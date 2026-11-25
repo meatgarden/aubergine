@@ -404,8 +404,8 @@
     "from": "2c75df8acfc1"
   },
   "home.trust.outlive.text": {
-    "text": "每个终端都是一个 tmux 会话：关掉浏览器或重启 Aubergine，你的工作照常运行。",
-    "from": "f913c3351663"
+    "text": "每个终端都是一个 tmux 会话：<a href=\"/keep-terminals-after-restart/\">关掉浏览器或重启 Aubergine，你的工作照常运行</a>。",
+    "from": "94905c3b891e"
   },
   "home.trust.nomodel.name": {
     "text": "没有模型，没有密钥",
@@ -1319,6 +1319,14 @@
     "text": "给每个智能体独立的检出和分支，两个智能体永远不会编辑同一批文件。",
     "from": "58872d0caca2"
   },
+  "guides.keep.name": {
+    "text": "重启之后保留你的终端",
+    "from": "6cfa04f7c3ab"
+  },
+  "guides.keep.text": {
+    "text": "关闭浏览器、重启 Aubergine 和重启电脑各自会保留什么，以及如何从上次停下的地方继续。",
+    "from": "396ced3608bc"
+  },
   "guides.queue.name": {
     "text": "队列、For you 与定时计划",
     "from": "61c48ccc941d"
@@ -1630,6 +1638,262 @@
   "copies.ld.a4": {
     "text": "不是。它把工作分开，但不会把智能体关在里面。智能体以你的身份运行，仍然可以读取和修改你能读写的每个文件。",
     "from": "8b760eb225ac"
+  },
+  "keep.meta.title": {
+    "text": "崩溃、重启或更新之后保留你的终端 | Aubergine",
+    "from": "d0521ba83d02"
+  },
+  "keep.meta.description": {
+    "text": "浏览器关闭、Aubergine 重启，以及电脑崩溃、重启或在夜里自动更新时，你的终端和编程智能体会怎样，以及如何从上次停下的地方继续。",
+    "from": "4f824d2bcf4e"
+  },
+  "keep.crumb": {
+    "text": "重启之后",
+    "from": "b287f32fbfcc"
+  },
+  "keep.title": {
+    "text": "电脑重启后，终端依然在",
+    "from": "be3fd58999ae"
+  },
+  "keep.lead": {
+    "text": "关掉浏览器或重启 Aubergine 不会丢失任何东西：每个终端都继续运行。电脑重启会结束正在运行的东西，而 Aubergine 会把它周围的一切带回来，让你从上次停下的地方继续，而不是从头开始。",
+    "from": "a30f93263e44"
+  },
+  "keep.table.title": {
+    "text": "当……时会发生什么",
+    "from": "2e3d1d162e51"
+  },
+  "keep.table.intro": {
+    "text": "每个终端都是 tmux 会话中的一个 shell，独立于浏览器和 Aubergine 的服务器运行。它的内容分在两处：正在运行的 shell，只由 tmux 保存；以及关于这个终端的一切说明，Aubergine 每次变动都会写进其数据文件夹里的一个文件。",
+    "from": "ee20243273bd"
+  },
+  "keep.table.thing": {
+    "text": "内容",
+    "from": "f8cf83a76a98"
+  },
+  "keep.table.browser": {
+    "text": "浏览器关闭、崩溃或更新，或你关掉标签页",
+    "from": "0a7d90fd549e"
+  },
+  "keep.table.server": {
+    "text": "Aubergine 停止、重启或被更新",
+    "from": "1c6408e3eb21"
+  },
+  "keep.table.computer": {
+    "text": "电脑崩溃、重启或安装更新",
+    "from": "321c23263fa9"
+  },
+  "keep.table.browserShort": {
+    "text": "浏览器关闭",
+    "from": "6a63c6750f2a"
+  },
+  "keep.table.serverShort": {
+    "text": "Aubergine 重启",
+    "from": "88d2ef622400"
+  },
+  "keep.table.computerShort": {
+    "text": "电脑重启",
+    "from": "515aa3442054"
+  },
+  "keep.row.running": {
+    "text": "正在运行的程序和智能体",
+    "from": "aa6584073938"
+  },
+  "keep.row.scrollback": {
+    "text": "终端显示过的内容（回滚记录）",
+    "from": "ae850a03d2bb"
+  },
+  "keep.row.place": {
+    "text": "它在画布上的位置、名称、颜色、标签、字段和链接",
+    "from": "d8942ea955fb"
+  },
+  "keep.row.note": {
+    "text": "它的笔记：摘要和日志",
+    "from": "bd09d21420fd"
+  },
+  "keep.row.folder": {
+    "text": "它所在的文件夹",
+    "from": "93d6eac7960d"
+  },
+  "keep.row.agent": {
+    "text": "智能体的对话",
+    "from": "edc534789af1"
+  },
+  "keep.row.copies": {
+    "text": "工作副本及其分支",
+    "from": "5d15d9f5fde9"
+  },
+  "keep.row.queue": {
+    "text": "队列、运行和计划",
+    "from": "862df801acb6"
+  },
+  "keep.cell.runs": {
+    "text": "继续运行",
+    "from": "8b35a116c9a8"
+  },
+  "keep.cell.ends": {
+    "text": "结束",
+    "from": "361e48d0308f"
+  },
+  "keep.cell.there": {
+    "text": "仍在",
+    "from": "007cce612ae7"
+  },
+  "keep.cell.gone": {
+    "text": "丢失",
+    "from": "283bb9deef02"
+  },
+  "keep.cell.fresh": {
+    "text": "同一文件夹中的新 shell",
+    "from": "0897ff42a469"
+  },
+  "keep.cell.goes": {
+    "text": "继续",
+    "from": "d17f7dd93885"
+  },
+  "keep.cell.resume": {
+    "text": "用 <strong>Resume agent</strong> 接着进行（Claude Code）",
+    "from": "b65d3c8c86df"
+  },
+  "keep.cell.late": {
+    "text": "仍在；错过的时间会迟到运行",
+    "from": "0c5a51a9cc07"
+  },
+  "keep.table.parked": {
+    "text": "停放的终端也同样保留，同样会得到一个新 shell。shell 在此之前就已结束的终端保持结束状态，并提供 <strong>Restart here</strong>（在此重启）。",
+    "from": "6ccfc616c13e"
+  },
+  "keep.table.update": {
+    "text": "更新之后，已经打开的终端会保留它的 shell 启动时所带的东西（它的 <code>PATH</code> 和 Aubergine 的 shell 集成），直到那个 shell 重新启动。如果 Aubergine 在登录时启动，更新之后请再运行一次 <code>aubergine service install</code>，而不是手动重启服务器。",
+    "from": "fb1239269602"
+  },
+  "keep.back.title": {
+    "text": "重启之后：回到工作",
+    "from": "8a4d5f07f8a6"
+  },
+  "keep.back.start": {
+    "text": "<strong>启动 Aubergine。</strong>如果它在登录时启动（<code>aubergine service install</code>，仅限 macOS），你一登录它就在运行，停止后 launchd 也会再把它启动。否则就启动它并打开页面：",
+    "from": "caf3ca498329"
+  },
+  "keep.back.canvas": {
+    "text": "<strong>画布和你离开时一样。</strong>每个终端都在原位，带着名称、颜色、标签、字段、链接和笔记，现在是一个新 shell，位于 Aubergine 最后看到它所在的文件夹（如果那个文件夹已不存在，则在你的默认文件夹）。不会重新输入或运行任何东西。",
+    "from": "9354ae2c51e0"
+  },
+  "keep.back.resume": {
+    "text": "<strong>恢复你的智能体。</strong>在运行过 Claude Code 且 Aubergine 知道其对话（它是从 Aubergine 启动的）的终端上，标题栏会提供 <strong>Resume agent</strong>（恢复智能体）：在那个对话中再次启动 Claude Code。在处于某个工作流运行中的终端上，它还会再次把这次运行告诉智能体，让它从运行所在的步骤继续。",
+    "from": "dadde3e3c41f"
+  },
+  "keep.back.read": {
+    "text": "<strong>看看每个终端进行到哪里。</strong>终端标题里的 <strong>Details</strong>（详情）会显示关于它的已知信息（运行的步骤和最后一份报告、文件夹、标签）、它的摘要、字段和链接，以及 <strong>Log</strong> 下的日志。在列表里把指针移到终端名称上，会显示它的回顾。",
+    "from": "93f57bf9eb94"
+  },
+  "keep.back.history": {
+    "text": "<strong>找回不在画布上的对话。</strong>命令面板（<code>⌘K</code>）中的 <strong>Past conversations…</strong>（过去的对话），或终端详情中的“Past conversations in this folder…”，会列出某个文件夹里 Claude Code 以前的对话，并能在画布上打开其中一个。",
+    "from": "237fdc4c37c5"
+  },
+  "keep.back.other": {
+    "text": "其他智能体没有 <strong>Resume agent</strong>，因为 Aubergine 不知道它的对话：请在同一个终端里用那个智能体自己的恢复方式重新启动它，并读一读笔记，告诉它进行到哪里了。",
+    "from": "793f54a1a40a"
+  },
+  "keep.pic.caption": {
+    "text": "终端的详情：运行的步骤和最后一份报告、文件夹、标签和字段。这些在电脑重启后都会保留；旁边的实时终端不会。",
+    "from": "d9f6211ba821"
+  },
+  "keep.lost.title": {
+    "text": "会丢失什么，以及怎么办",
+    "from": "14285bfff601"
+  },
+  "keep.lost.running": {
+    "text": "<strong>正在运行的东西会结束。</strong>构建、测试、服务器或正在工作的智能体会随电脑一起停止，Aubergine 不会自行重新启动其中任何一个。请自己重新启动它们；必须撑过重启的任务，应当交给专门为此设计的东西，比如系统的服务。",
+    "from": "e46f81e690a3"
+  },
+  "keep.lost.work": {
+    "text": "<strong>Aubergine 跟踪的工作会等着你。</strong>工作流的运行会保留它的步骤和每一份提交的报告。队列中的任务保持原位；服务器停止那一刻正在启动的任务会被标为失败，并附一句说明，不会自动重试任何东西。服务器停止期间错过的计划时间，如果不超过六小时（<code>schedules.lateWithinHours</code>），会迟到运行一次，否则标为已错过。",
+    "from": "3030fe221d28"
+  },
+  "keep.lost.scrollback": {
+    "text": "<strong>回滚记录会丢失。</strong>shell 运行期间，tmux 会保留它最后输出的 50,000 行，命令面板的搜索会读取这些内容。Aubergine 不记录终端的输出，所以电脑重启后没有东西可以找回，搜索只能找到此后输出的内容。",
+    "from": "aaed4fac1b79"
+  },
+  "keep.lost.away": {
+    "text": "<strong>“你不在时”会重新开始。</strong>它保存在服务器的内存里，而不是文件里，所以服务器启动后它只知道此后发生的变化，并会这样说明。",
+    "from": "6731aefcf508"
+  },
+  "keep.habit.title": {
+    "text": "让重启代价很小的习惯",
+    "from": "bd4d96a2eb2b"
+  },
+  "keep.habit.text": {
+    "text": "能留下来的是笔记，所以让智能体边做边写进去：一个决定、一个结果、停在了哪里。从 Aubergine 启动的 Claude Code 会自动把你发送的每条提示加入日志，并在开始时被要求给终端命名、维护摘要。任何智能体都可以用下面这些命令做到同样的事，<code>aubergine guide</code> 会向它说明：",
+    "from": "f0806ca11e08"
+  },
+  "keep.habit.recap": {
+    "text": "一天结束前，在终端详情里点 <strong>Ask its agent for a recap</strong>（请它的智能体写回顾）：智能体用 <code>aubergine recap --write</code> 写下现状，这份回顾会和终端一起保存。",
+    "from": "1b909d393ab1"
+  },
+  "keep.sleep.title": {
+    "text": "合上笔记本、睡眠和浏览器",
+    "from": "393a7e53106a"
+  },
+  "keep.sleep.sleep": {
+    "text": "<strong>睡眠不是重启。</strong>合上笔记本的盖子通常会让它睡眠：程序暂停，醒来后继续，表格最后一列的情况都不会发生。Aubergine 既不让电脑保持唤醒，也不唤醒它，所以睡眠期间到点的计划会迟到运行或被错过，同上。",
+    "from": "f90d61fc3eae"
+  },
+  "keep.sleep.browser": {
+    "text": "<strong>关闭浏览器、标签页或其窗口</strong>，或浏览器更新后重启，都不会结束任何东西。重新打开页面（<code>aubergine open</code> 会以登录状态打开），每个终端都会按 tmux 中的当前状态绘制。一直开着的页面会在服务器恢复后自动重新连接。",
+    "from": "40f09b6f29cb"
+  },
+  "keep.sleep.server": {
+    "text": "<strong>关闭运行 <code>aubergine start</code> 的窗口</strong>，或在其中按 Ctrl+C，只会停止服务器：也就是表格中间那一列。",
+    "from": "1cd0a9349c3d"
+  },
+  "keep.sleep.wsl": {
+    "text": "<strong>在使用 WSL 的 Windows 上</strong>，WSL 停止（因为 Windows 重启或执行 <code>wsl --shutdown</code> 之后）对 Aubergine 来说就是电脑重启。参见 <a href=\"/windows/\">使用 WSL 的 Windows</a>。",
+    "from": "0c01d734b5c3"
+  },
+  "keep.q.restore.q": {
+    "text": "Aubergine 能在重启后恢复我的终端吗？",
+    "from": "a2d8fea94c00"
+  },
+  "keep.q.restore.a": {
+    "text": "能，除了其中正在运行的东西。每个终端都会回到画布上的原位，带着名称、颜色、笔记、标签、字段和链接，成为位于最后所在文件夹的新 shell。其中运行过的程序不会重新启动；对 Claude Code，<strong>Resume agent</strong> 可以接着之前的对话。",
+    "from": "8be8d8045b34"
+  },
+  "keep.q.output.q": {
+    "text": "Aubergine 会保留我的终端输出和历史吗？",
+    "from": "7463118541ed"
+  },
+  "keep.q.output.a": {
+    "text": "输出只在 shell 运行期间保留：tmux 为每个终端保留 50,000 行回滚记录，关掉浏览器或重启 Aubergine 都不会丢失。电脑重启后就没了，因为 Aubergine 不记录终端输出。你输入过的命令历史（按上箭头会出现的那些）是你的 shell 自己的文件，像往常一样由 shell 保存。",
+    "from": "a88ba263b084"
+  },
+  "keep.q.claude.q": {
+    "text": "我的 Claude Code 对话能撑过重启吗？",
+    "from": "c87cda5e8a7e"
+  },
+  "keep.q.claude.a": {
+    "text": "对话可以：Claude Code 把它保存在自己的文件中，Aubergine 记得每个终端处于哪个对话。重启之后，终端标题栏上的 <strong>Resume agent</strong> 会在那个对话中再次启动 Claude Code。智能体那一刻正在做的事已经停止，在你要求之前不会重做。",
+    "from": "0d163dc56b89"
+  },
+  "keep.q.macos.q": {
+    "text": "macOS 夜里自动更新时还管用吗？",
+    "from": "dd58c7a1e65c"
+  },
+  "keep.q.macos.a": {
+    "text": "会重启电脑的更新就是一次普通的重启：正在运行的程序结束，其他一切都保留。开启登录时启动（<code>aubergine service install</code>）后，你一登录服务器就会再次运行，画布在等着你。在最后所在文件夹中打开新 shell 这一点，是在重启 Aubergine 的容器时看到的；真实的 macOS 夜间更新尚未试过。",
+    "from": "06c25c70de97"
+  },
+  "keep.q.tmux.q": {
+    "text": "我需要懂 tmux 吗？",
+    "from": "3d7564a5b7f9"
+  },
+  "keep.q.tmux.a": {
+    "text": "不需要。只要装好它（3.2 或更新版本），Aubergine 会在自己的套接字上用自己的设置运行它，没有状态栏，也没有前缀键，所以你永远不用输入 tmux 命令。如果你自己也在用 tmux，它不会被动到。",
+    "from": "d33e0b313f18"
+  },
+  "keep.related": {
+    "text": "相关：<a href=\"/claude/\">Aubergine 中的 Claude Code</a> · <a href=\"/queue-and-schedules/\">队列和计划</a> · <a href=\"/working-copies/\">工作副本</a>",
+    "from": "730944daab4e"
   },
   "queue.meta.title": {
     "text": "队列、For you 列表与定时计划 | Aubergine",

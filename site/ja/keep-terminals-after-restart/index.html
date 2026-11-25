@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Keep your terminals after a crash, a restart or an update | Aubergine</title>
-<meta name="description" content="What happens to your terminals and coding agents when the browser closes, when Aubergine restarts, and when the computer crashes, restarts or updates overnight, and how to pick up where you were.">
+<title>クラッシュ、再起動、アップデートのあともターミナルを残す | Aubergine</title>
+<meta name="description" content="ブラウザーが閉じたとき、Aubergine が再起動したとき、コンピューターがクラッシュ・再起動・夜間アップデートしたときに、ターミナルとコーディングエージェントがどうなるか。そして続きから再開する方法。">
 <link rel="canonical" href="https://thirstyeggplant.com/ja/keep-terminals-after-restart/">
 <link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/keep-terminals-after-restart/">
 <link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/keep-terminals-after-restart/">
@@ -27,8 +27,8 @@
 <link rel="stylesheet" href="../../style.css">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="Aubergine">
-<meta property="og:title" content="Keep your terminals after a crash, a restart or an update | Aubergine">
-<meta property="og:description" content="What happens to your terminals and coding agents when the browser closes, when Aubergine restarts, and when the computer crashes, restarts or updates overnight, and how to pick up where you were.">
+<meta property="og:title" content="クラッシュ、再起動、アップデートのあともターミナルを残す | Aubergine">
+<meta property="og:description" content="ブラウザーが閉じたとき、Aubergine が再起動したとき、コンピューターがクラッシュ・再起動・夜間アップデートしたときに、ターミナルとコーディングエージェントがどうなるか。そして続きから再開する方法。">
 <meta property="og:url" content="https://thirstyeggplant.com/ja/keep-terminals-after-restart/">
 <meta property="og:image" content="https://thirstyeggplant.com/og.png">
 <meta property="og:image:width" content="1200">
@@ -37,8 +37,8 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
 <meta name="twitter:image:alt" content="Aubergine：ターミナルが並ぶキャンバス。1つは処理中、1つはあなたを待っています">
-<meta name="twitter:title" content="Keep your terminals after a crash, a restart or an update | Aubergine">
-<meta name="twitter:description" content="What happens to your terminals and coding agents when the browser closes, when Aubergine restarts, and when the computer crashes, restarts or updates overnight, and how to pick up where you were.">
+<meta name="twitter:title" content="クラッシュ、再起動、アップデートのあともターミナルを残す | Aubergine">
+<meta name="twitter:description" content="ブラウザーが閉じたとき、Aubergine が再起動したとき、コンピューターがクラッシュ・再起動・夜間アップデートしたときに、ターミナルとコーディングエージェントがどうなるか。そして続きから再開する方法。">
 <link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
 </head>
 <body>
@@ -98,8 +98,8 @@
     {
       "@type": "TechArticle",
       "@id": "https://thirstyeggplant.com/ja/keep-terminals-after-restart/#article",
-      "headline": "Keep your terminals when your computer restarts",
-      "description": "What happens to your terminals and coding agents when the browser closes, when Aubergine restarts, and when the computer crashes, restarts or updates overnight, and how to pick up where you were.",
+      "headline": "コンピューターが再起動してもターミナルは残る",
+      "description": "ブラウザーが閉じたとき、Aubergine が再起動したとき、コンピューターがクラッシュ・再起動・夜間アップデートしたときに、ターミナルとコーディングエージェントがどうなるか。そして続きから再開する方法。",
       "url": "https://thirstyeggplant.com/ja/keep-terminals-after-restart/",
       "mainEntityOfPage": "https://thirstyeggplant.com/ja/keep-terminals-after-restart/",
       "datePublished": "2026-11-25",
@@ -115,18 +115,18 @@
       "itemListElement": [
         { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
         { "@type": "ListItem", "position": 2, "name": "ガイド", "item": "https://thirstyeggplant.com/guides/" },
-        { "@type": "ListItem", "position": 3, "name": "After a restart", "item": "https://thirstyeggplant.com/ja/keep-terminals-after-restart/" }
+        { "@type": "ListItem", "position": 3, "name": "再起動のあと", "item": "https://thirstyeggplant.com/ja/keep-terminals-after-restart/" }
       ]
     },
     {
       "@type": "FAQPage",
       "@id": "https://thirstyeggplant.com/ja/keep-terminals-after-restart/#faq",
       "mainEntity": [
-        { "@type": "Question", "name": "Can Aubergine restore my terminals after a reboot?", "acceptedAnswer": { "@type": "Answer", "text": "Yes, all but what was running in them. Each terminal comes back in its place on the canvas with its name, color, note, tags, fields and links, as a fresh shell in its last folder. The programs that ran in it are not started again; for Claude Code, Resume agent continues the conversation." } },
-        { "@type": "Question", "name": "Does Aubergine keep my terminal output and history?", "acceptedAnswer": { "@type": "Answer", "text": "The output, only while the shell runs: tmux keeps 50,000 lines of each terminal's scrollback, and closing the browser or restarting Aubergine loses none of it. After a restart of the computer it is gone, because Aubergine records no terminal output. The history of the commands you typed, which the up arrow brings back, is your shell's own file, kept by your shell as always." } },
-        { "@type": "Question", "name": "Will my Claude Code conversation survive a restart?", "acceptedAnswer": { "@type": "Answer", "text": "The conversation, yes: Claude Code keeps it in its own files, and Aubergine remembers which one each terminal was in. After the restart, Resume agent in the terminal's title bar starts Claude Code again in that conversation. What the agent was doing at that moment stopped, and is not done again until you ask." } },
-        { "@type": "Question", "name": "Does it work when macOS updates itself overnight?", "acceptedAnswer": { "@type": "Answer", "text": "An update that restarts the computer is a restart like any other: running programs end and everything else is kept. With start at login (aubergine service install), the server is running again once you log in, and the canvas is waiting. Fresh shells in their last folders were seen when a container of Aubergine was restarted; a real overnight update of macOS has not been tried." } },
-        { "@type": "Question", "name": "Do I need to know tmux?", "acceptedAnswer": { "@type": "Answer", "text": "No. It has to be installed (3.2 or newer), and Aubergine runs it on a socket of its own with its own settings, with no status bar and no prefix key, so you never type a tmux command. Your own tmux, if you use one, is not touched." } }
+        { "@type": "Question", "name": "Aubergine は再起動のあとにターミナルを復元できますか？", "acceptedAnswer": { "@type": "Answer", "text": "はい、中で動いていたもの以外はすべて。各ターミナルは名前、色、ノート、タグ、フィールド、リンクとともにキャンバスの元の位置に戻り、最後のフォルダーで新しいシェルになります。中で動いていたプログラムは起動し直されません。Claude Code なら Resume agent で会話を続けられます。" } },
+        { "@type": "Question", "name": "Aubergine はターミナルの出力と履歴を残しますか？", "acceptedAnswer": { "@type": "Answer", "text": "出力は、シェルが動いている間だけです。tmux は各ターミナルのスクロールバックを50,000行保持し、ブラウザーを閉じても Aubergine を再起動しても少しも失われません。コンピューターを再起動すると消えます。Aubergine はターミナルの出力を記録しないからです。入力したコマンドの履歴（上矢印で戻ってくるもの）はシェル自身のファイルで、いつもどおりシェルが保存します。" } },
+        { "@type": "Question", "name": "Claude Code の会話は再起動のあとも残りますか？", "acceptedAnswer": { "@type": "Answer", "text": "会話は残ります。Claude Code が自分のファイルに保存し、Aubergine は各ターミナルがどの会話にいたかを覚えています。再起動のあと、ターミナルのタイトルバーの Resume agent がその会話で Claude Code を再び起動します。その瞬間にエージェントがしていたことは止まっていて、あなたが頼むまでやり直されません。" } },
+        { "@type": "Question", "name": "macOS が夜中に自動でアップデートしても大丈夫ですか？", "acceptedAnswer": { "@type": "Answer", "text": "コンピューターを再起動するアップデートは、ほかの再起動と同じです。動いていたプログラムは終わり、それ以外はすべて残ります。ログイン時に起動する設定（aubergine service install）なら、ログインした時点でサーバーがまた動いていて、キャンバスが待っています。最後のフォルダーでの新しいシェルは、Aubergine のコンテナーを再起動したときに確認しました。実際の macOS の夜間アップデートは試していません。" } },
+        { "@type": "Question", "name": "tmux の知識は必要ですか？", "acceptedAnswer": { "@type": "Answer", "text": "いいえ。インストールされている必要はあります（3.2 以降）が、Aubergine は専用のソケットと専用の設定で動かし、ステータスバーもプレフィックスキーもないので、tmux のコマンドを入力することはありません。あなた自身の tmux を使っていても、それには触れません。" } }
       ]
     }
   ]
@@ -134,76 +134,76 @@
 </script>
 <header class="page-head">
   <div class="wrap">
-    <nav class="crumbs" aria-label="現在の位置"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">ガイド</a></li><li><span lang="en" dir="ltr">After a restart</span></li></ol></nav>
-    <h1><span lang="en" dir="ltr">Keep your terminals when your computer restarts</span></h1>
-    <p class="lead"><span lang="en" dir="ltr">Closing the browser or restarting Aubergine loses nothing: every terminal keeps running. A restart of the computer ends what was running, and Aubergine brings back everything around it, so you pick up where you were instead of starting again.</span></p>
+    <nav class="crumbs" aria-label="現在の位置"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">ガイド</a></li><li>再起動のあと</li></ol></nav>
+    <h1>コンピューターが再起動してもターミナルは残る</h1>
+    <p class="lead">ブラウザーを閉じても Aubergine を再起動しても、何も失われません。どのターミナルも動き続けます。コンピューターの再起動は動いていたものを終わらせますが、Aubergine はその周りのすべてを戻すので、最初からではなく続きから再開できます。</p>
   </div>
 </header>
 <div class="wrap page-body">
   <div class="prose">
-    <h2><span lang="en" dir="ltr">What happens when…</span></h2>
-    <p><span lang="en" dir="ltr">Every terminal is a shell in a tmux session, which runs apart from the browser and from Aubergine's server. What it holds is in two places: the running shell, which only tmux keeps, and everything said about the terminal, which Aubergine writes to a file in its data folder at every change.</span></p>
+    <h2>こんなとき何が起きるか</h2>
+    <p>どのターミナルも tmux セッション内のシェルで、ブラウザーとも Aubergine のサーバーとも別に動いています。中身は2か所にあります。動いているシェルは tmux だけが保持し、ターミナルについて言われていることはすべて、Aubergine が変更のたびにデータフォルダーのファイルに書き込みます。</p>
     <div class="table">
       <table class="table-stack">
-        <thead><tr><th><span lang="en" dir="ltr">What</span></th><th><span lang="en" dir="ltr">The browser closes, crashes or updates, or you close the tab</span></th><th><span lang="en" dir="ltr">Aubergine stops, restarts or is updated</span></th><th><span lang="en" dir="ltr">The computer crashes, restarts or installs an update</span></th></tr></thead>
+        <thead><tr><th>対象</th><th>ブラウザーが閉じる、クラッシュする、アップデートされる、またはタブを閉じる</th><th>Aubergine が止まる、再起動する、アップデートされる</th><th>コンピューターがクラッシュする、再起動する、アップデートをインストールする</th></tr></thead>
         <tbody>
-          <tr><td><span lang="en" dir="ltr">Running programs and agents</span></td><td data-label="Browser closed"><span lang="en" dir="ltr">keep running</span></td><td data-label="Aubergine restarted"><span lang="en" dir="ltr">keep running</span></td><td data-label="Computer restarted"><span lang="en" dir="ltr">end</span></td></tr>
-          <tr><td><span lang="en" dir="ltr">What the terminal showed (its scrollback)</span></td><td data-label="Browser closed"><span lang="en" dir="ltr">still there</span></td><td data-label="Aubergine restarted"><span lang="en" dir="ltr">still there</span></td><td data-label="Computer restarted"><span lang="en" dir="ltr">gone</span></td></tr>
-          <tr><td><span lang="en" dir="ltr">Its place on the canvas, name, color, tags, fields and links</span></td><td data-label="Browser closed"><span lang="en" dir="ltr">still there</span></td><td data-label="Aubergine restarted"><span lang="en" dir="ltr">still there</span></td><td data-label="Computer restarted"><span lang="en" dir="ltr">still there</span></td></tr>
-          <tr><td><span lang="en" dir="ltr">Its note: the summary and the log</span></td><td data-label="Browser closed"><span lang="en" dir="ltr">still there</span></td><td data-label="Aubergine restarted"><span lang="en" dir="ltr">still there</span></td><td data-label="Computer restarted"><span lang="en" dir="ltr">still there</span></td></tr>
-          <tr><td><span lang="en" dir="ltr">The folder it was in</span></td><td data-label="Browser closed"><span lang="en" dir="ltr">still there</span></td><td data-label="Aubergine restarted"><span lang="en" dir="ltr">still there</span></td><td data-label="Computer restarted"><span lang="en" dir="ltr">a fresh shell in the same folder</span></td></tr>
-          <tr><td><span lang="en" dir="ltr">An agent's conversation</span></td><td data-label="Browser closed"><span lang="en" dir="ltr">goes on</span></td><td data-label="Aubergine restarted"><span lang="en" dir="ltr">goes on</span></td><td data-label="Computer restarted"><span lang="en" dir="ltr"><strong>Resume agent</strong> continues it (Claude Code)</span></td></tr>
-          <tr><td><span lang="en" dir="ltr">Working copies and their branches</span></td><td data-label="Browser closed"><span lang="en" dir="ltr">still there</span></td><td data-label="Aubergine restarted"><span lang="en" dir="ltr">still there</span></td><td data-label="Computer restarted"><span lang="en" dir="ltr">still there</span></td></tr>
-          <tr><td><span lang="en" dir="ltr">The queue, runs and schedules</span></td><td data-label="Browser closed"><span lang="en" dir="ltr">still there</span></td><td data-label="Aubergine restarted"><span lang="en" dir="ltr">still there; a time that passed runs late</span></td><td data-label="Computer restarted"><span lang="en" dir="ltr">still there; a time that passed runs late</span></td></tr>
+          <tr><td>動いているプログラムとエージェント</td><td data-label="ブラウザーを閉じた">動き続ける</td><td data-label="Aubergine を再起動した">動き続ける</td><td data-label="コンピューターを再起動した">終わる</td></tr>
+          <tr><td>ターミナルに表示されていたもの（スクロールバック）</td><td data-label="ブラウザーを閉じた">残る</td><td data-label="Aubergine を再起動した">残る</td><td data-label="コンピューターを再起動した">消える</td></tr>
+          <tr><td>キャンバス上の位置、名前、色、タグ、フィールド、リンク</td><td data-label="ブラウザーを閉じた">残る</td><td data-label="Aubergine を再起動した">残る</td><td data-label="コンピューターを再起動した">残る</td></tr>
+          <tr><td>ノート：要約とログ</td><td data-label="ブラウザーを閉じた">残る</td><td data-label="Aubergine を再起動した">残る</td><td data-label="コンピューターを再起動した">残る</td></tr>
+          <tr><td>いたフォルダー</td><td data-label="ブラウザーを閉じた">残る</td><td data-label="Aubergine を再起動した">残る</td><td data-label="コンピューターを再起動した">同じフォルダーで新しいシェル</td></tr>
+          <tr><td>エージェントの会話</td><td data-label="ブラウザーを閉じた">続く</td><td data-label="Aubergine を再起動した">続く</td><td data-label="コンピューターを再起動した"><strong>Resume agent</strong> で続けられる（Claude Code）</td></tr>
+          <tr><td>作業コピーとそのブランチ</td><td data-label="ブラウザーを閉じた">残る</td><td data-label="Aubergine を再起動した">残る</td><td data-label="コンピューターを再起動した">残る</td></tr>
+          <tr><td>キュー、実行、スケジュール</td><td data-label="ブラウザーを閉じた">残る</td><td data-label="Aubergine を再起動した">残る。過ぎた時刻は遅れて実行</td><td data-label="コンピューターを再起動した">残る。過ぎた時刻は遅れて実行</td></tr>
         </tbody>
       </table>
     </div>
-    <p class="note"><span lang="en" dir="ltr">A parked terminal is kept the same way and gets a fresh shell too. A terminal whose shell had already ended stays ended, with <strong>Restart here</strong>.</span></p>
-    <p><span lang="en" dir="ltr">After an update, a terminal that was already open keeps what its shell started with (its <code>PATH</code> and Aubergine's shell integration) until that shell is started again. If Aubergine starts at login, run <code>aubergine service install</code> again after an update instead of restarting the server by hand.</span></p>
+    <p class="note">パークしたターミナルも同じように残り、やはり新しいシェルになります。シェルがすでに終わっていたターミナルは終わったままで、<strong>Restart here</strong>（ここで再起動）が出ます。</p>
+    <p>アップデートのあと、すでに開いていたターミナルは、シェルが起動したときのもの（<code>PATH</code> と Aubergine のシェル連携）を、そのシェルを起動し直すまで使い続けます。Aubergine をログイン時に起動しているなら、アップデートのあとはサーバーを手で再起動する代わりに <code>aubergine service install</code> をもう一度実行します。</p>
 
-    <h2><span lang="en" dir="ltr">After a restart: back to work</span></h2>
+    <h2>再起動のあと：作業に戻る</h2>
     <ol class="seq">
-      <li><p><span lang="en" dir="ltr"><strong>Start Aubergine.</strong> If it starts at login (<code>aubergine service install</code>, macOS only), it is running once you have logged in, and launchd starts it again if it stops. Otherwise start it and open the page:</span></p>
+      <li><p><strong>Aubergine を起動します。</strong>ログイン時に起動する設定（<code>aubergine service install</code>、macOS のみ）なら、ログインした時点で動いていて、止まれば launchd がまた起動します。そうでなければ、起動してページを開きます。</p>
         <p class="cmd"><code>aubergine start --open</code><button type="button" class="copy" data-copy data-copied="コピーしました" aria-live="polite" hidden>コピー</button></p></li>
-      <li><p><span lang="en" dir="ltr"><strong>The canvas is as you left it.</strong> Every terminal is in its place with its name, color, tags, fields, links and note, now a fresh shell in the last folder Aubergine saw it in, or in your default folder if that one is gone. Nothing is typed or run again.</span></p></li>
-      <li><p><span lang="en" dir="ltr"><strong>Resume your agents.</strong> Where Claude Code ran and Aubergine knows its conversation (it was started from Aubergine), the terminal's title bar offers <strong>Resume agent</strong>: it starts Claude Code again in that conversation. On a terminal that is on a run of a workflow, it also tells the agent about the run again, so it carries on from the step the run is at.</span></p></li>
-      <li><p><span lang="en" dir="ltr"><strong>See where each one stood.</strong> <strong>Details</strong> in a terminal's title shows what is known about it (a run's step and its last report, the folder, the tags), its summary, its fields and links, and its log under <strong>Log</strong>. Pointing at a terminal's name in the list shows its recap.</span></p></li>
-      <li><p><span lang="en" dir="ltr"><strong>Find a conversation that is not on the canvas.</strong> <strong>Past conversations…</strong> in the palette (<code>⌘K</code>), or “Past conversations in this folder…” in a terminal's details, lists Claude Code's earlier conversations in a folder and opens one on the canvas.</span></p></li>
+      <li><p><strong>キャンバスは離れたときのままです。</strong>どのターミナルも名前、色、タグ、フィールド、リンク、ノートとともに元の位置にあり、Aubergine が最後に見たフォルダーで（そのフォルダーがもうなければ既定のフォルダーで）新しいシェルになっています。何も入力し直されず、実行し直されません。</p></li>
+      <li><p><strong>エージェントを再開します。</strong>Claude Code が動いていて Aubergine がその会話を知っている（Aubergine から起動した）ターミナルでは、タイトルバーに <strong>Resume agent</strong>（エージェントを再開）が出ます。その会話で Claude Code を再び起動します。ワークフローの実行の途中にあるターミナルでは、その実行についてもう一度エージェントに伝えるので、実行が止まっているステップから続けます。</p></li>
+      <li><p><strong>それぞれがどこまで進んでいたかを見ます。</strong>ターミナルのタイトルにある <strong>Details</strong>（詳細）は、分かっていること（実行のステップと最後の報告、フォルダー、タグ）、要約、フィールドとリンク、そして <strong>Log</strong> の下にログを表示します。一覧でターミナルの名前にポインターを合わせると振り返りが出ます。</p></li>
+      <li><p><strong>キャンバスにない会話を探します。</strong>パレット（<code>⌘K</code>）の <strong>Past conversations…</strong>（過去の会話）、またはターミナルの詳細にある「Past conversations in this folder…」で、フォルダー内の Claude Code の過去の会話を一覧し、キャンバスに開けます。</p></li>
     </ol>
-    <p><span lang="en" dir="ltr">Any other agent has no <strong>Resume agent</strong>, because Aubergine does not know its conversation: start it again in the same terminal with that agent's own way of resuming, and read the note to tell it where it stood.</span></p>
-    <figure class="frame"><a href="../../screenshots/focus-part.png" class="frame-pic"><img src="../../screenshots/focus-part.png" width="1344" height="1172" loading="lazy" alt="ブラウザータブに1つだけ開いたターミナル。ヘッダーに名前、詳細にワークフローのステップ、フォルダー、フィールドがあり、その横にライブのターミナル。"></a><figcaption><span lang="en" dir="ltr">A terminal's details: a run's step and last report, the folder, tags and fields. All of it is kept through a restart of the computer; the live terminal beside it is not.</span></figcaption></figure>
+    <p>ほかのエージェントには <strong>Resume agent</strong> はありません。Aubergine がその会話を知らないためです。同じターミナルで、そのエージェント自身の再開の方法で起動し直し、ノートを読んでどこまで進んでいたかを伝えてください。</p>
+    <figure class="frame"><a href="../../screenshots/focus-part.png" class="frame-pic"><img src="../../screenshots/focus-part.png" width="1344" height="1172" loading="lazy" alt="ブラウザータブに1つだけ開いたターミナル。ヘッダーに名前、詳細にワークフローのステップ、フォルダー、フィールドがあり、その横にライブのターミナル。"></a><figcaption>ターミナルの詳細：実行のステップと最後の報告、フォルダー、タグ、フィールド。これらはすべてコンピューターの再起動のあとも残ります。横のライブのターミナルは残りません。</figcaption></figure>
 
-    <h2><span lang="en" dir="ltr">What is lost, and what to do about it</span></h2>
+    <h2>失われるもの、そしてどうするか</h2>
     <ul>
-      <li><span lang="en" dir="ltr"><strong>What was running ends.</strong> A build, a test run, a server or an agent in the middle of its work stops with the computer, and Aubergine starts none of them again by itself. Start them again yourself; a job that must outlast a restart belongs in something made for that, such as a service of your system.</span></li>
-      <li><span lang="en" dir="ltr"><strong>Work Aubergine keeps track of waits for you.</strong> A run of a workflow keeps its step and every report handed in. Tasks in the queue keep their place; one that was being started at the moment the server stopped is marked failed, with a sentence, and nothing is tried again by itself. A schedule's time that passed while the server was stopped runs once, late, if it is less than six hours old (<code>schedules.lateWithinHours</code>), and is marked missed otherwise.</span></li>
-      <li><span lang="en" dir="ltr"><strong>The scrollback is gone.</strong> While a shell runs, tmux keeps the last 50,000 lines it printed, and the palette's search reads them. Aubergine does not record what a terminal prints, so after a restart of the computer there is nothing to bring back, and search finds only what was printed since.</span></li>
-      <li><span lang="en" dir="ltr"><strong>“While you were away” starts again.</strong> It is kept in the server's memory, not in a file, so after the server starts it knows only what changed since then, and says so.</span></li>
+      <li><strong>動いていたものは終わります。</strong>ビルド、テスト、サーバー、作業途中のエージェントはコンピューターとともに止まり、Aubergine はどれも自分では起動し直しません。自分で起動し直してください。再起動を越えて続けるべき処理は、システムのサービスのような、そのために作られた仕組みに任せます。</li>
+      <li><strong>Aubergine が追っている作業はあなたを待ちます。</strong>ワークフローの実行は、ステップと提出された報告をすべて保ちます。キューのタスクは順番を保ちます。サーバーが止まった瞬間に開始中だったタスクは、理由の一文とともに失敗と記録され、自動で再試行されるものはありません。サーバーが止まっている間に過ぎたスケジュールの時刻は、6時間以内なら遅れて1回だけ実行され（<code>schedules.lateWithinHours</code>）、それ以外は逃したと記録されます。</li>
+      <li><strong>スクロールバックは消えます。</strong>シェルが動いている間、tmux は出力された最後の50,000行を保持し、パレットの検索はそれを読みます。Aubergine はターミナルの出力を記録しないので、コンピューターの再起動のあとに戻せるものはなく、検索で見つかるのはそれ以降の出力だけです。</li>
+      <li><strong>「離れている間」は最初からになります。</strong>ファイルではなくサーバーのメモリーにあるので、サーバーの起動後はそれ以降の変化しか知らず、そのことを伝えます。</li>
     </ul>
 
-    <h2><span lang="en" dir="ltr">The habit that makes a restart cheap</span></h2>
-    <p><span lang="en" dir="ltr">The note is what survives, so have agents write to it as they go: a decision, a result, where they stopped. A Claude Code started from Aubergine has each prompt you send added to the log by itself, and is told when it begins to name its terminal and keep its summary. Any agent can do the same with these commands, which <code>aubergine guide</code> explains to it:</span></p>
+    <h2>再起動を怖くなくする習慣</h2>
+    <p>残るのはノートです。だからエージェントには作業しながらノートに書かせましょう。決めたこと、結果、どこで止めたか。Aubergine から起動した Claude Code では、送ったプロンプトがひとつずつ自動でログに加わり、始めにターミナルに名前を付けて要約を保つよう伝えられます。どのエージェントも次のコマンドで同じことができ、<code>aubergine guide</code> がその使い方を説明します。</p>
     <pre><code>aubergine note "Tests pass on the branch. The migration is not written yet."
 aubergine describe --summary "Fixing the double redirect at sign-in"</code></pre>
-    <p><span lang="en" dir="ltr">Before you stop for the day, press <strong>Ask its agent for a recap</strong> in a terminal's details: the agent writes where it stands with <code>aubergine recap --write</code>, and the recap is kept with the terminal.</span></p>
+    <p>その日の作業を終える前に、ターミナルの詳細で <strong>Ask its agent for a recap</strong>（エージェントに振り返りを頼む）を押します。エージェントは <code>aubergine recap --write</code> で現状を書き、その振り返りはターミナルとともに保存されます。</p>
 
-    <h2><span lang="en" dir="ltr">Closing the laptop, sleep, and the browser</span></h2>
+    <h2>ノートパソコンを閉じる、スリープ、ブラウザー</h2>
     <ul>
-      <li><span lang="en" dir="ltr"><strong>Sleep is not a restart.</strong> Closing a laptop's lid usually puts it to sleep: programs pause and carry on when it wakes, and nothing in the last column of the table happens. Aubergine neither keeps the computer awake nor wakes it, so a schedule whose time passed during sleep runs late, or is missed, as above.</span></li>
-      <li><span lang="en" dir="ltr"><strong>Closing the browser, a tab or its window</strong>, or a browser update that restarts it, ends nothing. Open the page again (<code>aubergine open</code> opens it signed in) and each terminal is drawn from tmux as it is now. A page left open reconnects by itself when the server comes back.</span></li>
-      <li><span lang="en" dir="ltr"><strong>Closing the window where <code>aubergine start</code> runs</strong>, or pressing Ctrl+C there, stops the server and nothing else: the middle column of the table.</span></li>
-      <li><span lang="en" dir="ltr"><strong>On Windows with WSL</strong>, WSL stopping, because Windows restarts or after <code>wsl --shutdown</code>, is a restart of the computer for Aubergine. See <a href="../windows/">Windows with WSL</a>.</span></li>
+      <li><strong>スリープは再起動ではありません。</strong>ノートパソコンのふたを閉じると、たいていスリープします。プログラムは一時停止し、起きると続きから動き、表の最後の列のことは何も起きません。Aubergine はコンピューターを起こしたままにもせず、起こしもしないので、スリープ中に時刻が過ぎたスケジュールは、上のとおり遅れて実行されるか、逃したことになります。</li>
+      <li><strong>ブラウザー、タブ、そのウィンドウを閉じても</strong>、ブラウザーのアップデートで再起動しても、何も終わりません。ページを開き直せば（<code>aubergine open</code> でサインインした状態で開きます）、各ターミナルが tmux から今の状態で描かれます。開いたままのページは、サーバーが戻ると自動で再接続します。</li>
+      <li><strong><code>aubergine start</code> が動いているウィンドウを閉じる</strong>か、そこで Ctrl+C を押すと、止まるのはサーバーだけです。表の真ん中の列にあたります。</li>
+      <li><strong>WSL を使う Windows では</strong>、Windows の再起動や <code>wsl --shutdown</code> で WSL が止まることが、Aubergine にとってのコンピューターの再起動です。<a href="../windows/">WSL を使う Windows</a> を参照してください。</li>
     </ul>
 
     <h2>よくある質問</h2>
     <div class="questions">
-      <details><summary><span lang="en" dir="ltr">Can Aubergine restore my terminals after a reboot?</span></summary><p><span lang="en" dir="ltr">Yes, all but what was running in them. Each terminal comes back in its place on the canvas with its name, color, note, tags, fields and links, as a fresh shell in its last folder. The programs that ran in it are not started again; for Claude Code, <strong>Resume agent</strong> continues the conversation.</span></p></details>
-      <details><summary><span lang="en" dir="ltr">Does Aubergine keep my terminal output and history?</span></summary><p><span lang="en" dir="ltr">The output, only while the shell runs: tmux keeps 50,000 lines of each terminal's scrollback, and closing the browser or restarting Aubergine loses none of it. After a restart of the computer it is gone, because Aubergine records no terminal output. The history of the commands you typed, which the up arrow brings back, is your shell's own file, kept by your shell as always.</span></p></details>
-      <details><summary><span lang="en" dir="ltr">Will my Claude Code conversation survive a restart?</span></summary><p><span lang="en" dir="ltr">The conversation, yes: Claude Code keeps it in its own files, and Aubergine remembers which one each terminal was in. After the restart, <strong>Resume agent</strong> in the terminal's title bar starts Claude Code again in that conversation. What the agent was doing at that moment stopped, and is not done again until you ask.</span></p></details>
-      <details><summary><span lang="en" dir="ltr">Does it work when macOS updates itself overnight?</span></summary><p><span lang="en" dir="ltr">An update that restarts the computer is a restart like any other: running programs end and everything else is kept. With start at login (<code>aubergine service install</code>), the server is running again once you log in, and the canvas is waiting. Fresh shells in their last folders were seen when a container of Aubergine was restarted; a real overnight update of macOS has not been tried.</span></p></details>
-      <details><summary><span lang="en" dir="ltr">Do I need to know tmux?</span></summary><p><span lang="en" dir="ltr">No. It has to be installed (3.2 or newer), and Aubergine runs it on a socket of its own with its own settings, with no status bar and no prefix key, so you never type a tmux command. Your own tmux, if you use one, is not touched.</span></p></details>
+      <details><summary>Aubergine は再起動のあとにターミナルを復元できますか？</summary><p>はい、中で動いていたもの以外はすべて。各ターミナルは名前、色、ノート、タグ、フィールド、リンクとともにキャンバスの元の位置に戻り、最後のフォルダーで新しいシェルになります。中で動いていたプログラムは起動し直されません。Claude Code なら <strong>Resume agent</strong> で会話を続けられます。</p></details>
+      <details><summary>Aubergine はターミナルの出力と履歴を残しますか？</summary><p>出力は、シェルが動いている間だけです。tmux は各ターミナルのスクロールバックを50,000行保持し、ブラウザーを閉じても Aubergine を再起動しても少しも失われません。コンピューターを再起動すると消えます。Aubergine はターミナルの出力を記録しないからです。入力したコマンドの履歴（上矢印で戻ってくるもの）はシェル自身のファイルで、いつもどおりシェルが保存します。</p></details>
+      <details><summary>Claude Code の会話は再起動のあとも残りますか？</summary><p>会話は残ります。Claude Code が自分のファイルに保存し、Aubergine は各ターミナルがどの会話にいたかを覚えています。再起動のあと、ターミナルのタイトルバーの <strong>Resume agent</strong> がその会話で Claude Code を再び起動します。その瞬間にエージェントがしていたことは止まっていて、あなたが頼むまでやり直されません。</p></details>
+      <details><summary>macOS が夜中に自動でアップデートしても大丈夫ですか？</summary><p>コンピューターを再起動するアップデートは、ほかの再起動と同じです。動いていたプログラムは終わり、それ以外はすべて残ります。ログイン時に起動する設定（<code>aubergine service install</code>）なら、ログインした時点でサーバーがまた動いていて、キャンバスが待っています。最後のフォルダーでの新しいシェルは、Aubergine のコンテナーを再起動したときに確認しました。実際の macOS の夜間アップデートは試していません。</p></details>
+      <details><summary>tmux の知識は必要ですか？</summary><p>いいえ。インストールされている必要はあります（3.2 以降）が、Aubergine は専用のソケットと専用の設定で動かし、ステータスバーもプレフィックスキーもないので、tmux のコマンドを入力することはありません。あなた自身の tmux を使っていても、それには触れません。</p></details>
     </div>
-    <p><span lang="en" dir="ltr">Related: <a href="../claude/">Claude Code in Aubergine</a> · <a href="../queue-and-schedules/">the queue and schedules</a> · <a href="../working-copies/">working copies</a></span></p>
+    <p>関連：<a href="../claude/">Aubergine での Claude Code</a> · <a href="../queue-and-schedules/">キューとスケジュール</a> · <a href="../working-copies/">作業コピー</a></p>
   </div>
 </div>
 
@@ -213,7 +213,7 @@ aubergine describe --summary "Fixing the double redirect at sign-in"</code></pre
     <div class="close-do">
       <p>tmux 3.2 以降と Node.js 22 以降の入った macOS が必要です。<code>brew install tmux node</code> で両方が入ります。</p>
       <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="コピーしました" aria-live="polite" hidden>コピー</button></p>
-      <p class="actions"><a class="button" href="../install/">インストール</a><a class="button button-quiet" href="../run-multiple-coding-agents/">複数のコーディングエージェントを同時に動かす</a></p>
+      <p class="actions"><a class="button" href="../install/">インストール</a><a class="button button-quiet" href="../run-multiple-coding-agents/">複数のエージェントを動かす</a></p>
     </div>
   </div>
 </section>

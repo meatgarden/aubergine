@@ -404,8 +404,8 @@
     "from": "2c75df8acfc1"
   },
   "home.trust.outlive.text": {
-    "text": "Setiap terminal adalah sesi tmux: tutup browser atau mulai ulang Aubergine, dan pekerjaan Anda tetap berjalan.",
-    "from": "f913c3351663"
+    "text": "Setiap terminal adalah sesi tmux: <a href=\"/keep-terminals-after-restart/\">tutup browser atau mulai ulang Aubergine, dan pekerjaan Anda tetap berjalan</a>.",
+    "from": "94905c3b891e"
   },
   "home.trust.nomodel.name": {
     "text": "Tanpa model, tanpa kunci",
@@ -1319,6 +1319,14 @@
     "text": "Beri setiap agen checkout dan branch sendiri agar dua agen tidak pernah mengedit file yang sama.",
     "from": "58872d0caca2"
   },
+  "guides.keep.name": {
+    "text": "Menjaga terminal setelah komputer dimulai ulang",
+    "from": "6cfa04f7c3ab"
+  },
+  "guides.keep.text": {
+    "text": "Apa yang dipertahankan saat browser ditutup, saat Aubergine dimulai ulang, dan saat komputer dimulai ulang, serta cara melanjutkan dari tempat Anda berhenti.",
+    "from": "396ced3608bc"
+  },
   "guides.queue.name": {
     "text": "Antrean, For you, dan jadwal",
     "from": "61c48ccc941d"
@@ -1630,6 +1638,262 @@
   "copies.ld.a4": {
     "text": "Bukan. Ia memisahkan pekerjaan; ia tidak mengurung agen. Agen berjalan sebagai Anda dan tetap bisa membaca serta mengubah setiap file yang bisa Anda akses.",
     "from": "8b760eb225ac"
+  },
+  "keep.meta.title": {
+    "text": "Menjaga terminal setelah crash, mulai ulang, atau pembaruan | Aubergine",
+    "from": "d0521ba83d02"
+  },
+  "keep.meta.description": {
+    "text": "Apa yang terjadi pada terminal dan agen coding Anda saat browser ditutup, saat Aubergine dimulai ulang, dan saat komputer crash, dimulai ulang, atau diperbarui di malam hari, serta cara melanjutkan dari tempat Anda berhenti.",
+    "from": "4f824d2bcf4e"
+  },
+  "keep.crumb": {
+    "text": "Setelah mulai ulang",
+    "from": "b287f32fbfcc"
+  },
+  "keep.title": {
+    "text": "Terminal Anda tetap ada saat komputer dimulai ulang",
+    "from": "be3fd58999ae"
+  },
+  "keep.lead": {
+    "text": "Menutup browser atau memulai ulang Aubergine tidak menghilangkan apa pun: setiap terminal tetap berjalan. Memulai ulang komputer mengakhiri apa yang sedang berjalan, dan Aubergine mengembalikan semua yang ada di sekitarnya, sehingga Anda melanjutkan dari tempat Anda berhenti, bukan mulai dari nol.",
+    "from": "a30f93263e44"
+  },
+  "keep.table.title": {
+    "text": "Apa yang terjadi saat…",
+    "from": "2e3d1d162e51"
+  },
+  "keep.table.intro": {
+    "text": "Setiap terminal adalah shell di sesi tmux, yang berjalan terpisah dari browser dan dari server Aubergine. Isinya ada di dua tempat: shell yang berjalan, yang hanya disimpan tmux, dan semua yang dikatakan tentang terminal itu, yang ditulis Aubergine ke sebuah file di folder datanya setiap kali ada perubahan.",
+    "from": "ee20243273bd"
+  },
+  "keep.table.thing": {
+    "text": "Apa",
+    "from": "f8cf83a76a98"
+  },
+  "keep.table.browser": {
+    "text": "Browser ditutup, crash, atau diperbarui, atau Anda menutup tab",
+    "from": "0a7d90fd549e"
+  },
+  "keep.table.server": {
+    "text": "Aubergine berhenti, dimulai ulang, atau diperbarui",
+    "from": "1c6408e3eb21"
+  },
+  "keep.table.computer": {
+    "text": "Komputer crash, dimulai ulang, atau memasang pembaruan",
+    "from": "321c23263fa9"
+  },
+  "keep.table.browserShort": {
+    "text": "Browser ditutup",
+    "from": "6a63c6750f2a"
+  },
+  "keep.table.serverShort": {
+    "text": "Aubergine dimulai ulang",
+    "from": "88d2ef622400"
+  },
+  "keep.table.computerShort": {
+    "text": "Komputer dimulai ulang",
+    "from": "515aa3442054"
+  },
+  "keep.row.running": {
+    "text": "Program dan agen yang berjalan",
+    "from": "aa6584073938"
+  },
+  "keep.row.scrollback": {
+    "text": "Apa yang ditampilkan terminal (scrollback-nya)",
+    "from": "ae850a03d2bb"
+  },
+  "keep.row.place": {
+    "text": "Tempatnya di kanvas, nama, warna, tag, field, dan link",
+    "from": "d8942ea955fb"
+  },
+  "keep.row.note": {
+    "text": "Catatannya: ringkasan dan log",
+    "from": "bd09d21420fd"
+  },
+  "keep.row.folder": {
+    "text": "Folder tempat ia berada",
+    "from": "93d6eac7960d"
+  },
+  "keep.row.agent": {
+    "text": "Percakapan agen",
+    "from": "edc534789af1"
+  },
+  "keep.row.copies": {
+    "text": "Salinan kerja dan branch-nya",
+    "from": "5d15d9f5fde9"
+  },
+  "keep.row.queue": {
+    "text": "Antrean, run, dan jadwal",
+    "from": "862df801acb6"
+  },
+  "keep.cell.runs": {
+    "text": "tetap berjalan",
+    "from": "8b35a116c9a8"
+  },
+  "keep.cell.ends": {
+    "text": "berakhir",
+    "from": "361e48d0308f"
+  },
+  "keep.cell.there": {
+    "text": "masih ada",
+    "from": "007cce612ae7"
+  },
+  "keep.cell.gone": {
+    "text": "hilang",
+    "from": "283bb9deef02"
+  },
+  "keep.cell.fresh": {
+    "text": "shell baru di folder yang sama",
+    "from": "0897ff42a469"
+  },
+  "keep.cell.goes": {
+    "text": "berlanjut",
+    "from": "d17f7dd93885"
+  },
+  "keep.cell.resume": {
+    "text": "<strong>Resume agent</strong> melanjutkannya (Claude Code)",
+    "from": "b65d3c8c86df"
+  },
+  "keep.cell.late": {
+    "text": "masih ada; waktu yang terlewat berjalan terlambat",
+    "from": "0c5a51a9cc07"
+  },
+  "keep.table.parked": {
+    "text": "Terminal yang disimpan dipertahankan dengan cara yang sama dan juga mendapat shell baru. Terminal yang shell-nya sudah berakhir sebelumnya tetap berakhir, dengan <strong>Restart here</strong> (mulai ulang di sini).",
+    "from": "6ccfc616c13e"
+  },
+  "keep.table.update": {
+    "text": "Setelah pembaruan, terminal yang sudah terbuka tetap memakai apa yang dibawa shell-nya saat dimulai (<code>PATH</code>-nya dan integrasi shell Aubergine) sampai shell itu dimulai lagi. Jika Aubergine dimulai saat login, jalankan lagi <code>aubergine service install</code> setelah pembaruan alih-alih memulai ulang server secara manual.",
+    "from": "fb1239269602"
+  },
+  "keep.back.title": {
+    "text": "Setelah mulai ulang: kembali bekerja",
+    "from": "8a4d5f07f8a6"
+  },
+  "keep.back.start": {
+    "text": "<strong>Mulai Aubergine.</strong> Jika ia dimulai saat login (<code>aubergine service install</code>, hanya macOS), ia sudah berjalan begitu Anda login, dan launchd memulainya lagi jika berhenti. Jika tidak, mulai dan buka halamannya:",
+    "from": "caf3ca498329"
+  },
+  "keep.back.canvas": {
+    "text": "<strong>Kanvas seperti saat Anda tinggalkan.</strong> Setiap terminal ada di tempatnya dengan nama, warna, tag, field, link, dan catatannya, kini sebuah shell baru di folder terakhir tempat Aubergine melihatnya, atau di folder bawaan Anda jika folder itu sudah tidak ada. Tidak ada yang diketik atau dijalankan lagi.",
+    "from": "9354ae2c51e0"
+  },
+  "keep.back.resume": {
+    "text": "<strong>Lanjutkan agen Anda.</strong> Di tempat Claude Code berjalan dan Aubergine mengetahui percakapannya (ia dimulai dari Aubergine), bilah judul terminal menawarkan <strong>Resume agent</strong> (lanjutkan agen): ia menjalankan Claude Code lagi di percakapan itu. Pada terminal yang sedang dalam sebuah run workflow, ia juga memberi tahu agen tentang run itu lagi, sehingga agen melanjutkan dari langkah tempat run berada.",
+    "from": "dadde3e3c41f"
+  },
+  "keep.back.read": {
+    "text": "<strong>Lihat sampai mana masing-masing.</strong> <strong>Details</strong> (detail) di judul terminal menampilkan apa yang diketahui tentangnya (langkah sebuah run dan laporan terakhirnya, folder, tag), ringkasannya, field dan link-nya, serta log-nya di bawah <strong>Log</strong>. Mengarahkan penunjuk ke nama terminal di daftar menampilkan rekapnya.",
+    "from": "93f57bf9eb94"
+  },
+  "keep.back.history": {
+    "text": "<strong>Temukan percakapan yang tidak ada di kanvas.</strong> <strong>Past conversations…</strong> (percakapan sebelumnya) di palet (<code>⌘K</code>), atau “Past conversations in this folder…” di detail terminal, mendaftar percakapan Claude Code sebelumnya di sebuah folder dan membuka salah satunya di kanvas.",
+    "from": "237fdc4c37c5"
+  },
+  "keep.back.other": {
+    "text": "Agen lain tidak punya <strong>Resume agent</strong>, karena Aubergine tidak mengetahui percakapannya: jalankan lagi di terminal yang sama dengan cara melanjutkan milik agen itu sendiri, dan baca catatannya untuk memberi tahu sampai mana ia.",
+    "from": "793f54a1a40a"
+  },
+  "keep.pic.caption": {
+    "text": "Detail sebuah terminal: langkah sebuah run dan laporan terakhirnya, folder, tag, dan field. Semuanya dipertahankan setelah komputer dimulai ulang; terminal langsung di sebelahnya tidak.",
+    "from": "d9f6211ba821"
+  },
+  "keep.lost.title": {
+    "text": "Apa yang hilang, dan apa yang bisa dilakukan",
+    "from": "14285bfff601"
+  },
+  "keep.lost.running": {
+    "text": "<strong>Yang sedang berjalan berakhir.</strong> Build, uji, server, atau agen yang sedang bekerja berhenti bersama komputer, dan Aubergine tidak memulai satu pun lagi dengan sendirinya. Mulai lagi sendiri; pekerjaan yang harus bertahan melewati mulai ulang sebaiknya ada di sesuatu yang dibuat untuk itu, seperti layanan sistem Anda.",
+    "from": "e46f81e690a3"
+  },
+  "keep.lost.work": {
+    "text": "<strong>Pekerjaan yang dilacak Aubergine menunggu Anda.</strong> Sebuah run workflow mempertahankan langkahnya dan setiap laporan yang diserahkan. Tugas di antrean tetap di tempatnya; tugas yang sedang dimulai tepat saat server berhenti ditandai gagal, dengan satu kalimat, dan tidak ada yang dicoba lagi dengan sendirinya. Waktu jadwal yang terlewat saat server berhenti dijalankan sekali, terlambat, jika belum lewat enam jam (<code>schedules.lateWithinHours</code>), dan jika tidak ditandai terlewat.",
+    "from": "3030fe221d28"
+  },
+  "keep.lost.scrollback": {
+    "text": "<strong>Scrollback hilang.</strong> Selama shell berjalan, tmux menyimpan 50.000 baris terakhir yang dicetaknya, dan pencarian di palet membacanya. Aubergine tidak merekam apa yang dicetak terminal, jadi setelah komputer dimulai ulang tidak ada yang bisa dikembalikan, dan pencarian hanya menemukan apa yang dicetak sejak itu.",
+    "from": "aaed4fac1b79"
+  },
+  "keep.lost.away": {
+    "text": "<strong>“Selama Anda pergi” mulai dari awal.</strong> Ia disimpan di memori server, bukan di file, jadi setelah server dimulai ia hanya tahu apa yang berubah sejak itu, dan mengatakannya.",
+    "from": "6731aefcf508"
+  },
+  "keep.habit.title": {
+    "text": "Kebiasaan yang membuat mulai ulang murah",
+    "from": "bd4d96a2eb2b"
+  },
+  "keep.habit.text": {
+    "text": "Catatan adalah yang bertahan, jadi minta agen menulis di sana sambil bekerja: sebuah keputusan, sebuah hasil, di mana mereka berhenti. Claude Code yang dimulai dari Aubergine menambahkan setiap prompt yang Anda kirim ke log dengan sendirinya, dan saat mulai diminta memberi nama terminalnya serta menjaga ringkasannya. Agen mana pun bisa melakukan hal yang sama dengan perintah berikut, yang dijelaskan <code>aubergine guide</code> kepadanya:",
+    "from": "f0806ca11e08"
+  },
+  "keep.habit.recap": {
+    "text": "Sebelum berhenti untuk hari itu, tekan <strong>Ask its agent for a recap</strong> (minta rekap ke agennya) di detail terminal: agen menulis posisinya dengan <code>aubergine recap --write</code>, dan rekap itu disimpan bersama terminal.",
+    "from": "1b909d393ab1"
+  },
+  "keep.sleep.title": {
+    "text": "Menutup laptop, mode tidur, dan browser",
+    "from": "393a7e53106a"
+  },
+  "keep.sleep.sleep": {
+    "text": "<strong>Mode tidur bukan mulai ulang.</strong> Menutup layar laptop biasanya membuatnya tidur: program berhenti sejenak dan berlanjut saat ia bangun, dan tidak ada yang di kolom terakhir tabel terjadi. Aubergine tidak menjaga komputer tetap terjaga dan tidak membangunkannya, jadi jadwal yang waktunya terlewat selama tidur berjalan terlambat, atau terlewat, seperti di atas.",
+    "from": "f90d61fc3eae"
+  },
+  "keep.sleep.browser": {
+    "text": "<strong>Menutup browser, tab, atau jendelanya</strong>, atau pembaruan browser yang memulainya ulang, tidak mengakhiri apa pun. Buka lagi halamannya (<code>aubergine open</code> membukanya dalam keadaan masuk) dan setiap terminal digambar dari tmux seperti keadaannya sekarang. Halaman yang dibiarkan terbuka tersambung lagi dengan sendirinya saat server kembali.",
+    "from": "40f09b6f29cb"
+  },
+  "keep.sleep.server": {
+    "text": "<strong>Menutup jendela tempat <code>aubergine start</code> berjalan</strong>, atau menekan Ctrl+C di sana, menghentikan server dan tidak ada yang lain: kolom tengah tabel.",
+    "from": "1cd0a9349c3d"
+  },
+  "keep.sleep.wsl": {
+    "text": "<strong>Di Windows dengan WSL</strong>, berhentinya WSL, karena Windows dimulai ulang atau setelah <code>wsl --shutdown</code>, bagi Aubergine adalah komputer yang dimulai ulang. Lihat <a href=\"/windows/\">Windows dengan WSL</a>.",
+    "from": "0c01d734b5c3"
+  },
+  "keep.q.restore.q": {
+    "text": "Bisakah Aubergine memulihkan terminal saya setelah reboot?",
+    "from": "a2d8fea94c00"
+  },
+  "keep.q.restore.a": {
+    "text": "Ya, semuanya kecuali yang sedang berjalan di dalamnya. Setiap terminal kembali ke tempatnya di kanvas dengan nama, warna, catatan, tag, field, dan link-nya, sebagai shell baru di folder terakhirnya. Program yang berjalan di dalamnya tidak dimulai lagi; untuk Claude Code, <strong>Resume agent</strong> melanjutkan percakapannya.",
+    "from": "8be8d8045b34"
+  },
+  "keep.q.output.q": {
+    "text": "Apakah Aubergine menyimpan output dan riwayat terminal saya?",
+    "from": "7463118541ed"
+  },
+  "keep.q.output.a": {
+    "text": "Output hanya selama shell berjalan: tmux menyimpan 50.000 baris scrollback setiap terminal, dan menutup browser atau memulai ulang Aubergine tidak menghilangkan sedikit pun. Setelah komputer dimulai ulang, output itu hilang, karena Aubergine tidak merekam output terminal. Riwayat perintah yang Anda ketik, yang dimunculkan lagi oleh panah atas, adalah file milik shell Anda sendiri, disimpan oleh shell Anda seperti biasa.",
+    "from": "a88ba263b084"
+  },
+  "keep.q.claude.q": {
+    "text": "Apakah percakapan Claude Code saya bertahan setelah mulai ulang?",
+    "from": "c87cda5e8a7e"
+  },
+  "keep.q.claude.a": {
+    "text": "Percakapannya, ya: Claude Code menyimpannya di file miliknya sendiri, dan Aubergine mengingat percakapan mana tempat setiap terminal berada. Setelah mulai ulang, <strong>Resume agent</strong> di bilah judul terminal menjalankan Claude Code lagi di percakapan itu. Apa yang sedang dikerjakan agen saat itu sudah berhenti, dan tidak dikerjakan lagi sampai Anda minta.",
+    "from": "0d163dc56b89"
+  },
+  "keep.q.macos.q": {
+    "text": "Apakah ini berfungsi saat macOS memperbarui dirinya di malam hari?",
+    "from": "dd58c7a1e65c"
+  },
+  "keep.q.macos.a": {
+    "text": "Pembaruan yang memulai ulang komputer adalah mulai ulang seperti yang lain: program yang berjalan berakhir dan semua yang lain dipertahankan. Dengan mulai saat login (<code>aubergine service install</code>), server berjalan lagi begitu Anda login, dan kanvas menunggu. Shell baru di folder terakhirnya terlihat saat sebuah kontainer Aubergine dimulai ulang; pembaruan macOS sungguhan di malam hari belum dicoba.",
+    "from": "06c25c70de97"
+  },
+  "keep.q.tmux.q": {
+    "text": "Apakah saya perlu paham tmux?",
+    "from": "3d7564a5b7f9"
+  },
+  "keep.q.tmux.a": {
+    "text": "Tidak. tmux harus terpasang (3.2 atau lebih baru), dan Aubergine menjalankannya di socket sendiri dengan pengaturan sendiri, tanpa bilah status dan tanpa tombol prefiks, jadi Anda tidak pernah mengetik perintah tmux. tmux milik Anda sendiri, jika Anda memakainya, tidak disentuh.",
+    "from": "d33e0b313f18"
+  },
+  "keep.related": {
+    "text": "Terkait: <a href=\"/claude/\">Claude Code di Aubergine</a> · <a href=\"/queue-and-schedules/\">antrean dan jadwal</a> · <a href=\"/working-copies/\">salinan kerja</a>",
+    "from": "730944daab4e"
   },
   "queue.meta.title": {
     "text": "Antrean, daftar For you, dan jadwal | Aubergine",

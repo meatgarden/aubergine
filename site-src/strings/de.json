@@ -404,8 +404,8 @@
     "from": "2c75df8acfc1"
   },
   "home.trust.outlive.text": {
-    "text": "Jedes Terminal ist eine tmux-Session: Schließ den Browser oder starte Aubergine neu, und deine Arbeit läuft weiter.",
-    "from": "f913c3351663"
+    "text": "Jedes Terminal ist eine tmux-Session: <a href=\"/keep-terminals-after-restart/\">Schließ den Browser oder starte Aubergine neu, und deine Arbeit läuft weiter</a>.",
+    "from": "94905c3b891e"
   },
   "home.trust.nomodel.name": {
     "text": "Kein Modell, kein Schlüssel",
@@ -1319,6 +1319,14 @@
     "text": "Gib jedem Agenten einen eigenen Checkout und Branch, damit zwei Agenten nie dieselben Dateien bearbeiten.",
     "from": "58872d0caca2"
   },
+  "guides.keep.name": {
+    "text": "Terminals nach einem Neustart behalten",
+    "from": "6cfa04f7c3ab"
+  },
+  "guides.keep.text": {
+    "text": "Was das Schließen des Browsers, ein Neustart von Aubergine und ein Neustart des Rechners jeweils behalten, und wie du dort weitermachst, wo du warst.",
+    "from": "396ced3608bc"
+  },
   "guides.queue.name": {
     "text": "Die Warteschlange, For you und Zeitpläne",
     "from": "61c48ccc941d"
@@ -1630,6 +1638,262 @@
   "copies.ld.a4": {
     "text": "Nein. Sie hält Arbeit getrennt; sie sperrt keinen Agenten ein. Der Agent läuft als du und kann weiterhin jede Datei lesen und ändern, die du lesen und ändern kannst.",
     "from": "8b760eb225ac"
+  },
+  "keep.meta.title": {
+    "text": "Terminals nach Absturz, Neustart oder Update behalten | Aubergine",
+    "from": "d0521ba83d02"
+  },
+  "keep.meta.description": {
+    "text": "Was mit deinen Terminals und Coding-Agenten passiert, wenn der Browser zugeht, wenn Aubergine neu startet und wenn der Rechner abstürzt, neu startet oder sich nachts aktualisiert, und wie du dort weitermachst, wo du warst.",
+    "from": "4f824d2bcf4e"
+  },
+  "keep.crumb": {
+    "text": "Nach einem Neustart",
+    "from": "b287f32fbfcc"
+  },
+  "keep.title": {
+    "text": "Deine Terminals bleiben, wenn der Rechner neu startet",
+    "from": "be3fd58999ae"
+  },
+  "keep.lead": {
+    "text": "Den Browser zu schließen oder Aubergine neu zu starten verliert nichts: Jedes Terminal läuft weiter. Ein Neustart des Rechners beendet, was lief, und Aubergine holt alles drumherum zurück, damit du dort weitermachst, wo du warst, statt von vorn zu beginnen.",
+    "from": "a30f93263e44"
+  },
+  "keep.table.title": {
+    "text": "Was passiert, wenn…",
+    "from": "2e3d1d162e51"
+  },
+  "keep.table.intro": {
+    "text": "Jedes Terminal ist eine Shell in einer tmux-Session, die getrennt vom Browser und vom Server von Aubergine läuft. Was es enthält, liegt an zwei Orten: die laufende Shell, die nur tmux hält, und alles, was über das Terminal gesagt ist, das Aubergine bei jeder Änderung in eine Datei in seinem Datenordner schreibt.",
+    "from": "ee20243273bd"
+  },
+  "keep.table.thing": {
+    "text": "Was",
+    "from": "f8cf83a76a98"
+  },
+  "keep.table.browser": {
+    "text": "Der Browser schließt, stürzt ab oder aktualisiert sich, oder du schließt den Tab",
+    "from": "0a7d90fd549e"
+  },
+  "keep.table.server": {
+    "text": "Aubergine hält an, startet neu oder wird aktualisiert",
+    "from": "1c6408e3eb21"
+  },
+  "keep.table.computer": {
+    "text": "Der Rechner stürzt ab, startet neu oder installiert ein Update",
+    "from": "321c23263fa9"
+  },
+  "keep.table.browserShort": {
+    "text": "Browser zu",
+    "from": "6a63c6750f2a"
+  },
+  "keep.table.serverShort": {
+    "text": "Aubergine neu gestartet",
+    "from": "88d2ef622400"
+  },
+  "keep.table.computerShort": {
+    "text": "Rechner neu gestartet",
+    "from": "515aa3442054"
+  },
+  "keep.row.running": {
+    "text": "Laufende Programme und Agenten",
+    "from": "aa6584073938"
+  },
+  "keep.row.scrollback": {
+    "text": "Was das Terminal zeigte (sein Scrollback)",
+    "from": "ae850a03d2bb"
+  },
+  "keep.row.place": {
+    "text": "Sein Platz auf dem Canvas, Name, Farbe, Tags, Felder und Links",
+    "from": "d8942ea955fb"
+  },
+  "keep.row.note": {
+    "text": "Seine Notiz: die Zusammenfassung und das Log",
+    "from": "bd09d21420fd"
+  },
+  "keep.row.folder": {
+    "text": "Der Ordner, in dem es war",
+    "from": "93d6eac7960d"
+  },
+  "keep.row.agent": {
+    "text": "Die Unterhaltung eines Agenten",
+    "from": "edc534789af1"
+  },
+  "keep.row.copies": {
+    "text": "Arbeitskopien und ihre Branches",
+    "from": "5d15d9f5fde9"
+  },
+  "keep.row.queue": {
+    "text": "Die Warteschlange, Läufe und Zeitpläne",
+    "from": "862df801acb6"
+  },
+  "keep.cell.runs": {
+    "text": "laufen weiter",
+    "from": "8b35a116c9a8"
+  },
+  "keep.cell.ends": {
+    "text": "enden",
+    "from": "361e48d0308f"
+  },
+  "keep.cell.there": {
+    "text": "noch da",
+    "from": "007cce612ae7"
+  },
+  "keep.cell.gone": {
+    "text": "weg",
+    "from": "283bb9deef02"
+  },
+  "keep.cell.fresh": {
+    "text": "eine frische Shell im selben Ordner",
+    "from": "0897ff42a469"
+  },
+  "keep.cell.goes": {
+    "text": "geht weiter",
+    "from": "d17f7dd93885"
+  },
+  "keep.cell.resume": {
+    "text": "<strong>Resume agent</strong> setzt sie fort (Claude Code)",
+    "from": "b65d3c8c86df"
+  },
+  "keep.cell.late": {
+    "text": "noch da; eine verstrichene Zeit läuft verspätet",
+    "from": "0c5a51a9cc07"
+  },
+  "keep.table.parked": {
+    "text": "Ein geparktes Terminal wird genauso behalten und bekommt auch eine frische Shell. Ein Terminal, dessen Shell schon vorher geendet hatte, bleibt beendet, mit <strong>Restart here</strong> (hier neu starten).",
+    "from": "6ccfc616c13e"
+  },
+  "keep.table.update": {
+    "text": "Nach einem Update behält ein Terminal, das schon offen war, das, womit seine Shell gestartet ist (seinen <code>PATH</code> und die Shell-Integration von Aubergine), bis diese Shell neu gestartet wird. Startet Aubergine beim Anmelden, führ nach einem Update <code>aubergine service install</code> noch einmal aus, statt den Server von Hand neu zu starten.",
+    "from": "fb1239269602"
+  },
+  "keep.back.title": {
+    "text": "Nach einem Neustart: zurück an die Arbeit",
+    "from": "8a4d5f07f8a6"
+  },
+  "keep.back.start": {
+    "text": "<strong>Starte Aubergine.</strong> Startet es beim Anmelden (<code>aubergine service install</code>, nur macOS), läuft es, sobald du angemeldet bist, und launchd startet es wieder, wenn es anhält. Sonst starte es und öffne die Seite:",
+    "from": "caf3ca498329"
+  },
+  "keep.back.canvas": {
+    "text": "<strong>Der Canvas ist, wie du ihn verlassen hast.</strong> Jedes Terminal steht an seinem Platz mit Name, Farbe, Tags, Feldern, Links und Notiz, jetzt eine frische Shell im letzten Ordner, in dem Aubergine es gesehen hat, oder in deinem Standardordner, wenn es den nicht mehr gibt. Nichts wird erneut getippt oder ausgeführt.",
+    "from": "9354ae2c51e0"
+  },
+  "keep.back.resume": {
+    "text": "<strong>Setz deine Agenten fort.</strong> Wo Claude Code lief und Aubergine seine Unterhaltung kennt (es wurde aus Aubergine gestartet), bietet die Titelleiste des Terminals <strong>Resume agent</strong> (Agent fortsetzen) an: Es startet Claude Code in dieser Unterhaltung wieder. Bei einem Terminal, das an einem Lauf eines Workflows hängt, erzählt es dem Agenten auch noch einmal vom Lauf, damit er bei dem Schritt weitermacht, an dem der Lauf steht.",
+    "from": "dadde3e3c41f"
+  },
+  "keep.back.read": {
+    "text": "<strong>Sieh nach, wo jedes stand.</strong> <strong>Details</strong> im Titel eines Terminals zeigt, was über es bekannt ist (den Schritt eines Laufs und seinen letzten Bericht, den Ordner, die Tags), seine Zusammenfassung, seine Felder und Links und sein Log unter <strong>Log</strong>. Zeigst du in der Liste auf den Namen eines Terminals, erscheint seine Zusammenfassung des Stands.",
+    "from": "93f57bf9eb94"
+  },
+  "keep.back.history": {
+    "text": "<strong>Finde eine Unterhaltung, die nicht auf dem Canvas ist.</strong> <strong>Past conversations…</strong> (frühere Unterhaltungen) in der Palette (<code>⌘K</code>) oder „Past conversations in this folder…“ in den Details eines Terminals listet die früheren Unterhaltungen von Claude Code in einem Ordner und öffnet eine auf dem Canvas.",
+    "from": "237fdc4c37c5"
+  },
+  "keep.back.other": {
+    "text": "Jeder andere Agent hat kein <strong>Resume agent</strong>, weil Aubergine seine Unterhaltung nicht kennt: Starte ihn im selben Terminal mit der eigenen Fortsetzen-Funktion dieses Agenten wieder und lies die Notiz, um ihm zu sagen, wo er stand.",
+    "from": "793f54a1a40a"
+  },
+  "keep.pic.caption": {
+    "text": "Die Details eines Terminals: der Schritt eines Laufs und sein letzter Bericht, der Ordner, Tags und Felder. All das bleibt über einen Neustart des Rechners erhalten; das laufende Terminal daneben nicht.",
+    "from": "d9f6211ba821"
+  },
+  "keep.lost.title": {
+    "text": "Was verloren geht, und was du tun kannst",
+    "from": "14285bfff601"
+  },
+  "keep.lost.running": {
+    "text": "<strong>Was lief, endet.</strong> Ein Build, ein Testlauf, ein Server oder ein Agent mitten in der Arbeit hält mit dem Rechner an, und Aubergine startet keins davon von selbst wieder. Starte sie selbst neu; ein Job, der einen Neustart überdauern muss, gehört in etwas, das dafür gemacht ist, etwa einen Dienst deines Systems.",
+    "from": "e46f81e690a3"
+  },
+  "keep.lost.work": {
+    "text": "<strong>Arbeit, die Aubergine verfolgt, wartet auf dich.</strong> Ein Lauf eines Workflows behält seinen Schritt und jeden abgegebenen Bericht. Aufgaben in der Warteschlange behalten ihren Platz; eine, die gerade gestartet wurde, als der Server anhielt, wird mit einem Satz als fehlgeschlagen markiert, und nichts wird von selbst erneut versucht. Eine Zeit eines Zeitplans, die verstrich, während der Server stand, läuft einmal, verspätet, wenn sie weniger als sechs Stunden zurückliegt (<code>schedules.lateWithinHours</code>), und wird sonst als verpasst markiert.",
+    "from": "3030fe221d28"
+  },
+  "keep.lost.scrollback": {
+    "text": "<strong>Der Scrollback ist weg.</strong> Solange eine Shell läuft, hält tmux die letzten 50.000 Zeilen, die sie ausgegeben hat, und die Suche der Palette liest sie. Aubergine zeichnet nicht auf, was ein Terminal ausgibt, also gibt es nach einem Neustart des Rechners nichts zurückzuholen, und die Suche findet nur, was seitdem ausgegeben wurde.",
+    "from": "aaed4fac1b79"
+  },
+  "keep.lost.away": {
+    "text": "<strong>„Während du weg warst“ fängt neu an.</strong> Es liegt im Speicher des Servers, nicht in einer Datei, also weiß es nach dem Start des Servers nur, was sich seitdem geändert hat, und sagt das.",
+    "from": "6731aefcf508"
+  },
+  "keep.habit.title": {
+    "text": "Die Gewohnheit, die einen Neustart billig macht",
+    "from": "bd4d96a2eb2b"
+  },
+  "keep.habit.text": {
+    "text": "Die Notiz ist, was überlebt, also lass Agenten unterwegs hineinschreiben: eine Entscheidung, ein Ergebnis, wo sie aufgehört haben. Bei einem aus Aubergine gestarteten Claude Code kommt jeder Prompt, den du schickst, von selbst ins Log, und er wird zu Beginn gebeten, sein Terminal zu benennen und seine Zusammenfassung zu pflegen. Jeder Agent kann dasselbe mit diesen Befehlen tun, die <code>aubergine guide</code> ihm erklärt:",
+    "from": "f0806ca11e08"
+  },
+  "keep.habit.recap": {
+    "text": "Bevor du für heute aufhörst, drück <strong>Ask its agent for a recap</strong> (den Agenten um eine Zusammenfassung bitten) in den Details eines Terminals: Der Agent schreibt mit <code>aubergine recap --write</code>, wo er steht, und die Zusammenfassung bleibt beim Terminal.",
+    "from": "1b909d393ab1"
+  },
+  "keep.sleep.title": {
+    "text": "Laptop zuklappen, Ruhezustand und der Browser",
+    "from": "393a7e53106a"
+  },
+  "keep.sleep.sleep": {
+    "text": "<strong>Ruhezustand ist kein Neustart.</strong> Den Deckel eines Laptops zuzuklappen schickt ihn meist in den Ruhezustand: Programme pausieren und laufen weiter, wenn er aufwacht, und nichts aus der letzten Spalte der Tabelle passiert. Aubergine hält den Rechner weder wach noch weckt es ihn, also läuft ein Zeitplan, dessen Zeit im Ruhezustand verstrich, verspätet oder wird verpasst, wie oben.",
+    "from": "f90d61fc3eae"
+  },
+  "keep.sleep.browser": {
+    "text": "<strong>Den Browser, einen Tab oder sein Fenster zu schließen</strong>, oder ein Browser-Update, das ihn neu startet, beendet nichts. Öffne die Seite wieder (<code>aubergine open</code> öffnet sie angemeldet), und jedes Terminal wird aus tmux so gezeichnet, wie es jetzt ist. Eine offen gelassene Seite verbindet sich von selbst neu, wenn der Server zurück ist.",
+    "from": "40f09b6f29cb"
+  },
+  "keep.sleep.server": {
+    "text": "<strong>Das Fenster zu schließen, in dem <code>aubergine start</code> läuft</strong>, oder dort Ctrl+C zu drücken, hält den Server an und sonst nichts: die mittlere Spalte der Tabelle.",
+    "from": "1cd0a9349c3d"
+  },
+  "keep.sleep.wsl": {
+    "text": "<strong>Unter Windows mit WSL</strong> ist ein Anhalten von WSL, weil Windows neu startet oder nach <code>wsl --shutdown</code>, für Aubergine ein Neustart des Rechners. Siehe <a href=\"/windows/\">Windows mit WSL</a>.",
+    "from": "0c01d734b5c3"
+  },
+  "keep.q.restore.q": {
+    "text": "Kann Aubergine meine Terminals nach einem Neustart wiederherstellen?",
+    "from": "a2d8fea94c00"
+  },
+  "keep.q.restore.a": {
+    "text": "Ja, alles außer dem, was in ihnen lief. Jedes Terminal kommt an seinen Platz auf dem Canvas zurück, mit Name, Farbe, Notiz, Tags, Feldern und Links, als frische Shell in seinem letzten Ordner. Die Programme, die darin liefen, werden nicht wieder gestartet; für Claude Code setzt <strong>Resume agent</strong> die Unterhaltung fort.",
+    "from": "8be8d8045b34"
+  },
+  "keep.q.output.q": {
+    "text": "Behält Aubergine die Ausgabe und den Verlauf meines Terminals?",
+    "from": "7463118541ed"
+  },
+  "keep.q.output.a": {
+    "text": "Die Ausgabe nur, solange die Shell läuft: tmux hält 50.000 Zeilen Scrollback je Terminal, und den Browser zu schließen oder Aubergine neu zu starten verliert nichts davon. Nach einem Neustart des Rechners ist sie weg, weil Aubergine keine Terminal-Ausgabe aufzeichnet. Der Verlauf der Befehle, die du getippt hast und die der Pfeil nach oben zurückholt, ist die eigene Datei deiner Shell und wird von deiner Shell wie immer behalten.",
+    "from": "a88ba263b084"
+  },
+  "keep.q.claude.q": {
+    "text": "Überlebt meine Claude-Code-Unterhaltung einen Neustart?",
+    "from": "c87cda5e8a7e"
+  },
+  "keep.q.claude.a": {
+    "text": "Die Unterhaltung, ja: Claude Code behält sie in seinen eigenen Dateien, und Aubergine merkt sich, in welcher jedes Terminal war. Nach dem Neustart startet <strong>Resume agent</strong> in der Titelleiste des Terminals Claude Code in dieser Unterhaltung wieder. Was der Agent in dem Moment tat, hat aufgehört und wird erst wieder getan, wenn du darum bittest.",
+    "from": "0d163dc56b89"
+  },
+  "keep.q.macos.q": {
+    "text": "Funktioniert es, wenn sich macOS nachts selbst aktualisiert?",
+    "from": "dd58c7a1e65c"
+  },
+  "keep.q.macos.a": {
+    "text": "Ein Update, das den Rechner neu startet, ist ein Neustart wie jeder andere: Laufende Programme enden, alles andere bleibt. Mit dem Start beim Anmelden (<code>aubergine service install</code>) läuft der Server wieder, sobald du dich anmeldest, und der Canvas wartet. Frische Shells in ihren letzten Ordnern wurden beim Neustart eines Containers von Aubergine gesehen; ein echtes nächtliches macOS-Update wurde nicht ausprobiert.",
+    "from": "06c25c70de97"
+  },
+  "keep.q.tmux.q": {
+    "text": "Muss ich tmux können?",
+    "from": "3d7564a5b7f9"
+  },
+  "keep.q.tmux.a": {
+    "text": "Nein. Es muss installiert sein (3.2 oder neuer), und Aubergine betreibt es auf einem eigenen Socket mit eigenen Einstellungen, ohne Statusleiste und ohne Präfix-Taste, sodass du nie einen tmux-Befehl tippst. Dein eigenes tmux, falls du eins benutzt, wird nicht angefasst.",
+    "from": "d33e0b313f18"
+  },
+  "keep.related": {
+    "text": "Siehe auch: <a href=\"/claude/\">Claude Code in Aubergine</a> · <a href=\"/queue-and-schedules/\">die Warteschlange und Zeitpläne</a> · <a href=\"/working-copies/\">Arbeitskopien</a>",
+    "from": "730944daab4e"
   },
   "queue.meta.title": {
     "text": "Die Warteschlange, die For-you-Liste und Zeitpläne | Aubergine",

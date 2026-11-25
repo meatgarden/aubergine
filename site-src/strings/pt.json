@@ -404,8 +404,8 @@
     "from": "2c75df8acfc1"
   },
   "home.trust.outlive.text": {
-    "text": "Cada terminal é uma sessão do tmux: feche o navegador ou reinicie o Aubergine e seu trabalho continua rodando.",
-    "from": "f913c3351663"
+    "text": "Cada terminal é uma sessão do tmux: <a href=\"/keep-terminals-after-restart/\">feche o navegador ou reinicie o Aubergine e seu trabalho continua rodando</a>.",
+    "from": "94905c3b891e"
   },
   "home.trust.nomodel.name": {
     "text": "Sem modelo, sem chave",
@@ -1319,6 +1319,14 @@
     "text": "Dê a cada agente seu próprio checkout e branch para que dois agentes nunca editem os mesmos arquivos.",
     "from": "58872d0caca2"
   },
+  "guides.keep.name": {
+    "text": "Mantenha seus terminais depois de reiniciar",
+    "from": "6cfa04f7c3ab"
+  },
+  "guides.keep.text": {
+    "text": "O que fechar o navegador, reiniciar o Aubergine e reiniciar o computador mantêm, e como retomar de onde você parou.",
+    "from": "396ced3608bc"
+  },
   "guides.queue.name": {
     "text": "A fila, For you e os agendamentos",
     "from": "61c48ccc941d"
@@ -1630,6 +1638,262 @@
   "copies.ld.a4": {
     "text": "Não. Ela mantém o trabalho separado; não prende um agente. O agente roda como você e ainda pode ler e alterar qualquer arquivo que você pode.",
     "from": "8b760eb225ac"
+  },
+  "keep.meta.title": {
+    "text": "Mantenha seus terminais após uma falha, uma reinicialização ou uma atualização | Aubergine",
+    "from": "d0521ba83d02"
+  },
+  "keep.meta.description": {
+    "text": "O que acontece com seus terminais e agentes de código quando o navegador fecha, quando o Aubergine reinicia e quando o computador trava, reinicia ou se atualiza durante a noite, e como retomar de onde você parou.",
+    "from": "4f824d2bcf4e"
+  },
+  "keep.crumb": {
+    "text": "Depois de reiniciar",
+    "from": "b287f32fbfcc"
+  },
+  "keep.title": {
+    "text": "Mantenha seus terminais quando o computador reinicia",
+    "from": "be3fd58999ae"
+  },
+  "keep.lead": {
+    "text": "Fechar o navegador ou reiniciar o Aubergine não perde nada: cada terminal continua rodando. Uma reinicialização do computador encerra o que estava rodando, e o Aubergine traz de volta tudo ao redor, para você retomar de onde parou em vez de começar do zero.",
+    "from": "a30f93263e44"
+  },
+  "keep.table.title": {
+    "text": "O que acontece quando…",
+    "from": "2e3d1d162e51"
+  },
+  "keep.table.intro": {
+    "text": "Cada terminal é um shell numa sessão do tmux, que roda separado do navegador e do servidor do Aubergine. O que ele guarda está em dois lugares: o shell rodando, que só o tmux mantém, e tudo o que se diz sobre o terminal, que o Aubergine grava num arquivo da sua pasta de dados a cada mudança.",
+    "from": "ee20243273bd"
+  },
+  "keep.table.thing": {
+    "text": "O quê",
+    "from": "f8cf83a76a98"
+  },
+  "keep.table.browser": {
+    "text": "O navegador fecha, trava ou se atualiza, ou você fecha a aba",
+    "from": "0a7d90fd549e"
+  },
+  "keep.table.server": {
+    "text": "O Aubergine para, reinicia ou é atualizado",
+    "from": "1c6408e3eb21"
+  },
+  "keep.table.computer": {
+    "text": "O computador trava, reinicia ou instala uma atualização",
+    "from": "321c23263fa9"
+  },
+  "keep.table.browserShort": {
+    "text": "Navegador fechado",
+    "from": "6a63c6750f2a"
+  },
+  "keep.table.serverShort": {
+    "text": "Aubergine reiniciado",
+    "from": "88d2ef622400"
+  },
+  "keep.table.computerShort": {
+    "text": "Computador reiniciado",
+    "from": "515aa3442054"
+  },
+  "keep.row.running": {
+    "text": "Programas e agentes rodando",
+    "from": "aa6584073938"
+  },
+  "keep.row.scrollback": {
+    "text": "O que o terminal mostrava (o histórico de rolagem)",
+    "from": "ae850a03d2bb"
+  },
+  "keep.row.place": {
+    "text": "Seu lugar no canvas, nome, cor, tags, campos e links",
+    "from": "d8942ea955fb"
+  },
+  "keep.row.note": {
+    "text": "Sua nota: o resumo e o registro",
+    "from": "bd09d21420fd"
+  },
+  "keep.row.folder": {
+    "text": "A pasta em que ele estava",
+    "from": "93d6eac7960d"
+  },
+  "keep.row.agent": {
+    "text": "A conversa de um agente",
+    "from": "edc534789af1"
+  },
+  "keep.row.copies": {
+    "text": "Cópias de trabalho e seus branches",
+    "from": "5d15d9f5fde9"
+  },
+  "keep.row.queue": {
+    "text": "A fila, as execuções e os agendamentos",
+    "from": "862df801acb6"
+  },
+  "keep.cell.runs": {
+    "text": "continuam rodando",
+    "from": "8b35a116c9a8"
+  },
+  "keep.cell.ends": {
+    "text": "terminam",
+    "from": "361e48d0308f"
+  },
+  "keep.cell.there": {
+    "text": "sem alteração",
+    "from": "007cce612ae7"
+  },
+  "keep.cell.gone": {
+    "text": "perdido",
+    "from": "283bb9deef02"
+  },
+  "keep.cell.fresh": {
+    "text": "um shell novo na mesma pasta",
+    "from": "0897ff42a469"
+  },
+  "keep.cell.goes": {
+    "text": "continua",
+    "from": "d17f7dd93885"
+  },
+  "keep.cell.resume": {
+    "text": "<strong>Resume agent</strong> a continua (Claude Code)",
+    "from": "b65d3c8c86df"
+  },
+  "keep.cell.late": {
+    "text": "sem alteração; um horário que passou roda atrasado",
+    "from": "0c5a51a9cc07"
+  },
+  "keep.table.parked": {
+    "text": "Um terminal estacionado é mantido do mesmo jeito e também ganha um shell novo. Um terminal cujo shell já tinha terminado continua terminado, com <strong>Restart here</strong> (reiniciar aqui).",
+    "from": "6ccfc616c13e"
+  },
+  "keep.table.update": {
+    "text": "Depois de uma atualização, um terminal que já estava aberto mantém aquilo com que seu shell começou (o <code>PATH</code> e a integração de shell do Aubergine) até esse shell ser iniciado de novo. Se o Aubergine inicia no login, rode <code>aubergine service install</code> de novo depois de atualizar, em vez de reiniciar o servidor à mão.",
+    "from": "fb1239269602"
+  },
+  "keep.back.title": {
+    "text": "Depois de reiniciar: de volta ao trabalho",
+    "from": "8a4d5f07f8a6"
+  },
+  "keep.back.start": {
+    "text": "<strong>Inicie o Aubergine.</strong> Se ele inicia no login (<code>aubergine service install</code>, só no macOS), já está rodando quando você entra, e o launchd o inicia de novo se ele parar. Caso contrário, inicie-o e abra a página:",
+    "from": "caf3ca498329"
+  },
+  "keep.back.canvas": {
+    "text": "<strong>O canvas está como você deixou.</strong> Cada terminal está no seu lugar com nome, cor, tags, campos, links e nota, agora um shell novo na última pasta em que o Aubergine o viu, ou na sua pasta padrão se aquela não existir mais. Nada é digitado ou executado de novo.",
+    "from": "9354ae2c51e0"
+  },
+  "keep.back.resume": {
+    "text": "<strong>Retome seus agentes.</strong> Onde o Claude Code rodava e o Aubergine conhece a conversa (ele foi iniciado pelo Aubergine), a barra de título do terminal oferece <strong>Resume agent</strong> (retomar o agente): inicia o Claude Code de novo naquela conversa. Num terminal que está numa execução de um workflow, também conta ao agente sobre a execução de novo, para ele seguir a partir do passo em que ela está.",
+    "from": "dadde3e3c41f"
+  },
+  "keep.back.read": {
+    "text": "<strong>Veja onde cada um estava.</strong> <strong>Details</strong> (detalhes) no título de um terminal mostra o que se sabe dele (o passo de uma execução e seu último relatório, a pasta, as tags), seu resumo, seus campos e links, e seu registro em <strong>Log</strong>. Apontar para o nome de um terminal na lista mostra a recapitulação dele.",
+    "from": "93f57bf9eb94"
+  },
+  "keep.back.history": {
+    "text": "<strong>Encontre uma conversa que não está no canvas.</strong> <strong>Past conversations…</strong> (conversas anteriores) na paleta (<code>⌘K</code>), ou “Past conversations in this folder…” nos detalhes de um terminal, lista as conversas anteriores do Claude Code numa pasta e abre uma no canvas.",
+    "from": "237fdc4c37c5"
+  },
+  "keep.back.other": {
+    "text": "Qualquer outro agente não tem <strong>Resume agent</strong>, porque o Aubergine não conhece a conversa dele: inicie-o de novo no mesmo terminal com o jeito de retomar desse agente, e leia a nota para dizer a ele onde estava.",
+    "from": "793f54a1a40a"
+  },
+  "keep.pic.caption": {
+    "text": "Os detalhes de um terminal: o passo de uma execução e seu último relatório, a pasta, as tags e os campos. Tudo isso é mantido depois de reiniciar o computador; o terminal ao vivo ao lado, não.",
+    "from": "d9f6211ba821"
+  },
+  "keep.lost.title": {
+    "text": "O que se perde, e o que fazer",
+    "from": "14285bfff601"
+  },
+  "keep.lost.running": {
+    "text": "<strong>O que estava rodando termina.</strong> Um build, uma rodada de testes, um servidor ou um agente no meio do trabalho para junto com o computador, e o Aubergine não inicia nenhum deles de novo sozinho. Inicie-os você mesmo; um trabalho que precisa sobreviver a uma reinicialização pertence a algo feito para isso, como um serviço do seu sistema.",
+    "from": "e46f81e690a3"
+  },
+  "keep.lost.work": {
+    "text": "<strong>O trabalho que o Aubergine acompanha espera por você.</strong> Uma execução de um workflow mantém seu passo e cada relatório entregue. As tarefas da fila mantêm o lugar; uma que estava sendo iniciada no momento em que o servidor parou é marcada como falha, com uma frase, e nada é tentado de novo sozinho. Um horário de agendamento que passou enquanto o servidor estava parado roda uma vez, atrasado, se tiver menos de seis horas (<code>schedules.lateWithinHours</code>), e senão é marcado como perdido.",
+    "from": "3030fe221d28"
+  },
+  "keep.lost.scrollback": {
+    "text": "<strong>O histórico de rolagem se perde.</strong> Enquanto um shell roda, o tmux guarda as últimas 50.000 linhas que ele imprimiu, e a busca da paleta as lê. O Aubergine não grava o que um terminal imprime, então depois de reiniciar o computador não há nada para trazer de volta, e a busca só encontra o que foi impresso desde então.",
+    "from": "aaed4fac1b79"
+  },
+  "keep.lost.away": {
+    "text": "<strong>“Enquanto você estava fora” recomeça.</strong> Fica na memória do servidor, não num arquivo, então depois que o servidor inicia ele só sabe o que mudou desde então, e diz isso.",
+    "from": "6731aefcf508"
+  },
+  "keep.habit.title": {
+    "text": "O hábito que barateia uma reinicialização",
+    "from": "bd4d96a2eb2b"
+  },
+  "keep.habit.text": {
+    "text": "A nota é o que sobrevive, então faça os agentes escreverem nela enquanto trabalham: uma decisão, um resultado, onde pararam. Um Claude Code iniciado pelo Aubergine tem cada prompt que você envia adicionado ao registro sozinho, e ao começar é instruído a dar nome ao terminal e manter o resumo. Qualquer agente pode fazer o mesmo com estes comandos, que o <code>aubergine guide</code> explica a ele:",
+    "from": "f0806ca11e08"
+  },
+  "keep.habit.recap": {
+    "text": "Antes de encerrar o dia, clique em <strong>Ask its agent for a recap</strong> (pedir uma recapitulação ao agente) nos detalhes de um terminal: o agente escreve onde está com <code>aubergine recap --write</code>, e a recapitulação fica guardada com o terminal.",
+    "from": "1b909d393ab1"
+  },
+  "keep.sleep.title": {
+    "text": "Fechar o notebook, a suspensão e o navegador",
+    "from": "393a7e53106a"
+  },
+  "keep.sleep.sleep": {
+    "text": "<strong>Suspender não é reiniciar.</strong> Fechar a tampa de um notebook costuma suspendê-lo: os programas pausam e continuam quando ele acorda, e nada da última coluna da tabela acontece. O Aubergine nem mantém o computador acordado nem o acorda, então um agendamento cujo horário passou durante a suspensão roda atrasado, ou é perdido, como acima.",
+    "from": "f90d61fc3eae"
+  },
+  "keep.sleep.browser": {
+    "text": "<strong>Fechar o navegador, uma aba ou a janela dele</strong>, ou uma atualização do navegador que o reinicia, não encerra nada. Abra a página de novo (<code>aubergine open</code> a abre já com login) e cada terminal é desenhado a partir do tmux como está agora. Uma página deixada aberta se reconecta sozinha quando o servidor volta.",
+    "from": "40f09b6f29cb"
+  },
+  "keep.sleep.server": {
+    "text": "<strong>Fechar a janela em que <code>aubergine start</code> roda</strong>, ou apertar Ctrl+C nela, para o servidor e nada mais: a coluna do meio da tabela.",
+    "from": "1cd0a9349c3d"
+  },
+  "keep.sleep.wsl": {
+    "text": "<strong>No Windows com WSL</strong>, o WSL parar, porque o Windows reinicia ou depois de <code>wsl --shutdown</code>, é uma reinicialização do computador para o Aubergine. Veja <a href=\"/windows/\">Windows com WSL</a>.",
+    "from": "0c01d734b5c3"
+  },
+  "keep.q.restore.q": {
+    "text": "O Aubergine consegue restaurar meus terminais depois de reiniciar?",
+    "from": "a2d8fea94c00"
+  },
+  "keep.q.restore.a": {
+    "text": "Sim, tudo menos o que estava rodando neles. Cada terminal volta ao seu lugar no canvas com nome, cor, nota, tags, campos e links, como um shell novo na última pasta. Os programas que rodavam nele não são iniciados de novo; para o Claude Code, <strong>Resume agent</strong> continua a conversa.",
+    "from": "8be8d8045b34"
+  },
+  "keep.q.output.q": {
+    "text": "O Aubergine guarda a saída e o histórico do meu terminal?",
+    "from": "7463118541ed"
+  },
+  "keep.q.output.a": {
+    "text": "A saída, só enquanto o shell roda: o tmux guarda 50.000 linhas do histórico de rolagem de cada terminal, e fechar o navegador ou reiniciar o Aubergine não perde nada disso. Depois de reiniciar o computador ela se perde, porque o Aubergine não grava a saída dos terminais. O histórico dos comandos que você digitou, que a seta para cima traz de volta, é o arquivo do seu próprio shell, guardado pelo seu shell como sempre.",
+    "from": "a88ba263b084"
+  },
+  "keep.q.claude.q": {
+    "text": "Minha conversa do Claude Code sobrevive a uma reinicialização?",
+    "from": "c87cda5e8a7e"
+  },
+  "keep.q.claude.a": {
+    "text": "A conversa, sim: o Claude Code a guarda nos próprios arquivos, e o Aubergine lembra em qual cada terminal estava. Depois de reiniciar, <strong>Resume agent</strong> na barra de título do terminal inicia o Claude Code de novo naquela conversa. O que o agente fazia naquele momento parou, e não é feito de novo até você pedir.",
+    "from": "0d163dc56b89"
+  },
+  "keep.q.macos.q": {
+    "text": "Funciona quando o macOS se atualiza sozinho durante a noite?",
+    "from": "dd58c7a1e65c"
+  },
+  "keep.q.macos.a": {
+    "text": "Uma atualização que reinicia o computador é uma reinicialização como qualquer outra: os programas rodando terminam e todo o resto é mantido. Com o início no login (<code>aubergine service install</code>), o servidor volta a rodar assim que você entra, e o canvas está esperando. Shells novos nas últimas pastas foram vistos ao reiniciar um contêiner do Aubergine; uma atualização noturna real do macOS não foi testada.",
+    "from": "06c25c70de97"
+  },
+  "keep.q.tmux.q": {
+    "text": "Preciso saber tmux?",
+    "from": "3d7564a5b7f9"
+  },
+  "keep.q.tmux.a": {
+    "text": "Não. Ele precisa estar instalado (3.2 ou mais novo), e o Aubergine o roda num socket próprio com as próprias configurações, sem barra de status e sem tecla de prefixo, então você nunca digita um comando do tmux. Seu próprio tmux, se você usa um, não é tocado.",
+    "from": "d33e0b313f18"
+  },
+  "keep.related": {
+    "text": "Relacionado: <a href=\"/claude/\">Claude Code no Aubergine</a> · <a href=\"/queue-and-schedules/\">a fila e os agendamentos</a> · <a href=\"/working-copies/\">cópias de trabalho</a>",
+    "from": "730944daab4e"
   },
   "queue.meta.title": {
     "text": "A fila, a lista For you e os agendamentos | Aubergine",

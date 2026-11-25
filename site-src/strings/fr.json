@@ -404,8 +404,8 @@
     "from": "2c75df8acfc1"
   },
   "home.trust.outlive.text": {
-    "text": "Chaque terminal est une session tmux : fermez le navigateur ou redémarrez Aubergine, votre travail continue de tourner.",
-    "from": "f913c3351663"
+    "text": "Chaque terminal est une session tmux : <a href=\"/keep-terminals-after-restart/\">fermez le navigateur ou redémarrez Aubergine, votre travail continue de tourner</a>.",
+    "from": "94905c3b891e"
   },
   "home.trust.nomodel.name": {
     "text": "Pas de modèle, pas de clé",
@@ -1319,6 +1319,14 @@
     "text": "Donnez à chaque agent sa propre extraction et sa propre branche, pour que deux agents ne modifient jamais les mêmes fichiers.",
     "from": "58872d0caca2"
   },
+  "guides.keep.name": {
+    "text": "Garder vos terminaux après un redémarrage",
+    "from": "6cfa04f7c3ab"
+  },
+  "guides.keep.text": {
+    "text": "Ce que gardent la fermeture du navigateur, un redémarrage d’Aubergine et un redémarrage de l’ordinateur, et comment reprendre là où vous en étiez.",
+    "from": "396ced3608bc"
+  },
   "guides.queue.name": {
     "text": "La file d’attente, For you et les planifications",
     "from": "61c48ccc941d"
@@ -1630,6 +1638,262 @@
   "copies.ld.a4": {
     "text": "Non. Elle garde le travail séparé ; elle n’enferme pas un agent. L’agent tourne en votre nom et peut toujours lire et modifier tous les fichiers que vous pouvez lire et modifier.",
     "from": "8b760eb225ac"
+  },
+  "keep.meta.title": {
+    "text": "Garder vos terminaux après un plantage, un redémarrage ou une mise à jour | Aubergine",
+    "from": "d0521ba83d02"
+  },
+  "keep.meta.description": {
+    "text": "Ce qui arrive à vos terminaux et à vos agents de code quand le navigateur se ferme, quand Aubergine redémarre, et quand l’ordinateur plante, redémarre ou se met à jour la nuit, et comment reprendre là où vous en étiez.",
+    "from": "4f824d2bcf4e"
+  },
+  "keep.crumb": {
+    "text": "Après un redémarrage",
+    "from": "b287f32fbfcc"
+  },
+  "keep.title": {
+    "text": "Gardez vos terminaux quand votre ordinateur redémarre",
+    "from": "be3fd58999ae"
+  },
+  "keep.lead": {
+    "text": "Fermer le navigateur ou redémarrer Aubergine ne fait rien perdre : chaque terminal continue de tourner. Un redémarrage de l’ordinateur arrête ce qui tournait, et Aubergine ramène tout ce qui l’entourait, pour que vous repreniez là où vous en étiez au lieu de repartir de zéro.",
+    "from": "a30f93263e44"
+  },
+  "keep.table.title": {
+    "text": "Ce qui se passe quand…",
+    "from": "2e3d1d162e51"
+  },
+  "keep.table.intro": {
+    "text": "Chaque terminal est un shell dans une session tmux, qui tourne à part du navigateur et du serveur d’Aubergine. Ce qu’il contient est à deux endroits : le shell en cours, que seul tmux garde, et tout ce qui est dit du terminal, qu’Aubergine écrit dans un fichier de son dossier de données à chaque changement.",
+    "from": "ee20243273bd"
+  },
+  "keep.table.thing": {
+    "text": "Quoi",
+    "from": "f8cf83a76a98"
+  },
+  "keep.table.browser": {
+    "text": "Le navigateur se ferme, plante ou se met à jour, ou vous fermez l’onglet",
+    "from": "0a7d90fd549e"
+  },
+  "keep.table.server": {
+    "text": "Aubergine s’arrête, redémarre ou est mis à jour",
+    "from": "1c6408e3eb21"
+  },
+  "keep.table.computer": {
+    "text": "L’ordinateur plante, redémarre ou installe une mise à jour",
+    "from": "321c23263fa9"
+  },
+  "keep.table.browserShort": {
+    "text": "Navigateur fermé",
+    "from": "6a63c6750f2a"
+  },
+  "keep.table.serverShort": {
+    "text": "Aubergine redémarré",
+    "from": "88d2ef622400"
+  },
+  "keep.table.computerShort": {
+    "text": "Ordinateur redémarré",
+    "from": "515aa3442054"
+  },
+  "keep.row.running": {
+    "text": "Programmes et agents en cours",
+    "from": "aa6584073938"
+  },
+  "keep.row.scrollback": {
+    "text": "Ce que le terminal affichait (son historique de défilement)",
+    "from": "ae850a03d2bb"
+  },
+  "keep.row.place": {
+    "text": "Sa place sur le canevas, son nom, sa couleur, ses étiquettes, ses champs et ses liens",
+    "from": "d8942ea955fb"
+  },
+  "keep.row.note": {
+    "text": "Sa note : le résumé et le journal",
+    "from": "bd09d21420fd"
+  },
+  "keep.row.folder": {
+    "text": "Le dossier où il était",
+    "from": "93d6eac7960d"
+  },
+  "keep.row.agent": {
+    "text": "La conversation d’un agent",
+    "from": "edc534789af1"
+  },
+  "keep.row.copies": {
+    "text": "Les copies de travail et leurs branches",
+    "from": "5d15d9f5fde9"
+  },
+  "keep.row.queue": {
+    "text": "La file, les exécutions et les planifications",
+    "from": "862df801acb6"
+  },
+  "keep.cell.runs": {
+    "text": "continuent de tourner",
+    "from": "8b35a116c9a8"
+  },
+  "keep.cell.ends": {
+    "text": "s’arrêtent",
+    "from": "361e48d0308f"
+  },
+  "keep.cell.there": {
+    "text": "toujours là",
+    "from": "007cce612ae7"
+  },
+  "keep.cell.gone": {
+    "text": "perdu",
+    "from": "283bb9deef02"
+  },
+  "keep.cell.fresh": {
+    "text": "un nouveau shell dans le même dossier",
+    "from": "0897ff42a469"
+  },
+  "keep.cell.goes": {
+    "text": "continue",
+    "from": "d17f7dd93885"
+  },
+  "keep.cell.resume": {
+    "text": "<strong>Resume agent</strong> la poursuit (Claude Code)",
+    "from": "b65d3c8c86df"
+  },
+  "keep.cell.late": {
+    "text": "toujours là ; une heure passée s’exécute en retard",
+    "from": "0c5a51a9cc07"
+  },
+  "keep.table.parked": {
+    "text": "Un terminal mis de côté est gardé de la même façon et reçoit lui aussi un nouveau shell. Un terminal dont le shell s’était déjà terminé reste terminé, avec <strong>Restart here</strong> (redémarrer ici).",
+    "from": "6ccfc616c13e"
+  },
+  "keep.table.update": {
+    "text": "Après une mise à jour, un terminal déjà ouvert garde ce avec quoi son shell a démarré (son <code>PATH</code> et l’intégration shell d’Aubergine) jusqu’à ce que ce shell soit relancé. Si Aubergine démarre à l’ouverture de session, relancez <code>aubergine service install</code> après une mise à jour au lieu de redémarrer le serveur à la main.",
+    "from": "fb1239269602"
+  },
+  "keep.back.title": {
+    "text": "Après un redémarrage : au travail",
+    "from": "8a4d5f07f8a6"
+  },
+  "keep.back.start": {
+    "text": "<strong>Démarrez Aubergine.</strong> S’il démarre à l’ouverture de session (<code>aubergine service install</code>, macOS seulement), il tourne dès que vous êtes connecté, et launchd le relance s’il s’arrête. Sinon, démarrez-le et ouvrez la page :",
+    "from": "caf3ca498329"
+  },
+  "keep.back.canvas": {
+    "text": "<strong>Le canevas est tel que vous l’avez laissé.</strong> Chaque terminal est à sa place avec son nom, sa couleur, ses étiquettes, ses champs, ses liens et sa note, désormais un nouveau shell dans le dernier dossier où Aubergine l’a vu, ou dans votre dossier par défaut si celui-ci n’existe plus. Rien n’est tapé ni relancé.",
+    "from": "9354ae2c51e0"
+  },
+  "keep.back.resume": {
+    "text": "<strong>Reprenez vos agents.</strong> Là où Claude Code tournait et où Aubergine connaît sa conversation (il a été lancé depuis Aubergine), la barre de titre du terminal propose <strong>Resume agent</strong> (reprendre l’agent) : il relance Claude Code dans cette conversation. Sur un terminal engagé dans une exécution d’un workflow, il informe aussi de nouveau l’agent de cette exécution, pour qu’il reprenne à l’étape où elle en est.",
+    "from": "dadde3e3c41f"
+  },
+  "keep.back.read": {
+    "text": "<strong>Voyez où chacun en était.</strong> <strong>Details</strong> (détails) dans le titre d’un terminal montre ce qu’on sait de lui (l’étape d’une exécution et son dernier rapport, le dossier, les étiquettes), son résumé, ses champs et ses liens, et son journal sous <strong>Log</strong>. Pointer le nom d’un terminal dans la liste montre son récapitulatif.",
+    "from": "93f57bf9eb94"
+  },
+  "keep.back.history": {
+    "text": "<strong>Retrouvez une conversation absente du canevas.</strong> <strong>Past conversations…</strong> (conversations passées) dans la palette (<code>⌘K</code>), ou « Past conversations in this folder… » dans les détails d’un terminal, liste les conversations précédentes de Claude Code dans un dossier et en ouvre une sur le canevas.",
+    "from": "237fdc4c37c5"
+  },
+  "keep.back.other": {
+    "text": "Tout autre agent n’a pas de <strong>Resume agent</strong>, car Aubergine ne connaît pas sa conversation : relancez-le dans le même terminal avec la façon de reprendre propre à cet agent, et lisez la note pour lui dire où il en était.",
+    "from": "793f54a1a40a"
+  },
+  "keep.pic.caption": {
+    "text": "Les détails d’un terminal : l’étape d’une exécution et son dernier rapport, le dossier, les étiquettes et les champs. Tout cela est gardé après un redémarrage de l’ordinateur ; le terminal en direct à côté, non.",
+    "from": "d9f6211ba821"
+  },
+  "keep.lost.title": {
+    "text": "Ce qui est perdu, et que faire",
+    "from": "14285bfff601"
+  },
+  "keep.lost.running": {
+    "text": "<strong>Ce qui tournait s’arrête.</strong> Une compilation, des tests, un serveur ou un agent en plein travail s’arrête avec l’ordinateur, et Aubergine n’en relance aucun de lui-même. Relancez-les vous-même ; une tâche qui doit survivre à un redémarrage a sa place dans quelque chose fait pour ça, comme un service de votre système.",
+    "from": "e46f81e690a3"
+  },
+  "keep.lost.work": {
+    "text": "<strong>Le travail qu’Aubergine suit vous attend.</strong> Une exécution d’un workflow garde son étape et chaque rapport remis. Les tâches de la file gardent leur place ; celle qui était en train de démarrer au moment où le serveur s’est arrêté est marquée en échec, avec une phrase, et rien n’est réessayé de lui-même. Une heure de planification passée pendant que le serveur était arrêté s’exécute une fois, en retard, si elle date de moins de six heures (<code>schedules.lateWithinHours</code>), et sinon elle est marquée manquée.",
+    "from": "3030fe221d28"
+  },
+  "keep.lost.scrollback": {
+    "text": "<strong>L’historique de défilement est perdu.</strong> Tant qu’un shell tourne, tmux garde les 50 000 dernières lignes qu’il a affichées, et la recherche de la palette les lit. Aubergine n’enregistre pas ce qu’affiche un terminal : après un redémarrage de l’ordinateur il n’y a rien à ramener, et la recherche ne trouve que ce qui a été affiché depuis.",
+    "from": "aaed4fac1b79"
+  },
+  "keep.lost.away": {
+    "text": "<strong>« Pendant votre absence » repart de zéro.</strong> Il est gardé dans la mémoire du serveur, pas dans un fichier : après le démarrage du serveur il ne sait que ce qui a changé depuis, et il le dit.",
+    "from": "6731aefcf508"
+  },
+  "keep.habit.title": {
+    "text": "L’habitude qui rend un redémarrage indolore",
+    "from": "bd4d96a2eb2b"
+  },
+  "keep.habit.text": {
+    "text": "La note est ce qui survit : faites écrire les agents dedans au fil de l’eau, une décision, un résultat, où ils se sont arrêtés. Un Claude Code lancé depuis Aubergine voit chaque prompt que vous envoyez ajouté au journal de lui-même, et on lui demande au début de nommer son terminal et de tenir son résumé. Tout agent peut faire de même avec ces commandes, que <code>aubergine guide</code> lui explique :",
+    "from": "f0806ca11e08"
+  },
+  "keep.habit.recap": {
+    "text": "Avant d’arrêter pour la journée, cliquez sur <strong>Ask its agent for a recap</strong> (demander un récapitulatif à son agent) dans les détails d’un terminal : l’agent écrit où il en est avec <code>aubergine recap --write</code>, et le récapitulatif est gardé avec le terminal.",
+    "from": "1b909d393ab1"
+  },
+  "keep.sleep.title": {
+    "text": "Fermer le portable, la veille et le navigateur",
+    "from": "393a7e53106a"
+  },
+  "keep.sleep.sleep": {
+    "text": "<strong>La veille n’est pas un redémarrage.</strong> Fermer le capot d’un portable le met généralement en veille : les programmes se mettent en pause et reprennent à son réveil, et rien de la dernière colonne du tableau n’arrive. Aubergine ne garde pas l’ordinateur éveillé et ne le réveille pas : une planification dont l’heure est passée pendant la veille s’exécute en retard, ou est manquée, comme plus haut.",
+    "from": "f90d61fc3eae"
+  },
+  "keep.sleep.browser": {
+    "text": "<strong>Fermer le navigateur, un onglet ou sa fenêtre</strong>, ou une mise à jour du navigateur qui le redémarre, n’arrête rien. Rouvrez la page (<code>aubergine open</code> l’ouvre connecté) et chaque terminal est dessiné depuis tmux tel qu’il est maintenant. Une page restée ouverte se reconnecte d’elle-même quand le serveur revient.",
+    "from": "40f09b6f29cb"
+  },
+  "keep.sleep.server": {
+    "text": "<strong>Fermer la fenêtre où tourne <code>aubergine start</code></strong>, ou y appuyer sur Ctrl+C, arrête le serveur et rien d’autre : la colonne du milieu du tableau.",
+    "from": "1cd0a9349c3d"
+  },
+  "keep.sleep.wsl": {
+    "text": "<strong>Sous Windows avec WSL</strong>, l’arrêt de WSL, parce que Windows redémarre ou après <code>wsl --shutdown</code>, est un redémarrage de l’ordinateur pour Aubergine. Voir <a href=\"/windows/\">Windows avec WSL</a>.",
+    "from": "0c01d734b5c3"
+  },
+  "keep.q.restore.q": {
+    "text": "Aubergine peut-il restaurer mes terminaux après un redémarrage ?",
+    "from": "a2d8fea94c00"
+  },
+  "keep.q.restore.a": {
+    "text": "Oui, tout sauf ce qui tournait dedans. Chaque terminal revient à sa place sur le canevas avec son nom, sa couleur, sa note, ses étiquettes, ses champs et ses liens, sous la forme d’un nouveau shell dans son dernier dossier. Les programmes qui y tournaient ne sont pas relancés ; pour Claude Code, <strong>Resume agent</strong> poursuit la conversation.",
+    "from": "8be8d8045b34"
+  },
+  "keep.q.output.q": {
+    "text": "Aubergine garde-t-il la sortie et l’historique de mon terminal ?",
+    "from": "7463118541ed"
+  },
+  "keep.q.output.a": {
+    "text": "La sortie, seulement tant que le shell tourne : tmux garde 50 000 lignes de l’historique de défilement de chaque terminal, et fermer le navigateur ou redémarrer Aubergine n’en perd rien. Après un redémarrage de l’ordinateur elle est perdue, car Aubergine n’enregistre aucune sortie de terminal. L’historique des commandes que vous avez tapées, celui que ramène la flèche vers le haut, est le fichier propre à votre shell, gardé par votre shell comme toujours.",
+    "from": "a88ba263b084"
+  },
+  "keep.q.claude.q": {
+    "text": "Ma conversation Claude Code survit-elle à un redémarrage ?",
+    "from": "c87cda5e8a7e"
+  },
+  "keep.q.claude.a": {
+    "text": "La conversation, oui : Claude Code la garde dans ses propres fichiers, et Aubergine se souvient de celle où était chaque terminal. Après le redémarrage, <strong>Resume agent</strong> dans la barre de titre du terminal relance Claude Code dans cette conversation. Ce que l’agent faisait à ce moment s’est arrêté, et n’est pas refait tant que vous ne le demandez pas.",
+    "from": "0d163dc56b89"
+  },
+  "keep.q.macos.q": {
+    "text": "Est-ce que ça marche quand macOS se met à jour tout seul la nuit ?",
+    "from": "dd58c7a1e65c"
+  },
+  "keep.q.macos.a": {
+    "text": "Une mise à jour qui redémarre l’ordinateur est un redémarrage comme un autre : les programmes en cours s’arrêtent et tout le reste est gardé. Avec le démarrage à l’ouverture de session (<code>aubergine service install</code>), le serveur tourne de nouveau dès que vous vous connectez, et le canevas vous attend. Les nouveaux shells dans leurs derniers dossiers ont été vus au redémarrage d’un conteneur d’Aubergine ; une vraie mise à jour nocturne de macOS n’a pas été essayée.",
+    "from": "06c25c70de97"
+  },
+  "keep.q.tmux.q": {
+    "text": "Faut-il connaître tmux ?",
+    "from": "3d7564a5b7f9"
+  },
+  "keep.q.tmux.a": {
+    "text": "Non. Il doit être installé (3.2 ou plus récent), et Aubergine le fait tourner sur un socket à lui avec ses propres réglages, sans barre d’état ni touche de préfixe : vous ne tapez jamais de commande tmux. Votre propre tmux, si vous en utilisez un, n’est pas touché.",
+    "from": "d33e0b313f18"
+  },
+  "keep.related": {
+    "text": "À lire aussi : <a href=\"/claude/\">Claude Code dans Aubergine</a> · <a href=\"/queue-and-schedules/\">la file et les planifications</a> · <a href=\"/working-copies/\">les copies de travail</a>",
+    "from": "730944daab4e"
   },
   "queue.meta.title": {
     "text": "La file d’attente, la liste For you et les planifications | Aubergine",

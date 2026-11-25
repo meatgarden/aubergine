@@ -404,8 +404,8 @@
     "from": "2c75df8acfc1"
   },
   "home.trust.outlive.text": {
-    "text": "どのターミナルも tmux セッションです。ブラウザーを閉じても Aubergine を再起動しても、作業は動き続けます。",
-    "from": "f913c3351663"
+    "text": "どのターミナルも tmux セッションです。<a href=\"/keep-terminals-after-restart/\">ブラウザーを閉じても Aubergine を再起動しても、作業は動き続けます</a>。",
+    "from": "94905c3b891e"
   },
   "home.trust.nomodel.name": {
     "text": "モデルなし、キーなし",
@@ -1319,6 +1319,14 @@
     "text": "エージェントごとに専用のチェックアウトとブランチを渡し、2つのエージェントが同じファイルを編集しないようにします。",
     "from": "58872d0caca2"
   },
+  "guides.keep.name": {
+    "text": "再起動のあともターミナルを残す",
+    "from": "6cfa04f7c3ab"
+  },
+  "guides.keep.text": {
+    "text": "ブラウザーを閉じたとき、Aubergine を再起動したとき、コンピューターを再起動したときにそれぞれ何が残るか、そして続きから再開する方法。",
+    "from": "396ced3608bc"
+  },
   "guides.queue.name": {
     "text": "キュー、For you、スケジュール",
     "from": "61c48ccc941d"
@@ -1630,6 +1638,262 @@
   "copies.ld.a4": {
     "text": "いいえ。作業を分けておくもので、エージェントを閉じ込めるものではありません。エージェントはあなたとして動き、あなたが読み書きできるすべてのファイルを読み書きできます。",
     "from": "8b760eb225ac"
+  },
+  "keep.meta.title": {
+    "text": "クラッシュ、再起動、アップデートのあともターミナルを残す | Aubergine",
+    "from": "d0521ba83d02"
+  },
+  "keep.meta.description": {
+    "text": "ブラウザーが閉じたとき、Aubergine が再起動したとき、コンピューターがクラッシュ・再起動・夜間アップデートしたときに、ターミナルとコーディングエージェントがどうなるか。そして続きから再開する方法。",
+    "from": "4f824d2bcf4e"
+  },
+  "keep.crumb": {
+    "text": "再起動のあと",
+    "from": "b287f32fbfcc"
+  },
+  "keep.title": {
+    "text": "コンピューターが再起動してもターミナルは残る",
+    "from": "be3fd58999ae"
+  },
+  "keep.lead": {
+    "text": "ブラウザーを閉じても Aubergine を再起動しても、何も失われません。どのターミナルも動き続けます。コンピューターの再起動は動いていたものを終わらせますが、Aubergine はその周りのすべてを戻すので、最初からではなく続きから再開できます。",
+    "from": "a30f93263e44"
+  },
+  "keep.table.title": {
+    "text": "こんなとき何が起きるか",
+    "from": "2e3d1d162e51"
+  },
+  "keep.table.intro": {
+    "text": "どのターミナルも tmux セッション内のシェルで、ブラウザーとも Aubergine のサーバーとも別に動いています。中身は2か所にあります。動いているシェルは tmux だけが保持し、ターミナルについて言われていることはすべて、Aubergine が変更のたびにデータフォルダーのファイルに書き込みます。",
+    "from": "ee20243273bd"
+  },
+  "keep.table.thing": {
+    "text": "対象",
+    "from": "f8cf83a76a98"
+  },
+  "keep.table.browser": {
+    "text": "ブラウザーが閉じる、クラッシュする、アップデートされる、またはタブを閉じる",
+    "from": "0a7d90fd549e"
+  },
+  "keep.table.server": {
+    "text": "Aubergine が止まる、再起動する、アップデートされる",
+    "from": "1c6408e3eb21"
+  },
+  "keep.table.computer": {
+    "text": "コンピューターがクラッシュする、再起動する、アップデートをインストールする",
+    "from": "321c23263fa9"
+  },
+  "keep.table.browserShort": {
+    "text": "ブラウザーを閉じた",
+    "from": "6a63c6750f2a"
+  },
+  "keep.table.serverShort": {
+    "text": "Aubergine を再起動した",
+    "from": "88d2ef622400"
+  },
+  "keep.table.computerShort": {
+    "text": "コンピューターを再起動した",
+    "from": "515aa3442054"
+  },
+  "keep.row.running": {
+    "text": "動いているプログラムとエージェント",
+    "from": "aa6584073938"
+  },
+  "keep.row.scrollback": {
+    "text": "ターミナルに表示されていたもの（スクロールバック）",
+    "from": "ae850a03d2bb"
+  },
+  "keep.row.place": {
+    "text": "キャンバス上の位置、名前、色、タグ、フィールド、リンク",
+    "from": "d8942ea955fb"
+  },
+  "keep.row.note": {
+    "text": "ノート：要約とログ",
+    "from": "bd09d21420fd"
+  },
+  "keep.row.folder": {
+    "text": "いたフォルダー",
+    "from": "93d6eac7960d"
+  },
+  "keep.row.agent": {
+    "text": "エージェントの会話",
+    "from": "edc534789af1"
+  },
+  "keep.row.copies": {
+    "text": "作業コピーとそのブランチ",
+    "from": "5d15d9f5fde9"
+  },
+  "keep.row.queue": {
+    "text": "キュー、実行、スケジュール",
+    "from": "862df801acb6"
+  },
+  "keep.cell.runs": {
+    "text": "動き続ける",
+    "from": "8b35a116c9a8"
+  },
+  "keep.cell.ends": {
+    "text": "終わる",
+    "from": "361e48d0308f"
+  },
+  "keep.cell.there": {
+    "text": "残る",
+    "from": "007cce612ae7"
+  },
+  "keep.cell.gone": {
+    "text": "消える",
+    "from": "283bb9deef02"
+  },
+  "keep.cell.fresh": {
+    "text": "同じフォルダーで新しいシェル",
+    "from": "0897ff42a469"
+  },
+  "keep.cell.goes": {
+    "text": "続く",
+    "from": "d17f7dd93885"
+  },
+  "keep.cell.resume": {
+    "text": "<strong>Resume agent</strong> で続けられる（Claude Code）",
+    "from": "b65d3c8c86df"
+  },
+  "keep.cell.late": {
+    "text": "残る。過ぎた時刻は遅れて実行",
+    "from": "0c5a51a9cc07"
+  },
+  "keep.table.parked": {
+    "text": "パークしたターミナルも同じように残り、やはり新しいシェルになります。シェルがすでに終わっていたターミナルは終わったままで、<strong>Restart here</strong>（ここで再起動）が出ます。",
+    "from": "6ccfc616c13e"
+  },
+  "keep.table.update": {
+    "text": "アップデートのあと、すでに開いていたターミナルは、シェルが起動したときのもの（<code>PATH</code> と Aubergine のシェル連携）を、そのシェルを起動し直すまで使い続けます。Aubergine をログイン時に起動しているなら、アップデートのあとはサーバーを手で再起動する代わりに <code>aubergine service install</code> をもう一度実行します。",
+    "from": "fb1239269602"
+  },
+  "keep.back.title": {
+    "text": "再起動のあと：作業に戻る",
+    "from": "8a4d5f07f8a6"
+  },
+  "keep.back.start": {
+    "text": "<strong>Aubergine を起動します。</strong>ログイン時に起動する設定（<code>aubergine service install</code>、macOS のみ）なら、ログインした時点で動いていて、止まれば launchd がまた起動します。そうでなければ、起動してページを開きます。",
+    "from": "caf3ca498329"
+  },
+  "keep.back.canvas": {
+    "text": "<strong>キャンバスは離れたときのままです。</strong>どのターミナルも名前、色、タグ、フィールド、リンク、ノートとともに元の位置にあり、Aubergine が最後に見たフォルダーで（そのフォルダーがもうなければ既定のフォルダーで）新しいシェルになっています。何も入力し直されず、実行し直されません。",
+    "from": "9354ae2c51e0"
+  },
+  "keep.back.resume": {
+    "text": "<strong>エージェントを再開します。</strong>Claude Code が動いていて Aubergine がその会話を知っている（Aubergine から起動した）ターミナルでは、タイトルバーに <strong>Resume agent</strong>（エージェントを再開）が出ます。その会話で Claude Code を再び起動します。ワークフローの実行の途中にあるターミナルでは、その実行についてもう一度エージェントに伝えるので、実行が止まっているステップから続けます。",
+    "from": "dadde3e3c41f"
+  },
+  "keep.back.read": {
+    "text": "<strong>それぞれがどこまで進んでいたかを見ます。</strong>ターミナルのタイトルにある <strong>Details</strong>（詳細）は、分かっていること（実行のステップと最後の報告、フォルダー、タグ）、要約、フィールドとリンク、そして <strong>Log</strong> の下にログを表示します。一覧でターミナルの名前にポインターを合わせると振り返りが出ます。",
+    "from": "93f57bf9eb94"
+  },
+  "keep.back.history": {
+    "text": "<strong>キャンバスにない会話を探します。</strong>パレット（<code>⌘K</code>）の <strong>Past conversations…</strong>（過去の会話）、またはターミナルの詳細にある「Past conversations in this folder…」で、フォルダー内の Claude Code の過去の会話を一覧し、キャンバスに開けます。",
+    "from": "237fdc4c37c5"
+  },
+  "keep.back.other": {
+    "text": "ほかのエージェントには <strong>Resume agent</strong> はありません。Aubergine がその会話を知らないためです。同じターミナルで、そのエージェント自身の再開の方法で起動し直し、ノートを読んでどこまで進んでいたかを伝えてください。",
+    "from": "793f54a1a40a"
+  },
+  "keep.pic.caption": {
+    "text": "ターミナルの詳細：実行のステップと最後の報告、フォルダー、タグ、フィールド。これらはすべてコンピューターの再起動のあとも残ります。横のライブのターミナルは残りません。",
+    "from": "d9f6211ba821"
+  },
+  "keep.lost.title": {
+    "text": "失われるもの、そしてどうするか",
+    "from": "14285bfff601"
+  },
+  "keep.lost.running": {
+    "text": "<strong>動いていたものは終わります。</strong>ビルド、テスト、サーバー、作業途中のエージェントはコンピューターとともに止まり、Aubergine はどれも自分では起動し直しません。自分で起動し直してください。再起動を越えて続けるべき処理は、システムのサービスのような、そのために作られた仕組みに任せます。",
+    "from": "e46f81e690a3"
+  },
+  "keep.lost.work": {
+    "text": "<strong>Aubergine が追っている作業はあなたを待ちます。</strong>ワークフローの実行は、ステップと提出された報告をすべて保ちます。キューのタスクは順番を保ちます。サーバーが止まった瞬間に開始中だったタスクは、理由の一文とともに失敗と記録され、自動で再試行されるものはありません。サーバーが止まっている間に過ぎたスケジュールの時刻は、6時間以内なら遅れて1回だけ実行され（<code>schedules.lateWithinHours</code>）、それ以外は逃したと記録されます。",
+    "from": "3030fe221d28"
+  },
+  "keep.lost.scrollback": {
+    "text": "<strong>スクロールバックは消えます。</strong>シェルが動いている間、tmux は出力された最後の50,000行を保持し、パレットの検索はそれを読みます。Aubergine はターミナルの出力を記録しないので、コンピューターの再起動のあとに戻せるものはなく、検索で見つかるのはそれ以降の出力だけです。",
+    "from": "aaed4fac1b79"
+  },
+  "keep.lost.away": {
+    "text": "<strong>「離れている間」は最初からになります。</strong>ファイルではなくサーバーのメモリーにあるので、サーバーの起動後はそれ以降の変化しか知らず、そのことを伝えます。",
+    "from": "6731aefcf508"
+  },
+  "keep.habit.title": {
+    "text": "再起動を怖くなくする習慣",
+    "from": "bd4d96a2eb2b"
+  },
+  "keep.habit.text": {
+    "text": "残るのはノートです。だからエージェントには作業しながらノートに書かせましょう。決めたこと、結果、どこで止めたか。Aubergine から起動した Claude Code では、送ったプロンプトがひとつずつ自動でログに加わり、始めにターミナルに名前を付けて要約を保つよう伝えられます。どのエージェントも次のコマンドで同じことができ、<code>aubergine guide</code> がその使い方を説明します。",
+    "from": "f0806ca11e08"
+  },
+  "keep.habit.recap": {
+    "text": "その日の作業を終える前に、ターミナルの詳細で <strong>Ask its agent for a recap</strong>（エージェントに振り返りを頼む）を押します。エージェントは <code>aubergine recap --write</code> で現状を書き、その振り返りはターミナルとともに保存されます。",
+    "from": "1b909d393ab1"
+  },
+  "keep.sleep.title": {
+    "text": "ノートパソコンを閉じる、スリープ、ブラウザー",
+    "from": "393a7e53106a"
+  },
+  "keep.sleep.sleep": {
+    "text": "<strong>スリープは再起動ではありません。</strong>ノートパソコンのふたを閉じると、たいていスリープします。プログラムは一時停止し、起きると続きから動き、表の最後の列のことは何も起きません。Aubergine はコンピューターを起こしたままにもせず、起こしもしないので、スリープ中に時刻が過ぎたスケジュールは、上のとおり遅れて実行されるか、逃したことになります。",
+    "from": "f90d61fc3eae"
+  },
+  "keep.sleep.browser": {
+    "text": "<strong>ブラウザー、タブ、そのウィンドウを閉じても</strong>、ブラウザーのアップデートで再起動しても、何も終わりません。ページを開き直せば（<code>aubergine open</code> でサインインした状態で開きます）、各ターミナルが tmux から今の状態で描かれます。開いたままのページは、サーバーが戻ると自動で再接続します。",
+    "from": "40f09b6f29cb"
+  },
+  "keep.sleep.server": {
+    "text": "<strong><code>aubergine start</code> が動いているウィンドウを閉じる</strong>か、そこで Ctrl+C を押すと、止まるのはサーバーだけです。表の真ん中の列にあたります。",
+    "from": "1cd0a9349c3d"
+  },
+  "keep.sleep.wsl": {
+    "text": "<strong>WSL を使う Windows では</strong>、Windows の再起動や <code>wsl --shutdown</code> で WSL が止まることが、Aubergine にとってのコンピューターの再起動です。<a href=\"/windows/\">WSL を使う Windows</a> を参照してください。",
+    "from": "0c01d734b5c3"
+  },
+  "keep.q.restore.q": {
+    "text": "Aubergine は再起動のあとにターミナルを復元できますか？",
+    "from": "a2d8fea94c00"
+  },
+  "keep.q.restore.a": {
+    "text": "はい、中で動いていたもの以外はすべて。各ターミナルは名前、色、ノート、タグ、フィールド、リンクとともにキャンバスの元の位置に戻り、最後のフォルダーで新しいシェルになります。中で動いていたプログラムは起動し直されません。Claude Code なら <strong>Resume agent</strong> で会話を続けられます。",
+    "from": "8be8d8045b34"
+  },
+  "keep.q.output.q": {
+    "text": "Aubergine はターミナルの出力と履歴を残しますか？",
+    "from": "7463118541ed"
+  },
+  "keep.q.output.a": {
+    "text": "出力は、シェルが動いている間だけです。tmux は各ターミナルのスクロールバックを50,000行保持し、ブラウザーを閉じても Aubergine を再起動しても少しも失われません。コンピューターを再起動すると消えます。Aubergine はターミナルの出力を記録しないからです。入力したコマンドの履歴（上矢印で戻ってくるもの）はシェル自身のファイルで、いつもどおりシェルが保存します。",
+    "from": "a88ba263b084"
+  },
+  "keep.q.claude.q": {
+    "text": "Claude Code の会話は再起動のあとも残りますか？",
+    "from": "c87cda5e8a7e"
+  },
+  "keep.q.claude.a": {
+    "text": "会話は残ります。Claude Code が自分のファイルに保存し、Aubergine は各ターミナルがどの会話にいたかを覚えています。再起動のあと、ターミナルのタイトルバーの <strong>Resume agent</strong> がその会話で Claude Code を再び起動します。その瞬間にエージェントがしていたことは止まっていて、あなたが頼むまでやり直されません。",
+    "from": "0d163dc56b89"
+  },
+  "keep.q.macos.q": {
+    "text": "macOS が夜中に自動でアップデートしても大丈夫ですか？",
+    "from": "dd58c7a1e65c"
+  },
+  "keep.q.macos.a": {
+    "text": "コンピューターを再起動するアップデートは、ほかの再起動と同じです。動いていたプログラムは終わり、それ以外はすべて残ります。ログイン時に起動する設定（<code>aubergine service install</code>）なら、ログインした時点でサーバーがまた動いていて、キャンバスが待っています。最後のフォルダーでの新しいシェルは、Aubergine のコンテナーを再起動したときに確認しました。実際の macOS の夜間アップデートは試していません。",
+    "from": "06c25c70de97"
+  },
+  "keep.q.tmux.q": {
+    "text": "tmux の知識は必要ですか？",
+    "from": "3d7564a5b7f9"
+  },
+  "keep.q.tmux.a": {
+    "text": "いいえ。インストールされている必要はあります（3.2 以降）が、Aubergine は専用のソケットと専用の設定で動かし、ステータスバーもプレフィックスキーもないので、tmux のコマンドを入力することはありません。あなた自身の tmux を使っていても、それには触れません。",
+    "from": "d33e0b313f18"
+  },
+  "keep.related": {
+    "text": "関連：<a href=\"/claude/\">Aubergine での Claude Code</a> · <a href=\"/queue-and-schedules/\">キューとスケジュール</a> · <a href=\"/working-copies/\">作業コピー</a>",
+    "from": "730944daab4e"
   },
   "queue.meta.title": {
     "text": "キュー、For you の一覧、スケジュール | Aubergine",
