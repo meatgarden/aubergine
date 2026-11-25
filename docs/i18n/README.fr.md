@@ -2,13 +2,12 @@
 
 *Traduction automatique du début du README. L’application elle-même est en anglais. Le README complet est en anglais : [README.md](../../README.md).*
 
-**Tous vos terminaux sur un seul canevas, dans votre navigateur.** Faites tourner plusieurs agents de code côte à côte et voyez d’un coup d’œil lequel vous attend, à quelle étape en est chacun, et ce que chacun a écrit pour vous.
+**Tous vos terminaux, côte à côte. Apportez vos propres agents.** Aubergine place tous vos terminaux sur un seul canevas, dans votre navigateur. Lancez-en autant que vous voulez, avec les agents et les modèles que vous utilisez déjà, et voyez d’un coup d’œil lequel vous attend, à quelle étape en est chacun, et ce que chacun a écrit pour vous.
 
 - Tourne sur votre propre ordinateur, et nulle part ailleurs.
 - Les terminaux continuent de tourner quand vous fermez le navigateur ou redémarrez Aubergine.
 - Fonctionne avec de simples shells comme avec des agents.
-- Autant de terminaux que vous voulez, côte à côte.
-- Apportez vos propres agents et modèles : Aubergine n’a pas de modèle à elle, ne détient aucune clé et n’a pas de compte.
+- Aubergine n’a pas de modèle à elle, ne détient aucune clé et n’a pas de compte.
 
 <img src="../../site/screenshots/canvas.png" alt="Le canevas d’Aubergine : trois canevas en colonne à gauche, la liste des terminaux avec ce que fait chacun, et six terminaux en direct, dont quatre dans leurs propres couleurs et un qui attend une réponse.">
 

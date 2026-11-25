@@ -2,13 +2,12 @@
 
 <sub>Ini adalah terjemahan mesin dari bagian awal README. Aplikasinya sendiri berbahasa Inggris. README lengkap dalam bahasa Inggris: <a href="../../README.md">README.md</a>.</sub>
 
-**Semua terminal Anda di satu kanvas di browser.** Jalankan beberapa agen coding berdampingan dan lihat sekilas mana yang menunggu Anda, di langkah mana masing-masing berada, dan apa yang sudah ditulis masing-masing untuk Anda.
+**Semua terminal Anda, berjajar. Bawa agen Anda sendiri.** Aubergine menempatkan semua terminal Anda di satu kanvas di browser. Jalankan sebanyak yang Anda mau, dengan agen dan model yang sudah Anda pakai, dan lihat sekilas mana yang menunggu Anda, di langkah mana masing-masing berada, dan apa yang sudah ditulis masing-masing untuk Anda.
 
 - Berjalan di komputer Anda sendiri, dan tidak di tempat lain.
 - Terminal tetap berjalan saat Anda menutup browser atau memulai ulang Aubergine.
 - Bekerja dengan shell biasa maupun dengan agen.
-- Terminal sebanyak yang Anda mau, berdampingan.
-- Bawa agen dan model Anda sendiri: Aubergine tidak punya model sendiri, tidak menyimpan kunci, dan tidak punya akun.
+- Aubergine tidak punya model sendiri, tidak menyimpan kunci, dan tidak punya akun.
 
 <img src="../../site/screenshots/canvas.png" alt="Kanvas Aubergine: tiga kanvas dalam satu kolom di kiri, daftar terminal beserta apa yang sedang dikerjakan masing-masing, dan enam terminal yang hidup, empat dengan warnanya sendiri, satu menunggu jawaban.">
 
