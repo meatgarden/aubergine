@@ -159,14 +159,6 @@
     "text": "这是示意图，不是截图：画布上的五个终端，以及在等你的那一个。",
     "from": "413e282f8a9d"
   },
-  "home.used.label": {
-    "text": "使用它的工程师来自",
-    "from": "2349ce19f7df"
-  },
-  "home.used.note": {
-    "text": "这些是工程师个人，而不是他们的雇主或学校：这些组织都没有为 Aubergine 背书，也与它没有关联。",
-    "from": "5114b1f41a78"
-  },
   "home.powers.title": {
     "text": "给你的终端装上超能力",
     "from": "588a8ab51054"

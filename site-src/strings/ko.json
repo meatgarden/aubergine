@@ -159,14 +159,6 @@
     "text": "실제 화면이 아닌 그림입니다. 캔버스 위의 터미널 다섯 개와, 그중 여러분을 기다리는 하나.",
     "from": "413e282f8a9d"
   },
-  "home.used.label": {
-    "text": "사용하는 엔지니어들의 소속",
-    "from": "2349ce19f7df"
-  },
-  "home.used.note": {
-    "text": "엔지니어 개인이 사용하는 것이며, 그들의 회사나 학교가 아닙니다. 이 조직들 중 어느 곳도 Aubergine을 보증하거나 Aubergine과 제휴하지 않습니다.",
-    "from": "5114b1f41a78"
-  },
   "home.powers.title": {
     "text": "터미널에 슈퍼파워를",
     "from": "588a8ab51054"
