@@ -127,11 +127,13 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="Dónde estás"><ol><li><a href="../">Aubergine</a></li><li>Preguntas frecuentes</li></ol></nav>
-  <h1>Preguntas frecuentes</h1>
-  <p class="lead">Respuestas cortas. Las <a href="../guides/">guías</a> profundizan más.</p>
-</div>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Dónde estás"><ol><li><a href="../">Aubergine</a></li><li>Preguntas frecuentes</li></ol></nav>
+    <h1>Preguntas frecuentes</h1>
+    <p class="lead">Respuestas cortas. Las <a href="../guides/">guías</a> profundizan más.</p>
+  </div>
+</header>
 <div class="wrap page-body">
   <div class="questions">
     <details><summary>¿Qué es Aubergine?</summary><p>Un lienzo local, en el navegador, de sesiones de terminal. Cada terminal es un nodo que puedes colocar y usar, así que puedes ejecutar varios agentes de programación a la vez y ver cuál te está esperando.</p></details>
@@ -152,6 +154,17 @@
     <details><summary>¿Qué cambia el instalador en mi ordenador?</summary><p>Dos cosas: la carpeta de instalación (~/.aubergine) y un enlace llamado aubergine. Nunca usa sudo, nunca edita los archivos de inicio de tu shell y nunca instala Node.js, pnpm ni tmux.</p></details>
   </div>
 </div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">En marcha en cinco minutos</h2>
+    <div class="close-do">
+      <p>Necesitas macOS con tmux 3.2 o posterior y Node.js 22 o posterior. <code>brew install tmux node</code> instala ambos.</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="Copiado" aria-live="polite" hidden>Copiar</button></p>
+      <p class="actions"><a class="button" href="../install/">Instalar</a><a class="button button-quiet" href="https://github.com/thirstyeggplant/aubergine">Leer el código</a></p>
+    </div>
+  </div>
+</section>
 
 </main>
 <footer class="foot">

@@ -145,11 +145,13 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="Posisi Anda"><ol><li><a href="../">Aubergine</a></li><li>Instalasi</li></ol></nav>
-  <h1>Cara menginstal Aubergine</h1>
-  <p class="lead">Satu perintah untuk menginstal, satu untuk menjalankan. Sekitar lima menit, termasuk tur.</p>
-</div>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Posisi Anda"><ol><li><a href="../">Aubergine</a></li><li>Instalasi</li></ol></nav>
+    <h1>Cara menginstal Aubergine</h1>
+    <p class="lead">Satu perintah untuk menginstal, satu untuk menjalankan. Sekitar lima menit, termasuk tur.</p>
+  </div>
+</header>
 <div class="wrap page-body">
   <div class="prose">
     <h2>Persyaratan</h2>
@@ -161,7 +163,7 @@
     <p class="cmd"><code>brew install tmux node</code><button type="button" class="copy" data-copy data-copied="Tersalin" aria-live="polite" hidden>Salin</button></p>
 
     <h2>Instal dan jalankan</h2>
-    <ol>
+    <ol class="seq">
       <li><p><strong>Instal Aubergine</strong> dari npm (hanya perlu tmux dan Node.js):</p>
         <p class="cmd"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="Tersalin" aria-live="polite" hidden>Salin</button></p>
         <p>Atau dengan installer, yang juga memerlukan pnpm dan membangun dari kode sumber:</p>
@@ -170,7 +172,7 @@
         <p class="cmd"><code>aubergine start --open</code><button type="button" class="copy" data-copy data-copied="Tersalin" aria-live="polite" hidden>Salin</button></p></li>
       <li><p><strong>Ikuti tur.</strong> Klik <em>Show me around</em> di tengah kanvas kosong. Ia membuat kanvas bernama “Demo” dengan beberapa agen pengganti dan memandu Anda melalui delapan langkah singkat. Tidak ada yang sungguhan di demo, dan <code>aubergine demo --remove</code> menghapusnya.</p></li>
     </ol>
-    <p>Lebih suka membaca skripnya dulu? Unduh, baca, lalu jalankan <code>sh install.sh --dry-run</code> untuk melihat apa yang akan dilakukannya tanpa mengubah apa pun.</p>
+    <p class="note">Lebih suka membaca skripnya dulu? Unduh, baca, lalu jalankan <code>sh install.sh --dry-run</code> untuk melihat apa yang akan dilakukannya tanpa mengubah apa pun.</p>
 
     <h2>Apa yang diubah installer</h2>
     <p>Hanya dua hal: folder instalasi (<code>~/.aubergine</code>, atau <code>AUBERGINE_HOME</code>) dan satu link bernama <code>aubergine</code> di folder pada <code>PATH</code> Anda yang bisa Anda tulisi. Ia memeriksa semuanya terlebih dahulu dan tidak mengubah apa pun jika ada yang kurang.</p>
@@ -198,11 +200,19 @@
       <li><strong>Hapus</strong> dengan <code>aubergine uninstall</code>. Ia menghapus link dan, setelah bertanya, salinan yang dibuat installer. Ia tidak pernah menghapus data Anda dan tidak pernah mengakhiri terminal Anda.</li>
       <li><strong>Jalankan saat login</strong> dengan <code>aubergine service install</code>, sehingga Anda cukup membuka browser.</li>
     </ul>
-
-    <h2>Selanjutnya</h2>
-    <p>Baca <a href="../run-multiple-coding-agents/">cara menjalankan beberapa agen coding sekaligus</a>, atau <a href="../guides/">panduan</a>. Referensi lengkapnya ada di <a href="https://github.com/thirstyeggplant/aubergine#readme">README</a>.</p>
   </div>
 </div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">Selanjutnya</h2>
+    <div class="close-do">
+      <p>Baca <a href="../run-multiple-coding-agents/">cara menjalankan beberapa agen coding sekaligus</a>, atau <a href="../guides/">panduan</a>. Referensi lengkapnya ada di <a href="https://github.com/thirstyeggplant/aubergine#readme">README</a>.</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="Tersalin" aria-live="polite" hidden>Salin</button></p>
+      <p class="actions"><a class="button" href="../guides/">Panduan</a></p>
+    </div>
+  </div>
+</section>
 
 </main>
 <footer class="foot">

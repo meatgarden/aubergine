@@ -105,72 +105,90 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="Onde você está"><ol><li><a href="../">Aubergine</a></li><li>Roadmap</li></ol></nav>
-  <p class="tag">Planejado, ainda não pronto</p>
-  <h1>Roadmap</h1>
-  <p class="lead">Nada disso existe hoje. É para onde queremos ir, e a ordem pode mudar. Para o que está pronto agora, veja os <a href="../guides/">guias</a>.</p>
-</div>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Onde você está"><ol><li><a href="../">Aubergine</a></li><li>Roadmap</li></ol></nav>
+    <p class="tag">Planejado, ainda não pronto</p>
+    <h1>Roadmap</h1>
+    <p class="lead">Nada disso existe hoje. É para onde queremos ir, e a ordem pode mudar. Para o que está pronto agora, veja os <a href="../guides/">guias</a>.</p>
+  </div>
+</header>
 <div class="wrap page-body roadmap">
-    <h2>Equipes e conexões</h2>
-    <p class="intro">Pessoas trabalhando juntas, e agentes acessados pelas ferramentas que você já usa.</p>
-    <ul class="planned">
+  <section aria-labelledby="rm-teams">
+    <h2 id="rm-teams">Equipes e conexões</h2>
+      <p class="intro">Pessoas trabalhando juntas, e agentes acessados pelas ferramentas que você já usa.</p>
+      <ul class="planned">
       <li><h3>Multiplayer</h3><p>Compartilhe um canvas com outras pessoas e os agentes delas. Veja quem está trabalhando onde, passe um agente que está esperando para um colega e respondam juntos.</p></li>
       <li><h3>Interface de chat</h3><p>Peça coisas aos agentes e responda às perguntas deles a partir de um app de chat da equipe, com a mesma identidade e as mesmas configurações do navegador.</p></li>
       <li><h3>Tickets e pull requests</h3><p>Transforme uma issue em uma tarefa na fila, abra um pull request a partir de uma cópia de trabalho e informe o resultado de volta no ticket.</p></li>
       <li><h3>Monitoramentos, webhooks e triagem</h3><p>Comece um trabalho quando algo acontecer: um job de CI que falhou, um alerta, uma mudança monitorada ou uma chamada de outro serviço. Regras decidem o que vira tarefa.</p></li>
       <li><h3>Skills compartilhadas e um marketplace</h3><p>Compartilhe as skills de um agente por concessão, leve-as para toda a equipe com aprovação, importe-as do Git e encontre itens revisados em um catálogo público.</p></li>
       <li><h3>Memória para pessoas e salas</h3><p>Guarde o que um agente aprendeu para cada pessoa e cada sala compartilhada, separado das demais.</p></li>
-    </ul>
-    <p class="also">Também: controles de administração para modelos, compartilhamento e rigor · um servidor de equipe auto-hospedado · login para equipes (SSO e MFA) · limites de uso por pessoa, token ou agente · relatórios somente leitura para compartilhar sem compartilhar terminais · uma visão para celular da lista “For you” · conectores revisados para ferramentas da empresa · mais apps de chat · pequenos apps web internos publicados para pessoas escolhidas.</p>
-
-    <h2>Nuvem</h2>
-    <p class="intro">Agentes que não precisam do seu notebook acordado.</p>
-    <ul class="planned">
+      </ul>
+      <p class="also">Também: controles de administração para modelos, compartilhamento e rigor · um servidor de equipe auto-hospedado · login para equipes (SSO e MFA) · limites de uso por pessoa, token ou agente · relatórios somente leitura para compartilhar sem compartilhar terminais · uma visão para celular da lista “For you” · conectores revisados para ferramentas da empresa · mais apps de chat · pequenos apps web internos publicados para pessoas escolhidas.</p>
+  </section>
+  <section aria-labelledby="rm-cloud">
+    <h2 id="rm-cloud">Nuvem</h2>
+      <p class="intro">Agentes que não precisam do seu notebook acordado.</p>
+      <ul class="planned">
       <li><h3>Agentes em sandbox na nuvem</h3><p>Rode um agente em um sandbox isolado na nuvem e acompanhe-o no mesmo canvas dos seus agentes locais. Os sandboxes dormem quando ociosos, acordam quando necessário e mantêm o armazenamento entre execuções.</p></li>
       <li><h3>Um pool de agentes</h3><p>Descreva o trabalho e deixe um pool de agentes pegá-lo, em vez de indicar um terminal para cada tarefa.</p></li>
       <li><h3>Ambientes prontos</h3><p>Salve dependências, ferramentas, skills, arquivos e variáveis uma vez, e inicie a partir deles qualquer terminal novo ou agente na nuvem.</p></li>
       <li><h3>Trabalho longo, em várias fases</h3><p>Tarefas que rodam por horas ou dias em etapas, com um ponto de verificação após cada etapa e um progresso que sobrevive a reinícios.</p></li>
       <li><h3>Deploy na nuvem com um comando</h3><p>Coloque o Aubergine compartilhado de uma equipe na sua própria conta de nuvem com um comando.</p></li>
       <li><h3>Trabalho que você pode ver</h3><p>Um agente na nuvem devolve capturas de tela ou uma gravação curta do que construiu, na sua lista “For you”.</p></li>
-    </ul>
-    <p class="also">Também: MCP sobre HTTP, para agentes em outras máquinas · suporte testado ao Linux · integração com shells além do zsh.</p>
-
-    <h2>Controle</h2>
-    <p class="intro">Quanto um agente pode fazer, e um registro do que ele fez.</p>
-    <ul class="planned">
+      </ul>
+      <p class="also">Também: MCP sobre HTTP, para agentes em outras máquinas · suporte testado ao Linux · integração com shells além do zsh.</p>
+  </section>
+  <section aria-labelledby="rm-control">
+    <h2 id="rm-control">Controle</h2>
+      <p class="intro">Quanto um agente pode fazer, e um registro do que ele fez.</p>
+      <ul class="planned">
       <li><h3>Modos de aprovação</h3><p>Escolha quanto um agente pode fazer sozinho: aprovar cada ação, aprovar as arriscadas, ou nenhuma.</p></li>
       <li><h3>Política de comandos e triagem</h3><p>Regras para comandos que precisam de aprovação ou são sempre recusados, e triagem opcional de conteúdo externo antes que um agente o leia.</p></li>
       <li><h3>Níveis de risco por repositório</h3><p>Limites mais rígidos onde importa, mais frouxos onde não importa.</p></li>
       <li><h3>Uma trilha de auditoria completa</h3><p>Um registro de quem ou o que fez o quê, por projeto, além das chamadas com token registradas hoje.</p></li>
       <li><h3>Desfazer o trabalho de um agente</h3><p>Volte uma cópia de trabalho para antes de uma tarefa, ou descarte o branch dela em um só passo.</p></li>
       <li><h3>Controles de administração</h3><p>Configurações para toda a equipe sobre quais modelos podem ser usados e como o compartilhamento funciona.</p></li>
-    </ul>
-    <p class="also">Também: escolha de modelo por terminal, tarefa ou agendamento.</p>
-
-    <h2>Qualidade</h2>
-    <p class="intro">Verificações que acontecem antes de um trabalho ser dado como concluído.</p>
-    <ul class="planned">
+      </ul>
+      <p class="also">Também: escolha de modelo por terminal, tarefa ou agendamento.</p>
+  </section>
+  <section aria-labelledby="rm-quality">
+    <h2 id="rm-quality">Qualidade</h2>
+      <p class="intro">Verificações que acontecem antes de um trabalho ser dado como concluído.</p>
+      <ul class="planned">
       <li><h3>Portões de qualidade</h3><p>Uma execução não pode terminar até que a revisão, os testes ou uma verificação de segurança deem aprovação.</p></li>
       <li><h3>Revisão de pull requests</h3><p>Um agente revisa um pull request e informa na sua lista “For you”.</p></li>
       <li><h3>Testes conduzidos no navegador</h3><p>Um agente conduz um navegador para testar uma mudança e devolve os resultados.</p></li>
       <li><h3>Planejar antes de construir</h3><p>Um agente propõe um plano e espera a sua aprovação antes de tocar em arquivos.</p></li>
       <li><h3>Receitas de tarefas</h3><p>Fluxos de trabalho prontos para geração de testes, revisão, varredura de dependências e de segredos, e para manter a documentação em dia.</p></li>
       <li><h3>Métricas de resultado</h3><p>Tempo da tarefa até a conclusão, quantas vezes um agente esperou por você e uso por quem iniciou, por projeto.</p></li>
-    </ul>
-    <p class="also">Também: relatórios de incidentes, em que um agente investiga e redige um postmortem.</p>
-
-    <h2>Em todo lugar</h2>
-    <p class="intro">Mais formas de acessar o Aubergine e construir sobre ele.</p>
-    <ul class="planned">
+      </ul>
+      <p class="also">Também: relatórios de incidentes, em que um agente investiga e redige um postmortem.</p>
+  </section>
+  <section aria-labelledby="rm-everywhere">
+    <h2 id="rm-everywhere">Em todo lugar</h2>
+      <p class="intro">Mais formas de acessar o Aubergine e construir sobre ele.</p>
+      <ul class="planned">
       <li><h3>SDK publicado</h3><p>O cliente tipado como pacote instalável, depois clientes para outras linguagens, como Python.</p></li>
       <li><h3>Extensão para editores</h3><p>Mostre seus terminais e a lista “For you” dentro do VS Code e de editores parecidos, sem sair do editor.</p></li>
       <li><h3>App para desktop</h3><p>Um app empacotado com um ícone na barra de menus, em vez de uma aba do navegador.</p></li>
       <li><h3>Suporte ao Windows</h3><p>Rodar o Aubergine no próprio Windows. Hoje ele roda só dentro do WSL 2, como <a href="../windows/">o guia para Windows</a> descreve, e ninguém testou isso no Windows ainda.</p></li>
-    </ul>
-
-    <p class="note">Trabalho planejado é uma direção, não uma promessa. O <a href="https://github.com/thirstyeggplant/aubergine">repositório</a> mostra o que foi lançado.</p>
+      </ul>
+  </section>
+  <p class="note">Trabalho planejado é uma direção, não uma promessa. O <a href="https://github.com/thirstyeggplant/aubergine">repositório</a> mostra o que foi lançado.</p>
 </div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">Funcionando em cinco minutos</h2>
+    <div class="close-do">
+      <p>Você precisa de macOS com tmux 3.2 ou mais recente e Node.js 22 ou mais recente. <code>brew install tmux node</code> instala os dois.</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="Copiado" aria-live="polite" hidden>Copiar</button></p>
+      <p class="actions"><a class="button" href="../install/">Instalar</a><a class="button button-quiet" href="https://github.com/thirstyeggplant/aubergine">Ler o código</a></p>
+    </div>
+  </div>
+</section>
 
 </main>
 <footer class="foot">

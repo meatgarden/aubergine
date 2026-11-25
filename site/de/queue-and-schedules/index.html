@@ -130,11 +130,13 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="Wo du bist"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">Anleitungen</a></li><li>Warteschlange und Zeitpläne</li></ol></nav>
-  <h1>Die Warteschlange, „For you“ und Zeitpläne</h1>
-  <p class="lead">Zwei Listen, die sich gegenseitig speisen: Die Warteschlange hält Arbeit für Agenten, und <em>For you</em> (für dich) hält alles, was auf einen Menschen wartet. Zeitpläne stellen zu festen Zeiten Aufgaben in die Warteschlange.</p>
-</div>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Wo du bist"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">Anleitungen</a></li><li>Warteschlange und Zeitpläne</li></ol></nav>
+    <h1>Die Warteschlange, „For you“ und Zeitpläne</h1>
+    <p class="lead">Zwei Listen, die sich gegenseitig speisen: Die Warteschlange hält Arbeit für Agenten, und <em>For you</em> (für dich) hält alles, was auf einen Menschen wartet. Zeitpläne stellen zu festen Zeiten Aufgaben in die Warteschlange.</p>
+  </div>
+</header>
 <div class="wrap page-body">
   <div class="prose">
     <h2>Die Warteschlange</h2>
@@ -148,7 +150,7 @@
     </ul>
     <h2>For you</h2>
     <p>Terminals mit einer Frage, Läufe zum Freigeben oder blockierte Läufe, Entwürfe und Installationen zum Lesen, für die Warteschlange vorgeschlagene Aufgaben, fertige und fehlgeschlagene Aufgaben, Listen, die ein Agent abgegeben hat, und Arbeitskopien, deren Terminal weg ist. Die Zahl neben For you oben und „next waiting“ sind dieselbe Liste. Das meiste wird gesammelt, nicht geschrieben: Ein Eintrag verschwindet, wenn die Sache selbst erledigt ist.</p>
-    <figure class="pic"><a href="../../screenshots/for-you.png"><img src="../../screenshots/for-you.png" width="990" height="570" loading="lazy" alt="Die Spalte Waiting for you auf der Seite Runs: ein Feld für ein To-do, dann die Frage eines Platzhalter-Agenten, ein Entwurf zum Lesen und eine abgegebene Liste."></a><figcaption>For you auf der Seite Runs: eine Frage, ein Entwurf zum Lesen und eine abgegebene Liste, jeweils mit dem, was es ist.</figcaption></figure>
+    <figure class="frame"><a href="../../screenshots/for-you.png" class="frame-pic"><img src="../../screenshots/for-you.png" width="990" height="570" loading="lazy" alt="Die Spalte Waiting for you auf der Seite Runs: ein Feld für ein To-do, dann die Frage eines Platzhalter-Agenten, ein Entwurf zum Lesen und eine abgegebene Liste."></a><figcaption>For you auf der Seite Runs: eine Frage, ein Entwurf zum Lesen und eine abgegebene Liste, jeweils mit dem, was es ist.</figcaption></figure>
     <p>Ein Agent, der Arbeit findet, die er jetzt nicht tun sollte, kann eine Aufgabe vorschlagen, und einer, der einen Menschen braucht, kann dich fragen:</p>
     <pre><code>aubergine task add "Add a test for the retry" --details "it should fail without the fix"
 aubergine ask "the staging key expires this week: rotate it, or say who can"</code></pre>
@@ -171,6 +173,17 @@ aubergine schedule run "My morning list"</code></pre>
     <p>Siehe auch: <a href="../working-copies/">Arbeitskopien</a> · <a href="../run-multiple-coding-agents/">mehrere Coding-Agenten gleichzeitig</a></p>
   </div>
 </div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">In fünf Minuten startklar</h2>
+    <div class="close-do">
+      <p>Du brauchst macOS mit tmux 3.2 oder neuer und Node.js 22 oder neuer. <code>brew install tmux node</code> holt beides.</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="Kopiert" aria-live="polite" hidden>Kopieren</button></p>
+      <p class="actions"><a class="button" href="../install/">Installieren</a><a class="button button-quiet" href="https://github.com/thirstyeggplant/aubergine">Quellcode lesen</a></p>
+    </div>
+  </div>
+</section>
 
 </main>
 <footer class="foot">

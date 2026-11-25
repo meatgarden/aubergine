@@ -132,20 +132,21 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="Posisi Anda"><ol><li><a href="../">Aubergine</a></li><li>Windows dengan WSL</li></ol></nav>
-  <h1>Instal Aubergine di Windows dengan WSL</h1>
-  <p class="lead">Aubergine tidak berjalan di Windows sendiri. Ia berjalan di dalam WSL 2, Linux yang disediakan Windows, dan Anda memakainya dari browser Windows Anda.</p>
-</div>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Posisi Anda"><ol><li><a href="../">Aubergine</a></li><li>Windows dengan WSL</li></ol></nav>
+    <h1>Instal Aubergine di Windows dengan WSL</h1>
+    <p class="lead">Aubergine tidak berjalan di Windows sendiri. Ia berjalan di dalam WSL 2, Linux yang disediakan Windows, dan Anda memakainya dari browser Windows Anda.</p>
+    <p class="note note-strong"><strong>Apa yang dicoba.</strong> Langkah Linux dijalankan pada 25 November 2026 di Ubuntu 24.04.5 (x86_64) di dalam kontainer, bukan di WSL, dengan Aubergine 0.2.2 dari npm: ia mengompilasi pustaka terminalnya, berjalan, memasukkan sebuah browser, serta menjalankan terminal dan demo. Instalasi Node.js dengan nvm tidak dijalankan di sana, karena Node.js 22 sudah terpasang. Belum ada isi halaman ini yang dijalankan di Windows. Jika Anda mencobanya, <a href="https://github.com/thirstyeggplant/aubergine/issues">ceritakan hasilnya</a>.</p>
+  </div>
+</header>
 <div class="wrap page-body">
   <div class="prose">
-    <p class="note"><strong>Apa yang dicoba.</strong> Langkah Linux dijalankan pada 25 November 2026 di Ubuntu 24.04.5 (x86_64) di dalam kontainer, bukan di WSL, dengan Aubergine 0.2.2 dari npm: ia mengompilasi pustaka terminalnya, berjalan, memasukkan sebuah browser, serta menjalankan terminal dan demo. Instalasi Node.js dengan nvm tidak dijalankan di sana, karena Node.js 22 sudah terpasang. Belum ada isi halaman ini yang dijalankan di Windows. Jika Anda mencobanya, <a href="https://github.com/thirstyeggplant/aubergine/issues">ceritakan hasilnya</a>.</p>
-
     <h2>Yang Anda butuhkan</h2>
     <p>Windows 11, atau Windows 10 versi 2004 (build 19041) atau lebih baru, tempat WSL 2 bisa dipasang dengan satu perintah. <a href="https://learn.microsoft.com/windows/wsl/install">Halaman Microsoft tentang memasang WSL</a> berisi rinciannya.</p>
 
     <h2>Instal dan jalankan</h2>
-    <ol>
+    <ol class="seq">
       <li><p><strong>Pasang WSL.</strong> Buka PowerShell sebagai administrator, jalankan ini, lalu mulai ulang Windows setelah selesai. Ini memasang WSL 2 dengan Ubuntu.</p>
         <p class="cmd multi"><code>wsl --install</code><button type="button" class="copy" data-copy data-copied="Tersalin" aria-live="polite" hidden>Salin</button></p>
         <p>Setelah dimulai ulang, buka <strong>Ubuntu</strong> dari menu Start dan pilih nama pengguna serta kata sandi untuknya. Semua perintah di bawah diketik di sana, di Ubuntu.</p></li>
@@ -192,11 +193,19 @@
         </tbody>
       </table>
     </div>
-
-    <h2>Selanjutnya</h2>
-    <p>Menghentikan, memperbarui, dan mencopot sama seperti di <a href="../install/">halaman instalasi</a>, dan selebihnya ada di <a href="https://github.com/thirstyeggplant/aubergine#readme">README</a>.</p>
   </div>
 </div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">Selanjutnya</h2>
+    <div class="close-do">
+      <p>Menghentikan, memperbarui, dan mencopot sama seperti di <a href="../install/">halaman instalasi</a>, dan selebihnya ada di <a href="https://github.com/thirstyeggplant/aubergine#readme">README</a>.</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="Tersalin" aria-live="polite" hidden>Salin</button></p>
+      <p class="actions"><a class="button" href="../install/">Instalasi</a></p>
+    </div>
+  </div>
+</section>
 
 </main>
 <footer class="foot">

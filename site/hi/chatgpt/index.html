@@ -108,68 +108,93 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="आप कहाँ हैं"><ol><li><a href="../">Aubergine</a></li><li>Codex और ChatGPT</li></ol></nav>
-  <h1>Codex और ChatGPT</h1>
-  <p class="lead">Codex, OpenAI का कमांड-लाइन कोडिंग एजेंट है। आप इसे खुद इंस्टॉल करते हैं और इसमें खुद साइन इन करते हैं; Aubergine में यह किसी भी दूसरे प्रोग्राम की तरह टर्मिनल में चलता है।</p>
-</div>
-<div class="wrap page-body">
-  <div class="prose">
-    <h2>अभी आज़माया नहीं गया</h2>
-    <p>अभी तक किसी ने Aubergine में असली Codex नहीं चलाया है। यह पेज जो बताता है, वह है जो Aubergine टर्मिनल के किसी भी प्रोग्राम के लिए और <code>aubergine</code> कमांड के लिए करता है, जो बना हुआ और टेस्ट किया हुआ है; Codex खुद वहाँ कैसा बर्ताव करता है, यह देखा नहीं गया है। अगर आप आज़माएँ, तो <a href="https://github.com/thirstyeggplant/aubergine/issues">बताएँ कैसा रहा</a>।</p>
-
-    <h2>इसे शुरू करें</h2>
-    <p><strong>New terminal</strong> से, या <code>N</code> से, एक टर्मिनल खोलें, और उसमें Codex वैसे ही शुरू करें जैसे किसी भी टर्मिनल में करते। Aubergine किसी मॉडल को कॉल नहीं करता और कोई key नहीं रखता: Codex को जो चाहिए, वह आपने उसमें साइन इन करते समय दे दिया।</p>
-
-    <h2>आज क्या काम करता है</h2>
-    <p>वह सब जो Aubergine किसी भी टर्मिनल के लिए करता है:</p>
+<header class="page-head page-head-big">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="आप कहाँ हैं"><ol><li><a href="../">Aubergine</a></li><li>Codex और ChatGPT</li></ol></nav>
+    <h1>Codex और ChatGPT</h1>
+    <p class="lead">Codex, OpenAI का कमांड-लाइन कोडिंग एजेंट है। आप इसे खुद इंस्टॉल करते हैं और इसमें खुद साइन इन करते हैं; Aubergine में यह किसी भी दूसरे प्रोग्राम की तरह टर्मिनल में चलता है।</p>
   </div>
-  <ul class="rows">
-    <li><h3>साथ-साथ</h3><p>एक कैनवस पर जितने चाहें उतने टर्मिनल, और टैब के रूप में कैनवस।</p></li>
-    <li><h3>कमांड की स्थिति</h3><p>zsh के साथ, टर्मिनल का टाइटल दिखाता है कि कोई कमांड चल रहा है, और कौन-सा।</p></li>
-    <li><h3>रंग, नोट और फ़ील्ड</h3><p>इसके टर्मिनल को एक रंग दें, सारांश और लॉग वाला नोट रखें, और टिकट या मालिक जैसे फ़ील्ड रखें।</p></li>
-    <li><h3>पार्क करना</h3><p>× टर्मिनल को पार्क करता है: वह कैनवस से हट जाता है और चलता रहता है, और <strong>Parked</strong> उसे वापस लाता है।</p></li>
-    <li><h3>एक टर्मिनल अकेले</h3><p>टर्मिनल को उसके अपने ब्राउज़र टैब में खोलें, उसकी जानकारी और नोट बगल में।</p></li>
-    <li><h3>एक वर्किंग कॉपी</h3><p><strong>Shell in a folder or a working copy…</strong>, या <code>aubergine new --copy</code>, टर्मिनल को उसके अपने चेकआउट में उसकी अपनी ब्रांच पर शुरू करता है, ताकि दो एजेंट कभी एक ही फ़ाइलें न बदलें।</p></li>
-    <li><h3>आउटपुट में खोज</h3><p><code>⌘K</code> हर टर्मिनल ने जो प्रिंट किया है उसमें खोजता है, और टर्मिनल को मिलान तक पीछे स्क्रॉल करके खोलता है।</p></li>
-  </ul>
-  <div class="prose">
-    <h2>यह कमांड से क्या बता सकता है</h2>
-    <p>हर Aubergine टर्मिनल में <code>aubergine</code> कमांड है और सिर्फ़ उसी टर्मिनल का एक क्रेडेंशियल। वहाँ का कोई भी प्रोग्राम, Codex भी, इन्हें इस्तेमाल कर सकता है:</p>
+</header>
+<section class="part" aria-labelledby="untried-h">
+  <div class="wrap dark-split">
+    <div class="note note-strong"><h2 id="untried-h">अभी आज़माया नहीं गया</h2><p>अभी तक किसी ने Aubergine में असली Codex नहीं चलाया है। यह पेज जो बताता है, वह है जो Aubergine टर्मिनल के किसी भी प्रोग्राम के लिए और <code>aubergine</code> कमांड के लिए करता है, जो बना हुआ और टेस्ट किया हुआ है; Codex खुद वहाँ कैसा बर्ताव करता है, यह देखा नहीं गया है। अगर आप आज़माएँ, तो <a href="https://github.com/thirstyeggplant/aubergine/issues">बताएँ कैसा रहा</a>।</p></div>
+    <div class="prose">
+      <h2>इसे शुरू करें</h2>
+      <p><strong>New terminal</strong> से, या <code>N</code> से, एक टर्मिनल खोलें, और उसमें Codex वैसे ही शुरू करें जैसे किसी भी टर्मिनल में करते। Aubergine किसी मॉडल को कॉल नहीं करता और कोई key नहीं रखता: Codex को जो चाहिए, वह आपने उसमें साइन इन करते समय दे दिया।</p>
+    </div>
   </div>
-  <ul class="rows">
-    <li><h3><code>aubergine attention waiting "…"</code></h3><p>टर्मिनल को waiting for you के रूप में चिह्नित करता है, साथ में उसे क्या चाहिए; <code>aubergine attention working</code> और <code>aubergine attention done</code> बाकी बताते हैं।</p></li>
-    <li><h3><code>aubergine note "…"</code></h3><p>टर्मिनल के नोट लॉग में एक लाइन जोड़ता है।</p></li>
-    <li><h3><code>aubergine describe</code></h3><p>टर्मिनल को काम के नाम पर रखता है और उसका सारांश रखता है; <code>aubergine link add</code> और <code>aubergine field set</code> काम के लिंक और फ़ील्ड जोड़ते हैं। जो आपने खुद लिखा, वही चलता है।</p></li>
-    <li><h3><code>aubergine workflow status</code></h3><p>वर्कफ़्लो का मौजूदा स्टेप पढ़ता है; <code>aubergine workflow done</code> उसे पूरा बताता है और अगला प्रिंट करता है।</p></li>
-    <li><h3><code>aubergine task add</code></h3><p>क्यू के लिए एक टास्क प्रस्तावित करता है, और <code>aubergine ask</code> आपसे कुछ ऐसा माँगता है जो सिर्फ़ कोई इंसान कर सकता है। दोनों आपकी सूची में इंतज़ार करते हैं।</p></li>
-  </ul>
-  <div class="prose">
-    <h3>इसे कैसे बताएँ</h3>
-    <p>Codex को Aubergine के बारे में तब तक पता नहीं होता जब तक उसे बताया न जाए। यह पाँच लाइनें प्रिंट करता है जिन्हें उन निर्देशों में पेस्ट करना है जो आपका एजेंट किसी प्रोजेक्ट में हर बातचीत की शुरुआत में पढ़ता है; उसका अपना दस्तावेज़ बताता है कि वे कहाँ जाती हैं:</p>
-    <p class="cmd"><code>aubergine guide --snippet</code><button type="button" class="copy" data-copy data-copied="कॉपी हो गया" aria-live="polite" hidden>कॉपी करें</button></p>
-    <p>ये लाइनें उसे कहती हैं कि जब वह Aubergine टर्मिनल में हो तो एक बार <code>aubergine guide</code> चलाए, और गाइड बाकी बताती है। Aubergine लाइनें प्रिंट करता है और उन्हें कभी किसी फ़ाइल में नहीं लिखता।</p>
-    <p>अगर आपका एजेंट MCP सर्वर शुरू कर सकता है, तो <code>aubergine mcp</code> वही चीज़ें टूल के रूप में देता है; Aubergine टर्मिनल के अंदर, टर्मिनल के अपने काम के लिए इसे न कोई पता चाहिए, न कोई टोकन।</p>
-
-    <h2>आज सिर्फ़ Claude Code के लिए बना</h2>
-    <p>Aubergine किसी एजेंट के लिए खुद से जो करता है, वह Claude Code के लिए बना है। Codex के लिए, आज:</p>
-    <ul>
-      <li>यह New terminal मेन्यू में नहीं है: आप इसे खुद किसी टर्मिनल में शुरू करते हैं।</li>
-      <li>Aubergine इसे एजेंट के रूप में नहीं देखता: यह खुद से waiting या finished नहीं दिखाया जाता, सिर्फ़ तब जब यह <code>aubergine attention</code> चलाता है।</li>
-      <li>इसके लिए कुछ टाइप नहीं होता: इसके टर्मिनल पर शुरू किया गया वर्कफ़्लो कुछ टाइप नहीं करता और वह लाइन दिखाता है जो आपको खुद इसे देनी है, और रीकैप या संदेश की इसे सूचना नहीं दी जाती।</li>
-      <li>क्यू इसे कोई टास्क नहीं देता: टास्क सिर्फ़ ऐसे टर्मिनल पर जाता है जहाँ एजेंट दिखता हो और खाली हो।</li>
-      <li>न Resume agent है, न पुरानी बातचीत की सूची, न यह सूची कि यह कैसे सेट अप है, और न Aubergine के टूल का डायलॉग।</li>
-      <li><code>aubergine move</code> और <code>aubergine here --claude</code> सिर्फ़ Claude Code को लाते हैं।</li>
-      <li>इसे अपने टर्मिनल का नाम रखने या सारांश रखने की याद नहीं दिलाई जाती।</li>
+</section>
+<section class="part band-lilac" aria-labelledby="works-h">
+  <div class="wrap">
+    <div class="show">
+      <div class="show-words"><h2 id="works-h">आज क्या काम करता है</h2><p>वह सब जो Aubergine किसी भी टर्मिनल के लिए करता है:</p></div>
+      <figure class="frame"><a href="../../screenshots/list.png" class="frame-pic"><img src="../../screenshots/list.png" width="1440" height="1008" loading="lazy" alt="साइड पैनल जिसमें पाँच टर्मिनल अपनी स्थिति के शब्दों के साथ हैं (working, waiting for you, finished, parked), और बगल में कैनवस का एक हिस्सा जिसमें एक लाइव शेल है।"></a><figcaption>सूची बताती है कि हर टर्मिनल क्या कर रहा है; उसके बगल में खुद टर्मिनल हैं।</figcaption></figure>
+    </div>
+    <ul class="across">
+      <li><h3>साथ-साथ</h3><p>एक कैनवस पर जितने चाहें उतने टर्मिनल, और टैब के रूप में कैनवस।</p></li>
+      <li><h3>कमांड की स्थिति</h3><p>zsh के साथ, टर्मिनल का टाइटल दिखाता है कि कोई कमांड चल रहा है, और कौन-सा।</p></li>
+      <li><h3>रंग, नोट और फ़ील्ड</h3><p>इसके टर्मिनल को एक रंग दें, सारांश और लॉग वाला नोट रखें, और टिकट या मालिक जैसे फ़ील्ड रखें।</p></li>
+      <li><h3>पार्क करना</h3><p>× टर्मिनल को पार्क करता है: वह कैनवस से हट जाता है और चलता रहता है, और <strong>Parked</strong> उसे वापस लाता है।</p></li>
+      <li><h3>एक टर्मिनल अकेले</h3><p>टर्मिनल को उसके अपने ब्राउज़र टैब में खोलें, उसकी जानकारी और नोट बगल में।</p></li>
+      <li><h3>एक वर्किंग कॉपी</h3><p><strong>Shell in a folder or a working copy…</strong>, या <code>aubergine new --copy</code>, टर्मिनल को उसके अपने चेकआउट में उसकी अपनी ब्रांच पर शुरू करता है, ताकि दो एजेंट कभी एक ही फ़ाइलें न बदलें।</p></li>
+      <li><h3>आउटपुट में खोज</h3><p><code>⌘K</code> हर टर्मिनल ने जो प्रिंट किया है उसमें खोजता है, और टर्मिनल को मिलान तक पीछे स्क्रॉल करके खोलता है।</p></li>
     </ul>
-    <p>यह सब <a href="../claude/">Claude Code</a> पेज पर है।</p>
-
-    <h2>ब्राउज़र में ChatGPT</h2>
-    <p>ब्राउज़र टैब में ChatGPT एक वेब पेज है, टर्मिनल का प्रोग्राम नहीं, इसलिए यह कैनवस पर नहीं चलता।</p>
-
-    <p class="note">Aubergine का OpenAI से कोई संबंध नहीं है। Codex और ChatGPT, OpenAI के ट्रेडमार्क हैं।</p>
   </div>
-</div>
+</section>
+<section class="part" aria-labelledby="report-h">
+  <div class="wrap">
+    <div class="part-head">
+      <h2 id="report-h">यह कमांड से क्या बता सकता है</h2>
+      <p>हर Aubergine टर्मिनल में <code>aubergine</code> कमांड है और सिर्फ़ उसी टर्मिनल का एक क्रेडेंशियल। वहाँ का कोई भी प्रोग्राम, Codex भी, इन्हें इस्तेमाल कर सकता है:</p>
+    </div>
+    <ul class="commands">
+      <li><h3><code>aubergine attention waiting "…"</code></h3><p>टर्मिनल को waiting for you के रूप में चिह्नित करता है, साथ में उसे क्या चाहिए; <code>aubergine attention working</code> और <code>aubergine attention done</code> बाकी बताते हैं।</p></li>
+      <li><h3><code>aubergine note "…"</code></h3><p>टर्मिनल के नोट लॉग में एक लाइन जोड़ता है।</p></li>
+      <li><h3><code>aubergine describe</code></h3><p>टर्मिनल को काम के नाम पर रखता है और उसका सारांश रखता है; <code>aubergine link add</code> और <code>aubergine field set</code> काम के लिंक और फ़ील्ड जोड़ते हैं। जो आपने खुद लिखा, वही चलता है।</p></li>
+      <li><h3><code>aubergine workflow status</code></h3><p>वर्कफ़्लो का मौजूदा स्टेप पढ़ता है; <code>aubergine workflow done</code> उसे पूरा बताता है और अगला प्रिंट करता है।</p></li>
+      <li><h3><code>aubergine task add</code></h3><p>क्यू के लिए एक टास्क प्रस्तावित करता है, और <code>aubergine ask</code> आपसे कुछ ऐसा माँगता है जो सिर्फ़ कोई इंसान कर सकता है। दोनों आपकी सूची में इंतज़ार करते हैं।</p></li>
+    </ul>
+    <div class="prose">
+      <h3>इसे कैसे बताएँ</h3>
+      <p>Codex को Aubergine के बारे में तब तक पता नहीं होता जब तक उसे बताया न जाए। यह पाँच लाइनें प्रिंट करता है जिन्हें उन निर्देशों में पेस्ट करना है जो आपका एजेंट किसी प्रोजेक्ट में हर बातचीत की शुरुआत में पढ़ता है; उसका अपना दस्तावेज़ बताता है कि वे कहाँ जाती हैं:</p>
+      <p class="cmd"><code>aubergine guide --snippet</code><button type="button" class="copy" data-copy data-copied="कॉपी हो गया" aria-live="polite" hidden>कॉपी करें</button></p>
+      <p>ये लाइनें उसे कहती हैं कि जब वह Aubergine टर्मिनल में हो तो एक बार <code>aubergine guide</code> चलाए, और गाइड बाकी बताती है। Aubergine लाइनें प्रिंट करता है और उन्हें कभी किसी फ़ाइल में नहीं लिखता।</p>
+      <p>अगर आपका एजेंट MCP सर्वर शुरू कर सकता है, तो <code>aubergine mcp</code> वही चीज़ें टूल के रूप में देता है; Aubergine टर्मिनल के अंदर, टर्मिनल के अपने काम के लिए इसे न कोई पता चाहिए, न कोई टोकन।</p>
+    </div>
+  </div>
+</section>
+<section class="band band-dark" aria-labelledby="only-h">
+  <div class="wrap dark-split">
+    <h2 id="only-h">आज सिर्फ़ Claude Code के लिए बना</h2>
+    <div class="prose">
+      <p>Aubergine किसी एजेंट के लिए खुद से जो करता है, वह Claude Code के लिए बना है। Codex के लिए, आज:</p>
+      <ul>
+        <li>यह New terminal मेन्यू में नहीं है: आप इसे खुद किसी टर्मिनल में शुरू करते हैं।</li>
+        <li>Aubergine इसे एजेंट के रूप में नहीं देखता: यह खुद से waiting या finished नहीं दिखाया जाता, सिर्फ़ तब जब यह <code>aubergine attention</code> चलाता है।</li>
+        <li>इसके लिए कुछ टाइप नहीं होता: इसके टर्मिनल पर शुरू किया गया वर्कफ़्लो कुछ टाइप नहीं करता और वह लाइन दिखाता है जो आपको खुद इसे देनी है, और रीकैप या संदेश की इसे सूचना नहीं दी जाती।</li>
+        <li>क्यू इसे कोई टास्क नहीं देता: टास्क सिर्फ़ ऐसे टर्मिनल पर जाता है जहाँ एजेंट दिखता हो और खाली हो।</li>
+        <li>न Resume agent है, न पुरानी बातचीत की सूची, न यह सूची कि यह कैसे सेट अप है, और न Aubergine के टूल का डायलॉग।</li>
+        <li><code>aubergine move</code> और <code>aubergine here --claude</code> सिर्फ़ Claude Code को लाते हैं।</li>
+        <li>इसे अपने टर्मिनल का नाम रखने या सारांश रखने की याद नहीं दिलाई जाती।</li>
+      </ul>
+      <p>यह सब <a href="../claude/">Claude Code</a> पेज पर है।</p>
+      <h3>ब्राउज़र में ChatGPT</h3>
+      <p>ब्राउज़र टैब में ChatGPT एक वेब पेज है, टर्मिनल का प्रोग्राम नहीं, इसलिए यह कैनवस पर नहीं चलता।</p>
+      <p class="note">Aubergine का OpenAI से कोई संबंध नहीं है। Codex और ChatGPT, OpenAI के ट्रेडमार्क हैं।</p>
+    </div>
+  </div>
+</section>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">पाँच मिनट में तैयार</h2>
+    <div class="close-do">
+      <p>आपको macOS चाहिए, tmux 3.2 या नए और Node.js 22 या नए के साथ। <code>brew install tmux node</code> दोनों ले आता है।</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="कॉपी हो गया" aria-live="polite" hidden>कॉपी करें</button></p>
+      <p class="actions"><a class="button" href="../install/">इंस्टॉल करें</a><a class="button button-quiet" href="https://github.com/thirstyeggplant/aubergine">सोर्स पढ़ें</a></p>
+    </div>
+  </div>
+</section>
 
 </main>
 <footer class="foot">

@@ -144,11 +144,13 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="현재 위치"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">가이드</a></li><li>작업 사본</li></ol></nav>
-  <h1>에이전트 둘, 저장소 하나: 작업 사본</h1>
-  <p class="lead">모든 터미널은 보통 여러분의 실제 폴더에서 작업합니다. 그러면 한 저장소의 두 에이전트가 같은 파일을 편집하고, 어느 변경이 누구의 것인지 알 수 없습니다. 작업 사본은 각 터미널에게 자체 브랜치에 있는 자체 체크아웃을 줍니다.</p>
-</div>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="현재 위치"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">가이드</a></li><li>작업 사본</li></ol></nav>
+    <h1>에이전트 둘, 저장소 하나: 작업 사본</h1>
+    <p class="lead">모든 터미널은 보통 여러분의 실제 폴더에서 작업합니다. 그러면 한 저장소의 두 에이전트가 같은 파일을 편집하고, 어느 변경이 누구의 것인지 알 수 없습니다. 작업 사본은 각 터미널에게 자체 브랜치에 있는 자체 체크아웃을 줍니다.</p>
+  </div>
+</header>
 <div class="wrap page-body">
   <div class="prose">
     <h2>작업 사본에서 터미널 시작하기</h2>
@@ -183,6 +185,17 @@ aubergine copies discard api</code></pre>
     <p>관련: <a href="../run-multiple-coding-agents/">여러 코딩 에이전트를 한꺼번에 실행하기</a> · <a href="../queue-and-schedules/">대기열과 일정</a>(새 터미널에서 시작된 작업은 폴더가 저장소 안에 있으면 자체 작업 사본을 받습니다).</p>
   </div>
 </div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">5분이면 시작합니다</h2>
+    <div class="close-do">
+      <p>tmux 3.2 이상과 Node.js 22 이상이 설치된 macOS가 필요합니다. <code>brew install tmux node</code>로 둘 다 설치할 수 있습니다.</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="복사됨" aria-live="polite" hidden>복사</button></p>
+      <p class="actions"><a class="button" href="../install/">설치</a><a class="button button-quiet" href="https://github.com/thirstyeggplant/aubergine">소스 보기</a></p>
+    </div>
+  </div>
+</section>
 
 </main>
 <footer class="foot">

@@ -129,11 +129,13 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="현재 위치"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">가이드</a></li><li>여러 에이전트 실행하기</li></ol></nav>
-  <h1>여러 코딩 에이전트를 한꺼번에 실행하는 방법</h1>
-  <p class="lead">에이전트 두 개는 쉽습니다. 다섯 개면 혼돈입니다. 어느 것이 막혔는지, 어느 것이 여러분을 기다리는지, 어느 것이 그 파일을 바꿨는지? Aubergine은 바로 그 순간을 위해 만들어졌습니다. 여러분의 컴퓨터에서 실행됩니다.</p>
-</div>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="현재 위치"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">가이드</a></li><li>여러 에이전트 실행하기</li></ol></nav>
+    <h1>여러 코딩 에이전트를 한꺼번에 실행하는 방법</h1>
+    <p class="lead">에이전트 두 개는 쉽습니다. 다섯 개면 혼돈입니다. 어느 것이 막혔는지, 어느 것이 여러분을 기다리는지, 어느 것이 그 파일을 바꿨는지? Aubergine은 바로 그 순간을 위해 만들어졌습니다. 여러분의 컴퓨터에서 실행됩니다.</p>
+  </div>
+</header>
 <div class="wrap page-body">
   <div class="prose">
     <h2>1. 각 에이전트에게 하나의 캔버스 위 터미널을 주세요</h2>
@@ -154,9 +156,19 @@
       <li>여러분이 할 수 있는 일을 에이전트가 하지 못하게 막지 않습니다. 에이전트는 여러분으로서 실행됩니다. 무엇이 보호되고 무엇이 보호되지 않는지는 <a href="../security/">보안</a>을 참고하세요.</li>
       <li>현재는 컴퓨터 한 대에서 실행됩니다. 다른 사람과 캔버스를 공유하는 것과 클라우드에서 에이전트를 실행하는 것은 <a href="../roadmap/">로드맵</a>에 있으며, 아직 만들어지지 않았습니다.</li>
     </ul>
-    <p class="actions"><a class="button primary" href="../install/">Aubergine 설치</a></p>
   </div>
 </div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">5분이면 시작합니다</h2>
+    <div class="close-do">
+      <p>tmux 3.2 이상과 Node.js 22 이상이 설치된 macOS가 필요합니다. <code>brew install tmux node</code>로 둘 다 설치할 수 있습니다.</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="복사됨" aria-live="polite" hidden>복사</button></p>
+      <p class="actions"><a class="button" href="../install/">Aubergine 설치</a><a class="button button-quiet" href="https://github.com/thirstyeggplant/aubergine">소스 보기</a></p>
+    </div>
+  </div>
+</section>
 
 </main>
 <footer class="foot">

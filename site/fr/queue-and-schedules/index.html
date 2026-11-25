@@ -130,11 +130,13 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="Où vous êtes"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">Guides</a></li><li>File d’attente et planifications</li></ol></nav>
-  <h1>La file d’attente, « For you » et les planifications</h1>
-  <p class="lead">Deux listes qui s’alimentent l’une l’autre : la file d’attente contient le travail des agents, et <em>For you</em> (pour vous) contient tout ce qui attend une personne. Les planifications ajoutent des tâches à la file d’attente à heure fixe.</p>
-</div>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Où vous êtes"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">Guides</a></li><li>File d’attente et planifications</li></ol></nav>
+    <h1>La file d’attente, « For you » et les planifications</h1>
+    <p class="lead">Deux listes qui s’alimentent l’une l’autre : la file d’attente contient le travail des agents, et <em>For you</em> (pour vous) contient tout ce qui attend une personne. Les planifications ajoutent des tâches à la file d’attente à heure fixe.</p>
+  </div>
+</header>
 <div class="wrap page-body">
   <div class="prose">
     <h2>La file d’attente</h2>
@@ -148,7 +150,7 @@
     </ul>
     <h2>For you</h2>
     <p>Les terminaux qui ont une question, les exécutions à approuver ou bloquées, les brouillons et les installations à lire, les tâches proposées pour la file d’attente, les tâches terminées et échouées, les listes remises par un agent, et les copies de travail dont le terminal n’est plus là. Le compteur à côté de For you en haut et « next waiting » sont la même liste. L’essentiel est rassemblé, pas écrit : un élément disparaît quand la chose elle-même est faite.</p>
-    <figure class="pic"><a href="../../screenshots/for-you.png"><img src="../../screenshots/for-you.png" width="990" height="570" loading="lazy" alt="La colonne Waiting for you de la page Runs : un champ pour ajouter une chose à faire, puis la question d’un agent factice, un brouillon à lire et une liste remise."></a><figcaption>For you sur la page Runs : une question, un brouillon à lire et une liste remise, chacun avec ce qu’il est.</figcaption></figure>
+    <figure class="frame"><a href="../../screenshots/for-you.png" class="frame-pic"><img src="../../screenshots/for-you.png" width="990" height="570" loading="lazy" alt="La colonne Waiting for you de la page Runs : un champ pour ajouter une chose à faire, puis la question d’un agent factice, un brouillon à lire et une liste remise."></a><figcaption>For you sur la page Runs : une question, un brouillon à lire et une liste remise, chacun avec ce qu’il est.</figcaption></figure>
     <p>Un agent qui trouve du travail qu’il ne devrait pas faire maintenant peut proposer une tâche, et un agent qui a besoin d’une personne peut vous demander :</p>
     <pre><code>aubergine task add "Add a test for the retry" --details "it should fail without the fix"
 aubergine ask "the staging key expires this week: rotate it, or say who can"</code></pre>
@@ -171,6 +173,17 @@ aubergine schedule run "My morning list"</code></pre>
     <p>Voir aussi : <a href="../working-copies/">copies de travail</a> · <a href="../run-multiple-coding-agents/">faire tourner plusieurs agents de code à la fois</a></p>
   </div>
 </div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">Opérationnel en cinq minutes</h2>
+    <div class="close-do">
+      <p>Il vous faut macOS avec tmux 3.2 ou plus récent et Node.js 22 ou plus récent. <code>brew install tmux node</code> installe les deux.</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="Copié" aria-live="polite" hidden>Copier</button></p>
+      <p class="actions"><a class="button" href="../install/">Installer</a><a class="button button-quiet" href="https://github.com/thirstyeggplant/aubergine">Lire le code source</a></p>
+    </div>
+  </div>
+</section>
 
 </main>
 <footer class="foot">

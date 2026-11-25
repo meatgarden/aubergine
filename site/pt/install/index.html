@@ -145,11 +145,13 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="Onde você está"><ol><li><a href="../">Aubergine</a></li><li>Instalar</li></ol></nav>
-  <h1>Como instalar o Aubergine</h1>
-  <p class="lead">Um comando instala, outro inicia. Cerca de cinco minutos, com o tour.</p>
-</div>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Onde você está"><ol><li><a href="../">Aubergine</a></li><li>Instalar</li></ol></nav>
+    <h1>Como instalar o Aubergine</h1>
+    <p class="lead">Um comando instala, outro inicia. Cerca de cinco minutos, com o tour.</p>
+  </div>
+</header>
 <div class="wrap page-body">
   <div class="prose">
     <h2>Requisitos</h2>
@@ -161,7 +163,7 @@
     <p class="cmd"><code>brew install tmux node</code><button type="button" class="copy" data-copy data-copied="Copiado" aria-live="polite" hidden>Copiar</button></p>
 
     <h2>Instale e inicie</h2>
-    <ol>
+    <ol class="seq">
       <li><p><strong>Instale o Aubergine</strong> pelo npm (precisa só de tmux e Node.js):</p>
         <p class="cmd"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="Copiado" aria-live="polite" hidden>Copiar</button></p>
         <p>Ou com o instalador, que também precisa de pnpm e compila a partir do código-fonte:</p>
@@ -170,7 +172,7 @@
         <p class="cmd"><code>aubergine start --open</code><button type="button" class="copy" data-copy data-copied="Copiado" aria-live="polite" hidden>Copiar</button></p></li>
       <li><p><strong>Faça o tour.</strong> Clique em <em>Show me around</em> no meio do canvas vazio. Ele cria um canvas chamado “Demo” com alguns agentes simulados e guia você por oito etapas curtas. Nada na demo é real, e <code>aubergine demo --remove</code> a remove.</p></li>
     </ol>
-    <p>Prefere ler o script antes? Baixe-o, leia-o e rode <code>sh install.sh --dry-run</code> para ver o que ele faria sem mudar nada.</p>
+    <p class="note">Prefere ler o script antes? Baixe-o, leia-o e rode <code>sh install.sh --dry-run</code> para ver o que ele faria sem mudar nada.</p>
 
     <h2>O que o instalador muda</h2>
     <p>Só duas coisas: a pasta de instalação (<code>~/.aubergine</code>, ou <code>AUBERGINE_HOME</code>) e um link chamado <code>aubergine</code> em uma pasta do seu <code>PATH</code> em que você pode escrever. Ele verifica tudo antes e não muda nada se faltar alguma coisa.</p>
@@ -198,11 +200,19 @@
       <li><strong>Desinstale</strong> com <code>aubergine uninstall</code>. Ele remove o link e, depois de perguntar, a cópia que o instalador fez. Ele nunca remove seus dados e nunca encerra seus terminais.</li>
       <li><strong>Inicie junto com o login</strong> com <code>aubergine service install</code>, e você só precisa abrir o navegador.</li>
     </ul>
-
-    <h2>Próximos passos</h2>
-    <p>Leia <a href="../run-multiple-coding-agents/">como rodar vários agentes de programação ao mesmo tempo</a>, ou os <a href="../guides/">guias</a>. A referência completa está no <a href="https://github.com/thirstyeggplant/aubergine#readme">README</a>.</p>
   </div>
 </div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">Próximos passos</h2>
+    <div class="close-do">
+      <p>Leia <a href="../run-multiple-coding-agents/">como rodar vários agentes de programação ao mesmo tempo</a>, ou os <a href="../guides/">guias</a>. A referência completa está no <a href="https://github.com/thirstyeggplant/aubergine#readme">README</a>.</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="Copiado" aria-live="polite" hidden>Copiar</button></p>
+      <p class="actions"><a class="button" href="../guides/">Guias</a></p>
+    </div>
+  </div>
+</section>
 
 </main>
 <footer class="foot">

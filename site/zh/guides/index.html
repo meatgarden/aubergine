@@ -105,24 +105,39 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="当前位置"><ol><li><a href="../">Aubergine</a></li><li>指南</li></ol></nav>
-  <h1>指南</h1>
-  <p class="lead">简短、实用的指南。完整参考是 <a href="https://github.com/thirstyeggplant/aubergine#readme">README</a>。</p>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="当前位置"><ol><li><a href="../">Aubergine</a></li><li>指南</li></ol></nav>
+    <h1>指南</h1>
+    <p class="lead">简短、实用的指南。完整参考是 <a href="https://github.com/thirstyeggplant/aubergine#readme">README</a>。</p>
+  </div>
+</header>
+<div class="cards-band">
+  <div class="wrap page-body">
+    <ul class="cards">
+      <li><h2><a href="../install/">安装 Aubergine</a></h2><p>系统要求、一行安装脚本、它会改动什么，以及常见问题的解决方法。</p></li>
+      <li><h2><a href="../windows/">在 Windows 上用 WSL 安装</a></h2><p>在 WSL 2 里运行 Aubergine，并在 Windows 的浏览器中使用。Linux 部分的步骤已运行过；在 Windows 上还什么都没试过。</p></li>
+      <li><h2><a href="../run-multiple-coding-agents/">同时运行多个编程智能体</a></h2><p>画布、等待计数、队列、工作副本和工作流，一次讲完。</p></li>
+      <li><h2><a href="../claude/">Aubergine 中的 Claude Code</a></h2><p>Aubergine 为 Claude Code 自动做的事，以及每样东西在哪里。</p></li>
+      <li><h2><a href="../chatgpt/">Codex 与 ChatGPT</a></h2><p>Codex 像任何程序一样在终端中运行，它能报告什么，以及哪些只为 Claude Code 构建。</p></li>
+      <li><h2><a href="../working-copies/">工作副本</a></h2><p>给每个智能体独立的检出和分支，两个智能体永远不会编辑同一批文件。</p></li>
+      <li><h2><a href="../queue-and-schedules/">队列、For you 与定时计划</a></h2><p>工作只分派一次，看到所有在等你的事，并在设定的时间运行任务。</p></li>
+      <li><h2><a href="../security/">安全与隐私</a></h2><p>哪些受保护，哪些不受保护。</p></li>
+      <li><h2><a href="../faq/">常见问题</a></h2><p>常见问题的简短回答。</p></li>
+    </ul>
+  </div>
 </div>
-<div class="wrap page-body">
-  <ul class="rows">
-    <li><h2><a class="row-link" href="../install/">安装 Aubergine</a></h2><p>系统要求、一行安装脚本、它会改动什么，以及常见问题的解决方法。</p></li>
-    <li><h2><a class="row-link" href="../windows/">在 Windows 上用 WSL 安装</a></h2><p>在 WSL 2 里运行 Aubergine，并在 Windows 的浏览器中使用。Linux 部分的步骤已运行过；在 Windows 上还什么都没试过。</p></li>
-    <li><h2><a class="row-link" href="../run-multiple-coding-agents/">同时运行多个编程智能体</a></h2><p>画布、等待计数、队列、工作副本和工作流，一次讲完。</p></li>
-    <li><h2><a class="row-link" href="../claude/">Aubergine 中的 Claude Code</a></h2><p>Aubergine 为 Claude Code 自动做的事，以及每样东西在哪里。</p></li>
-    <li><h2><a class="row-link" href="../chatgpt/">Codex 与 ChatGPT</a></h2><p>Codex 像任何程序一样在终端中运行，它能报告什么，以及哪些只为 Claude Code 构建。</p></li>
-    <li><h2><a class="row-link" href="../working-copies/">工作副本</a></h2><p>给每个智能体独立的检出和分支，两个智能体永远不会编辑同一批文件。</p></li>
-    <li><h2><a class="row-link" href="../queue-and-schedules/">队列、For you 与定时计划</a></h2><p>工作只分派一次，看到所有在等你的事，并在设定的时间运行任务。</p></li>
-    <li><h2><a class="row-link" href="../security/">安全与隐私</a></h2><p>哪些受保护，哪些不受保护。</p></li>
-    <li><h2><a class="row-link" href="../faq/">常见问题</a></h2><p>常见问题的简短回答。</p></li>
-  </ul>
-</div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">五分钟上手</h2>
+    <div class="close-do">
+      <p>你需要 macOS，以及 tmux 3.2 或更高版本和 Node.js 22 或更高版本。<code>brew install tmux node</code> 可以一次装好两者。</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="已复制" aria-live="polite" hidden>复制</button></p>
+      <p class="actions"><a class="button" href="../install/">安装</a><a class="button button-quiet" href="https://github.com/thirstyeggplant/aubergine">阅读源码</a></p>
+    </div>
+  </div>
+</section>
 
 </main>
 <footer class="foot">

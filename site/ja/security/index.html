@@ -129,11 +129,13 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="現在の位置"><ol><li><a href="../">Aubergine</a></li><li>セキュリティ</li></ol></nav>
-  <h1>セキュリティとプライバシー</h1>
-  <p class="lead">Aubergine がターミナルを守るためにすること、そして同じくらい大事な、しないこと。要するに、ローカルで動き、エージェントのために動く前に尋ね、それでもエージェントはあなたとして動く、ということです。</p>
-</div>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="現在の位置"><ol><li><a href="../">Aubergine</a></li><li>セキュリティ</li></ol></nav>
+    <h1>セキュリティとプライバシー</h1>
+    <p class="lead">Aubergine がターミナルを守るためにすること、そして同じくらい大事な、しないこと。要するに、ローカルで動き、エージェントのために動く前に尋ね、それでもエージェントはあなたとして動く、ということです。</p>
+  </div>
+</header>
 <div class="wrap page-body">
   <div class="prose">
     <h2>すべてはあなたのコンピューターに</h2>
@@ -173,6 +175,17 @@
     <p>関連：<a href="../working-copies/">作業コピー</a> · <a href="../faq/">FAQ</a> · <a href="../roadmap/">ロードマップ</a>（承認モードとコマンドのポリシーは予定中で、まだ作られていません）</p>
   </div>
 </div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">5分で動かす</h2>
+    <div class="close-do">
+      <p>tmux 3.2 以降と Node.js 22 以降の入った macOS が必要です。<code>brew install tmux node</code> で両方が入ります。</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="コピーしました" aria-live="polite" hidden>コピー</button></p>
+      <p class="actions"><a class="button" href="../install/">インストール</a><a class="button button-quiet" href="https://github.com/thirstyeggplant/aubergine">ソースを読む</a></p>
+    </div>
+  </div>
+</section>
 
 </main>
 <footer class="foot">

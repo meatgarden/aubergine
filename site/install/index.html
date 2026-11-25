@@ -138,11 +138,13 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="Where you are"><ol><li><a href="../">Aubergine</a></li><li>Install</li></ol></nav>
-  <h1>How to install Aubergine</h1>
-  <p class="lead">One command installs it, one starts it. About five minutes, including the tour.</p>
-</div>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Where you are"><ol><li><a href="../">Aubergine</a></li><li>Install</li></ol></nav>
+    <h1>How to install Aubergine</h1>
+    <p class="lead">One command installs it, one starts it. About five minutes, including the tour.</p>
+  </div>
+</header>
 <div class="wrap page-body">
   <div class="prose">
     <h2>Requirements</h2>
@@ -154,7 +156,7 @@
     <p class="cmd"><code>brew install tmux node</code><button type="button" class="copy" data-copy data-copied="Copied" aria-live="polite" hidden>Copy</button></p>
 
     <h2>Install and start</h2>
-    <ol>
+    <ol class="seq">
       <li><p><strong>Install Aubergine</strong> from npm (needs tmux and Node.js only):</p>
         <p class="cmd"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="Copied" aria-live="polite" hidden>Copy</button></p>
         <p>Or with the installer, which also needs pnpm and builds from the source:</p>
@@ -163,7 +165,7 @@
         <p class="cmd"><code>aubergine start --open</code><button type="button" class="copy" data-copy data-copied="Copied" aria-live="polite" hidden>Copy</button></p></li>
       <li><p><strong>Take the tour.</strong> Click <em>Show me around</em> in the middle of the empty canvas. It makes a canvas named “Demo” with a few stand-in agents and walks you through eight short steps. Nothing in the demo is real, and <code>aubergine demo --remove</code> takes it away.</p></li>
     </ol>
-    <p>Prefer to read the script first? Download it, read it, and run <code>sh install.sh --dry-run</code> to see what it would do without changing anything.</p>
+    <p class="note">Prefer to read the script first? Download it, read it, and run <code>sh install.sh --dry-run</code> to see what it would do without changing anything.</p>
 
     <h2>What the installer changes</h2>
     <p>Two things only: the install folder (<code>~/.aubergine</code>, or <code>AUBERGINE_HOME</code>) and one link named <code>aubergine</code> in a folder on your <code>PATH</code> that you can write to. It checks everything first and changes nothing if something is missing.</p>
@@ -191,11 +193,19 @@
       <li><strong>Uninstall</strong> with <code>aubergine uninstall</code>. It removes the link and, after asking, the copy the installer made. It never removes your data and never ends your terminals.</li>
       <li><strong>Start at login</strong> with <code>aubergine service install</code>, so you only ever open the browser.</li>
     </ul>
-
-    <h2>Next</h2>
-    <p>Read <a href="../run-multiple-coding-agents/">how to run several coding agents at once</a>, or the <a href="../guides/">guides</a>. The full reference is in the <a href="https://github.com/thirstyeggplant/aubergine#readme">README</a>.</p>
   </div>
 </div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">Next</h2>
+    <div class="close-do">
+      <p>Read <a href="../run-multiple-coding-agents/">how to run several coding agents at once</a>, or the <a href="../guides/">guides</a>. The full reference is in the <a href="https://github.com/thirstyeggplant/aubergine#readme">README</a>.</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="Copied" aria-live="polite" hidden>Copy</button></p>
+      <p class="actions"><a class="button" href="../guides/">Guides</a></p>
+    </div>
+  </div>
+</section>
 
 </main>
 <footer class="foot">

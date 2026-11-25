@@ -144,11 +144,13 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="Dónde estás"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">Guías</a></li><li>Copias de trabajo</li></ol></nav>
-  <h1>Dos agentes, un repositorio: copias de trabajo</h1>
-  <p class="lead">Normalmente cada terminal trabaja en tu carpeta real. Entonces dos agentes en un mismo repositorio editan los mismos archivos, y no puedes saber qué cambio es de quién. Una copia de trabajo le da a cada terminal su propio checkout, en su propia rama.</p>
-</div>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Dónde estás"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">Guías</a></li><li>Copias de trabajo</li></ol></nav>
+    <h1>Dos agentes, un repositorio: copias de trabajo</h1>
+    <p class="lead">Normalmente cada terminal trabaja en tu carpeta real. Entonces dos agentes en un mismo repositorio editan los mismos archivos, y no puedes saber qué cambio es de quién. Una copia de trabajo le da a cada terminal su propio checkout, en su propia rama.</p>
+  </div>
+</header>
 <div class="wrap page-body">
   <div class="prose">
     <h2>Inicia una terminal en una copia de trabajo</h2>
@@ -183,6 +185,17 @@ aubergine copies discard api</code></pre>
     <p>Relacionado: <a href="../run-multiple-coding-agents/">ejecutar varios agentes de programación a la vez</a> · <a href="../queue-and-schedules/">la cola y las programaciones</a> (una tarea iniciada en una terminal nueva recibe una copia de trabajo propia cuando la carpeta está en un repositorio).</p>
   </div>
 </div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">En marcha en cinco minutos</h2>
+    <div class="close-do">
+      <p>Necesitas macOS con tmux 3.2 o posterior y Node.js 22 o posterior. <code>brew install tmux node</code> instala ambos.</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="Copiado" aria-live="polite" hidden>Copiar</button></p>
+      <p class="actions"><a class="button" href="../install/">Instalar</a><a class="button button-quiet" href="https://github.com/thirstyeggplant/aubergine">Leer el código</a></p>
+    </div>
+  </div>
+</section>
 
 </main>
 <footer class="foot">

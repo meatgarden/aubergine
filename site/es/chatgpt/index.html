@@ -108,68 +108,93 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="Dónde estás"><ol><li><a href="../">Aubergine</a></li><li>Codex y ChatGPT</li></ol></nav>
-  <h1>Codex y ChatGPT</h1>
-  <p class="lead">Codex es el agente de programación de línea de comandos de OpenAI. Lo instalas e inicias sesión en él tú mismo; en Aubergine se ejecuta en una terminal como cualquier otro programa.</p>
-</div>
-<div class="wrap page-body">
-  <div class="prose">
-    <h2>Aún no probado</h2>
-    <p>Nadie ha ejecutado todavía un Codex real en Aubergine. Lo que dice esta página es lo que Aubergine hace por cualquier programa en una terminal y por los comandos <code>aubergine</code>, que está hecho y probado; cómo se comporta Codex ahí no se ha visto. Si lo pruebas, <a href="https://github.com/thirstyeggplant/aubergine/issues">cuéntanos cómo te fue</a>.</p>
-
-    <h2>Inícialo</h2>
-    <p>Abre una terminal con <strong>New terminal</strong>, o <code>N</code>, e inicia Codex en ella como harías en cualquier terminal. Aubergine no llama a ningún modelo ni guarda ninguna clave: lo que Codex necesita se lo diste al iniciar sesión en él.</p>
-
-    <h2>Qué funciona hoy</h2>
-    <p>Todo lo que Aubergine hace por cualquier terminal:</p>
+<header class="page-head page-head-big">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Dónde estás"><ol><li><a href="../">Aubergine</a></li><li>Codex y ChatGPT</li></ol></nav>
+    <h1>Codex y ChatGPT</h1>
+    <p class="lead">Codex es el agente de programación de línea de comandos de OpenAI. Lo instalas e inicias sesión en él tú mismo; en Aubergine se ejecuta en una terminal como cualquier otro programa.</p>
   </div>
-  <ul class="rows">
-    <li><h3>Una al lado de la otra</h3><p>Tantas terminales como quieras en un solo lienzo, y los lienzos como pestañas.</p></li>
-    <li><h3>Estado de los comandos</h3><p>Con zsh, el título de una terminal muestra que se está ejecutando un comando, y cuál.</p></li>
-    <li><h3>Colores, notas y campos</h3><p>Dale un color a su terminal, lleva una nota con un resumen y un registro, y campos como un ticket o un responsable.</p></li>
-    <li><h3>Aparcar</h3><p>× aparca la terminal: sale del lienzo y sigue en marcha, y <strong>Parked</strong> (aparcadas) la trae de vuelta.</p></li>
-    <li><h3>Una terminal por sí sola</h3><p>Abre la terminal en una pestaña del navegador propia, con sus detalles y su nota al lado.</p></li>
-    <li><h3>Una copia de trabajo</h3><p><strong>Shell in a folder or a working copy…</strong>, o <code>aubergine new --copy</code>, inicia la terminal en su propio checkout en su propia rama, para que dos agentes nunca editen los mismos archivos.</p></li>
-    <li><h3>Búsqueda en la salida</h3><p><code>⌘K</code> busca en lo que ha imprimido cada terminal, y abre la terminal desplazada hasta la coincidencia.</p></li>
-  </ul>
-  <div class="prose">
-    <h2>Qué puede decir mediante los comandos</h2>
-    <p>Cada terminal de Aubergine tiene el comando <code>aubergine</code> y una credencial solo para esa terminal. Cualquier programa que esté ahí, Codex incluido, puede usarlos:</p>
+</header>
+<section class="part" aria-labelledby="untried-h">
+  <div class="wrap dark-split">
+    <div class="note note-strong"><h2 id="untried-h">Aún no probado</h2><p>Nadie ha ejecutado todavía un Codex real en Aubergine. Lo que dice esta página es lo que Aubergine hace por cualquier programa en una terminal y por los comandos <code>aubergine</code>, que está hecho y probado; cómo se comporta Codex ahí no se ha visto. Si lo pruebas, <a href="https://github.com/thirstyeggplant/aubergine/issues">cuéntanos cómo te fue</a>.</p></div>
+    <div class="prose">
+      <h2>Inícialo</h2>
+      <p>Abre una terminal con <strong>New terminal</strong>, o <code>N</code>, e inicia Codex en ella como harías en cualquier terminal. Aubergine no llama a ningún modelo ni guarda ninguna clave: lo que Codex necesita se lo diste al iniciar sesión en él.</p>
+    </div>
   </div>
-  <ul class="rows">
-    <li><h3><code>aubergine attention waiting "…"</code></h3><p>Marca la terminal como esperándote, con lo que necesita; <code>aubergine attention working</code> y <code>aubergine attention done</code> dicen el resto.</p></li>
-    <li><h3><code>aubergine note "…"</code></h3><p>Añade una línea al registro de notas de la terminal.</p></li>
-    <li><h3><code>aubergine describe</code></h3><p>Pone a la terminal el nombre del trabajo y mantiene su resumen; <code>aubergine link add</code> y <code>aubergine field set</code> añaden los enlaces y campos del trabajo. Lo que escribiste tú gana.</p></li>
-    <li><h3><code>aubergine workflow status</code></h3><p>Lee el paso actual de un flujo de trabajo; <code>aubergine workflow done</code> lo da por hecho e imprime el siguiente.</p></li>
-    <li><h3><code>aubergine task add</code></h3><p>Propone una tarea para la cola, y <code>aubergine ask</code> te pide algo que solo puede hacer una persona. Ambas cosas esperan en tu lista.</p></li>
-  </ul>
-  <div class="prose">
-    <h3>Cómo decírselo</h3>
-    <p>Codex no sabe nada de Aubergine hasta que se lo dicen. Esto imprime cinco líneas para pegar en las instrucciones que tu agente lee al inicio de cada conversación en un proyecto; su propia documentación dice dónde van:</p>
-    <p class="cmd"><code>aubergine guide --snippet</code><button type="button" class="copy" data-copy data-copied="Copiado" aria-live="polite" hidden>Copiar</button></p>
-    <p>Las líneas le dicen que ejecute <code>aubergine guide</code> una vez cuando esté en una terminal de Aubergine, y la guía dice el resto. Aubergine imprime las líneas y nunca las escribe en ningún archivo.</p>
-    <p>Si tu agente puede iniciar un servidor MCP, <code>aubergine mcp</code> ofrece lo mismo como herramientas; dentro de una terminal de Aubergine no necesita dirección ni token para el trabajo propio de la terminal.</p>
-
-    <h2>Hecho hoy solo para Claude Code</h2>
-    <p>Lo que Aubergine hace por sí mismo para un agente está hecho para Claude Code. Para Codex, hoy:</p>
-    <ul>
-      <li>No está en el menú New terminal: lo inicias tú en una terminal.</li>
-      <li>Aubergine no lo ve como un agente: no se marca como esperando ni terminado por sí solo, solo cuando ejecuta <code>aubergine attention</code>.</li>
-      <li>No se escribe nada para él: un flujo de trabajo iniciado en su terminal no escribe nada y muestra la línea para que se la des tú, y no se le anuncia un resumen ni un mensaje.</li>
-      <li>La cola no le da ninguna tarea: una tarea solo va a una terminal donde se ve un agente y está libre.</li>
-      <li>No hay Resume agent, ni lista de conversaciones pasadas, ni lista de cómo está configurado, ni diálogo para las herramientas de Aubergine.</li>
-      <li><code>aubergine move</code> y <code>aubergine here --claude</code> solo traen Claude Code.</li>
-      <li>No se le recuerda que ponga nombre a su terminal ni que mantenga un resumen.</li>
+</section>
+<section class="part band-lilac" aria-labelledby="works-h">
+  <div class="wrap">
+    <div class="show">
+      <div class="show-words"><h2 id="works-h">Qué funciona hoy</h2><p>Todo lo que Aubergine hace por cualquier terminal:</p></div>
+      <figure class="frame"><a href="../../screenshots/list.png" class="frame-pic"><img src="../../screenshots/list.png" width="1440" height="1008" loading="lazy" alt="El panel lateral con cinco terminales y su estado en palabras (working, waiting for you, finished, parked), junto a una parte del lienzo con una shell en vivo."></a><figcaption>La lista dice qué está haciendo cada terminal; a su lado, las propias terminales.</figcaption></figure>
+    </div>
+    <ul class="across">
+      <li><h3>Una al lado de la otra</h3><p>Tantas terminales como quieras en un solo lienzo, y los lienzos como pestañas.</p></li>
+      <li><h3>Estado de los comandos</h3><p>Con zsh, el título de una terminal muestra que se está ejecutando un comando, y cuál.</p></li>
+      <li><h3>Colores, notas y campos</h3><p>Dale un color a su terminal, lleva una nota con un resumen y un registro, y campos como un ticket o un responsable.</p></li>
+      <li><h3>Aparcar</h3><p>× aparca la terminal: sale del lienzo y sigue en marcha, y <strong>Parked</strong> (aparcadas) la trae de vuelta.</p></li>
+      <li><h3>Una terminal por sí sola</h3><p>Abre la terminal en una pestaña del navegador propia, con sus detalles y su nota al lado.</p></li>
+      <li><h3>Una copia de trabajo</h3><p><strong>Shell in a folder or a working copy…</strong>, o <code>aubergine new --copy</code>, inicia la terminal en su propio checkout en su propia rama, para que dos agentes nunca editen los mismos archivos.</p></li>
+      <li><h3>Búsqueda en la salida</h3><p><code>⌘K</code> busca en lo que ha imprimido cada terminal, y abre la terminal desplazada hasta la coincidencia.</p></li>
     </ul>
-    <p>Todo eso está en la página de <a href="../claude/">Claude Code</a>.</p>
-
-    <h2>ChatGPT en un navegador</h2>
-    <p>ChatGPT en una pestaña del navegador es una página web, no un programa en una terminal, así que no se ejecuta en el lienzo.</p>
-
-    <p class="note">Aubergine no está afiliado a OpenAI. Codex y ChatGPT son marcas registradas de OpenAI.</p>
   </div>
-</div>
+</section>
+<section class="part" aria-labelledby="report-h">
+  <div class="wrap">
+    <div class="part-head">
+      <h2 id="report-h">Qué puede decir mediante los comandos</h2>
+      <p>Cada terminal de Aubergine tiene el comando <code>aubergine</code> y una credencial solo para esa terminal. Cualquier programa que esté ahí, Codex incluido, puede usarlos:</p>
+    </div>
+    <ul class="commands">
+      <li><h3><code>aubergine attention waiting "…"</code></h3><p>Marca la terminal como esperándote, con lo que necesita; <code>aubergine attention working</code> y <code>aubergine attention done</code> dicen el resto.</p></li>
+      <li><h3><code>aubergine note "…"</code></h3><p>Añade una línea al registro de notas de la terminal.</p></li>
+      <li><h3><code>aubergine describe</code></h3><p>Pone a la terminal el nombre del trabajo y mantiene su resumen; <code>aubergine link add</code> y <code>aubergine field set</code> añaden los enlaces y campos del trabajo. Lo que escribiste tú gana.</p></li>
+      <li><h3><code>aubergine workflow status</code></h3><p>Lee el paso actual de un flujo de trabajo; <code>aubergine workflow done</code> lo da por hecho e imprime el siguiente.</p></li>
+      <li><h3><code>aubergine task add</code></h3><p>Propone una tarea para la cola, y <code>aubergine ask</code> te pide algo que solo puede hacer una persona. Ambas cosas esperan en tu lista.</p></li>
+    </ul>
+    <div class="prose">
+      <h3>Cómo decírselo</h3>
+      <p>Codex no sabe nada de Aubergine hasta que se lo dicen. Esto imprime cinco líneas para pegar en las instrucciones que tu agente lee al inicio de cada conversación en un proyecto; su propia documentación dice dónde van:</p>
+      <p class="cmd"><code>aubergine guide --snippet</code><button type="button" class="copy" data-copy data-copied="Copiado" aria-live="polite" hidden>Copiar</button></p>
+      <p>Las líneas le dicen que ejecute <code>aubergine guide</code> una vez cuando esté en una terminal de Aubergine, y la guía dice el resto. Aubergine imprime las líneas y nunca las escribe en ningún archivo.</p>
+      <p>Si tu agente puede iniciar un servidor MCP, <code>aubergine mcp</code> ofrece lo mismo como herramientas; dentro de una terminal de Aubergine no necesita dirección ni token para el trabajo propio de la terminal.</p>
+    </div>
+  </div>
+</section>
+<section class="band band-dark" aria-labelledby="only-h">
+  <div class="wrap dark-split">
+    <h2 id="only-h">Hecho hoy solo para Claude Code</h2>
+    <div class="prose">
+      <p>Lo que Aubergine hace por sí mismo para un agente está hecho para Claude Code. Para Codex, hoy:</p>
+      <ul>
+        <li>No está en el menú New terminal: lo inicias tú en una terminal.</li>
+        <li>Aubergine no lo ve como un agente: no se marca como esperando ni terminado por sí solo, solo cuando ejecuta <code>aubergine attention</code>.</li>
+        <li>No se escribe nada para él: un flujo de trabajo iniciado en su terminal no escribe nada y muestra la línea para que se la des tú, y no se le anuncia un resumen ni un mensaje.</li>
+        <li>La cola no le da ninguna tarea: una tarea solo va a una terminal donde se ve un agente y está libre.</li>
+        <li>No hay Resume agent, ni lista de conversaciones pasadas, ni lista de cómo está configurado, ni diálogo para las herramientas de Aubergine.</li>
+        <li><code>aubergine move</code> y <code>aubergine here --claude</code> solo traen Claude Code.</li>
+        <li>No se le recuerda que ponga nombre a su terminal ni que mantenga un resumen.</li>
+      </ul>
+      <p>Todo eso está en la página de <a href="../claude/">Claude Code</a>.</p>
+      <h3>ChatGPT en un navegador</h3>
+      <p>ChatGPT en una pestaña del navegador es una página web, no un programa en una terminal, así que no se ejecuta en el lienzo.</p>
+      <p class="note">Aubergine no está afiliado a OpenAI. Codex y ChatGPT son marcas registradas de OpenAI.</p>
+    </div>
+  </div>
+</section>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">En marcha en cinco minutos</h2>
+    <div class="close-do">
+      <p>Necesitas macOS con tmux 3.2 o posterior y Node.js 22 o posterior. <code>brew install tmux node</code> instala ambos.</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="Copiado" aria-live="polite" hidden>Copiar</button></p>
+      <p class="actions"><a class="button" href="../install/">Instalar</a><a class="button button-quiet" href="https://github.com/thirstyeggplant/aubergine">Leer el código</a></p>
+    </div>
+  </div>
+</section>
 
 </main>
 <footer class="foot">

@@ -132,20 +132,21 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="আপনি কোথায় আছেন"><ol><li><a href="../">Aubergine</a></li><li>WSL দিয়ে Windows</li></ol></nav>
-  <h1>WSL দিয়ে Windows-এ Aubergine ইনস্টল করুন</h1>
-  <p class="lead">Aubergine সরাসরি Windows-এ চলে না। এটি WSL 2-এর ভেতরে চলে, যা Windows-এর দেওয়া Linux, আর আপনি এটি আপনার Windows ব্রাউজার থেকে ব্যবহার করেন।</p>
-</div>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="আপনি কোথায় আছেন"><ol><li><a href="../">Aubergine</a></li><li>WSL দিয়ে Windows</li></ol></nav>
+    <h1>WSL দিয়ে Windows-এ Aubergine ইনস্টল করুন</h1>
+    <p class="lead">Aubergine সরাসরি Windows-এ চলে না। এটি WSL 2-এর ভেতরে চলে, যা Windows-এর দেওয়া Linux, আর আপনি এটি আপনার Windows ব্রাউজার থেকে ব্যবহার করেন।</p>
+    <p class="note note-strong"><strong>কী চেষ্টা করা হয়েছে।</strong> Linux-এর ধাপগুলো ২৫ নভেম্বর ২০২৬-এ একটি কন্টেইনারে Ubuntu 24.04.5 (x86_64)-এ চালানো হয়েছে, WSL-এ নয়, npm থেকে Aubergine 0.2.2 দিয়ে: এটি নিজের টার্মিনাল লাইব্রেরি কম্পাইল করেছে, চালু হয়েছে, একটি ব্রাউজারকে সাইন ইন করিয়েছে, আর একটি টার্মিনাল ও ডেমো চালিয়েছে। nvm দিয়ে Node.js ইনস্টল করা সেখানে চালানো হয়নি, কারণ Node.js 22 আগে থেকেই ইনস্টল করা ছিল। এই পেজের কিছুই এখনো Windows-এ চালানো হয়নি। আপনি চেষ্টা করলে <a href="https://github.com/thirstyeggplant/aubergine/issues">আমাদের জানান কেমন হলো</a>।</p>
+  </div>
+</header>
 <div class="wrap page-body">
   <div class="prose">
-    <p class="note"><strong>কী চেষ্টা করা হয়েছে।</strong> Linux-এর ধাপগুলো ২৫ নভেম্বর ২০২৬-এ একটি কন্টেইনারে Ubuntu 24.04.5 (x86_64)-এ চালানো হয়েছে, WSL-এ নয়, npm থেকে Aubergine 0.2.2 দিয়ে: এটি নিজের টার্মিনাল লাইব্রেরি কম্পাইল করেছে, চালু হয়েছে, একটি ব্রাউজারকে সাইন ইন করিয়েছে, আর একটি টার্মিনাল ও ডেমো চালিয়েছে। nvm দিয়ে Node.js ইনস্টল করা সেখানে চালানো হয়নি, কারণ Node.js 22 আগে থেকেই ইনস্টল করা ছিল। এই পেজের কিছুই এখনো Windows-এ চালানো হয়নি। আপনি চেষ্টা করলে <a href="https://github.com/thirstyeggplant/aubergine/issues">আমাদের জানান কেমন হলো</a>।</p>
-
     <h2>আপনার যা লাগবে</h2>
     <p>Windows 11, বা Windows 10 ভার্সন 2004 (বিল্ড 19041) বা নতুন, যেখানে একটি কমান্ডে WSL 2 ইনস্টল করা যায়। বিস্তারিত আছে Microsoft-এর <a href="https://learn.microsoft.com/windows/wsl/install">WSL ইনস্টল করার পেজে</a>।</p>
 
     <h2>ইনস্টল করুন আর চালু করুন</h2>
-    <ol>
+    <ol class="seq">
       <li><p><strong>WSL ইনস্টল করুন।</strong> PowerShell অ্যাডমিনিস্ট্রেটর হিসেবে খুলুন, এটি চালান, আর শেষ হলে Windows রিস্টার্ট করুন। এটি Ubuntu-সহ WSL 2 ইনস্টল করে।</p>
         <p class="cmd multi"><code>wsl --install</code><button type="button" class="copy" data-copy data-copied="কপি হয়েছে" aria-live="polite" hidden>কপি করুন</button></p>
         <p>রিস্টার্টের পরে Start মেনু থেকে <strong>Ubuntu</strong> খুলুন আর তার জন্য একটি ইউজার নেম ও পাসওয়ার্ড বেছে নিন। নিচের প্রতিটি কমান্ড সেখানেই, Ubuntu-তে টাইপ করা হয়।</p></li>
@@ -192,11 +193,19 @@
         </tbody>
       </table>
     </div>
-
-    <h2>এরপর</h2>
-    <p>থামানো, আপডেট করা আর আনইনস্টল করা <a href="../install/">ইনস্টল পেজের</a> মতোই, আর বাকি সবকিছু <a href="https://github.com/thirstyeggplant/aubergine#readme">README</a>-তে আছে।</p>
   </div>
 </div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">এরপর</h2>
+    <div class="close-do">
+      <p>থামানো, আপডেট করা আর আনইনস্টল করা <a href="../install/">ইনস্টল পেজের</a> মতোই, আর বাকি সবকিছু <a href="https://github.com/thirstyeggplant/aubergine#readme">README</a>-তে আছে।</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="কপি হয়েছে" aria-live="polite" hidden>কপি করুন</button></p>
+      <p class="actions"><a class="button" href="../install/">ইনস্টল</a></p>
+    </div>
+  </div>
+</section>
 
 </main>
 <footer class="foot">

@@ -105,72 +105,90 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="현재 위치"><ol><li><a href="../">Aubergine</a></li><li>로드맵</li></ol></nav>
-  <p class="tag">계획 중, 아직 만들어지지 않음</p>
-  <h1>로드맵</h1>
-  <p class="lead">이 중 어느 것도 아직 존재하지 않습니다. 우리가 가고 싶은 방향이며, 순서는 바뀔 수 있습니다. 지금 만들어진 것은 <a href="../guides/">가이드</a>를 보세요.</p>
-</div>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="현재 위치"><ol><li><a href="../">Aubergine</a></li><li>로드맵</li></ol></nav>
+    <p class="tag">계획 중, 아직 만들어지지 않음</p>
+    <h1>로드맵</h1>
+    <p class="lead">이 중 어느 것도 아직 존재하지 않습니다. 우리가 가고 싶은 방향이며, 순서는 바뀔 수 있습니다. 지금 만들어진 것은 <a href="../guides/">가이드</a>를 보세요.</p>
+  </div>
+</header>
 <div class="wrap page-body roadmap">
-    <h2>팀과 연결</h2>
-    <p class="intro">함께 일하는 사람들, 그리고 이미 쓰는 도구에서 닿는 에이전트.</p>
-    <ul class="planned">
+  <section aria-labelledby="rm-teams">
+    <h2 id="rm-teams">팀과 연결</h2>
+      <p class="intro">함께 일하는 사람들, 그리고 이미 쓰는 도구에서 닿는 에이전트.</p>
+      <ul class="planned">
       <li><h3>멀티플레이어</h3><p>다른 사람들과 그들의 에이전트와 캔버스를 공유합니다. 누가 어디서 일하는지 보고, 기다리는 에이전트를 팀원에게 넘기고, 함께 답합니다.</p></li>
       <li><h3>채팅 인터페이스</h3><p>팀 채팅 앱에서 에이전트에게 요청하고 질문에 답합니다. 브라우저에서와 같은 신원과 설정으로.</p></li>
       <li><h3>티켓과 풀 리퀘스트</h3><p>이슈를 대기열의 작업으로 바꾸고, 작업 사본에서 풀 리퀘스트를 열고, 결과를 티켓에 다시 보고합니다.</p></li>
       <li><h3>감시, 웹훅, 분류</h3><p>무언가 일어나면 작업을 시작합니다. 실패한 CI 작업, 알림, 감시 중인 변경, 다른 서비스의 호출. 무엇이 작업이 될지는 규칙이 정합니다.</p></li>
       <li><h3>공유 스킬과 마켓플레이스</h3><p>권한 부여로 에이전트의 스킬을 공유하고, 승인을 거쳐 팀 전체로 넓히고, Git에서 가져오고, 공개 카탈로그에서 검토된 항목을 찾습니다.</p></li>
       <li><h3>사람과 방을 위한 기억</h3><p>에이전트가 배운 것을 사람마다, 공유된 방마다 서로 분리해 보관합니다.</p></li>
-    </ul>
-    <p class="also">또한: 모델, 공유, 엄격도에 대한 관리자 통제 · 자체 호스팅 팀 서버 · 팀을 위한 로그인(SSO와 MFA) · 사람, 토큰, 에이전트별 사용량 한도 · 터미널을 공유하지 않고 공유하는 읽기 전용 보고서 · “For you” 목록의 휴대폰 화면 · 회사 도구로 가는 검토된 커넥터 · 더 많은 채팅 앱 · 정해진 사람들에게 게시하는 작은 내부 웹 앱.</p>
-
-    <h2>클라우드</h2>
-    <p class="intro">노트북이 깨어 있지 않아도 되는 에이전트.</p>
-    <ul class="planned">
+      </ul>
+      <p class="also">또한: 모델, 공유, 엄격도에 대한 관리자 통제 · 자체 호스팅 팀 서버 · 팀을 위한 로그인(SSO와 MFA) · 사람, 토큰, 에이전트별 사용량 한도 · 터미널을 공유하지 않고 공유하는 읽기 전용 보고서 · “For you” 목록의 휴대폰 화면 · 회사 도구로 가는 검토된 커넥터 · 더 많은 채팅 앱 · 정해진 사람들에게 게시하는 작은 내부 웹 앱.</p>
+  </section>
+  <section aria-labelledby="rm-cloud">
+    <h2 id="rm-cloud">클라우드</h2>
+      <p class="intro">노트북이 깨어 있지 않아도 되는 에이전트.</p>
+      <ul class="planned">
       <li><h3>클라우드의 샌드박스 에이전트</h3><p>격리된 클라우드 샌드박스에서 에이전트를 실행하고, 로컬 에이전트와 같은 캔버스에서 지켜봅니다. 샌드박스는 유휴 시 잠들고, 필요할 때 깨어나며, 실행 사이에 저장소를 유지합니다.</p></li>
       <li><h3>에이전트 풀</h3><p>작업마다 터미널을 지정하는 대신, 일을 설명하면 에이전트 풀이 가져갑니다.</p></li>
       <li><h3>미리 만든 환경</h3><p>의존성, 도구, 스킬, 파일, 변수를 한 번 저장해 두고, 새 터미널이나 클라우드 에이전트를 그것으로 시작합니다.</p></li>
       <li><h3>길고 여러 단계로 된 작업</h3><p>몇 시간이나 며칠에 걸쳐 단계별로 실행되는 작업. 단계마다 확인이 있고, 진행 상황은 재시작을 견딥니다.</p></li>
       <li><h3>명령 하나로 클라우드 배포</h3><p>팀이 공유하는 Aubergine을 명령 하나로 여러분의 클라우드 계정에 올립니다.</p></li>
       <li><h3>볼 수 있는 작업</h3><p>클라우드 에이전트가 만든 것의 스크린샷이나 짧은 녹화를 여러분의 “For you” 목록으로 돌려줍니다.</p></li>
-    </ul>
-    <p class="also">또한: 다른 기기의 에이전트를 위한 HTTP 기반 MCP · 테스트된 Linux 지원 · zsh 외의 셸 통합.</p>
-
-    <h2>통제</h2>
-    <p class="intro">에이전트가 얼마나 할 수 있는지, 그리고 무엇을 했는지의 기록.</p>
-    <ul class="planned">
+      </ul>
+      <p class="also">또한: 다른 기기의 에이전트를 위한 HTTP 기반 MCP · 테스트된 Linux 지원 · zsh 외의 셸 통합.</p>
+  </section>
+  <section aria-labelledby="rm-control">
+    <h2 id="rm-control">통제</h2>
+      <p class="intro">에이전트가 얼마나 할 수 있는지, 그리고 무엇을 했는지의 기록.</p>
+      <ul class="planned">
       <li><h3>승인 모드</h3><p>에이전트가 혼자 얼마나 할 수 있는지 고릅니다. 모든 행동을 승인, 위험한 것만 승인, 또는 승인 없음.</p></li>
       <li><h3>명령 정책과 검사</h3><p>승인이 필요하거나 항상 거부되는 명령에 대한 규칙, 그리고 에이전트가 읽기 전에 외부 내용을 선택적으로 검사하는 기능.</p></li>
       <li><h3>저장소별 위험 수준</h3><p>중요한 곳에서는 더 엄격하게, 그렇지 않은 곳에서는 더 느슨하게.</p></li>
       <li><h3>전체 감사 기록</h3><p>오늘 기록되는 토큰 호출을 넘어, 프로젝트별로 누가 또는 무엇이 무엇을 했는지의 기록.</p></li>
       <li><h3>에이전트의 작업 되돌리기</h3><p>작업 사본을 작업 이전으로 되돌리거나, 그 브랜치를 한 번에 버립니다.</p></li>
       <li><h3>관리자 통제</h3><p>어떤 모델을 쓸 수 있는지, 공유가 어떻게 동작하는지에 대한 팀 전체 설정.</p></li>
-    </ul>
-    <p class="also">또한: 터미널, 작업, 일정별 모델 선택.</p>
-
-    <h2>품질</h2>
-    <p class="intro">작업을 완료라고 부르기 전에 일어나는 확인.</p>
-    <ul class="planned">
+      </ul>
+      <p class="also">또한: 터미널, 작업, 일정별 모델 선택.</p>
+  </section>
+  <section aria-labelledby="rm-quality">
+    <h2 id="rm-quality">품질</h2>
+      <p class="intro">작업을 완료라고 부르기 전에 일어나는 확인.</p>
+      <ul class="planned">
       <li><h3>품질 관문</h3><p>리뷰, 테스트, 보안 검사가 통과를 보고하기 전에는 실행이 끝날 수 없습니다.</p></li>
       <li><h3>풀 리퀘스트 리뷰</h3><p>에이전트가 풀 리퀘스트를 리뷰하고 여러분의 “For you” 목록에 보고합니다.</p></li>
       <li><h3>브라우저 기반 테스트</h3><p>에이전트가 브라우저를 조작해 변경을 테스트하고 결과를 돌려줍니다.</p></li>
       <li><h3>만들기 전에 계획</h3><p>에이전트가 계획을 제안하고, 파일을 건드리기 전에 여러분의 승인을 기다립니다.</p></li>
       <li><h3>작업 레시피</h3><p>테스트 생성, 리뷰, 의존성과 비밀 검사, 문서 최신 유지를 위한 미리 만든 워크플로.</p></li>
       <li><h3>성과 지표</h3><p>프로젝트별로 작업에서 완료까지의 시간, 에이전트가 여러분을 기다린 빈도, 누가 시작했는지에 따른 사용량.</p></li>
-    </ul>
-    <p class="also">또한: 에이전트가 조사하고 사후 분석 초안을 쓰는 장애 보고서.</p>
-
-    <h2>어디서나</h2>
-    <p class="intro">Aubergine에 닿고 그 위에 무언가를 만드는 더 많은 방법.</p>
-    <ul class="planned">
+      </ul>
+      <p class="also">또한: 에이전트가 조사하고 사후 분석 초안을 쓰는 장애 보고서.</p>
+  </section>
+  <section aria-labelledby="rm-everywhere">
+    <h2 id="rm-everywhere">어디서나</h2>
+      <p class="intro">Aubergine에 닿고 그 위에 무언가를 만드는 더 많은 방법.</p>
+      <ul class="planned">
       <li><h3>공개 SDK</h3><p>설치 가능한 패키지로서의 타입 있는 클라이언트, 그다음 Python 같은 다른 언어용 클라이언트.</p></li>
       <li><h3>에디터 확장</h3><p>VS Code와 비슷한 에디터 안에서, 에디터를 떠나지 않고 터미널과 “For you” 목록을 보여 줍니다.</p></li>
       <li><h3>데스크톱 앱</h3><p>브라우저 탭 대신, 메뉴 막대 아이콘이 있는 패키지 앱.</p></li>
       <li><h3>Windows 지원</h3><p>Windows 자체에서 Aubergine을 실행합니다. 지금은 <a href="../windows/">Windows 가이드</a>에 적힌 대로 WSL 2 안에서만 실행되며, Windows에서 이를 시도해 본 사람은 아직 없습니다.</p></li>
-    </ul>
-
-    <p class="note">계획된 작업은 방향이지 약속이 아닙니다. 출시된 것은 <a href="https://github.com/thirstyeggplant/aubergine">저장소</a>에서 볼 수 있습니다.</p>
+      </ul>
+  </section>
+  <p class="note">계획된 작업은 방향이지 약속이 아닙니다. 출시된 것은 <a href="https://github.com/thirstyeggplant/aubergine">저장소</a>에서 볼 수 있습니다.</p>
 </div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">5분이면 시작합니다</h2>
+    <div class="close-do">
+      <p>tmux 3.2 이상과 Node.js 22 이상이 설치된 macOS가 필요합니다. <code>brew install tmux node</code>로 둘 다 설치할 수 있습니다.</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="복사됨" aria-live="polite" hidden>복사</button></p>
+      <p class="actions"><a class="button" href="../install/">설치</a><a class="button button-quiet" href="https://github.com/thirstyeggplant/aubergine">소스 보기</a></p>
+    </div>
+  </div>
+</section>
 
 </main>
 <footer class="foot">

@@ -20,21 +20,36 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="{{attr:site.crumbs}}"><ol><li><a href="/">Aubergine</a></li><li>{{guides.crumb}}</li></ol></nav>
-  <h1>{{guides.title}}</h1>
-  <p class="lead">{{guides.lead}}</p>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="{{attr:site.crumbs}}"><ol><li><a href="/">Aubergine</a></li><li>{{guides.crumb}}</li></ol></nav>
+    <h1>{{guides.title}}</h1>
+    <p class="lead">{{guides.lead}}</p>
+  </div>
+</header>
+<div class="cards-band">
+  <div class="wrap page-body">
+    <ul class="cards">
+      <li><h2><a href="/install/">{{guides.install.name}}</a></h2><p>{{guides.install.text}}</p></li>
+      <li><h2><a href="/windows/">{{guides.windows.name}}</a></h2><p>{{guides.windows.text}}</p></li>
+      <li><h2><a href="/run-multiple-coding-agents/">{{guides.several.name}}</a></h2><p>{{guides.several.text}}</p></li>
+      <li><h2><a href="/claude/">{{guides.claude.name}}</a></h2><p>{{guides.claude.text}}</p></li>
+      <li><h2><a href="/chatgpt/">{{guides.codex.name}}</a></h2><p>{{guides.codex.text}}</p></li>
+      <li><h2><a href="/working-copies/">{{guides.copies.name}}</a></h2><p>{{guides.copies.text}}</p></li>
+      <li><h2><a href="/queue-and-schedules/">{{guides.queue.name}}</a></h2><p>{{guides.queue.text}}</p></li>
+      <li><h2><a href="/security/">{{guides.security.name}}</a></h2><p>{{guides.security.text}}</p></li>
+      <li><h2><a href="/faq/">{{guides.faq.name}}</a></h2><p>{{guides.faq.text}}</p></li>
+    </ul>
+  </div>
 </div>
-<div class="wrap page-body">
-  <ul class="rows">
-    <li><h2><a class="row-link" href="/install/">{{guides.install.name}}</a></h2><p>{{guides.install.text}}</p></li>
-    <li><h2><a class="row-link" href="/windows/">{{guides.windows.name}}</a></h2><p>{{guides.windows.text}}</p></li>
-    <li><h2><a class="row-link" href="/run-multiple-coding-agents/">{{guides.several.name}}</a></h2><p>{{guides.several.text}}</p></li>
-    <li><h2><a class="row-link" href="/claude/">{{guides.claude.name}}</a></h2><p>{{guides.claude.text}}</p></li>
-    <li><h2><a class="row-link" href="/chatgpt/">{{guides.codex.name}}</a></h2><p>{{guides.codex.text}}</p></li>
-    <li><h2><a class="row-link" href="/working-copies/">{{guides.copies.name}}</a></h2><p>{{guides.copies.text}}</p></li>
-    <li><h2><a class="row-link" href="/queue-and-schedules/">{{guides.queue.name}}</a></h2><p>{{guides.queue.text}}</p></li>
-    <li><h2><a class="row-link" href="/security/">{{guides.security.name}}</a></h2><p>{{guides.security.text}}</p></li>
-    <li><h2><a class="row-link" href="/faq/">{{guides.faq.name}}</a></h2><p>{{guides.faq.text}}</p></li>
-  </ul>
-</div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">{{home.install.title}}</h2>
+    <div class="close-do">
+      <p>{{home.install.intro}}</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="{{attr:site.copied}}" aria-live="polite" hidden>{{site.copy}}</button></p>
+      <p class="actions"><a class="button" href="/install/">{{home.hero.install}}</a><a class="button button-quiet" href="https://github.com/thirstyeggplant/aubergine">{{home.hero.source}}</a></p>
+    </div>
+  </div>
+</section>

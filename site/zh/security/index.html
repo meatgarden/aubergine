@@ -129,11 +129,13 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="当前位置"><ol><li><a href="../">Aubergine</a></li><li>安全</li></ol></nav>
-  <h1>安全与隐私</h1>
-  <p class="lead">Aubergine 为保护你的终端做了什么，以及同样重要的，它没有做什么。简而言之：它在本地运行，替智能体行动前会先询问，而智能体仍然以你的身份运行。</p>
-</div>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="当前位置"><ol><li><a href="../">Aubergine</a></li><li>安全</li></ol></nav>
+    <h1>安全与隐私</h1>
+    <p class="lead">Aubergine 为保护你的终端做了什么，以及同样重要的，它没有做什么。简而言之：它在本地运行，替智能体行动前会先询问，而智能体仍然以你的身份运行。</p>
+  </div>
+</header>
 <div class="wrap page-body">
   <div class="prose">
     <h2>一切都留在你的电脑上</h2>
@@ -173,6 +175,17 @@
     <p>相关：<a href="../working-copies/">工作副本</a> · <a href="../faq/">常见问题</a> · <a href="../roadmap/">路线图</a>（审批模式和命令策略在计划中，尚未构建）</p>
   </div>
 </div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">五分钟上手</h2>
+    <div class="close-do">
+      <p>你需要 macOS，以及 tmux 3.2 或更高版本和 Node.js 22 或更高版本。<code>brew install tmux node</code> 可以一次装好两者。</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="已复制" aria-live="polite" hidden>复制</button></p>
+      <p class="actions"><a class="button" href="../install/">安装</a><a class="button button-quiet" href="https://github.com/thirstyeggplant/aubergine">阅读源码</a></p>
+    </div>
+  </div>
+</section>
 
 </main>
 <footer class="foot">

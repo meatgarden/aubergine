@@ -127,11 +127,13 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="أين أنت"><ol><li><a href="../">Aubergine</a></li><li>الأسئلة الشائعة</li></ol></nav>
-  <h1>الأسئلة الشائعة</h1>
-  <p class="lead">إجابات قصيرة. <a href="../guides/">الأدلة</a> تتعمق أكثر.</p>
-</div>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="أين أنت"><ol><li><a href="../">Aubergine</a></li><li>الأسئلة الشائعة</li></ol></nav>
+    <h1>الأسئلة الشائعة</h1>
+    <p class="lead">إجابات قصيرة. <a href="../guides/">الأدلة</a> تتعمق أكثر.</p>
+  </div>
+</header>
 <div class="wrap page-body">
   <div class="questions">
     <details><summary>ما Aubergine؟</summary><p>لوحة محلية في المتصفح لجلسات الطرفية. كل طرفية عقدة يمكنك ترتيبها واستخدامها، فتشغّل عدة وكلاء برمجة في آن واحد وتعرف أيهم ينتظرك.</p></details>
@@ -152,6 +154,17 @@
     <details><summary>ماذا يغيّر المثبِّت على حاسوبي؟</summary><p>شيئين: مجلد التثبيت (~/.aubergine) ورابطًا واحدًا اسمه aubergine. لا يستخدم sudo أبدًا، ولا يعدّل ملفات بدء الصدفة لديك أبدًا، ولا يثبّت Node.js أو pnpm أو tmux أبدًا.</p></details>
   </div>
 </div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">جاهز للعمل في خمس دقائق</h2>
+    <div class="close-do">
+      <p>تحتاج إلى macOS مع tmux 3.2 أو أحدث، ومعه Node.js 22 أو أحدث. الأمر <code>brew install tmux node</code> يثبّت الاثنين.</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="تم النسخ" aria-live="polite" hidden>نسخ</button></p>
+      <p class="actions"><a class="button" href="../install/">التثبيت</a><a class="button button-quiet" href="https://github.com/thirstyeggplant/aubergine">اقرأ الشيفرة المصدرية</a></p>
+    </div>
+  </div>
+</section>
 
 </main>
 <footer class="foot">

@@ -130,11 +130,13 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="আপনি কোথায় আছেন"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">গাইড</a></li><li>কিউ আর শিডিউল</li></ol></nav>
-  <h1>কিউ, “For you” আর শিডিউল</h1>
-  <p class="lead">দুটি তালিকা যা একে অপরকে ভরায়: কিউ এজেন্টদের জন্য কাজ রাখে, আর <em>For you</em> রাখে একজন মানুষের অপেক্ষায় থাকা সবকিছু। শিডিউল নির্দিষ্ট সময়ে কিউতে টাস্ক যোগ করে।</p>
-</div>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="আপনি কোথায় আছেন"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">গাইড</a></li><li>কিউ আর শিডিউল</li></ol></nav>
+    <h1>কিউ, “For you” আর শিডিউল</h1>
+    <p class="lead">দুটি তালিকা যা একে অপরকে ভরায়: কিউ এজেন্টদের জন্য কাজ রাখে, আর <em>For you</em> রাখে একজন মানুষের অপেক্ষায় থাকা সবকিছু। শিডিউল নির্দিষ্ট সময়ে কিউতে টাস্ক যোগ করে।</p>
+  </div>
+</header>
 <div class="wrap page-body">
   <div class="prose">
     <h2>কিউ</h2>
@@ -148,7 +150,7 @@
     </ul>
     <h2>For you</h2>
     <p>প্রশ্ন থাকা টার্মিনাল, অনুমোদনের অপেক্ষায় বা আটকে থাকা রান, পড়ার জন্য ড্রাফট আর ইনস্টল, কিউয়ের জন্য প্রস্তাবিত টাস্ক, শেষ হওয়া আর ব্যর্থ টাস্ক, এজেন্টের জমা দেওয়া তালিকা, আর এমন ওয়ার্কিং কপি যার টার্মিনাল আর নেই। উপরে For you-এর পাশের সংখ্যা আর “next waiting” একই তালিকা। এর বেশিরভাগই জড়ো করা, লেখা নয়: একটি আইটেম চলে যায় যখন জিনিসটি নিজেই শেষ হয়।</p>
-    <figure class="pic"><a href="../../screenshots/for-you.png"><img src="../../screenshots/for-you.png" width="990" height="570" loading="lazy" alt="Runs পেজের Waiting for you কলাম: একটি to-do যোগ করার বাক্স, তারপর একটি নকল এজেন্টের প্রশ্ন, পড়ার জন্য একটি ড্রাফট আর জমা দেওয়া একটি তালিকা।"></a><figcaption>Runs পেজে For you: একটি প্রশ্ন, পড়ার জন্য একটি ড্রাফট আর জমা দেওয়া একটি তালিকা, প্রতিটির সঙ্গে সেটি কী।</figcaption></figure>
+    <figure class="frame"><a href="../../screenshots/for-you.png" class="frame-pic"><img src="../../screenshots/for-you.png" width="990" height="570" loading="lazy" alt="Runs পেজের Waiting for you কলাম: একটি to-do যোগ করার বাক্স, তারপর একটি নকল এজেন্টের প্রশ্ন, পড়ার জন্য একটি ড্রাফট আর জমা দেওয়া একটি তালিকা।"></a><figcaption>Runs পেজে For you: একটি প্রশ্ন, পড়ার জন্য একটি ড্রাফট আর জমা দেওয়া একটি তালিকা, প্রতিটির সঙ্গে সেটি কী।</figcaption></figure>
     <p>যে এজেন্ট এমন কাজ পায় যা তার এখন করা উচিত নয়, সে একটি টাস্ক প্রস্তাব করতে পারে, আর যার একজন মানুষের দরকার, সে আপনাকে জিজ্ঞেস করতে পারে:</p>
     <pre><code>aubergine task add "Add a test for the retry" --details "it should fail without the fix"
 aubergine ask "the staging key expires this week: rotate it, or say who can"</code></pre>
@@ -171,6 +173,17 @@ aubergine schedule run "My morning list"</code></pre>
     <p>সম্পর্কিত: <a href="../working-copies/">ওয়ার্কিং কপি</a> · <a href="../run-multiple-coding-agents/">একসঙ্গে কয়েকটি কোডিং এজেন্ট চালান</a></p>
   </div>
 </div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">পাঁচ মিনিটে চালু</h2>
+    <div class="close-do">
+      <p>আপনার লাগবে macOS, সঙ্গে tmux 3.2 বা নতুনতর আর Node.js 22 বা নতুনতর। <code>brew install tmux node</code> দুটোই এনে দেয়।</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="কপি হয়েছে" aria-live="polite" hidden>কপি করুন</button></p>
+      <p class="actions"><a class="button" href="../install/">ইনস্টল করুন</a><a class="button button-quiet" href="https://github.com/thirstyeggplant/aubergine">সোর্স পড়ুন</a></p>
+    </div>
+  </div>
+</section>
 
 </main>
 <footer class="foot">

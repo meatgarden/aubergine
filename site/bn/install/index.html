@@ -145,11 +145,13 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="আপনি কোথায় আছেন"><ol><li><a href="../">Aubergine</a></li><li>ইনস্টল</li></ol></nav>
-  <h1>Aubergine কীভাবে ইনস্টল করবেন</h1>
-  <p class="lead">একটি কমান্ড ইনস্টল করে, একটি চালু করে। ট্যুর সহ মোটামুটি পাঁচ মিনিট।</p>
-</div>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="আপনি কোথায় আছেন"><ol><li><a href="../">Aubergine</a></li><li>ইনস্টল</li></ol></nav>
+    <h1>Aubergine কীভাবে ইনস্টল করবেন</h1>
+    <p class="lead">একটি কমান্ড ইনস্টল করে, একটি চালু করে। ট্যুর সহ মোটামুটি পাঁচ মিনিট।</p>
+  </div>
+</header>
 <div class="wrap page-body">
   <div class="prose">
     <h2>যা লাগবে</h2>
@@ -161,7 +163,7 @@
     <p class="cmd"><code>brew install tmux node</code><button type="button" class="copy" data-copy data-copied="কপি হয়েছে" aria-live="polite" hidden>কপি করুন</button></p>
 
     <h2>ইনস্টল আর চালু করুন</h2>
-    <ol>
+    <ol class="seq">
       <li><p>npm থেকে <strong>Aubergine ইনস্টল করুন</strong> (শুধু tmux আর Node.js লাগে):</p>
         <p class="cmd"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="কপি হয়েছে" aria-live="polite" hidden>কপি করুন</button></p>
         <p>অথবা ইনস্টলার দিয়ে, যার pnpm-ও লাগে আর যা সোর্স থেকে বিল্ড করে:</p>
@@ -170,7 +172,7 @@
         <p class="cmd"><code>aubergine start --open</code><button type="button" class="copy" data-copy data-copied="কপি হয়েছে" aria-live="polite" hidden>কপি করুন</button></p></li>
       <li><p><strong>ট্যুর নিন।</strong> ফাঁকা ক্যানভাসের মাঝখানে <em>Show me around</em>-এ ক্লিক করুন। এটি “Demo” নামের একটি ক্যানভাস বানায়, কয়েকটি নকল এজেন্ট সহ, আর আটটি ছোট ধাপে আপনাকে ঘুরিয়ে দেখায়। ডেমোর কিছুই আসল নয়, আর <code>aubergine demo --remove</code> সেটি সরিয়ে দেয়।</p></li>
     </ol>
-    <p>আগে স্ক্রিপ্টটি পড়তে চান? ডাউনলোড করুন, পড়ুন, আর <code>sh install.sh --dry-run</code> চালান, কিছু না বদলে এটি কী করত তা দেখতে।</p>
+    <p class="note">আগে স্ক্রিপ্টটি পড়তে চান? ডাউনলোড করুন, পড়ুন, আর <code>sh install.sh --dry-run</code> চালান, কিছু না বদলে এটি কী করত তা দেখতে।</p>
 
     <h2>ইনস্টলার কী বদলায়</h2>
     <p>শুধু দুটি জিনিস: ইনস্টল ফোল্ডার (<code>~/.aubergine</code>, বা <code>AUBERGINE_HOME</code>) আর <code>aubergine</code> নামের একটি লিংক, আপনার <code>PATH</code>-এর এমন একটি ফোল্ডারে যেখানে আপনি লিখতে পারেন। এটি আগে সবকিছু যাচাই করে, আর কিছু না থাকলে কিছুই বদলায় না।</p>
@@ -198,11 +200,19 @@
       <li><strong>আনইনস্টল</strong>: <code>aubergine uninstall</code> দিয়ে। এটি লিংকটি সরায় আর, জিজ্ঞেস করার পরে, ইনস্টলারের বানানো কপিটি। এটি কখনো আপনার ডেটা মোছে না আর কখনো আপনার টার্মিনাল বন্ধ করে না।</li>
       <li><strong>লগইনের সময় চালু</strong>: <code>aubergine service install</code> দিয়ে, যাতে আপনাকে শুধু ব্রাউজার খুলতে হয়।</li>
     </ul>
-
-    <h2>এরপর</h2>
-    <p>পড়ুন <a href="../run-multiple-coding-agents/">কীভাবে একসঙ্গে কয়েকটি কোডিং এজেন্ট চালাবেন</a>, বা <a href="../guides/">গাইডগুলো</a>। পুরো রেফারেন্স আছে <a href="https://github.com/thirstyeggplant/aubergine#readme">README</a>-তে।</p>
   </div>
 </div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">এরপর</h2>
+    <div class="close-do">
+      <p>পড়ুন <a href="../run-multiple-coding-agents/">কীভাবে একসঙ্গে কয়েকটি কোডিং এজেন্ট চালাবেন</a>, বা <a href="../guides/">গাইডগুলো</a>। পুরো রেফারেন্স আছে <a href="https://github.com/thirstyeggplant/aubergine#readme">README</a>-তে।</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="কপি হয়েছে" aria-live="polite" hidden>কপি করুন</button></p>
+      <p class="actions"><a class="button" href="../guides/">গাইড</a></p>
+    </div>
+  </div>
+</section>
 
 </main>
 <footer class="foot">

@@ -129,11 +129,13 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="Onde você está"><ol><li><a href="../">Aubergine</a></li><li>Segurança</li></ol></nav>
-  <h1>Segurança e privacidade</h1>
-  <p class="lead">O que o Aubergine faz para proteger seus terminais e, tão importante quanto, o que ele não faz. Em resumo: ele é local, pergunta antes de agir por um agente, e os agentes continuam rodando como você.</p>
-</div>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Onde você está"><ol><li><a href="../">Aubergine</a></li><li>Segurança</li></ol></nav>
+    <h1>Segurança e privacidade</h1>
+    <p class="lead">O que o Aubergine faz para proteger seus terminais e, tão importante quanto, o que ele não faz. Em resumo: ele é local, pergunta antes de agir por um agente, e os agentes continuam rodando como você.</p>
+  </div>
+</header>
 <div class="wrap page-body">
   <div class="prose">
     <h2>Tudo fica no seu computador</h2>
@@ -173,6 +175,17 @@
     <p>Relacionado: <a href="../working-copies/">cópias de trabalho</a> · <a href="../faq/">perguntas frequentes</a> · <a href="../roadmap/">roadmap</a> (modos de aprovação e política de comandos estão planejados, não prontos)</p>
   </div>
 </div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">Funcionando em cinco minutos</h2>
+    <div class="close-do">
+      <p>Você precisa de macOS com tmux 3.2 ou mais recente e Node.js 22 ou mais recente. <code>brew install tmux node</code> instala os dois.</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="Copiado" aria-live="polite" hidden>Copiar</button></p>
+      <p class="actions"><a class="button" href="../install/">Instalar</a><a class="button button-quiet" href="https://github.com/thirstyeggplant/aubergine">Ler o código</a></p>
+    </div>
+  </div>
+</section>
 
 </main>
 <footer class="foot">

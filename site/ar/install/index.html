@@ -145,11 +145,13 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="أين أنت"><ol><li><a href="../">Aubergine</a></li><li>التثبيت</li></ol></nav>
-  <h1>كيف تثبّت Aubergine</h1>
-  <p class="lead">أمر واحد يثبّته، وأمر واحد يشغّله. نحو خمس دقائق، مع الجولة.</p>
-</div>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="أين أنت"><ol><li><a href="../">Aubergine</a></li><li>التثبيت</li></ol></nav>
+    <h1>كيف تثبّت Aubergine</h1>
+    <p class="lead">أمر واحد يثبّته، وأمر واحد يشغّله. نحو خمس دقائق، مع الجولة.</p>
+  </div>
+</header>
 <div class="wrap page-body">
   <div class="prose">
     <h2>المتطلبات</h2>
@@ -161,7 +163,7 @@
     <p class="cmd"><code>brew install tmux node</code><button type="button" class="copy" data-copy data-copied="تم النسخ" aria-live="polite" hidden>نسخ</button></p>
 
     <h2>التثبيت والتشغيل</h2>
-    <ol>
+    <ol class="seq">
       <li><p><strong>ثبّت Aubergine</strong> من npm (يحتاج إلى tmux وNode.js فقط):</p>
         <p class="cmd"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="تم النسخ" aria-live="polite" hidden>نسخ</button></p>
         <p>أو بالمثبِّت، الذي يحتاج أيضًا إلى pnpm ويبني من الشيفرة المصدرية:</p>
@@ -170,7 +172,7 @@
         <p class="cmd"><code>aubergine start --open</code><button type="button" class="copy" data-copy data-copied="تم النسخ" aria-live="polite" hidden>نسخ</button></p></li>
       <li><p><strong>خذ الجولة.</strong> انقر <em>Show me around</em> في وسط اللوحة الفارغة. يصنع لوحة اسمها «Demo» فيها بضعة وكلاء بدلاء ويمرّ بك عبر ثماني خطوات قصيرة. لا شيء في العرض التجريبي حقيقي، والأمر <code>aubergine demo --remove</code> يزيله.</p></li>
     </ol>
-    <p>تفضّل قراءة النص البرمجي أولًا؟ نزّله، واقرأه، وشغّل <code>sh install.sh --dry-run</code> لترى ما سيفعله دون تغيير أي شيء.</p>
+    <p class="note">تفضّل قراءة النص البرمجي أولًا؟ نزّله، واقرأه، وشغّل <code>sh install.sh --dry-run</code> لترى ما سيفعله دون تغيير أي شيء.</p>
 
     <h2>ما يغيّره المثبِّت</h2>
     <p>شيئان فقط: مجلد التثبيت (<code>~/.aubergine</code>، أو <code>AUBERGINE_HOME</code>) ورابط واحد اسمه <code>aubergine</code> في مجلد على <code>PATH</code> لديك تستطيع الكتابة فيه. يتحقق من كل شيء أولًا ولا يغيّر شيئًا إذا نقص شيء.</p>
@@ -198,11 +200,19 @@
       <li><strong>ألغِ التثبيت</strong> بالأمر <code>aubergine uninstall</code>. يزيل الرابط، وبعد أن يسألك، النسخة التي صنعها المثبِّت. لا يزيل بياناتك أبدًا ولا يُنهي طرفياتك أبدًا.</li>
       <li><strong>شغّله عند تسجيل الدخول</strong> بالأمر <code>aubergine service install</code>، فلا يبقى عليك إلا فتح المتصفح.</li>
     </ul>
-
-    <h2>التالي</h2>
-    <p>اقرأ <a href="../run-multiple-coding-agents/">كيف تشغّل عدة وكلاء برمجة في آن واحد</a>، أو <a href="../guides/">الأدلة</a>. المرجع الكامل في <a href="https://github.com/thirstyeggplant/aubergine#readme">README</a>.</p>
   </div>
 </div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">التالي</h2>
+    <div class="close-do">
+      <p>اقرأ <a href="../run-multiple-coding-agents/">كيف تشغّل عدة وكلاء برمجة في آن واحد</a>، أو <a href="../guides/">الأدلة</a>. المرجع الكامل في <a href="https://github.com/thirstyeggplant/aubergine#readme">README</a>.</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="تم النسخ" aria-live="polite" hidden>نسخ</button></p>
+      <p class="actions"><a class="button" href="../guides/">الأدلة</a></p>
+    </div>
+  </div>
+</section>
 
 </main>
 <footer class="foot">

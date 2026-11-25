@@ -130,11 +130,13 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="現在の位置"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">ガイド</a></li><li>キューとスケジュール</li></ol></nav>
-  <h1>キュー、「For you」、スケジュール</h1>
-  <p class="lead">互いにつながる2つの一覧です。キューはエージェントの仕事を、<em>For you</em> は人を待つものすべてを持ちます。スケジュールは決まった時刻にキューへタスクを加えます。</p>
-</div>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="現在の位置"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">ガイド</a></li><li>キューとスケジュール</li></ol></nav>
+    <h1>キュー、「For you」、スケジュール</h1>
+    <p class="lead">互いにつながる2つの一覧です。キューはエージェントの仕事を、<em>For you</em> は人を待つものすべてを持ちます。スケジュールは決まった時刻にキューへタスクを加えます。</p>
+  </div>
+</header>
 <div class="wrap page-body">
   <div class="prose">
     <h2>キュー</h2>
@@ -148,7 +150,7 @@
     </ul>
     <h2>For you</h2>
     <p>質問のあるターミナル、承認待ちやブロックされた実行、読むべき下書きやインストール、キューに提案されたタスク、完了したタスクと失敗したタスク、エージェントが提出した一覧、ターミナルがなくなった作業コピー。上部の For you の横の数と「next waiting」は同じ一覧です。ほとんどは書かれたものではなく集められたもので、対象そのものが済むと項目は消えます。</p>
-    <figure class="pic"><a href="../../screenshots/for-you.png"><img src="../../screenshots/for-you.png" width="990" height="570" loading="lazy" alt="Runs ページの Waiting for you の列：To-do を追加する欄、続いて代役のエージェントの質問、読むべき下書き、提出された一覧。"></a><figcaption>Runs ページの For you：質問、読むべき下書き、提出された一覧が、それぞれ何かとともに並びます。</figcaption></figure>
+    <figure class="frame"><a href="../../screenshots/for-you.png" class="frame-pic"><img src="../../screenshots/for-you.png" width="990" height="570" loading="lazy" alt="Runs ページの Waiting for you の列：To-do を追加する欄、続いて代役のエージェントの質問、読むべき下書き、提出された一覧。"></a><figcaption>Runs ページの For you：質問、読むべき下書き、提出された一覧が、それぞれ何かとともに並びます。</figcaption></figure>
     <p>今やるべきではない仕事を見つけたエージェントはタスクを提案でき、人が必要なエージェントはあなたに頼めます：</p>
     <pre><code>aubergine task add "Add a test for the retry" --details "it should fail without the fix"
 aubergine ask "the staging key expires this week: rotate it, or say who can"</code></pre>
@@ -171,6 +173,17 @@ aubergine schedule run "My morning list"</code></pre>
     <p>関連：<a href="../working-copies/">作業コピー</a> · <a href="../run-multiple-coding-agents/">複数のコーディングエージェントを同時に動かす</a></p>
   </div>
 </div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">5分で動かす</h2>
+    <div class="close-do">
+      <p>tmux 3.2 以降と Node.js 22 以降の入った macOS が必要です。<code>brew install tmux node</code> で両方が入ります。</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="コピーしました" aria-live="polite" hidden>コピー</button></p>
+      <p class="actions"><a class="button" href="../install/">インストール</a><a class="button button-quiet" href="https://github.com/thirstyeggplant/aubergine">ソースを読む</a></p>
+    </div>
+  </div>
+</section>
 
 </main>
 <footer class="foot">

@@ -130,11 +130,13 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="आप कहाँ हैं"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">गाइड</a></li><li>क्यू और शेड्यूल</li></ol></nav>
-  <h1>क्यू, “For you” और शेड्यूल</h1>
-  <p class="lead">दो सूचियाँ जो एक-दूसरे को भरती हैं: क्यू एजेंटों के लिए काम रखती है, और <em>For you</em> वह सब रखती है जो किसी इंसान का इंतज़ार कर रहा है। शेड्यूल तय समय पर क्यू में टास्क जोड़ते हैं।</p>
-</div>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="आप कहाँ हैं"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">गाइड</a></li><li>क्यू और शेड्यूल</li></ol></nav>
+    <h1>क्यू, “For you” और शेड्यूल</h1>
+    <p class="lead">दो सूचियाँ जो एक-दूसरे को भरती हैं: क्यू एजेंटों के लिए काम रखती है, और <em>For you</em> वह सब रखती है जो किसी इंसान का इंतज़ार कर रहा है। शेड्यूल तय समय पर क्यू में टास्क जोड़ते हैं।</p>
+  </div>
+</header>
 <div class="wrap page-body">
   <div class="prose">
     <h2>क्यू</h2>
@@ -148,7 +150,7 @@
     </ul>
     <h2>For you</h2>
     <p>सवाल वाले टर्मिनल, मंज़ूरी के लिए या अटके हुए रन, पढ़ने के लिए ड्राफ़्ट और इंस्टॉल, क्यू के लिए प्रस्तावित टास्क, पूरे और फ़ेल हुए टास्क, एजेंट की सौंपी हुई सूचियाँ, और ऐसी वर्किंग कॉपी जिनका टर्मिनल जा चुका है। ऊपर For you के बगल वाली गिनती और “next waiting” एक ही सूची हैं। इसमें से ज़्यादातर इकट्ठा किया जाता है, लिखा नहीं जाता: कोई आइटम तब हटता है जब वह चीज़ खुद पूरी हो जाती है।</p>
-    <figure class="pic"><a href="../../screenshots/for-you.png"><img src="../../screenshots/for-you.png" width="990" height="570" loading="lazy" alt="Runs पेज का Waiting for you कॉलम: to-do जोड़ने का एक बॉक्स, फिर एक नकली एजेंट का सवाल, पढ़ने के लिए एक ड्राफ़्ट और सौंपी गई एक सूची।"></a><figcaption>Runs पेज पर For you: एक सवाल, पढ़ने के लिए एक ड्राफ़्ट और सौंपी गई एक सूची, हर एक के साथ कि वह क्या है।</figcaption></figure>
+    <figure class="frame"><a href="../../screenshots/for-you.png" class="frame-pic"><img src="../../screenshots/for-you.png" width="990" height="570" loading="lazy" alt="Runs पेज का Waiting for you कॉलम: to-do जोड़ने का एक बॉक्स, फिर एक नकली एजेंट का सवाल, पढ़ने के लिए एक ड्राफ़्ट और सौंपी गई एक सूची।"></a><figcaption>Runs पेज पर For you: एक सवाल, पढ़ने के लिए एक ड्राफ़्ट और सौंपी गई एक सूची, हर एक के साथ कि वह क्या है।</figcaption></figure>
     <p>जो एजेंट ऐसा काम पाता है जो उसे अभी नहीं करना चाहिए, वह एक टास्क प्रस्तावित कर सकता है, और जिसे किसी इंसान की ज़रूरत है, वह आपसे पूछ सकता है:</p>
     <pre><code>aubergine task add "Add a test for the retry" --details "it should fail without the fix"
 aubergine ask "the staging key expires this week: rotate it, or say who can"</code></pre>
@@ -171,6 +173,17 @@ aubergine schedule run "My morning list"</code></pre>
     <p>जुड़ा हुआ: <a href="../working-copies/">वर्किंग कॉपी</a> · <a href="../run-multiple-coding-agents/">एक साथ कई कोडिंग एजेंट चलाएँ</a></p>
   </div>
 </div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">पाँच मिनट में तैयार</h2>
+    <div class="close-do">
+      <p>आपको macOS चाहिए, tmux 3.2 या नए और Node.js 22 या नए के साथ। <code>brew install tmux node</code> दोनों ले आता है।</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="कॉपी हो गया" aria-live="polite" hidden>कॉपी करें</button></p>
+      <p class="actions"><a class="button" href="../install/">इंस्टॉल करें</a><a class="button button-quiet" href="https://github.com/thirstyeggplant/aubergine">सोर्स पढ़ें</a></p>
+    </div>
+  </div>
+</section>
 
 </main>
 <footer class="foot">

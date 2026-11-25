@@ -132,20 +132,21 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="Wo du bist"><ol><li><a href="../">Aubergine</a></li><li>Windows mit WSL</li></ol></nav>
-  <h1>Aubergine unter Windows mit WSL installieren</h1>
-  <p class="lead">Aubergine läuft nicht auf Windows selbst. Es läuft in WSL 2, dem Linux, das Windows mitbringt, und du bedienst es in deinem Browser unter Windows.</p>
-</div>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Wo du bist"><ol><li><a href="../">Aubergine</a></li><li>Windows mit WSL</li></ol></nav>
+    <h1>Aubergine unter Windows mit WSL installieren</h1>
+    <p class="lead">Aubergine läuft nicht auf Windows selbst. Es läuft in WSL 2, dem Linux, das Windows mitbringt, und du bedienst es in deinem Browser unter Windows.</p>
+    <p class="note note-strong"><strong>Was ausprobiert wurde.</strong> Die Linux-Schritte liefen am 25. November 2026 unter Ubuntu 24.04.5 (x86_64) in einem Container, nicht in WSL, mit Aubergine 0.2.2 von npm: Es hat seine Terminal-Bibliothek kompiliert, ist gestartet, hat einen Browser angemeldet und ein Terminal und die Demo laufen lassen. Node.js mit nvm zu installieren wurde dort nicht ausgeführt, weil Node.js 22 schon installiert war. Nichts auf dieser Seite wurde bisher unter Windows ausgeführt. Wenn du es ausprobierst, <a href="https://github.com/thirstyeggplant/aubergine/issues">erzähl uns, wie es lief</a>.</p>
+  </div>
+</header>
 <div class="wrap page-body">
   <div class="prose">
-    <p class="note"><strong>Was ausprobiert wurde.</strong> Die Linux-Schritte liefen am 25. November 2026 unter Ubuntu 24.04.5 (x86_64) in einem Container, nicht in WSL, mit Aubergine 0.2.2 von npm: Es hat seine Terminal-Bibliothek kompiliert, ist gestartet, hat einen Browser angemeldet und ein Terminal und die Demo laufen lassen. Node.js mit nvm zu installieren wurde dort nicht ausgeführt, weil Node.js 22 schon installiert war. Nichts auf dieser Seite wurde bisher unter Windows ausgeführt. Wenn du es ausprobierst, <a href="https://github.com/thirstyeggplant/aubergine/issues">erzähl uns, wie es lief</a>.</p>
-
     <h2>Was du brauchst</h2>
     <p>Windows 11 oder Windows 10 Version 2004 (Build 19041) oder neuer, wo sich WSL 2 mit einem Befehl installieren lässt. Microsofts <a href="https://learn.microsoft.com/windows/wsl/install">Seite zur Installation von WSL</a> hat die Einzelheiten.</p>
 
     <h2>Installieren und starten</h2>
-    <ol>
+    <ol class="seq">
       <li><p><strong>Installiere WSL.</strong> Öffne PowerShell als Administrator, führe das hier aus und starte Windows neu, wenn es fertig ist. Es installiert WSL 2 mit Ubuntu.</p>
         <p class="cmd multi"><code>wsl --install</code><button type="button" class="copy" data-copy data-copied="Kopiert" aria-live="polite" hidden>Kopieren</button></p>
         <p>Öffne nach dem Neustart <strong>Ubuntu</strong> aus dem Startmenü und wähle dort einen Benutzernamen und ein Passwort. Alle folgenden Befehle tippst du dort ein, in Ubuntu.</p></li>
@@ -192,11 +193,19 @@
         </tbody>
       </table>
     </div>
-
-    <h2>Weiter</h2>
-    <p>Anhalten, Aktualisieren und Deinstallieren gehen wie auf der <a href="../install/">Installationsseite</a>, und alles andere steht in der <a href="https://github.com/thirstyeggplant/aubergine#readme">README</a>.</p>
   </div>
 </div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">Weiter</h2>
+    <div class="close-do">
+      <p>Anhalten, Aktualisieren und Deinstallieren gehen wie auf der <a href="../install/">Installationsseite</a>, und alles andere steht in der <a href="https://github.com/thirstyeggplant/aubergine#readme">README</a>.</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="Kopiert" aria-live="polite" hidden>Kopieren</button></p>
+      <p class="actions"><a class="button" href="../install/">Installieren</a></p>
+    </div>
+  </div>
+</section>
 
 </main>
 <footer class="foot">

@@ -129,11 +129,13 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="Wo du bist"><ol><li><a href="../">Aubergine</a></li><li>Sicherheit</li></ol></nav>
-  <h1>Sicherheit und Datenschutz</h1>
-  <p class="lead">Was Aubergine tut, um deine Terminals zu schützen, und, genauso wichtig, was nicht. Kurz gesagt: Es ist lokal, es fragt, bevor es für einen Agenten handelt, und Agenten laufen trotzdem als du.</p>
-</div>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Wo du bist"><ol><li><a href="../">Aubergine</a></li><li>Sicherheit</li></ol></nav>
+    <h1>Sicherheit und Datenschutz</h1>
+    <p class="lead">Was Aubergine tut, um deine Terminals zu schützen, und, genauso wichtig, was nicht. Kurz gesagt: Es ist lokal, es fragt, bevor es für einen Agenten handelt, und Agenten laufen trotzdem als du.</p>
+  </div>
+</header>
 <div class="wrap page-body">
   <div class="prose">
     <h2>Alles bleibt auf deinem Rechner</h2>
@@ -173,6 +175,17 @@
     <p>Siehe auch: <a href="../working-copies/">Arbeitskopien</a> · <a href="../faq/">FAQ</a> · <a href="../roadmap/">Roadmap</a> (Freigabemodi und Befehlsrichtlinien sind geplant, nicht gebaut)</p>
   </div>
 </div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">In fünf Minuten startklar</h2>
+    <div class="close-do">
+      <p>Du brauchst macOS mit tmux 3.2 oder neuer und Node.js 22 oder neuer. <code>brew install tmux node</code> holt beides.</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="Kopiert" aria-live="polite" hidden>Kopieren</button></p>
+      <p class="actions"><a class="button" href="../install/">Installieren</a><a class="button button-quiet" href="https://github.com/thirstyeggplant/aubergine">Quellcode lesen</a></p>
+    </div>
+  </div>
+</section>
 
 </main>
 <footer class="foot">

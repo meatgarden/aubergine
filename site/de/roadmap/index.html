@@ -105,72 +105,90 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="Wo du bist"><ol><li><a href="../">Aubergine</a></li><li>Roadmap</li></ol></nav>
-  <p class="tag">Geplant, noch nicht gebaut</p>
-  <h1>Roadmap</h1>
-  <p class="lead">Nichts davon gibt es heute. Es ist, wo wir hinwollen, und die Reihenfolge kann sich ändern. Was jetzt gebaut ist, steht in den <a href="../guides/">Anleitungen</a>.</p>
-</div>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Wo du bist"><ol><li><a href="../">Aubergine</a></li><li>Roadmap</li></ol></nav>
+    <p class="tag">Geplant, noch nicht gebaut</p>
+    <h1>Roadmap</h1>
+    <p class="lead">Nichts davon gibt es heute. Es ist, wo wir hinwollen, und die Reihenfolge kann sich ändern. Was jetzt gebaut ist, steht in den <a href="../guides/">Anleitungen</a>.</p>
+  </div>
+</header>
 <div class="wrap page-body roadmap">
-    <h2>Teams und Verbindungen</h2>
-    <p class="intro">Menschen, die zusammenarbeiten, und Agenten, die du aus den Tools erreichst, die du schon nutzt.</p>
-    <ul class="planned">
+  <section aria-labelledby="rm-teams">
+    <h2 id="rm-teams">Teams und Verbindungen</h2>
+      <p class="intro">Menschen, die zusammenarbeiten, und Agenten, die du aus den Tools erreichst, die du schon nutzt.</p>
+      <ul class="planned">
       <li><h3>Mehrspieler</h3><p>Teile ein Canvas mit anderen Menschen und ihren Agenten. Sieh, wer wo arbeitet, gib einen wartenden Agenten an jemanden aus dem Team weiter und antwortet gemeinsam.</p></li>
       <li><h3>Chat-Oberfläche</h3><p>Sprich Agenten an und beantworte ihre Fragen aus einer Team-Chat-App, mit derselben Identität und denselben Einstellungen wie im Browser.</p></li>
       <li><h3>Tickets und Pull Requests</h3><p>Mach aus einem Issue eine Aufgabe in der Warteschlange, öffne einen Pull Request aus einer Arbeitskopie und melde das Ergebnis an das Ticket zurück.</p></li>
       <li><h3>Beobachtungen, Webhooks und Triage</h3><p>Starte Arbeit, wenn etwas passiert: ein fehlgeschlagener CI-Job, ein Alarm, eine beobachtete Änderung oder ein Aufruf aus einem anderen Dienst. Regeln entscheiden, was eine Aufgabe wird.</p></li>
       <li><h3>Geteilte Skills und ein Marktplatz</h3><p>Teile die Skills eines Agenten per Freigabe, hebe sie mit Zustimmung aufs ganze Team, importiere sie aus Git und finde geprüfte Einträge in einem öffentlichen Katalog.</p></li>
       <li><h3>Gedächtnis für Menschen und Räume</h3><p>Behalte, was ein Agent gelernt hat, für jeden Menschen und jeden geteilten Raum, getrennt von den anderen.</p></li>
-    </ul>
-    <p class="also">Außerdem: Admin-Einstellungen für Modelle, Teilen und Strenge · ein selbst gehosteter Team-Server · Anmeldung für Teams (SSO und MFA) · Nutzungsgrenzen pro Person, Token oder Agent · schreibgeschützte Berichte zum Teilen, ohne Terminals zu teilen · eine Handy-Ansicht der Liste „For you“ · geprüfte Konnektoren zu Firmen-Tools · mehr Chat-Apps · kleine interne Web-Apps, veröffentlicht für ausgewählte Menschen.</p>
-
-    <h2>Cloud</h2>
-    <p class="intro">Agenten, die deinen Laptop nicht wach brauchen.</p>
-    <ul class="planned">
+      </ul>
+      <p class="also">Außerdem: Admin-Einstellungen für Modelle, Teilen und Strenge · ein selbst gehosteter Team-Server · Anmeldung für Teams (SSO und MFA) · Nutzungsgrenzen pro Person, Token oder Agent · schreibgeschützte Berichte zum Teilen, ohne Terminals zu teilen · eine Handy-Ansicht der Liste „For you“ · geprüfte Konnektoren zu Firmen-Tools · mehr Chat-Apps · kleine interne Web-Apps, veröffentlicht für ausgewählte Menschen.</p>
+  </section>
+  <section aria-labelledby="rm-cloud">
+    <h2 id="rm-cloud">Cloud</h2>
+      <p class="intro">Agenten, die deinen Laptop nicht wach brauchen.</p>
+      <ul class="planned">
       <li><h3>Agenten in Sandboxes in der Cloud</h3><p>Lass einen Agenten in einer isolierten Cloud-Sandbox laufen und verfolge ihn auf demselben Canvas wie deine lokalen. Sandboxes schlafen, wenn sie untätig sind, wachen bei Bedarf auf und behalten ihren Speicher zwischen Läufen.</p></li>
       <li><h3>Ein Pool von Agenten</h3><p>Beschreib die Arbeit und lass einen Pool von Agenten sie aufgreifen, statt für jede Aufgabe ein Terminal zu benennen.</p></li>
       <li><h3>Fertige Umgebungen</h3><p>Speichere Abhängigkeiten, Tools, Skills, Dateien und Variablen einmal und starte jedes neue Terminal oder jeden Cloud-Agenten daraus.</p></li>
       <li><h3>Lange, mehrphasige Arbeit</h3><p>Aufgaben, die Stunden oder Tage in Etappen laufen, mit einem Check-in nach jeder Etappe und Fortschritt, der Neustarts übersteht.</p></li>
       <li><h3>Cloud-Deployment mit einem Befehl</h3><p>Bring das geteilte Aubergine eines Teams mit einem Befehl auf dein eigenes Cloud-Konto.</p></li>
       <li><h3>Arbeit, die du sehen kannst</h3><p>Ein Cloud-Agent gibt Screenshots oder eine kurze Aufnahme dessen zurück, was er gebaut hat, in deiner Liste „For you“.</p></li>
-    </ul>
-    <p class="also">Außerdem: MCP über HTTP für Agenten auf anderen Rechnern · getestete Linux-Unterstützung · Shell-Integration über zsh hinaus.</p>
-
-    <h2>Kontrolle</h2>
-    <p class="intro">Wie viel ein Agent darf, und ein Protokoll dessen, was er getan hat.</p>
-    <ul class="planned">
+      </ul>
+      <p class="also">Außerdem: MCP über HTTP für Agenten auf anderen Rechnern · getestete Linux-Unterstützung · Shell-Integration über zsh hinaus.</p>
+  </section>
+  <section aria-labelledby="rm-control">
+    <h2 id="rm-control">Kontrolle</h2>
+      <p class="intro">Wie viel ein Agent darf, und ein Protokoll dessen, was er getan hat.</p>
+      <ul class="planned">
       <li><h3>Freigabemodi</h3><p>Wähle, wie viel ein Agent allein tun darf: jede Aktion freigeben, die riskanten freigeben oder keine.</p></li>
       <li><h3>Befehlsrichtlinien und Prüfung</h3><p>Regeln für Befehle, die eine Freigabe brauchen oder immer abgelehnt werden, und eine optionale Prüfung von Inhalten von außen, bevor ein Agent sie liest.</p></li>
       <li><h3>Risikostufen pro Repository</h3><p>Strengere Grenzen, wo es darauf ankommt, lockerere, wo nicht.</p></li>
       <li><h3>Ein vollständiges Audit-Protokoll</h3><p>Ein Protokoll, wer oder was was getan hat, pro Projekt, über die heute erfassten Token-Aufrufe hinaus.</p></li>
       <li><h3>Die Arbeit eines Agenten rückgängig machen</h3><p>Eine Arbeitskopie auf den Stand vor einer Aufgabe zurücksetzen oder ihren Branch in einem Schritt verwerfen.</p></li>
       <li><h3>Admin-Einstellungen</h3><p>Teamweite Einstellungen, welche Modelle genutzt werden dürfen und wie Teilen funktioniert.</p></li>
-    </ul>
-    <p class="also">Außerdem: Modellwahl pro Terminal, Aufgabe oder Zeitplan.</p>
-
-    <h2>Qualität</h2>
-    <p class="intro">Prüfungen, bevor Arbeit als erledigt gilt.</p>
-    <ul class="planned">
+      </ul>
+      <p class="also">Außerdem: Modellwahl pro Terminal, Aufgabe oder Zeitplan.</p>
+  </section>
+  <section aria-labelledby="rm-quality">
+    <h2 id="rm-quality">Qualität</h2>
+      <p class="intro">Prüfungen, bevor Arbeit als erledigt gilt.</p>
+      <ul class="planned">
       <li><h3>Qualitätstore</h3><p>Ein Lauf kann erst enden, wenn Review, Tests oder eine Sicherheitsprüfung ein Bestanden melden.</p></li>
       <li><h3>Review von Pull Requests</h3><p>Ein Agent prüft einen Pull Request und meldet sich in deiner Liste „For you“.</p></li>
       <li><h3>Browsergesteuertes Testen</h3><p>Ein Agent steuert einen Browser, um eine Änderung zu testen, und gibt die Ergebnisse zurück.</p></li>
       <li><h3>Erst planen, dann bauen</h3><p>Ein Agent schlägt einen Plan vor und wartet auf deine Freigabe, bevor er Dateien anfasst.</p></li>
       <li><h3>Aufgabenrezepte</h3><p>Fertige Workflows für Testgenerierung, Review, Scans von Abhängigkeiten und Geheimnissen und aktuelle Dokumentation.</p></li>
       <li><h3>Ergebniskennzahlen</h3><p>Zeit von der Aufgabe bis zum Abschluss, wie oft ein Agent auf dich gewartet hat, und Nutzung danach, wer gestartet hat, pro Projekt.</p></li>
-    </ul>
-    <p class="also">Außerdem: Vorfallberichte, bei denen ein Agent nachforscht und ein Postmortem entwirft.</p>
-
-    <h2>Überall</h2>
-    <p class="intro">Mehr Wege, Aubergine zu erreichen und darauf aufzubauen.</p>
-    <ul class="planned">
+      </ul>
+      <p class="also">Außerdem: Vorfallberichte, bei denen ein Agent nachforscht und ein Postmortem entwirft.</p>
+  </section>
+  <section aria-labelledby="rm-everywhere">
+    <h2 id="rm-everywhere">Überall</h2>
+      <p class="intro">Mehr Wege, Aubergine zu erreichen und darauf aufzubauen.</p>
+      <ul class="planned">
       <li><h3>Veröffentlichtes SDK</h3><p>Der typisierte Client als installierbares Paket, danach Clients für andere Sprachen wie Python.</p></li>
       <li><h3>Editor-Erweiterung</h3><p>Zeig deine Terminals und deine Liste „For you“ in VS Code und ähnlichen Editoren, ohne den Editor zu verlassen.</p></li>
       <li><h3>Desktop-App</h3><p>Eine gepackte App mit einem Symbol in der Menüleiste statt eines Browser-Tabs.</p></li>
       <li><h3>Windows-Unterstützung</h3><p>Aubergine auf Windows selbst laufen lassen. Heute läuft es nur in WSL 2, wie <a href="../windows/">die Anleitung für Windows</a> beschreibt, und unter Windows hat das noch niemand ausprobiert.</p></li>
-    </ul>
-
-    <p class="note">Geplante Arbeit ist eine Richtung, kein Versprechen. Das <a href="https://github.com/thirstyeggplant/aubergine">Repository</a> zeigt, was ausgeliefert ist.</p>
+      </ul>
+  </section>
+  <p class="note">Geplante Arbeit ist eine Richtung, kein Versprechen. Das <a href="https://github.com/thirstyeggplant/aubergine">Repository</a> zeigt, was ausgeliefert ist.</p>
 </div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">In fünf Minuten startklar</h2>
+    <div class="close-do">
+      <p>Du brauchst macOS mit tmux 3.2 oder neuer und Node.js 22 oder neuer. <code>brew install tmux node</code> holt beides.</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="Kopiert" aria-live="polite" hidden>Kopieren</button></p>
+      <p class="actions"><a class="button" href="../install/">Installieren</a><a class="button button-quiet" href="https://github.com/thirstyeggplant/aubergine">Quellcode lesen</a></p>
+    </div>
+  </div>
+</section>
 
 </main>
 <footer class="foot">

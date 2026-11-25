@@ -45,11 +45,13 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="{{attr:site.crumbs}}"><ol><li><a href="/">Aubergine</a></li><li><a href="/guides/">{{guides.crumb}}</a></li><li>{{queue.crumb}}</li></ol></nav>
-  <h1>{{queue.title}}</h1>
-  <p class="lead">{{queue.lead}}</p>
-</div>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="{{attr:site.crumbs}}"><ol><li><a href="/">Aubergine</a></li><li><a href="/guides/">{{guides.crumb}}</a></li><li>{{queue.crumb}}</li></ol></nav>
+    <h1>{{queue.title}}</h1>
+    <p class="lead">{{queue.lead}}</p>
+  </div>
+</header>
 <div class="wrap page-body">
   <div class="prose">
     <h2>{{queue.queue.title}}</h2>
@@ -63,7 +65,7 @@
     </ul>
     <h2>{{queue.foryou.title}}</h2>
     <p>{{queue.foryou.text}}</p>
-    <figure class="pic"><a href="/screenshots/for-you.png"><img src="/screenshots/for-you.png" width="990" height="570" loading="lazy" alt="{{attr:queue.pic.alt}}"></a><figcaption>{{queue.pic.caption}}</figcaption></figure>
+    <figure class="frame"><a href="/screenshots/for-you.png" class="frame-pic"><img src="/screenshots/for-you.png" width="990" height="570" loading="lazy" alt="{{attr:queue.pic.alt}}"></a><figcaption>{{queue.pic.caption}}</figcaption></figure>
     <p>{{queue.foryou.propose}}</p>
     <pre><code>aubergine task add "Add a test for the retry" --details "it should fail without the fix"
 aubergine ask "the staging key expires this week: rotate it, or say who can"</code></pre>
@@ -86,3 +88,14 @@ aubergine schedule run "My morning list"</code></pre>
     <p>{{queue.related}}</p>
   </div>
 </div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">{{home.install.title}}</h2>
+    <div class="close-do">
+      <p>{{home.install.intro}}</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="{{attr:site.copied}}" aria-live="polite" hidden>{{site.copy}}</button></p>
+      <p class="actions"><a class="button" href="/install/">{{home.hero.install}}</a><a class="button button-quiet" href="https://github.com/thirstyeggplant/aubergine">{{home.hero.source}}</a></p>
+    </div>
+  </div>
+</section>

@@ -129,11 +129,13 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="현재 위치"><ol><li><a href="../">Aubergine</a></li><li>보안</li></ol></nav>
-  <h1>보안과 개인정보</h1>
-  <p class="lead">Aubergine이 터미널을 보호하기 위해 하는 일과, 그만큼 중요한, 하지 않는 일. 짧게 말하면 로컬에서 동작하고, 에이전트를 위해 행동하기 전에 묻고, 그래도 에이전트는 여러분으로서 실행됩니다.</p>
-</div>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="현재 위치"><ol><li><a href="../">Aubergine</a></li><li>보안</li></ol></nav>
+    <h1>보안과 개인정보</h1>
+    <p class="lead">Aubergine이 터미널을 보호하기 위해 하는 일과, 그만큼 중요한, 하지 않는 일. 짧게 말하면 로컬에서 동작하고, 에이전트를 위해 행동하기 전에 묻고, 그래도 에이전트는 여러분으로서 실행됩니다.</p>
+  </div>
+</header>
 <div class="wrap page-body">
   <div class="prose">
     <h2>모든 것이 여러분의 컴퓨터에 머뭅니다</h2>
@@ -173,6 +175,17 @@
     <p>관련: <a href="../working-copies/">작업 사본</a> · <a href="../faq/">FAQ</a> · <a href="../roadmap/">로드맵</a>(승인 모드와 명령 정책은 계획 중이며 아직 만들어지지 않았습니다)</p>
   </div>
 </div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">5분이면 시작합니다</h2>
+    <div class="close-do">
+      <p>tmux 3.2 이상과 Node.js 22 이상이 설치된 macOS가 필요합니다. <code>brew install tmux node</code>로 둘 다 설치할 수 있습니다.</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="복사됨" aria-live="polite" hidden>복사</button></p>
+      <p class="actions"><a class="button" href="../install/">설치</a><a class="button button-quiet" href="https://github.com/thirstyeggplant/aubergine">소스 보기</a></p>
+    </div>
+  </div>
+</section>
 
 </main>
 <footer class="foot">

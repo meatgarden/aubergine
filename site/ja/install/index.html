@@ -145,11 +145,13 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="現在の位置"><ol><li><a href="../">Aubergine</a></li><li>インストール</li></ol></nav>
-  <h1>Aubergine のインストール方法</h1>
-  <p class="lead">1つのコマンドでインストールし、1つのコマンドで起動します。ツアーを含めて約5分です。</p>
-</div>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="現在の位置"><ol><li><a href="../">Aubergine</a></li><li>インストール</li></ol></nav>
+    <h1>Aubergine のインストール方法</h1>
+    <p class="lead">1つのコマンドでインストールし、1つのコマンドで起動します。ツアーを含めて約5分です。</p>
+  </div>
+</header>
 <div class="wrap page-body">
   <div class="prose">
     <h2>必要なもの</h2>
@@ -161,7 +163,7 @@
     <p class="cmd"><code>brew install tmux node</code><button type="button" class="copy" data-copy data-copied="コピーしました" aria-live="polite" hidden>コピー</button></p>
 
     <h2>インストールと起動</h2>
-    <ol>
+    <ol class="seq">
       <li><p>npm から <strong>Aubergine をインストール</strong>します（必要なのは tmux と Node.js だけです）：</p>
         <p class="cmd"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="コピーしました" aria-live="polite" hidden>コピー</button></p>
         <p>または、pnpm も必要でソースからビルドするインストーラーを使います：</p>
@@ -170,7 +172,7 @@
         <p class="cmd"><code>aubergine start --open</code><button type="button" class="copy" data-copy data-copied="コピーしました" aria-live="polite" hidden>コピー</button></p></li>
       <li><p><strong>ツアーを試します。</strong>空のキャンバスの中央にある <em>Show me around</em>（案内して）をクリックします。代役のエージェントがいくつか並ぶ「Demo」という名前のキャンバスが作られ、8つの短いステップで案内します。デモの中に本物はなく、<code>aubergine demo --remove</code> で取り除けます。</p></li>
     </ol>
-    <p>先にスクリプトを読みたいですか？ダウンロードして読み、<code>sh install.sh --dry-run</code> を実行すれば、何も変えずに何をするかが分かります。</p>
+    <p class="note">先にスクリプトを読みたいですか？ダウンロードして読み、<code>sh install.sh --dry-run</code> を実行すれば、何も変えずに何をするかが分かります。</p>
 
     <h2>インストーラーが変えるもの</h2>
     <p>2つだけです。インストールフォルダー（<code>~/.aubergine</code>、または <code>AUBERGINE_HOME</code>）と、<code>aubergine</code> という名前のリンク1つで、リンクは <code>PATH</code> 上の書き込めるフォルダーに置かれます。先にすべてを確認し、何か足りなければ何も変えません。</p>
@@ -198,11 +200,19 @@
       <li><strong>アンインストール</strong>は <code>aubergine uninstall</code> で行います。リンクを削除し、確認の後でインストーラーが作ったコピーを削除します。データは決して削除せず、ターミナルも終了しません。</li>
       <li><strong>ログイン時に起動</strong>するには <code>aubergine service install</code> を使います。そうすれば、あとはブラウザーを開くだけです。</li>
     </ul>
-
-    <h2>次へ</h2>
-    <p><a href="../run-multiple-coding-agents/">複数のコーディングエージェントを同時に動かす方法</a>や<a href="../guides/">ガイド</a>を読んでください。完全なリファレンスは <a href="https://github.com/thirstyeggplant/aubergine#readme">README</a> にあります。</p>
   </div>
 </div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">次へ</h2>
+    <div class="close-do">
+      <p><a href="../run-multiple-coding-agents/">複数のコーディングエージェントを同時に動かす方法</a>や<a href="../guides/">ガイド</a>を読んでください。完全なリファレンスは <a href="https://github.com/thirstyeggplant/aubergine#readme">README</a> にあります。</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="コピーしました" aria-live="polite" hidden>コピー</button></p>
+      <p class="actions"><a class="button" href="../guides/">ガイド</a></p>
+    </div>
+  </div>
+</section>
 
 </main>
 <footer class="foot">

@@ -42,11 +42,13 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="{{attr:site.crumbs}}"><ol><li><a href="/">Aubergine</a></li><li>{{faq.crumb}}</li></ol></nav>
-  <h1>{{faq.title}}</h1>
-  <p class="lead">{{faq.lead}}</p>
-</div>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="{{attr:site.crumbs}}"><ol><li><a href="/">Aubergine</a></li><li>{{faq.crumb}}</li></ol></nav>
+    <h1>{{faq.title}}</h1>
+    <p class="lead">{{faq.lead}}</p>
+  </div>
+</header>
 <div class="wrap page-body">
   <div class="questions">
     <details><summary>{{faq.what.q}}</summary><p>{{faq.what.a}}</p></details>
@@ -67,3 +69,14 @@
     <details><summary>{{faq.installer.q}}</summary><p>{{faq.installer.a}}</p></details>
   </div>
 </div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">{{home.install.title}}</h2>
+    <div class="close-do">
+      <p>{{home.install.intro}}</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="{{attr:site.copied}}" aria-live="polite" hidden>{{site.copy}}</button></p>
+      <p class="actions"><a class="button" href="/install/">{{home.hero.install}}</a><a class="button button-quiet" href="https://github.com/thirstyeggplant/aubergine">{{home.hero.source}}</a></p>
+    </div>
+  </div>
+</section>

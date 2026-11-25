@@ -132,20 +132,21 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="Dónde estás"><ol><li><a href="../">Aubergine</a></li><li>Windows con WSL</li></ol></nav>
-  <h1>Instalar Aubergine en Windows con WSL</h1>
-  <p class="lead">Aubergine no funciona en Windows en sí. Funciona dentro de WSL 2, el Linux que ofrece Windows, y lo usas desde tu navegador de Windows.</p>
-</div>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Dónde estás"><ol><li><a href="../">Aubergine</a></li><li>Windows con WSL</li></ol></nav>
+    <h1>Instalar Aubergine en Windows con WSL</h1>
+    <p class="lead">Aubergine no funciona en Windows en sí. Funciona dentro de WSL 2, el Linux que ofrece Windows, y lo usas desde tu navegador de Windows.</p>
+    <p class="note note-strong"><strong>Qué se probó.</strong> Los pasos de Linux se ejecutaron el 25 de noviembre de 2026 en Ubuntu 24.04.5 (x86_64) dentro de un contenedor, no en WSL, con Aubergine 0.2.2 desde npm: compiló su biblioteca de terminal, arrancó, inició sesión en un navegador y ejecutó un terminal y la demo. La instalación de Node.js con nvm no se ejecutó allí, porque Node.js 22 ya estaba instalado. Nada de esta página se ha ejecutado todavía en Windows. Si lo pruebas, <a href="https://github.com/thirstyeggplant/aubergine/issues">cuéntanos cómo te fue</a>.</p>
+  </div>
+</header>
 <div class="wrap page-body">
   <div class="prose">
-    <p class="note"><strong>Qué se probó.</strong> Los pasos de Linux se ejecutaron el 25 de noviembre de 2026 en Ubuntu 24.04.5 (x86_64) dentro de un contenedor, no en WSL, con Aubergine 0.2.2 desde npm: compiló su biblioteca de terminal, arrancó, inició sesión en un navegador y ejecutó un terminal y la demo. La instalación de Node.js con nvm no se ejecutó allí, porque Node.js 22 ya estaba instalado. Nada de esta página se ha ejecutado todavía en Windows. Si lo pruebas, <a href="https://github.com/thirstyeggplant/aubergine/issues">cuéntanos cómo te fue</a>.</p>
-
     <h2>Qué necesitas</h2>
     <p>Windows 11, o Windows 10 versión 2004 (compilación 19041) o posterior, donde WSL 2 se instala con un solo comando. La <a href="https://learn.microsoft.com/windows/wsl/install">página de Microsoft sobre cómo instalar WSL</a> tiene los detalles.</p>
 
     <h2>Instalar e iniciar</h2>
-    <ol>
+    <ol class="seq">
       <li><p><strong>Instala WSL.</strong> Abre PowerShell como administrador, ejecuta esto y reinicia Windows cuando termine. Instala WSL 2 con Ubuntu.</p>
         <p class="cmd multi"><code>wsl --install</code><button type="button" class="copy" data-copy data-copied="Copiado" aria-live="polite" hidden>Copiar</button></p>
         <p>Tras reiniciar, abre <strong>Ubuntu</strong> desde el menú Inicio y elige un nombre de usuario y una contraseña. Todos los comandos siguientes se escriben allí, en Ubuntu.</p></li>
@@ -192,11 +193,19 @@
         </tbody>
       </table>
     </div>
-
-    <h2>Siguiente</h2>
-    <p>Detener, actualizar y desinstalar funcionan como en la <a href="../install/">página de instalación</a>, y todo lo demás está en el <a href="https://github.com/thirstyeggplant/aubergine#readme">README</a>.</p>
   </div>
 </div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">Siguiente</h2>
+    <div class="close-do">
+      <p>Detener, actualizar y desinstalar funcionan como en la <a href="../install/">página de instalación</a>, y todo lo demás está en el <a href="https://github.com/thirstyeggplant/aubergine#readme">README</a>.</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="Copiado" aria-live="polite" hidden>Copiar</button></p>
+      <p class="actions"><a class="button" href="../install/">Instalar</a></p>
+    </div>
+  </div>
+</section>
 
 </main>
 <footer class="foot">

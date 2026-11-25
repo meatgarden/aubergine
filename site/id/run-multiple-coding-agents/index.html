@@ -129,11 +129,13 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="Posisi Anda"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">Panduan</a></li><li>Menjalankan beberapa agen</li></ol></nav>
-  <h1>Cara menjalankan beberapa agen coding sekaligus</h1>
-  <p class="lead">Dua agen itu mudah. Lima agen itu kacau: mana yang macet, mana yang menunggu Anda, mana yang mengubah file itu? Aubergine dibuat untuk saat seperti itu. Ia berjalan di komputer Anda sendiri.</p>
-</div>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Posisi Anda"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">Panduan</a></li><li>Menjalankan beberapa agen</li></ol></nav>
+    <h1>Cara menjalankan beberapa agen coding sekaligus</h1>
+    <p class="lead">Dua agen itu mudah. Lima agen itu kacau: mana yang macet, mana yang menunggu Anda, mana yang mengubah file itu? Aubergine dibuat untuk saat seperti itu. Ia berjalan di komputer Anda sendiri.</p>
+  </div>
+</header>
 <div class="wrap page-body">
   <div class="prose">
     <h2>1. Beri setiap agen satu terminal di satu kanvas</h2>
@@ -154,9 +156,19 @@
       <li>Ia tidak mencegah agen melakukan sesuatu yang bisa Anda lakukan. Agen berjalan sebagai Anda. Lihat <a href="../security/">keamanan</a> untuk apa yang dilindungi dan apa yang tidak.</li>
       <li>Hari ini ia berjalan di satu komputer. Berbagi kanvas dengan orang lain dan menjalankan agen di cloud ada di <a href="../roadmap/">peta jalan</a>, dan belum dibuat.</li>
     </ul>
-    <p class="actions"><a class="button primary" href="../install/">Instal Aubergine</a></p>
   </div>
 </div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">Siap dipakai dalam lima menit</h2>
+    <div class="close-do">
+      <p>Anda memerlukan macOS dengan tmux 3.2 atau lebih baru dan Node.js 22 atau lebih baru. <code>brew install tmux node</code> memasang keduanya.</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="Tersalin" aria-live="polite" hidden>Salin</button></p>
+      <p class="actions"><a class="button" href="../install/">Instal Aubergine</a><a class="button button-quiet" href="https://github.com/thirstyeggplant/aubergine">Baca kode sumbernya</a></p>
+    </div>
+  </div>
+</section>
 
 </main>
 <footer class="foot">

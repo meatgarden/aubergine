@@ -108,69 +108,58 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="Onde você está"><ol><li><a href="../">Aubergine</a></li><li>Claude Code</li></ol></nav>
-  <h1>O que o Aubergine faz pelo Claude Code</h1>
-  <p class="lead">O Claude Code roda em um terminal do Aubergine como qualquer programa. Iniciado pelo Aubergine, ele também diz ao canvas o que está fazendo, e o Aubergine pode passar instruções a ele, retomá-lo e mostrar como ele está configurado. Isto é tudo, na ordem em que você encontra.</p>
-</div>
-<div class="wrap page-body">
-  <div class="prose">
+<header class="page-head page-head-big">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Onde você está"><ol><li><a href="../">Aubergine</a></li><li>Claude Code</li></ol></nav>
+    <h1>O que o Aubergine faz pelo Claude Code</h1>
+    <p class="lead">O Claude Code roda em um terminal do Aubergine como qualquer programa. Iniciado pelo Aubergine, ele também diz ao canvas o que está fazendo, e o Aubergine pode passar instruções a ele, retomá-lo e mostrar como ele está configurado. Isto é tudo, na ordem em que você encontra.</p>
     <p class="note">Você mesmo instala o Claude Code e faz login nele. O Aubergine não chama nenhum modelo e não guarda nenhuma chave: ele inicia o comando <code>claude</code> que você já tem.</p>
-
-    <h2>Inicie pelo menu</h2>
-    <p><strong>New terminal ▾ → Claude Code</strong>, ou <code>C</code> enquanto nenhum terminal está com o teclado, inicia <code>claude</code> em um terminal novo com um arquivo de configurações que o Aubergine escreve na própria pasta de dados. A sua configuração do Claude Code não é tocada.</p>
-    <p>O comando que ele inicia é <code>agents.claudeCommand</code> nas configurações, <code>claude</code> a menos que você mude; o Aubergine adiciona as próprias flags no final.</p>
-    <p class="note">Onde: o menu ao lado de New terminal, no topo da lista de terminais.</p>
-
-    <h2>Veja quando ele trabalha, espera e termina</h2>
-    <p>Os hooks desse arquivo de configurações dizem ao canvas o que o agente está fazendo. Quando você envia um prompt, ele é adicionado ao log de notas do terminal e o terminal mostra <strong>working</strong> (trabalhando). Quando o agente precisa de você, com uma pergunta de permissão ou porque está ocioso esperando uma entrada, a borda dele ganha a cor da espera e o título e a linha dele dizem <strong>waiting for you</strong> (esperando por você). Quando ele para, mostra <strong>finished</strong> (terminado).</p>
-    <p><code>W</code> vai para o próximo terminal que espera, e <strong>Notify</strong> liga as notificações na área de trabalho para os terminais que começam a esperar. Prompts podem conter segredos: <code>"agents": { "logPrompts": false }</code> em <code>config.json</code> os deixa fora do log de notas.</p>
-    <p class="note">Onde: o título do terminal, a linha dele na lista e o contador ao lado de For you, no topo.</p>
-
-    <h2>Um Claude Code que você mesmo iniciou</h2>
-    <p>Digitado à mão em um terminal comum, <code>claude</code> funciona como qualquer programa, mas o Aubergine só vê um shell ocupado rodando-o: nada de waiting for you, e nada é digitado para ele quando você inicia um fluxo de trabalho ali. Para mudar isso, imprima os hooks e adicione-os à mão às suas próprias configurações do Claude Code. Fora de um terminal do Aubergine eles não fazem nada.</p>
-    <p class="cmd"><code>aubergine hooks print</code><button type="button" class="copy" data-copy data-copied="Copiado" aria-live="polite" hidden>Copiar</button></p>
-
-    <h2>Ele se dá um nome e mantém um resumo</h2>
-    <p>Um agente que o Aubergine inicia é instruído, quando começa, a dar ao terminal o nome do trabalho e manter um resumo, com <code>aubergine describe</code>, <code>aubergine link add</code> e <code>aubergine field set</code>, e é lembrado uma vez quando para sem nome próprio ou sem resumo. O que você mesmo escreve prevalece; o que o agente diz sobre a mesma coisa espera ao lado com <strong>Use this</strong> (usar este). O lembrete pode ser desligado em <strong>Settings</strong>.</p>
-    <p class="note">Onde: os detalhes do terminal, com nome, resumo, campos e links.</p>
-
-    <h2>Fluxos de trabalho, tarefas, resumos e mensagens chegam até ele</h2>
-    <p>O Aubergine digita quatro frases fixas em um terminal, e só elas: que um fluxo de trabalho foi iniciado, que pediram ao agente para escrever algo, que você pediu um resumo e que há uma mensagem esperando. Cada uma nomeia um comando para o agente rodar. Uma frase só é digitada onde se vê que um agente está com o teclado: um que o Aubergine iniciou, ou um cujas configurações têm os hooks de <code>aubergine hooks print</code>.</p>
-    <p>Da mesma forma, uma tarefa da fila só vai para um terminal onde um agente assim está na frente e livre, e <strong>Claude Code on a workflow…</strong> inicia um terminal novo cujo agente fica sabendo da execução no primeiro prompt.</p>
-    <p class="note">Onde: <strong>Run a workflow…</strong> no menu do título de um terminal, e <strong>Runs</strong> no topo da página.</p>
-
-    <h2>Resume agent</h2>
-    <p>O Aubergine lembra em qual conversa um terminal de agente estava. Quando o shell dele volta a um prompt, porque você saiu do agente ou o computador reiniciou, o terminal oferece <strong>Resume agent</strong> (retomar o agente), que inicia o agente de novo naquela conversa. Em um terminal que está em uma execução, ele também conta ao agente sobre a execução de novo.</p>
-    <p class="note">Onde: a barra de título do terminal.</p>
-
-    <h2>Conversas anteriores</h2>
-    <p><strong>Past conversations…</strong> lista as conversas anteriores do agente em uma pasta: leia uma, abra-a no canvas ou abra uma cópia que deixa o original como está. Digite <code>@</code> e algumas palavras na paleta para pesquisá-las; <code>aubergine history</code> as lista na linha de comando. Nada do que é lido é guardado, e nenhum token e nenhum agente pode ler conversas através do Aubergine.</p>
-    <p>Ele lê os arquivos que o Claude Code mantém. O formato deles é interno do Claude Code e muda entre versões. Depois de uma atualização do agente, nomes e transcrições podem vir mais pobres, e um registro que o Aubergine não consegue ler é indicado como tal, nunca mostrado como vazio.</p>
-    <p class="note">Onde: a paleta (<code>⌘K</code>), e “Past conversations in this folder…” nos detalhes de um terminal.</p>
-
-    <h2>Como ele está configurado</h2>
-    <p>Uma lista do que os arquivos de configuração do agente dizem que ele recebeu: servidores MCP, plugins, hooks, skills, regras de permissão e arquivos de configurações, cada um com sua origem, e o que o Aubergine adicionou. Só nomes, nunca um valor ou um segredo. Ela diz como o agente está configurado, não o que o agente em execução carregou, e diz claramente o que não tem como saber, como os conectores que vêm com a sua conta.</p>
-    <p class="note">Onde: <strong>⚙ on</strong> no terminal, “What is switched on for this agent…” na paleta, e os detalhes do terminal.</p>
-
-    <h2>As ferramentas do Aubergine para ele</h2>
-    <p><strong>Claude Code with Aubergine tools…</strong> pergunta primeiro o que o agente pode fazer: <strong>None</strong> (nada); <strong>Its own work only</strong> (só o próprio trabalho), com a credencial do próprio terminal; ou <strong>More…</strong> (mais), escopos que você escolhe, para os quais é criado um token só para aquele terminal, revogado quando o terminal é encerrado de vez. As ferramentas são <code>aubergine mcp</code>, passado ao agente na linha de inicialização; a configuração dele não é escrita.</p>
-    <p class="note">Onde: o menu ao lado de New terminal.</p>
-
-    <h2>Traga um Claude Code que você já tem aberto</h2>
-    <p>Um agente em execução não pode ser movido, mas a conversa dele pode. <strong>Open elsewhere</strong> (abertos em outro lugar) lista as suas abas do Claude Code, com <strong>Fork to canvas</strong> (bifurcar para o canvas) e, para um agente ocioso, <strong>Stop and resume here</strong> (parar e retomar aqui), que pergunta antes. De um terminal, <code>aubergine move</code> faz o mesmo, e <code>aubergine here --claude</code> inicia o Claude Code no canvas continuando a última conversa daquela pasta.</p>
-    <p class="note">Onde: <strong>Open elsewhere</strong> na barra sobre o canvas, ou <code>O</code>.</p>
-
-    <h2>Em uma cópia de trabalho só dele</h2>
-    <p><code>aubergine here --copy --claude</code> inicia o Claude Code no próprio checkout do repositório, no próprio branch, para que dois agentes nunca editem os mesmos arquivos. A caixa de diálogo de um terminal do Claude Code com ferramentas tem a mesma opção.</p>
-
-    <h2>O que já foi testado</h2>
-    <p>A demo que vem com o Aubergine usa agentes simulados, scripts curtos que rodam os mesmos comandos e hooks que um agente de verdade, não um Claude Code de verdade. Com um agente de verdade, ainda não foram testados uma aprovação, uma cópia de trabalho, uma tarefa da fila e um agendamento.</p>
-
-    <p>Outro agente pode dizer quase tudo isso pelos comandos <code>aubergine</code>: veja <a href="../chatgpt/">Codex e ChatGPT</a>.</p>
-    <p class="note">O Aubergine não é afiliado à Anthropic. Claude e Claude Code são marcas registradas da Anthropic.</p>
   </div>
-</div>
+</header>
+<section class="part" aria-label="O que o Aubergine faz pelo Claude Code">
+  <div class="wrap">
+    <ol class="features">
+      <li><h2>Inicie pelo menu</h2><div class="feature-words"><p><strong>New terminal ▾ → Claude Code</strong>, ou <code>C</code> enquanto nenhum terminal está com o teclado, inicia <code>claude</code> em um terminal novo com um arquivo de configurações que o Aubergine escreve na própria pasta de dados. A sua configuração do Claude Code não é tocada.</p><p>O comando que ele inicia é <code>agents.claudeCommand</code> nas configurações, <code>claude</code> a menos que você mude; o Aubergine adiciona as próprias flags no final.</p><p class="where">Onde: o menu ao lado de New terminal, no topo da lista de terminais.</p></div></li>
+      <li class="with-pic flip">
+        <div class="feature-words"><h2>Veja quando ele trabalha, espera e termina</h2><p>Os hooks desse arquivo de configurações dizem ao canvas o que o agente está fazendo. Quando você envia um prompt, ele é adicionado ao log de notas do terminal e o terminal mostra <strong>working</strong> (trabalhando). Quando o agente precisa de você, com uma pergunta de permissão ou porque está ocioso esperando uma entrada, a borda dele ganha a cor da espera e o título e a linha dele dizem <strong>waiting for you</strong> (esperando por você). Quando ele para, mostra <strong>finished</strong> (terminado).</p><p><code>W</code> vai para o próximo terminal que espera, e <strong>Notify</strong> liga as notificações na área de trabalho para os terminais que começam a esperar. Prompts podem conter segredos: <code>"agents": { "logPrompts": false }</code> em <code>config.json</code> os deixa fora do log de notas.</p><p class="where">Onde: o título do terminal, a linha dele na lista e o contador ao lado de For you, no topo.</p></div>
+        <figure class="frame"><a href="../../screenshots/waiting.png" class="frame-pic"><img src="../../screenshots/waiting.png" width="1496" height="600" loading="lazy" alt="Um terminal cujo agente faz uma pergunta, com o título waiting for you e a borda na cor da espera."></a><figcaption>A borda dele ganha a cor da espera, e o título diz waiting for you (esperando por você).</figcaption></figure>
+      </li>
+      <li><h2>Um Claude Code que você mesmo iniciou</h2><div class="feature-words"><p>Digitado à mão em um terminal comum, <code>claude</code> funciona como qualquer programa, mas o Aubergine só vê um shell ocupado rodando-o: nada de waiting for you, e nada é digitado para ele quando você inicia um fluxo de trabalho ali. Para mudar isso, imprima os hooks e adicione-os à mão às suas próprias configurações do Claude Code. Fora de um terminal do Aubergine eles não fazem nada.</p><p class="cmd"><code>aubergine hooks print</code><button type="button" class="copy" data-copy data-copied="Copiado" aria-live="polite" hidden>Copiar</button></p></div></li>
+      <li class="with-pic">
+        <div class="feature-words"><h2>Ele se dá um nome e mantém um resumo</h2><p>Um agente que o Aubergine inicia é instruído, quando começa, a dar ao terminal o nome do trabalho e manter um resumo, com <code>aubergine describe</code>, <code>aubergine link add</code> e <code>aubergine field set</code>, e é lembrado uma vez quando para sem nome próprio ou sem resumo. O que você mesmo escreve prevalece; o que o agente diz sobre a mesma coisa espera ao lado com <strong>Use this</strong> (usar este). O lembrete pode ser desligado em <strong>Settings</strong>.</p><p class="where">Onde: os detalhes do terminal, com nome, resumo, campos e links.</p></div>
+        <figure class="frame"><a href="../../screenshots/focus-part.png" class="frame-pic"><img src="../../screenshots/focus-part.png" width="1344" height="1172" loading="lazy" alt="Um terminal sozinho em uma aba do navegador: o nome no cabeçalho, os detalhes com a etapa do fluxo de trabalho, a pasta e os campos, e o terminal ao vivo ao lado."></a><figcaption>Os detalhes e a nota dele abrem ao lado quando você pede, e fecham de novo com os botões deles.</figcaption></figure>
+      </li>
+      <li><h2>Fluxos de trabalho, tarefas, resumos e mensagens chegam até ele</h2><div class="feature-words"><p>O Aubergine digita quatro frases fixas em um terminal, e só elas: que um fluxo de trabalho foi iniciado, que pediram ao agente para escrever algo, que você pediu um resumo e que há uma mensagem esperando. Cada uma nomeia um comando para o agente rodar. Uma frase só é digitada onde se vê que um agente está com o teclado: um que o Aubergine iniciou, ou um cujas configurações têm os hooks de <code>aubergine hooks print</code>.</p><p>Da mesma forma, uma tarefa da fila só vai para um terminal onde um agente assim está na frente e livre, e <strong>Claude Code on a workflow…</strong> inicia um terminal novo cujo agente fica sabendo da execução no primeiro prompt.</p><p class="where">Onde: <strong>Run a workflow…</strong> no menu do título de um terminal, e <strong>Runs</strong> no topo da página.</p></div></li>
+      <li><h2>Resume agent</h2><div class="feature-words"><p>O Aubergine lembra em qual conversa um terminal de agente estava. Quando o shell dele volta a um prompt, porque você saiu do agente ou o computador reiniciou, o terminal oferece <strong>Resume agent</strong> (retomar o agente), que inicia o agente de novo naquela conversa. Em um terminal que está em uma execução, ele também conta ao agente sobre a execução de novo.</p><p class="where">Onde: a barra de título do terminal.</p></div></li>
+      <li><h2>Conversas anteriores</h2><div class="feature-words"><p><strong>Past conversations…</strong> lista as conversas anteriores do agente em uma pasta: leia uma, abra-a no canvas ou abra uma cópia que deixa o original como está. Digite <code>@</code> e algumas palavras na paleta para pesquisá-las; <code>aubergine history</code> as lista na linha de comando. Nada do que é lido é guardado, e nenhum token e nenhum agente pode ler conversas através do Aubergine.</p><p>Ele lê os arquivos que o Claude Code mantém. O formato deles é interno do Claude Code e muda entre versões. Depois de uma atualização do agente, nomes e transcrições podem vir mais pobres, e um registro que o Aubergine não consegue ler é indicado como tal, nunca mostrado como vazio.</p><p class="where">Onde: a paleta (<code>⌘K</code>), e “Past conversations in this folder…” nos detalhes de um terminal.</p></div></li>
+      <li><h2>Como ele está configurado</h2><div class="feature-words"><p>Uma lista do que os arquivos de configuração do agente dizem que ele recebeu: servidores MCP, plugins, hooks, skills, regras de permissão e arquivos de configurações, cada um com sua origem, e o que o Aubergine adicionou. Só nomes, nunca um valor ou um segredo. Ela diz como o agente está configurado, não o que o agente em execução carregou, e diz claramente o que não tem como saber, como os conectores que vêm com a sua conta.</p><p class="where">Onde: <strong>⚙ on</strong> no terminal, “What is switched on for this agent…” na paleta, e os detalhes do terminal.</p></div></li>
+      <li><h2>As ferramentas do Aubergine para ele</h2><div class="feature-words"><p><strong>Claude Code with Aubergine tools…</strong> pergunta primeiro o que o agente pode fazer: <strong>None</strong> (nada); <strong>Its own work only</strong> (só o próprio trabalho), com a credencial do próprio terminal; ou <strong>More…</strong> (mais), escopos que você escolhe, para os quais é criado um token só para aquele terminal, revogado quando o terminal é encerrado de vez. As ferramentas são <code>aubergine mcp</code>, passado ao agente na linha de inicialização; a configuração dele não é escrita.</p><p class="where">Onde: o menu ao lado de New terminal.</p></div></li>
+      <li><h2>Traga um Claude Code que você já tem aberto</h2><div class="feature-words"><p>Um agente em execução não pode ser movido, mas a conversa dele pode. <strong>Open elsewhere</strong> (abertos em outro lugar) lista as suas abas do Claude Code, com <strong>Fork to canvas</strong> (bifurcar para o canvas) e, para um agente ocioso, <strong>Stop and resume here</strong> (parar e retomar aqui), que pergunta antes. De um terminal, <code>aubergine move</code> faz o mesmo, e <code>aubergine here --claude</code> inicia o Claude Code no canvas continuando a última conversa daquela pasta.</p><p class="where">Onde: <strong>Open elsewhere</strong> na barra sobre o canvas, ou <code>O</code>.</p></div></li>
+      <li><h2>Em uma cópia de trabalho só dele</h2><div class="feature-words"><p><code>aubergine here --copy --claude</code> inicia o Claude Code no próprio checkout do repositório, no próprio branch, para que dois agentes nunca editem os mesmos arquivos. A caixa de diálogo de um terminal do Claude Code com ferramentas tem a mesma opção.</p></div></li>
+    </ol>
+  </div>
+</section>
+<section class="band band-dark" aria-labelledby="tried-h">
+  <div class="wrap dark-split">
+    <h2 id="tried-h">O que já foi testado</h2>
+    <div class="prose">
+      <p>A demo que vem com o Aubergine usa agentes simulados, scripts curtos que rodam os mesmos comandos e hooks que um agente de verdade, não um Claude Code de verdade. Com um agente de verdade, ainda não foram testados uma aprovação, uma cópia de trabalho, uma tarefa da fila e um agendamento.</p>
+      <p>Outro agente pode dizer quase tudo isso pelos comandos <code>aubergine</code>: veja <a href="../chatgpt/">Codex e ChatGPT</a>.</p>
+      <p class="note">O Aubergine não é afiliado à Anthropic. Claude e Claude Code são marcas registradas da Anthropic.</p>
+    </div>
+  </div>
+</section>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">Funcionando em cinco minutos</h2>
+    <div class="close-do">
+      <p>Você precisa de macOS com tmux 3.2 ou mais recente e Node.js 22 ou mais recente. <code>brew install tmux node</code> instala os dois.</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="Copiado" aria-live="polite" hidden>Copiar</button></p>
+      <p class="actions"><a class="button" href="../install/">Instalar</a><a class="button button-quiet" href="https://github.com/thirstyeggplant/aubergine">Ler o código</a></p>
+    </div>
+  </div>
+</section>
 
 </main>
 <footer class="foot">

@@ -108,68 +108,93 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="Posisi Anda"><ol><li><a href="../">Aubergine</a></li><li>Codex dan ChatGPT</li></ol></nav>
-  <h1>Codex dan ChatGPT</h1>
-  <p class="lead">Codex adalah agen coding command-line dari OpenAI. Anda menginstalnya dan masuk ke dalamnya sendiri; di Aubergine ia berjalan di terminal seperti program lain.</p>
-</div>
-<div class="wrap page-body">
-  <div class="prose">
-    <h2>Belum dicoba</h2>
-    <p>Belum ada yang menjalankan Codex sungguhan di Aubergine. Isi halaman ini adalah apa yang dilakukan Aubergine untuk program apa pun di terminal dan untuk perintah <code>aubergine</code>, yang sudah dibuat dan diuji; bagaimana Codex sendiri berperilaku di sana belum terlihat. Jika Anda mencobanya, <a href="https://github.com/thirstyeggplant/aubergine/issues">ceritakan hasilnya</a>.</p>
-
-    <h2>Menjalankannya</h2>
-    <p>Buka terminal dengan <strong>New terminal</strong>, atau <code>N</code>, dan jalankan Codex di dalamnya seperti di terminal mana pun. Aubergine tidak memanggil model dan tidak menyimpan kunci: apa yang dibutuhkan Codex sudah Anda berikan saat masuk ke dalamnya.</p>
-
-    <h2>Apa yang berfungsi hari ini</h2>
-    <p>Semua yang dilakukan Aubergine untuk terminal mana pun:</p>
+<header class="page-head page-head-big">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Posisi Anda"><ol><li><a href="../">Aubergine</a></li><li>Codex dan ChatGPT</li></ol></nav>
+    <h1>Codex dan ChatGPT</h1>
+    <p class="lead">Codex adalah agen coding command-line dari OpenAI. Anda menginstalnya dan masuk ke dalamnya sendiri; di Aubergine ia berjalan di terminal seperti program lain.</p>
   </div>
-  <ul class="rows">
-    <li><h3>Berdampingan</h3><p>Terminal sebanyak yang Anda mau di satu kanvas, dan kanvas sebagai tab.</p></li>
-    <li><h3>Status perintah</h3><p>Dengan zsh, judul terminal menunjukkan bahwa sebuah perintah sedang berjalan, dan perintah apa.</p></li>
-    <li><h3>Warna, catatan, dan field</h3><p>Beri terminalnya warna, simpan catatan dengan ringkasan dan log, dan field seperti tiket atau pemilik.</p></li>
-    <li><h3>Menyimpan terminal (parking)</h3><p>× menyimpan terminal: ia meninggalkan kanvas dan tetap berjalan, dan <strong>Parked</strong> mengembalikannya.</p></li>
-    <li><h3>Satu terminal tersendiri</h3><p>Buka terminal di tab browser tersendiri, dengan detail dan catatannya di sebelahnya.</p></li>
-    <li><h3>Salinan kerja</h3><p><strong>Shell in a folder or a working copy…</strong>, atau <code>aubergine new --copy</code>, menjalankan terminal di checkout-nya sendiri di branch sendiri, sehingga dua agen tidak pernah mengedit file yang sama.</p></li>
-    <li><h3>Pencarian output</h3><p><code>⌘K</code> mencari apa yang dicetak setiap terminal, dan membuka terminal yang sudah digulir kembali ke hasil yang cocok.</p></li>
-  </ul>
-  <div class="prose">
-    <h2>Apa yang bisa ia sampaikan lewat perintah</h2>
-    <p>Setiap terminal Aubergine punya perintah <code>aubergine</code> dan kredensial khusus untuk terminal itu saja. Program apa pun di sana, termasuk Codex, bisa memakainya:</p>
+</header>
+<section class="part" aria-labelledby="untried-h">
+  <div class="wrap dark-split">
+    <div class="note note-strong"><h2 id="untried-h">Belum dicoba</h2><p>Belum ada yang menjalankan Codex sungguhan di Aubergine. Isi halaman ini adalah apa yang dilakukan Aubergine untuk program apa pun di terminal dan untuk perintah <code>aubergine</code>, yang sudah dibuat dan diuji; bagaimana Codex sendiri berperilaku di sana belum terlihat. Jika Anda mencobanya, <a href="https://github.com/thirstyeggplant/aubergine/issues">ceritakan hasilnya</a>.</p></div>
+    <div class="prose">
+      <h2>Menjalankannya</h2>
+      <p>Buka terminal dengan <strong>New terminal</strong>, atau <code>N</code>, dan jalankan Codex di dalamnya seperti di terminal mana pun. Aubergine tidak memanggil model dan tidak menyimpan kunci: apa yang dibutuhkan Codex sudah Anda berikan saat masuk ke dalamnya.</p>
+    </div>
   </div>
-  <ul class="rows">
-    <li><h3><code>aubergine attention waiting "…"</code></h3><p>Menandai terminal sebagai waiting for you, beserta apa yang dibutuhkannya; <code>aubergine attention working</code> dan <code>aubergine attention done</code> menyampaikan sisanya.</p></li>
-    <li><h3><code>aubergine note "…"</code></h3><p>Menambahkan satu baris ke log catatan terminal.</p></li>
-    <li><h3><code>aubergine describe</code></h3><p>Menamai terminal sesuai pekerjaan dan menyimpan ringkasannya; <code>aubergine link add</code> dan <code>aubergine field set</code> menambahkan link dan field pekerjaan itu. Apa yang Anda tulis sendiri yang berlaku.</p></li>
-    <li><h3><code>aubergine workflow status</code></h3><p>Membaca langkah workflow saat ini; <code>aubergine workflow done</code> melaporkannya selesai dan mencetak langkah berikutnya.</p></li>
-    <li><h3><code>aubergine task add</code></h3><p>Mengusulkan tugas untuk antrean, dan <code>aubergine ask</code> meminta Anda melakukan sesuatu yang hanya bisa dilakukan orang. Keduanya menunggu di daftar Anda.</p></li>
-  </ul>
-  <div class="prose">
-    <h3>Cara memberitahunya</h3>
-    <p>Codex tidak tahu tentang Aubergine sampai diberi tahu. Perintah ini mencetak lima baris untuk ditempel ke instruksi yang dibaca agen Anda di awal setiap percakapan dalam sebuah proyek; dokumentasinya sendiri menjelaskan di mana baris itu ditaruh:</p>
-    <p class="cmd"><code>aubergine guide --snippet</code><button type="button" class="copy" data-copy data-copied="Tersalin" aria-live="polite" hidden>Salin</button></p>
-    <p>Baris-baris itu menyuruhnya menjalankan <code>aubergine guide</code> sekali saat berada di terminal Aubergine, dan panduan itu menjelaskan sisanya. Aubergine hanya mencetak baris-baris itu dan tidak pernah menulisnya ke file mana pun.</p>
-    <p>Jika agen Anda bisa menjalankan server MCP, <code>aubergine mcp</code> menawarkan hal yang sama sebagai alat; di dalam terminal Aubergine ia tidak memerlukan alamat maupun token untuk pekerjaan terminal itu sendiri.</p>
-
-    <h2>Hari ini hanya dibuat untuk Claude Code</h2>
-    <p>Hal-hal yang dilakukan Aubergine sendiri untuk sebuah agen dibuat untuk Claude Code. Untuk Codex, hari ini:</p>
-    <ul>
-      <li>Ia tidak ada di menu New terminal: Anda menjalankannya sendiri di terminal.</li>
-      <li>Aubergine tidak melihatnya sebagai agen: ia tidak ditandai menunggu atau selesai dengan sendirinya, hanya saat ia menjalankan <code>aubergine attention</code>.</li>
-      <li>Tidak ada yang diketikkan untuknya: workflow yang dimulai di terminalnya tidak mengetikkan apa pun dan menampilkan baris yang harus Anda berikan sendiri, dan rekap atau pesan tidak diberitahukan kepadanya.</li>
-      <li>Antrean tidak memberinya tugas: tugas hanya diberikan ke terminal yang terlihat punya agen dan sedang bebas.</li>
-      <li>Tidak ada Resume agent, tidak ada daftar percakapan lama, tidak ada daftar bagaimana ia disiapkan, dan tidak ada dialog untuk alat Aubergine.</li>
-      <li><code>aubergine move</code> dan <code>aubergine here --claude</code> hanya memindahkan Claude Code.</li>
-      <li>Ia tidak diingatkan untuk menamai terminalnya atau menyimpan ringkasan.</li>
+</section>
+<section class="part band-lilac" aria-labelledby="works-h">
+  <div class="wrap">
+    <div class="show">
+      <div class="show-words"><h2 id="works-h">Apa yang berfungsi hari ini</h2><p>Semua yang dilakukan Aubergine untuk terminal mana pun:</p></div>
+      <figure class="frame"><a href="../../screenshots/list.png" class="frame-pic"><img src="../../screenshots/list.png" width="1440" height="1008" loading="lazy" alt="Panel samping yang mendaftar lima terminal beserta statusnya dalam kata-kata (working, waiting for you, finished, parked), di samping sebagian kanvas dengan shell yang hidup."></a><figcaption>Daftar menunjukkan apa yang sedang dikerjakan tiap terminal; di sebelahnya, terminal itu sendiri.</figcaption></figure>
+    </div>
+    <ul class="across">
+      <li><h3>Berdampingan</h3><p>Terminal sebanyak yang Anda mau di satu kanvas, dan kanvas sebagai tab.</p></li>
+      <li><h3>Status perintah</h3><p>Dengan zsh, judul terminal menunjukkan bahwa sebuah perintah sedang berjalan, dan perintah apa.</p></li>
+      <li><h3>Warna, catatan, dan field</h3><p>Beri terminalnya warna, simpan catatan dengan ringkasan dan log, dan field seperti tiket atau pemilik.</p></li>
+      <li><h3>Menyimpan terminal (parking)</h3><p>× menyimpan terminal: ia meninggalkan kanvas dan tetap berjalan, dan <strong>Parked</strong> mengembalikannya.</p></li>
+      <li><h3>Satu terminal tersendiri</h3><p>Buka terminal di tab browser tersendiri, dengan detail dan catatannya di sebelahnya.</p></li>
+      <li><h3>Salinan kerja</h3><p><strong>Shell in a folder or a working copy…</strong>, atau <code>aubergine new --copy</code>, menjalankan terminal di checkout-nya sendiri di branch sendiri, sehingga dua agen tidak pernah mengedit file yang sama.</p></li>
+      <li><h3>Pencarian output</h3><p><code>⌘K</code> mencari apa yang dicetak setiap terminal, dan membuka terminal yang sudah digulir kembali ke hasil yang cocok.</p></li>
     </ul>
-    <p>Semuanya ada di halaman <a href="../claude/">Claude Code</a>.</p>
-
-    <h2>ChatGPT di browser</h2>
-    <p>ChatGPT di tab browser adalah halaman web, bukan program di terminal, jadi ia tidak berjalan di kanvas.</p>
-
-    <p class="note">Aubergine tidak berafiliasi dengan OpenAI. Codex dan ChatGPT adalah merek dagang OpenAI.</p>
   </div>
-</div>
+</section>
+<section class="part" aria-labelledby="report-h">
+  <div class="wrap">
+    <div class="part-head">
+      <h2 id="report-h">Apa yang bisa ia sampaikan lewat perintah</h2>
+      <p>Setiap terminal Aubergine punya perintah <code>aubergine</code> dan kredensial khusus untuk terminal itu saja. Program apa pun di sana, termasuk Codex, bisa memakainya:</p>
+    </div>
+    <ul class="commands">
+      <li><h3><code>aubergine attention waiting "…"</code></h3><p>Menandai terminal sebagai waiting for you, beserta apa yang dibutuhkannya; <code>aubergine attention working</code> dan <code>aubergine attention done</code> menyampaikan sisanya.</p></li>
+      <li><h3><code>aubergine note "…"</code></h3><p>Menambahkan satu baris ke log catatan terminal.</p></li>
+      <li><h3><code>aubergine describe</code></h3><p>Menamai terminal sesuai pekerjaan dan menyimpan ringkasannya; <code>aubergine link add</code> dan <code>aubergine field set</code> menambahkan link dan field pekerjaan itu. Apa yang Anda tulis sendiri yang berlaku.</p></li>
+      <li><h3><code>aubergine workflow status</code></h3><p>Membaca langkah workflow saat ini; <code>aubergine workflow done</code> melaporkannya selesai dan mencetak langkah berikutnya.</p></li>
+      <li><h3><code>aubergine task add</code></h3><p>Mengusulkan tugas untuk antrean, dan <code>aubergine ask</code> meminta Anda melakukan sesuatu yang hanya bisa dilakukan orang. Keduanya menunggu di daftar Anda.</p></li>
+    </ul>
+    <div class="prose">
+      <h3>Cara memberitahunya</h3>
+      <p>Codex tidak tahu tentang Aubergine sampai diberi tahu. Perintah ini mencetak lima baris untuk ditempel ke instruksi yang dibaca agen Anda di awal setiap percakapan dalam sebuah proyek; dokumentasinya sendiri menjelaskan di mana baris itu ditaruh:</p>
+      <p class="cmd"><code>aubergine guide --snippet</code><button type="button" class="copy" data-copy data-copied="Tersalin" aria-live="polite" hidden>Salin</button></p>
+      <p>Baris-baris itu menyuruhnya menjalankan <code>aubergine guide</code> sekali saat berada di terminal Aubergine, dan panduan itu menjelaskan sisanya. Aubergine hanya mencetak baris-baris itu dan tidak pernah menulisnya ke file mana pun.</p>
+      <p>Jika agen Anda bisa menjalankan server MCP, <code>aubergine mcp</code> menawarkan hal yang sama sebagai alat; di dalam terminal Aubergine ia tidak memerlukan alamat maupun token untuk pekerjaan terminal itu sendiri.</p>
+    </div>
+  </div>
+</section>
+<section class="band band-dark" aria-labelledby="only-h">
+  <div class="wrap dark-split">
+    <h2 id="only-h">Hari ini hanya dibuat untuk Claude Code</h2>
+    <div class="prose">
+      <p>Hal-hal yang dilakukan Aubergine sendiri untuk sebuah agen dibuat untuk Claude Code. Untuk Codex, hari ini:</p>
+      <ul>
+        <li>Ia tidak ada di menu New terminal: Anda menjalankannya sendiri di terminal.</li>
+        <li>Aubergine tidak melihatnya sebagai agen: ia tidak ditandai menunggu atau selesai dengan sendirinya, hanya saat ia menjalankan <code>aubergine attention</code>.</li>
+        <li>Tidak ada yang diketikkan untuknya: workflow yang dimulai di terminalnya tidak mengetikkan apa pun dan menampilkan baris yang harus Anda berikan sendiri, dan rekap atau pesan tidak diberitahukan kepadanya.</li>
+        <li>Antrean tidak memberinya tugas: tugas hanya diberikan ke terminal yang terlihat punya agen dan sedang bebas.</li>
+        <li>Tidak ada Resume agent, tidak ada daftar percakapan lama, tidak ada daftar bagaimana ia disiapkan, dan tidak ada dialog untuk alat Aubergine.</li>
+        <li><code>aubergine move</code> dan <code>aubergine here --claude</code> hanya memindahkan Claude Code.</li>
+        <li>Ia tidak diingatkan untuk menamai terminalnya atau menyimpan ringkasan.</li>
+      </ul>
+      <p>Semuanya ada di halaman <a href="../claude/">Claude Code</a>.</p>
+      <h3>ChatGPT di browser</h3>
+      <p>ChatGPT di tab browser adalah halaman web, bukan program di terminal, jadi ia tidak berjalan di kanvas.</p>
+      <p class="note">Aubergine tidak berafiliasi dengan OpenAI. Codex dan ChatGPT adalah merek dagang OpenAI.</p>
+    </div>
+  </div>
+</section>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">Siap dipakai dalam lima menit</h2>
+    <div class="close-do">
+      <p>Anda memerlukan macOS dengan tmux 3.2 atau lebih baru dan Node.js 22 atau lebih baru. <code>brew install tmux node</code> memasang keduanya.</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="Tersalin" aria-live="polite" hidden>Salin</button></p>
+      <p class="actions"><a class="button" href="../install/">Instal</a><a class="button button-quiet" href="https://github.com/thirstyeggplant/aubergine">Baca kode sumbernya</a></p>
+    </div>
+  </div>
+</section>
 
 </main>
 <footer class="foot">

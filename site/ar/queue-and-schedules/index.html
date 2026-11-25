@@ -130,11 +130,13 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="أين أنت"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">الأدلة</a></li><li>الطابور والجداول الزمنية</li></ol></nav>
-  <h1>الطابور و«For you» والجداول الزمنية</h1>
-  <p class="lead">قائمتان تغذّي إحداهما الأخرى: الطابور يحمل عملًا للوكلاء، و<em>For you</em> يحمل كل ما ينتظر إنسانًا. والجداول الزمنية تضيف مهام إلى الطابور في أوقات محددة.</p>
-</div>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="أين أنت"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">الأدلة</a></li><li>الطابور والجداول الزمنية</li></ol></nav>
+    <h1>الطابور و«For you» والجداول الزمنية</h1>
+    <p class="lead">قائمتان تغذّي إحداهما الأخرى: الطابور يحمل عملًا للوكلاء، و<em>For you</em> يحمل كل ما ينتظر إنسانًا. والجداول الزمنية تضيف مهام إلى الطابور في أوقات محددة.</p>
+  </div>
+</header>
 <div class="wrap page-body">
   <div class="prose">
     <h2>الطابور</h2>
@@ -148,7 +150,7 @@
     </ul>
     <h2>For you</h2>
     <p>طرفيات لديها سؤال، وتشغيلات تنتظر الموافقة أو متوقفة، ومسودات وعمليات تثبيت للقراءة، ومهام مقترحة للطابور، ومهام منتهية وفاشلة، وقوائم سلّمها وكيل، ونسخ عمل ذهبت طرفيتها. العدد بجانب For you في الأعلى و«next waiting» هما القائمة نفسها. معظمها يُجمع ولا يُكتب: يزول العنصر حين يتم الشيء نفسه.</p>
-    <figure class="pic"><a href="../../screenshots/for-you.png"><img src="../../screenshots/for-you.png" width="990" height="570" loading="lazy" alt="عمود Waiting for you في صفحة Runs: مربع لإضافة مهمة شخصية، ثم سؤال من وكيل بديل، ومسودة للقراءة، وقائمة سُلّمت."></a><figcaption>For you في صفحة Runs: سؤال، ومسودة للقراءة، وقائمة سُلّمت، كلٌّ مع ما هو.</figcaption></figure>
+    <figure class="frame"><a href="../../screenshots/for-you.png" class="frame-pic"><img src="../../screenshots/for-you.png" width="990" height="570" loading="lazy" alt="عمود Waiting for you في صفحة Runs: مربع لإضافة مهمة شخصية، ثم سؤال من وكيل بديل، ومسودة للقراءة، وقائمة سُلّمت."></a><figcaption>For you في صفحة Runs: سؤال، ومسودة للقراءة، وقائمة سُلّمت، كلٌّ مع ما هو.</figcaption></figure>
     <p>الوكيل الذي يجد عملًا لا ينبغي أن يفعله الآن يستطيع اقتراح مهمة، والذي يحتاج إلى إنسان يستطيع أن يسألك:</p>
     <pre><code>aubergine task add "Add a test for the retry" --details "it should fail without the fix"
 aubergine ask "the staging key expires this week: rotate it, or say who can"</code></pre>
@@ -171,6 +173,17 @@ aubergine schedule run "My morning list"</code></pre>
     <p>ذو صلة: <a href="../working-copies/">نسخ العمل</a> · <a href="../run-multiple-coding-agents/">شغّل عدة وكلاء برمجة في آن واحد</a></p>
   </div>
 </div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">جاهز للعمل في خمس دقائق</h2>
+    <div class="close-do">
+      <p>تحتاج إلى macOS مع tmux 3.2 أو أحدث، ومعه Node.js 22 أو أحدث. الأمر <code>brew install tmux node</code> يثبّت الاثنين.</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="تم النسخ" aria-live="polite" hidden>نسخ</button></p>
+      <p class="actions"><a class="button" href="../install/">التثبيت</a><a class="button button-quiet" href="https://github.com/thirstyeggplant/aubergine">اقرأ الشيفرة المصدرية</a></p>
+    </div>
+  </div>
+</section>
 
 </main>
 <footer class="foot">

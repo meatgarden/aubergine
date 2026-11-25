@@ -132,20 +132,21 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="現在の位置"><ol><li><a href="../">Aubergine</a></li><li>WSL で Windows</li></ol></nav>
-  <h1>WSL を使って Windows に Aubergine をインストール</h1>
-  <p class="lead">Aubergine は Windows そのものでは動きません。Windows が用意する Linux である WSL 2 の中で動き、Windows のブラウザーから使います。</p>
-</div>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="現在の位置"><ol><li><a href="../">Aubergine</a></li><li>WSL で Windows</li></ol></nav>
+    <h1>WSL を使って Windows に Aubergine をインストール</h1>
+    <p class="lead">Aubergine は Windows そのものでは動きません。Windows が用意する Linux である WSL 2 の中で動き、Windows のブラウザーから使います。</p>
+    <p class="note note-strong"><strong>試したこと。</strong>Linux の手順は 2026年11月25日に、WSL ではなくコンテナの中の Ubuntu 24.04.5（x86_64）で、npm の Aubergine 0.2.2 を使って実行しました。端末ライブラリーをコンパイルし、起動し、ブラウザーをサインインさせ、ターミナルとデモを動かしました。Node.js 22 がすでに入っていたため、nvm による Node.js のインストールはそこでは実行していません。このページのことは、まだ何も Windows で実行していません。試したら、<a href="https://github.com/thirstyeggplant/aubergine/issues">結果を教えてください</a>。</p>
+  </div>
+</header>
 <div class="wrap page-body">
   <div class="prose">
-    <p class="note"><strong>試したこと。</strong>Linux の手順は 2026年11月25日に、WSL ではなくコンテナの中の Ubuntu 24.04.5（x86_64）で、npm の Aubergine 0.2.2 を使って実行しました。端末ライブラリーをコンパイルし、起動し、ブラウザーをサインインさせ、ターミナルとデモを動かしました。Node.js 22 がすでに入っていたため、nvm による Node.js のインストールはそこでは実行していません。このページのことは、まだ何も Windows で実行していません。試したら、<a href="https://github.com/thirstyeggplant/aubergine/issues">結果を教えてください</a>。</p>
-
     <h2>必要なもの</h2>
     <p>Windows 11、または Windows 10 バージョン 2004（ビルド 19041）以降。ここでは WSL 2 をコマンド1つで入れられます。詳しくは Microsoft の <a href="https://learn.microsoft.com/windows/wsl/install">WSL のインストールのページ</a>にあります。</p>
 
     <h2>インストールして起動する</h2>
-    <ol>
+    <ol class="seq">
       <li><p><strong>WSL を入れます。</strong>PowerShell を管理者として開いてこれを実行し、終わったら Windows を再起動します。Ubuntu 入りの WSL 2 が入ります。</p>
         <p class="cmd multi"><code>wsl --install</code><button type="button" class="copy" data-copy data-copied="コピーしました" aria-live="polite" hidden>コピー</button></p>
         <p>再起動したら、スタートメニューから <strong>Ubuntu</strong> を開き、ユーザー名とパスワードを決めます。以下のコマンドはすべてそこ、Ubuntu の中で入力します。</p></li>
@@ -192,11 +193,19 @@
         </tbody>
       </table>
     </div>
-
-    <h2>次へ</h2>
-    <p>停止、更新、アンインストールは<a href="../install/">インストールのページ</a>と同じです。ほかのことはすべて <a href="https://github.com/thirstyeggplant/aubergine#readme">README</a> にあります。</p>
   </div>
 </div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">次へ</h2>
+    <div class="close-do">
+      <p>停止、更新、アンインストールは<a href="../install/">インストールのページ</a>と同じです。ほかのことはすべて <a href="https://github.com/thirstyeggplant/aubergine#readme">README</a> にあります。</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="コピーしました" aria-live="polite" hidden>コピー</button></p>
+      <p class="actions"><a class="button" href="../install/">インストール</a></p>
+    </div>
+  </div>
+</section>
 
 </main>
 <footer class="foot">

@@ -129,11 +129,13 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="আপনি কোথায় আছেন"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">গাইড</a></li><li>একাধিক এজেন্ট চালান</li></ol></nav>
-  <h1>একসঙ্গে কয়েকটি কোডিং এজেন্ট কীভাবে চালাবেন</h1>
-  <p class="lead">দুটি এজেন্ট সহজ। পাঁচটি হলে বিশৃঙ্খলা: কোনটি আটকে আছে, কোনটি আপনার অপেক্ষায়, কোনটি ওই ফাইল বদলেছে? Aubergine ঠিক সেই মুহূর্তের জন্য তৈরি। এটি আপনার নিজের কম্পিউটারে চলে।</p>
-</div>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="আপনি কোথায় আছেন"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">গাইড</a></li><li>একাধিক এজেন্ট চালান</li></ol></nav>
+    <h1>একসঙ্গে কয়েকটি কোডিং এজেন্ট কীভাবে চালাবেন</h1>
+    <p class="lead">দুটি এজেন্ট সহজ। পাঁচটি হলে বিশৃঙ্খলা: কোনটি আটকে আছে, কোনটি আপনার অপেক্ষায়, কোনটি ওই ফাইল বদলেছে? Aubergine ঠিক সেই মুহূর্তের জন্য তৈরি। এটি আপনার নিজের কম্পিউটারে চলে।</p>
+  </div>
+</header>
 <div class="wrap page-body">
   <div class="prose">
     <h2>1. প্রতিটি এজেন্টকে এক ক্যানভাসে একটি টার্মিনাল দিন</h2>
@@ -154,9 +156,19 @@
       <li>এটি কোনো এজেন্টকে এমন কিছু করা থেকে আটকায় না যা আপনি করতে পারেন। এজেন্টরা আপনার পরিচয়ে চলে। কী সুরক্ষিত আর কী নয়, তার জন্য <a href="../security/">নিরাপত্তা</a> দেখুন।</li>
       <li>আজ এটি একটি কম্পিউটারে চলে। অন্যদের সঙ্গে ক্যানভাস শেয়ার করা আর ক্লাউডে এজেন্ট চালানো <a href="../roadmap/">রোডম্যাপে</a> আছে, তৈরি হয়নি।</li>
     </ul>
-    <p class="actions"><a class="button primary" href="../install/">Aubergine ইনস্টল করুন</a></p>
   </div>
 </div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">পাঁচ মিনিটে চালু</h2>
+    <div class="close-do">
+      <p>আপনার লাগবে macOS, সঙ্গে tmux 3.2 বা নতুনতর আর Node.js 22 বা নতুনতর। <code>brew install tmux node</code> দুটোই এনে দেয়।</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="কপি হয়েছে" aria-live="polite" hidden>কপি করুন</button></p>
+      <p class="actions"><a class="button" href="../install/">Aubergine ইনস্টল করুন</a><a class="button button-quiet" href="https://github.com/thirstyeggplant/aubergine">সোর্স পড়ুন</a></p>
+    </div>
+  </div>
+</section>
 
 </main>
 <footer class="foot">

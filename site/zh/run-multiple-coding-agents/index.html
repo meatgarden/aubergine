@@ -129,11 +129,13 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="当前位置"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">指南</a></li><li>运行多个智能体</li></ol></nav>
-  <h1>如何同时运行多个编程智能体</h1>
-  <p class="lead">两个智能体很简单。五个就是一团乱：哪个卡住了，哪个在等你，哪个改了那个文件？Aubergine 正是为这种时刻而做的。它运行在你自己的电脑上。</p>
-</div>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="当前位置"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">指南</a></li><li>运行多个智能体</li></ol></nav>
+    <h1>如何同时运行多个编程智能体</h1>
+    <p class="lead">两个智能体很简单。五个就是一团乱：哪个卡住了，哪个在等你，哪个改了那个文件？Aubergine 正是为这种时刻而做的。它运行在你自己的电脑上。</p>
+  </div>
+</header>
 <div class="wrap page-body">
   <div class="prose">
     <h2>1. 在一张画布上给每个智能体一个终端</h2>
@@ -154,9 +156,19 @@
       <li>它不会阻止智能体做你能做的事。智能体以你的身份运行。哪些受保护、哪些不受保护，见<a href="../security/">安全</a>。</li>
       <li>目前它在一台电脑上运行。与他人共享画布、在云端运行智能体都在<a href="../roadmap/">路线图</a>上，尚未构建。</li>
     </ul>
-    <p class="actions"><a class="button primary" href="../install/">安装 Aubergine</a></p>
   </div>
 </div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">五分钟上手</h2>
+    <div class="close-do">
+      <p>你需要 macOS，以及 tmux 3.2 或更高版本和 Node.js 22 或更高版本。<code>brew install tmux node</code> 可以一次装好两者。</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="已复制" aria-live="polite" hidden>复制</button></p>
+      <p class="actions"><a class="button" href="../install/">安装 Aubergine</a><a class="button button-quiet" href="https://github.com/thirstyeggplant/aubergine">阅读源码</a></p>
+    </div>
+  </div>
+</section>
 
 </main>
 <footer class="foot">

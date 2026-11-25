@@ -108,69 +108,58 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="আপনি কোথায় আছেন"><ol><li><a href="../">Aubergine</a></li><li>Claude Code</li></ol></nav>
-  <h1>Aubergine Claude Code-এর জন্য কী করে</h1>
-  <p class="lead">Claude Code যেকোনো প্রোগ্রামের মতো Aubergine টার্মিনালে চলে। Aubergine থেকে চালু করলে এটি ক্যানভাসকে জানায়ও যে কী করছে, আর Aubergine একে তথ্য দিতে পারে, আবার শুরু করতে পারে আর দেখাতে পারে এটি কীভাবে সেট আপ করা। এই হলো সবটুকু, যে ক্রমে আপনি এর দেখা পান।</p>
-</div>
-<div class="wrap page-body">
-  <div class="prose">
+<header class="page-head page-head-big">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="আপনি কোথায় আছেন"><ol><li><a href="../">Aubergine</a></li><li>Claude Code</li></ol></nav>
+    <h1>Aubergine Claude Code-এর জন্য কী করে</h1>
+    <p class="lead">Claude Code যেকোনো প্রোগ্রামের মতো Aubergine টার্মিনালে চলে। Aubergine থেকে চালু করলে এটি ক্যানভাসকে জানায়ও যে কী করছে, আর Aubergine একে তথ্য দিতে পারে, আবার শুরু করতে পারে আর দেখাতে পারে এটি কীভাবে সেট আপ করা। এই হলো সবটুকু, যে ক্রমে আপনি এর দেখা পান।</p>
     <p class="note">Claude Code আপনি নিজে ইনস্টল করেন আর নিজে সাইন ইন করেন। Aubergine কোনো মডেল কল করে না আর কোনো key রাখে না: এটি আপনার কাছে আগে থেকে থাকা <code>claude</code> কমান্ডটি চালু করে।</p>
-
-    <h2>মেনু থেকে চালু করুন</h2>
-    <p><strong>New terminal ▾ → Claude Code</strong>, বা কোনো টার্মিনালের কাছে কিবোর্ড না থাকলে <code>C</code>, একটি নতুন টার্মিনালে <code>claude</code> চালু করে, এমন একটি সেটিংস ফাইল দিয়ে যা Aubergine নিজের ডেটা ফোল্ডারে লেখে। আপনার নিজের Claude Code কনফিগারেশনে হাত দেওয়া হয় না।</p>
-    <p>এটি যে কমান্ড চালু করে তা সেটিংসের <code>agents.claudeCommand</code>, আপনি না বদলালে <code>claude</code>; Aubergine শেষে নিজের ফ্ল্যাগ যোগ করে।</p>
-    <p class="note">কোথায়: New terminal-এর পাশের মেনু, টার্মিনালের তালিকার একদম উপরে।</p>
-
-    <h2>দেখুন কখন কাজ করছে, অপেক্ষা করছে আর শেষ করছে</h2>
-    <p>সেই সেটিংস ফাইলের হুকগুলো ক্যানভাসকে জানায় এজেন্ট কী করছে। আপনি একটি প্রম্পট পাঠালে প্রম্পটটি টার্মিনালের নোট লগে যোগ হয় আর টার্মিনাল <strong>working</strong> দেখায়। এজেন্টের আপনাকে দরকার হলে, অনুমতির প্রশ্ন নিয়ে বা ইনপুটের অপেক্ষায় idle থাকায়, এর রেখা অপেক্ষার রঙ নেয় আর এর শিরোনাম ও সারিতে লেখা থাকে <strong>waiting for you</strong> (আপনার অপেক্ষায়)। থেমে গেলে দেখায় <strong>finished</strong>।</p>
-    <p><code>W</code> পরের অপেক্ষমাণ টার্মিনালে নিয়ে যায়, আর <strong>Notify</strong> অপেক্ষা শুরু করা টার্মিনালের জন্য ডেস্কটপ নোটিফিকেশন চালু করে। প্রম্পটে গোপন তথ্য থাকতে পারে: <code>"agents": { "logPrompts": false }</code>, <code>config.json</code>-এ, সেগুলো নোট লগের বাইরে রাখে।</p>
-    <p class="note">কোথায়: টার্মিনালের শিরোনাম, তালিকায় তার সারি, আর উপরে For you-এর পাশের সংখ্যা।</p>
-
-    <h2>যে Claude Code আপনি নিজে চালু করেছেন</h2>
-    <p>সাধারণ টার্মিনালে হাতে টাইপ করলে <code>claude</code> যেকোনো প্রোগ্রামের মতো কাজ করে, কিন্তু Aubergine শুধু দেখে একটি শেল সেটি চালাতে busy: কোনো waiting for you নেই, আর সেখানে ওয়ার্কফ্লো শুরু করলে তার জন্য কিছু টাইপ হয় না। এটি বদলাতে হুকগুলো প্রিন্ট করুন আর হাতে আপনার নিজের Claude Code সেটিংসে যোগ করুন। Aubergine টার্মিনালের বাইরে সেগুলো কিছুই করে না।</p>
-    <p class="cmd"><code>aubergine hooks print</code><button type="button" class="copy" data-copy data-copied="কপি হয়েছে" aria-live="polite" hidden>কপি করুন</button></p>
-
-    <h2>এটি নিজের নাম দেয় আর একটি সারাংশ রাখে</h2>
-    <p>Aubergine যে এজেন্ট চালু করে, শুরুতেই তাকে বলা হয় <code>aubergine describe</code>, <code>aubergine link add</code> আর <code>aubergine field set</code> দিয়ে তার টার্মিনালের নাম কাজের নামে রাখতে আর একটি সারাংশ রাখতে, আর নিজের নাম বা সারাংশ ছাড়া থামলে একবার মনে করিয়ে দেওয়া হয়। আপনি নিজে যা লেখেন সেটাই থাকে; একই বিষয়ে এজেন্ট যা বলে, তা পাশে <strong>Use this</strong> সহ অপেক্ষা করে। মনে করিয়ে দেওয়া <strong>Settings</strong>-এ বন্ধ করা যায়।</p>
-    <p class="note">কোথায়: টার্মিনালের বিবরণ, তার নাম, সারাংশ, ফিল্ড আর লিংক সহ।</p>
-
-    <h2>ওয়ার্কফ্লো, টাস্ক, রিক্যাপ আর বার্তা এর কাছে পৌঁছায়</h2>
-    <p>Aubergine একটি টার্মিনালে চারটি নির্দিষ্ট বাক্য টাইপ করে, আর শুধু এগুলোই: যে একটি ওয়ার্কফ্লো শুরু হয়েছে, যে এজেন্টকে কিছু লিখতে বলা হয়েছে, যে আপনি একটি রিক্যাপ চেয়েছেন, আর যে একটি বার্তা অপেক্ষা করছে। প্রতিটি বাক্য এজেন্টের চালানোর জন্য একটি কমান্ড বলে দেয়। বাক্য শুধু সেখানেই টাইপ হয় যেখানে কিবোর্ড কোনো এজেন্টের কাছে আছে বলে দেখা যায়: এমন এজেন্ট যাকে Aubergine চালু করেছে, বা যার সেটিংসে <code>aubergine hooks print</code>-এর হুক আছে।</p>
-    <p>একইভাবে, কিউয়ের টাস্ক শুধু এমন টার্মিনালে যায় যেখানে এমন এজেন্ট সামনে আছে আর ফাঁকা, আর <strong>Claude Code on a workflow…</strong> একটি নতুন টার্মিনাল চালু করে যার এজেন্টকে তার প্রথম প্রম্পটেই রানের কথা জানানো হয়।</p>
-    <p class="note">কোথায়: টার্মিনালের শিরোনামের মেনুতে <strong>Run a workflow…</strong>, আর পেজের উপরে <strong>Runs</strong>।</p>
-
-    <h2>Resume agent</h2>
-    <p>Aubergine মনে রাখে কোনো এজেন্ট টার্মিনাল কোন কথোপকথনে ছিল। এর শেল আবার প্রম্পটে ফিরলে, কারণ আপনি এজেন্ট থেকে বেরিয়েছেন বা কম্পিউটার রিস্টার্ট হয়েছে, টার্মিনাল <strong>Resume agent</strong> (এজেন্ট আবার শুরু) দেখায়, যা এজেন্টকে সেই কথোপকথনেই আবার চালু করে। কোনো রানে থাকা টার্মিনালে এটি এজেন্টকে রানের কথাও আবার জানায়।</p>
-    <p class="note">কোথায়: টার্মিনালের টাইটেল বার।</p>
-
-    <h2>পুরোনো কথোপকথন</h2>
-    <p><strong>Past conversations…</strong> একটি ফোল্ডারে এজেন্টের আগের কথোপকথনগুলোর তালিকা দেখায়: একটি পড়ুন, ক্যানভাসে খুলুন, বা এমন একটি কপি খুলুন যা আসলটিকে যেমন আছে তেমন রাখে। খুঁজতে প্যালেটে <code>@</code> আর কয়েকটি শব্দ টাইপ করুন; <code>aubergine history</code> কমান্ড লাইনে তালিকা দেখায়। যা পড়া হয় তা রাখা হয় না, আর কোনো টোকেন বা এজেন্ট Aubergine-এর মাধ্যমে কথোপকথন পড়তে পারে না।</p>
-    <p>এটি Claude Code-এর রাখা ফাইলগুলো পড়ে। সেগুলোর গঠন Claude Code-এর অভ্যন্তরীণ, আর সংস্করণ বদলালে তা বদলায়। এজেন্টের আপডেটের পরে নাম আর ট্রান্সক্রিপ্ট কম আসতে পারে, আর যে রেকর্ড Aubergine পড়তে পারে না সেটির ব্যাপারে তা-ই বলা হয়, কখনো খালি দেখানো হয় না।</p>
-    <p class="note">কোথায়: প্যালেট (<code>⌘K</code>), আর টার্মিনালের বিবরণে “Past conversations in this folder…”।</p>
-
-    <h2>এটি কীভাবে সেট আপ করা</h2>
-    <p>এজেন্টের কনফিগারেশন ফাইল অনুযায়ী তাকে কী কী দেওয়া হয়েছে তার তালিকা: MCP সার্ভার, প্লাগইন, হুক, স্কিল, অনুমতির নিয়ম আর সেটিংস ফাইল, প্রতিটির সঙ্গে কোথা থেকে এসেছে, আর Aubergine কী যোগ করেছে। শুধু নাম, কখনো কোনো মান বা গোপন তথ্য নয়। এটি বলে এজেন্ট কীভাবে সেট আপ করা, চলমান এজেন্ট কী লোড করেছে তা নয়, আর স্পষ্ট বলে কী জানা সম্ভব নয়, যেমন আপনার অ্যাকাউন্টের সঙ্গে আসা কানেক্টর।</p>
-    <p class="note">কোথায়: টার্মিনালে <strong>⚙ on</strong>, প্যালেটে “What is switched on for this agent…”, আর টার্মিনালের বিবরণ।</p>
-
-    <h2>এর জন্য Aubergine-এর টুল</h2>
-    <p><strong>Claude Code with Aubergine tools…</strong> আগে জিজ্ঞেস করে এজেন্ট কী করতে পারবে: <strong>None</strong> (কিছুই না); <strong>Its own work only</strong> (শুধু নিজের কাজ), টার্মিনালের নিজের ক্রেডেনশিয়াল দিয়ে; বা <strong>More…</strong>, আপনার বেছে নেওয়া স্কোপ, যার জন্য সেই একটি টার্মিনালের জন্য একটি টোকেন বানানো হয় আর টার্মিনাল চিরতরে বন্ধ হলে বাতিল হয়। টুলগুলো হলো <code>aubergine mcp</code>, যা এজেন্টকে তার লঞ্চ লাইনে দেওয়া হয়; এর নিজের কনফিগারেশন লেখা হয় না।</p>
-    <p class="note">কোথায়: New terminal-এর পাশের মেনু।</p>
-
-    <h2>আগে থেকে খোলা Claude Code নিয়ে আসুন</h2>
-    <p>চলমান এজেন্টকে সরানো যায় না, কিন্তু তার কথোপকথন আনা যায়। <strong>Open elsewhere</strong> আপনার Claude Code ট্যাবগুলো দেখায়, <strong>Fork to canvas</strong> সহ আর, idle এজেন্টের জন্য, <strong>Stop and resume here</strong> সহ, যা আগে আপনাকে জিজ্ঞেস করে। কোনো টার্মিনাল থেকে <code>aubergine move</code> একই কাজ করে, আর <code>aubergine here --claude</code> ক্যানভাসে Claude Code চালু করে, সেই ফোল্ডারের শেষ কথোপকথন চালিয়ে।</p>
-    <p class="note">কোথায়: ক্যানভাসের উপরের বারে <strong>Open elsewhere</strong>, বা <code>O</code>।</p>
-
-    <h2>নিজস্ব ওয়ার্কিং কপিতে</h2>
-    <p><code>aubergine here --copy --claude</code> Claude Code-কে রিপোজিটরির নিজস্ব চেকআউটে, নিজস্ব ব্রাঞ্চে চালু করে, যাতে দুটি এজেন্ট কখনো একই ফাইল না বদলায়। টুল সহ Claude Code টার্মিনালের ডায়ালগেও একই বিকল্প আছে।</p>
-
-    <h2>কী পরীক্ষা করা হয়েছে</h2>
-    <p>Aubergine-এর সঙ্গে আসা ডেমো নকল এজেন্ট ব্যবহার করে, ছোট স্ক্রিপ্ট যা আসল এজেন্টের মতোই একই কমান্ড আর হুক চালায়, আসল Claude Code নয়। আসল এজেন্ট দিয়ে অনুমোদন, ওয়ার্কিং কপি, কিউয়ের টাস্ক আর শিডিউল এখনো পরীক্ষা করা হয়নি।</p>
-
-    <p>অন্য এজেন্ট এর বেশিরভাগই <code>aubergine</code> কমান্ড দিয়ে জানাতে পারে: দেখুন <a href="../chatgpt/">Codex আর ChatGPT</a>।</p>
-    <p class="note">Aubergine-এর সঙ্গে Anthropic-এর কোনো সম্পর্ক নেই। Claude আর Claude Code হলো Anthropic-এর ট্রেডমার্ক।</p>
   </div>
-</div>
+</header>
+<section class="part" aria-label="Aubergine Claude Code-এর জন্য কী করে">
+  <div class="wrap">
+    <ol class="features">
+      <li><h2>মেনু থেকে চালু করুন</h2><div class="feature-words"><p><strong>New terminal ▾ → Claude Code</strong>, বা কোনো টার্মিনালের কাছে কিবোর্ড না থাকলে <code>C</code>, একটি নতুন টার্মিনালে <code>claude</code> চালু করে, এমন একটি সেটিংস ফাইল দিয়ে যা Aubergine নিজের ডেটা ফোল্ডারে লেখে। আপনার নিজের Claude Code কনফিগারেশনে হাত দেওয়া হয় না।</p><p>এটি যে কমান্ড চালু করে তা সেটিংসের <code>agents.claudeCommand</code>, আপনি না বদলালে <code>claude</code>; Aubergine শেষে নিজের ফ্ল্যাগ যোগ করে।</p><p class="where">কোথায়: New terminal-এর পাশের মেনু, টার্মিনালের তালিকার একদম উপরে।</p></div></li>
+      <li class="with-pic flip">
+        <div class="feature-words"><h2>দেখুন কখন কাজ করছে, অপেক্ষা করছে আর শেষ করছে</h2><p>সেই সেটিংস ফাইলের হুকগুলো ক্যানভাসকে জানায় এজেন্ট কী করছে। আপনি একটি প্রম্পট পাঠালে প্রম্পটটি টার্মিনালের নোট লগে যোগ হয় আর টার্মিনাল <strong>working</strong> দেখায়। এজেন্টের আপনাকে দরকার হলে, অনুমতির প্রশ্ন নিয়ে বা ইনপুটের অপেক্ষায় idle থাকায়, এর রেখা অপেক্ষার রঙ নেয় আর এর শিরোনাম ও সারিতে লেখা থাকে <strong>waiting for you</strong> (আপনার অপেক্ষায়)। থেমে গেলে দেখায় <strong>finished</strong>।</p><p><code>W</code> পরের অপেক্ষমাণ টার্মিনালে নিয়ে যায়, আর <strong>Notify</strong> অপেক্ষা শুরু করা টার্মিনালের জন্য ডেস্কটপ নোটিফিকেশন চালু করে। প্রম্পটে গোপন তথ্য থাকতে পারে: <code>"agents": { "logPrompts": false }</code>, <code>config.json</code>-এ, সেগুলো নোট লগের বাইরে রাখে।</p><p class="where">কোথায়: টার্মিনালের শিরোনাম, তালিকায় তার সারি, আর উপরে For you-এর পাশের সংখ্যা।</p></div>
+        <figure class="frame"><a href="../../screenshots/waiting.png" class="frame-pic"><img src="../../screenshots/waiting.png" width="1496" height="600" loading="lazy" alt="একটি টার্মিনাল যার এজেন্ট একটি প্রশ্ন করছে, শিরোনামে waiting for you, রেখা অপেক্ষার রঙে।"></a><figcaption>এর রেখা অপেক্ষার রঙ নেয়, আর এর শিরোনামে লেখা থাকে waiting for you।</figcaption></figure>
+      </li>
+      <li><h2>যে Claude Code আপনি নিজে চালু করেছেন</h2><div class="feature-words"><p>সাধারণ টার্মিনালে হাতে টাইপ করলে <code>claude</code> যেকোনো প্রোগ্রামের মতো কাজ করে, কিন্তু Aubergine শুধু দেখে একটি শেল সেটি চালাতে busy: কোনো waiting for you নেই, আর সেখানে ওয়ার্কফ্লো শুরু করলে তার জন্য কিছু টাইপ হয় না। এটি বদলাতে হুকগুলো প্রিন্ট করুন আর হাতে আপনার নিজের Claude Code সেটিংসে যোগ করুন। Aubergine টার্মিনালের বাইরে সেগুলো কিছুই করে না।</p><p class="cmd"><code>aubergine hooks print</code><button type="button" class="copy" data-copy data-copied="কপি হয়েছে" aria-live="polite" hidden>কপি করুন</button></p></div></li>
+      <li class="with-pic">
+        <div class="feature-words"><h2>এটি নিজের নাম দেয় আর একটি সারাংশ রাখে</h2><p>Aubergine যে এজেন্ট চালু করে, শুরুতেই তাকে বলা হয় <code>aubergine describe</code>, <code>aubergine link add</code> আর <code>aubergine field set</code> দিয়ে তার টার্মিনালের নাম কাজের নামে রাখতে আর একটি সারাংশ রাখতে, আর নিজের নাম বা সারাংশ ছাড়া থামলে একবার মনে করিয়ে দেওয়া হয়। আপনি নিজে যা লেখেন সেটাই থাকে; একই বিষয়ে এজেন্ট যা বলে, তা পাশে <strong>Use this</strong> সহ অপেক্ষা করে। মনে করিয়ে দেওয়া <strong>Settings</strong>-এ বন্ধ করা যায়।</p><p class="where">কোথায়: টার্মিনালের বিবরণ, তার নাম, সারাংশ, ফিল্ড আর লিংক সহ।</p></div>
+        <figure class="frame"><a href="../../screenshots/focus-part.png" class="frame-pic"><img src="../../screenshots/focus-part.png" width="1344" height="1172" loading="lazy" alt="একটি ব্রাউজার ট্যাবে একা একটি টার্মিনাল: উপরে তার নাম, তার বিবরণে ওয়ার্কফ্লোর ধাপ, ফোল্ডার আর ফিল্ড, আর পাশে লাইভ টার্মিনাল।"></a><figcaption>আপনি চাইলে এর বিবরণ আর নোট পাশে খোলে, আর নিজেদের বোতাম দিয়ে আবার বন্ধ হয়।</figcaption></figure>
+      </li>
+      <li><h2>ওয়ার্কফ্লো, টাস্ক, রিক্যাপ আর বার্তা এর কাছে পৌঁছায়</h2><div class="feature-words"><p>Aubergine একটি টার্মিনালে চারটি নির্দিষ্ট বাক্য টাইপ করে, আর শুধু এগুলোই: যে একটি ওয়ার্কফ্লো শুরু হয়েছে, যে এজেন্টকে কিছু লিখতে বলা হয়েছে, যে আপনি একটি রিক্যাপ চেয়েছেন, আর যে একটি বার্তা অপেক্ষা করছে। প্রতিটি বাক্য এজেন্টের চালানোর জন্য একটি কমান্ড বলে দেয়। বাক্য শুধু সেখানেই টাইপ হয় যেখানে কিবোর্ড কোনো এজেন্টের কাছে আছে বলে দেখা যায়: এমন এজেন্ট যাকে Aubergine চালু করেছে, বা যার সেটিংসে <code>aubergine hooks print</code>-এর হুক আছে।</p><p>একইভাবে, কিউয়ের টাস্ক শুধু এমন টার্মিনালে যায় যেখানে এমন এজেন্ট সামনে আছে আর ফাঁকা, আর <strong>Claude Code on a workflow…</strong> একটি নতুন টার্মিনাল চালু করে যার এজেন্টকে তার প্রথম প্রম্পটেই রানের কথা জানানো হয়।</p><p class="where">কোথায়: টার্মিনালের শিরোনামের মেনুতে <strong>Run a workflow…</strong>, আর পেজের উপরে <strong>Runs</strong>।</p></div></li>
+      <li><h2>Resume agent</h2><div class="feature-words"><p>Aubergine মনে রাখে কোনো এজেন্ট টার্মিনাল কোন কথোপকথনে ছিল। এর শেল আবার প্রম্পটে ফিরলে, কারণ আপনি এজেন্ট থেকে বেরিয়েছেন বা কম্পিউটার রিস্টার্ট হয়েছে, টার্মিনাল <strong>Resume agent</strong> (এজেন্ট আবার শুরু) দেখায়, যা এজেন্টকে সেই কথোপকথনেই আবার চালু করে। কোনো রানে থাকা টার্মিনালে এটি এজেন্টকে রানের কথাও আবার জানায়।</p><p class="where">কোথায়: টার্মিনালের টাইটেল বার।</p></div></li>
+      <li><h2>পুরোনো কথোপকথন</h2><div class="feature-words"><p><strong>Past conversations…</strong> একটি ফোল্ডারে এজেন্টের আগের কথোপকথনগুলোর তালিকা দেখায়: একটি পড়ুন, ক্যানভাসে খুলুন, বা এমন একটি কপি খুলুন যা আসলটিকে যেমন আছে তেমন রাখে। খুঁজতে প্যালেটে <code>@</code> আর কয়েকটি শব্দ টাইপ করুন; <code>aubergine history</code> কমান্ড লাইনে তালিকা দেখায়। যা পড়া হয় তা রাখা হয় না, আর কোনো টোকেন বা এজেন্ট Aubergine-এর মাধ্যমে কথোপকথন পড়তে পারে না।</p><p>এটি Claude Code-এর রাখা ফাইলগুলো পড়ে। সেগুলোর গঠন Claude Code-এর অভ্যন্তরীণ, আর সংস্করণ বদলালে তা বদলায়। এজেন্টের আপডেটের পরে নাম আর ট্রান্সক্রিপ্ট কম আসতে পারে, আর যে রেকর্ড Aubergine পড়তে পারে না সেটির ব্যাপারে তা-ই বলা হয়, কখনো খালি দেখানো হয় না।</p><p class="where">কোথায়: প্যালেট (<code>⌘K</code>), আর টার্মিনালের বিবরণে “Past conversations in this folder…”।</p></div></li>
+      <li><h2>এটি কীভাবে সেট আপ করা</h2><div class="feature-words"><p>এজেন্টের কনফিগারেশন ফাইল অনুযায়ী তাকে কী কী দেওয়া হয়েছে তার তালিকা: MCP সার্ভার, প্লাগইন, হুক, স্কিল, অনুমতির নিয়ম আর সেটিংস ফাইল, প্রতিটির সঙ্গে কোথা থেকে এসেছে, আর Aubergine কী যোগ করেছে। শুধু নাম, কখনো কোনো মান বা গোপন তথ্য নয়। এটি বলে এজেন্ট কীভাবে সেট আপ করা, চলমান এজেন্ট কী লোড করেছে তা নয়, আর স্পষ্ট বলে কী জানা সম্ভব নয়, যেমন আপনার অ্যাকাউন্টের সঙ্গে আসা কানেক্টর।</p><p class="where">কোথায়: টার্মিনালে <strong>⚙ on</strong>, প্যালেটে “What is switched on for this agent…”, আর টার্মিনালের বিবরণ।</p></div></li>
+      <li><h2>এর জন্য Aubergine-এর টুল</h2><div class="feature-words"><p><strong>Claude Code with Aubergine tools…</strong> আগে জিজ্ঞেস করে এজেন্ট কী করতে পারবে: <strong>None</strong> (কিছুই না); <strong>Its own work only</strong> (শুধু নিজের কাজ), টার্মিনালের নিজের ক্রেডেনশিয়াল দিয়ে; বা <strong>More…</strong>, আপনার বেছে নেওয়া স্কোপ, যার জন্য সেই একটি টার্মিনালের জন্য একটি টোকেন বানানো হয় আর টার্মিনাল চিরতরে বন্ধ হলে বাতিল হয়। টুলগুলো হলো <code>aubergine mcp</code>, যা এজেন্টকে তার লঞ্চ লাইনে দেওয়া হয়; এর নিজের কনফিগারেশন লেখা হয় না।</p><p class="where">কোথায়: New terminal-এর পাশের মেনু।</p></div></li>
+      <li><h2>আগে থেকে খোলা Claude Code নিয়ে আসুন</h2><div class="feature-words"><p>চলমান এজেন্টকে সরানো যায় না, কিন্তু তার কথোপকথন আনা যায়। <strong>Open elsewhere</strong> আপনার Claude Code ট্যাবগুলো দেখায়, <strong>Fork to canvas</strong> সহ আর, idle এজেন্টের জন্য, <strong>Stop and resume here</strong> সহ, যা আগে আপনাকে জিজ্ঞেস করে। কোনো টার্মিনাল থেকে <code>aubergine move</code> একই কাজ করে, আর <code>aubergine here --claude</code> ক্যানভাসে Claude Code চালু করে, সেই ফোল্ডারের শেষ কথোপকথন চালিয়ে।</p><p class="where">কোথায়: ক্যানভাসের উপরের বারে <strong>Open elsewhere</strong>, বা <code>O</code>।</p></div></li>
+      <li><h2>নিজস্ব ওয়ার্কিং কপিতে</h2><div class="feature-words"><p><code>aubergine here --copy --claude</code> Claude Code-কে রিপোজিটরির নিজস্ব চেকআউটে, নিজস্ব ব্রাঞ্চে চালু করে, যাতে দুটি এজেন্ট কখনো একই ফাইল না বদলায়। টুল সহ Claude Code টার্মিনালের ডায়ালগেও একই বিকল্প আছে।</p></div></li>
+    </ol>
+  </div>
+</section>
+<section class="band band-dark" aria-labelledby="tried-h">
+  <div class="wrap dark-split">
+    <h2 id="tried-h">কী পরীক্ষা করা হয়েছে</h2>
+    <div class="prose">
+      <p>Aubergine-এর সঙ্গে আসা ডেমো নকল এজেন্ট ব্যবহার করে, ছোট স্ক্রিপ্ট যা আসল এজেন্টের মতোই একই কমান্ড আর হুক চালায়, আসল Claude Code নয়। আসল এজেন্ট দিয়ে অনুমোদন, ওয়ার্কিং কপি, কিউয়ের টাস্ক আর শিডিউল এখনো পরীক্ষা করা হয়নি।</p>
+      <p>অন্য এজেন্ট এর বেশিরভাগই <code>aubergine</code> কমান্ড দিয়ে জানাতে পারে: দেখুন <a href="../chatgpt/">Codex আর ChatGPT</a>।</p>
+      <p class="note">Aubergine-এর সঙ্গে Anthropic-এর কোনো সম্পর্ক নেই। Claude আর Claude Code হলো Anthropic-এর ট্রেডমার্ক।</p>
+    </div>
+  </div>
+</section>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">পাঁচ মিনিটে চালু</h2>
+    <div class="close-do">
+      <p>আপনার লাগবে macOS, সঙ্গে tmux 3.2 বা নতুনতর আর Node.js 22 বা নতুনতর। <code>brew install tmux node</code> দুটোই এনে দেয়।</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="কপি হয়েছে" aria-live="polite" hidden>কপি করুন</button></p>
+      <p class="actions"><a class="button" href="../install/">ইনস্টল করুন</a><a class="button button-quiet" href="https://github.com/thirstyeggplant/aubergine">সোর্স পড়ুন</a></p>
+    </div>
+  </div>
+</section>
 
 </main>
 <footer class="foot">

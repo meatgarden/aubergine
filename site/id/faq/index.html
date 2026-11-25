@@ -127,11 +127,13 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="Posisi Anda"><ol><li><a href="../">Aubergine</a></li><li>FAQ</li></ol></nav>
-  <h1>Pertanyaan yang sering diajukan</h1>
-  <p class="lead">Jawaban singkat. <a href="../guides/">Panduan</a> membahas lebih dalam.</p>
-</div>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Posisi Anda"><ol><li><a href="../">Aubergine</a></li><li>FAQ</li></ol></nav>
+    <h1>Pertanyaan yang sering diajukan</h1>
+    <p class="lead">Jawaban singkat. <a href="../guides/">Panduan</a> membahas lebih dalam.</p>
+  </div>
+</header>
 <div class="wrap page-body">
   <div class="questions">
     <details><summary>Apa itu Aubergine?</summary><p>Kanvas lokal berbasis browser berisi sesi terminal. Setiap terminal adalah node yang bisa Anda atur dan pakai, sehingga Anda bisa menjalankan beberapa agen coding sekaligus dan melihat mana yang sedang menunggu Anda.</p></details>
@@ -152,6 +154,17 @@
     <details><summary>Apa yang diubah installer di komputer saya?</summary><p>Dua hal: folder instalasi (~/.aubergine) dan satu link bernama aubergine. Ia tidak pernah memakai sudo, tidak pernah mengedit file startup shell Anda, dan tidak pernah menginstal Node.js, pnpm, atau tmux.</p></details>
   </div>
 </div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">Siap dipakai dalam lima menit</h2>
+    <div class="close-do">
+      <p>Anda memerlukan macOS dengan tmux 3.2 atau lebih baru dan Node.js 22 atau lebih baru. <code>brew install tmux node</code> memasang keduanya.</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="Tersalin" aria-live="polite" hidden>Salin</button></p>
+      <p class="actions"><a class="button" href="../install/">Instal</a><a class="button button-quiet" href="https://github.com/thirstyeggplant/aubergine">Baca kode sumbernya</a></p>
+    </div>
+  </div>
+</section>
 
 </main>
 <footer class="foot">

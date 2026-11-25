@@ -145,11 +145,13 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="Wo du bist"><ol><li><a href="../">Aubergine</a></li><li>Installieren</li></ol></nav>
-  <h1>Aubergine installieren</h1>
-  <p class="lead">Ein Befehl installiert es, einer startet es. Etwa fünf Minuten, Tour eingeschlossen.</p>
-</div>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Wo du bist"><ol><li><a href="../">Aubergine</a></li><li>Installieren</li></ol></nav>
+    <h1>Aubergine installieren</h1>
+    <p class="lead">Ein Befehl installiert es, einer startet es. Etwa fünf Minuten, Tour eingeschlossen.</p>
+  </div>
+</header>
 <div class="wrap page-body">
   <div class="prose">
     <h2>Voraussetzungen</h2>
@@ -161,7 +163,7 @@
     <p class="cmd"><code>brew install tmux node</code><button type="button" class="copy" data-copy data-copied="Kopiert" aria-live="polite" hidden>Kopieren</button></p>
 
     <h2>Installieren und starten</h2>
-    <ol>
+    <ol class="seq">
       <li><p><strong>Installiere Aubergine</strong> über npm (braucht nur tmux und Node.js):</p>
         <p class="cmd"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="Kopiert" aria-live="polite" hidden>Kopieren</button></p>
         <p>Oder mit dem Installer, der zusätzlich pnpm braucht und aus dem Quellcode baut:</p>
@@ -170,7 +172,7 @@
         <p class="cmd"><code>aubergine start --open</code><button type="button" class="copy" data-copy data-copied="Kopiert" aria-live="polite" hidden>Kopieren</button></p></li>
       <li><p><strong>Mach die Tour.</strong> Klick in der Mitte des leeren Canvas auf <em>Show me around</em>. Das legt ein Canvas namens „Demo“ mit ein paar Platzhalter-Agenten an und führt dich in acht kurzen Schritten herum. Nichts in der Demo ist echt, und <code>aubergine demo --remove</code> entfernt sie wieder.</p></li>
     </ol>
-    <p>Lieber erst das Skript lesen? Lad es herunter, lies es und führ <code>sh install.sh --dry-run</code> aus, um zu sehen, was es tun würde, ohne etwas zu ändern.</p>
+    <p class="note">Lieber erst das Skript lesen? Lad es herunter, lies es und führ <code>sh install.sh --dry-run</code> aus, um zu sehen, was es tun würde, ohne etwas zu ändern.</p>
 
     <h2>Was der Installer ändert</h2>
     <p>Nur zwei Dinge: den Installationsordner (<code>~/.aubergine</code> oder <code>AUBERGINE_HOME</code>) und einen Link namens <code>aubergine</code> in einem Ordner auf deinem <code>PATH</code>, in den du schreiben darfst. Er prüft vorher alles und ändert nichts, wenn etwas fehlt.</p>
@@ -198,11 +200,19 @@
       <li><strong>Deinstalliere</strong> mit <code>aubergine uninstall</code>. Es entfernt den Link und, nach Rückfrage, die Kopie, die der Installer angelegt hat. Es entfernt nie deine Daten und beendet nie deine Terminals.</li>
       <li><strong>Starte es bei der Anmeldung</strong> mit <code>aubergine service install</code>, dann musst du nur noch den Browser öffnen.</li>
     </ul>
-
-    <h2>Weiter</h2>
-    <p>Lies, <a href="../run-multiple-coding-agents/">wie du mehrere Coding-Agenten gleichzeitig laufen lässt</a>, oder die <a href="../guides/">Anleitungen</a>. Die vollständige Referenz steht in der <a href="https://github.com/thirstyeggplant/aubergine#readme">README</a>.</p>
   </div>
 </div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">Weiter</h2>
+    <div class="close-do">
+      <p>Lies, <a href="../run-multiple-coding-agents/">wie du mehrere Coding-Agenten gleichzeitig laufen lässt</a>, oder die <a href="../guides/">Anleitungen</a>. Die vollständige Referenz steht in der <a href="https://github.com/thirstyeggplant/aubergine#readme">README</a>.</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="Kopiert" aria-live="polite" hidden>Kopieren</button></p>
+      <p class="actions"><a class="button" href="../guides/">Anleitungen</a></p>
+    </div>
+  </div>
+</section>
 
 </main>
 <footer class="foot">

@@ -145,11 +145,13 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="현재 위치"><ol><li><a href="../">Aubergine</a></li><li>설치</li></ol></nav>
-  <h1>Aubergine 설치 방법</h1>
-  <p class="lead">명령 하나로 설치하고, 하나로 시작합니다. 둘러보기를 포함해 5분 정도 걸립니다.</p>
-</div>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="현재 위치"><ol><li><a href="../">Aubergine</a></li><li>설치</li></ol></nav>
+    <h1>Aubergine 설치 방법</h1>
+    <p class="lead">명령 하나로 설치하고, 하나로 시작합니다. 둘러보기를 포함해 5분 정도 걸립니다.</p>
+  </div>
+</header>
 <div class="wrap page-body">
   <div class="prose">
     <h2>요구 사항</h2>
@@ -161,7 +163,7 @@
     <p class="cmd"><code>brew install tmux node</code><button type="button" class="copy" data-copy data-copied="복사됨" aria-live="polite" hidden>복사</button></p>
 
     <h2>설치하고 시작하기</h2>
-    <ol>
+    <ol class="seq">
       <li><p>npm에서 <strong>Aubergine 설치</strong>(tmux와 Node.js만 필요):</p>
         <p class="cmd"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="복사됨" aria-live="polite" hidden>복사</button></p>
         <p>또는 pnpm도 필요하고 소스에서 빌드하는 설치 프로그램으로:</p>
@@ -170,7 +172,7 @@
         <p class="cmd"><code>aubergine start --open</code><button type="button" class="copy" data-copy data-copied="복사됨" aria-live="polite" hidden>복사</button></p></li>
       <li><p><strong>둘러보기.</strong> 빈 캔버스 가운데의 <em>Show me around</em>를 클릭하세요. 대역 에이전트 몇 개가 있는 “Demo”라는 캔버스를 만들고 여덟 개의 짧은 단계로 안내합니다. 데모의 어떤 것도 진짜가 아니며, <code>aubergine demo --remove</code>로 없앨 수 있습니다.</p></li>
     </ol>
-    <p>스크립트를 먼저 읽어 보고 싶으신가요? 내려받아 읽은 뒤 <code>sh install.sh --dry-run</code>을 실행하면 아무것도 바꾸지 않고 무엇을 할지 볼 수 있습니다.</p>
+    <p class="note">스크립트를 먼저 읽어 보고 싶으신가요? 내려받아 읽은 뒤 <code>sh install.sh --dry-run</code>을 실행하면 아무것도 바꾸지 않고 무엇을 할지 볼 수 있습니다.</p>
 
     <h2>설치 프로그램이 바꾸는 것</h2>
     <p>두 가지뿐입니다. 설치 폴더(<code>~/.aubergine</code> 또는 <code>AUBERGINE_HOME</code>)와 <code>aubergine</code>이라는 링크 하나이며, 이 링크는 쓰기 권한이 있는 <code>PATH</code>상의 폴더에 놓입니다. 먼저 모든 것을 확인하고, 빠진 것이 있으면 아무것도 바꾸지 않습니다.</p>
@@ -198,11 +200,19 @@
       <li><strong>제거</strong>: <code>aubergine uninstall</code>을 실행합니다. 링크를 지우고, 확인을 받은 뒤 설치 프로그램이 만든 사본을 지웁니다. 데이터를 지우거나 터미널을 끝내는 일은 결코 없습니다.</li>
       <li><strong>로그인 시 시작</strong>: <code>aubergine service install</code>을 실행해 두면, 브라우저만 열면 됩니다.</li>
     </ul>
-
-    <h2>다음</h2>
-    <p><a href="../run-multiple-coding-agents/">여러 코딩 에이전트를 한꺼번에 실행하는 방법</a>이나 <a href="../guides/">가이드</a>를 읽어 보세요. 전체 참조 문서는 <a href="https://github.com/thirstyeggplant/aubergine#readme">README</a>에 있습니다.</p>
   </div>
 </div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">다음</h2>
+    <div class="close-do">
+      <p><a href="../run-multiple-coding-agents/">여러 코딩 에이전트를 한꺼번에 실행하는 방법</a>이나 <a href="../guides/">가이드</a>를 읽어 보세요. 전체 참조 문서는 <a href="https://github.com/thirstyeggplant/aubergine#readme">README</a>에 있습니다.</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="복사됨" aria-live="polite" hidden>복사</button></p>
+      <p class="actions"><a class="button" href="../guides/">가이드</a></p>
+    </div>
+  </div>
+</section>
 
 </main>
 <footer class="foot">

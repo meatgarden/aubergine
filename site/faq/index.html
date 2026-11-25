@@ -120,11 +120,13 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="Where you are"><ol><li><a href="../">Aubergine</a></li><li>FAQ</li></ol></nav>
-  <h1>Frequently asked questions</h1>
-  <p class="lead">Short answers. The <a href="../guides/">guides</a> go deeper.</p>
-</div>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Where you are"><ol><li><a href="../">Aubergine</a></li><li>FAQ</li></ol></nav>
+    <h1>Frequently asked questions</h1>
+    <p class="lead">Short answers. The <a href="../guides/">guides</a> go deeper.</p>
+  </div>
+</header>
 <div class="wrap page-body">
   <div class="questions">
     <details><summary>What is Aubergine?</summary><p>A local, browser-based canvas of terminal sessions. Each terminal is a node you can arrange and use, so you can run several coding agents at once and see which one is waiting for you.</p></details>
@@ -145,6 +147,17 @@
     <details><summary>What does the installer change on my computer?</summary><p>Two things: the install folder (~/.aubergine) and one link named aubergine. It never uses sudo, never edits your shell startup files and never installs Node.js, pnpm or tmux.</p></details>
   </div>
 </div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">Up and running in five minutes</h2>
+    <div class="close-do">
+      <p>You need macOS with tmux 3.2 or newer and Node.js 22 or newer. <code>brew install tmux node</code> gets both.</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="Copied" aria-live="polite" hidden>Copy</button></p>
+      <p class="actions"><a class="button" href="../install/">Install</a><a class="button button-quiet" href="https://github.com/thirstyeggplant/aubergine">Read the source</a></p>
+    </div>
+  </div>
+</section>
 
 </main>
 <footer class="foot">

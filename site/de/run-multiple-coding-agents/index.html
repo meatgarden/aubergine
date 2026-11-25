@@ -129,11 +129,13 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="Wo du bist"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">Anleitungen</a></li><li>Mehrere Agenten gleichzeitig</li></ol></nav>
-  <h1>Mehrere Coding-Agenten gleichzeitig laufen lassen</h1>
-  <p class="lead">Zwei Agenten sind einfach. Fünf sind Chaos: Welcher hängt, welcher wartet auf dich, welcher hat diese Datei geändert? Für genau diesen Moment ist Aubergine gebaut. Es läuft auf deinem eigenen Rechner.</p>
-</div>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Wo du bist"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">Anleitungen</a></li><li>Mehrere Agenten gleichzeitig</li></ol></nav>
+    <h1>Mehrere Coding-Agenten gleichzeitig laufen lassen</h1>
+    <p class="lead">Zwei Agenten sind einfach. Fünf sind Chaos: Welcher hängt, welcher wartet auf dich, welcher hat diese Datei geändert? Für genau diesen Moment ist Aubergine gebaut. Es läuft auf deinem eigenen Rechner.</p>
+  </div>
+</header>
 <div class="wrap page-body">
   <div class="prose">
     <h2>1. Gib jedem Agenten ein Terminal auf einem Canvas</h2>
@@ -154,9 +156,19 @@
       <li>Es hält einen Agenten nicht davon ab, etwas zu tun, was du tun könntest. Agenten laufen als du. Unter <a href="../security/">Sicherheit</a> steht, was geschützt ist und was nicht.</li>
       <li>Es läuft heute auf einem Rechner. Ein Canvas mit anderen Menschen teilen und Agenten in der Cloud laufen lassen stehen auf der <a href="../roadmap/">Roadmap</a> und sind nicht gebaut.</li>
     </ul>
-    <p class="actions"><a class="button primary" href="../install/">Aubergine installieren</a></p>
   </div>
 </div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">In fünf Minuten startklar</h2>
+    <div class="close-do">
+      <p>Du brauchst macOS mit tmux 3.2 oder neuer und Node.js 22 oder neuer. <code>brew install tmux node</code> holt beides.</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="Kopiert" aria-live="polite" hidden>Kopieren</button></p>
+      <p class="actions"><a class="button" href="../install/">Aubergine installieren</a><a class="button button-quiet" href="https://github.com/thirstyeggplant/aubergine">Quellcode lesen</a></p>
+    </div>
+  </div>
+</section>
 
 </main>
 <footer class="foot">

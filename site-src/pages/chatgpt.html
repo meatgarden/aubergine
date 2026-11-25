@@ -23,65 +23,90 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="{{attr:site.crumbs}}"><ol><li><a href="/">Aubergine</a></li><li>{{chatgpt.crumb}}</li></ol></nav>
-  <h1>{{chatgpt.title}}</h1>
-  <p class="lead">{{chatgpt.lead}}</p>
-</div>
-<div class="wrap page-body">
-  <div class="prose">
-    <h2>{{chatgpt.untried.title}}</h2>
-    <p>{{chatgpt.untried.text}}</p>
-
-    <h2>{{chatgpt.start.title}}</h2>
-    <p>{{chatgpt.start.text}}</p>
-
-    <h2>{{chatgpt.works.title}}</h2>
-    <p>{{chatgpt.works.intro}}</p>
+<header class="page-head page-head-big">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="{{attr:site.crumbs}}"><ol><li><a href="/">Aubergine</a></li><li>{{chatgpt.crumb}}</li></ol></nav>
+    <h1>{{chatgpt.title}}</h1>
+    <p class="lead">{{chatgpt.lead}}</p>
   </div>
-  <ul class="rows">
-    <li><h3>{{chatgpt.works.side.name}}</h3><p>{{chatgpt.works.side.text}}</p></li>
-    <li><h3>{{chatgpt.works.status.name}}</h3><p>{{chatgpt.works.status.text}}</p></li>
-    <li><h3>{{chatgpt.works.keep.name}}</h3><p>{{chatgpt.works.keep.text}}</p></li>
-    <li><h3>{{chatgpt.works.park.name}}</h3><p>{{chatgpt.works.park.text}}</p></li>
-    <li><h3>{{chatgpt.works.focus.name}}</h3><p>{{chatgpt.works.focus.text}}</p></li>
-    <li><h3>{{chatgpt.works.copy.name}}</h3><p>{{chatgpt.works.copy.text}}</p></li>
-    <li><h3>{{chatgpt.works.search.name}}</h3><p>{{chatgpt.works.search.text}}</p></li>
-  </ul>
-  <div class="prose">
-    <h2>{{chatgpt.report.title}}</h2>
-    <p>{{chatgpt.report.intro}}</p>
+</header>
+<section class="part" aria-labelledby="untried-h">
+  <div class="wrap dark-split">
+    <div class="note note-strong"><h2 id="untried-h">{{chatgpt.untried.title}}</h2><p>{{chatgpt.untried.text}}</p></div>
+    <div class="prose">
+      <h2>{{chatgpt.start.title}}</h2>
+      <p>{{chatgpt.start.text}}</p>
+    </div>
   </div>
-  <ul class="rows">
-    <li><h3><code>aubergine attention waiting "…"</code></h3><p>{{chatgpt.report.attention}}</p></li>
-    <li><h3><code>aubergine note "…"</code></h3><p>{{chatgpt.report.note}}</p></li>
-    <li><h3><code>aubergine describe</code></h3><p>{{chatgpt.report.describe}}</p></li>
-    <li><h3><code>aubergine workflow status</code></h3><p>{{chatgpt.report.workflow}}</p></li>
-    <li><h3><code>aubergine task add</code></h3><p>{{chatgpt.report.task}}</p></li>
-  </ul>
-  <div class="prose">
-    <h3>{{chatgpt.tell.title}}</h3>
-    <p>{{chatgpt.tell.text}}</p>
-    <p class="cmd"><code>aubergine guide --snippet</code><button type="button" class="copy" data-copy data-copied="{{attr:site.copied}}" aria-live="polite" hidden>{{site.copy}}</button></p>
-    <p>{{chatgpt.tell.after}}</p>
-    <p>{{chatgpt.tell.mcp}}</p>
-
-    <h2>{{chatgpt.only.title}}</h2>
-    <p>{{chatgpt.only.intro}}</p>
-    <ul>
-      <li>{{chatgpt.only.menu}}</li>
-      <li>{{chatgpt.only.seen}}</li>
-      <li>{{chatgpt.only.typed}}</li>
-      <li>{{chatgpt.only.queue}}</li>
-      <li>{{chatgpt.only.resume}}</li>
-      <li>{{chatgpt.only.move}}</li>
-      <li>{{chatgpt.only.remind}}</li>
+</section>
+<section class="part band-lilac" aria-labelledby="works-h">
+  <div class="wrap">
+    <div class="show">
+      <div class="show-words"><h2 id="works-h">{{chatgpt.works.title}}</h2><p>{{chatgpt.works.intro}}</p></div>
+      <figure class="frame"><a href="/screenshots/list.png" class="frame-pic"><img src="/screenshots/list.png" width="1440" height="1008" loading="lazy" alt="{{attr:home.see.canvas.alt}}"></a><figcaption>{{home.see.canvas.caption}}</figcaption></figure>
+    </div>
+    <ul class="across">
+      <li><h3>{{chatgpt.works.side.name}}</h3><p>{{chatgpt.works.side.text}}</p></li>
+      <li><h3>{{chatgpt.works.status.name}}</h3><p>{{chatgpt.works.status.text}}</p></li>
+      <li><h3>{{chatgpt.works.keep.name}}</h3><p>{{chatgpt.works.keep.text}}</p></li>
+      <li><h3>{{chatgpt.works.park.name}}</h3><p>{{chatgpt.works.park.text}}</p></li>
+      <li><h3>{{chatgpt.works.focus.name}}</h3><p>{{chatgpt.works.focus.text}}</p></li>
+      <li><h3>{{chatgpt.works.copy.name}}</h3><p>{{chatgpt.works.copy.text}}</p></li>
+      <li><h3>{{chatgpt.works.search.name}}</h3><p>{{chatgpt.works.search.text}}</p></li>
     </ul>
-    <p>{{chatgpt.only.more}}</p>
-
-    <h2>{{chatgpt.browser.title}}</h2>
-    <p>{{chatgpt.browser.text}}</p>
-
-    <p class="note">{{chatgpt.mark}}</p>
   </div>
-</div>
+</section>
+<section class="part" aria-labelledby="report-h">
+  <div class="wrap">
+    <div class="part-head">
+      <h2 id="report-h">{{chatgpt.report.title}}</h2>
+      <p>{{chatgpt.report.intro}}</p>
+    </div>
+    <ul class="commands">
+      <li><h3><code>aubergine attention waiting "…"</code></h3><p>{{chatgpt.report.attention}}</p></li>
+      <li><h3><code>aubergine note "…"</code></h3><p>{{chatgpt.report.note}}</p></li>
+      <li><h3><code>aubergine describe</code></h3><p>{{chatgpt.report.describe}}</p></li>
+      <li><h3><code>aubergine workflow status</code></h3><p>{{chatgpt.report.workflow}}</p></li>
+      <li><h3><code>aubergine task add</code></h3><p>{{chatgpt.report.task}}</p></li>
+    </ul>
+    <div class="prose">
+      <h3>{{chatgpt.tell.title}}</h3>
+      <p>{{chatgpt.tell.text}}</p>
+      <p class="cmd"><code>aubergine guide --snippet</code><button type="button" class="copy" data-copy data-copied="{{attr:site.copied}}" aria-live="polite" hidden>{{site.copy}}</button></p>
+      <p>{{chatgpt.tell.after}}</p>
+      <p>{{chatgpt.tell.mcp}}</p>
+    </div>
+  </div>
+</section>
+<section class="band band-dark" aria-labelledby="only-h">
+  <div class="wrap dark-split">
+    <h2 id="only-h">{{chatgpt.only.title}}</h2>
+    <div class="prose">
+      <p>{{chatgpt.only.intro}}</p>
+      <ul>
+        <li>{{chatgpt.only.menu}}</li>
+        <li>{{chatgpt.only.seen}}</li>
+        <li>{{chatgpt.only.typed}}</li>
+        <li>{{chatgpt.only.queue}}</li>
+        <li>{{chatgpt.only.resume}}</li>
+        <li>{{chatgpt.only.move}}</li>
+        <li>{{chatgpt.only.remind}}</li>
+      </ul>
+      <p>{{chatgpt.only.more}}</p>
+      <h3>{{chatgpt.browser.title}}</h3>
+      <p>{{chatgpt.browser.text}}</p>
+      <p class="note">{{chatgpt.mark}}</p>
+    </div>
+  </div>
+</section>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">{{home.install.title}}</h2>
+    <div class="close-do">
+      <p>{{home.install.intro}}</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="{{attr:site.copied}}" aria-live="polite" hidden>{{site.copy}}</button></p>
+      <p class="actions"><a class="button" href="/install/">{{home.hero.install}}</a><a class="button button-quiet" href="https://github.com/thirstyeggplant/aubergine">{{home.hero.source}}</a></p>
+    </div>
+  </div>
+</section>

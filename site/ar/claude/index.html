@@ -108,69 +108,58 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="أين أنت"><ol><li><a href="../">Aubergine</a></li><li>Claude Code</li></ol></nav>
-  <h1>ما يفعله Aubergine لـ Claude Code</h1>
-  <p class="lead">يعمل Claude Code في طرفية Aubergine مثل أي برنامج. وإذا شُغّل من Aubergine، يخبر اللوحة أيضًا بما يفعله، ويستطيع Aubergine أن يطلعه على المطلوب، وأن يستأنفه، وأن يعرض طريقة إعداده. هذا كل شيء، بالترتيب الذي تلقاه به.</p>
-</div>
-<div class="wrap page-body">
-  <div class="prose">
+<header class="page-head page-head-big">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="أين أنت"><ol><li><a href="../">Aubergine</a></li><li>Claude Code</li></ol></nav>
+    <h1>ما يفعله Aubergine لـ Claude Code</h1>
+    <p class="lead">يعمل Claude Code في طرفية Aubergine مثل أي برنامج. وإذا شُغّل من Aubergine، يخبر اللوحة أيضًا بما يفعله، ويستطيع Aubergine أن يطلعه على المطلوب، وأن يستأنفه، وأن يعرض طريقة إعداده. هذا كل شيء، بالترتيب الذي تلقاه به.</p>
     <p class="note">تثبّت Claude Code وتسجّل الدخول إليه بنفسك. لا يستدعي Aubergine أي نموذج ولا يحتفظ بأي مفتاح: إنه يشغّل الأمر <code>claude</code> الموجود لديك أصلًا.</p>
-
-    <h2>شغّله من القائمة</h2>
-    <p><strong>New terminal ▾ → Claude Code</strong>، أو <code>C</code> حين لا تكون لوحة المفاتيح مع أي طرفية، يشغّل <code>claude</code> في طرفية جديدة مع ملف إعدادات يكتبه Aubergine في مجلد بياناته الخاص. إعدادات Claude Code الخاصة بك لا تُمس.</p>
-    <p>الأمر الذي يشغّله هو <code>agents.claudeCommand</code> في الإعدادات، وهو <code>claude</code> ما لم تغيّره؛ ويضيف Aubergine خياراته الخاصة في آخره.</p>
-    <p class="note">أين: القائمة بجانب New terminal، أعلى قائمة الطرفيات.</p>
-
-    <h2>اعرف متى يعمل وينتظر وينتهي</h2>
-    <p>الخطافات في ملف الإعدادات ذاك تخبر اللوحة بما يفعله الوكيل. حين ترسل موجّهًا، يُضاف الموجّه إلى سجل ملاحظات الطرفية وتُظهر الطرفية <strong>working</strong> (يعمل). وحين يحتاج إليك الوكيل، بسؤال عن إذن أو لأنه خامل ينتظر مدخلات، يتحوّل إطاره إلى لون الانتظار ويقول عنوانه وصفّه <strong>waiting for you</strong> (بانتظارك). وحين يتوقف، يُظهر <strong>finished</strong> (انتهى).</p>
-    <p>المفتاح <code>W</code> ينتقل إلى الطرفية التالية التي تنتظر، و<strong>Notify</strong> يشغّل إشعارات سطح المكتب للطرفيات التي تبدأ الانتظار. قد تحوي الموجّهات أسرارًا: <code>"agents": { "logPrompts": false }</code> في <code>config.json</code> يُبقيها خارج سجل الملاحظات.</p>
-    <p class="note">أين: عنوان الطرفية، وصفّها في القائمة، والعدد بجانب For you في الأعلى.</p>
-
-    <h2>Claude Code شغّلته بنفسك</h2>
-    <p>إذا كُتب <code>claude</code> يدويًا في طرفية عادية فإنه يعمل مثل أي برنامج، لكن Aubergine لا يرى إلا صدفة مشغولة بتشغيله: لا waiting for you، ولا يُكتب له شيء حين تبدأ سير عمل فيها. لتغيير ذلك، اطبع الخطافات وأضفها يدويًا إلى إعدادات Claude Code الخاصة بك. لا تفعل شيئًا خارج طرفية Aubergine.</p>
-    <p class="cmd"><code>aubergine hooks print</code><button type="button" class="copy" data-copy data-copied="تم النسخ" aria-live="polite" hidden>نسخ</button></p>
-
-    <h2>يسمّي نفسه ويحتفظ بملخص</h2>
-    <p>الوكيل الذي يشغّله Aubergine يُطلب منه عند بدئه أن يسمّي طرفيته باسم العمل وأن يحتفظ بملخص، باستخدام <code>aubergine describe</code> و<code>aubergine link add</code> و<code>aubergine field set</code>، ويُذكَّر مرة واحدة حين يتوقف بلا اسم من عنده أو بلا ملخص. ما تكتبه أنت يغلب؛ وما يقوله الوكيل عن الشيء نفسه ينتظر بجانبه مع <strong>Use this</strong> (استخدم هذا). ويمكن إيقاف التذكير في <strong>Settings</strong>.</p>
-    <p class="note">أين: تفاصيل الطرفية، مع اسمها وملخصها وحقولها وروابطها.</p>
-
-    <h2>سير العمل والمهام والملخصات والرسائل تصل إليه</h2>
-    <p>يكتب Aubergine أربع جمل ثابتة في الطرفية، وهذه فقط: أن سير عمل قد بدأ، وأن الوكيل طُلب منه كتابة شيء، وأنك طلبت ملخصًا، وأن رسالة تنتظر. كل جملة تسمّي أمرًا واحدًا يشغّله الوكيل. ولا تُكتب جملة إلا حيث يُرى أن لوحة المفاتيح مع وكيل: وكيل شغّله Aubergine، أو وكيل في إعداداته الخطافات الناتجة عن <code>aubergine hooks print</code>.</p>
-    <p>وبالطريقة نفسها، لا تذهب مهمة من الطابور إلا إلى طرفية فيها وكيل كهذا في الواجهة ومتفرغ، و<strong>Claude Code on a workflow…‎</strong> يشغّل طرفية جديدة يُخبَر وكيلها بالتشغيل في أول موجّه له.</p>
-    <p class="note">أين: <strong>Run a workflow…‎</strong> في قائمة عنوان الطرفية، و<strong>Runs</strong> في أعلى الصفحة.</p>
-
-    <h2>Resume agent (استئناف الوكيل)</h2>
-    <p>يتذكر Aubergine المحادثة التي كانت فيها طرفية الوكيل. حين تعود صدفتها إلى المحث، لأنك خرجت من الوكيل أو أُعيد تشغيل الحاسوب، تعرض الطرفية <strong>Resume agent</strong>، الذي يشغّل الوكيل من جديد في تلك المحادثة. وفي طرفية مرتبطة بتشغيل، يخبر الوكيل بالتشغيل من جديد أيضًا.</p>
-    <p class="note">أين: شريط عنوان الطرفية.</p>
-
-    <h2>المحادثات السابقة</h2>
-    <p><strong>Past conversations…‎</strong> يعرض المحادثات السابقة للوكيل في مجلد: اقرأ واحدة، أو افتحها على اللوحة، أو افتح نسخة تترك الأصل كما هو. اكتب <code>@</code> وبعض الكلمات في لوحة الأوامر للبحث فيها؛ والأمر <code>aubergine history</code> يعرضها في سطر الأوامر. لا يُحتفظ بشيء مما يُقرأ، ولا يستطيع أي رمز ولا أي وكيل قراءة المحادثات عبر Aubergine.</p>
-    <p>يقرأ الملفات التي يحتفظ بها Claude Code. وشكلها داخلي خاص بـ Claude Code ويتغيّر بين الإصدارات. بعد تحديث الوكيل قد تقلّ الأسماء والنصوص، والسجل الذي لا يستطيع Aubergine قراءته يُقال عنه ذلك، ولا يُعرض فارغًا أبدًا.</p>
-    <p class="note">أين: لوحة الأوامر (<code>⌘K</code>)، و«Past conversations in this folder…‎» في تفاصيل الطرفية.</p>
-
-    <h2>طريقة إعداده</h2>
-    <p>قائمة بما تقول ملفات إعدادات الوكيل إنه أُعطيه: خوادم MCP، والإضافات، والخطافات، والمهارات، وقواعد الأذونات، وملفات الإعدادات، كلٌّ مع مصدره، وما أضافه Aubergine. أسماء فقط، لا قيمة ولا سرّ أبدًا. تقول كيف أُعدّ الوكيل، لا ما حمّله الوكيل الجاري، وتقول صراحة ما لا يمكنها معرفته، مثل الموصلات التي تأتي مع حسابك.</p>
-    <p class="note">أين: <strong>‎⚙ on</strong> على الطرفية، و«What is switched on for this agent…‎» في لوحة الأوامر، وتفاصيل الطرفية.</p>
-
-    <h2>أدوات Aubergine له</h2>
-    <p><strong>Claude Code with Aubergine tools…‎</strong> يسأل أولًا عمّا يجوز للوكيل فعله: <strong>None</strong> (لا شيء)؛ أو <strong>Its own work only</strong> (عمله فقط)، ببيانات اعتماد الطرفية نفسها؛ أو <strong>More…‎</strong> (المزيد)، نطاقات تختارها، يُصنع لها رمز لتلك الطرفية وحدها ويُلغى حين تُنهى الطرفية نهائيًا. الأدوات هي <code>aubergine mcp</code>، تُمرَّر إلى الوكيل في سطر تشغيله؛ ولا تُكتب إعداداته الخاصة.</p>
-    <p class="note">أين: القائمة بجانب New terminal.</p>
-
-    <h2>انقل Claude Code مفتوحًا لديك أصلًا</h2>
-    <p>لا يمكن نقل وكيل يعمل، لكن يمكن نقل محادثته. <strong>Open elsewhere</strong> يعرض علامات تبويب Claude Code لديك، مع <strong>Fork to canvas</strong> و، لوكيل خامل، <strong>Stop and resume here</strong>، الذي يسألك أولًا. ومن طرفية، يفعل <code>aubergine move</code> الشيء نفسه، و<code>aubergine here --claude</code> يشغّل Claude Code على اللوحة مكمّلًا آخر محادثة في ذلك المجلد.</p>
-    <p class="note">أين: <strong>Open elsewhere</strong> في الشريط فوق اللوحة، أو <code>O</code>.</p>
-
-    <h2>في نسخة عمل خاصة به</h2>
-    <p>الأمر <code>aubergine here --copy --claude</code> يشغّل Claude Code في نسخته المسحوبة الخاصة من المستودع، على فرعه الخاص، فلا يعدّل وكيلان الملفات نفسها أبدًا. ونافذة طرفية Claude Code مع الأدوات فيها الخيار نفسه.</p>
-
-    <h2>ما الذي جُرّب</h2>
-    <p>العرض التجريبي المرفق مع Aubergine يستخدم بدلاء، نصوصًا برمجية قصيرة تشغّل الأوامر والخطافات نفسها التي يشغّلها وكيل حقيقي، لا Claude Code حقيقيًا. ومع وكيل حقيقي، لم تُجرَّب بعدُ الموافقة، ونسخة العمل، والمهمة من الطابور، والجدول الزمني.</p>
-
-    <p>يستطيع وكيل آخر أن يقول معظم هذا عبر أوامر <code>aubergine</code>: انظر <a href="../chatgpt/">Codex و ChatGPT</a>.</p>
-    <p class="note">Aubergine غير تابع لـ Anthropic. Claude وClaude Code علامتان تجاريتان لـ Anthropic.</p>
   </div>
-</div>
+</header>
+<section class="part" aria-label="ما يفعله Aubergine لـ Claude Code">
+  <div class="wrap">
+    <ol class="features">
+      <li><h2>شغّله من القائمة</h2><div class="feature-words"><p><strong>New terminal ▾ → Claude Code</strong>، أو <code>C</code> حين لا تكون لوحة المفاتيح مع أي طرفية، يشغّل <code>claude</code> في طرفية جديدة مع ملف إعدادات يكتبه Aubergine في مجلد بياناته الخاص. إعدادات Claude Code الخاصة بك لا تُمس.</p><p>الأمر الذي يشغّله هو <code>agents.claudeCommand</code> في الإعدادات، وهو <code>claude</code> ما لم تغيّره؛ ويضيف Aubergine خياراته الخاصة في آخره.</p><p class="where">أين: القائمة بجانب New terminal، أعلى قائمة الطرفيات.</p></div></li>
+      <li class="with-pic flip">
+        <div class="feature-words"><h2>اعرف متى يعمل وينتظر وينتهي</h2><p>الخطافات في ملف الإعدادات ذاك تخبر اللوحة بما يفعله الوكيل. حين ترسل موجّهًا، يُضاف الموجّه إلى سجل ملاحظات الطرفية وتُظهر الطرفية <strong>working</strong> (يعمل). وحين يحتاج إليك الوكيل، بسؤال عن إذن أو لأنه خامل ينتظر مدخلات، يتحوّل إطاره إلى لون الانتظار ويقول عنوانه وصفّه <strong>waiting for you</strong> (بانتظارك). وحين يتوقف، يُظهر <strong>finished</strong> (انتهى).</p><p>المفتاح <code>W</code> ينتقل إلى الطرفية التالية التي تنتظر، و<strong>Notify</strong> يشغّل إشعارات سطح المكتب للطرفيات التي تبدأ الانتظار. قد تحوي الموجّهات أسرارًا: <code>"agents": { "logPrompts": false }</code> في <code>config.json</code> يُبقيها خارج سجل الملاحظات.</p><p class="where">أين: عنوان الطرفية، وصفّها في القائمة، والعدد بجانب For you في الأعلى.</p></div>
+        <figure class="frame"><a href="../../screenshots/waiting.png" class="frame-pic"><img src="../../screenshots/waiting.png" width="1496" height="600" loading="lazy" alt="طرفية واحدة يطرح وكيلها سؤالًا، وعنوانها يقول waiting for you، وإطارها بلون الانتظار."></a><figcaption>يأخذ إطارها لون الانتظار، ويقول عنوانها waiting for you (بانتظارك).</figcaption></figure>
+      </li>
+      <li><h2>Claude Code شغّلته بنفسك</h2><div class="feature-words"><p>إذا كُتب <code>claude</code> يدويًا في طرفية عادية فإنه يعمل مثل أي برنامج، لكن Aubergine لا يرى إلا صدفة مشغولة بتشغيله: لا waiting for you، ولا يُكتب له شيء حين تبدأ سير عمل فيها. لتغيير ذلك، اطبع الخطافات وأضفها يدويًا إلى إعدادات Claude Code الخاصة بك. لا تفعل شيئًا خارج طرفية Aubergine.</p><p class="cmd"><code>aubergine hooks print</code><button type="button" class="copy" data-copy data-copied="تم النسخ" aria-live="polite" hidden>نسخ</button></p></div></li>
+      <li class="with-pic">
+        <div class="feature-words"><h2>يسمّي نفسه ويحتفظ بملخص</h2><p>الوكيل الذي يشغّله Aubergine يُطلب منه عند بدئه أن يسمّي طرفيته باسم العمل وأن يحتفظ بملخص، باستخدام <code>aubergine describe</code> و<code>aubergine link add</code> و<code>aubergine field set</code>، ويُذكَّر مرة واحدة حين يتوقف بلا اسم من عنده أو بلا ملخص. ما تكتبه أنت يغلب؛ وما يقوله الوكيل عن الشيء نفسه ينتظر بجانبه مع <strong>Use this</strong> (استخدم هذا). ويمكن إيقاف التذكير في <strong>Settings</strong>.</p><p class="where">أين: تفاصيل الطرفية، مع اسمها وملخصها وحقولها وروابطها.</p></div>
+        <figure class="frame"><a href="../../screenshots/focus-part.png" class="frame-pic"><img src="../../screenshots/focus-part.png" width="1344" height="1172" loading="lazy" alt="طرفية واحدة وحدها في علامة تبويب في المتصفح: اسمها في الرأس، وتفاصيلها مع خطوة سير العمل ومجلدها وحقولها، والطرفية الحيّة بجانبها."></a><figcaption>تُفتح تفاصيلها وملاحظتها بجانبها حين تطلب ذلك، وتُغلق من جديد بأزرارها.</figcaption></figure>
+      </li>
+      <li><h2>سير العمل والمهام والملخصات والرسائل تصل إليه</h2><div class="feature-words"><p>يكتب Aubergine أربع جمل ثابتة في الطرفية، وهذه فقط: أن سير عمل قد بدأ، وأن الوكيل طُلب منه كتابة شيء، وأنك طلبت ملخصًا، وأن رسالة تنتظر. كل جملة تسمّي أمرًا واحدًا يشغّله الوكيل. ولا تُكتب جملة إلا حيث يُرى أن لوحة المفاتيح مع وكيل: وكيل شغّله Aubergine، أو وكيل في إعداداته الخطافات الناتجة عن <code>aubergine hooks print</code>.</p><p>وبالطريقة نفسها، لا تذهب مهمة من الطابور إلا إلى طرفية فيها وكيل كهذا في الواجهة ومتفرغ، و<strong>Claude Code on a workflow…‎</strong> يشغّل طرفية جديدة يُخبَر وكيلها بالتشغيل في أول موجّه له.</p><p class="where">أين: <strong>Run a workflow…‎</strong> في قائمة عنوان الطرفية، و<strong>Runs</strong> في أعلى الصفحة.</p></div></li>
+      <li><h2>Resume agent (استئناف الوكيل)</h2><div class="feature-words"><p>يتذكر Aubergine المحادثة التي كانت فيها طرفية الوكيل. حين تعود صدفتها إلى المحث، لأنك خرجت من الوكيل أو أُعيد تشغيل الحاسوب، تعرض الطرفية <strong>Resume agent</strong>، الذي يشغّل الوكيل من جديد في تلك المحادثة. وفي طرفية مرتبطة بتشغيل، يخبر الوكيل بالتشغيل من جديد أيضًا.</p><p class="where">أين: شريط عنوان الطرفية.</p></div></li>
+      <li><h2>المحادثات السابقة</h2><div class="feature-words"><p><strong>Past conversations…‎</strong> يعرض المحادثات السابقة للوكيل في مجلد: اقرأ واحدة، أو افتحها على اللوحة، أو افتح نسخة تترك الأصل كما هو. اكتب <code>@</code> وبعض الكلمات في لوحة الأوامر للبحث فيها؛ والأمر <code>aubergine history</code> يعرضها في سطر الأوامر. لا يُحتفظ بشيء مما يُقرأ، ولا يستطيع أي رمز ولا أي وكيل قراءة المحادثات عبر Aubergine.</p><p>يقرأ الملفات التي يحتفظ بها Claude Code. وشكلها داخلي خاص بـ Claude Code ويتغيّر بين الإصدارات. بعد تحديث الوكيل قد تقلّ الأسماء والنصوص، والسجل الذي لا يستطيع Aubergine قراءته يُقال عنه ذلك، ولا يُعرض فارغًا أبدًا.</p><p class="where">أين: لوحة الأوامر (<code>⌘K</code>)، و«Past conversations in this folder…‎» في تفاصيل الطرفية.</p></div></li>
+      <li><h2>طريقة إعداده</h2><div class="feature-words"><p>قائمة بما تقول ملفات إعدادات الوكيل إنه أُعطيه: خوادم MCP، والإضافات، والخطافات، والمهارات، وقواعد الأذونات، وملفات الإعدادات، كلٌّ مع مصدره، وما أضافه Aubergine. أسماء فقط، لا قيمة ولا سرّ أبدًا. تقول كيف أُعدّ الوكيل، لا ما حمّله الوكيل الجاري، وتقول صراحة ما لا يمكنها معرفته، مثل الموصلات التي تأتي مع حسابك.</p><p class="where">أين: <strong>‎⚙ on</strong> على الطرفية، و«What is switched on for this agent…‎» في لوحة الأوامر، وتفاصيل الطرفية.</p></div></li>
+      <li><h2>أدوات Aubergine له</h2><div class="feature-words"><p><strong>Claude Code with Aubergine tools…‎</strong> يسأل أولًا عمّا يجوز للوكيل فعله: <strong>None</strong> (لا شيء)؛ أو <strong>Its own work only</strong> (عمله فقط)، ببيانات اعتماد الطرفية نفسها؛ أو <strong>More…‎</strong> (المزيد)، نطاقات تختارها، يُصنع لها رمز لتلك الطرفية وحدها ويُلغى حين تُنهى الطرفية نهائيًا. الأدوات هي <code>aubergine mcp</code>، تُمرَّر إلى الوكيل في سطر تشغيله؛ ولا تُكتب إعداداته الخاصة.</p><p class="where">أين: القائمة بجانب New terminal.</p></div></li>
+      <li><h2>انقل Claude Code مفتوحًا لديك أصلًا</h2><div class="feature-words"><p>لا يمكن نقل وكيل يعمل، لكن يمكن نقل محادثته. <strong>Open elsewhere</strong> يعرض علامات تبويب Claude Code لديك، مع <strong>Fork to canvas</strong> و، لوكيل خامل، <strong>Stop and resume here</strong>، الذي يسألك أولًا. ومن طرفية، يفعل <code>aubergine move</code> الشيء نفسه، و<code>aubergine here --claude</code> يشغّل Claude Code على اللوحة مكمّلًا آخر محادثة في ذلك المجلد.</p><p class="where">أين: <strong>Open elsewhere</strong> في الشريط فوق اللوحة، أو <code>O</code>.</p></div></li>
+      <li><h2>في نسخة عمل خاصة به</h2><div class="feature-words"><p>الأمر <code>aubergine here --copy --claude</code> يشغّل Claude Code في نسخته المسحوبة الخاصة من المستودع، على فرعه الخاص، فلا يعدّل وكيلان الملفات نفسها أبدًا. ونافذة طرفية Claude Code مع الأدوات فيها الخيار نفسه.</p></div></li>
+    </ol>
+  </div>
+</section>
+<section class="band band-dark" aria-labelledby="tried-h">
+  <div class="wrap dark-split">
+    <h2 id="tried-h">ما الذي جُرّب</h2>
+    <div class="prose">
+      <p>العرض التجريبي المرفق مع Aubergine يستخدم بدلاء، نصوصًا برمجية قصيرة تشغّل الأوامر والخطافات نفسها التي يشغّلها وكيل حقيقي، لا Claude Code حقيقيًا. ومع وكيل حقيقي، لم تُجرَّب بعدُ الموافقة، ونسخة العمل، والمهمة من الطابور، والجدول الزمني.</p>
+      <p>يستطيع وكيل آخر أن يقول معظم هذا عبر أوامر <code>aubergine</code>: انظر <a href="../chatgpt/">Codex و ChatGPT</a>.</p>
+      <p class="note">Aubergine غير تابع لـ Anthropic. Claude وClaude Code علامتان تجاريتان لـ Anthropic.</p>
+    </div>
+  </div>
+</section>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">جاهز للعمل في خمس دقائق</h2>
+    <div class="close-do">
+      <p>تحتاج إلى macOS مع tmux 3.2 أو أحدث، ومعه Node.js 22 أو أحدث. الأمر <code>brew install tmux node</code> يثبّت الاثنين.</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="تم النسخ" aria-live="polite" hidden>نسخ</button></p>
+      <p class="actions"><a class="button" href="../install/">التثبيت</a><a class="button button-quiet" href="https://github.com/thirstyeggplant/aubergine">اقرأ الشيفرة المصدرية</a></p>
+    </div>
+  </div>
+</section>
 
 </main>
 <footer class="foot">

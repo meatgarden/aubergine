@@ -127,11 +127,13 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="Onde você está"><ol><li><a href="../">Aubergine</a></li><li>Perguntas frequentes</li></ol></nav>
-  <h1>Perguntas frequentes</h1>
-  <p class="lead">Respostas curtas. Os <a href="../guides/">guias</a> vão mais fundo.</p>
-</div>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Onde você está"><ol><li><a href="../">Aubergine</a></li><li>Perguntas frequentes</li></ol></nav>
+    <h1>Perguntas frequentes</h1>
+    <p class="lead">Respostas curtas. Os <a href="../guides/">guias</a> vão mais fundo.</p>
+  </div>
+</header>
 <div class="wrap page-body">
   <div class="questions">
     <details><summary>O que é o Aubergine?</summary><p>Um canvas local, no navegador, de sessões de terminal. Cada terminal é um nó que você pode organizar e usar, então dá para rodar vários agentes de programação ao mesmo tempo e ver qual está esperando por você.</p></details>
@@ -152,6 +154,17 @@
     <details><summary>O que o instalador muda no meu computador?</summary><p>Duas coisas: a pasta de instalação (~/.aubergine) e um link chamado aubergine. Ele nunca usa sudo, nunca edita os arquivos de inicialização do seu shell e nunca instala Node.js, pnpm nem tmux.</p></details>
   </div>
 </div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">Funcionando em cinco minutos</h2>
+    <div class="close-do">
+      <p>Você precisa de macOS com tmux 3.2 ou mais recente e Node.js 22 ou mais recente. <code>brew install tmux node</code> instala os dois.</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="Copiado" aria-live="polite" hidden>Copiar</button></p>
+      <p class="actions"><a class="button" href="../install/">Instalar</a><a class="button button-quiet" href="https://github.com/thirstyeggplant/aubergine">Ler o código</a></p>
+    </div>
+  </div>
+</section>
 
 </main>
 <footer class="foot">

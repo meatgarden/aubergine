@@ -137,11 +137,13 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="Where you are"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">Guides</a></li><li>Working copies</li></ol></nav>
-  <h1>Two agents, one repository: working copies</h1>
-  <p class="lead">Every terminal normally works in your real folder. Two agents in one repository then edit the same files, and you cannot tell whose change is whose. A working copy gives each terminal its own checkout, on its own branch.</p>
-</div>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Where you are"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">Guides</a></li><li>Working copies</li></ol></nav>
+    <h1>Two agents, one repository: working copies</h1>
+    <p class="lead">Every terminal normally works in your real folder. Two agents in one repository then edit the same files, and you cannot tell whose change is whose. A working copy gives each terminal its own checkout, on its own branch.</p>
+  </div>
+</header>
 <div class="wrap page-body">
   <div class="prose">
     <h2>Start a terminal in a working copy</h2>
@@ -176,6 +178,17 @@ aubergine copies discard api</code></pre>
     <p>Related: <a href="../run-multiple-coding-agents/">run several coding agents at once</a> · <a href="../queue-and-schedules/">the queue and schedules</a> (a task started on a new terminal gets a working copy of its own where the folder is in a repository).</p>
   </div>
 </div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">Up and running in five minutes</h2>
+    <div class="close-do">
+      <p>You need macOS with tmux 3.2 or newer and Node.js 22 or newer. <code>brew install tmux node</code> gets both.</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="Copied" aria-live="polite" hidden>Copy</button></p>
+      <p class="actions"><a class="button" href="../install/">Install</a><a class="button button-quiet" href="https://github.com/thirstyeggplant/aubergine">Read the source</a></p>
+    </div>
+  </div>
+</section>
 
 </main>
 <footer class="foot">

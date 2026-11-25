@@ -144,11 +144,13 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="Où vous êtes"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">Guides</a></li><li>Copies de travail</li></ol></nav>
-  <h1>Deux agents, un dépôt : les copies de travail</h1>
-  <p class="lead">Chaque terminal travaille normalement dans votre vrai dossier. Deux agents dans un même dépôt modifient alors les mêmes fichiers, et vous ne savez plus quelle modification est de qui. Une copie de travail donne à chaque terminal sa propre extraction, sur sa propre branche.</p>
-</div>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Où vous êtes"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">Guides</a></li><li>Copies de travail</li></ol></nav>
+    <h1>Deux agents, un dépôt : les copies de travail</h1>
+    <p class="lead">Chaque terminal travaille normalement dans votre vrai dossier. Deux agents dans un même dépôt modifient alors les mêmes fichiers, et vous ne savez plus quelle modification est de qui. Une copie de travail donne à chaque terminal sa propre extraction, sur sa propre branche.</p>
+  </div>
+</header>
 <div class="wrap page-body">
   <div class="prose">
     <h2>Lancer un terminal dans une copie de travail</h2>
@@ -183,6 +185,17 @@ aubergine copies discard api</code></pre>
     <p>Voir aussi : <a href="../run-multiple-coding-agents/">faire tourner plusieurs agents de code à la fois</a> · <a href="../queue-and-schedules/">la file d’attente et les planifications</a> (une tâche lancée sur un nouveau terminal reçoit sa propre copie de travail quand le dossier est dans un dépôt).</p>
   </div>
 </div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">Opérationnel en cinq minutes</h2>
+    <div class="close-do">
+      <p>Il vous faut macOS avec tmux 3.2 ou plus récent et Node.js 22 ou plus récent. <code>brew install tmux node</code> installe les deux.</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="Copié" aria-live="polite" hidden>Copier</button></p>
+      <p class="actions"><a class="button" href="../install/">Installer</a><a class="button button-quiet" href="https://github.com/thirstyeggplant/aubergine">Lire le code source</a></p>
+    </div>
+  </div>
+</section>
 
 </main>
 <footer class="foot">

@@ -127,11 +127,13 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="현재 위치"><ol><li><a href="../">Aubergine</a></li><li>FAQ</li></ol></nav>
-  <h1>자주 묻는 질문</h1>
-  <p class="lead">짧은 답변입니다. 더 자세한 내용은 <a href="../guides/">가이드</a>에 있습니다.</p>
-</div>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="현재 위치"><ol><li><a href="../">Aubergine</a></li><li>FAQ</li></ol></nav>
+    <h1>자주 묻는 질문</h1>
+    <p class="lead">짧은 답변입니다. 더 자세한 내용은 <a href="../guides/">가이드</a>에 있습니다.</p>
+  </div>
+</header>
 <div class="wrap page-body">
   <div class="questions">
     <details><summary>Aubergine은 무엇인가요?</summary><p>터미널 세션을 올려 두는, 브라우저 기반의 로컬 캔버스입니다. 각 터미널은 배치하고 사용할 수 있는 노드이므로, 여러 코딩 에이전트를 한꺼번에 실행하면서 어느 것이 여러분을 기다리는지 볼 수 있습니다.</p></details>
@@ -152,6 +154,17 @@
     <details><summary>설치 프로그램은 제 컴퓨터에서 무엇을 바꾸나요?</summary><p>두 가지입니다. 설치 폴더(~/.aubergine)와 aubergine이라는 링크 하나. sudo를 쓰지 않고, 셸 시작 파일을 편집하지 않으며, Node.js, pnpm, tmux를 설치하지 않습니다.</p></details>
   </div>
 </div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">5분이면 시작합니다</h2>
+    <div class="close-do">
+      <p>tmux 3.2 이상과 Node.js 22 이상이 설치된 macOS가 필요합니다. <code>brew install tmux node</code>로 둘 다 설치할 수 있습니다.</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="복사됨" aria-live="polite" hidden>복사</button></p>
+      <p class="actions"><a class="button" href="../install/">설치</a><a class="button button-quiet" href="https://github.com/thirstyeggplant/aubergine">소스 보기</a></p>
+    </div>
+  </div>
+</section>
 
 </main>
 <footer class="foot">

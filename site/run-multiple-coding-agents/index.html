@@ -122,11 +122,13 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="Where you are"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">Guides</a></li><li>Run several agents</li></ol></nav>
-  <h1>How to run several coding agents at once</h1>
-  <p class="lead">Two agents are easy. Five are chaos: which one is stuck, which is waiting on you, which changed that file? Aubergine is built for that moment. It runs on your own computer.</p>
-</div>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Where you are"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">Guides</a></li><li>Run several agents</li></ol></nav>
+    <h1>How to run several coding agents at once</h1>
+    <p class="lead">Two agents are easy. Five are chaos: which one is stuck, which is waiting on you, which changed that file? Aubergine is built for that moment. It runs on your own computer.</p>
+  </div>
+</header>
 <div class="wrap page-body">
   <div class="prose">
     <h2>1. Give each agent a terminal on one canvas</h2>
@@ -147,9 +149,19 @@
       <li>It does not keep an agent from doing something you could do. Agents run as you. See <a href="../security/">security</a> for what is and is not protected.</li>
       <li>It runs on one computer today. Sharing a canvas with other people and running agents in the cloud are on the <a href="../roadmap/">roadmap</a>, and are not built.</li>
     </ul>
-    <p class="actions"><a class="button primary" href="../install/">Install Aubergine</a></p>
   </div>
 </div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">Up and running in five minutes</h2>
+    <div class="close-do">
+      <p>You need macOS with tmux 3.2 or newer and Node.js 22 or newer. <code>brew install tmux node</code> gets both.</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="Copied" aria-live="polite" hidden>Copy</button></p>
+      <p class="actions"><a class="button" href="../install/">Install Aubergine</a><a class="button button-quiet" href="https://github.com/thirstyeggplant/aubergine">Read the source</a></p>
+    </div>
+  </div>
+</section>
 
 </main>
 <footer class="foot">

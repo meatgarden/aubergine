@@ -129,11 +129,13 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="आप कहाँ हैं"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">गाइड</a></li><li>कई एजेंट चलाएँ</li></ol></nav>
-  <h1>एक साथ कई कोडिंग एजेंट कैसे चलाएँ</h1>
-  <p class="lead">दो एजेंट आसान हैं। पाँच हों तो अफ़रा-तफ़री: कौन-सा अटका है, कौन-सा आपका इंतज़ार कर रहा है, उस फ़ाइल को किसने बदला? Aubergine उसी पल के लिए बना है। यह आपके अपने कंप्यूटर पर चलता है।</p>
-</div>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="आप कहाँ हैं"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">गाइड</a></li><li>कई एजेंट चलाएँ</li></ol></nav>
+    <h1>एक साथ कई कोडिंग एजेंट कैसे चलाएँ</h1>
+    <p class="lead">दो एजेंट आसान हैं। पाँच हों तो अफ़रा-तफ़री: कौन-सा अटका है, कौन-सा आपका इंतज़ार कर रहा है, उस फ़ाइल को किसने बदला? Aubergine उसी पल के लिए बना है। यह आपके अपने कंप्यूटर पर चलता है।</p>
+  </div>
+</header>
 <div class="wrap page-body">
   <div class="prose">
     <h2>1. हर एजेंट को एक कैनवस पर एक टर्मिनल दें</h2>
@@ -154,9 +156,19 @@
       <li>यह किसी एजेंट को ऐसा कुछ करने से नहीं रोकता जो आप कर सकते हैं। एजेंट आपके रूप में चलते हैं। क्या सुरक्षित है और क्या नहीं, इसके लिए <a href="../security/">सुरक्षा</a> देखें।</li>
       <li>आज यह एक कंप्यूटर पर चलता है। दूसरे लोगों के साथ कैनवस शेयर करना और क्लाउड में एजेंट चलाना <a href="../roadmap/">रोडमैप</a> पर हैं, और बने नहीं हैं।</li>
     </ul>
-    <p class="actions"><a class="button primary" href="../install/">Aubergine इंस्टॉल करें</a></p>
   </div>
 </div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">पाँच मिनट में तैयार</h2>
+    <div class="close-do">
+      <p>आपको macOS चाहिए, tmux 3.2 या नए और Node.js 22 या नए के साथ। <code>brew install tmux node</code> दोनों ले आता है।</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="कॉपी हो गया" aria-live="polite" hidden>कॉपी करें</button></p>
+      <p class="actions"><a class="button" href="../install/">Aubergine इंस्टॉल करें</a><a class="button button-quiet" href="https://github.com/thirstyeggplant/aubergine">सोर्स पढ़ें</a></p>
+    </div>
+  </div>
+</section>
 
 </main>
 <footer class="foot">

@@ -145,11 +145,13 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="Où vous êtes"><ol><li><a href="../">Aubergine</a></li><li>Installer</li></ol></nav>
-  <h1>Comment installer Aubergine</h1>
-  <p class="lead">Une commande l’installe, une autre la lance. Environ cinq minutes, visite comprise.</p>
-</div>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Où vous êtes"><ol><li><a href="../">Aubergine</a></li><li>Installer</li></ol></nav>
+    <h1>Comment installer Aubergine</h1>
+    <p class="lead">Une commande l’installe, une autre la lance. Environ cinq minutes, visite comprise.</p>
+  </div>
+</header>
 <div class="wrap page-body">
   <div class="prose">
     <h2>Prérequis</h2>
@@ -161,7 +163,7 @@
     <p class="cmd"><code>brew install tmux node</code><button type="button" class="copy" data-copy data-copied="Copié" aria-live="polite" hidden>Copier</button></p>
 
     <h2>Installer et lancer</h2>
-    <ol>
+    <ol class="seq">
       <li><p><strong>Installez Aubergine</strong> depuis npm (il ne faut que tmux et Node.js) :</p>
         <p class="cmd"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="Copié" aria-live="polite" hidden>Copier</button></p>
         <p>Ou avec le script d’installation, qui a aussi besoin de pnpm et compile depuis le code source :</p>
@@ -170,7 +172,7 @@
         <p class="cmd"><code>aubergine start --open</code><button type="button" class="copy" data-copy data-copied="Copié" aria-live="polite" hidden>Copier</button></p></li>
       <li><p><strong>Suivez la visite.</strong> Cliquez sur <em>Show me around</em> au milieu du canevas vide. Cela crée un canevas nommé « Demo » avec quelques agents factices et vous guide en huit courtes étapes. Rien dans la démo n’est réel, et <code>aubergine demo --remove</code> la retire.</p></li>
     </ol>
-    <p>Vous préférez lire le script d’abord ? Téléchargez-le, lisez-le, et exécutez <code>sh install.sh --dry-run</code> pour voir ce qu’il ferait sans rien modifier.</p>
+    <p class="note">Vous préférez lire le script d’abord ? Téléchargez-le, lisez-le, et exécutez <code>sh install.sh --dry-run</code> pour voir ce qu’il ferait sans rien modifier.</p>
 
     <h2>Ce que modifie le script d’installation</h2>
     <p>Deux choses seulement : le dossier d’installation (<code>~/.aubergine</code>, ou <code>AUBERGINE_HOME</code>) et un lien nommé <code>aubergine</code> dans un dossier de votre <code>PATH</code> où vous pouvez écrire. Il vérifie tout d’abord et ne modifie rien s’il manque quelque chose.</p>
@@ -198,11 +200,19 @@
       <li><strong>Désinstallez</strong> avec <code>aubergine uninstall</code>. Cela retire le lien et, après vous l’avoir demandé, la copie créée par le script d’installation. Vos données ne sont jamais supprimées et vos terminaux jamais fermés.</li>
       <li><strong>Lancez-la à l’ouverture de session</strong> avec <code>aubergine service install</code>, pour n’avoir plus qu’à ouvrir le navigateur.</li>
     </ul>
-
-    <h2>Ensuite</h2>
-    <p>Lisez <a href="../run-multiple-coding-agents/">comment faire tourner plusieurs agents de code à la fois</a>, ou les <a href="../guides/">guides</a>. La référence complète est dans le <a href="https://github.com/thirstyeggplant/aubergine#readme">README</a>.</p>
   </div>
 </div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">Ensuite</h2>
+    <div class="close-do">
+      <p>Lisez <a href="../run-multiple-coding-agents/">comment faire tourner plusieurs agents de code à la fois</a>, ou les <a href="../guides/">guides</a>. La référence complète est dans le <a href="https://github.com/thirstyeggplant/aubergine#readme">README</a>.</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="Copié" aria-live="polite" hidden>Copier</button></p>
+      <p class="actions"><a class="button" href="../guides/">Guides</a></p>
+    </div>
+  </div>
+</section>
 
 </main>
 <footer class="foot">

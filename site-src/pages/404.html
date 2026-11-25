@@ -1,13 +1,29 @@
 <!--page {"path": "404.html", "order": 99, "absolute": true, "englishOnly": true, "noindex": true, "sitemap": false, "llms": null}-->
-<div class="wrap page-head">
-  <h1>{{404.title}}</h1>
-  <p class="lead">{{404.lead}}</p>
+<header class="page-head">
+  <div class="wrap">
+    <p class="crumbs">404</p>
+    <h1>{{404.title}}</h1>
+    <p class="lead">{{404.lead}}</p>
+  </div>
+</header>
+<div class="cards-band">
+  <div class="wrap page-body">
+    <ul class="cards cards-two">
+      <li><h2><a href="/">{{404.home}}</a></h2></li>
+      <li><h2><a href="/install/">{{404.install}}</a></h2></li>
+      <li><h2><a href="/guides/">{{404.guides}}</a></h2></li>
+      <li><h2><a href="/faq/">{{404.faq}}</a></h2></li>
+    </ul>
+  </div>
 </div>
-<div class="wrap page-body">
-  <ul class="rows">
-    <li><h2><a class="row-link" href="/">{{404.home}}</a></h2></li>
-    <li><h2><a class="row-link" href="/install/">{{404.install}}</a></h2></li>
-    <li><h2><a class="row-link" href="/guides/">{{404.guides}}</a></h2></li>
-    <li><h2><a class="row-link" href="/faq/">{{404.faq}}</a></h2></li>
-  </ul>
-</div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">{{home.install.title}}</h2>
+    <div class="close-do">
+      <p>{{home.install.intro}}</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="{{attr:site.copied}}" aria-live="polite" hidden>{{site.copy}}</button></p>
+      <p class="actions"><a class="button" href="/install/">{{home.hero.install}}</a><a class="button button-quiet" href="https://github.com/thirstyeggplant/aubergine">{{home.hero.source}}</a></p>
+    </div>
+  </div>
+</section>

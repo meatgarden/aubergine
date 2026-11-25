@@ -129,11 +129,13 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="Où vous êtes"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">Guides</a></li><li>Plusieurs agents à la fois</li></ol></nav>
-  <h1>Comment faire tourner plusieurs agents de code à la fois</h1>
-  <p class="lead">Deux agents, c’est facile. Cinq, c’est le chaos : lequel est bloqué, lequel vous attend, lequel a modifié ce fichier ? Aubergine est faite pour ce moment-là. Elle tourne sur votre propre ordinateur.</p>
-</div>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Où vous êtes"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">Guides</a></li><li>Plusieurs agents à la fois</li></ol></nav>
+    <h1>Comment faire tourner plusieurs agents de code à la fois</h1>
+    <p class="lead">Deux agents, c’est facile. Cinq, c’est le chaos : lequel est bloqué, lequel vous attend, lequel a modifié ce fichier ? Aubergine est faite pour ce moment-là. Elle tourne sur votre propre ordinateur.</p>
+  </div>
+</header>
 <div class="wrap page-body">
   <div class="prose">
     <h2>1. Donnez à chaque agent un terminal sur un seul canevas</h2>
@@ -154,9 +156,19 @@
       <li>Elle n’empêche pas un agent de faire ce que vous pourriez faire. Les agents tournent en votre nom. Voir <a href="../security/">sécurité</a> pour ce qui est protégé et ce qui ne l’est pas.</li>
       <li>Elle tourne aujourd’hui sur un seul ordinateur. Partager un canevas avec d’autres personnes et faire tourner des agents dans le cloud figurent sur la <a href="../roadmap/">feuille de route</a>, et ne sont pas construits.</li>
     </ul>
-    <p class="actions"><a class="button primary" href="../install/">Installer Aubergine</a></p>
   </div>
 </div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">Opérationnel en cinq minutes</h2>
+    <div class="close-do">
+      <p>Il vous faut macOS avec tmux 3.2 ou plus récent et Node.js 22 ou plus récent. <code>brew install tmux node</code> installe les deux.</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="Copié" aria-live="polite" hidden>Copier</button></p>
+      <p class="actions"><a class="button" href="../install/">Installer Aubergine</a><a class="button button-quiet" href="https://github.com/thirstyeggplant/aubergine">Lire le code source</a></p>
+    </div>
+  </div>
+</section>
 
 </main>
 <footer class="foot">
