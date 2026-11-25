@@ -17,6 +17,7 @@
 - [Install on Windows with WSL](https://thirstyeggplant.com/windows/): Aubergine inside WSL 2, used from a Windows browser; the Linux steps were run in a container, nothing on Windows yet
 - [Run several coding agents at once](https://thirstyeggplant.com/run-multiple-coding-agents/)
 - [Working copies](https://thirstyeggplant.com/working-copies/): an agent per checkout and branch
+- [Keep your terminals after a restart](https://thirstyeggplant.com/keep-terminals-after-restart/): what closing the browser, restarting Aubergine and restarting the computer each keep, what is lost, and how to pick up where you were
 - [The queue, For you and schedules](https://thirstyeggplant.com/queue-and-schedules/)
 - [Security and privacy](https://thirstyeggplant.com/security/): what is and is not protected
 - [Roadmap](https://thirstyeggplant.com/roadmap/): planned, not built
