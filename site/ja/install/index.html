@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="ja" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>macOS に Aubergine をインストールする方法 | Aubergine</title>
+<meta name="description" content="1つのコマンドで Aubergine をインストールして起動し、5分のツアーを試しましょう。必要なもの、インストーラーが変えるもの、よくある問題の解決方法。">
+<link rel="canonical" href="https://thirstyeggplant.com/ja/install/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/install/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/install/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/install/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/install/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/install/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/install/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/install/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/install/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/install/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/install/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/install/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/install/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/install/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="theme-color" content="#120f14" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#faf6f2" media="(prefers-color-scheme: light)">
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="macOS に Aubergine をインストールする方法 | Aubergine">
+<meta property="og:description" content="1つのコマンドで Aubergine をインストールして起動し、5分のツアーを試しましょう。必要なもの、インストーラーが変えるもの、よくある問題の解決方法。">
+<meta property="og:url" content="https://thirstyeggplant.com/ja/install/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine：ターミナルが並ぶキャンバス。1つは処理中、1つはあなたを待っています">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine：ターミナルが並ぶキャンバス。1つは処理中、1つはあなたを待っています">
+<meta name="twitter:title" content="macOS に Aubergine をインストールする方法 | Aubergine">
+<meta name="twitter:description" content="1つのコマンドで Aubergine をインストールして起動し、5分のツアーを試しましょう。必要なもの、インストーラーが変えるもの、よくある問題の解決方法。">
+<link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">本文へ移動</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="ページ">
+      <ul>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="./" aria-current="page">インストール</a></li>
+        <li><a href="../guides/">ガイド</a></li>
+        <li><a href="../security/">セキュリティ</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="言語: 日本語"><span class="lang-long" aria-hidden="true">日本語</span><span class="lang-short" aria-hidden="true">JA</span></summary>
+      <ul class="menu-list"><li><a href="../../install/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="../../es/install/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="../../pt/install/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="../../fr/install/" hreflang="fr" lang="fr" dir="ltr">Français</a></li><li><a href="../../de/install/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="./" hreflang="ja" lang="ja" dir="ltr" aria-current="true">日本語</a></li><li><a href="../../zh/install/" hreflang="zh-Hans" lang="zh-Hans" dir="ltr">简体中文</a></li><li><a href="../../ko/install/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="../../id/install/" hreflang="id" lang="id" dir="ltr">Bahasa Indonesia</a></li><li><a href="../../hi/install/" hreflang="hi" lang="hi" dir="ltr">हिन्दी</a></li><li><a href="../../bn/install/" hreflang="bn" lang="bn" dir="ltr">বাংলা</a></li><li><a href="../../ar/install/" hreflang="ar" lang="ar" dir="rtl">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>メニュー</summary>
+      <ul class="menu-list">
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="./" aria-current="page">インストール</a></li>
+        <li><a href="../guides/">ガイド</a></li>
+        <li><a href="../security/">セキュリティ</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="wrap translated">
+  <p class="note">Aubergine 本体は英語です。ボタン、メニュー、画像はすべて英語版のものです。</p>
+  <p class="note">このページは英語版から機械翻訳されています。<a href="https://github.com/thirstyeggplant/aubergine/issues">修正を送る</a>。</p>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://thirstyeggplant.com/ja/install/#article",
+      "headline": "Aubergine のインストール方法",
+      "description": "1つのコマンドで Aubergine をインストールして起動し、5分のツアーを試しましょう。必要なもの、インストーラーが変えるもの、よくある問題の解決方法。",
+      "url": "https://thirstyeggplant.com/ja/install/",
+      "mainEntityOfPage": "https://thirstyeggplant.com/ja/install/",
+      "datePublished": "2026-11-18",
+      "inLanguage": "ja",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "インストール", "item": "https://thirstyeggplant.com/ja/install/" }
+      ]
+    },
+    {
+      "@type": "HowTo",
+      "@id": "https://thirstyeggplant.com/ja/install/#howto",
+      "name": "Aubergine をインストールして起動する方法",
+      "description": "1つのコマンドで macOS に Aubergine をインストールし、起動して、ツアーを試します。",
+      "step": [
+        { "@type": "HowToStep", "position": 1, "name": "必要なものをインストールする", "text": "brew install tmux node" },
+        { "@type": "HowToStep", "position": 2, "name": "Aubergine をインストールする", "text": "npm install -g @meatgarden/aubergine" },
+        { "@type": "HowToStep", "position": 3, "name": "起動してブラウザーを開く", "text": "aubergine start --open" },
+        { "@type": "HowToStep", "position": 4, "name": "ツアーを試す", "text": "ツアーを試します。空のキャンバスの中央にある Show me around（案内して）をクリックします。代役のエージェントがいくつか並ぶ「Demo」という名前のキャンバスが作られ、8つの短いステップで案内します。デモの中に本物はなく、aubergine demo --remove で取り除けます。" }
+      ],
+      "tool": [
+        { "@type": "HowToTool", "name": "tmux 3.2" },
+        { "@type": "HowToTool", "name": "Node.js 22" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://thirstyeggplant.com/ja/install/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "Aubergine のインストーラーは何を変更しますか？", "acceptedAnswer": { "@type": "Answer", "text": "2つです。インストールフォルダー（~/.aubergine、または AUBERGINE_HOME）と、PATH 上の aubergine という名前のリンク1つ。sudo は使わず、シェルの起動ファイルを編集せず、Node.js・pnpm・tmux をインストールすることもありません。" } },
+        { "@type": "Question", "name": "Aubergine はどう更新しますか？", "acceptedAnswer": { "@type": "Answer", "text": "npm でインストールした場合：npm install -g @meatgarden/aubergine@latest を実行します。インストーラーでインストールした場合：aubergine update を実行するか、インストーラーをもう一度実行します。その後サーバーを再起動します。" } },
+        { "@type": "Question", "name": "Aubergine はどうアンインストールしますか？", "acceptedAnswer": { "@type": "Answer", "text": "aubergine uninstall を実行します。リンクを削除し、確認の後でインストーラーが作ったコピーを削除します。データを削除したり、ターミナルを終了したりすることはありません。" } },
+        { "@type": "Question", "name": "Aubergine は Linux や Windows で動きますか？", "acceptedAnswer": { "@type": "Answer", "text": "Linux でも動くはずですが、まだテストしていません。Windows はサポートしていません。" } }
+      ]
+    }
+  ]
+}
+</script>
+<div class="wrap page-head">
+  <nav class="crumbs" aria-label="現在の位置"><ol><li><a href="../">Aubergine</a></li><li>インストール</li></ol></nav>
+  <h1>Aubergine のインストール方法</h1>
+  <p class="lead">1つのコマンドでインストールし、1つのコマンドで起動します。ツアーを含めて約5分です。</p>
+</div>
+<div class="wrap page-body">
+  <div class="prose">
+    <h2>必要なもの</h2>
+    <ul>
+      <li>macOS。Linux でも同じように動くはずですが、まだテストしていません。</li>
+      <li><a href="https://github.com/tmux/tmux">tmux</a> 3.2 以降と Node.js 22 以降。インストーラーには pnpm も必要です。</li>
+    </ul>
+    <p><a href="https://brew.sh">Homebrew</a> なら、1行で両方が入ります（インストーラーを使うなら <code>pnpm</code> も加えます）：</p>
+    <p class="cmd"><code>brew install tmux node</code><button type="button" class="copy" data-copy data-copied="コピーしました" aria-live="polite" hidden>コピー</button></p>
+
+    <h2>インストールと起動</h2>
+    <ol>
+      <li><p>npm から <strong>Aubergine をインストール</strong>します（必要なのは tmux と Node.js だけです）：</p>
+        <p class="cmd"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="コピーしました" aria-live="polite" hidden>コピー</button></p>
+        <p>または、pnpm も必要でソースからビルドするインストーラーを使います：</p>
+        <p class="cmd"><code>curl -fsSL https://raw.githubusercontent.com/thirstyeggplant/aubergine/main/install.sh | sh</code><button type="button" class="copy" data-copy data-copied="コピーしました" aria-live="polite" hidden>コピー</button></p></li>
+      <li><p><strong>起動して、サインイン済みのブラウザーを開きます。</strong></p>
+        <p class="cmd"><code>aubergine start --open</code><button type="button" class="copy" data-copy data-copied="コピーしました" aria-live="polite" hidden>コピー</button></p></li>
+      <li><p><strong>ツアーを試します。</strong>空のキャンバスの中央にある <em>Show me around</em>（案内して）をクリックします。代役のエージェントがいくつか並ぶ「Demo」という名前のキャンバスが作られ、8つの短いステップで案内します。デモの中に本物はなく、<code>aubergine demo --remove</code> で取り除けます。</p></li>
+    </ol>
+    <p>先にスクリプトを読みたいですか？ダウンロードして読み、<code>sh install.sh --dry-run</code> を実行すれば、何も変えずに何をするかが分かります。</p>
+
+    <h2>インストーラーが変えるもの</h2>
+    <p>2つだけです。インストールフォルダー（<code>~/.aubergine</code>、または <code>AUBERGINE_HOME</code>）と、<code>aubergine</code> という名前のリンク1つで、リンクは <code>PATH</code> 上の書き込めるフォルダーに置かれます。先にすべてを確認し、何か足りなければ何も変えません。</p>
+    <p class="note"><strong>しないこと：</strong><code>sudo</code> の使用、シェルの起動ファイルの編集、Node.js・pnpm・tmux のインストール、データフォルダーへの変更。</p>
+
+    <h2>うまくいかないとき</h2>
+    <p>まず <code>aubergine doctor</code> を実行してください。よくある原因を確認します。</p>
+    <div class="table">
+      <table>
+        <thead><tr><th>見えるもの</th><th>すること</th></tr></thead>
+        <tbody>
+          <tr><td>「This browser is not signed in yet」</td><td>そのブラウザーでサインインのリンクを一度開きます。<code>aubergine open --print</code> で再び出力されます。</td></tr>
+          <tr><td>tmux がない、または古すぎるというページ</td><td>tmux をインストールまたは更新し（<code>brew install tmux</code>）、サーバーを再起動します。</td></tr>
+          <tr><td>ポートが使用中でサーバーが起動しない</td><td>別のポートを使います：<code>AUBERGINE_PORT=4700 aubergine start</code>。</td></tr>
+          <tr><td><code>aubergine: command not found</code></td><td>リンクが <code>PATH</code> にありません。インストーラーが、シェルの起動ファイルに加える1行を出力します。</td></tr>
+          <tr><td>ターミナルに状態のバッジが出ない</td><td>状態の表示には zsh が必要で、更新前に作られたセッションは古いシェルのままです。パークして、新しいターミナルを起動してください。</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>停止、更新、アンインストール</h2>
+    <ul>
+      <li>Ctrl+C でサーバーを<strong>停止</strong>します。ターミナルは動き続けます。サーバーを再び起動してページを再読み込みすれば戻ります。</li>
+      <li><strong>更新</strong>は、npm でインストールした場合は <code>npm install -g @meatgarden/aubergine@latest</code>、インストーラーを使った場合は <code>aubergine update</code> で行います。その後サーバーを再起動します。</li>
+      <li><strong>アンインストール</strong>は <code>aubergine uninstall</code> で行います。リンクを削除し、確認の後でインストーラーが作ったコピーを削除します。データは決して削除せず、ターミナルも終了しません。</li>
+      <li><strong>ログイン時に起動</strong>するには <code>aubergine service install</code> を使います。そうすれば、あとはブラウザーを開くだけです。</li>
+    </ul>
+
+    <h2>次へ</h2>
+    <p><a href="../run-multiple-coding-agents/">複数のコーディングエージェントを同時に動かす方法</a>や<a href="../guides/">ガイド</a>を読んでください。完全なリファレンスは <a href="https://github.com/thirstyeggplant/aubergine#readme">README</a> にあります。</p>
+  </div>
+</div>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <nav aria-label="すべてのページ">
+      <ul class="foot-links">
+        <li><a href="../">ホーム</a></li>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex と ChatGPT</a></li>
+        <li><a href="./" aria-current="page">インストール</a></li>
+        <li><a href="../guides/">ガイド</a></li>
+        <li><a href="../run-multiple-coding-agents/">複数のエージェントを動かす</a></li>
+        <li><a href="../working-copies/">作業コピー</a></li>
+        <li><a href="../queue-and-schedules/">キューとスケジュール</a></li>
+        <li><a href="../security/">セキュリティ</a></li>
+        <li><a href="../roadmap/">ロードマップ</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">Aubergine は <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">MIT ライセンス</a>のもとで公開された無料のオープンソースで、あなた自身のコンピューターで動きます。</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+</script>
+</body>
+</html>

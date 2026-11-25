@@ -1,0 +1,87 @@
+<!--page {"order": 2, "llms": {"name": "Codex and ChatGPT in Aubergine", "about": "Codex runs in a terminal like any program; what it can report, and what is built only for Claude Code"}}-->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "TechArticle",
+      "@id": "{{=url}}#article",
+      "headline": {{json:chatgpt.title}},
+      "description": {{json:chatgpt.meta.description}},
+      "url": "{{=url}}",
+      "inLanguage": "{{=lang}}",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": {{json:chatgpt.crumb}}, "item": "{{=url}}" }
+      ]
+    }
+  ]
+}
+</script>
+<div class="wrap page-head">
+  <nav class="crumbs" aria-label="{{attr:site.crumbs}}"><ol><li><a href="/">Aubergine</a></li><li>{{chatgpt.crumb}}</li></ol></nav>
+  <h1>{{chatgpt.title}}</h1>
+  <p class="lead">{{chatgpt.lead}}</p>
+</div>
+<div class="wrap page-body">
+  <div class="prose">
+    <h2>{{chatgpt.untried.title}}</h2>
+    <p>{{chatgpt.untried.text}}</p>
+
+    <h2>{{chatgpt.start.title}}</h2>
+    <p>{{chatgpt.start.text}}</p>
+
+    <h2>{{chatgpt.works.title}}</h2>
+    <p>{{chatgpt.works.intro}}</p>
+  </div>
+  <ul class="rows">
+    <li><h3>{{chatgpt.works.side.name}}</h3><p>{{chatgpt.works.side.text}}</p></li>
+    <li><h3>{{chatgpt.works.status.name}}</h3><p>{{chatgpt.works.status.text}}</p></li>
+    <li><h3>{{chatgpt.works.keep.name}}</h3><p>{{chatgpt.works.keep.text}}</p></li>
+    <li><h3>{{chatgpt.works.park.name}}</h3><p>{{chatgpt.works.park.text}}</p></li>
+    <li><h3>{{chatgpt.works.focus.name}}</h3><p>{{chatgpt.works.focus.text}}</p></li>
+    <li><h3>{{chatgpt.works.copy.name}}</h3><p>{{chatgpt.works.copy.text}}</p></li>
+    <li><h3>{{chatgpt.works.search.name}}</h3><p>{{chatgpt.works.search.text}}</p></li>
+  </ul>
+  <div class="prose">
+    <h2>{{chatgpt.report.title}}</h2>
+    <p>{{chatgpt.report.intro}}</p>
+  </div>
+  <ul class="rows">
+    <li><h3><code>aubergine attention waiting "…"</code></h3><p>{{chatgpt.report.attention}}</p></li>
+    <li><h3><code>aubergine note "…"</code></h3><p>{{chatgpt.report.note}}</p></li>
+    <li><h3><code>aubergine describe</code></h3><p>{{chatgpt.report.describe}}</p></li>
+    <li><h3><code>aubergine workflow status</code></h3><p>{{chatgpt.report.workflow}}</p></li>
+    <li><h3><code>aubergine task add</code></h3><p>{{chatgpt.report.task}}</p></li>
+  </ul>
+  <div class="prose">
+    <h3>{{chatgpt.tell.title}}</h3>
+    <p>{{chatgpt.tell.text}}</p>
+    <p class="cmd"><code>aubergine guide --snippet</code><button type="button" class="copy" data-copy data-copied="{{attr:site.copied}}" aria-live="polite" hidden>{{site.copy}}</button></p>
+    <p>{{chatgpt.tell.after}}</p>
+    <p>{{chatgpt.tell.mcp}}</p>
+
+    <h2>{{chatgpt.only.title}}</h2>
+    <p>{{chatgpt.only.intro}}</p>
+    <ul>
+      <li>{{chatgpt.only.menu}}</li>
+      <li>{{chatgpt.only.seen}}</li>
+      <li>{{chatgpt.only.typed}}</li>
+      <li>{{chatgpt.only.queue}}</li>
+      <li>{{chatgpt.only.resume}}</li>
+      <li>{{chatgpt.only.move}}</li>
+      <li>{{chatgpt.only.remind}}</li>
+    </ul>
+    <p>{{chatgpt.only.more}}</p>
+
+    <h2>{{chatgpt.browser.title}}</h2>
+    <p>{{chatgpt.browser.text}}</p>
+
+    <p class="note">{{chatgpt.mark}}</p>
+  </div>
+</div>

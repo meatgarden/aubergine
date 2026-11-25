@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="zh-Hans" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>安全与隐私 | Aubergine</title>
+<meta name="description" content="Aubergine 只在你的电脑上运行，监听 127.0.0.1，检查每个请求，为每个令牌限定权限范围，并直接说明它防不住什么。">
+<link rel="canonical" href="https://thirstyeggplant.com/zh/security/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/security/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/security/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/security/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/security/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/security/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/security/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/security/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/security/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/security/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/security/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/security/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/security/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/security/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="theme-color" content="#120f14" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#faf6f2" media="(prefers-color-scheme: light)">
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="安全与隐私 | Aubergine">
+<meta property="og:description" content="Aubergine 只在你的电脑上运行，监听 127.0.0.1，检查每个请求，为每个令牌限定权限范围，并直接说明它防不住什么。">
+<meta property="og:url" content="https://thirstyeggplant.com/zh/security/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine：一张摆满终端的画布，一个正在忙，一个在等你">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine：一张摆满终端的画布，一个正在忙，一个在等你">
+<meta name="twitter:title" content="安全与隐私 | Aubergine">
+<meta name="twitter:description" content="Aubergine 只在你的电脑上运行，监听 127.0.0.1，检查每个请求，为每个令牌限定权限范围，并直接说明它防不住什么。">
+<link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">跳到正文</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="页面">
+      <ul>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">安装</a></li>
+        <li><a href="../guides/">指南</a></li>
+        <li><a href="./" aria-current="page">安全</a></li>
+        <li><a href="../faq/">常见问题</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="语言: 简体中文"><span class="lang-long" aria-hidden="true">简体中文</span><span class="lang-short" aria-hidden="true">ZH</span></summary>
+      <ul class="menu-list"><li><a href="../../security/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="../../es/security/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="../../pt/security/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="../../fr/security/" hreflang="fr" lang="fr" dir="ltr">Français</a></li><li><a href="../../de/security/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="../../ja/security/" hreflang="ja" lang="ja" dir="ltr">日本語</a></li><li><a href="./" hreflang="zh-Hans" lang="zh-Hans" dir="ltr" aria-current="true">简体中文</a></li><li><a href="../../ko/security/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="../../id/security/" hreflang="id" lang="id" dir="ltr">Bahasa Indonesia</a></li><li><a href="../../hi/security/" hreflang="hi" lang="hi" dir="ltr">हिन्दी</a></li><li><a href="../../bn/security/" hreflang="bn" lang="bn" dir="ltr">বাংলা</a></li><li><a href="../../ar/security/" hreflang="ar" lang="ar" dir="rtl">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>菜单</summary>
+      <ul class="menu-list">
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">安装</a></li>
+        <li><a href="../guides/">指南</a></li>
+        <li><a href="./" aria-current="page">安全</a></li>
+        <li><a href="../faq/">常见问题</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="wrap translated">
+  <p class="note">Aubergine 本身是英文的：它的按钮、菜单和截图都是英文版。</p>
+  <p class="note">本页由机器从英文翻译而来。<a href="https://github.com/thirstyeggplant/aubergine/issues">提交修正</a>。</p>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://thirstyeggplant.com/zh/security/#article",
+      "headline": "安全与隐私",
+      "description": "Aubergine 只在你的电脑上运行，监听 127.0.0.1，检查每个请求，为每个令牌限定权限范围，并直接说明它防不住什么。",
+      "url": "https://thirstyeggplant.com/zh/security/",
+      "mainEntityOfPage": "https://thirstyeggplant.com/zh/security/",
+      "datePublished": "2026-11-18",
+      "inLanguage": "zh-Hans",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "安全", "item": "https://thirstyeggplant.com/zh/security/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://thirstyeggplant.com/zh/security/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "Aubergine 会把我的终端或代码发送到别处吗？", "acceptedAnswer": { "@type": "Answer", "text": "不会。服务器只监听 127.0.0.1，因此在你设置从其他设备使用之前，只能从你的电脑访问，别处都访问不到。Aubergine 不调用模型，除非你自己添加库来源，否则不获取任何东西；在你自己的 gh 工具已安装时，它会向其查询某个终端分支的拉取请求。" } },
+        { "@type": "Question", "name": "智能体能修改 Aubergine 的设置或给自己创建令牌吗？", "acceptedAnswer": { "@type": "Answer", "text": "不能。创建令牌、修改设置、读取活动日志，以及任何与 Aubergine 之外的终端有关的事，无论令牌有什么权限范围，都永远不允许。" } },
+        { "@type": "Question", "name": "审批能阻止所有者自己的智能体给自己批准吗？", "acceptedAnswer": { "@type": "Answer", "text": "不能。以你的身份运行的智能体可以以你的身份行事。审批会被记录，但不会针对你自己的智能体强制执行。" } },
+        { "@type": "Question", "name": "工作副本是沙箱吗？", "acceptedAnswer": { "@type": "Answer", "text": "不是。它们把工作分开，但不会把智能体关在里面。智能体以你的身份运行。" } }
+      ]
+    }
+  ]
+}
+</script>
+<div class="wrap page-head">
+  <nav class="crumbs" aria-label="当前位置"><ol><li><a href="../">Aubergine</a></li><li>安全</li></ol></nav>
+  <h1>安全与隐私</h1>
+  <p class="lead">Aubergine 为保护你的终端做了什么，以及同样重要的，它没有做什么。简而言之：它在本地运行，替智能体行动前会先询问，而智能体仍然以你的身份运行。</p>
+</div>
+<div class="wrap page-body">
+  <div class="prose">
+    <h2>一切都留在你的电脑上</h2>
+    <ul>
+      <li>服务器只绑定 <code>127.0.0.1</code>。每个请求和每次 WebSocket 升级都会检查 <code>Host</code> 和 <code>Origin</code>，浏览器还必须持有访问 Cookie。</li>
+      <li>从其他设备使用 Aubergine 默认关闭，直到你自己设置：同一台电脑上的某个程序以你在设置中写的名称为它提供 HTTPS，每个浏览器都用一次性代码配对，并且可以吊销。已配对的设备能做所有者能做的一切。<a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/remote.md">Using Aubergine from elsewhere</a> 说明了具体做法。</li>
+      <li>Aubergine 不调用模型，也不会自行发起网络请求，只有两个例外：在<em>你</em>要求时获取一个库来源（Git 地址），以及在你自己的 <code>gh</code> 工具已安装并登录时，向它查询某个终端分支的拉取请求。</li>
+      <li>桌面通知来自打开的页面。没有任何东西离开你的电脑。</li>
+    </ul>
+    <h2>三类调用方，各自单独判断</h2>
+    <p>每个请求在查找任何内容之前，都会先对照调用方被允许做什么进行检查，因此没有权限的调用方从回应中什么也得不到。调用方有三种：你（在浏览器中登录）、智能体的会话，以及 API 令牌。</p>
+    <ul>
+      <li><strong>API 令牌有权限范围。</strong>密钥只显示一次，从不保存；只保留一个哈希。用令牌发起的调用会记入活动日志：谁、做了什么、结果如何，从不记录密钥，也从不记录发送的内容。</li>
+      <li><strong>有些事任何令牌都永远做不到：</strong>创建或吊销令牌、读取活动日志、修改设置，以及任何与 Aubergine 之外的终端有关的事。</li>
+      <li><strong>终端访问是两个独立的权限范围</strong>，一个用于读取，一个用于输入，各自只限于你选择的会话。你可以把一个终端标为 <em>people only</em>（仅限人），对所有令牌关闭它。</li>
+      <li><strong>智能体自己的凭据范围很窄。</strong>它可以设置自己的关注状态、向自己的笔记添加内容、报告自己的状态，以及读取自己所在的运行。它无法触及其他终端、画布或令牌。</li>
+    </ul>
+    <h2>智能体不能独自做的事</h2>
+    <ul>
+      <li>智能体或程序写的东西（工作流、步骤）会作为<strong>草稿</strong>交给你审阅。只有你能接受。</li>
+      <li>等待人的步骤只能由人批准或退回。规则、定时计划和演示都只属于你。</li>
+      <li>Aubergine 只会往智能体的终端里输入几句固定的话，比如“读取你的下一步”。你保存的任何内容、智能体写的任何内容都不会被输入。</li>
+      <li>从库中安装需要你接受与你所看到的完全相同的内容。</li>
+    </ul>
+    <h2>这些防不住什么</h2>
+    <p class="note"><strong>智能体以你的身份运行。</strong>终端里的智能体能做你在那个终端里能做的任何事，包括运行命令、读取文件，以及在它愿意时使用你自己的浏览器会话。</p>
+    <ul>
+      <li><strong>审批不是锁。</strong>以你的身份运行的智能体可以以你的身份做决定。决定会被记录，而不会被阻止。</li>
+      <li><strong>工作副本不是沙箱。</strong>它们把工作分开，但不会把智能体关在里面。</li>
+      <li><strong>审阅界面是库条目的把关手段。</strong>一个条目就是一组指令，智能体会用它被允许做的一切去执行。没读过的东西不要安装。</li>
+      <li><strong>给智能体的指南是建议</strong>，不是锁。</li>
+    </ul>
+    <h2>安装脚本</h2>
+    <p>它只改动两样东西：它自己的文件夹，以及一个名为 <code>aubergine</code> 的链接。不用 <code>sudo</code>，不编辑你的 shell 启动文件，也从不碰你的数据文件夹。<code>aubergine uninstall</code> 只移除它自己创建的东西。</p>
+    <h2>报告问题</h2>
+    <p>在 <a href="https://github.com/thirstyeggplant/aubergine/issues">GitHub</a> 上提一个 issue。不要在里面放机密或令牌。</p>
+    <p>相关：<a href="../working-copies/">工作副本</a> · <a href="../faq/">常见问题</a> · <a href="../roadmap/">路线图</a>（审批模式和命令策略在计划中，尚未构建）</p>
+  </div>
+</div>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <nav aria-label="所有页面">
+      <ul class="foot-links">
+        <li><a href="../">首页</a></li>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex 与 ChatGPT</a></li>
+        <li><a href="../install/">安装</a></li>
+        <li><a href="../guides/">指南</a></li>
+        <li><a href="../run-multiple-coding-agents/">运行多个智能体</a></li>
+        <li><a href="../working-copies/">工作副本</a></li>
+        <li><a href="../queue-and-schedules/">队列与定时计划</a></li>
+        <li><a href="./" aria-current="page">安全</a></li>
+        <li><a href="../roadmap/">路线图</a></li>
+        <li><a href="../faq/">常见问题</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">Aubergine 免费开源，采用 <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">MIT 许可证</a>，运行在你自己的电脑上。</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+</script>
+</body>
+</html>

@@ -1,14 +1,30 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The queue, the For you list and schedules | Aubergine</title>
 <meta name="description" content="Write a task once and let a free agent take it, see everything that waits on you in one list, and run tasks at set times with schedules.">
 <link rel="canonical" href="https://thirstyeggplant.com/queue-and-schedules/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/queue-and-schedules/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/queue-and-schedules/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/queue-and-schedules/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/queue-and-schedules/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/queue-and-schedules/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/queue-and-schedules/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/queue-and-schedules/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/queue-and-schedules/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/queue-and-schedules/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/queue-and-schedules/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/queue-and-schedules/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/queue-and-schedules/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/queue-and-schedules/">
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-<meta name="theme-color" content="#14151a">
+<meta name="theme-color" content="#120f14" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#faf6f2" media="(prefers-color-scheme: light)">
 <link rel="icon" href="../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../style.css">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="Aubergine">
 <meta property="og:title" content="The queue, the For you list and schedules | Aubergine">
@@ -23,7 +39,44 @@
 <meta name="twitter:image:alt" content="Aubergine: a canvas of terminals, one busy and one waiting for you">
 <meta name="twitter:title" content="The queue, the For you list and schedules | Aubergine">
 <meta name="twitter:description" content="Write a task once and let a free agent take it, see everything that waits on you in one list, and run tasks at set times with schedules.">
-<link rel="stylesheet" href="../style.css">
+<link rel="alternate" type="text/plain" href="../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">Skip to the page</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../"><img src="../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="Pages">
+      <ul>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">Install</a></li>
+        <li><a href="../guides/">Guides</a></li>
+        <li><a href="../security/">Security</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="Language: English"><span class="lang-long" aria-hidden="true">English</span><span class="lang-short" aria-hidden="true">EN</span></summary>
+      <ul class="menu-list"><li><a href="./" hreflang="en" lang="en" dir="ltr" aria-current="true">English</a></li><li><a href="../es/queue-and-schedules/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="../pt/queue-and-schedules/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="../fr/queue-and-schedules/" hreflang="fr" lang="fr" dir="ltr">Français</a></li><li><a href="../de/queue-and-schedules/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="../ja/queue-and-schedules/" hreflang="ja" lang="ja" dir="ltr">日本語</a></li><li><a href="../zh/queue-and-schedules/" hreflang="zh-Hans" lang="zh-Hans" dir="ltr">简体中文</a></li><li><a href="../ko/queue-and-schedules/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="../id/queue-and-schedules/" hreflang="id" lang="id" dir="ltr">Bahasa Indonesia</a></li><li><a href="../hi/queue-and-schedules/" hreflang="hi" lang="hi" dir="ltr">हिन्दी</a></li><li><a href="../bn/queue-and-schedules/" hreflang="bn" lang="bn" dir="ltr">বাংলা</a></li><li><a href="../ar/queue-and-schedules/" hreflang="ar" lang="ar" dir="rtl">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>Menu</summary>
+      <ul class="menu-list">
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">Install</a></li>
+        <li><a href="../guides/">Guides</a></li>
+        <li><a href="../security/">Security</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+<main id="main" tabindex="-1">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -43,99 +96,42 @@
       "url": "https://thirstyeggplant.com/queue-and-schedules/",
       "mainEntityOfPage": "https://thirstyeggplant.com/queue-and-schedules/",
       "datePublished": "2026-11-18",
-      "dateModified": "2026-11-18",
       "inLanguage": "en",
-      "author": {
-        "@id": "https://github.com/thirstyeggplant#organization"
-      },
-      "publisher": {
-        "@id": "https://github.com/thirstyeggplant#organization"
-      },
-      "isPartOf": {
-        "@id": "https://thirstyeggplant.com/#website"
-      },
-      "about": {
-        "@id": "https://thirstyeggplant.com/#software"
-      }
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
     },
     {
       "@type": "BreadcrumbList",
       "itemListElement": [
-        {
-          "@type": "ListItem",
-          "position": 1,
-          "name": "Aubergine",
-          "item": "https://thirstyeggplant.com/"
-        },
-        {
-          "@type": "ListItem",
-          "position": 2,
-          "name": "Guides",
-          "item": "https://thirstyeggplant.com/guides/"
-        },
-        {
-          "@type": "ListItem",
-          "position": 3,
-          "name": "Queue and schedules",
-          "item": "https://thirstyeggplant.com/queue-and-schedules/"
-        }
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Guides", "item": "https://thirstyeggplant.com/guides/" },
+        { "@type": "ListItem", "position": 3, "name": "Queue and schedules", "item": "https://thirstyeggplant.com/queue-and-schedules/" }
       ]
     },
     {
       "@type": "FAQPage",
       "@id": "https://thirstyeggplant.com/queue-and-schedules/#faq",
       "mainEntity": [
-        {
-          "@type": "Question",
-          "name": "What is the queue in Aubergine?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Work for agents. You write a task once, with a title, details and optionally a folder, a workflow and who may take it. A free agent takes it when you say so."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "What is the For you list?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Everything that waits on a person in one place: terminals with a question, runs to approve, drafts to read, finished and failed tasks, and lists agents handed in."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Can an agent start work on its own?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "An agent can propose a task or ask you something, but a proposal starts nothing until you accept it."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "What happens to a schedule when my computer is asleep?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Nothing wakes the computer. A time that passed while it slept runs once when it is back, marked late, if it is less than six hours old. Older than that it is marked missed."
-          }
-        }
+        { "@type": "Question", "name": "What is the queue in Aubergine?", "acceptedAnswer": { "@type": "Answer", "text": "Work for agents. You write a task once, with a title, details and optionally a folder, a workflow and who may take it. A free agent takes it when you say so." } },
+        { "@type": "Question", "name": "What is the For you list?", "acceptedAnswer": { "@type": "Answer", "text": "Everything that waits on a person in one place: terminals with a question, runs to approve, drafts to read, finished and failed tasks, and lists agents handed in." } },
+        { "@type": "Question", "name": "Can an agent start work on its own?", "acceptedAnswer": { "@type": "Answer", "text": "An agent can propose a task or ask you something, but a proposal starts nothing until you accept it." } },
+        { "@type": "Question", "name": "What happens to a schedule when my computer is asleep?", "acceptedAnswer": { "@type": "Answer", "text": "Nothing wakes the computer. A time that passed while it slept runs once when it is back, marked late, if it is less than six hours old. Older than that it is marked missed." } }
       ]
     }
   ]
 }
 </script>
-</head>
-<body>
-<div class="glow" aria-hidden="true"></div>
-<div class="wrap">
-  <header class="top">
-    <a class="brand" href="../"><img src="../icon.svg" alt="" width="30" height="30">Aubergine</a>
-    <nav aria-label="Main"><a href="../install/">Install</a><a href="../guides/">Guides</a><a href="../security/">Security</a><a href="../roadmap/">Roadmap</a><a href="../faq/">FAQ</a><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></nav>
-  </header>
-  <main class="prose">
-    <p class="crumbs"><a href="../">Aubergine</a> / <a href="../guides/">Guides</a> / <span aria-current="page">Queue and schedules</span></p>
-    <h1>The queue, “For you” and schedules</h1>
-    <p class="lead">Two lists that feed each other: the queue holds work for agents, and <em>For you</em> holds everything that waits on a person. Schedules add tasks to the queue at set times.</p>
+<div class="wrap page-head">
+  <nav class="crumbs" aria-label="Where you are"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">Guides</a></li><li>Queue and schedules</li></ol></nav>
+  <h1>The queue, “For you” and schedules</h1>
+  <p class="lead">Two lists that feed each other: the queue holds work for agents, and <em>For you</em> holds everything that waits on a person. Schedules add tasks to the queue at set times.</p>
+</div>
+<div class="wrap page-body">
+  <div class="prose">
     <h2>The queue</h2>
-    <p>Open <strong>Queue</strong> (or press <code>Q</code>) and click <strong>+ Task</strong>. A task has a title, what to do, and optionally a folder, a workflow, and who may take it. By default any terminal where an agent is free may take it; you can name one terminal, or have a new agent terminal started for it, in a working copy of its own where the folder is in a repository.</p>
+    <p>Open <strong>Runs</strong> at the top of the page (or press <code>Q</code>) and click <strong>Add task</strong>. A task has a title, what to do, and optionally a folder, a workflow, and who may take it. By default any terminal where an agent is free may take it; you can name one terminal, or have a new agent terminal started for it, in a working copy of its own where the folder is in a repository.</p>
     <ul>
       <li><strong>Start next</strong> starts the first task that someone can take now. A plain shell is never given a task.</li>
       <li><strong>At most N at once</strong>, three unless you change it. <strong>Hold</strong> stops new starts and touches nothing that is running.</li>
@@ -144,16 +140,18 @@
       <li>A task follows its run: <em>needs you</em> while a run waits for approval, <em>done</em> when it finishes, <em>failed</em> with a sentence when it stops. Nothing is tried again by itself.</li>
     </ul>
     <h2>For you</h2>
-    <p>Terminals with a question, runs to approve or blocked, drafts and installs to read, tasks proposed for the queue, finished and failed tasks, lists an agent handed in, and working copies whose terminal is gone. The count at the top of the canvas and “next waiting” are the same list. Most of it is gathered, not written: an item goes when the thing itself is done.</p>
+    <p>Terminals with a question, runs to approve or blocked, drafts and installs to read, tasks proposed for the queue, finished and failed tasks, lists an agent handed in, and working copies whose terminal is gone. The count beside For you at the top and “next waiting” are the same list. Most of it is gathered, not written: an item goes when the thing itself is done.</p>
+    <figure class="pic"><a href="../screenshots/for-you.png"><img src="../screenshots/for-you.png" width="990" height="570" loading="lazy" alt="The Waiting for you column of the Runs page: a box to add a to-do, then a stand-in agent's question, a draft to read and a list handed in."></a><figcaption>For you on the Runs page: a question, a draft to read and a list handed in, each with what it is.</figcaption></figure>
     <p>An agent that finds work it should not do now can propose a task, and one that needs a person can ask you:</p>
     <pre><code>aubergine task add "Add a test for the retry" --details "it should fail without the fix"
 aubergine ask "the staging key expires this week: rotate it, or say who can"</code></pre>
     <p>Both land on your list. A proposal starts nothing until you accept it.</p>
     <h2>Schedules</h2>
-    <p>A schedule is a time of day, days of the week, something to run and somewhere to run it. When its time comes it adds one task to the queue, and the queue starts it. Under <strong>Schedules</strong> on the Queue screen, or <code>aubergine schedule</code>. The time is on this computer's clock; there are no expressions and nothing more often than once a day.</p>
+    <p>A schedule is a time of day, days of the week, something to run and somewhere to run it. When its time comes it adds one task to the queue, and the queue starts it. Under <strong>Schedules</strong> on the Runs page, or <code>aubergine schedule</code>. The time is on this computer's clock; there are no expressions and nothing more often than once a day.</p>
     <pre><code>aubergine schedule add "My morning list" --at 08:30 --days weekdays \
   --element "Morning list" --new Main
-aubergine schedule run "My morning list"     # try it now</code></pre>
+aubergine schedule run "My morning list"</code></pre>
+    <p><code>aubergine schedule run</code> tries a schedule now.</p>
     <h3>When things are not as planned</h3>
     <ul>
       <li>The computer must be awake and Aubergine running. A time that passed while it slept runs <strong>once</strong> when it is back, marked late, if it is under six hours old. Otherwise it is marked <strong>missed</strong>.</li>
@@ -164,11 +162,50 @@ aubergine schedule run "My morning list"     # try it now</code></pre>
     <p>Under <strong>Rules</strong>, you can say “when a task is done, failed or needs me, or a schedule fired or was missed, then notify me or run a saved step”. Rules are yours alone to write: no program and no agent can add or change one, and a rule cannot set itself off.</p>
     <p>Aubergine calls no model and holds no credential for any app. A task or schedule only starts a run; the agent that takes it does the work with its own tools.</p>
     <p>Related: <a href="../working-copies/">working copies</a> · <a href="../run-multiple-coding-agents/">run several coding agents at once</a></p>
-  </main>
-  <footer>
-    <span>Aubergine is open source. <a href="https://github.com/thirstyeggplant/aubergine">GitHub</a> · <a href="../llms.txt">llms.txt</a></span>
-    <span class="flinks"><a href="../install/">Install</a> · <a href="../guides/">Guides</a> · <a href="../run-multiple-coding-agents/">Run several agents</a> · <a href="../working-copies/">Working copies</a> · <a href="../queue-and-schedules/">Queue and schedules</a> · <a href="../security/">Security</a> · <a href="../roadmap/">Roadmap</a> · <a href="../faq/">FAQ</a></span>
-  </footer>
+  </div>
 </div>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <nav aria-label="Every page">
+      <ul class="foot-links">
+        <li><a href="../">Home</a></li>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex and ChatGPT</a></li>
+        <li><a href="../install/">Install</a></li>
+        <li><a href="../guides/">Guides</a></li>
+        <li><a href="../run-multiple-coding-agents/">Run several agents</a></li>
+        <li><a href="../working-copies/">Working copies</a></li>
+        <li><a href="./" aria-current="page">Queue and schedules</a></li>
+        <li><a href="../security/">Security</a></li>
+        <li><a href="../roadmap/">Roadmap</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">Aubergine is free and open source under the <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">MIT license</a>, and runs on your own computer.</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+</script>
 </body>
 </html>

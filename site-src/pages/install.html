@@ -1,0 +1,120 @@
+<!--page {"order": 3, "llms": {"name": "Install", "about": "requirements, the installer, fixes"}}-->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "{{=url}}#article",
+      "headline": {{json:install.title}},
+      "description": {{json:install.meta.description}},
+      "url": "{{=url}}",
+      "mainEntityOfPage": "{{=url}}",
+      "datePublished": "2026-11-18",
+      "inLanguage": "{{=lang}}",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": {{json:install.crumb}}, "item": "{{=url}}" }
+      ]
+    },
+    {
+      "@type": "HowTo",
+      "@id": "{{=url}}#howto",
+      "name": {{json:install.ld.howto}},
+      "description": {{json:install.ld.howtoAbout}},
+      "step": [
+        { "@type": "HowToStep", "position": 1, "name": {{json:install.ld.s1}}, "text": "brew install tmux node" },
+        { "@type": "HowToStep", "position": 2, "name": {{json:install.ld.s2}}, "text": "npm install -g @meatgarden/aubergine" },
+        { "@type": "HowToStep", "position": 3, "name": {{json:install.ld.s3}}, "text": "aubergine start --open" },
+        { "@type": "HowToStep", "position": 4, "name": {{json:install.ld.s4}}, "text": {{json:install.steps.tour}} }
+      ],
+      "tool": [
+        { "@type": "HowToTool", "name": "tmux 3.2" },
+        { "@type": "HowToTool", "name": "Node.js 22" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "{{=url}}#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": {{json:install.ld.q1}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:install.ld.a1}} } },
+        { "@type": "Question", "name": {{json:install.ld.q2}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:install.ld.a2}} } },
+        { "@type": "Question", "name": {{json:install.ld.q3}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:install.ld.a3}} } },
+        { "@type": "Question", "name": {{json:install.ld.q4}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:install.ld.a4}} } }
+      ]
+    }
+  ]
+}
+</script>
+<div class="wrap page-head">
+  <nav class="crumbs" aria-label="{{attr:site.crumbs}}"><ol><li><a href="/">Aubergine</a></li><li>{{install.crumb}}</li></ol></nav>
+  <h1>{{install.title}}</h1>
+  <p class="lead">{{install.lead}}</p>
+</div>
+<div class="wrap page-body">
+  <div class="prose">
+    <h2>{{install.req.title}}</h2>
+    <ul>
+      <li>{{install.req.os}}</li>
+      <li>{{install.req.tools}}</li>
+    </ul>
+    <p>{{install.req.brew}}</p>
+    <p class="cmd"><code>brew install tmux node</code><button type="button" class="copy" data-copy data-copied="{{attr:site.copied}}" aria-live="polite" hidden>{{site.copy}}</button></p>
+
+    <h2>{{install.steps.title}}</h2>
+    <ol>
+      <li><p>{{install.steps.npm}}</p>
+        <p class="cmd"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="{{attr:site.copied}}" aria-live="polite" hidden>{{site.copy}}</button></p>
+        <p>{{install.steps.script}}</p>
+        <p class="cmd"><code>curl -fsSL https://raw.githubusercontent.com/thirstyeggplant/aubergine/main/install.sh | sh</code><button type="button" class="copy" data-copy data-copied="{{attr:site.copied}}" aria-live="polite" hidden>{{site.copy}}</button></p></li>
+      <li><p>{{install.steps.start}}</p>
+        <p class="cmd"><code>aubergine start --open</code><button type="button" class="copy" data-copy data-copied="{{attr:site.copied}}" aria-live="polite" hidden>{{site.copy}}</button></p></li>
+      <li><p>{{install.steps.tour}}</p></li>
+    </ol>
+    <p>{{install.steps.read}}</p>
+
+    <h2>{{install.changes.title}}</h2>
+    <p>{{install.changes.text}}</p>
+    <p class="note">{{install.changes.not}}</p>
+
+    <h2>{{install.wrong.title}}</h2>
+    <p>{{install.wrong.doctor}}</p>
+    <div class="table">
+      <table>
+        <thead><tr><th>{{install.wrong.see}}</th><th>{{install.wrong.do}}</th></tr></thead>
+        <tbody>
+          <tr><td>{{install.wrong.signin.see}}</td><td>{{install.wrong.signin.do}}</td></tr>
+          <tr><td>{{install.wrong.tmux.see}}</td><td>{{install.wrong.tmux.do}}</td></tr>
+          <tr><td>{{install.wrong.port.see}}</td><td>{{install.wrong.port.do}}</td></tr>
+          <tr><td><code>aubergine: command not found</code></td><td>{{install.wrong.path.do}}</td></tr>
+          <tr><td>{{install.wrong.badges.see}}</td><td>{{install.wrong.badges.do}}</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>{{install.later.title}}</h2>
+    <ul>
+      <li>{{install.later.stop}}</li>
+      <li>{{install.later.update}}</li>
+      <li>{{install.later.uninstall}}</li>
+      <li>{{install.later.login}}</li>
+    </ul>
+
+    <h2>{{install.next.title}}</h2>
+    <p>{{install.next.text}}</p>
+  </div>
+</div>

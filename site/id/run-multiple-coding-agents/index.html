@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="id" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cara menjalankan beberapa agen coding sekaligus | Aubergine</title>
+<meta name="description" content="Taruh setiap agen coding di terminalnya sendiri di satu kanvas, lihat mana yang menunggu Anda, bagikan pekerjaan dari antrean, dan pisahkan perubahan setiap agen.">
+<link rel="canonical" href="https://thirstyeggplant.com/id/run-multiple-coding-agents/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/run-multiple-coding-agents/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/run-multiple-coding-agents/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/run-multiple-coding-agents/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/run-multiple-coding-agents/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/run-multiple-coding-agents/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/run-multiple-coding-agents/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/run-multiple-coding-agents/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/run-multiple-coding-agents/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/run-multiple-coding-agents/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/run-multiple-coding-agents/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/run-multiple-coding-agents/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/run-multiple-coding-agents/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/run-multiple-coding-agents/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="theme-color" content="#120f14" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#faf6f2" media="(prefers-color-scheme: light)">
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="Cara menjalankan beberapa agen coding sekaligus | Aubergine">
+<meta property="og:description" content="Taruh setiap agen coding di terminalnya sendiri di satu kanvas, lihat mana yang menunggu Anda, bagikan pekerjaan dari antrean, dan pisahkan perubahan setiap agen.">
+<meta property="og:url" content="https://thirstyeggplant.com/id/run-multiple-coding-agents/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine: kanvas berisi terminal, satu sedang sibuk dan satu menunggu Anda">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine: kanvas berisi terminal, satu sedang sibuk dan satu menunggu Anda">
+<meta name="twitter:title" content="Cara menjalankan beberapa agen coding sekaligus | Aubergine">
+<meta name="twitter:description" content="Taruh setiap agen coding di terminalnya sendiri di satu kanvas, lihat mana yang menunggu Anda, bagikan pekerjaan dari antrean, dan pisahkan perubahan setiap agen.">
+<link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">Langsung ke isi halaman</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="Halaman">
+      <ul>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">Instalasi</a></li>
+        <li><a href="../guides/">Panduan</a></li>
+        <li><a href="../security/">Keamanan</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="Bahasa: Bahasa Indonesia"><span class="lang-long" aria-hidden="true">Bahasa Indonesia</span><span class="lang-short" aria-hidden="true">ID</span></summary>
+      <ul class="menu-list"><li><a href="../../run-multiple-coding-agents/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="../../es/run-multiple-coding-agents/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="../../pt/run-multiple-coding-agents/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="../../fr/run-multiple-coding-agents/" hreflang="fr" lang="fr" dir="ltr">Français</a></li><li><a href="../../de/run-multiple-coding-agents/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="../../ja/run-multiple-coding-agents/" hreflang="ja" lang="ja" dir="ltr">日本語</a></li><li><a href="../../zh/run-multiple-coding-agents/" hreflang="zh-Hans" lang="zh-Hans" dir="ltr">简体中文</a></li><li><a href="../../ko/run-multiple-coding-agents/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="./" hreflang="id" lang="id" dir="ltr" aria-current="true">Bahasa Indonesia</a></li><li><a href="../../hi/run-multiple-coding-agents/" hreflang="hi" lang="hi" dir="ltr">हिन्दी</a></li><li><a href="../../bn/run-multiple-coding-agents/" hreflang="bn" lang="bn" dir="ltr">বাংলা</a></li><li><a href="../../ar/run-multiple-coding-agents/" hreflang="ar" lang="ar" dir="rtl">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>Menu</summary>
+      <ul class="menu-list">
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">Instalasi</a></li>
+        <li><a href="../guides/">Panduan</a></li>
+        <li><a href="../security/">Keamanan</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="wrap translated">
+  <p class="note">Aubergine sendiri berbahasa Inggris: tombol, menu, dan gambarnya adalah versi bahasa Inggris.</p>
+  <p class="note">Halaman ini diterjemahkan oleh mesin dari bahasa Inggris. <a href="https://github.com/thirstyeggplant/aubergine/issues">Kirim koreksi</a>.</p>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://thirstyeggplant.com/id/run-multiple-coding-agents/#article",
+      "headline": "Cara menjalankan beberapa agen coding sekaligus",
+      "description": "Taruh setiap agen coding di terminalnya sendiri di satu kanvas, lihat mana yang menunggu Anda, bagikan pekerjaan dari antrean, dan pisahkan perubahan setiap agen.",
+      "url": "https://thirstyeggplant.com/id/run-multiple-coding-agents/",
+      "mainEntityOfPage": "https://thirstyeggplant.com/id/run-multiple-coding-agents/",
+      "datePublished": "2026-11-18",
+      "inLanguage": "id",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Panduan", "item": "https://thirstyeggplant.com/guides/" },
+        { "@type": "ListItem", "position": 3, "name": "Menjalankan beberapa agen", "item": "https://thirstyeggplant.com/id/run-multiple-coding-agents/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://thirstyeggplant.com/id/run-multiple-coding-agents/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "Bagaimana cara menjalankan beberapa agen coding sekaligus?", "acceptedAnswer": { "@type": "Answer", "text": "Taruh setiap agen di terminalnya sendiri di kanvas Aubergine. Kanvas menunjukkan mana yang sibuk, diam, atau menunggu Anda, dan satu daftar bernama For you mengumpulkan setiap pertanyaan dan persetujuan." } },
+        { "@type": "Question", "name": "Bagaimana agar dua agen tidak mengedit file yang sama?", "acceptedAnswer": { "@type": "Answer", "text": "Jalankan setiap terminal di salinan kerjanya sendiri: checkout repositori miliknya sendiri di branch sendiri. Aubergine tidak pernah melakukan merge atau push untuk Anda." } },
+        { "@type": "Question", "name": "Apakah ia bekerja dengan agen coding apa pun?", "acceptedAnswer": { "@type": "Answer", "text": "Ya. Aubergine menjalankan terminal biasa, jadi agen command-line apa pun bisa berjalan di dalamnya. Hal-hal yang dilakukan Aubergine sendiri untuk sebuah agen dibuat untuk Claude Code; agen lain mana pun bisa melapor lewat perintah aubergine." } }
+      ]
+    }
+  ]
+}
+</script>
+<div class="wrap page-head">
+  <nav class="crumbs" aria-label="Posisi Anda"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">Panduan</a></li><li>Menjalankan beberapa agen</li></ol></nav>
+  <h1>Cara menjalankan beberapa agen coding sekaligus</h1>
+  <p class="lead">Dua agen itu mudah. Lima agen itu kacau: mana yang macet, mana yang menunggu Anda, mana yang mengubah file itu? Aubergine dibuat untuk saat seperti itu. Ia berjalan di komputer Anda sendiri.</p>
+</div>
+<div class="wrap page-body">
+  <div class="prose">
+    <h2>1. Beri setiap agen satu terminal di satu kanvas</h2>
+    <p>Klik <strong>New terminal</strong>, di bagian atas daftar terminal (atau tekan <code>N</code>), dan jalankan agen di dalamnya. Seret terminal lewat bilah judulnya, ubah ukurannya, dan kelompokkan dalam frame. Pekerjaan yang berkaitan ditaruh di satu kanvas; pekerjaan yang terpisah di kanvas (tab) terpisah atau di <em>proyek</em>, masing-masing dengan terminal, antrean, dan jadwalnya sendiri.</p>
+    <p>Setiap terminal adalah shell sungguhan di sesi tmux. Tutup browser, atau hentikan Aubergine, dan agen Anda tetap berjalan.</p>
+    <h2>2. Lihat agen mana yang membutuhkan Anda</h2>
+    <p>Setiap terminal menunjukkan apakah ia sibuk, diam, atau menunggu Anda. Status itu berasal dari hook di shell Anda dan dari agen itu sendiri, bukan dari membaca layar. Angka di samping <strong>For you</strong> di bagian atas dan tombol <code>W</code> membawa Anda langsung ke terminal berikutnya yang menunggu.</p>
+    <p>Satu daftar, <strong>For you</strong>, mengumpulkan semua yang menunggu seseorang: pertanyaan, run yang perlu disetujui, tugas selesai yang perlu dilihat, dan tugas gagal beserta alasannya.</p>
+    <h2>3. Bagikan pekerjaan dari antrean</h2>
+    <p>Tulis tugas sekali dan masukkan ke <a href="../queue-and-schedules/">antrean</a>. Agen yang sedang bebas mengambilnya saat Anda menyuruhnya, dengan batas berapa yang berjalan sekaligus. Untuk pekerjaan yang berulang, atur jadwal. Agen bisa mengusulkan tugas dan bertanya kepada Anda, tetapi tidak ada yang dimulai sampai Anda menerimanya.</p>
+    <h2>4. Pisahkan perubahan setiap agen</h2>
+    <p>Dua agen di satu folder mengedit file yang sama. Jalankan masing-masing di <a href="../working-copies/">salinan kerja</a> sendiri: checkout terpisah di branch sendiri, sehingga Anda bisa membaca pekerjaan setiap agen secara terpisah. Aubergine tidak pernah melakukan merge, push, atau rebase untuk Anda.</p>
+    <h2>5. Beri agen langkah-langkah, dan putuskan di gerbangnya</h2>
+    <p>Workflow adalah daftar langkah berurutan yang diikuti agen, dengan strip yang menunjukkan posisinya. Sebuah langkah bisa menunggu Anda menyetujui atau mengembalikannya. Setiap run yang berjalan muncul di satu papan.</p>
+    <h2>Apa yang tidak dilakukannya</h2>
+    <ul>
+      <li>Ia tidak memanggil model atau memilihkannya untuk Anda. Agennya milik Anda.</li>
+      <li>Ia tidak mencegah agen melakukan sesuatu yang bisa Anda lakukan. Agen berjalan sebagai Anda. Lihat <a href="../security/">keamanan</a> untuk apa yang dilindungi dan apa yang tidak.</li>
+      <li>Hari ini ia berjalan di satu komputer. Berbagi kanvas dengan orang lain dan menjalankan agen di cloud ada di <a href="../roadmap/">peta jalan</a>, dan belum dibuat.</li>
+    </ul>
+    <p class="actions"><a class="button primary" href="../install/">Instal Aubergine</a></p>
+  </div>
+</div>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <nav aria-label="Semua halaman">
+      <ul class="foot-links">
+        <li><a href="../">Beranda</a></li>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex dan ChatGPT</a></li>
+        <li><a href="../install/">Instalasi</a></li>
+        <li><a href="../guides/">Panduan</a></li>
+        <li><a href="./" aria-current="page">Menjalankan beberapa agen</a></li>
+        <li><a href="../working-copies/">Salinan kerja</a></li>
+        <li><a href="../queue-and-schedules/">Antrean dan jadwal</a></li>
+        <li><a href="../security/">Keamanan</a></li>
+        <li><a href="../roadmap/">Peta jalan</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">Aubergine gratis dan open source di bawah <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">lisensi MIT</a>, dan berjalan di komputer Anda sendiri.</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="fr" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Comment faire tourner plusieurs agents de code à la fois | Aubergine</title>
+<meta name="description" content="Mettez chaque agent de code dans son propre terminal sur un seul canevas, voyez lequel vous attend, distribuez le travail depuis une file d’attente, et gardez les modifications de chaque agent séparées.">
+<link rel="canonical" href="https://thirstyeggplant.com/fr/run-multiple-coding-agents/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/run-multiple-coding-agents/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/run-multiple-coding-agents/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/run-multiple-coding-agents/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/run-multiple-coding-agents/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/run-multiple-coding-agents/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/run-multiple-coding-agents/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/run-multiple-coding-agents/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/run-multiple-coding-agents/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/run-multiple-coding-agents/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/run-multiple-coding-agents/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/run-multiple-coding-agents/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/run-multiple-coding-agents/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/run-multiple-coding-agents/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="theme-color" content="#120f14" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#faf6f2" media="(prefers-color-scheme: light)">
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="Comment faire tourner plusieurs agents de code à la fois | Aubergine">
+<meta property="og:description" content="Mettez chaque agent de code dans son propre terminal sur un seul canevas, voyez lequel vous attend, distribuez le travail depuis une file d’attente, et gardez les modifications de chaque agent séparées.">
+<meta property="og:url" content="https://thirstyeggplant.com/fr/run-multiple-coding-agents/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine : un canevas de terminaux, l’un occupé et l’autre qui vous attend">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine : un canevas de terminaux, l’un occupé et l’autre qui vous attend">
+<meta name="twitter:title" content="Comment faire tourner plusieurs agents de code à la fois | Aubergine">
+<meta name="twitter:description" content="Mettez chaque agent de code dans son propre terminal sur un seul canevas, voyez lequel vous attend, distribuez le travail depuis une file d’attente, et gardez les modifications de chaque agent séparées.">
+<link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">Aller au contenu</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="Pages">
+      <ul>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">Installer</a></li>
+        <li><a href="../guides/">Guides</a></li>
+        <li><a href="../security/">Sécurité</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="Langue: Français"><span class="lang-long" aria-hidden="true">Français</span><span class="lang-short" aria-hidden="true">FR</span></summary>
+      <ul class="menu-list"><li><a href="../../run-multiple-coding-agents/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="../../es/run-multiple-coding-agents/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="../../pt/run-multiple-coding-agents/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="./" hreflang="fr" lang="fr" dir="ltr" aria-current="true">Français</a></li><li><a href="../../de/run-multiple-coding-agents/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="../../ja/run-multiple-coding-agents/" hreflang="ja" lang="ja" dir="ltr">日本語</a></li><li><a href="../../zh/run-multiple-coding-agents/" hreflang="zh-Hans" lang="zh-Hans" dir="ltr">简体中文</a></li><li><a href="../../ko/run-multiple-coding-agents/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="../../id/run-multiple-coding-agents/" hreflang="id" lang="id" dir="ltr">Bahasa Indonesia</a></li><li><a href="../../hi/run-multiple-coding-agents/" hreflang="hi" lang="hi" dir="ltr">हिन्दी</a></li><li><a href="../../bn/run-multiple-coding-agents/" hreflang="bn" lang="bn" dir="ltr">বাংলা</a></li><li><a href="../../ar/run-multiple-coding-agents/" hreflang="ar" lang="ar" dir="rtl">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>Menu</summary>
+      <ul class="menu-list">
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">Installer</a></li>
+        <li><a href="../guides/">Guides</a></li>
+        <li><a href="../security/">Sécurité</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="wrap translated">
+  <p class="note">Aubergine elle-même est en anglais : ses boutons, ses menus et ses images sont ceux de la version anglaise.</p>
+  <p class="note">Cette page a été traduite de l’anglais par une machine. <a href="https://github.com/thirstyeggplant/aubergine/issues">Proposer une correction</a>.</p>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://thirstyeggplant.com/fr/run-multiple-coding-agents/#article",
+      "headline": "Comment faire tourner plusieurs agents de code à la fois",
+      "description": "Mettez chaque agent de code dans son propre terminal sur un seul canevas, voyez lequel vous attend, distribuez le travail depuis une file d’attente, et gardez les modifications de chaque agent séparées.",
+      "url": "https://thirstyeggplant.com/fr/run-multiple-coding-agents/",
+      "mainEntityOfPage": "https://thirstyeggplant.com/fr/run-multiple-coding-agents/",
+      "datePublished": "2026-11-18",
+      "inLanguage": "fr",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Guides", "item": "https://thirstyeggplant.com/guides/" },
+        { "@type": "ListItem", "position": 3, "name": "Plusieurs agents à la fois", "item": "https://thirstyeggplant.com/fr/run-multiple-coding-agents/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://thirstyeggplant.com/fr/run-multiple-coding-agents/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "Comment faire tourner plusieurs agents de code à la fois ?", "acceptedAnswer": { "@type": "Answer", "text": "Mettez chaque agent dans son propre terminal sur un canevas Aubergine. Le canevas montre lesquels sont occupés, inactifs ou en attente de vous, et une liste appelée For you rassemble chaque question et chaque approbation." } },
+        { "@type": "Question", "name": "Comment empêcher deux agents de modifier les mêmes fichiers ?", "acceptedAnswer": { "@type": "Answer", "text": "Lancez chaque terminal dans sa propre copie de travail : sa propre extraction du dépôt sur sa propre branche. Aubergine ne fusionne ni ne pousse jamais à votre place." } },
+        { "@type": "Question", "name": "Est-ce que ça fonctionne avec n’importe quel agent de code ?", "acceptedAnswer": { "@type": "Answer", "text": "Oui. Aubergine fait tourner des terminaux ordinaires, donc n’importe quel agent en ligne de commande peut y tourner. Ce qu’Aubergine fait d’elle-même pour un agent est conçu pour Claude Code ; tout autre agent peut rendre compte avec les commandes aubergine." } }
+      ]
+    }
+  ]
+}
+</script>
+<div class="wrap page-head">
+  <nav class="crumbs" aria-label="Où vous êtes"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">Guides</a></li><li>Plusieurs agents à la fois</li></ol></nav>
+  <h1>Comment faire tourner plusieurs agents de code à la fois</h1>
+  <p class="lead">Deux agents, c’est facile. Cinq, c’est le chaos : lequel est bloqué, lequel vous attend, lequel a modifié ce fichier ? Aubergine est faite pour ce moment-là. Elle tourne sur votre propre ordinateur.</p>
+</div>
+<div class="wrap page-body">
+  <div class="prose">
+    <h2>1. Donnez à chaque agent un terminal sur un seul canevas</h2>
+    <p>Cliquez sur <strong>New terminal</strong> (nouveau terminal), en haut de la liste des terminaux (ou appuyez sur <code>N</code>), et lancez-y un agent. Faites glisser les terminaux par leur barre de titre, redimensionnez-les et regroupez-les dans des cadres. Le travail lié va sur un même canevas ; les travaux distincts vont dans des canevas séparés (des onglets) ou des <em>projets</em>, chacun avec ses propres terminaux, sa file d’attente et ses planifications.</p>
+    <p>Chaque terminal est un vrai shell dans une session tmux. Fermez le navigateur, ou arrêtez Aubergine, et vos agents continuent de tourner.</p>
+    <h2>2. Voyez quel agent a besoin de vous</h2>
+    <p>Chaque terminal indique s’il est occupé, inactif ou en attente de vous. Cet état vient de hooks dans votre shell et des agents eux-mêmes, pas de la lecture de l’écran. Le compteur à côté de <strong>For you</strong> en haut et la touche <code>W</code> vous mènent droit au prochain qui attend.</p>
+    <p>Une seule liste, <strong>For you</strong> (pour vous), rassemble tout ce qui attend une personne : des questions, des exécutions à approuver, des tâches terminées à regarder, et celles qui ont échoué, avec la raison.</p>
+    <h2>3. Distribuez le travail depuis une file d’attente</h2>
+    <p>Écrivez une tâche une fois et mettez-la dans la <a href="../queue-and-schedules/">file d’attente</a>. Un agent libre la prend quand vous le dites, avec une limite au nombre qui tournent à la fois. Pour le travail qui se répète, définissez une planification. Les agents peuvent proposer des tâches et vous poser des questions, mais rien ne démarre tant que vous n’avez pas accepté.</p>
+    <h2>4. Gardez les modifications de chaque agent séparées</h2>
+    <p>Deux agents dans un même dossier modifient les mêmes fichiers. Lancez chacun dans sa propre <a href="../working-copies/">copie de travail</a> : une extraction séparée sur sa propre branche, pour lire le travail de chaque agent à part. Aubergine ne fusionne, ne pousse et ne rebase jamais à votre place.</p>
+    <h2>5. Donnez des étapes aux agents, et décidez aux points de contrôle</h2>
+    <p>Un workflow est une liste ordonnée d’étapes que suit un agent, avec une bande qui montre où il en est. Une étape peut attendre que vous l’approuviez ou la renvoyiez. Toutes les exécutions en cours apparaissent sur un seul tableau.</p>
+    <h2>Ce qu’elle ne fait pas</h2>
+    <ul>
+      <li>Elle n’appelle aucun modèle et n’en choisit aucun pour vous. Les agents sont les vôtres.</li>
+      <li>Elle n’empêche pas un agent de faire ce que vous pourriez faire. Les agents tournent en votre nom. Voir <a href="../security/">sécurité</a> pour ce qui est protégé et ce qui ne l’est pas.</li>
+      <li>Elle tourne aujourd’hui sur un seul ordinateur. Partager un canevas avec d’autres personnes et faire tourner des agents dans le cloud figurent sur la <a href="../roadmap/">feuille de route</a>, et ne sont pas construits.</li>
+    </ul>
+    <p class="actions"><a class="button primary" href="../install/">Installer Aubergine</a></p>
+  </div>
+</div>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <nav aria-label="Toutes les pages">
+      <ul class="foot-links">
+        <li><a href="../">Accueil</a></li>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex et ChatGPT</a></li>
+        <li><a href="../install/">Installer</a></li>
+        <li><a href="../guides/">Guides</a></li>
+        <li><a href="./" aria-current="page">Plusieurs agents à la fois</a></li>
+        <li><a href="../working-copies/">Copies de travail</a></li>
+        <li><a href="../queue-and-schedules/">File d’attente et planifications</a></li>
+        <li><a href="../security/">Sécurité</a></li>
+        <li><a href="../roadmap/">Feuille de route</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">Aubergine est libre et gratuite, sous <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">licence MIT</a>, et tourne sur votre propre ordinateur.</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+</script>
+</body>
+</html>

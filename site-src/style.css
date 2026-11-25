@@ -1,0 +1,347 @@
+/* The site's look: docs/site.md, "The look". Dark first; the light theme redefines colours only. */
+
+@font-face {
+  font-family: "Bricolage Grotesque";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 200 800;
+  src: url(fonts/bricolage-grotesque-latin-ext-wght-normal.woff2) format("woff2-variations"), url(fonts/bricolage-grotesque-latin-ext-wght-normal.woff2) format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "Bricolage Grotesque";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 200 800;
+  src: url(fonts/bricolage-grotesque-latin-wght-normal.woff2) format("woff2-variations"), url(fonts/bricolage-grotesque-latin-wght-normal.woff2) format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+:root {
+  color-scheme: dark;
+  --ground: #120f14;
+  --raised: #1a161d;
+  --line: #2c2531;
+  --text: #f2ebf1;
+  --quiet: #a89dab;
+  --aubergine: #c690c1;
+  --deep: #5a2956;
+  --amber: #f0b24a;
+  --green: #84c98d;
+
+  /* Headings in Bricolage Grotesque; a script it has no letters for falls to the system's sans at the same weight. */
+  --face-head: "Bricolage Grotesque", system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", sans-serif;
+  --face-text: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", "Helvetica Neue", Arial, sans-serif;
+  --face-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+
+  /* 17px text on 1.65, and a scale of 1.25 from there. */
+  --step-0: 1.0625rem;
+  --step--1: 0.85rem;
+  --step-1: 1.328rem;
+  --step-2: 1.66rem;
+  --step-3: 2.075rem;
+  --step-4: 2.594rem;
+  --step-5: 3.242rem;
+  --measure: 68ch;
+  --column: 72rem;
+  --gutter: 20px;
+  --section: 96px;
+  --corner: 10px;
+  --quick: 120ms;
+}
+@media (prefers-color-scheme: light) {
+  :root {
+    color-scheme: light;
+    --ground: #faf6f2;
+    --raised: #ffffff;
+    --line: #e7ddd9;
+    --text: #201a22;
+    --quiet: #655a6b;
+    --aubergine: #6b2f66;
+    --deep: #ead9e8;
+    --amber: #a3620a;
+    --green: #2c7a3a;
+  }
+}
+@media (max-width: 640px) {
+  :root { --section: 64px; }
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--text);
+  font: 400 var(--step-0)/1.65 var(--face-text);
+  -webkit-font-smoothing: antialiased;
+  overflow-wrap: break-word;
+}
+img { max-width: 100%; height: auto; display: block; }
+a { color: var(--aubergine); text-underline-offset: 0.2em; text-decoration-thickness: 1px; transition: color var(--quick), text-decoration-color var(--quick); }
+a:hover { text-decoration-thickness: 2px; }
+:focus-visible { outline: 2px solid var(--aubergine); outline-offset: 3px; border-radius: 4px; }
+main:focus { outline: none; }
+code { font-family: var(--face-mono); font-size: 0.88em; overflow-wrap: anywhere; }
+:not(pre) > code { direction: ltr; unicode-bidi: isolate; padding: 0.05em 0.35em; border: 1px solid var(--line); border-radius: 5px; background: var(--raised); }
+strong { font-weight: 650; }
+
+h1, h2, h3 {
+  font-family: var(--face-head);
+  font-weight: 750;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  margin: 0;
+  text-wrap: balance;
+}
+h1 { font-size: clamp(var(--step-3), 6vw, var(--step-5)); }
+h2 { font-size: clamp(var(--step-2), 4vw, var(--step-3)); }
+h3 { font-size: var(--step-1); letter-spacing: -0.01em; line-height: 1.25; }
+p { margin: 0; }
+
+.wrap { max-width: var(--column); margin-inline: auto; padding-inline: var(--gutter); }
+.skip { position: absolute; inset-inline-start: var(--gutter); inset-block-start: -100px; padding: 8px 12px; background: var(--raised); border: 1px solid var(--line); border-radius: var(--corner); z-index: 2; }
+.skip:focus { inset-block-start: 8px; }
+
+/* The top bar: the mark, the pages, the languages. */
+.top { border-block-end: 1px solid var(--line); }
+.top-in { display: flex; align-items: center; gap: 24px; min-height: 64px; }
+.mark { display: inline-flex; align-items: center; gap: 10px; color: var(--text); text-decoration: none; font-family: var(--face-head); font-weight: 750; font-size: var(--step-1); letter-spacing: -0.02em; margin-inline-end: auto; }
+.mark img { width: 28px; height: 28px; }
+.nav ul { display: flex; gap: 4px; list-style: none; margin: 0; padding: 0; }
+.nav a { display: block; padding: 6px 10px; border-radius: 8px; color: var(--quiet); text-decoration: none; font-size: 0.94rem; transition: color var(--quick), background-color var(--quick); }
+.nav a:hover, .nav a[aria-current="page"] { color: var(--text); }
+.nav a[aria-current="page"] { background: var(--raised); }
+.menu { position: relative; }
+.menu summary { list-style: none; cursor: pointer; white-space: nowrap; padding: 6px 12px; border: 1px solid var(--line); border-radius: 8px; color: var(--text); font-size: 0.94rem; transition: background-color var(--quick); }
+.menu summary::-webkit-details-marker { display: none; }
+.menu summary::after { content: ""; display: inline-block; margin-inline-start: 8px; width: 6px; height: 6px; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: translateY(-3px) rotate(45deg); }
+/* The chevron is drawn with physical borders, so that it points down in both directions. */
+.menu summary:hover, .menu[open] summary { background: var(--raised); }
+.menu-list { position: absolute; inset-inline-end: 0; inset-block-start: calc(100% + 6px); z-index: 3; min-width: 13rem; list-style: none; margin: 0; padding: 6px; background: var(--raised); border: 1px solid var(--line); border-radius: var(--corner); box-shadow: 0 16px 40px -16px rgb(0 0 0 / 0.5); }
+.menu-list a { display: block; padding: 8px 12px; border-radius: 6px; color: var(--text); text-decoration: none; }
+.menu-list a:hover { background: var(--line); }
+.menu-list a[aria-current] { color: var(--aubergine); }
+.pages { display: none; }
+/* The language button says the language's name; on a phone, its short code (the name stays its accessible name and is in the menu). */
+.lang-short { display: none; }
+@media (max-width: 900px) {
+  .nav { display: none; }
+  .pages { display: block; }
+}
+@media (max-width: 640px) {
+  .top-in { gap: 12px; }
+  .lang-long { display: none; }
+  .lang-short { display: inline; }
+}
+.translated { padding-block: 16px 0; display: grid; gap: 6px; }
+
+/* Sections and the words in them. */
+main { display: block; padding-block-end: var(--section); }
+.section { padding-block-start: var(--section); }
+.section > .wrap > h2 { max-width: 24ch; }
+.intro { margin-block-start: 16px; max-width: var(--measure); color: var(--quiet); font-size: var(--step-0); }
+.prose { max-width: var(--measure); }
+.prose > * + * { margin-block-start: 1em; }
+.prose h2 { margin-block-start: 2.2em; }
+.prose > h2:first-child, .prose > .note:first-child { margin-block-start: 0; }
+.rows + .prose > h2:first-child { margin-block-start: 2.2em; }
+.prose h3 { margin-block-start: 1.8em; }
+.prose ul, .prose ol { padding-inline-start: 1.3em; }
+.prose li + li { margin-block-start: 0.4em; }
+.prose li > pre { margin-block: 0.6em; }
+.lead { font-size: var(--step-1); line-height: 1.5; color: var(--text); max-width: 34em; }
+.page-head { padding-block: 56px 8px; }
+.page-head h1 { max-width: 20ch; margin-block-start: 12px; }
+.page-head .lead { margin-block-start: 20px; }
+.page-body { padding-block: 32px 0; }
+.crumbs { font-size: var(--step--1); color: var(--quiet); }
+.crumbs a { color: var(--quiet); }
+.crumbs ol { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; margin: 0; padding: 0; }
+.crumbs li + li::before { content: "/"; margin-inline-end: 6px; }
+.kicker { font-size: var(--step--1); color: var(--quiet); letter-spacing: 0.02em; }
+
+/* The note: a quiet line with a rule at its start edge. */
+.note { color: var(--quiet); font-size: 0.94rem; border-inline-start: 2px solid var(--line); padding-inline-start: 14px; max-width: var(--measure); }
+.prose .note { margin-block: 1.4em; }
+
+/* The command: a line of monospace with a button that copies it. */
+.cmd { display: flex; align-items: center; gap: 8px; max-width: 100%; margin: 0; padding-block: 6px; padding-inline: 16px 6px; background: var(--raised); border: 1px solid var(--line); border-radius: var(--corner); font-family: var(--face-mono); font-size: 0.9rem; }
+.cmd code { direction: ltr; text-align: left; flex: 1; min-width: 0; padding: 6px 0; border: 0; background: none; font-size: 1em; white-space: pre; overflow-x: auto; overflow-wrap: normal; color: var(--text); }
+.cmd code::before { content: "$ "; color: var(--green); }
+.cmd.multi code::before { content: none; }
+.cmd.multi { align-items: flex-start; }
+.cmd .copy { flex: none; }
+.cmds { display: grid; gap: 10px; }
+
+/* Buttons and links that look like them. */
+.button, .copy {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 40px; padding: 0 18px; border-radius: 999px; border: 1px solid var(--line);
+  background: transparent; color: var(--text); font: 600 0.94rem/1 var(--face-text); text-decoration: none; cursor: pointer;
+  transition: background-color var(--quick), border-color var(--quick);
+}
+.button:hover, .copy:hover { background: var(--raised); border-color: var(--quiet); }
+.button.primary { background: var(--deep); border-color: var(--deep); }
+.button.primary:hover { border-color: var(--aubergine); }
+.copy { min-height: 32px; padding: 0 12px; font-size: var(--step--1); font-family: var(--face-text); }
+.actions { display: flex; flex-wrap: wrap; gap: 10px; }
+
+/* The hero: words at the start edge, the canvas beside them. */
+.hero { padding-block: 72px 0; }
+.hero-in { display: grid; gap: 48px; align-items: center; }
+.hero-in > * { min-width: 0; }
+.hero h1 { font-size: clamp(var(--step-4), 6.4vw, 4.05rem); line-height: 1.04; letter-spacing: -0.03em; max-width: 13ch; }
+.hero h1 em { font-style: normal; color: var(--amber); }
+.hero .lead { margin-block-start: 24px; }
+.hero .cmd { margin-block-start: 28px; max-width: 30rem; }
+.hero .actions { margin-block-start: 20px; }
+.hero .kicker { margin-block-end: 20px; }
+.hero .after { margin-block-start: 14px; font-size: var(--step--1); color: var(--quiet); }
+@media (min-width: 1000px) {
+  .hero-in { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 48px; }
+}
+
+/* The canvas: a field of dots with terminals placed on it. */
+.canvas { margin: 0; }
+.canvas-field {
+  position: relative; padding: 18px; border-radius: 16px; border: 1px solid var(--line);
+  background: radial-gradient(circle, var(--line) 1.2px, transparent 1.6px) 0 0 / 22px 22px, var(--ground);
+  display: grid; gap: 14px;
+}
+.canvas figcaption { margin-block-start: 12px; font-size: var(--step--1); color: var(--quiet); }
+@media (min-width: 560px) {
+  .canvas-field { grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 18px 16px; padding: 24px 22px 30px; }
+  .term-1 { grid-column: 1 / 7; }
+  .term-2 { grid-column: 7 / 13; margin-block-start: 44px; margin-inline-start: 8px; }
+  .term-3 { grid-column: 2 / 7; }
+  .term-4 { grid-column: 7 / 13; margin-block-start: 26px; margin-inline-end: 14px; }
+  .term-5 { grid-column: 4 / 10; margin-block-start: -4px; }
+}
+@media (max-width: 559px) {
+  .term:nth-child(even) { margin-inline-start: 22px; }
+  .term:nth-child(odd) { margin-inline-end: 22px; }
+}
+
+/* The terminal: a title with a state, a few lines. */
+.term { position: relative; background: var(--raised); border: 1px solid var(--line); border-radius: var(--corner); overflow: hidden; box-shadow: 0 18px 40px -24px rgb(0 0 0 / 0.6); align-self: start; }
+.term-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 10px; padding: 7px 12px; border-block-end: 1px solid var(--line); font-size: 0.8rem; }
+.term-name { direction: ltr; unicode-bidi: isolate; font-family: var(--face-mono); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: clip; min-width: 0; }
+.term-state { margin-inline-start: auto; display: inline-flex; align-items: center; gap: 6px; color: var(--quiet); white-space: nowrap; }
+.term-state::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--quiet); }
+.term pre { direction: ltr; text-align: left; margin: 0; padding: 10px 12px 12px; font: 0.74rem/1.6 var(--face-mono); color: var(--quiet); white-space: pre-wrap; overflow-wrap: anywhere; }
+.term pre b { font-weight: 400; color: var(--green); }
+.term pre i { font-style: normal; color: var(--text); }
+.term.working .term-state { color: var(--text); }
+.term.working .term-state::before { background: var(--aubergine); }
+.term.done .term-state { color: var(--green); }
+.term.done .term-state::before { background: var(--green); }
+/* Amber means waiting for you, and is used for nothing else. */
+.term.waits { border-color: var(--amber); }
+.term.waits .term-bar { border-block-end-color: color-mix(in srgb, var(--amber) 45%, var(--line)); }
+.term.waits .term-state { color: var(--amber); }
+.term.waits .term-state::before { background: var(--amber); animation: breathe 3.2s ease-in-out infinite; }
+.term.waits pre i { color: var(--amber); }
+@keyframes breathe { 50% { opacity: 0.35; transform: scale(0.8); } }
+
+/* The picture: a real capture, in a frame, with one sentence under it. */
+.pic { margin: 0; }
+.pic a { display: block; border-radius: var(--corner); }
+.pic img { width: 100%; border: 1px solid var(--line); border-radius: var(--corner); background: var(--raised); }
+.pic figcaption { margin-block-start: 12px; color: var(--quiet); font-size: 0.94rem; max-width: var(--measure); }
+.shows { display: grid; gap: 64px; margin-block-start: 48px; }
+.show { display: grid; gap: 20px; align-items: center; }
+.show h3 { font-size: var(--step-2); max-width: 16ch; }
+.show p { margin-block-start: 12px; color: var(--quiet); max-width: 30em; }
+@media (min-width: 900px) {
+  .show { grid-template-columns: minmax(0, 4fr) minmax(0, 7fr); gap: 48px; }
+  .show:nth-child(even) { grid-template-columns: minmax(0, 7fr) minmax(0, 4fr); }
+  .show:nth-child(even) > :first-child { order: 2; }
+}
+.prose .pic { margin-block: 2em; max-width: 640px; }
+
+/* The row: a name and one sentence, no box. */
+.rows { list-style: none; margin: 32px 0 0; padding: 0; border-block-start: 1px solid var(--line); }
+.rows > li { display: grid; gap: 4px 32px; padding-block: 18px; border-block-end: 1px solid var(--line); }
+.rows h2, .rows h3 { font-size: var(--step-0); font-family: var(--face-text); font-weight: 650; letter-spacing: 0; line-height: 1.65; }
+.rows p { color: var(--quiet); max-width: var(--measure); }
+.rows a.row-link { font-weight: 600; text-decoration: none; }
+.rows a.row-link:hover { text-decoration: underline; }
+@media (min-width: 760px) {
+  .rows > li { grid-template-columns: 17rem minmax(0, 1fr); }
+}
+
+/* Steps of an install. */
+.steps { list-style: none; counter-reset: step; margin: 32px 0 0; padding: 0; display: grid; gap: 28px; }
+.steps > li { counter-increment: step; display: grid; grid-template-columns: 2.4rem minmax(0, 1fr); gap: 4px 16px; }
+.steps > li::before { content: counter(step); grid-row: 1 / span 3; font-family: var(--face-head); font-weight: 750; font-size: var(--step-2); line-height: 1; color: var(--aubergine); }
+.steps h3 { font-size: var(--step-1); }
+.steps p { color: var(--quiet); max-width: var(--measure); }
+.steps .cmd { margin-block-start: 6px; max-width: 34rem; }
+
+/* Questions. */
+.questions { margin-block-start: 28px; border-block-start: 1px solid var(--line); max-width: 52rem; }
+.questions details { border-block-end: 1px solid var(--line); }
+.questions summary { cursor: pointer; padding-block: 16px; font-weight: 650; list-style: none; display: flex; gap: 12px; justify-content: space-between; }
+.questions summary::-webkit-details-marker { display: none; }
+.questions summary::after { content: "+"; color: var(--quiet); font-weight: 400; flex: none; }
+.questions details[open] summary::after { content: "−"; }
+.questions details > p { padding-block-end: 18px; color: var(--quiet); max-width: var(--measure); }
+.more-link { margin-block-start: 20px; }
+.section > .wrap > h2 + .note { margin-block-start: 16px; }
+
+/* Tables and blocks of commands on the subject pages. */
+.prose pre { direction: ltr; text-align: left; margin: 0; padding: 12px 16px; background: var(--raised); border: 1px solid var(--line); border-radius: var(--corner); font: 0.86rem/1.6 var(--face-mono); overflow-x: auto; }
+.prose pre code { font-size: 1em; overflow-wrap: normal; }
+.table { overflow-x: auto; }
+.prose table { border-collapse: collapse; width: 100%; font-size: 0.94rem; }
+.prose th, .prose td { text-align: start; vertical-align: top; padding: 10px 12px; border-block-end: 1px solid var(--line); }
+.prose th { font-weight: 650; color: var(--quiet); }
+
+/* Lists of planned things (the roadmap). */
+.planned { list-style: none; margin: 20px 0 0; padding: 0; border-block-start: 1px dashed var(--line); }
+.planned > li { display: grid; gap: 4px 32px; padding-block: 16px; border-block-end: 1px dashed var(--line); }
+.planned h3 { font-size: var(--step-0); font-family: var(--face-text); font-weight: 650; letter-spacing: 0; line-height: 1.65; }
+.planned p { color: var(--quiet); }
+@media (min-width: 760px) { .planned > li { grid-template-columns: 17rem minmax(0, 1fr); } }
+.also { margin-block-start: 16px; color: var(--quiet); font-size: 0.94rem; }
+.tag { display: inline-block; font-size: var(--step--1); color: var(--aubergine); border: 1px dashed var(--aubergine); border-radius: 999px; padding: 1px 10px; }
+
+/* The foot of every page. */
+.foot { border-block-start: 1px solid var(--line); padding-block: 32px 48px; font-size: 0.94rem; color: var(--quiet); }
+.foot-in { display: grid; gap: 16px; }
+.foot-links { display: flex; flex-wrap: wrap; gap: 6px 18px; list-style: none; margin: 0; padding: 0; }
+.foot-links a { color: var(--quiet); }
+.foot-links a:hover, .foot-links a[aria-current] { color: var(--text); }
+.foot-line a { color: var(--quiet); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+
+/* The roadmap: groups of planned things. */
+.roadmap > h2 { margin-block-start: 64px; }
+.roadmap > h2:first-child { margin-block-start: 16px; }
+.roadmap > .intro { margin-block-start: 8px; }
+.roadmap > .note { margin-block-start: 56px; }
+
+/* Scripts the heading face has no letters for fall to the system's sans at the same weight (the stack in --face-head);
+   they get looser leading and no negative letter-spacing, which would pull Arabic apart and crowd CJK and Indic letters. */
+:is(h1, h2, h3):is(:lang(ja), :lang(zh), :lang(ko), :lang(hi), :lang(bn), :lang(ar)) { letter-spacing: 0; }
+:is(h1, h2, h3):is(:lang(ja), :lang(zh), :lang(ko)) { line-height: 1.4; }
+:is(h1, h2, h3):is(:lang(hi), :lang(bn)) { line-height: 1.5; }
+:is(h1, h2, h3):lang(ar) { line-height: 1.45; }
+.hero h1:is(:lang(ja), :lang(zh), :lang(ko)) { line-height: 1.3; }
+.hero h1:is(:lang(hi), :lang(bn), :lang(ar)) { line-height: 1.3; }
+/* A "ch" is half a CJK letter: the measures of headings are given in letters there instead. */
+:is(h1, h2, h3):lang(ja) { word-break: auto-phrase; }
+.hero h1:is(:lang(ja), :lang(zh), :lang(ko)) { font-size: clamp(var(--step-3), 5vw, var(--step-5)); max-width: 9em; }
+.section > .wrap > h2:is(:lang(ja), :lang(zh), :lang(ko)) { max-width: 16em; }
+.page-head h1:is(:lang(ja), :lang(zh), :lang(ko)) { max-width: 14em; }
+.show h3:is(:lang(ja), :lang(zh), :lang(ko)) { max-width: 10em; }
+
+/* Korean breaks between words, not inside them. */
+:lang(ko) { word-break: keep-all; overflow-wrap: anywhere; }
+
+/* Commands and code read left to right on a right-to-left page. */
+pre, .cmd code { direction: ltr; unicode-bidi: isolate; }

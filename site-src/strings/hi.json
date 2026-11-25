@@ -1,0 +1,2218 @@
+{
+  "site.skip": {
+    "text": "पेज पर जाएँ",
+    "from": "c1da0f1587b7"
+  },
+  "site.nav.label": {
+    "text": "पेज",
+    "from": "9046da16aea9"
+  },
+  "site.nav.claude": {
+    "text": "Claude Code",
+    "from": "246ef8c1130d"
+  },
+  "site.nav.codex": {
+    "text": "Codex",
+    "from": "616efbe96852"
+  },
+  "site.nav.install": {
+    "text": "इंस्टॉल",
+    "from": "569ca49f4aaf"
+  },
+  "site.nav.guides": {
+    "text": "गाइड",
+    "from": "572cd72feb9a"
+  },
+  "site.nav.security": {
+    "text": "सुरक्षा",
+    "from": "8f6fb4eb7f42"
+  },
+  "site.nav.faq": {
+    "text": "सवाल-जवाब",
+    "from": "dbc468a14b60"
+  },
+  "site.menu": {
+    "text": "मेन्यू",
+    "from": "99af6606ff9d"
+  },
+  "site.languages.label": {
+    "text": "भाषा",
+    "from": "a4fe65264ef7"
+  },
+  "site.crumbs": {
+    "text": "आप कहाँ हैं",
+    "from": "54cd982fb2dd"
+  },
+  "site.copy": {
+    "text": "कॉपी करें",
+    "from": "e21f935f11d7"
+  },
+  "site.copied": {
+    "text": "कॉपी हो गया",
+    "from": "8d525e5f158b"
+  },
+  "site.og.alt": {
+    "text": "Aubergine: टर्मिनलों का एक कैनवस, एक काम में लगा हुआ और एक आपका इंतज़ार करता हुआ",
+    "from": "25b02deb2ff8"
+  },
+  "site.translated.app": {
+    "text": "Aubergine खुद अंग्रेज़ी में है: उसके बटन, मेन्यू और तस्वीरें अंग्रेज़ी वाली ही हैं।",
+    "from": "a81916766b4d"
+  },
+  "site.translated.machine": {
+    "text": "इस पेज का अंग्रेज़ी से अनुवाद मशीन ने किया है। <a href=\"https://github.com/thirstyeggplant/aubergine/issues\">सुधार भेजें</a>।",
+    "from": "e0f116b75aa8"
+  },
+  "site.foot.label": {
+    "text": "सभी पेज",
+    "from": "b879e5a49e14"
+  },
+  "site.foot.home": {
+    "text": "होम",
+    "from": "3a78695388b3"
+  },
+  "site.foot.claude": {
+    "text": "Claude Code",
+    "from": "246ef8c1130d"
+  },
+  "site.foot.codex": {
+    "text": "Codex और ChatGPT",
+    "from": "38c13bed7dca"
+  },
+  "site.foot.install": {
+    "text": "इंस्टॉल",
+    "from": "569ca49f4aaf"
+  },
+  "site.foot.guides": {
+    "text": "गाइड",
+    "from": "572cd72feb9a"
+  },
+  "site.foot.several": {
+    "text": "कई एजेंट चलाएँ",
+    "from": "8b0dc326e0f4"
+  },
+  "site.foot.copies": {
+    "text": "वर्किंग कॉपी",
+    "from": "9660dc116131"
+  },
+  "site.foot.queue": {
+    "text": "क्यू और शेड्यूल",
+    "from": "403b3a701d15"
+  },
+  "site.foot.security": {
+    "text": "सुरक्षा",
+    "from": "8f6fb4eb7f42"
+  },
+  "site.foot.roadmap": {
+    "text": "रोडमैप",
+    "from": "92375f997ffe"
+  },
+  "site.foot.faq": {
+    "text": "सवाल-जवाब",
+    "from": "dbc468a14b60"
+  },
+  "site.foot.license": {
+    "text": "Aubergine मुफ़्त और ओपन सोर्स है, <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE\">MIT लाइसेंस</a> के तहत, और आपके अपने कंप्यूटर पर चलता है।",
+    "from": "21c2472673d7"
+  },
+  "home.meta.title": {
+    "text": "Aubergine: आपके सारे टर्मिनल एक कैनवस पर, उन्हीं एजेंटों के साथ जो आप पहले से इस्तेमाल करते हैं",
+    "from": "620bab21c0b6"
+  },
+  "home.meta.description": {
+    "text": "Aubergine आपके सारे टर्मिनल आपके ब्राउज़र में एक कैनवस पर साथ-साथ रखता है। जितने चाहें उतने चलाएँ, उन्हीं एजेंटों और मॉडलों के साथ जो आप पहले से इस्तेमाल करते हैं, और देखें कि किसे आपकी ज़रूरत है। मुफ़्त, लोकल, ओपन सोर्स।",
+    "from": "71a14cde3a05"
+  },
+  "home.ld.category": {
+    "text": "टर्मिनल मल्टीप्लेक्सर और एजेंट वर्कस्पेस",
+    "from": "d32b7b10eecd"
+  },
+  "home.ld.requires": {
+    "text": "tmux 3.2 या नया, Node.js 22 या नया",
+    "from": "6fadbd03c20d"
+  },
+  "home.hero.kicker": {
+    "text": "मुफ़्त · ओपन सोर्स · आपके कंप्यूटर पर चलता है",
+    "from": "28742c2f94e7"
+  },
+  "home.hero.title": {
+    "text": "आपके सारे टर्मिनल, साथ-साथ। देखें किस एजेंट को <em>आपकी ज़रूरत है</em>।",
+    "from": "7be0ec221ba9"
+  },
+  "home.hero.lead": {
+    "text": "Aubergine आपके सारे टर्मिनल आपके ब्राउज़र में एक कैनवस पर साथ-साथ रखता है। जितने चाहें उतने चलाएँ, उन्हीं एजेंटों और मॉडलों के साथ जो आप पहले से इस्तेमाल करते हैं। इसका अपना कोई मॉडल नहीं है और यह कभी कोई key नहीं माँगता।",
+    "from": "c8c8b75e9e20"
+  },
+  "home.hero.after": {
+    "text": "फिर <code>aubergine start --open</code>। macOS के लिए, tmux 3.2 या नए और Node.js 22 या नए के साथ।",
+    "from": "bed0cbea0b2d"
+  },
+  "home.hero.install": {
+    "text": "इंस्टॉल करें",
+    "from": "569ca49f4aaf"
+  },
+  "home.hero.source": {
+    "text": "सोर्स पढ़ें",
+    "from": "625b22ba31d0"
+  },
+  "home.canvas.caption": {
+    "text": "यह एक चित्र है, कैप्चर नहीं: कैनवस पर पाँच टर्मिनल, और वह एक जो आपका इंतज़ार कर रहा है।",
+    "from": "413e282f8a9d"
+  },
+  "home.see.title": {
+    "text": "यह दिखता कैसा है",
+    "from": "9a5d81b4a5f3"
+  },
+  "home.see.intro": {
+    "text": "Aubergine के साथ आने वाले डेमो के असली कैप्चर: नकली एजेंट, असली नहीं।",
+    "from": "61f7034f8117"
+  },
+  "home.see.canvas.claim": {
+    "text": "हर टर्मिनल एक कैनवस पर",
+    "from": "51af5aa39147"
+  },
+  "home.see.canvas.text": {
+    "text": "जितने चाहें उतने, साथ-साथ, और हर एक तब तक लाइव जब तक वह दिख रहा है।",
+    "from": "e5c7903b1535"
+  },
+  "home.see.canvas.caption": {
+    "text": "सूची बताती है कि हर टर्मिनल क्या कर रहा है; उसके बगल में खुद टर्मिनल हैं।",
+    "from": "40d3143df913"
+  },
+  "home.see.canvas.alt": {
+    "text": "साइड पैनल जिसमें पाँच टर्मिनल अपनी स्थिति के शब्दों के साथ हैं (working, waiting for you, finished, parked), और बगल में कैनवस का एक हिस्सा जिसमें एक लाइव शेल है।",
+    "from": "2bb1af139cbc"
+  },
+  "home.see.waits.claim": {
+    "text": "जो इंतज़ार कर रहा है, वह अलग दिखता है",
+    "from": "7d5fd4d29cc6"
+  },
+  "home.see.waits.text": {
+    "text": "जब किसी एजेंट को आपकी ज़रूरत होती है, तो आप उसे कैनवस के दूसरे छोर से भी देख लेते हैं, और <code>W</code> आपको वहाँ ले जाता है।",
+    "from": "d1db837c4eb1"
+  },
+  "home.see.waits.caption": {
+    "text": "उसकी लाइन इंतज़ार के रंग की हो जाती है, और उसके टाइटल में waiting for you लिखा आता है।",
+    "from": "56be14801975"
+  },
+  "home.see.waits.alt": {
+    "text": "एक टर्मिनल जिसका एजेंट सवाल पूछ रहा है, उसके टाइटल में waiting for you लिखा है, उसकी लाइन इंतज़ार के रंग में है।",
+    "from": "90d945c1648c"
+  },
+  "home.see.focus.claim": {
+    "text": "एक टर्मिनल अकेले",
+    "from": "0ddd4013565e"
+  },
+  "home.see.focus.text": {
+    "text": "किसी भी टर्मिनल को उसके अपने ब्राउज़र टैब में खोलें, वही टर्मिनल, कॉपी नहीं।",
+    "from": "ba54fa6c02df"
+  },
+  "home.see.focus.caption": {
+    "text": "आप माँगें तो उसकी जानकारी और उसका नोट उसके बगल में खुलते हैं, और अपने बटनों से फिर बंद हो जाते हैं।",
+    "from": "95b86a5cd8de"
+  },
+  "home.see.focus.alt": {
+    "text": "एक ब्राउज़र टैब में अकेला एक टर्मिनल: ऊपर उसका नाम, उसकी जानकारी जिसमें उसका वर्कफ़्लो स्टेप, फ़ोल्डर और फ़ील्ड हैं, और उनके बगल में लाइव टर्मिनल।",
+    "from": "3b3df705e912"
+  },
+  "home.agents.title": {
+    "text": "अपना एजेंट खुद लाएँ",
+    "from": "053237049eea"
+  },
+  "home.agents.intro": {
+    "text": "Aubergine साधारण टर्मिनल चलाता है। यह किसी मॉडल को कॉल नहीं करता, कोई key नहीं रखता और इसमें कोई अकाउंट नहीं है: कमांड-लाइन एजेंट जो आप पहले से इस्तेमाल करते हैं, आपके नाम से साइन इन किए हुए, इसके टर्मिनलों में उसी मॉडल के साथ चलते हैं जो आपने उनके लिए चुना है। Aubergine किसी एजेंट के लिए खुद से जो करता है, वह आज Claude Code के लिए बना है; कोई भी दूसरा एजेंट वही बातें <code>aubergine</code> कमांड से बता सकता है।",
+    "from": "9e12708b9129"
+  },
+  "home.agents.claude": {
+    "text": "इसे New terminal मेन्यू से शुरू करें, और यह खुद बताता है कि कब काम कर रहा है, कब आपका इंतज़ार कर रहा है या कब पूरा हुआ; Aubergine इसकी बातचीत फिर से शुरू कर सकता है और दिखा सकता है कि यह कैसे सेट अप है।",
+    "from": "493938fd27d5"
+  },
+  "home.agents.codex.name": {
+    "text": "Codex और ChatGPT",
+    "from": "38c13bed7dca"
+  },
+  "home.agents.codex": {
+    "text": "Codex किसी भी प्रोग्राम की तरह टर्मिनल में चलता है, और जब उसके निर्देश उसे कहें, तब <code>aubergine</code> कमांड से रिपोर्ट करता है। ब्राउज़र में ChatGPT कोई टर्मिनल प्रोग्राम नहीं है।",
+    "from": "57da92f4d853"
+  },
+  "home.agents.other.name": {
+    "text": "कोई भी दूसरा कमांड-लाइन एजेंट, या सादा शेल",
+    "from": "ee656f2d4bf2"
+  },
+  "home.agents.other": {
+    "text": "हर टर्मिनल में <code>aubergine</code> कमांड है, और <code>aubergine guide --snippet</code> आपके एजेंट के अपने निर्देशों के लिए पाँच लाइनें प्रिंट करता है।",
+    "from": "bd4153cd9ede"
+  },
+  "home.built.title": {
+    "text": "और क्या बना हुआ है",
+    "from": "67ca3d0bd3e6"
+  },
+  "home.built.intro": {
+    "text": "यह सब आज आपके कंप्यूटर पर चलता है।",
+    "from": "e6025b6fd725"
+  },
+  "home.built.canvas.name": {
+    "text": "टर्मिनलों का एक कैनवस",
+    "from": "efed05a9a763"
+  },
+  "home.built.canvas.text": {
+    "text": "असली टर्मिनलों को खिसकाएँ, ज़ूम करें और सजाएँ, टाइप करने के लिए एक बार क्लिक करें, किसी को पार्क करके बाद में वापस लाएँ, या किसी को उसकी जानकारी और नोट के साथ अकेले ब्राउज़र टैब में खोलें।",
+    "from": "062fb655d54f"
+  },
+  "home.built.waiting.name": {
+    "text": "देखें कौन इंतज़ार कर रहा है",
+    "from": "a8dd066ebe3d"
+  },
+  "home.built.waiting.text": {
+    "text": "हर टर्मिनल पर busy, idle या waiting for you, और “For you” सूची और “next waiting” आपको सीधे वहाँ ले जाते हैं जहाँ किसी इंसान की ज़रूरत है।",
+    "from": "d2f2b06c77b4"
+  },
+  "home.built.queue.name": {
+    "text": "क्यू और शेड्यूल",
+    "from": "403b3a701d15"
+  },
+  "home.built.queue.text": {
+    "text": "एक टास्क एक बार लिखें और किसी खाली एजेंट को उसे लेने दें, या उसे दिन के किसी समय पर, अपने चुने हुए दिनों में, शेड्यूल करें।",
+    "from": "ca6521d877a6"
+  },
+  "home.built.copies.name": {
+    "text": "वर्किंग कॉपी",
+    "from": "9660dc116131"
+  },
+  "home.built.copies.text": {
+    "text": "हर एजेंट को रिपॉज़िटरी की उसकी अपनी कॉपी, उसकी अपनी ब्रांच पर दें, ताकि दो एजेंट कभी एक ही फ़ाइलें न बदलें।",
+    "from": "4230039c27f0"
+  },
+  "home.built.projects.name": {
+    "text": "प्रोजेक्ट",
+    "from": "04e2a9728af7"
+  },
+  "home.built.projects.text": {
+    "text": "एक सर्वर, कई कंट्रोल रूम: हर प्रोजेक्ट के अपने कैनवस, क्यू, शेड्यूल और नियम होते हैं, और उसे फ़ाइल या टेम्पलेट के रूप में सेव किया जा सकता है।",
+    "from": "e0961f503387"
+  },
+  "home.built.workflows.name": {
+    "text": "वर्कफ़्लो और मंज़ूरी",
+    "from": "cefa6bb93441"
+  },
+  "home.built.workflows.text": {
+    "text": "एजेंट को पालन करने के लिए स्टेप दें, ऐसे स्टेप पर रुकें जो किसी इंसान का इंतज़ार करता है, और हर चल रहे रन को एक बोर्ड पर देखें।",
+    "from": "7b456d89fd1e"
+  },
+  "home.built.messages.name": {
+    "text": "टर्मिनलों के बीच संदेश",
+    "from": "48b5af2c48ad"
+  },
+  "home.built.messages.text": {
+    "text": "एजेंटों को आपस में बात करने दें, नाम वाले भेजने वालों, सीमाओं और विरामों के साथ; हर कैनवस के लिए यह डिफ़ॉल्ट रूप से बंद है।",
+    "from": "785ee3f85615"
+  },
+  "home.built.api.name": {
+    "text": "API और MCP सर्वर",
+    "from": "1a84834881e1"
+  },
+  "home.built.api.text": {
+    "text": "स्कोप वाले टोकन के साथ एक लोकल HTTP API, एक टाइप्ड क्लाइंट, और एक MCP सर्वर जो सिर्फ़ वही टूल दिखाता है जिन्हें कोई क्रेडेंशियल इस्तेमाल कर सकता है।",
+    "from": "f9999af55d29"
+  },
+  "home.built.cli.name": {
+    "text": "एक कमांड लाइन",
+    "from": "f8709772ea07"
+  },
+  "home.built.cli.text": {
+    "text": "<code>aubergine</code> कमांड मशीन के किसी भी टर्मिनल से टर्मिनल शुरू करता है, टास्क क्यू में डालता है, शेड्यूल सेट करता है, बोर्ड पढ़ता है और रन को मंज़ूरी देता है।",
+    "from": "7c132e9877d8"
+  },
+  "home.built.recaps.name": {
+    "text": "रीकैप और इतिहास",
+    "from": "2ea7a47cfa76"
+  },
+  "home.built.recaps.text": {
+    "text": "देखें कि आपके न रहते क्या बदला, टर्मिनल के आउटपुट में खोजें, और पैलेट से पुरानी बातचीत फिर खोलें।",
+    "from": "1a640de790ee"
+  },
+  "home.trust.title": {
+    "text": "आपके टर्मिनल आपके ही रहते हैं",
+    "from": "c6f11f794209"
+  },
+  "home.trust.local.name": {
+    "text": "सिर्फ़ लोकल",
+    "from": "c905013aab29"
+  },
+  "home.trust.local.text": {
+    "text": "सर्वर 127.0.0.1 पर सुनता है और हर अनुरोध का Host और Origin जाँचता है; किसी दूसरे डिवाइस से इस्तेमाल तब तक बंद रहता है जब तक आप उसे सेट अप न करें।",
+    "from": "cd7a0d902e0f"
+  },
+  "home.trust.outlive.name": {
+    "text": "ऐप बंद हो, टर्मिनल चलते रहें",
+    "from": "2c75df8acfc1"
+  },
+  "home.trust.outlive.text": {
+    "text": "हर टर्मिनल एक tmux सेशन है: ब्राउज़र बंद करें या Aubergine को रीस्टार्ट करें, आपका काम चलता रहता है।",
+    "from": "f913c3351663"
+  },
+  "home.trust.nomodel.name": {
+    "text": "न मॉडल, न key",
+    "from": "2f070717231f"
+  },
+  "home.trust.nomodel.text": {
+    "text": "Aubergine न कोई मॉडल चुनता है, न उसे कॉल करता है, और न उसके लिए कोई key रखता है; आपके एजेंट अपना लाते हैं।",
+    "from": "fe25a0ed6b54"
+  },
+  "home.trust.decide.name": {
+    "text": "फ़ैसला आपका",
+    "from": "6a93d45962ec"
+  },
+  "home.trust.decide.text": {
+    "text": "टोकन स्कोप वाले होते हैं, एजेंट जो लिखते हैं वह आपकी समीक्षा का इंतज़ार करता है, और मंज़ूरी कोई इंसान देता है।",
+    "from": "7e1645184727"
+  },
+  "home.trust.more": {
+    "text": "क्या सुरक्षित है, और क्या नहीं",
+    "from": "f0da10ecfe7d"
+  },
+  "home.install.title": {
+    "text": "पाँच मिनट में तैयार",
+    "from": "ade3bbf9af01"
+  },
+  "home.install.intro": {
+    "text": "आपको macOS चाहिए, tmux 3.2 या नए और Node.js 22 या नए के साथ। <code>brew install tmux node</code> दोनों ले आता है।",
+    "from": "fabf8314c9cb"
+  },
+  "home.install.s1.title": {
+    "text": "इंस्टॉल करें",
+    "from": "569ca49f4aaf"
+  },
+  "home.install.s1.text": {
+    "text": "या <a href=\"/install/\">इंस्टॉलर</a> इस्तेमाल करें, जो pnpm से सोर्स से बिल्ड करता है।",
+    "from": "506eece86d4a"
+  },
+  "home.install.s2.title": {
+    "text": "इसे शुरू करें और अपना ब्राउज़र खोलें",
+    "from": "09b350acdba9"
+  },
+  "home.install.s2.text": {
+    "text": "यह सर्वर शुरू करता है और आपका ब्राउज़र साइन इन किया हुआ खोलता है।",
+    "from": "cc6fc15c6b0d"
+  },
+  "home.install.s3.title": {
+    "text": "टूर लें",
+    "from": "a83c4366d2df"
+  },
+  "home.install.s3.text": {
+    "text": "खाली कैनवस पर <strong>Show me around</strong> पर क्लिक करें। यह नकली एजेंटों वाला एक Demo कैनवस बनाता है और आपको आठ छोटे स्टेप में घुमाता है; <code>aubergine demo --remove</code> उसे हटा देता है।",
+    "from": "b20f7c13bc30"
+  },
+  "home.install.note": {
+    "text": "इंस्टॉलर सिर्फ़ <code>~/.aubergine</code> और <code>aubergine</code> नाम का एक लिंक बदलता है। यह कभी sudo इस्तेमाल नहीं करता और कभी आपकी शेल स्टार्टअप फ़ाइलें नहीं बदलता।",
+    "from": "1b03983d93c3"
+  },
+  "home.faq.title": {
+    "text": "सवाल",
+    "from": "9a72221a2747"
+  },
+  "home.faq.what.q": {
+    "text": "Aubergine क्या है?",
+    "from": "34bffd794522"
+  },
+  "home.faq.what.a": {
+    "text": "टर्मिनल सेशनों का एक लोकल, ब्राउज़र में चलने वाला कैनवस। हर टर्मिनल एक नोड है जिसे आप सजा और इस्तेमाल कर सकते हैं, ताकि आप एक साथ कई कोडिंग एजेंट चला सकें और देख सकें कि कौन-सा आपका इंतज़ार कर रहा है।",
+    "from": "e2699684c13a"
+  },
+  "home.faq.send.q": {
+    "text": "क्या Aubergine मेरे टर्मिनल या कोड कहीं भेजता है?",
+    "from": "8e3369fd3214"
+  },
+  "home.faq.send.a": {
+    "text": "नहीं। सब कुछ आपके अपने कंप्यूटर पर चलता है। सर्वर सिर्फ़ 127.0.0.1 पर सुनता है और हर अनुरोध का Host और Origin जाँचता है।",
+    "from": "df08013e9725"
+  },
+  "home.faq.need.q": {
+    "text": "Aubergine चलाने के लिए मुझे क्या चाहिए?",
+    "from": "efe26fb96381"
+  },
+  "home.faq.need.a": {
+    "text": "macOS, tmux 3.2 या नए और Node.js 22 या नए के साथ; इंस्टॉलर को pnpm भी चाहिए। Linux पर चलना चाहिए, पर अभी तक टेस्ट नहीं हुआ है।",
+    "from": "50e15eb9d5c0"
+  },
+  "home.faq.byhand.q": {
+    "text": "अगर मैं Claude Code खुद किसी टर्मिनल में शुरू करूँ तो?",
+    "from": "e8281791e5fb"
+  },
+  "home.faq.byhand.a": {
+    "text": "यह किसी भी प्रोग्राम की तरह काम करता है: आप उसमें हमेशा की तरह टाइप करते हैं। पर Aubergine को किसी एजेंट के होने का पता तभी चलता है जब उसने एजेंट खुद शुरू किया हो (New terminal, फिर Claude Code), क्योंकि वह कुछ छोटे हुक जोड़ता है जो बताते हैं कि एजेंट क्या कर रहा है। हाथ से शुरू करने पर टर्मिनल बस <code>claude</code> चलाने में busy दिखता है: जब वह कुछ पूछता है तो उसे waiting for you नहीं दिखाया जाता, और जब आप वहाँ कोई वर्कफ़्लो शुरू करते हैं, तो उसके लिए कुछ टाइप नहीं होता। उसे खुद <code>aubergine workflow status</code> चलाने को कहें, जो अंदर से अब भी काम करता है, या एजेंट को New terminal मेन्यू से शुरू करें।",
+    "from": "23c877f7b9d5"
+  },
+  "home.faq.free.q": {
+    "text": "क्या Aubergine मुफ़्त है?",
+    "from": "ff46b785dd7f"
+  },
+  "home.faq.free.a": {
+    "text": "हाँ। यह <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE\">MIT लाइसेंस</a> के तहत मुफ़्त और ओपन सोर्स है, और इसका सोर्स GitHub पर है।",
+    "from": "30fae4a08af7"
+  },
+  "home.faq.more": {
+    "text": "सारे सवाल",
+    "from": "57bf5a60dd59"
+  },
+  "home.planned.title": {
+    "text": "क्या योजना में है",
+    "from": "e10eed0040ae"
+  },
+  "home.planned.line": {
+    "text": "मल्टीप्लेयर, क्लाउड में एजेंट, मंज़ूरी के मोड और भी बहुत कुछ योजना में हैं और बने नहीं हैं। <a href=\"/roadmap/\">रोडमैप देखें</a>।",
+    "from": "5c6d1db70932"
+  },
+  "claude.meta.title": {
+    "text": "Aubergine में Claude Code | Aubergine",
+    "from": "964ec2c2f3df"
+  },
+  "claude.meta.description": {
+    "text": "Aubergine Claude Code के लिए खुद से क्या करता है: उसे मेन्यू से शुरू करना, यह देखना कि वह कब इंतज़ार कर रहा है, बातचीत फिर से शुरू करना, पुरानी बातचीत, वह कैसे सेट अप है, और टूल।",
+    "from": "53c5a33c5a7d"
+  },
+  "claude.title": {
+    "text": "Aubergine Claude Code के लिए क्या करता है",
+    "from": "d05c8e0b3f82"
+  },
+  "claude.lead": {
+    "text": "Claude Code किसी भी प्रोग्राम की तरह Aubergine टर्मिनल में चलता है। Aubergine से शुरू करने पर वह कैनवस को यह भी बताता है कि वह क्या कर रहा है, और Aubergine उसे जानकारी दे सकता है, उसे फिर से शुरू कर सकता है और दिखा सकता है कि वह कैसे सेट अप है। यह सब कुछ है, उसी क्रम में जिसमें आप इससे मिलते हैं।",
+    "from": "48626cf950ce"
+  },
+  "claude.yours": {
+    "text": "Claude Code आप खुद इंस्टॉल करते हैं और उसमें खुद साइन इन करते हैं। Aubergine किसी मॉडल को कॉल नहीं करता और कोई key नहीं रखता: यह वही <code>claude</code> कमांड शुरू करता है जो आपके पास पहले से है।",
+    "from": "49c81d042977"
+  },
+  "claude.start.title": {
+    "text": "इसे मेन्यू से शुरू करें",
+    "from": "f2e4406e142f"
+  },
+  "claude.start.text": {
+    "text": "<strong>New terminal ▾ → Claude Code</strong>, या जब किसी टर्मिनल के पास कीबोर्ड न हो तब <code>C</code>, एक नए टर्मिनल में <code>claude</code> शुरू करता है, एक सेटिंग्स फ़ाइल के साथ जो Aubergine अपने डेटा फ़ोल्डर में लिखता है। आपकी अपनी Claude Code कॉन्फ़िगरेशन को छुआ नहीं जाता।",
+    "from": "58f4f8786edb"
+  },
+  "claude.start.command": {
+    "text": "यह जो कमांड शुरू करता है वह सेटिंग्स में <code>agents.claudeCommand</code> है, जब तक आप उसे न बदलें तब तक <code>claude</code>; Aubergine अपने फ़्लैग अंत में जोड़ता है।",
+    "from": "cadf315d3f4f"
+  },
+  "claude.start.where": {
+    "text": "कहाँ: New terminal के बगल वाला मेन्यू, टर्मिनलों की सूची में सबसे ऊपर।",
+    "from": "8535ecc3618e"
+  },
+  "claude.state.title": {
+    "text": "देखें कब यह काम करता है, इंतज़ार करता है और पूरा होता है",
+    "from": "762bb49f53ad"
+  },
+  "claude.state.text": {
+    "text": "उस सेटिंग्स फ़ाइल के हुक कैनवस को बताते हैं कि एजेंट क्या कर रहा है। जब आप कोई प्रॉम्प्ट भेजते हैं, तो वह प्रॉम्प्ट टर्मिनल के नोट लॉग में जुड़ जाता है और टर्मिनल <strong>working</strong> दिखाता है। जब एजेंट को आपकी ज़रूरत होती है, किसी अनुमति के सवाल के साथ या क्योंकि वह इनपुट के इंतज़ार में idle है, तो उसकी लाइन इंतज़ार के रंग की हो जाती है और उसके टाइटल और उसकी पंक्ति में <strong>waiting for you</strong> (आपका इंतज़ार) लिखा आता है। जब वह रुकता है, तो <strong>finished</strong> दिखाता है।",
+    "from": "64ec1f0a81c2"
+  },
+  "claude.state.more": {
+    "text": "<code>W</code> अगले इंतज़ार कर रहे टर्मिनल पर ले जाता है, और <strong>Notify</strong> उन टर्मिनलों के लिए डेस्कटॉप नोटिफ़िकेशन चालू करता है जो इंतज़ार करने लगते हैं। प्रॉम्प्ट में राज़ की बातें हो सकती हैं: <code>\"agents\": { \"logPrompts\": false }</code>, <code>config.json</code> में, उन्हें नोट लॉग से बाहर रखता है।",
+    "from": "8d17a75b0b6f"
+  },
+  "claude.state.where": {
+    "text": "कहाँ: टर्मिनल का टाइटल, सूची में उसकी पंक्ति, और ऊपर For you के बगल वाली गिनती।",
+    "from": "4069b9f958a3"
+  },
+  "claude.byhand.title": {
+    "text": "Claude Code जो आपने खुद शुरू किया",
+    "from": "4e9410ab2c6a"
+  },
+  "claude.byhand.text": {
+    "text": "सादे टर्मिनल में हाथ से टाइप करने पर <code>claude</code> किसी भी प्रोग्राम की तरह काम करता है, पर Aubergine को बस एक शेल दिखता है जो उसे चलाने में busy है: कोई waiting for you नहीं, और जब आप वहाँ वर्कफ़्लो शुरू करते हैं तो उसके लिए कुछ टाइप नहीं होता। इसे बदलने के लिए हुक प्रिंट करें और उन्हें हाथ से अपनी Claude Code सेटिंग्स में जोड़ें। Aubergine टर्मिनल के बाहर वे कुछ नहीं करते।",
+    "from": "fa6fba9030be"
+  },
+  "claude.describe.title": {
+    "text": "यह खुद को नाम देता है और सारांश रखता है",
+    "from": "d093aa41e5df"
+  },
+  "claude.describe.text": {
+    "text": "Aubergine जिस एजेंट को शुरू करता है, उसे शुरुआत में कहा जाता है कि वह <code>aubergine describe</code>, <code>aubergine link add</code> और <code>aubergine field set</code> से अपने टर्मिनल को काम के नाम पर रखे और एक सारांश रखे, और जब वह अपने नाम या सारांश के बिना रुकता है तो उसे एक बार याद दिलाया जाता है। जो आप खुद लिखते हैं वही चलता है; उसी चीज़ के बारे में एजेंट जो कहता है, वह उसके बगल में <strong>Use this</strong> के साथ इंतज़ार करता है। याद दिलाना <strong>Settings</strong> में बंद किया जा सकता है।",
+    "from": "b3ada1af2f57"
+  },
+  "claude.describe.where": {
+    "text": "कहाँ: टर्मिनल की जानकारी, उसके नाम, सारांश, फ़ील्ड और लिंक के साथ।",
+    "from": "14d403dcf75f"
+  },
+  "claude.told.title": {
+    "text": "वर्कफ़्लो, टास्क, रीकैप और संदेश उस तक पहुँचते हैं",
+    "from": "65f0d98fe0d0"
+  },
+  "claude.told.text": {
+    "text": "Aubergine किसी टर्मिनल में चार तय वाक्य टाइप करता है, और सिर्फ़ यही: कि एक वर्कफ़्लो शुरू हुआ, कि एजेंट से कुछ लिखने को कहा गया, कि आपने रीकैप माँगा, और कि एक संदेश इंतज़ार कर रहा है। हर वाक्य एजेंट के चलाने के लिए एक कमांड बताता है। वाक्य सिर्फ़ वहीं टाइप होता है जहाँ कीबोर्ड किसी एजेंट के पास दिखता है: ऐसा एजेंट जिसे Aubergine ने शुरू किया, या जिसकी सेटिंग्स में <code>aubergine hooks print</code> वाले हुक हैं।",
+    "from": "a965be64fc8b"
+  },
+  "claude.told.more": {
+    "text": "इसी तरह, क्यू का टास्क सिर्फ़ ऐसे टर्मिनल पर जाता है जहाँ ऐसा एजेंट सामने हो और खाली हो, और <strong>Claude Code on a workflow…</strong> एक नया टर्मिनल शुरू करता है जिसके एजेंट को उसके पहले प्रॉम्प्ट में रन के बारे में बताया जाता है।",
+    "from": "4db5493b4c50"
+  },
+  "claude.told.where": {
+    "text": "कहाँ: टर्मिनल के टाइटल के मेन्यू में <strong>Run a workflow…</strong>, और पेज के ऊपर <strong>Runs</strong>।",
+    "from": "85ec8e15f827"
+  },
+  "claude.resume.title": {
+    "text": "Resume agent",
+    "from": "0bb60c450191"
+  },
+  "claude.resume.text": {
+    "text": "Aubergine याद रखता है कि कोई एजेंट टर्मिनल किस बातचीत में था। जब उसका शेल फिर प्रॉम्प्ट पर हो, क्योंकि आपने एजेंट से बाहर निकले या कंप्यूटर रीस्टार्ट हुआ, तो टर्मिनल <strong>Resume agent</strong> (एजेंट फिर शुरू करें) देता है, जो एजेंट को उसी बातचीत में फिर शुरू करता है। किसी रन पर लगे टर्मिनल में, यह एजेंट को रन के बारे में फिर से बताता भी है।",
+    "from": "bad9c16cacaa"
+  },
+  "claude.resume.where": {
+    "text": "कहाँ: टर्मिनल का टाइटल बार।",
+    "from": "f9a5a6f578cf"
+  },
+  "claude.history.title": {
+    "text": "पुरानी बातचीत",
+    "from": "93b87f3b2adf"
+  },
+  "claude.history.text": {
+    "text": "<strong>Past conversations…</strong> किसी फ़ोल्डर में एजेंट की पिछली बातचीत की सूची दिखाता है: कोई पढ़ें, उसे कैनवस पर खोलें, या उसकी एक कॉपी खोलें जो असली को वैसा ही छोड़ देती है। उन्हें खोजने के लिए पैलेट में <code>@</code> और कुछ शब्द टाइप करें; <code>aubergine history</code> उन्हें कमांड लाइन पर दिखाता है। जो पढ़ा जाता है वह रखा नहीं जाता, और कोई टोकन या एजेंट Aubergine के ज़रिए बातचीत नहीं पढ़ सकता।",
+    "from": "168514a264d1"
+  },
+  "claude.history.form": {
+    "text": "यह वे फ़ाइलें पढ़ता है जो Claude Code रखता है। उनका फ़ॉर्मैट Claude Code का आंतरिक है और वर्ज़न के बीच बदलता है। एजेंट के अपडेट के बाद नाम और ट्रांसक्रिप्ट कम हो सकते हैं, और जिस रिकॉर्ड को Aubergine नहीं पढ़ पाता, उसके बारे में यही कहा जाता है, उसे कभी खाली नहीं दिखाया जाता।",
+    "from": "0d92e097b755"
+  },
+  "claude.history.where": {
+    "text": "कहाँ: पैलेट (<code>⌘K</code>), और टर्मिनल की जानकारी में “Past conversations in this folder…”।",
+    "from": "3477b0fbf75a"
+  },
+  "claude.setup.title": {
+    "text": "यह कैसे सेट अप है",
+    "from": "af61266588a1"
+  },
+  "claude.setup.text": {
+    "text": "एजेंट की कॉन्फ़िगरेशन फ़ाइलों के अनुसार उसे क्या-क्या दिया गया है, उसकी सूची: MCP सर्वर, प्लगइन, हुक, स्किल, अनुमति के नियम और सेटिंग्स फ़ाइलें, हर एक के साथ कि वह कहाँ से आता है, और Aubergine ने क्या जोड़ा। सिर्फ़ नाम, कभी कोई वैल्यू या राज़ नहीं। यह बताती है कि एजेंट कैसे सेट अप है, यह नहीं कि चल रहे एजेंट ने क्या लोड किया है, और साफ़ कहती है कि वह क्या नहीं जान सकती, जैसे आपके अकाउंट के साथ आने वाले कनेक्टर।",
+    "from": "c514bb19fdee"
+  },
+  "claude.setup.where": {
+    "text": "कहाँ: टर्मिनल पर <strong>⚙ on</strong>, पैलेट में “What is switched on for this agent…”, और टर्मिनल की जानकारी।",
+    "from": "a8c53c214fcc"
+  },
+  "claude.tools.title": {
+    "text": "इसके लिए Aubergine के टूल",
+    "from": "e66ee8e8e0bc"
+  },
+  "claude.tools.text": {
+    "text": "<strong>Claude Code with Aubergine tools…</strong> पहले पूछता है कि एजेंट क्या कर सकता है: <strong>None</strong> (कुछ नहीं); <strong>Its own work only</strong> (सिर्फ़ अपना काम), टर्मिनल के अपने क्रेडेंशियल के साथ; या <strong>More…</strong>, आपके चुने स्कोप, जिनके लिए उसी एक टर्मिनल के लिए टोकन बनता है और टर्मिनल के हमेशा के लिए बंद होने पर रद्द हो जाता है। टूल <code>aubergine mcp</code> हैं, जो एजेंट को उसकी लॉन्च लाइन पर दिए जाते हैं; उसकी अपनी कॉन्फ़िगरेशन लिखी नहीं जाती।",
+    "from": "6f42a9f284d0"
+  },
+  "claude.tools.where": {
+    "text": "कहाँ: New terminal के बगल वाला मेन्यू।",
+    "from": "33b77d6aeba6"
+  },
+  "claude.move.title": {
+    "text": "पहले से खुले Claude Code को ले आएँ",
+    "from": "71713eb1febd"
+  },
+  "claude.move.text": {
+    "text": "चलते हुए एजेंट को हटाया नहीं जा सकता, पर उसकी बातचीत को लाया जा सकता है। <strong>Open elsewhere</strong> आपके Claude Code टैब दिखाता है, <strong>Fork to canvas</strong> के साथ और, idle एजेंट के लिए, <strong>Stop and resume here</strong> के साथ, जो पहले आपसे पूछता है। किसी टर्मिनल से <code>aubergine move</code> यही करता है, और <code>aubergine here --claude</code> कैनवस पर Claude Code शुरू करता है जो उस फ़ोल्डर की पिछली बातचीत को आगे बढ़ाता है।",
+    "from": "2710d35e40f6"
+  },
+  "claude.move.where": {
+    "text": "कहाँ: कैनवस के ऊपर वाले बार में <strong>Open elsewhere</strong>, या <code>O</code>।",
+    "from": "957b9c5d2c08"
+  },
+  "claude.copy.title": {
+    "text": "उसकी अपनी वर्किंग कॉपी में",
+    "from": "88b0fbc30823"
+  },
+  "claude.copy.text": {
+    "text": "<code>aubergine here --copy --claude</code> Claude Code को रिपॉज़िटरी के उसके अपने चेकआउट में, उसकी अपनी ब्रांच पर शुरू करता है, ताकि दो एजेंट कभी एक ही फ़ाइलें न बदलें। टूल वाले Claude Code टर्मिनल के डायलॉग में भी यही विकल्प है।",
+    "from": "d952aaa25439"
+  },
+  "claude.tried.title": {
+    "text": "क्या आज़माया गया है",
+    "from": "dc4245eb9cbd"
+  },
+  "claude.tried.text": {
+    "text": "Aubergine के साथ आने वाला डेमो नकली एजेंट इस्तेमाल करता है, छोटी स्क्रिप्ट जो वही कमांड और हुक चलाती हैं जो असली एजेंट चलाता है, असली Claude Code नहीं। असली एजेंट के साथ मंज़ूरी, वर्किंग कॉपी, क्यू का टास्क और शेड्यूल अभी आज़माए नहीं गए हैं।",
+    "from": "d7b31de7e83d"
+  },
+  "claude.others": {
+    "text": "कोई दूसरा एजेंट इसमें से ज़्यादातर बातें <code>aubergine</code> कमांड से बता सकता है: देखें <a href=\"/chatgpt/\">Codex और ChatGPT</a>।",
+    "from": "a37bd1ffdb77"
+  },
+  "claude.mark": {
+    "text": "Aubergine का Anthropic से कोई संबंध नहीं है। Claude और Claude Code, Anthropic के ट्रेडमार्क हैं।",
+    "from": "cdae060f0648"
+  },
+  "chatgpt.meta.title": {
+    "text": "Aubergine में Codex और ChatGPT | Aubergine",
+    "from": "8dcd1dde8945"
+  },
+  "chatgpt.meta.description": {
+    "text": "Codex, OpenAI का कमांड-लाइन कोडिंग एजेंट, किसी भी प्रोग्राम की तरह Aubergine टर्मिनल में चलता है। आज क्या काम करता है, aubergine कमांड से यह क्या रिपोर्ट कर सकता है, और क्या सिर्फ़ Claude Code के लिए बना है।",
+    "from": "6f8c78d52c06"
+  },
+  "chatgpt.crumb": {
+    "text": "Codex और ChatGPT",
+    "from": "38c13bed7dca"
+  },
+  "chatgpt.title": {
+    "text": "Codex और ChatGPT",
+    "from": "38c13bed7dca"
+  },
+  "chatgpt.lead": {
+    "text": "Codex, OpenAI का कमांड-लाइन कोडिंग एजेंट है। आप इसे खुद इंस्टॉल करते हैं और इसमें खुद साइन इन करते हैं; Aubergine में यह किसी भी दूसरे प्रोग्राम की तरह टर्मिनल में चलता है।",
+    "from": "70f25216735c"
+  },
+  "chatgpt.untried.title": {
+    "text": "अभी आज़माया नहीं गया",
+    "from": "b0889cc96cfa"
+  },
+  "chatgpt.untried.text": {
+    "text": "अभी तक किसी ने Aubergine में असली Codex नहीं चलाया है। यह पेज जो बताता है, वह है जो Aubergine टर्मिनल के किसी भी प्रोग्राम के लिए और <code>aubergine</code> कमांड के लिए करता है, जो बना हुआ और टेस्ट किया हुआ है; Codex खुद वहाँ कैसा बर्ताव करता है, यह देखा नहीं गया है। अगर आप आज़माएँ, तो <a href=\"https://github.com/thirstyeggplant/aubergine/issues\">बताएँ कैसा रहा</a>।",
+    "from": "fbfa21211143"
+  },
+  "chatgpt.start.title": {
+    "text": "इसे शुरू करें",
+    "from": "4238a078a056"
+  },
+  "chatgpt.start.text": {
+    "text": "<strong>New terminal</strong> से, या <code>N</code> से, एक टर्मिनल खोलें, और उसमें Codex वैसे ही शुरू करें जैसे किसी भी टर्मिनल में करते। Aubergine किसी मॉडल को कॉल नहीं करता और कोई key नहीं रखता: Codex को जो चाहिए, वह आपने उसमें साइन इन करते समय दे दिया।",
+    "from": "382ba4da4e80"
+  },
+  "chatgpt.works.title": {
+    "text": "आज क्या काम करता है",
+    "from": "e34f6b7e46b1"
+  },
+  "chatgpt.works.intro": {
+    "text": "वह सब जो Aubergine किसी भी टर्मिनल के लिए करता है:",
+    "from": "12590cf44023"
+  },
+  "chatgpt.works.side.name": {
+    "text": "साथ-साथ",
+    "from": "a3d7b387c34d"
+  },
+  "chatgpt.works.side.text": {
+    "text": "एक कैनवस पर जितने चाहें उतने टर्मिनल, और टैब के रूप में कैनवस।",
+    "from": "dbf89836ed55"
+  },
+  "chatgpt.works.status.name": {
+    "text": "कमांड की स्थिति",
+    "from": "fe494b43cb4b"
+  },
+  "chatgpt.works.status.text": {
+    "text": "zsh के साथ, टर्मिनल का टाइटल दिखाता है कि कोई कमांड चल रहा है, और कौन-सा।",
+    "from": "4c2760707e62"
+  },
+  "chatgpt.works.keep.name": {
+    "text": "रंग, नोट और फ़ील्ड",
+    "from": "6a46e4fad859"
+  },
+  "chatgpt.works.keep.text": {
+    "text": "इसके टर्मिनल को एक रंग दें, सारांश और लॉग वाला नोट रखें, और टिकट या मालिक जैसे फ़ील्ड रखें।",
+    "from": "ee6d1af56cf5"
+  },
+  "chatgpt.works.park.name": {
+    "text": "पार्क करना",
+    "from": "4a64d6c849df"
+  },
+  "chatgpt.works.park.text": {
+    "text": "× टर्मिनल को पार्क करता है: वह कैनवस से हट जाता है और चलता रहता है, और <strong>Parked</strong> उसे वापस लाता है।",
+    "from": "ddc50d8a2017"
+  },
+  "chatgpt.works.focus.name": {
+    "text": "एक टर्मिनल अकेले",
+    "from": "0ddd4013565e"
+  },
+  "chatgpt.works.focus.text": {
+    "text": "टर्मिनल को उसके अपने ब्राउज़र टैब में खोलें, उसकी जानकारी और नोट बगल में।",
+    "from": "55d7e4f4f460"
+  },
+  "chatgpt.works.copy.name": {
+    "text": "एक वर्किंग कॉपी",
+    "from": "2e0960650715"
+  },
+  "chatgpt.works.copy.text": {
+    "text": "<strong>Shell in a folder or a working copy…</strong>, या <code>aubergine new --copy</code>, टर्मिनल को उसके अपने चेकआउट में उसकी अपनी ब्रांच पर शुरू करता है, ताकि दो एजेंट कभी एक ही फ़ाइलें न बदलें।",
+    "from": "9abe578a4127"
+  },
+  "chatgpt.works.search.name": {
+    "text": "आउटपुट में खोज",
+    "from": "0f487fa9a292"
+  },
+  "chatgpt.works.search.text": {
+    "text": "<code>⌘K</code> हर टर्मिनल ने जो प्रिंट किया है उसमें खोजता है, और टर्मिनल को मिलान तक पीछे स्क्रॉल करके खोलता है।",
+    "from": "60d93140539a"
+  },
+  "chatgpt.report.title": {
+    "text": "यह कमांड से क्या बता सकता है",
+    "from": "0e02d0340875"
+  },
+  "chatgpt.report.intro": {
+    "text": "हर Aubergine टर्मिनल में <code>aubergine</code> कमांड है और सिर्फ़ उसी टर्मिनल का एक क्रेडेंशियल। वहाँ का कोई भी प्रोग्राम, Codex भी, इन्हें इस्तेमाल कर सकता है:",
+    "from": "60b4ba06f8a5"
+  },
+  "chatgpt.report.attention": {
+    "text": "टर्मिनल को waiting for you के रूप में चिह्नित करता है, साथ में उसे क्या चाहिए; <code>aubergine attention working</code> और <code>aubergine attention done</code> बाकी बताते हैं।",
+    "from": "ed9452d7523a"
+  },
+  "chatgpt.report.note": {
+    "text": "टर्मिनल के नोट लॉग में एक लाइन जोड़ता है।",
+    "from": "a99a9a2851ea"
+  },
+  "chatgpt.report.describe": {
+    "text": "टर्मिनल को काम के नाम पर रखता है और उसका सारांश रखता है; <code>aubergine link add</code> और <code>aubergine field set</code> काम के लिंक और फ़ील्ड जोड़ते हैं। जो आपने खुद लिखा, वही चलता है।",
+    "from": "4a69c7925e1d"
+  },
+  "chatgpt.report.workflow": {
+    "text": "वर्कफ़्लो का मौजूदा स्टेप पढ़ता है; <code>aubergine workflow done</code> उसे पूरा बताता है और अगला प्रिंट करता है।",
+    "from": "bfa2482d9f38"
+  },
+  "chatgpt.report.task": {
+    "text": "क्यू के लिए एक टास्क प्रस्तावित करता है, और <code>aubergine ask</code> आपसे कुछ ऐसा माँगता है जो सिर्फ़ कोई इंसान कर सकता है। दोनों आपकी सूची में इंतज़ार करते हैं।",
+    "from": "f6a6658159c8"
+  },
+  "chatgpt.tell.title": {
+    "text": "इसे कैसे बताएँ",
+    "from": "808fc16a4b54"
+  },
+  "chatgpt.tell.text": {
+    "text": "Codex को Aubergine के बारे में तब तक पता नहीं होता जब तक उसे बताया न जाए। यह पाँच लाइनें प्रिंट करता है जिन्हें उन निर्देशों में पेस्ट करना है जो आपका एजेंट किसी प्रोजेक्ट में हर बातचीत की शुरुआत में पढ़ता है; उसका अपना दस्तावेज़ बताता है कि वे कहाँ जाती हैं:",
+    "from": "ad7d9c3cdf01"
+  },
+  "chatgpt.tell.after": {
+    "text": "ये लाइनें उसे कहती हैं कि जब वह Aubergine टर्मिनल में हो तो एक बार <code>aubergine guide</code> चलाए, और गाइड बाकी बताती है। Aubergine लाइनें प्रिंट करता है और उन्हें कभी किसी फ़ाइल में नहीं लिखता।",
+    "from": "24aa468975b7"
+  },
+  "chatgpt.tell.mcp": {
+    "text": "अगर आपका एजेंट MCP सर्वर शुरू कर सकता है, तो <code>aubergine mcp</code> वही चीज़ें टूल के रूप में देता है; Aubergine टर्मिनल के अंदर, टर्मिनल के अपने काम के लिए इसे न कोई पता चाहिए, न कोई टोकन।",
+    "from": "7e1e9649a26d"
+  },
+  "chatgpt.only.title": {
+    "text": "आज सिर्फ़ Claude Code के लिए बना",
+    "from": "13e4ac762aab"
+  },
+  "chatgpt.only.intro": {
+    "text": "Aubergine किसी एजेंट के लिए खुद से जो करता है, वह Claude Code के लिए बना है। Codex के लिए, आज:",
+    "from": "dcf7194de658"
+  },
+  "chatgpt.only.menu": {
+    "text": "यह New terminal मेन्यू में नहीं है: आप इसे खुद किसी टर्मिनल में शुरू करते हैं।",
+    "from": "51fe40c6c0b7"
+  },
+  "chatgpt.only.seen": {
+    "text": "Aubergine इसे एजेंट के रूप में नहीं देखता: यह खुद से waiting या finished नहीं दिखाया जाता, सिर्फ़ तब जब यह <code>aubergine attention</code> चलाता है।",
+    "from": "94d90e71f3eb"
+  },
+  "chatgpt.only.typed": {
+    "text": "इसके लिए कुछ टाइप नहीं होता: इसके टर्मिनल पर शुरू किया गया वर्कफ़्लो कुछ टाइप नहीं करता और वह लाइन दिखाता है जो आपको खुद इसे देनी है, और रीकैप या संदेश की इसे सूचना नहीं दी जाती।",
+    "from": "1b4e07823075"
+  },
+  "chatgpt.only.queue": {
+    "text": "क्यू इसे कोई टास्क नहीं देता: टास्क सिर्फ़ ऐसे टर्मिनल पर जाता है जहाँ एजेंट दिखता हो और खाली हो।",
+    "from": "6a80a3e587a3"
+  },
+  "chatgpt.only.resume": {
+    "text": "न Resume agent है, न पुरानी बातचीत की सूची, न यह सूची कि यह कैसे सेट अप है, और न Aubergine के टूल का डायलॉग।",
+    "from": "ce8c093c0018"
+  },
+  "chatgpt.only.move": {
+    "text": "<code>aubergine move</code> और <code>aubergine here --claude</code> सिर्फ़ Claude Code को लाते हैं।",
+    "from": "66352f237ada"
+  },
+  "chatgpt.only.remind": {
+    "text": "इसे अपने टर्मिनल का नाम रखने या सारांश रखने की याद नहीं दिलाई जाती।",
+    "from": "0b61446686d8"
+  },
+  "chatgpt.only.more": {
+    "text": "यह सब <a href=\"/claude/\">Claude Code</a> पेज पर है।",
+    "from": "0bd32ffbda24"
+  },
+  "chatgpt.browser.title": {
+    "text": "ब्राउज़र में ChatGPT",
+    "from": "586ec4475558"
+  },
+  "chatgpt.browser.text": {
+    "text": "ब्राउज़र टैब में ChatGPT एक वेब पेज है, टर्मिनल का प्रोग्राम नहीं, इसलिए यह कैनवस पर नहीं चलता।",
+    "from": "580874279183"
+  },
+  "chatgpt.mark": {
+    "text": "Aubergine का OpenAI से कोई संबंध नहीं है। Codex और ChatGPT, OpenAI के ट्रेडमार्क हैं।",
+    "from": "a897a2ac5a2d"
+  },
+  "install.meta.title": {
+    "text": "macOS पर Aubergine कैसे इंस्टॉल करें | Aubergine",
+    "from": "a8bd952c734f"
+  },
+  "install.meta.description": {
+    "text": "एक कमांड से Aubergine इंस्टॉल करें, इसे शुरू करें, और पाँच मिनट का टूर लें। ज़रूरतें, इंस्टॉलर क्या बदलता है, और आम समस्याओं के हल।",
+    "from": "abcd815ec344"
+  },
+  "install.crumb": {
+    "text": "इंस्टॉल",
+    "from": "569ca49f4aaf"
+  },
+  "install.title": {
+    "text": "Aubergine कैसे इंस्टॉल करें",
+    "from": "71f80d2b2ec8"
+  },
+  "install.lead": {
+    "text": "एक कमांड इसे इंस्टॉल करता है, एक शुरू करता है। टूर मिलाकर लगभग पाँच मिनट।",
+    "from": "8924d3085c0c"
+  },
+  "install.req.title": {
+    "text": "ज़रूरतें",
+    "from": "e0cdd07f6a27"
+  },
+  "install.req.os": {
+    "text": "macOS। Linux पर भी ऐसे ही चलना चाहिए, पर अभी तक टेस्ट नहीं हुआ है।",
+    "from": "e896cb710692"
+  },
+  "install.req.tools": {
+    "text": "<a href=\"https://github.com/tmux/tmux\">tmux</a> 3.2 या नया और Node.js 22 या नया। इंस्टॉलर को pnpm भी चाहिए।",
+    "from": "588e2ab2ee94"
+  },
+  "install.req.brew": {
+    "text": "<a href=\"https://brew.sh\">Homebrew</a> के साथ, एक लाइन दोनों ले आती है (इंस्टॉलर के लिए <code>pnpm</code> जोड़ें):",
+    "from": "9c116b9ec828"
+  },
+  "install.steps.title": {
+    "text": "इंस्टॉल करें और शुरू करें",
+    "from": "945ef89608d4"
+  },
+  "install.steps.npm": {
+    "text": "npm से <strong>Aubergine इंस्टॉल करें</strong> (सिर्फ़ tmux और Node.js चाहिए):",
+    "from": "eea62c4639cd"
+  },
+  "install.steps.script": {
+    "text": "या इंस्टॉलर से, जिसे pnpm भी चाहिए और जो सोर्स से बिल्ड करता है:",
+    "from": "d6b9bd23fe72"
+  },
+  "install.steps.start": {
+    "text": "<strong>इसे शुरू करें और अपना ब्राउज़र साइन इन किया हुआ खोलें।</strong>",
+    "from": "37654a734fd0"
+  },
+  "install.steps.tour": {
+    "text": "<strong>टूर लें।</strong> खाली कैनवस के बीच में <em>Show me around</em> पर क्लिक करें। यह “Demo” नाम का एक कैनवस बनाता है जिसमें कुछ नकली एजेंट होते हैं, और आपको आठ छोटे स्टेप में घुमाता है। डेमो में कुछ भी असली नहीं है, और <code>aubergine demo --remove</code> उसे हटा देता है।",
+    "from": "e7f179f7c61a"
+  },
+  "install.steps.read": {
+    "text": "पहले स्क्रिप्ट पढ़ना चाहते हैं? उसे डाउनलोड करें, पढ़ें, और <code>sh install.sh --dry-run</code> चलाएँ, यह देखने के लिए कि वह कुछ बदले बिना क्या करेगी।",
+    "from": "6a20dd49876a"
+  },
+  "install.changes.title": {
+    "text": "इंस्टॉलर क्या बदलता है",
+    "from": "0563a99f51ff"
+  },
+  "install.changes.text": {
+    "text": "सिर्फ़ दो चीज़ें: इंस्टॉल फ़ोल्डर (<code>~/.aubergine</code>, या <code>AUBERGINE_HOME</code>) और <code>aubergine</code> नाम का एक लिंक, आपके <code>PATH</code> के किसी ऐसे फ़ोल्डर में जिसमें आप लिख सकते हैं। यह पहले सब कुछ जाँचता है, और अगर कुछ कमी हो तो कुछ नहीं बदलता।",
+    "from": "0a825e326d78"
+  },
+  "install.changes.not": {
+    "text": "<strong>यह नहीं करता:</strong> <code>sudo</code> का इस्तेमाल, आपकी शेल स्टार्टअप फ़ाइलों में बदलाव, Node.js, pnpm या tmux इंस्टॉल करना, या आपके डेटा फ़ोल्डर को छूना।",
+    "from": "2515db06f3ef"
+  },
+  "install.wrong.title": {
+    "text": "अगर कुछ गड़बड़ हो",
+    "from": "1a766f8f96ef"
+  },
+  "install.wrong.doctor": {
+    "text": "पहले <code>aubergine doctor</code> चलाएँ। यह आम कारण जाँचता है।",
+    "from": "41b2c2485b07"
+  },
+  "install.wrong.see": {
+    "text": "आपको क्या दिखता है",
+    "from": "fd4e554fab6a"
+  },
+  "install.wrong.do": {
+    "text": "क्या करें",
+    "from": "f47f1edc44ed"
+  },
+  "install.wrong.signin.see": {
+    "text": "“This browser is not signed in yet”",
+    "from": "9f5b94b25ed4"
+  },
+  "install.wrong.signin.do": {
+    "text": "उस ब्राउज़र में साइन-इन लिंक एक बार खोलें। <code>aubergine open --print</code> उसे फिर से प्रिंट करता है।",
+    "from": "965c7c3ed508"
+  },
+  "install.wrong.tmux.see": {
+    "text": "एक पेज जो कहता है कि tmux नहीं है या बहुत पुराना है",
+    "from": "ef3468da7805"
+  },
+  "install.wrong.tmux.do": {
+    "text": "tmux इंस्टॉल या अपग्रेड करें (<code>brew install tmux</code>), फिर सर्वर रीस्टार्ट करें।",
+    "from": "9be03214def8"
+  },
+  "install.wrong.port.see": {
+    "text": "सर्वर शुरू नहीं होता क्योंकि पोर्ट पहले से इस्तेमाल में है",
+    "from": "aa6f2b6e17dc"
+  },
+  "install.wrong.port.do": {
+    "text": "दूसरा पोर्ट इस्तेमाल करें: <code>AUBERGINE_PORT=4700 aubergine start</code>।",
+    "from": "25b1179a84ca"
+  },
+  "install.wrong.path.do": {
+    "text": "लिंक आपके <code>PATH</code> पर नहीं है। इंस्टॉलर वह एक लाइन प्रिंट करता है जो आपकी शेल की स्टार्टअप फ़ाइल में जोड़नी है।",
+    "from": "c15d51fbb74f"
+  },
+  "install.wrong.badges.see": {
+    "text": "टर्मिनल कोई स्टेटस बैज नहीं दिखाता",
+    "from": "00220a528dae"
+  },
+  "install.wrong.badges.do": {
+    "text": "स्टेटस के लिए zsh चाहिए, और अपडेट से पहले बना सेशन अपना पुराना शेल रखता है। उसे पार्क करें और नया शुरू करें।",
+    "from": "a82cc898a1f3"
+  },
+  "install.later.title": {
+    "text": "रोकें, अपडेट करें, अनइंस्टॉल करें",
+    "from": "8c6be2046c96"
+  },
+  "install.later.stop": {
+    "text": "सर्वर को Ctrl+C से <strong>रोकें</strong>। आपके टर्मिनल चलते रहते हैं; उन्हें वापस पाने के लिए सर्वर फिर शुरू करें और पेज रीलोड करें।",
+    "from": "1ef7650944a8"
+  },
+  "install.later.update": {
+    "text": "<strong>अपडेट करें</strong>: अगर आपने npm से इंस्टॉल किया, तो <code>npm install -g @meatgarden/aubergine@latest</code> से; अगर इंस्टॉलर इस्तेमाल किया, तो <code>aubergine update</code> से। फिर सर्वर रीस्टार्ट करें।",
+    "from": "a07a85ca11ea"
+  },
+  "install.later.uninstall": {
+    "text": "<strong>अनइंस्टॉल करें</strong>: <code>aubergine uninstall</code> से। यह लिंक हटाता है और, पूछने के बाद, वह कॉपी जो इंस्टॉलर ने बनाई। यह कभी आपका डेटा नहीं हटाता और कभी आपके टर्मिनल बंद नहीं करता।",
+    "from": "6d77ba78aea3"
+  },
+  "install.later.login": {
+    "text": "<strong>लॉगिन पर शुरू करें</strong>: <code>aubergine service install</code> से, ताकि आपको बस ब्राउज़र खोलना पड़े।",
+    "from": "e90077683d1e"
+  },
+  "install.next.title": {
+    "text": "आगे",
+    "from": "1ff57a29d7c9"
+  },
+  "install.next.text": {
+    "text": "पढ़ें <a href=\"/run-multiple-coding-agents/\">एक साथ कई कोडिंग एजेंट कैसे चलाएँ</a>, या <a href=\"/guides/\">गाइड</a>। पूरा संदर्भ <a href=\"https://github.com/thirstyeggplant/aubergine#readme\">README</a> में है।",
+    "from": "e0f26d3bf925"
+  },
+  "install.ld.howto": {
+    "text": "Aubergine कैसे इंस्टॉल करें और शुरू करें",
+    "from": "7a2473f8500b"
+  },
+  "install.ld.howtoAbout": {
+    "text": "एक कमांड से macOS पर Aubergine इंस्टॉल करें, इसे शुरू करें, और टूर लें।",
+    "from": "e0aeedb8e5ed"
+  },
+  "install.ld.s1": {
+    "text": "ज़रूरी चीज़ें इंस्टॉल करें",
+    "from": "058debbaf60f"
+  },
+  "install.ld.s2": {
+    "text": "Aubergine इंस्टॉल करें",
+    "from": "733a8757545c"
+  },
+  "install.ld.s3": {
+    "text": "इसे शुरू करें और ब्राउज़र खोलें",
+    "from": "8c7a8d4cca8c"
+  },
+  "install.ld.s4": {
+    "text": "टूर लें",
+    "from": "a83c4366d2df"
+  },
+  "install.ld.q1": {
+    "text": "Aubergine इंस्टॉलर क्या बदलता है?",
+    "from": "3abbf9c3de69"
+  },
+  "install.ld.a1": {
+    "text": "दो चीज़ें: इंस्टॉल फ़ोल्डर (~/.aubergine, या AUBERGINE_HOME) और आपके PATH पर aubergine नाम का एक लिंक। यह कभी sudo इस्तेमाल नहीं करता, कभी आपकी शेल स्टार्टअप फ़ाइलें नहीं बदलता, और कभी Node.js, pnpm या tmux इंस्टॉल नहीं करता।",
+    "from": "fc93852fb9a6"
+  },
+  "install.ld.q2": {
+    "text": "मैं Aubergine को अपडेट कैसे करूँ?",
+    "from": "ac62d764ea7a"
+  },
+  "install.ld.a2": {
+    "text": "npm से इंस्टॉल किया है: npm install -g @meatgarden/aubergine@latest चलाएँ। इंस्टॉलर से इंस्टॉल किया है: aubergine update चलाएँ, या इंस्टॉलर फिर से। फिर सर्वर रीस्टार्ट करें।",
+    "from": "96bfcbba99a6"
+  },
+  "install.ld.q3": {
+    "text": "मैं Aubergine को अनइंस्टॉल कैसे करूँ?",
+    "from": "5dbaf4c141c9"
+  },
+  "install.ld.a3": {
+    "text": "aubergine uninstall चलाएँ। यह लिंक हटाता है और, पूछने के बाद, वह कॉपी जो इंस्टॉलर ने बनाई। यह कभी आपका डेटा नहीं हटाता और न आपके टर्मिनल बंद करता है।",
+    "from": "829813dbf528"
+  },
+  "install.ld.q4": {
+    "text": "क्या Aubergine Linux या Windows पर चलता है?",
+    "from": "e3df2a3fd915"
+  },
+  "install.ld.a4": {
+    "text": "Linux पर चलना चाहिए, पर अभी तक टेस्ट नहीं हुआ है। Windows सपोर्टेड नहीं है।",
+    "from": "b8b7b1d1037d"
+  },
+  "guides.meta.title": {
+    "text": "Aubergine गाइड | Aubergine",
+    "from": "0d501fb6af2e"
+  },
+  "guides.meta.description": {
+    "text": "Aubergine के साथ कई कोडिंग एजेंट चलाने की गाइड: पूरा परिचय, Claude Code और Codex, वर्किंग कॉपी, और क्यू और शेड्यूल।",
+    "from": "813ebf5cbbed"
+  },
+  "guides.crumb": {
+    "text": "गाइड",
+    "from": "572cd72feb9a"
+  },
+  "guides.title": {
+    "text": "गाइड",
+    "from": "572cd72feb9a"
+  },
+  "guides.lead": {
+    "text": "छोटी, काम की गाइड। पूरा संदर्भ <a href=\"https://github.com/thirstyeggplant/aubergine#readme\">README</a> है।",
+    "from": "4235a66ec40d"
+  },
+  "guides.install.name": {
+    "text": "Aubergine इंस्टॉल करें",
+    "from": "733a8757545c"
+  },
+  "guides.install.text": {
+    "text": "ज़रूरतें, एक लाइन वाला इंस्टॉलर, वह क्या बदलता है, और आम समस्याओं के हल।",
+    "from": "0c229f404056"
+  },
+  "guides.several.name": {
+    "text": "एक साथ कई कोडिंग एजेंट चलाएँ",
+    "from": "d9bedb06d9bf"
+  },
+  "guides.several.text": {
+    "text": "कैनवस, इंतज़ार की गिनती, क्यू, वर्किंग कॉपी और वर्कफ़्लो, एक ही टूर में।",
+    "from": "432d38d0ca9c"
+  },
+  "guides.claude.name": {
+    "text": "Aubergine में Claude Code",
+    "from": "f05972fd315a"
+  },
+  "guides.claude.text": {
+    "text": "Aubergine Claude Code के लिए खुद से क्या करता है, और हर चीज़ कहाँ है।",
+    "from": "f77c6acef73f"
+  },
+  "guides.codex.name": {
+    "text": "Codex और ChatGPT",
+    "from": "38c13bed7dca"
+  },
+  "guides.codex.text": {
+    "text": "किसी भी प्रोग्राम की तरह टर्मिनल में Codex, यह क्या रिपोर्ट कर सकता है, और क्या सिर्फ़ Claude Code के लिए बना है।",
+    "from": "406a9eebc6ae"
+  },
+  "guides.copies.name": {
+    "text": "वर्किंग कॉपी",
+    "from": "9660dc116131"
+  },
+  "guides.copies.text": {
+    "text": "हर एजेंट को उसका अपना चेकआउट और ब्रांच दें, ताकि दो एजेंट कभी एक ही फ़ाइलें न बदलें।",
+    "from": "58872d0caca2"
+  },
+  "guides.queue.name": {
+    "text": "क्यू, For you और शेड्यूल",
+    "from": "61c48ccc941d"
+  },
+  "guides.queue.text": {
+    "text": "काम एक बार बाँटें, वह सब देखें जो आपका इंतज़ार कर रहा है, और टास्क तय समय पर चलाएँ।",
+    "from": "28336b44a14a"
+  },
+  "guides.security.name": {
+    "text": "सुरक्षा और निजता",
+    "from": "1418baab9c29"
+  },
+  "guides.security.text": {
+    "text": "क्या सुरक्षित है, और क्या नहीं।",
+    "from": "87046dc292ef"
+  },
+  "guides.faq.name": {
+    "text": "सवाल-जवाब",
+    "from": "dbc468a14b60"
+  },
+  "guides.faq.text": {
+    "text": "आम सवालों के छोटे जवाब।",
+    "from": "ba6e629d77f3"
+  },
+  "several.meta.title": {
+    "text": "एक साथ कई कोडिंग एजेंट कैसे चलाएँ | Aubergine",
+    "from": "edfa22b644ca"
+  },
+  "several.meta.description": {
+    "text": "हर कोडिंग एजेंट को एक कैनवस पर उसके अपने टर्मिनल में रखें, देखें कि कौन आपका इंतज़ार कर रहा है, क्यू से काम बाँटें, और हर एजेंट के बदलाव अलग रखें।",
+    "from": "0886bd4868f2"
+  },
+  "several.crumb": {
+    "text": "कई एजेंट चलाएँ",
+    "from": "8b0dc326e0f4"
+  },
+  "several.title": {
+    "text": "एक साथ कई कोडिंग एजेंट कैसे चलाएँ",
+    "from": "fcc048eb4346"
+  },
+  "several.lead": {
+    "text": "दो एजेंट आसान हैं। पाँच हों तो अफ़रा-तफ़री: कौन-सा अटका है, कौन-सा आपका इंतज़ार कर रहा है, उस फ़ाइल को किसने बदला? Aubergine उसी पल के लिए बना है। यह आपके अपने कंप्यूटर पर चलता है।",
+    "from": "66c0ad369837"
+  },
+  "several.canvas.title": {
+    "text": "1. हर एजेंट को एक कैनवस पर एक टर्मिनल दें",
+    "from": "4866382ee0cb"
+  },
+  "several.canvas.text": {
+    "text": "टर्मिनलों की सूची में सबसे ऊपर <strong>New terminal</strong> पर क्लिक करें (या <code>N</code> दबाएँ), और उसमें एक एजेंट शुरू करें। टर्मिनलों को उनके टाइटल बार से खींचें, उनका आकार बदलें, और उन्हें फ़्रेम में समूहों में रखें। जुड़ा हुआ काम एक कैनवस पर जाता है; अलग-अलग काम अलग कैनवस (टैब) या <em>प्रोजेक्ट</em> में जाते हैं, हर एक के अपने टर्मिनल, क्यू और शेड्यूल के साथ।",
+    "from": "1670aca324d5"
+  },
+  "several.canvas.tmux": {
+    "text": "हर टर्मिनल एक tmux सेशन में असली शेल है। ब्राउज़र बंद करें, या Aubergine रोकें, और आपके एजेंट चलते रहते हैं।",
+    "from": "fcd6a03136f7"
+  },
+  "several.waits.title": {
+    "text": "2. देखें किस एजेंट को आपकी ज़रूरत है",
+    "from": "02af5cc81964"
+  },
+  "several.waits.text": {
+    "text": "हर टर्मिनल दिखाता है कि वह busy है, idle है या waiting for you। यह स्टेटस आपके शेल के हुक से और खुद एजेंटों से आता है, स्क्रीन पढ़कर नहीं। ऊपर <strong>For you</strong> के बगल वाली गिनती और <code>W</code> कुंजी आपको सीधे अगले इंतज़ार कर रहे टर्मिनल पर ले जाते हैं।",
+    "from": "aa2e391970e3"
+  },
+  "several.waits.foryou": {
+    "text": "एक सूची, <strong>For you</strong> (आपके लिए), वह सब इकट्ठा करती है जो किसी इंसान का इंतज़ार कर रहा है: सवाल, मंज़ूरी के लिए रन, देखने के लिए पूरे हुए टास्क, और फ़ेल हुए टास्क कारण के साथ।",
+    "from": "0791b2b7f30f"
+  },
+  "several.queue.title": {
+    "text": "3. क्यू से काम बाँटें",
+    "from": "876879f17f0c"
+  },
+  "several.queue.text": {
+    "text": "एक टास्क एक बार लिखें और उसे <a href=\"/queue-and-schedules/\">क्यू</a> में डालें। जब आप कहें, कोई खाली एजेंट उसे लेता है, इस सीमा के साथ कि एक साथ कितने चलें। दोहराए जाने वाले काम के लिए शेड्यूल सेट करें। एजेंट टास्क प्रस्तावित कर सकते हैं और आपसे सवाल पूछ सकते हैं, पर जब तक आप स्वीकार न करें, कुछ शुरू नहीं होता।",
+    "from": "65372959c515"
+  },
+  "several.apart.title": {
+    "text": "4. हर एजेंट के बदलाव अलग रखें",
+    "from": "819cc99b8d5c"
+  },
+  "several.apart.text": {
+    "text": "एक फ़ोल्डर में दो एजेंट एक ही फ़ाइलें बदलते हैं। हर एक को उसकी अपनी <a href=\"/working-copies/\">वर्किंग कॉपी</a> में शुरू करें: उसकी अपनी ब्रांच पर एक अलग चेकआउट, ताकि आप हर एजेंट का काम अलग से पढ़ सकें। Aubergine आपके लिए कभी merge, push या rebase नहीं करता।",
+    "from": "5f5f23de12b5"
+  },
+  "several.steps.title": {
+    "text": "5. एजेंटों को स्टेप दें, और गेट पर फ़ैसला करें",
+    "from": "33923fa2da4c"
+  },
+  "several.steps.text": {
+    "text": "वर्कफ़्लो स्टेप की एक क्रमवार सूची है जिसका एजेंट पालन करता है, एक पट्टी के साथ जो दिखाती है कि वह कहाँ है। कोई स्टेप आपके मंज़ूर करने या वापस भेजने का इंतज़ार कर सकता है। हर चल रहा रन एक बोर्ड पर दिखता है।",
+    "from": "f0912196c0fb"
+  },
+  "several.not.title": {
+    "text": "यह क्या नहीं करता",
+    "from": "b3a53baf5dfd"
+  },
+  "several.not.model": {
+    "text": "यह किसी मॉडल को कॉल नहीं करता और न आपके लिए कोई चुनता है। एजेंट आपके हैं।",
+    "from": "0735098d7a82"
+  },
+  "several.not.asyou": {
+    "text": "यह किसी एजेंट को ऐसा कुछ करने से नहीं रोकता जो आप कर सकते हैं। एजेंट आपके रूप में चलते हैं। क्या सुरक्षित है और क्या नहीं, इसके लिए <a href=\"/security/\">सुरक्षा</a> देखें।",
+    "from": "a24f01fbd135"
+  },
+  "several.not.one": {
+    "text": "आज यह एक कंप्यूटर पर चलता है। दूसरे लोगों के साथ कैनवस शेयर करना और क्लाउड में एजेंट चलाना <a href=\"/roadmap/\">रोडमैप</a> पर हैं, और बने नहीं हैं।",
+    "from": "ac3140a055a6"
+  },
+  "several.install": {
+    "text": "Aubergine इंस्टॉल करें",
+    "from": "733a8757545c"
+  },
+  "several.ld.q1": {
+    "text": "मैं एक साथ कई कोडिंग एजेंट कैसे चलाऊँ?",
+    "from": "42c519b36444"
+  },
+  "several.ld.a1": {
+    "text": "हर एजेंट को Aubergine कैनवस पर उसके अपने टर्मिनल में रखें। कैनवस दिखाता है कि कौन busy है, idle है या आपका इंतज़ार कर रहा है, और For you नाम की एक सूची हर सवाल और मंज़ूरी इकट्ठा करती है।",
+    "from": "b878f9a6290f"
+  },
+  "several.ld.q2": {
+    "text": "मैं दो एजेंटों को एक ही फ़ाइलें बदलने से कैसे रोकूँ?",
+    "from": "50c7b0247257"
+  },
+  "several.ld.a2": {
+    "text": "हर टर्मिनल को उसकी अपनी वर्किंग कॉपी में शुरू करें: रिपॉज़िटरी का उसका अपना चेकआउट, उसकी अपनी ब्रांच पर। Aubergine आपके लिए कभी merge या push नहीं करता।",
+    "from": "7da5b34834bf"
+  },
+  "several.ld.q3": {
+    "text": "क्या यह किसी भी कोडिंग एजेंट के साथ काम करता है?",
+    "from": "a17347c2058b"
+  },
+  "several.ld.a3": {
+    "text": "हाँ। Aubergine साधारण टर्मिनल चलाता है, इसलिए कोई भी कमांड-लाइन एजेंट उनमें चल सकता है। Aubergine किसी एजेंट के लिए खुद से जो करता है, वह Claude Code के लिए बना है; कोई भी दूसरा एजेंट aubergine कमांड से रिपोर्ट कर सकता है।",
+    "from": "60142c410708"
+  },
+  "copies.meta.title": {
+    "text": "वर्किंग कॉपी के साथ एक रिपॉज़िटरी पर दो कोडिंग एजेंट चलाएँ | Aubergine",
+    "from": "22fa024200af"
+  },
+  "copies.meta.description": {
+    "text": "वर्किंग कॉपी हर एजेंट को रिपॉज़िटरी का उसका अपना चेकआउट और ब्रांच देती है, ताकि दो एजेंट कभी एक ही फ़ाइलें न बदलें और आप हर एक का काम अलग से पढ़ सकें।",
+    "from": "a293deb1c990"
+  },
+  "copies.crumb": {
+    "text": "वर्किंग कॉपी",
+    "from": "9660dc116131"
+  },
+  "copies.title": {
+    "text": "दो एजेंट, एक रिपॉज़िटरी: वर्किंग कॉपी",
+    "from": "acd55dc99e6b"
+  },
+  "copies.lead": {
+    "text": "आम तौर पर हर टर्मिनल आपके असली फ़ोल्डर में काम करता है। तब एक रिपॉज़िटरी में दो एजेंट एक ही फ़ाइलें बदलते हैं, और आप नहीं बता सकते कि कौन-सा बदलाव किसका है। वर्किंग कॉपी हर टर्मिनल को उसका अपना चेकआउट देती है, उसकी अपनी ब्रांच पर।",
+    "from": "bca0754aab05"
+  },
+  "copies.start.title": {
+    "text": "वर्किंग कॉपी में टर्मिनल शुरू करें",
+    "from": "288cfa5a3c70"
+  },
+  "copies.start.s1": {
+    "text": "टर्मिनलों की सूची में सबसे ऊपर <strong>New terminal</strong> के अंत में <strong>▾</strong> दबाएँ, फिर <strong>Shell in a folder or a working copy…</strong>।",
+    "from": "1b1addf2a211"
+  },
+  "copies.start.s2": {
+    "text": "फ़ोल्डर दें और <strong>In its own working copy</strong> चुनें। यह विकल्प सिर्फ़ वहीं मिलता है जहाँ यह हो सकता है, और जहाँ नहीं हो सकता वहाँ कारण बताता है: Git रिपॉज़िटरी नहीं है, bare रिपॉज़िटरी है, या अभी कोई कमिट नहीं है।",
+    "from": "8299d8f71e82"
+  },
+  "copies.start.cli": {
+    "text": "किसी टर्मिनल से, यही काम:",
+    "from": "2e409315b41b"
+  },
+  "copies.get.title": {
+    "text": "आपको क्या मिलता है",
+    "from": "41a1acbef296"
+  },
+  "copies.get.text": {
+    "text": "एक Git worktree, ऐसे फ़ोल्डर में जिसे Aubergine अपने डेटा फ़ोल्डर के नीचे रखता है, कभी आपकी रिपॉज़िटरी के अंदर नहीं, <code>aubergine/&lt;terminal name&gt;-&lt;six characters&gt;</code> नाम की एक नई ब्रांच पर। यह उस कमिट से शुरू होती है जिस पर आपका चेकआउट है, और टर्मिनल उसी सबफ़ोल्डर में शुरू होता है जिसमें आप थे। आपका अपना चेकआउट कभी नहीं बदलता: न उसकी फ़ाइलें, न जो stage किया है, न वह ब्रांच जो आपने चेकआउट की है।",
+    "from": "c06801122abd"
+  },
+  "copies.get.not": {
+    "text": "<strong>साथ नहीं आता:</strong> आपके बिना कमिट किए बदलाव (आपके लिए कुछ stash या कमिट नहीं किया जाता), और वे फ़ाइलें जिन्हें Git अनदेखा करता है या ट्रैक नहीं करता, जैसे इंस्टॉल की हुई डिपेंडेंसी और लोकल सेटिंग्स। जिस प्रोजेक्ट को इंस्टॉल स्टेप चाहिए, उसे वर्किंग कॉपी में फिर से चाहिए।",
+    "from": "131b661ca520"
+  },
+  "copies.read.title": {
+    "text": "पढ़ें कि एजेंट ने क्या बदला",
+    "from": "d455bd023725"
+  },
+  "copies.read.text": {
+    "text": "वर्किंग कॉपी वाला टर्मिनल अपने टाइटल बार पर अपनी ब्रांच और अलग फ़ाइलों की गिनती दिखाता है। बदली, जोड़ी और हटाई गई फ़ाइलों के लिए उस पर क्लिक करें, जिसमें वह काम चिह्नित है जो किसी कमिट में नहीं है, और आपकी चुनी किसी भी फ़ाइल का सिर्फ़ पढ़ने वाला अंतर।",
+    "from": "20954eec8106"
+  },
+  "copies.end.title": {
+    "text": "जब टर्मिनल बंद होता है",
+    "from": "250be513dcc7"
+  },
+  "copies.end.text": {
+    "text": "कोई वर्किंग कॉपी सिर्फ़ इसलिए कभी नहीं हटाई जाती कि उसका टर्मिनल बंद हुआ। आप चुनते हैं:",
+    "from": "b2d17861d25a"
+  },
+  "copies.end.branch": {
+    "text": "<strong>Keep the branch, remove the folder</strong> (ब्रांच रखें, फ़ोल्डर हटाएँ), जब सब कुछ कमिट हो चुका हो।",
+    "from": "5d0203e6fc80"
+  },
+  "copies.end.keep": {
+    "text": "<strong>Keep everything.</strong> (सब कुछ रखें।) यह सूची में रहती है और बताती है कि इसका टर्मिनल जा चुका है।",
+    "from": "a03d07a03a5a"
+  },
+  "copies.end.discard": {
+    "text": "<strong>Discard both</strong> (दोनों हटाएँ), जो दूसरी बार पूछता है जब कॉपी में ऐसा काम हो जो कहीं और नहीं है।",
+    "from": "6ae2c654ddf6"
+  },
+  "copies.end.never": {
+    "text": "Aubergine कभी merge, push या rebase नहीं करता। रखी गई ब्रांच का आप क्या करें, यह आपका काम है।",
+    "from": "e9af3c7c1ccd"
+  },
+  "copies.git.title": {
+    "text": "Aubergine आपकी रिपॉज़िटरी में क्या चलाता है",
+    "from": "3a32836a0505"
+  },
+  "copies.git.text": {
+    "text": "Aubergine वह <code>git</code> इस्तेमाल करता है जो आपके <code>PATH</code> पर है (2.31 या नया)। हर Git कमांड जो वह शुरू करता है, उसमें कोई हुक नहीं चलता, कुछ नहीं पूछा जाता, कुछ भी नेटवर्क तक नहीं पहुँचता, और submodule फ़ेच नहीं होते। आपकी अपनी Git कॉन्फ़िगरेशन में नामित फ़िल्टर, जैसे large-file storage, चलते हैं, जैसे वे आपके अपने <code>git status</code> के लिए चलते हैं।",
+    "from": "b36bf6176964"
+  },
+  "copies.sandbox.title": {
+    "text": "यह सैंडबॉक्स नहीं है",
+    "from": "a4e45939dc38"
+  },
+  "copies.sandbox.text": {
+    "text": "वर्किंग कॉपी काम को अलग रखती है। यह एजेंट को बंद करके नहीं रखती: एजेंट आपके रूप में चलता है और हर वह फ़ाइल पढ़ और बदल सकता है जो आप कर सकते हैं, आपका अपना चेकआउट भी। गलत काम करने वाले एजेंट को रोकने के लिए इस पर भरोसा न करें। <a href=\"/security/\">सुरक्षा</a> देखें।",
+    "from": "12f777412114"
+  },
+  "copies.related": {
+    "text": "जुड़ा हुआ: <a href=\"/run-multiple-coding-agents/\">एक साथ कई कोडिंग एजेंट चलाएँ</a> · <a href=\"/queue-and-schedules/\">क्यू और शेड्यूल</a> (नए टर्मिनल पर शुरू हुए टास्क को उसकी अपनी वर्किंग कॉपी मिलती है जहाँ फ़ोल्डर किसी रिपॉज़िटरी में हो)।",
+    "from": "489f01eef5df"
+  },
+  "copies.ld.howto": {
+    "text": "किसी एजेंट को उसकी अपनी वर्किंग कॉपी में कैसे चलाएँ",
+    "from": "6a1451788037"
+  },
+  "copies.ld.howtoAbout": {
+    "text": "किसी टर्मिनल को रिपॉज़िटरी का उसका अपना चेकआउट और ब्रांच दें।",
+    "from": "64a170729926"
+  },
+  "copies.ld.s1": {
+    "text": "नए टर्मिनल का डायलॉग खोलें",
+    "from": "5bde830139dc"
+  },
+  "copies.ld.s1text": {
+    "text": "टर्मिनलों की सूची में सबसे ऊपर New terminal के अंत वाला तीर दबाएँ, फिर Shell in a folder or a working copy।",
+    "from": "32bded457fe9"
+  },
+  "copies.ld.s2": {
+    "text": "In its own working copy चुनें",
+    "from": "63c9214f2664"
+  },
+  "copies.ld.s2text": {
+    "text": "फ़ोल्डर दें, जो कम से कम एक कमिट वाली Git रिपॉज़िटरी में होना चाहिए, और In its own working copy चुनें।",
+    "from": "e0d93261f9f0"
+  },
+  "copies.ld.s3": {
+    "text": "या कमांड लाइन इस्तेमाल करें",
+    "from": "0ee1f2056fa4"
+  },
+  "copies.ld.s4": {
+    "text": "पढ़ें क्या बदला",
+    "from": "bab32518bbd7"
+  },
+  "copies.ld.s4text": {
+    "text": "बदली, जोड़ी और हटाई गई फ़ाइलें और हर फ़ाइल का अंतर देखने के लिए टर्मिनल के टाइटल बार पर ब्रांच पर क्लिक करें।",
+    "from": "357674609610"
+  },
+  "copies.ld.s5": {
+    "text": "तय करें कि इसका क्या हो",
+    "from": "b2b7c44a3193"
+  },
+  "copies.ld.s5text": {
+    "text": "जब टर्मिनल बंद हो, तो ब्रांच रखें और फ़ोल्डर हटाएँ, सब कुछ रखें, या दोनों हटाएँ।",
+    "from": "9fb24490ab62"
+  },
+  "copies.ld.q1": {
+    "text": "Aubergine में वर्किंग कॉपी क्या है?",
+    "from": "c29a3dde79ad"
+  },
+  "copies.ld.a1": {
+    "text": "एक Git worktree: उसी रिपॉज़िटरी का दूसरा चेकआउट, उसकी अपनी नई ब्रांच पर, Aubergine के डेटा फ़ोल्डर में रखा हुआ और कभी आपकी रिपॉज़िटरी के अंदर नहीं।",
+    "from": "ece33bda8bd9"
+  },
+  "copies.ld.q2": {
+    "text": "क्या वर्किंग कॉपी में मेरे बिना कमिट किए बदलाव होते हैं?",
+    "from": "e87c77e35caf"
+  },
+  "copies.ld.a2": {
+    "text": "नहीं। वे न साथ आते हैं, न छुए जाते हैं। अगर नए टर्मिनल में वे चाहिए, तो पहले कमिट करें।",
+    "from": "fd51d7c79f2a"
+  },
+  "copies.ld.q3": {
+    "text": "क्या Aubergine वर्किंग कॉपी की ब्रांच को merge या push करता है?",
+    "from": "5ed71f558894"
+  },
+  "copies.ld.a3": {
+    "text": "नहीं। Aubergine कभी merge, push या rebase नहीं करता, और कभी वह ब्रांच नहीं बदलता जो आपने चेकआउट की है।",
+    "from": "c35bdaa3b9fd"
+  },
+  "copies.ld.q4": {
+    "text": "क्या वर्किंग कॉपी एक सैंडबॉक्स है?",
+    "from": "43526bb8ae8a"
+  },
+  "copies.ld.a4": {
+    "text": "नहीं। यह काम को अलग रखती है; यह एजेंट को बंद करके नहीं रखती। एजेंट आपके रूप में चलता है और अब भी हर वह फ़ाइल पढ़ और बदल सकता है जो आप कर सकते हैं।",
+    "from": "8b760eb225ac"
+  },
+  "queue.meta.title": {
+    "text": "क्यू, For you सूची और शेड्यूल | Aubergine",
+    "from": "aaf91b58a021"
+  },
+  "queue.meta.description": {
+    "text": "एक टास्क एक बार लिखें और किसी खाली एजेंट को उसे लेने दें, जो कुछ आपका इंतज़ार कर रहा है उसे एक सूची में देखें, और शेड्यूल से टास्क तय समय पर चलाएँ।",
+    "from": "1eede965ade8"
+  },
+  "queue.crumb": {
+    "text": "क्यू और शेड्यूल",
+    "from": "403b3a701d15"
+  },
+  "queue.title": {
+    "text": "क्यू, “For you” और शेड्यूल",
+    "from": "7f3e0c94e636"
+  },
+  "queue.lead": {
+    "text": "दो सूचियाँ जो एक-दूसरे को भरती हैं: क्यू एजेंटों के लिए काम रखती है, और <em>For you</em> वह सब रखती है जो किसी इंसान का इंतज़ार कर रहा है। शेड्यूल तय समय पर क्यू में टास्क जोड़ते हैं।",
+    "from": "b208af706f74"
+  },
+  "queue.queue.title": {
+    "text": "क्यू",
+    "from": "0d95744a342b"
+  },
+  "queue.queue.text": {
+    "text": "पेज के ऊपर <strong>Runs</strong> खोलें (या <code>Q</code> दबाएँ) और <strong>Add task</strong> पर क्लिक करें। टास्क में एक शीर्षक होता है, क्या करना है, और चाहें तो एक फ़ोल्डर, एक वर्कफ़्लो, और कौन उसे ले सकता है। डिफ़ॉल्ट रूप से कोई भी टर्मिनल जहाँ एजेंट खाली हो, उसे ले सकता है; आप एक टर्मिनल का नाम दे सकते हैं, या उसके लिए एक नया एजेंट टर्मिनल शुरू करवा सकते हैं, उसकी अपनी वर्किंग कॉपी में जहाँ फ़ोल्डर किसी रिपॉज़िटरी में हो।",
+    "from": "989827036836"
+  },
+  "queue.queue.next": {
+    "text": "<strong>Start next</strong> पहला ऐसा टास्क शुरू करता है जिसे अभी कोई ले सकता है। सादे शेल को कभी टास्क नहीं दिया जाता।",
+    "from": "ae7829bbd4d8"
+  },
+  "queue.queue.limit": {
+    "text": "<strong>At most N at once</strong> (एक साथ ज़्यादा से ज़्यादा N), जब तक आप न बदलें तब तक तीन। <strong>Hold</strong> नई शुरुआत रोकता है और चल रहे किसी काम को नहीं छूता।",
+    "from": "e2f51053f100"
+  },
+  "queue.queue.itself": {
+    "text": "<strong>Start by itself</strong> तब तक बंद रहता है जब तक आप उसे चालू न करें। कुछ भी टाइमर पर नहीं जाँचा जाता।",
+    "from": "c2a89a6c6733"
+  },
+  "queue.queue.order": {
+    "text": "क्रम आपका है: किसी टास्क को खींचें, या ऐरो कुंजियाँ इस्तेमाल करें।",
+    "from": "e3aa94f38bbc"
+  },
+  "queue.queue.follows": {
+    "text": "टास्क अपने रन के साथ चलता है: जब तक रन मंज़ूरी का इंतज़ार करे तब तक <em>needs you</em>, पूरा होने पर <em>done</em>, रुकने पर एक वाक्य के साथ <em>failed</em>। कुछ भी अपने आप दोबारा नहीं आज़माया जाता।",
+    "from": "a1dc88999acf"
+  },
+  "queue.pic.caption": {
+    "text": "Runs पेज पर For you: एक सवाल, पढ़ने के लिए एक ड्राफ़्ट और सौंपी गई एक सूची, हर एक के साथ कि वह क्या है।",
+    "from": "b25234fa54ca"
+  },
+  "queue.pic.alt": {
+    "text": "Runs पेज का Waiting for you कॉलम: to-do जोड़ने का एक बॉक्स, फिर एक नकली एजेंट का सवाल, पढ़ने के लिए एक ड्राफ़्ट और सौंपी गई एक सूची।",
+    "from": "9bc144e9c95e"
+  },
+  "queue.foryou.title": {
+    "text": "For you",
+    "from": "143134f93925"
+  },
+  "queue.foryou.text": {
+    "text": "सवाल वाले टर्मिनल, मंज़ूरी के लिए या अटके हुए रन, पढ़ने के लिए ड्राफ़्ट और इंस्टॉल, क्यू के लिए प्रस्तावित टास्क, पूरे और फ़ेल हुए टास्क, एजेंट की सौंपी हुई सूचियाँ, और ऐसी वर्किंग कॉपी जिनका टर्मिनल जा चुका है। ऊपर For you के बगल वाली गिनती और “next waiting” एक ही सूची हैं। इसमें से ज़्यादातर इकट्ठा किया जाता है, लिखा नहीं जाता: कोई आइटम तब हटता है जब वह चीज़ खुद पूरी हो जाती है।",
+    "from": "f0987632af6e"
+  },
+  "queue.foryou.propose": {
+    "text": "जो एजेंट ऐसा काम पाता है जो उसे अभी नहीं करना चाहिए, वह एक टास्क प्रस्तावित कर सकता है, और जिसे किसी इंसान की ज़रूरत है, वह आपसे पूछ सकता है:",
+    "from": "6cab942ae32c"
+  },
+  "queue.foryou.land": {
+    "text": "दोनों आपकी सूची में आते हैं। जब तक आप स्वीकार न करें, कोई प्रस्ताव कुछ शुरू नहीं करता।",
+    "from": "b9045f914e0b"
+  },
+  "queue.schedules.title": {
+    "text": "शेड्यूल",
+    "from": "221ff19c904c"
+  },
+  "queue.schedules.text": {
+    "text": "शेड्यूल दिन का एक समय, हफ़्ते के दिन, चलाने के लिए कुछ, और उसे चलाने की कोई जगह है। जब उसका समय आता है तो वह क्यू में एक टास्क जोड़ता है, और क्यू उसे शुरू करती है। Runs पेज पर <strong>Schedules</strong> के नीचे, या <code>aubergine schedule</code>। समय इस कंप्यूटर की घड़ी का होता है; कोई एक्सप्रेशन नहीं, और दिन में एक बार से ज़्यादा कुछ नहीं।",
+    "from": "a43d6965e12f"
+  },
+  "queue.schedules.run": {
+    "text": "<code>aubergine schedule run</code> किसी शेड्यूल को अभी आज़माता है।",
+    "from": "433ccf3d7204"
+  },
+  "queue.plan.title": {
+    "text": "जब चीज़ें योजना के मुताबिक न हों",
+    "from": "0474d0b379f1"
+  },
+  "queue.plan.awake": {
+    "text": "कंप्यूटर जगा होना चाहिए और Aubergine चलता होना चाहिए। जो समय उसके सोते हुए निकल गया, वह उसके लौटने पर <strong>एक बार</strong> चलता है, देर से चिह्नित, अगर वह छह घंटे से कम पुराना हो। नहीं तो उसे <strong>missed</strong> (छूटा) चिह्नित किया जाता है।",
+    "from": "da52cc0d963c"
+  },
+  "queue.plan.skipped": {
+    "text": "जब तक किसी शेड्यूल का पिछला टास्क अभी इंतज़ार कर रहा हो या काम में हो, वह दूसरा नहीं जोड़ता, और बताता है कि उसे छोड़ दिया गया।",
+    "from": "f076f68e0964"
+  },
+  "queue.plan.gone": {
+    "text": "अगर उसमें नामित कोई चीज़ जा चुकी हो (टर्मिनल, स्टेप, कैनवस), तो वह नहीं चलता, और आपकी सूची में एक आइटम यह बताता है।",
+    "from": "bc76023361ed"
+  },
+  "queue.rules.title": {
+    "text": "नियम",
+    "from": "4228aeb07c41"
+  },
+  "queue.rules.text": {
+    "text": "<strong>Rules</strong> के नीचे आप कह सकते हैं “जब कोई टास्क पूरा हो, फ़ेल हो या उसे मेरी ज़रूरत हो, या कोई शेड्यूल चला या छूट गया, तब मुझे सूचना दो या कोई सेव किया हुआ स्टेप चलाओ”। नियम लिखना सिर्फ़ आपका काम है: कोई प्रोग्राम या एजेंट कोई नियम जोड़ या बदल नहीं सकता, और कोई नियम खुद को चालू नहीं कर सकता।",
+    "from": "b4ec8a0da4e6"
+  },
+  "queue.rules.nothing": {
+    "text": "Aubergine किसी मॉडल को कॉल नहीं करता और किसी ऐप का कोई क्रेडेंशियल नहीं रखता। टास्क या शेड्यूल सिर्फ़ एक रन शुरू करता है; जो एजेंट उसे लेता है, वह अपने टूल से काम करता है।",
+    "from": "635fa52c391c"
+  },
+  "queue.related": {
+    "text": "जुड़ा हुआ: <a href=\"/working-copies/\">वर्किंग कॉपी</a> · <a href=\"/run-multiple-coding-agents/\">एक साथ कई कोडिंग एजेंट चलाएँ</a>",
+    "from": "a1b112595d4a"
+  },
+  "queue.ld.headline": {
+    "text": "क्यू, For you सूची और शेड्यूल",
+    "from": "e7aa7f29e008"
+  },
+  "queue.ld.q1": {
+    "text": "Aubergine में क्यू क्या है?",
+    "from": "f483ddf62dfe"
+  },
+  "queue.ld.a1": {
+    "text": "एजेंटों के लिए काम। आप एक टास्क एक बार लिखते हैं, शीर्षक, ब्योरे और चाहें तो एक फ़ोल्डर, एक वर्कफ़्लो और कौन उसे ले सकता है, के साथ। जब आप कहें, कोई खाली एजेंट उसे लेता है।",
+    "from": "3d99add6ea00"
+  },
+  "queue.ld.q2": {
+    "text": "For you सूची क्या है?",
+    "from": "10295c2a2707"
+  },
+  "queue.ld.a2": {
+    "text": "वह सब जो किसी इंसान का इंतज़ार कर रहा है, एक जगह: सवाल वाले टर्मिनल, मंज़ूरी के लिए रन, पढ़ने के लिए ड्राफ़्ट, पूरे और फ़ेल हुए टास्क, और एजेंटों की सौंपी हुई सूचियाँ।",
+    "from": "4167a6eb1070"
+  },
+  "queue.ld.q3": {
+    "text": "क्या कोई एजेंट खुद से काम शुरू कर सकता है?",
+    "from": "a9a38a49db05"
+  },
+  "queue.ld.a3": {
+    "text": "एजेंट एक टास्क प्रस्तावित कर सकता है या आपसे कुछ पूछ सकता है, पर जब तक आप स्वीकार न करें, प्रस्ताव कुछ शुरू नहीं करता।",
+    "from": "75c93148284c"
+  },
+  "queue.ld.q4": {
+    "text": "जब मेरा कंप्यूटर स्लीप में हो तो शेड्यूल का क्या होता है?",
+    "from": "09ef41a88ccf"
+  },
+  "queue.ld.a4": {
+    "text": "कुछ भी कंप्यूटर को नहीं जगाता। जो समय उसके सोते हुए निकल गया, वह उसके लौटने पर एक बार चलता है, देर से चिह्नित, अगर वह छह घंटे से कम पुराना हो। उससे पुराना हो तो उसे missed चिह्नित किया जाता है।",
+    "from": "28be43f4ec53"
+  },
+  "security.meta.title": {
+    "text": "सुरक्षा और निजता | Aubergine",
+    "from": "ceea0328314d"
+  },
+  "security.meta.description": {
+    "text": "Aubergine सिर्फ़ आपके कंप्यूटर पर चलता है, 127.0.0.1 पर सुनता है, हर अनुरोध जाँचता है, हर टोकन का स्कोप तय करता है, और साफ़ बताता है कि वह किससे सुरक्षा नहीं देता।",
+    "from": "d44a642ead3b"
+  },
+  "security.crumb": {
+    "text": "सुरक्षा",
+    "from": "8f6fb4eb7f42"
+  },
+  "security.title": {
+    "text": "सुरक्षा और निजता",
+    "from": "1418baab9c29"
+  },
+  "security.lead": {
+    "text": "Aubergine आपके टर्मिनलों की सुरक्षा के लिए क्या करता है, और, उतना ही ज़रूरी, क्या नहीं करता। छोटे में: यह लोकल है, किसी एजेंट के लिए कुछ करने से पहले पूछता है, और एजेंट फिर भी आपके रूप में चलते हैं।",
+    "from": "1026aabf288c"
+  },
+  "security.local.title": {
+    "text": "सब कुछ आपके कंप्यूटर पर रहता है",
+    "from": "793ac3d2607e"
+  },
+  "security.local.bind": {
+    "text": "सर्वर सिर्फ़ <code>127.0.0.1</code> से बँधता है। हर अनुरोध, और हर WebSocket अपग्रेड, का <code>Host</code> और <code>Origin</code> जाँचा जाता है, और ब्राउज़र के पास एक्सेस कुकी होनी चाहिए।",
+    "from": "6a7b211aac87"
+  },
+  "security.local.elsewhere": {
+    "text": "किसी दूसरे डिवाइस से Aubergine का इस्तेमाल तब तक बंद है जब तक आप उसे सेट अप न करें: उसी कंप्यूटर पर कोई चीज़ HTTPS को उस तक पहुँचाती है, उस नाम के तहत जो आप सेटिंग्स में लिखते हैं, और हर ब्राउज़र एक बार के कोड से जोड़ा जाता है और उसे रद्द किया जा सकता है। जोड़ा गया डिवाइस वह सब कर सकता है जो मालिक कर सकता है। <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/remote.md\">Using Aubergine from elsewhere</a> बताता है कैसे।",
+    "from": "31531be51b00"
+  },
+  "security.local.network": {
+    "text": "Aubergine किसी मॉडल को कॉल नहीं करता और अपनी ओर से कोई नेटवर्क अनुरोध शुरू नहीं करता, दो अपवादों के साथ: लाइब्रेरी सोर्स (एक Git पता) फ़ेच करना जब <em>आप</em> कहें, और आपके अपने <code>gh</code> टूल से, जहाँ वह इंस्टॉल और साइन इन हो, किसी टर्मिनल की ब्रांच का pull request पूछना।",
+    "from": "09a9d3b11a3f"
+  },
+  "security.local.notify": {
+    "text": "डेस्कटॉप नोटिफ़िकेशन खुले पेज से आते हैं। कुछ भी आपके कंप्यूटर से बाहर नहीं जाता।",
+    "from": "a061f94decff"
+  },
+  "security.callers.title": {
+    "text": "तीन तरह के कॉलर, हर एक को अलग से परखा जाता है",
+    "from": "70f1b55254c0"
+  },
+  "security.callers.text": {
+    "text": "कुछ भी देखने से पहले हर अनुरोध को इस पर जाँचा जाता है कि कॉलर क्या कर सकता है, ताकि बिना अधिकार वाला कॉलर जवाब से कुछ न जाने। कॉलर हैं आप (ब्राउज़र में साइन इन), किसी एजेंट का सेशन, और एक API टोकन।",
+    "from": "c126625e9b6c"
+  },
+  "security.callers.scopes": {
+    "text": "<strong>API टोकन के स्कोप होते हैं।</strong> राज़ एक बार दिखाया जाता है और कभी सहेजा नहीं जाता; सिर्फ़ उसका हैश रखा जाता है। टोकन से किए गए कॉल एक activity log में जाते हैं: किसने, क्या और कैसे खत्म हुआ, कभी राज़ नहीं और कभी वह नहीं जो भेजा गया।",
+    "from": "4c7141504f63"
+  },
+  "security.callers.never": {
+    "text": "<strong>कुछ चीज़ें कोई टोकन कभी नहीं कर सकता:</strong> टोकन बनाना या रद्द करना, activity log पढ़ना, सेटिंग्स बदलना, और Aubergine के बाहर के टर्मिनलों से जुड़ा कुछ भी।",
+    "from": "72b0d531789b"
+  },
+  "security.callers.terminal": {
+    "text": "<strong>टर्मिनल एक्सेस दो अलग स्कोप हैं</strong>, एक पढ़ने का और एक टाइप करने का, हर एक आपके चुने सेशनों तक सीमित। आप किसी टर्मिनल को <em>people only</em> (सिर्फ़ लोग) चिह्नित करके उसे हर टोकन के लिए बंद कर सकते हैं।",
+    "from": "25a56b3d0365"
+  },
+  "security.callers.agent": {
+    "text": "<strong>एजेंट का अपना क्रेडेंशियल सीमित होता है।</strong> यह अपना ध्यान-संकेत सेट कर सकता है, अपने नोट में जोड़ सकता है, अपनी स्थिति बता सकता है और जिस रन पर है उसे पढ़ सकता है। यह दूसरे टर्मिनलों, कैनवस या टोकन तक नहीं पहुँच सकता।",
+    "from": "e256c4165a46"
+  },
+  "security.alone.title": {
+    "text": "एजेंट अकेले क्या नहीं कर सकता",
+    "from": "03326de9b26e"
+  },
+  "security.alone.draft": {
+    "text": "एजेंट या प्रोग्राम जो लिखता है (एक वर्कफ़्लो, एक स्टेप) वह एक <strong>ड्राफ़्ट</strong> के रूप में आता है जिसकी आप समीक्षा करते हैं। स्वीकार करना सिर्फ़ आपका काम है।",
+    "from": "4170ed1f1019"
+  },
+  "security.alone.person": {
+    "text": "जो स्टेप किसी इंसान का इंतज़ार करता है, उसे सिर्फ़ इंसान ही मंज़ूर कर सकता है या वापस भेज सकता है। नियम, शेड्यूल और डेमो सिर्फ़ आपके हैं।",
+    "from": "d50827bd1466"
+  },
+  "security.alone.typed": {
+    "text": "Aubergine किसी एजेंट के टर्मिनल में बस कुछ तय वाक्य टाइप करता है, जैसे “read your next step”। जो आपने सहेजा है और जो किसी एजेंट ने लिखा है, उसमें से कुछ भी टाइप नहीं होता।",
+    "from": "fbf9087a8e44"
+  },
+  "security.alone.library": {
+    "text": "लाइब्रेरी से इंस्टॉल करने के लिए ज़रूरी है कि आप ठीक वही सामग्री स्वीकार करें जो आपको दिखाई गई।",
+    "from": "6d62284139e3"
+  },
+  "security.not.title": {
+    "text": "यह किससे सुरक्षा नहीं देता",
+    "from": "664cb80d250f"
+  },
+  "security.not.asyou": {
+    "text": "<strong>एजेंट आपके रूप में चलते हैं।</strong> टर्मिनल में एजेंट वह सब कर सकता है जो आप उस टर्मिनल में कर सकते हैं, जिसमें कमांड चलाना, फ़ाइलें पढ़ना और, अगर वह चाहे, आपके अपने ब्राउज़र सेशन का इस्तेमाल करना शामिल है।",
+    "from": "179663eb5387"
+  },
+  "security.not.approvals": {
+    "text": "<strong>मंज़ूरी कोई ताला नहीं है।</strong> जो एजेंट आपके रूप में चलता है, वह आपके रूप में फ़ैसला कर सकता है। फ़ैसला दर्ज होता है, रोका नहीं जाता।",
+    "from": "dc58a76bd541"
+  },
+  "security.not.copies": {
+    "text": "<strong>वर्किंग कॉपी सैंडबॉक्स नहीं हैं।</strong> वे काम को अलग रखती हैं और एजेंट को बंद करके नहीं रखतीं।",
+    "from": "de9877dffd91"
+  },
+  "security.not.review": {
+    "text": "<strong>लाइब्रेरी आइटम के लिए समीक्षा स्क्रीन ही नियंत्रण है।</strong> आइटम ऐसे निर्देश हैं जिनका पालन एजेंट वह सब करके करेगा जो वह एजेंट कर सकता है। जो आपने नहीं पढ़ा, उसे इंस्टॉल न करें।",
+    "from": "1972614790c0"
+  },
+  "security.not.guide": {
+    "text": "<strong>एजेंटों के लिए गाइड एक सलाह है</strong>, ताला नहीं।",
+    "from": "79f0576917ce"
+  },
+  "security.installer.title": {
+    "text": "इंस्टॉलर",
+    "from": "26ab59561d68"
+  },
+  "security.installer.text": {
+    "text": "यह दो चीज़ें बदलता है: अपना फ़ोल्डर और <code>aubergine</code> नाम का एक लिंक। न <code>sudo</code>, न आपकी शेल स्टार्टअप फ़ाइलों में बदलाव, और यह कभी आपके डेटा फ़ोल्डर को नहीं छूता। <code>aubergine uninstall</code> सिर्फ़ वही हटाता है जो इसने बनाया।",
+    "from": "0dd991c78883"
+  },
+  "security.report.title": {
+    "text": "समस्या बताएँ",
+    "from": "53de38dec81e"
+  },
+  "security.report.text": {
+    "text": "<a href=\"https://github.com/thirstyeggplant/aubergine/issues\">GitHub</a> पर एक issue खोलें। उसमें राज़ या टोकन न डालें।",
+    "from": "578a2c2c1f9c"
+  },
+  "security.related": {
+    "text": "जुड़ा हुआ: <a href=\"/working-copies/\">वर्किंग कॉपी</a> · <a href=\"/faq/\">सवाल-जवाब</a> · <a href=\"/roadmap/\">रोडमैप</a> (मंज़ूरी के मोड और कमांड नीति योजना में हैं, बने नहीं हैं)",
+    "from": "f7672fdbd012"
+  },
+  "security.ld.q1": {
+    "text": "क्या Aubergine मेरे टर्मिनल या कोड कहीं भेजता है?",
+    "from": "8e3369fd3214"
+  },
+  "security.ld.a1": {
+    "text": "नहीं। सर्वर सिर्फ़ 127.0.0.1 पर सुनता है, इसलिए जब तक आप दूसरे डिवाइस से इस्तेमाल सेट अप न करें, वह आपके कंप्यूटर से ही पहुँचा जा सकता है, कहीं और से नहीं। Aubergine किसी मॉडल को कॉल नहीं करता और कुछ फ़ेच नहीं करता जब तक आप खुद कोई लाइब्रेरी सोर्स न जोड़ें; जहाँ आपका अपना gh टूल इंस्टॉल है, वहाँ वह उससे किसी टर्मिनल की ब्रांच का pull request पूछता है।",
+    "from": "d6089c695fd7"
+  },
+  "security.ld.q2": {
+    "text": "क्या कोई एजेंट Aubergine की सेटिंग्स बदल सकता है या खुद के लिए टोकन बना सकता है?",
+    "from": "50baf59f3f49"
+  },
+  "security.ld.a2": {
+    "text": "नहीं। टोकन बनाना, सेटिंग्स बदलना, activity log पढ़ना और Aubergine के बाहर के टर्मिनलों से जुड़ा कुछ भी किसी टोकन को कभी नहीं दिया जाता, चाहे उसके स्कोप कुछ भी हों।",
+    "from": "83dbce1b8ba8"
+  },
+  "security.ld.q3": {
+    "text": "क्या मंज़ूरी मालिक के अपने एजेंट को खुद को मंज़ूरी देने से रोकती है?",
+    "from": "44ef09ccbdb5"
+  },
+  "security.ld.a3": {
+    "text": "नहीं। जो एजेंट आपके रूप में चलता है, वह आपके रूप में काम कर सकता है। मंज़ूरी दर्ज होती है, आपके अपने एजेंट पर लागू नहीं की जाती।",
+    "from": "218bd3880939"
+  },
+  "security.ld.q4": {
+    "text": "क्या वर्किंग कॉपी सैंडबॉक्स हैं?",
+    "from": "8fba34c387fd"
+  },
+  "security.ld.a4": {
+    "text": "नहीं। वे काम को अलग रखती हैं पर एजेंट को बंद करके नहीं रखतीं। एजेंट आपके रूप में चलते हैं।",
+    "from": "00ac8e54df7b"
+  },
+  "roadmap.meta.title": {
+    "text": "रोडमैप: Aubergine के लिए क्या योजना में है | Aubergine",
+    "from": "f82b67c7e4ed"
+  },
+  "roadmap.meta.description": {
+    "text": "Aubergine आज क्या करता है और क्या योजना में है पर अभी बना नहीं: मल्टीप्लेयर, सैंडबॉक्स वाले क्लाउड एजेंट, मंज़ूरी के मोड, क्वालिटी गेट, एक SDK और भी बहुत कुछ।",
+    "from": "eae564891939"
+  },
+  "roadmap.crumb": {
+    "text": "रोडमैप",
+    "from": "92375f997ffe"
+  },
+  "roadmap.tag": {
+    "text": "योजना में है, अभी बना नहीं",
+    "from": "8520b04b5a47"
+  },
+  "roadmap.title": {
+    "text": "रोडमैप",
+    "from": "92375f997ffe"
+  },
+  "roadmap.lead": {
+    "text": "इसमें से कुछ भी आज मौजूद नहीं है। यह वह है जहाँ हम जाना चाहते हैं, और क्रम बदल सकता है। अभी क्या बना है, इसके लिए <a href=\"/guides/\">गाइड</a> देखें।",
+    "from": "905a1a4e53eb"
+  },
+  "roadmap.note": {
+    "text": "योजना में रखा काम एक दिशा है, वादा नहीं। <a href=\"https://github.com/thirstyeggplant/aubergine\">रिपॉज़िटरी</a> दिखाती है कि क्या शिप हुआ है।",
+    "from": "2a77383dd929"
+  },
+  "roadmap.teams.title": {
+    "text": "टीम और कनेक्शन",
+    "from": "4e0046ce8160"
+  },
+  "roadmap.teams.sub": {
+    "text": "साथ काम करते लोग, और उन टूल से पहुँचे जाने वाले एजेंट जो आप पहले से इस्तेमाल करते हैं।",
+    "from": "b79bf222234e"
+  },
+  "roadmap.teams.multiplayer.name": {
+    "text": "मल्टीप्लेयर",
+    "from": "563370a7b0ef"
+  },
+  "roadmap.teams.multiplayer.text": {
+    "text": "दूसरे लोगों और उनके एजेंटों के साथ कैनवस शेयर करें। देखें कौन कहाँ काम कर रहा है, इंतज़ार कर रहे एजेंट को किसी साथी को सौंपें, और साथ मिलकर जवाब दें।",
+    "from": "b11467b3847f"
+  },
+  "roadmap.teams.chat.name": {
+    "text": "चैट इंटरफ़ेस",
+    "from": "2d4271591981"
+  },
+  "roadmap.teams.chat.text": {
+    "text": "टीम चैट ऐप से एजेंटों से पूछें और उनके सवालों के जवाब दें, उसी पहचान और सेटिंग्स के साथ जो ब्राउज़र में हैं।",
+    "from": "e030fc9eb4b5"
+  },
+  "roadmap.teams.tickets.name": {
+    "text": "टिकट और pull request",
+    "from": "c18d1bcc516f"
+  },
+  "roadmap.teams.tickets.text": {
+    "text": "किसी issue को क्यू के टास्क में बदलें, वर्किंग कॉपी से pull request खोलें, और नतीजा टिकट पर वापस बताएँ।",
+    "from": "4641289cfa30"
+  },
+  "roadmap.teams.watches.name": {
+    "text": "वॉच, वेबहुक और ट्रायाज",
+    "from": "9c51f5013534"
+  },
+  "roadmap.teams.watches.text": {
+    "text": "कुछ होने पर काम शुरू करें: फ़ेल हुआ CI जॉब, कोई अलर्ट, नज़र में रखा कोई बदलाव या किसी दूसरी सेवा से आया कॉल। नियम तय करते हैं कि क्या टास्क बनेगा।",
+    "from": "1c497d4b9a99"
+  },
+  "roadmap.teams.skills.name": {
+    "text": "शेयर की गई स्किल और एक मार्केटप्लेस",
+    "from": "31d4586cb1ae"
+  },
+  "roadmap.teams.skills.text": {
+    "text": "किसी एजेंट की स्किल अनुमति देकर शेयर करें, उन्हें मंज़ूरी के साथ पूरी टीम में बढ़ाएँ, Git से इंपोर्ट करें, और एक सार्वजनिक कैटलॉग में समीक्षा किए गए आइटम खोजें।",
+    "from": "fd5d82778447"
+  },
+  "roadmap.teams.memory.name": {
+    "text": "लोगों और रूम के लिए मेमोरी",
+    "from": "ad614cac170e"
+  },
+  "roadmap.teams.memory.text": {
+    "text": "एजेंट ने जो सीखा है उसे हर व्यक्ति और हर शेयर किए गए रूम के लिए, दूसरों से अलग, रखें।",
+    "from": "416f752e7296"
+  },
+  "roadmap.teams.more": {
+    "text": "साथ ही: मॉडल, शेयरिंग और सख़्ती के लिए एडमिन कंट्रोल · खुद होस्ट किया गया टीम सर्वर · टीमों के लिए साइन-इन (SSO और MFA) · हर व्यक्ति, टोकन या एजेंट के लिए इस्तेमाल की सीमा · टर्मिनल शेयर किए बिना शेयर करने के लिए सिर्फ़ पढ़ने वाली रिपोर्ट · “For you” सूची का फ़ोन व्यू · कंपनी के टूल के लिए समीक्षा किए गए कनेक्टर · और चैट ऐप · चुने हुए लोगों के लिए प्रकाशित छोटे अंदरूनी वेब ऐप।",
+    "from": "481fe85556f5"
+  },
+  "roadmap.cloud.title": {
+    "text": "क्लाउड",
+    "from": "b977b950c1ae"
+  },
+  "roadmap.cloud.sub": {
+    "text": "एजेंट जिन्हें आपके लैपटॉप के जगे रहने की ज़रूरत नहीं।",
+    "from": "87fb76b1a7f8"
+  },
+  "roadmap.cloud.sandbox.name": {
+    "text": "क्लाउड में सैंडबॉक्स वाले एजेंट",
+    "from": "afb143bae999"
+  },
+  "roadmap.cloud.sandbox.text": {
+    "text": "किसी एजेंट को एक अलग क्लाउड सैंडबॉक्स में चलाएँ और उसे अपने लोकल एजेंटों वाले कैनवस पर ही देखें। सैंडबॉक्स idle होने पर सो जाते हैं, ज़रूरत पर जागते हैं और रन के बीच स्टोरेज रखते हैं।",
+    "from": "a53d1378b583"
+  },
+  "roadmap.cloud.pool.name": {
+    "text": "एजेंटों का एक पूल",
+    "from": "7d3bca9c3c41"
+  },
+  "roadmap.cloud.pool.text": {
+    "text": "काम का वर्णन करें और एजेंटों के एक पूल को उसे उठाने दें, हर टास्क के लिए एक टर्मिनल का नाम देने के बजाय।",
+    "from": "f9b895723ae8"
+  },
+  "roadmap.cloud.envs.name": {
+    "text": "तैयार एनवायरनमेंट",
+    "from": "ed1697ee039b"
+  },
+  "roadmap.cloud.envs.text": {
+    "text": "डिपेंडेंसी, टूल, स्किल, फ़ाइलें और वेरिएबल एक बार सेव करें, और कोई भी नया टर्मिनल या क्लाउड एजेंट उनसे शुरू करें।",
+    "from": "d97c932492be"
+  },
+  "roadmap.cloud.long.name": {
+    "text": "लंबा, कई चरणों वाला काम",
+    "from": "1207d0ac598f"
+  },
+  "roadmap.cloud.long.text": {
+    "text": "ऐसे टास्क जो घंटों या दिनों तक चरणों में चलें, हर चरण के बाद एक जाँच के साथ, और ऐसी प्रगति जो रीस्टार्ट के बाद भी बनी रहे।",
+    "from": "a1e631232a28"
+  },
+  "roadmap.cloud.deploy.name": {
+    "text": "एक कमांड से क्लाउड डिप्लॉय",
+    "from": "dabcec83058d"
+  },
+  "roadmap.cloud.deploy.text": {
+    "text": "टीम का शेयर किया गया Aubergine एक कमांड से अपने क्लाउड अकाउंट पर लगाएँ।",
+    "from": "6a0dc41e1a38"
+  },
+  "roadmap.cloud.see.name": {
+    "text": "काम जो आप देख सकें",
+    "from": "dae8006cad9a"
+  },
+  "roadmap.cloud.see.text": {
+    "text": "क्लाउड एजेंट ने जो बनाया, उसके स्क्रीनशॉट या एक छोटी रिकॉर्डिंग आपकी “For you” सूची में लौटाता है।",
+    "from": "34843169f72f"
+  },
+  "roadmap.cloud.more": {
+    "text": "साथ ही: HTTP पर MCP, दूसरी मशीनों के एजेंटों के लिए · टेस्ट किया हुआ Linux सपोर्ट · zsh के अलावा शेल इंटीग्रेशन।",
+    "from": "ab24c1d11df2"
+  },
+  "roadmap.control.title": {
+    "text": "नियंत्रण",
+    "from": "32d7e8208247"
+  },
+  "roadmap.control.sub": {
+    "text": "एजेंट कितना कर सकता है, और उसने जो किया उसका रिकॉर्ड।",
+    "from": "9b7292a38acb"
+  },
+  "roadmap.control.approval.name": {
+    "text": "मंज़ूरी के मोड",
+    "from": "7bd88c9e6d2d"
+  },
+  "roadmap.control.approval.text": {
+    "text": "चुनें कि एजेंट अकेले कितना कर सकता है: हर काम मंज़ूर करें, जोखिम वाले मंज़ूर करें, या कोई नहीं।",
+    "from": "b9608d55fca3"
+  },
+  "roadmap.control.policy.name": {
+    "text": "कमांड नीति और जाँच",
+    "from": "c3c9b7fc9194"
+  },
+  "roadmap.control.policy.text": {
+    "text": "उन कमांड के नियम जिन्हें मंज़ूरी चाहिए या जो हमेशा मना हैं, और एजेंट के पढ़ने से पहले बाहरी सामग्री की वैकल्पिक जाँच।",
+    "from": "6697b64fab83"
+  },
+  "roadmap.control.risk.name": {
+    "text": "हर रिपॉज़िटरी के लिए जोखिम स्तर",
+    "from": "989a1686d169"
+  },
+  "roadmap.control.risk.text": {
+    "text": "जहाँ ज़रूरी हो वहाँ सख़्त सीमाएँ, जहाँ न हो वहाँ ढीली।",
+    "from": "10639df3756c"
+  },
+  "roadmap.control.audit.name": {
+    "text": "पूरा ऑडिट ट्रेल",
+    "from": "dfb67e3ffb15"
+  },
+  "roadmap.control.audit.text": {
+    "text": "किसने या किस चीज़ ने क्या किया, इसका हर प्रोजेक्ट के लिए रिकॉर्ड, आज दर्ज होने वाले टोकन कॉल से आगे।",
+    "from": "c97e6d6355c9"
+  },
+  "roadmap.control.undo.name": {
+    "text": "एजेंट का काम पलटें",
+    "from": "f031a385eb84"
+  },
+  "roadmap.control.undo.text": {
+    "text": "वर्किंग कॉपी को किसी टास्क से पहले की स्थिति में लौटाएँ, या उसकी ब्रांच एक कदम में हटा दें।",
+    "from": "8a76ddeef3eb"
+  },
+  "roadmap.control.admin.name": {
+    "text": "एडमिन कंट्रोल",
+    "from": "9636c9a17dce"
+  },
+  "roadmap.control.admin.text": {
+    "text": "पूरी टीम के लिए सेटिंग्स, कि कौन-से मॉडल इस्तेमाल हो सकते हैं और शेयरिंग कैसे काम करती है।",
+    "from": "2e27927bdc87"
+  },
+  "roadmap.control.more": {
+    "text": "साथ ही: हर टर्मिनल, टास्क या शेड्यूल के लिए मॉडल का चुनाव।",
+    "from": "f596795919fb"
+  },
+  "roadmap.quality.title": {
+    "text": "क्वालिटी",
+    "from": "1b2c08a8733d"
+  },
+  "roadmap.quality.sub": {
+    "text": "जाँचें जो काम को पूरा कहे जाने से पहले होती हैं।",
+    "from": "d384d12758ef"
+  },
+  "roadmap.quality.gates.name": {
+    "text": "क्वालिटी गेट",
+    "from": "94515eddaac8"
+  },
+  "roadmap.quality.gates.text": {
+    "text": "कोई रन तब तक पूरा नहीं हो सकता जब तक समीक्षा, टेस्ट या सुरक्षा जाँच पास न बताएँ।",
+    "from": "cb60bf40a980"
+  },
+  "roadmap.quality.review.name": {
+    "text": "pull request की समीक्षा",
+    "from": "88740e3ab820"
+  },
+  "roadmap.quality.review.text": {
+    "text": "एक एजेंट pull request की समीक्षा करता है और आपकी “For you” सूची में रिपोर्ट करता है।",
+    "from": "f2cb7f3e314f"
+  },
+  "roadmap.quality.browser.name": {
+    "text": "ब्राउज़र से टेस्टिंग",
+    "from": "7c8b76a0df2d"
+  },
+  "roadmap.quality.browser.text": {
+    "text": "एक एजेंट किसी बदलाव को टेस्ट करने के लिए ब्राउज़र चलाता है और नतीजे लौटाता है।",
+    "from": "35d5c9f82525"
+  },
+  "roadmap.quality.plan.name": {
+    "text": "बनाने से पहले योजना",
+    "from": "c1b4e7cda45f"
+  },
+  "roadmap.quality.plan.text": {
+    "text": "एक एजेंट योजना प्रस्तावित करता है और फ़ाइलें छूने से पहले आपकी मंज़ूरी का इंतज़ार करता है।",
+    "from": "bfe188b91109"
+  },
+  "roadmap.quality.recipes.name": {
+    "text": "टास्क रेसिपी",
+    "from": "a907955cd430"
+  },
+  "roadmap.quality.recipes.text": {
+    "text": "टेस्ट बनाने, समीक्षा, डिपेंडेंसी और सीक्रेट स्कैन, और दस्तावेज़ों को अप-टू-डेट रखने के लिए तैयार वर्कफ़्लो।",
+    "from": "d2b3c5c8eb35"
+  },
+  "roadmap.quality.metrics.name": {
+    "text": "नतीजों के आँकड़े",
+    "from": "0663013cf8b2"
+  },
+  "roadmap.quality.metrics.text": {
+    "text": "टास्क से पूरा होने तक का समय, एजेंट ने कितनी बार आपका इंतज़ार किया, और किसने शुरू किया उसके हिसाब से इस्तेमाल, हर प्रोजेक्ट के लिए।",
+    "from": "cc91d3e1b4a9"
+  },
+  "roadmap.quality.more": {
+    "text": "साथ ही: घटनाओं की रिपोर्ट, जहाँ एक एजेंट जाँच करता है और postmortem का ड्राफ़्ट बनाता है।",
+    "from": "38f56a594979"
+  },
+  "roadmap.everywhere.title": {
+    "text": "हर जगह",
+    "from": "dcc10bfd55ac"
+  },
+  "roadmap.everywhere.sub": {
+    "text": "Aubergine तक पहुँचने और उस पर बनाने के और तरीके।",
+    "from": "738934daa2cd"
+  },
+  "roadmap.everywhere.sdk.name": {
+    "text": "प्रकाशित SDK",
+    "from": "02aa38383381"
+  },
+  "roadmap.everywhere.sdk.text": {
+    "text": "टाइप्ड क्लाइंट एक इंस्टॉल करने लायक पैकेज के रूप में, फिर Python जैसी दूसरी भाषाओं के लिए क्लाइंट।",
+    "from": "a3e3521d038a"
+  },
+  "roadmap.everywhere.editor.name": {
+    "text": "एडिटर एक्सटेंशन",
+    "from": "92399ab4236f"
+  },
+  "roadmap.everywhere.editor.text": {
+    "text": "अपने टर्मिनल और “For you” सूची VS Code और ऐसे ही एडिटरों के अंदर दिखाएँ, एडिटर छोड़े बिना।",
+    "from": "f8f4319dbbe7"
+  },
+  "roadmap.everywhere.desktop.name": {
+    "text": "डेस्कटॉप ऐप",
+    "from": "7102842054a4"
+  },
+  "roadmap.everywhere.desktop.text": {
+    "text": "मेन्यू-बार आइकन वाला एक पैकेज्ड ऐप, ब्राउज़र टैब के बजाय।",
+    "from": "2a56e82d4a02"
+  },
+  "roadmap.everywhere.windows.name": {
+    "text": "Windows सपोर्ट",
+    "from": "e61744d0c993"
+  },
+  "roadmap.everywhere.windows.text": {
+    "text": "Windows पर Aubergine चलाएँ। आज सिर्फ़ macOS सपोर्टेड है, और Linux टेस्ट नहीं हुआ है।",
+    "from": "6eb34c4aada3"
+  },
+  "faq.meta.title": {
+    "text": "अक्सर पूछे जाने वाले सवाल | Aubergine",
+    "from": "0956334109a5"
+  },
+  "faq.meta.description": {
+    "text": "Aubergine के बारे में जवाब: यह क्या है, इसे क्या चाहिए, क्या यह निजी है, यह कोडिंग एजेंटों के साथ कैसे काम करता है, और क्या योजना में है।",
+    "from": "b4a8a7a10267"
+  },
+  "faq.crumb": {
+    "text": "सवाल-जवाब",
+    "from": "dbc468a14b60"
+  },
+  "faq.title": {
+    "text": "अक्सर पूछे जाने वाले सवाल",
+    "from": "e956a9404b46"
+  },
+  "faq.lead": {
+    "text": "छोटे जवाब। <a href=\"/guides/\">गाइड</a> ज़्यादा गहराई में जाती हैं।",
+    "from": "cc5a52e1d739"
+  },
+  "faq.what.q": {
+    "text": "Aubergine क्या है?",
+    "from": "34bffd794522"
+  },
+  "faq.what.a": {
+    "text": "टर्मिनल सेशनों का एक लोकल, ब्राउज़र में चलने वाला कैनवस। हर टर्मिनल एक नोड है जिसे आप सजा और इस्तेमाल कर सकते हैं, ताकि आप एक साथ कई कोडिंग एजेंट चला सकें और देख सकें कि कौन-सा आपका इंतज़ार कर रहा है।",
+    "from": "e2699684c13a"
+  },
+  "faq.free.q": {
+    "text": "क्या Aubergine मुफ़्त और ओपन सोर्स है?",
+    "from": "0084cd893989"
+  },
+  "faq.free.a": {
+    "text": "हाँ। यह मुफ़्त है और इसका सोर्स GitHub पर है।",
+    "from": "7ac926cbb182"
+  },
+  "faq.need.q": {
+    "text": "Aubergine चलाने के लिए मुझे क्या चाहिए?",
+    "from": "efe26fb96381"
+  },
+  "faq.need.a": {
+    "text": "macOS, tmux 3.2 या नए और Node.js 22 या नए के साथ; इंस्टॉलर को pnpm भी चाहिए। Linux पर चलना चाहिए, पर अभी तक टेस्ट नहीं हुआ है। Windows सपोर्टेड नहीं है।",
+    "from": "d0ea17ebbaa3"
+  },
+  "faq.agents.q": {
+    "text": "क्या यह किसी भी कोडिंग एजेंट के साथ काम करता है?",
+    "from": "a17347c2058b"
+  },
+  "faq.agents.a": {
+    "text": "Aubergine साधारण टर्मिनल चलाता है, इसलिए कोई भी कमांड-लाइन एजेंट उनमें चल सकता है। Aubergine किसी एजेंट के लिए खुद से जो करता है, जैसे यह देखना कि वह इंतज़ार कर रहा है, वह <a href=\"/claude/\">Claude Code</a> के लिए बना है; कोई भी दूसरा एजेंट, <a href=\"/chatgpt/\">Codex</a> भी, अपनी स्थिति <code>aubergine</code> कमांड और एक लोकल API से बता सकता है, और ऐसा MCP सर्वर इस्तेमाल कर सकता है जो सिर्फ़ वही दिखाता है जिसकी उसका टोकन अनुमति देता है।",
+    "from": "f2ff9ce8d976"
+  },
+  "faq.send.q": {
+    "text": "क्या Aubergine मेरे टर्मिनल या कोड कहीं भेजता है?",
+    "from": "8e3369fd3214"
+  },
+  "faq.send.a": {
+    "text": "नहीं। सब कुछ आपके अपने कंप्यूटर पर चलता है। सर्वर सिर्फ़ 127.0.0.1 पर सुनता है।",
+    "from": "3b02bfd4cab9"
+  },
+  "faq.model.q": {
+    "text": "क्या Aubergine किसी AI मॉडल को कॉल करता है?",
+    "from": "f7d8f06fe992"
+  },
+  "faq.model.a": {
+    "text": "नहीं। आपके एजेंट करते हैं। Aubergine बस उनके टर्मिनल चलाता है और उन पर नज़र रखता है, और किसी मॉडल की कोई key नहीं रखता।",
+    "from": "b237bbedc740"
+  },
+  "faq.close.q": {
+    "text": "ब्राउज़र बंद करने पर मेरे टर्मिनलों का क्या होता है?",
+    "from": "b5dd88540c71"
+  },
+  "faq.close.a": {
+    "text": "वे चलते रहते हैं। हर सेशन एक tmux सेशन है जो ब्राउज़र और Aubergine सर्वर दोनों से ज़्यादा चलता है।",
+    "from": "7871478dcac5"
+  },
+  "faq.waiting.q": {
+    "text": "मुझे कैसे पता चले कि कौन-सा एजेंट मेरा इंतज़ार कर रहा है?",
+    "from": "7430a38bad53"
+  },
+  "faq.waiting.a": {
+    "text": "हर टर्मिनल दिखाता है कि वह busy है, idle है या waiting। पेज के ऊपर For you के बगल वाली गिनती और For you सूची वह सब इकट्ठा करती हैं जिसे आपकी ज़रूरत है।",
+    "from": "35f55955a398"
+  },
+  "faq.apart.q": {
+    "text": "मैं दो एजेंटों को एक ही फ़ाइलें बदलने से कैसे रोकूँ?",
+    "from": "50c7b0247257"
+  },
+  "faq.apart.a": {
+    "text": "हर टर्मिनल को उसकी अपनी वर्किंग कॉपी में शुरू करें: उसका अपना चेकआउट, उसकी अपनी ब्रांच पर। Aubergine आपके लिए कभी merge या push नहीं करता।",
+    "from": "823333cbb2a8"
+  },
+  "faq.steps.q": {
+    "text": "क्या मैं किसी एजेंट को पालन करने के लिए स्टेप की सूची दे सकता हूँ?",
+    "from": "76d449645ba9"
+  },
+  "faq.steps.a": {
+    "text": "हाँ। वर्कफ़्लो स्टेप की एक क्रमवार सूची है, एक पट्टी के साथ जो दिखाती है कि एजेंट कहाँ है। कोई स्टेप आपके मंज़ूर करने या वापस भेजने का इंतज़ार कर सकता है।",
+    "from": "9bc235f9572a"
+  },
+  "faq.talk.q": {
+    "text": "क्या एजेंट एक-दूसरे से बात कर सकते हैं?",
+    "from": "bb3d5c828a26"
+  },
+  "faq.talk.a": {
+    "text": "हाँ, सीमाओं के अंदर। टर्मिनलों के बीच संदेशों में नाम वाले भेजने वाले, विराम और ब्लॉक होते हैं, और हर कैनवस के लिए ये डिफ़ॉल्ट रूप से बंद होते हैं।",
+    "from": "b84d014d23cc"
+  },
+  "faq.api.q": {
+    "text": "क्या कोई API है?",
+    "from": "e5876c15cf79"
+  },
+  "faq.api.a": {
+    "text": "हाँ। स्कोप वाले टोकन के साथ एक लोकल HTTP API, एक टाइप्ड क्लाइंट, और एक MCP सर्वर जो सिर्फ़ वही टूल दिखाता है जिन्हें कोई क्रेडेंशियल इस्तेमाल कर सकता है।",
+    "from": "70b05cca5923"
+  },
+  "faq.focus.q": {
+    "text": "क्या मैं एक टर्मिनल अकेले खोल सकता हूँ?",
+    "from": "4e72afdbfe4a"
+  },
+  "faq.focus.a": {
+    "text": "हाँ। टर्मिनल के टाइटल में <strong>Tab ↗</strong> उसे उसके अपने ब्राउज़र टैब में खोलता है, वही टर्मिनल, कॉपी नहीं, और आप माँगें तो उसकी जानकारी और नोट बगल में। टैब बंद करने से कुछ बंद नहीं होता।",
+    "from": "0909e72f8382"
+  },
+  "faq.fields.q": {
+    "text": "क्या मैं किसी टर्मिनल के साथ टिकट या मालिक रख सकता हूँ?",
+    "from": "92b518e794bd"
+  },
+  "faq.fields.a": {
+    "text": "हाँ। टर्मिनल की जानकारी में फ़ील्ड होते हैं, लेबल और वैल्यू की जोड़ियाँ। उसमें मौजूद एजेंट <code>aubergine field set</code> से अपने फ़ील्ड सेट कर सकता है; जहाँ आपने वही लेबल सेट किया है, वहाँ आपका रहता है।",
+    "from": "595a80f0d504"
+  },
+  "faq.cloud.q": {
+    "text": "क्या Aubergine कई लोगों या क्लाउड में एजेंटों को सपोर्ट करेगा?",
+    "from": "3c1035134c8f"
+  },
+  "faq.cloud.a": {
+    "text": "दोनों योजना में हैं और कोई भी बना नहीं है। <a href=\"/roadmap/\">रोडमैप</a> देखें। आज सब कुछ एक कंप्यूटर पर चलता है।",
+    "from": "02eb76c521d2"
+  },
+  "faq.installer.q": {
+    "text": "इंस्टॉलर मेरे कंप्यूटर पर क्या बदलता है?",
+    "from": "e6f26b5fdca4"
+  },
+  "faq.installer.a": {
+    "text": "दो चीज़ें: इंस्टॉल फ़ोल्डर (~/.aubergine) और aubergine नाम का एक लिंक। यह कभी sudo इस्तेमाल नहीं करता, कभी आपकी शेल स्टार्टअप फ़ाइलें नहीं बदलता और कभी Node.js, pnpm या tmux इंस्टॉल नहीं करता।",
+    "from": "00c4335ab841"
+  },
+  "404.meta.title": {
+    "text": "पेज नहीं मिला | Aubergine",
+    "from": "19d867c4b2d8"
+  },
+  "404.meta.description": {
+    "text": "यह पेज मौजूद नहीं है। Aubergine गाइड पर वापस जाएँ।",
+    "from": "920927185e61"
+  },
+  "404.title": {
+    "text": "वह पेज यहाँ नहीं है",
+    "from": "fecba20c2c31"
+  },
+  "404.lead": {
+    "text": "हो सकता है पता गलत टाइप हुआ हो या पेज कहीं और चला गया हो। ये मदद कर सकते हैं:",
+    "from": "679fc5b22fd6"
+  },
+  "404.home": {
+    "text": "Aubergine का होम पेज",
+    "from": "c340078688b5"
+  },
+  "404.install": {
+    "text": "Aubergine इंस्टॉल करें",
+    "from": "733a8757545c"
+  },
+  "404.guides": {
+    "text": "गाइड",
+    "from": "572cd72feb9a"
+  },
+  "404.faq": {
+    "text": "अक्सर पूछे जाने वाले सवाल",
+    "from": "e956a9404b46"
+  }
+}

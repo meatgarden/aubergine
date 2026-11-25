@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="fr" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Guides d’Aubergine | Aubergine</title>
+<meta name="description" content="Des guides pour faire tourner plusieurs agents de code avec Aubergine : la vue d’ensemble, Claude Code et Codex, les copies de travail, la file d’attente et les planifications.">
+<link rel="canonical" href="https://thirstyeggplant.com/fr/guides/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/guides/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/guides/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/guides/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/guides/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/guides/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/guides/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/guides/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/guides/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/guides/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/guides/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/guides/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/guides/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/guides/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="theme-color" content="#120f14" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#faf6f2" media="(prefers-color-scheme: light)">
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="Guides d’Aubergine | Aubergine">
+<meta property="og:description" content="Des guides pour faire tourner plusieurs agents de code avec Aubergine : la vue d’ensemble, Claude Code et Codex, les copies de travail, la file d’attente et les planifications.">
+<meta property="og:url" content="https://thirstyeggplant.com/fr/guides/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine : un canevas de terminaux, l’un occupé et l’autre qui vous attend">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine : un canevas de terminaux, l’un occupé et l’autre qui vous attend">
+<meta name="twitter:title" content="Guides d’Aubergine | Aubergine">
+<meta name="twitter:description" content="Des guides pour faire tourner plusieurs agents de code avec Aubergine : la vue d’ensemble, Claude Code et Codex, les copies de travail, la file d’attente et les planifications.">
+<link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">Aller au contenu</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="Pages">
+      <ul>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">Installer</a></li>
+        <li><a href="./" aria-current="page">Guides</a></li>
+        <li><a href="../security/">Sécurité</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="Langue: Français"><span class="lang-long" aria-hidden="true">Français</span><span class="lang-short" aria-hidden="true">FR</span></summary>
+      <ul class="menu-list"><li><a href="../../guides/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="../../es/guides/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="../../pt/guides/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="./" hreflang="fr" lang="fr" dir="ltr" aria-current="true">Français</a></li><li><a href="../../de/guides/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="../../ja/guides/" hreflang="ja" lang="ja" dir="ltr">日本語</a></li><li><a href="../../zh/guides/" hreflang="zh-Hans" lang="zh-Hans" dir="ltr">简体中文</a></li><li><a href="../../ko/guides/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="../../id/guides/" hreflang="id" lang="id" dir="ltr">Bahasa Indonesia</a></li><li><a href="../../hi/guides/" hreflang="hi" lang="hi" dir="ltr">हिन्दी</a></li><li><a href="../../bn/guides/" hreflang="bn" lang="bn" dir="ltr">বাংলা</a></li><li><a href="../../ar/guides/" hreflang="ar" lang="ar" dir="rtl">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>Menu</summary>
+      <ul class="menu-list">
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">Installer</a></li>
+        <li><a href="./" aria-current="page">Guides</a></li>
+        <li><a href="../security/">Sécurité</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="wrap translated">
+  <p class="note">Aubergine elle-même est en anglais : ses boutons, ses menus et ses images sont ceux de la version anglaise.</p>
+  <p class="note">Cette page a été traduite de l’anglais par une machine. <a href="https://github.com/thirstyeggplant/aubergine/issues">Proposer une correction</a>.</p>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Guides", "item": "https://thirstyeggplant.com/fr/guides/" }
+      ]
+    }
+  ]
+}
+</script>
+<div class="wrap page-head">
+  <nav class="crumbs" aria-label="Où vous êtes"><ol><li><a href="../">Aubergine</a></li><li>Guides</li></ol></nav>
+  <h1>Guides</h1>
+  <p class="lead">Des guides courts et pratiques. La référence complète est le <a href="https://github.com/thirstyeggplant/aubergine#readme">README</a>.</p>
+</div>
+<div class="wrap page-body">
+  <ul class="rows">
+    <li><h2><a class="row-link" href="../install/">Installer Aubergine</a></h2><p>Prérequis, le script d’installation en une ligne, ce qu’il modifie, et solutions aux problèmes courants.</p></li>
+    <li><h2><a class="row-link" href="../run-multiple-coding-agents/">Faire tourner plusieurs agents de code à la fois</a></h2><p>Le canevas, le compteur d’attente, la file d’attente, les copies de travail et les workflows en une visite.</p></li>
+    <li><h2><a class="row-link" href="../claude/">Claude Code dans Aubergine</a></h2><p>Ce qu’Aubergine fait d’elle-même pour Claude Code, et où se trouve chaque chose.</p></li>
+    <li><h2><a class="row-link" href="../chatgpt/">Codex et ChatGPT</a></h2><p>Codex dans un terminal comme n’importe quel programme, ce qu’il peut signaler, et ce qui est construit uniquement pour Claude Code.</p></li>
+    <li><h2><a class="row-link" href="../working-copies/">Copies de travail</a></h2><p>Donnez à chaque agent sa propre extraction et sa propre branche, pour que deux agents ne modifient jamais les mêmes fichiers.</p></li>
+    <li><h2><a class="row-link" href="../queue-and-schedules/">La file d’attente, For you et les planifications</a></h2><p>Distribuez le travail une fois, voyez tout ce qui vous attend, et lancez des tâches à heure fixe.</p></li>
+    <li><h2><a class="row-link" href="../security/">Sécurité et confidentialité</a></h2><p>Ce qui est protégé, et ce qui ne l’est pas.</p></li>
+    <li><h2><a class="row-link" href="../faq/">FAQ</a></h2><p>Des réponses courtes aux questions courantes.</p></li>
+  </ul>
+</div>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <nav aria-label="Toutes les pages">
+      <ul class="foot-links">
+        <li><a href="../">Accueil</a></li>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex et ChatGPT</a></li>
+        <li><a href="../install/">Installer</a></li>
+        <li><a href="./" aria-current="page">Guides</a></li>
+        <li><a href="../run-multiple-coding-agents/">Plusieurs agents à la fois</a></li>
+        <li><a href="../working-copies/">Copies de travail</a></li>
+        <li><a href="../queue-and-schedules/">File d’attente et planifications</a></li>
+        <li><a href="../security/">Sécurité</a></li>
+        <li><a href="../roadmap/">Feuille de route</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">Aubergine est libre et gratuite, sous <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">licence MIT</a>, et tourne sur votre propre ordinateur.</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+</script>
+</body>
+</html>

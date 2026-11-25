@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="zh-Hans" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>用工作副本让两个编程智能体在同一个仓库上工作 | Aubergine</title>
+<meta name="description" content="工作副本给每个智能体一份仓库的独立检出和分支，两个智能体永远不会编辑同一批文件，你也能分开阅读各自的工作。">
+<link rel="canonical" href="https://thirstyeggplant.com/zh/working-copies/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/working-copies/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/working-copies/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/working-copies/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/working-copies/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/working-copies/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/working-copies/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/working-copies/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/working-copies/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/working-copies/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/working-copies/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/working-copies/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/working-copies/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/working-copies/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="theme-color" content="#120f14" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#faf6f2" media="(prefers-color-scheme: light)">
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="用工作副本让两个编程智能体在同一个仓库上工作 | Aubergine">
+<meta property="og:description" content="工作副本给每个智能体一份仓库的独立检出和分支，两个智能体永远不会编辑同一批文件，你也能分开阅读各自的工作。">
+<meta property="og:url" content="https://thirstyeggplant.com/zh/working-copies/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine：一张摆满终端的画布，一个正在忙，一个在等你">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine：一张摆满终端的画布，一个正在忙，一个在等你">
+<meta name="twitter:title" content="用工作副本让两个编程智能体在同一个仓库上工作 | Aubergine">
+<meta name="twitter:description" content="工作副本给每个智能体一份仓库的独立检出和分支，两个智能体永远不会编辑同一批文件，你也能分开阅读各自的工作。">
+<link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">跳到正文</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="页面">
+      <ul>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">安装</a></li>
+        <li><a href="../guides/">指南</a></li>
+        <li><a href="../security/">安全</a></li>
+        <li><a href="../faq/">常见问题</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="语言: 简体中文"><span class="lang-long" aria-hidden="true">简体中文</span><span class="lang-short" aria-hidden="true">ZH</span></summary>
+      <ul class="menu-list"><li><a href="../../working-copies/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="../../es/working-copies/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="../../pt/working-copies/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="../../fr/working-copies/" hreflang="fr" lang="fr" dir="ltr">Français</a></li><li><a href="../../de/working-copies/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="../../ja/working-copies/" hreflang="ja" lang="ja" dir="ltr">日本語</a></li><li><a href="./" hreflang="zh-Hans" lang="zh-Hans" dir="ltr" aria-current="true">简体中文</a></li><li><a href="../../ko/working-copies/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="../../id/working-copies/" hreflang="id" lang="id" dir="ltr">Bahasa Indonesia</a></li><li><a href="../../hi/working-copies/" hreflang="hi" lang="hi" dir="ltr">हिन्दी</a></li><li><a href="../../bn/working-copies/" hreflang="bn" lang="bn" dir="ltr">বাংলা</a></li><li><a href="../../ar/working-copies/" hreflang="ar" lang="ar" dir="rtl">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>菜单</summary>
+      <ul class="menu-list">
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">安装</a></li>
+        <li><a href="../guides/">指南</a></li>
+        <li><a href="../security/">安全</a></li>
+        <li><a href="../faq/">常见问题</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="wrap translated">
+  <p class="note">Aubergine 本身是英文的：它的按钮、菜单和截图都是英文版。</p>
+  <p class="note">本页由机器从英文翻译而来。<a href="https://github.com/thirstyeggplant/aubergine/issues">提交修正</a>。</p>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://thirstyeggplant.com/zh/working-copies/#article",
+      "headline": "两个智能体，一个仓库：工作副本",
+      "description": "工作副本给每个智能体一份仓库的独立检出和分支，两个智能体永远不会编辑同一批文件，你也能分开阅读各自的工作。",
+      "url": "https://thirstyeggplant.com/zh/working-copies/",
+      "mainEntityOfPage": "https://thirstyeggplant.com/zh/working-copies/",
+      "datePublished": "2026-11-18",
+      "inLanguage": "zh-Hans",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "指南", "item": "https://thirstyeggplant.com/guides/" },
+        { "@type": "ListItem", "position": 3, "name": "工作副本", "item": "https://thirstyeggplant.com/zh/working-copies/" }
+      ]
+    },
+    {
+      "@type": "HowTo",
+      "@id": "https://thirstyeggplant.com/zh/working-copies/#howto",
+      "name": "如何让智能体在自己的工作副本中运行",
+      "description": "给终端一份仓库的独立检出和分支。",
+      "tool": [{ "@type": "HowToTool", "name": "Git 2.31" }],
+      "step": [
+        { "@type": "HowToStep", "position": 1, "name": "打开新建终端对话框", "text": "按下终端列表顶部 New terminal 末端的箭头，然后选择 Shell in a folder or a working copy。" },
+        { "@type": "HowToStep", "position": 2, "name": "选择 In its own working copy", "text": "指定文件夹，它必须位于至少有一个提交的 Git 仓库中，然后选择 In its own working copy。" },
+        { "@type": "HowToStep", "position": 3, "name": "或者使用命令行", "text": "aubergine here --copy" },
+        { "@type": "HowToStep", "position": 4, "name": "阅读改动", "text": "点击终端标题栏上的分支，查看修改、新增和删除的文件以及每个文件的差异。" },
+        { "@type": "HowToStep", "position": 5, "name": "决定如何处理它", "text": "终端结束时，选择保留分支并删除文件夹、全部保留，或两者都丢弃。" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://thirstyeggplant.com/zh/working-copies/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "Aubergine 中的工作副本是什么？", "acceptedAnswer": { "@type": "Answer", "text": "一个 Git worktree：同一仓库的第二份检出，位于它自己的新分支上，保存在 Aubergine 的数据文件夹中，绝不在你的仓库里。" } },
+        { "@type": "Question", "name": "工作副本包含我未提交的改动吗？", "acceptedAnswer": { "@type": "Answer", "text": "不包含。它们不会被带过去，也不会被改动。如果新终端需要它们，请先提交。" } },
+        { "@type": "Question", "name": "Aubergine 会合并或推送工作副本的分支吗？", "acceptedAnswer": { "@type": "Answer", "text": "不会。Aubergine 从不合并、推送或变基，也从不改变你检出的分支。" } },
+        { "@type": "Question", "name": "工作副本是沙箱吗？", "acceptedAnswer": { "@type": "Answer", "text": "不是。它把工作分开，但不会把智能体关在里面。智能体以你的身份运行，仍然可以读取和修改你能读写的每个文件。" } }
+      ]
+    }
+  ]
+}
+</script>
+<div class="wrap page-head">
+  <nav class="crumbs" aria-label="当前位置"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">指南</a></li><li>工作副本</li></ol></nav>
+  <h1>两个智能体，一个仓库：工作副本</h1>
+  <p class="lead">通常每个终端都在你真实的文件夹里工作。于是同一个仓库中的两个智能体会编辑同一批文件，你也分不清哪个改动是谁的。工作副本给每个终端一份独立的检出，位于它自己的分支上。</p>
+</div>
+<div class="wrap page-body">
+  <div class="prose">
+    <h2>在工作副本中启动终端</h2>
+    <ol>
+      <li>按下终端列表顶部 <strong>New terminal</strong> 末端的 <strong>▾</strong>，然后选择 <strong>Shell in a folder or a working copy…</strong>。</li>
+      <li>指定文件夹并选择 <strong>In its own working copy</strong>（在它自己的工作副本中）。只有在可行时才提供这个选项，不可行时会说明原因：不是 Git 仓库、是裸仓库，或者还没有提交。</li>
+    </ol>
+    <p>在终端中也可以这样做：</p>
+    <pre><code>aubergine here --copy
+aubergine new "api" --copy --in ~/code/my-project</code></pre>
+    <h2>你会得到什么</h2>
+    <p>一个 Git worktree，位于 Aubergine 放在其数据文件夹下的一个文件夹中，绝不在你的仓库里，处于一个名为 <code>aubergine/&lt;terminal name&gt;-&lt;six characters&gt;</code> 的新分支上。它从你的检出当前所在的提交开始，终端会在你当时所在的同一个子文件夹中启动。你自己的检出永远不会被改动：文件不会，已暂存的内容不会，你检出的分支也不会。</p>
+    <p class="note"><strong>不会带过去的：</strong>你未提交的改动（不会替你 stash 或提交），以及 Git 忽略或不跟踪的文件，例如已安装的依赖和本地设置。需要安装步骤的项目，在工作副本中也需要再做一次。</p>
+    <h2>阅读智能体改了什么</h2>
+    <p>处于工作副本中的终端会在标题栏显示它的分支和有差异的文件数。点击它可以看到修改、新增和删除的文件，不在任何提交中的工作会被标出，还可以查看你选择的任何文件的只读差异。</p>
+    <h2>终端结束时</h2>
+    <p>工作副本绝不会仅仅因为终端结束而被删除。由你选择：</p>
+    <ul>
+      <li>当一切都已提交时，选 <strong>Keep the branch, remove the folder</strong>（保留分支，删除文件夹）。</li>
+      <li><strong>Keep everything.</strong>（全部保留）它会留在列表中，并注明它的终端已经不在了。</li>
+      <li><strong>Discard both</strong>（两者都丢弃），当副本中有别处没有的工作时，它会再问一次。</li>
+    </ul>
+    <pre><code>aubergine copies
+aubergine copies show api
+aubergine copies keep-branch api
+aubergine copies discard api</code></pre>
+    <p>Aubergine 从不合并、推送或变基。保留下来的分支怎么处理由你决定。</p>
+    <h2>Aubergine 在你的仓库中运行什么</h2>
+    <p>Aubergine 使用的 <code>git</code> 是你 <code>PATH</code> 中的那个（2.31 或更高版本）。它启动的每条 Git 命令都不会运行钩子、不会弹出提示、不会访问网络，也不会拉取子模块。你自己的 Git 配置中指定的过滤器（例如大文件存储）会运行，就像你自己运行 <code>git status</code> 时一样。</p>
+    <h2>它不是沙箱</h2>
+    <p>工作副本把工作分开。它不会把智能体关在里面：智能体以你的身份运行，可以读取和修改你能读写的每个文件，包括你自己的检出。不要指望它拦住做错事的智能体。见<a href="../security/">安全</a>。</p>
+    <p>相关：<a href="../run-multiple-coding-agents/">同时运行多个编程智能体</a> · <a href="../queue-and-schedules/">队列与定时计划</a>（在新终端上启动的任务，如果文件夹位于仓库中，会得到自己的工作副本）。</p>
+  </div>
+</div>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <nav aria-label="所有页面">
+      <ul class="foot-links">
+        <li><a href="../">首页</a></li>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex 与 ChatGPT</a></li>
+        <li><a href="../install/">安装</a></li>
+        <li><a href="../guides/">指南</a></li>
+        <li><a href="../run-multiple-coding-agents/">运行多个智能体</a></li>
+        <li><a href="./" aria-current="page">工作副本</a></li>
+        <li><a href="../queue-and-schedules/">队列与定时计划</a></li>
+        <li><a href="../security/">安全</a></li>
+        <li><a href="../roadmap/">路线图</a></li>
+        <li><a href="../faq/">常见问题</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">Aubergine 免费开源，采用 <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">MIT 许可证</a>，运行在你自己的电脑上。</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="bn" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>macOS-এ Aubergine কীভাবে ইনস্টল করবেন | Aubergine</title>
+<meta name="description" content="একটি কমান্ডে Aubergine ইনস্টল করুন, চালু করুন, আর পাঁচ মিনিটের ট্যুর নিন। কী লাগবে, ইনস্টলার কী বদলায়, আর সাধারণ সমস্যার সমাধান।">
+<link rel="canonical" href="https://thirstyeggplant.com/bn/install/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/install/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/install/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/install/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/install/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/install/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/install/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/install/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/install/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/install/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/install/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/install/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/install/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/install/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="theme-color" content="#120f14" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#faf6f2" media="(prefers-color-scheme: light)">
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="macOS-এ Aubergine কীভাবে ইনস্টল করবেন | Aubergine">
+<meta property="og:description" content="একটি কমান্ডে Aubergine ইনস্টল করুন, চালু করুন, আর পাঁচ মিনিটের ট্যুর নিন। কী লাগবে, ইনস্টলার কী বদলায়, আর সাধারণ সমস্যার সমাধান।">
+<meta property="og:url" content="https://thirstyeggplant.com/bn/install/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine: টার্মিনালের একটি ক্যানভাস, একটি কাজে ব্যস্ত আর একটি আপনার অপেক্ষায়">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine: টার্মিনালের একটি ক্যানভাস, একটি কাজে ব্যস্ত আর একটি আপনার অপেক্ষায়">
+<meta name="twitter:title" content="macOS-এ Aubergine কীভাবে ইনস্টল করবেন | Aubergine">
+<meta name="twitter:description" content="একটি কমান্ডে Aubergine ইনস্টল করুন, চালু করুন, আর পাঁচ মিনিটের ট্যুর নিন। কী লাগবে, ইনস্টলার কী বদলায়, আর সাধারণ সমস্যার সমাধান।">
+<link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">পেজে যান</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="পেজ">
+      <ul>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="./" aria-current="page">ইনস্টল</a></li>
+        <li><a href="../guides/">গাইড</a></li>
+        <li><a href="../security/">নিরাপত্তা</a></li>
+        <li><a href="../faq/">প্রশ্নোত্তর</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="ভাষা: বাংলা"><span class="lang-long" aria-hidden="true">বাংলা</span><span class="lang-short" aria-hidden="true">BN</span></summary>
+      <ul class="menu-list"><li><a href="../../install/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="../../es/install/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="../../pt/install/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="../../fr/install/" hreflang="fr" lang="fr" dir="ltr">Français</a></li><li><a href="../../de/install/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="../../ja/install/" hreflang="ja" lang="ja" dir="ltr">日本語</a></li><li><a href="../../zh/install/" hreflang="zh-Hans" lang="zh-Hans" dir="ltr">简体中文</a></li><li><a href="../../ko/install/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="../../id/install/" hreflang="id" lang="id" dir="ltr">Bahasa Indonesia</a></li><li><a href="../../hi/install/" hreflang="hi" lang="hi" dir="ltr">हिन्दी</a></li><li><a href="./" hreflang="bn" lang="bn" dir="ltr" aria-current="true">বাংলা</a></li><li><a href="../../ar/install/" hreflang="ar" lang="ar" dir="rtl">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>মেনু</summary>
+      <ul class="menu-list">
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="./" aria-current="page">ইনস্টল</a></li>
+        <li><a href="../guides/">গাইড</a></li>
+        <li><a href="../security/">নিরাপত্তা</a></li>
+        <li><a href="../faq/">প্রশ্নোত্তর</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="wrap translated">
+  <p class="note">Aubergine নিজে ইংরেজিতে: এর বোতাম, মেনু আর ছবি সবই ইংরেজি।</p>
+  <p class="note">এই পেজটি ইংরেজি থেকে মেশিন দিয়ে অনুবাদ করা। <a href="https://github.com/thirstyeggplant/aubergine/issues">সংশোধন পাঠান</a>।</p>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://thirstyeggplant.com/bn/install/#article",
+      "headline": "Aubergine কীভাবে ইনস্টল করবেন",
+      "description": "একটি কমান্ডে Aubergine ইনস্টল করুন, চালু করুন, আর পাঁচ মিনিটের ট্যুর নিন। কী লাগবে, ইনস্টলার কী বদলায়, আর সাধারণ সমস্যার সমাধান।",
+      "url": "https://thirstyeggplant.com/bn/install/",
+      "mainEntityOfPage": "https://thirstyeggplant.com/bn/install/",
+      "datePublished": "2026-11-18",
+      "inLanguage": "bn",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "ইনস্টল", "item": "https://thirstyeggplant.com/bn/install/" }
+      ]
+    },
+    {
+      "@type": "HowTo",
+      "@id": "https://thirstyeggplant.com/bn/install/#howto",
+      "name": "Aubergine কীভাবে ইনস্টল আর চালু করবেন",
+      "description": "একটি কমান্ডে macOS-এ Aubergine ইনস্টল করুন, চালু করুন, আর ট্যুর নিন।",
+      "step": [
+        { "@type": "HowToStep", "position": 1, "name": "যা লাগবে তা ইনস্টল করুন", "text": "brew install tmux node" },
+        { "@type": "HowToStep", "position": 2, "name": "Aubergine ইনস্টল করুন", "text": "npm install -g @meatgarden/aubergine" },
+        { "@type": "HowToStep", "position": 3, "name": "চালু করুন আর ব্রাউজার খুলুন", "text": "aubergine start --open" },
+        { "@type": "HowToStep", "position": 4, "name": "ট্যুর নিন", "text": "ট্যুর নিন। ফাঁকা ক্যানভাসের মাঝখানে Show me around-এ ক্লিক করুন। এটি “Demo” নামের একটি ক্যানভাস বানায়, কয়েকটি নকল এজেন্ট সহ, আর আটটি ছোট ধাপে আপনাকে ঘুরিয়ে দেখায়। ডেমোর কিছুই আসল নয়, আর aubergine demo --remove সেটি সরিয়ে দেয়।" }
+      ],
+      "tool": [
+        { "@type": "HowToTool", "name": "tmux 3.2" },
+        { "@type": "HowToTool", "name": "Node.js 22" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://thirstyeggplant.com/bn/install/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "Aubergine ইনস্টলার কী বদলায়?", "acceptedAnswer": { "@type": "Answer", "text": "দুটি জিনিস: ইনস্টল ফোল্ডার (~/.aubergine, বা AUBERGINE_HOME) আর আপনার PATH-এ aubergine নামের একটি লিংক। এটি কখনো sudo ব্যবহার করে না, কখনো আপনার শেলের স্টার্টআপ ফাইল সম্পাদনা করে না, আর কখনো Node.js, pnpm বা tmux ইনস্টল করে না।" } },
+        { "@type": "Question", "name": "Aubergine কীভাবে আপডেট করব?", "acceptedAnswer": { "@type": "Answer", "text": "npm দিয়ে ইনস্টল করা: npm install -g @meatgarden/aubergine@latest চালান। ইনস্টলার দিয়ে ইনস্টল করা: aubergine update চালান, বা আবার ইনস্টলার। তারপর সার্ভার রিস্টার্ট করুন।" } },
+        { "@type": "Question", "name": "Aubergine কীভাবে আনইনস্টল করব?", "acceptedAnswer": { "@type": "Answer", "text": "aubergine uninstall চালান। এটি লিংকটি সরায় আর, জিজ্ঞেস করার পরে, ইনস্টলারের বানানো কপিটি। এটি কখনো আপনার ডেটা মোছে না বা আপনার টার্মিনাল বন্ধ করে না।" } },
+        { "@type": "Question", "name": "Aubergine কি Linux বা Windows-এ চলে?", "acceptedAnswer": { "@type": "Answer", "text": "Linux-এ চলার কথা, কিন্তু এখনো পরীক্ষা করা হয়নি। Windows সমর্থিত নয়।" } }
+      ]
+    }
+  ]
+}
+</script>
+<div class="wrap page-head">
+  <nav class="crumbs" aria-label="আপনি কোথায় আছেন"><ol><li><a href="../">Aubergine</a></li><li>ইনস্টল</li></ol></nav>
+  <h1>Aubergine কীভাবে ইনস্টল করবেন</h1>
+  <p class="lead">একটি কমান্ড ইনস্টল করে, একটি চালু করে। ট্যুর সহ মোটামুটি পাঁচ মিনিট।</p>
+</div>
+<div class="wrap page-body">
+  <div class="prose">
+    <h2>যা লাগবে</h2>
+    <ul>
+      <li>macOS। Linux-এও একইভাবে চলার কথা, কিন্তু এখনো পরীক্ষা করা হয়নি।</li>
+      <li><a href="https://github.com/tmux/tmux">tmux</a> 3.2 বা নতুনতর আর Node.js 22 বা নতুনতর। ইনস্টলারের pnpm-ও লাগে।</li>
+    </ul>
+    <p><a href="https://brew.sh">Homebrew</a> থাকলে একটি লাইনেই দুটো পাবেন (ইনস্টলারের জন্য <code>pnpm</code> যোগ করুন):</p>
+    <p class="cmd"><code>brew install tmux node</code><button type="button" class="copy" data-copy data-copied="কপি হয়েছে" aria-live="polite" hidden>কপি করুন</button></p>
+
+    <h2>ইনস্টল আর চালু করুন</h2>
+    <ol>
+      <li><p>npm থেকে <strong>Aubergine ইনস্টল করুন</strong> (শুধু tmux আর Node.js লাগে):</p>
+        <p class="cmd"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="কপি হয়েছে" aria-live="polite" hidden>কপি করুন</button></p>
+        <p>অথবা ইনস্টলার দিয়ে, যার pnpm-ও লাগে আর যা সোর্স থেকে বিল্ড করে:</p>
+        <p class="cmd"><code>curl -fsSL https://raw.githubusercontent.com/thirstyeggplant/aubergine/main/install.sh | sh</code><button type="button" class="copy" data-copy data-copied="কপি হয়েছে" aria-live="polite" hidden>কপি করুন</button></p></li>
+      <li><p><strong>চালু করুন আর ব্রাউজার সাইন ইন করা অবস্থায় খুলুন।</strong></p>
+        <p class="cmd"><code>aubergine start --open</code><button type="button" class="copy" data-copy data-copied="কপি হয়েছে" aria-live="polite" hidden>কপি করুন</button></p></li>
+      <li><p><strong>ট্যুর নিন।</strong> ফাঁকা ক্যানভাসের মাঝখানে <em>Show me around</em>-এ ক্লিক করুন। এটি “Demo” নামের একটি ক্যানভাস বানায়, কয়েকটি নকল এজেন্ট সহ, আর আটটি ছোট ধাপে আপনাকে ঘুরিয়ে দেখায়। ডেমোর কিছুই আসল নয়, আর <code>aubergine demo --remove</code> সেটি সরিয়ে দেয়।</p></li>
+    </ol>
+    <p>আগে স্ক্রিপ্টটি পড়তে চান? ডাউনলোড করুন, পড়ুন, আর <code>sh install.sh --dry-run</code> চালান, কিছু না বদলে এটি কী করত তা দেখতে।</p>
+
+    <h2>ইনস্টলার কী বদলায়</h2>
+    <p>শুধু দুটি জিনিস: ইনস্টল ফোল্ডার (<code>~/.aubergine</code>, বা <code>AUBERGINE_HOME</code>) আর <code>aubergine</code> নামের একটি লিংক, আপনার <code>PATH</code>-এর এমন একটি ফোল্ডারে যেখানে আপনি লিখতে পারেন। এটি আগে সবকিছু যাচাই করে, আর কিছু না থাকলে কিছুই বদলায় না।</p>
+    <p class="note"><strong>এটি করে না:</strong> <code>sudo</code> ব্যবহার, আপনার শেলের স্টার্টআপ ফাইল সম্পাদনা, Node.js, pnpm বা tmux ইনস্টল, বা আপনার ডেটা ফোল্ডারে হাত দেওয়া।</p>
+
+    <h2>কিছু গোলমাল হলে</h2>
+    <p>প্রথমে <code>aubergine doctor</code> চালান। এটি সাধারণ কারণগুলো যাচাই করে।</p>
+    <div class="table">
+      <table>
+        <thead><tr><th>আপনি যা দেখছেন</th><th>যা করবেন</th></tr></thead>
+        <tbody>
+          <tr><td>“This browser is not signed in yet”</td><td>সেই ব্রাউজারে সাইন-ইন লিংকটি একবার খুলুন। <code>aubergine open --print</code> সেটি আবার প্রিন্ট করে।</td></tr>
+          <tr><td>একটি পেজ যা বলে tmux নেই বা খুব পুরোনো</td><td>tmux ইনস্টল বা আপগ্রেড করুন (<code>brew install tmux</code>), তারপর সার্ভার রিস্টার্ট করুন।</td></tr>
+          <tr><td>পোর্ট আগে থেকেই ব্যবহৃত, তাই সার্ভার চালু হচ্ছে না</td><td>অন্য পোর্ট ব্যবহার করুন: <code>AUBERGINE_PORT=4700 aubergine start</code>।</td></tr>
+          <tr><td><code>aubergine: command not found</code></td><td>লিংকটি আপনার <code>PATH</code>-এ নেই। ইনস্টলার সেই একটি লাইন প্রিন্ট করে যা আপনার শেলের স্টার্টআপ ফাইলে যোগ করতে হবে।</td></tr>
+          <tr><td>একটি টার্মিনালে কোনো স্ট্যাটাস ব্যাজ দেখা যাচ্ছে না</td><td>স্ট্যাটাসের জন্য zsh লাগে, আর আপডেটের আগে তৈরি সেশন তার পুরোনো শেলই রাখে। সেটি পার্ক করুন আর নতুন একটি চালু করুন।</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>থামানো, আপডেট, আনইনস্টল</h2>
+    <ul>
+      <li>Ctrl+C দিয়ে সার্ভার <strong>থামান</strong>। আপনার টার্মিনালগুলো চলতে থাকে; ফিরে পেতে সার্ভার আবার চালু করুন আর পেজ রিলোড করুন।</li>
+      <li><strong>আপডেট</strong>: npm দিয়ে ইনস্টল করে থাকলে <code>npm install -g @meatgarden/aubergine@latest</code> দিয়ে; ইনস্টলার ব্যবহার করে থাকলে <code>aubergine update</code> দিয়ে। তারপর সার্ভার রিস্টার্ট করুন।</li>
+      <li><strong>আনইনস্টল</strong>: <code>aubergine uninstall</code> দিয়ে। এটি লিংকটি সরায় আর, জিজ্ঞেস করার পরে, ইনস্টলারের বানানো কপিটি। এটি কখনো আপনার ডেটা মোছে না আর কখনো আপনার টার্মিনাল বন্ধ করে না।</li>
+      <li><strong>লগইনের সময় চালু</strong>: <code>aubergine service install</code> দিয়ে, যাতে আপনাকে শুধু ব্রাউজার খুলতে হয়।</li>
+    </ul>
+
+    <h2>এরপর</h2>
+    <p>পড়ুন <a href="../run-multiple-coding-agents/">কীভাবে একসঙ্গে কয়েকটি কোডিং এজেন্ট চালাবেন</a>, বা <a href="../guides/">গাইডগুলো</a>। পুরো রেফারেন্স আছে <a href="https://github.com/thirstyeggplant/aubergine#readme">README</a>-তে।</p>
+  </div>
+</div>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <nav aria-label="সব পেজ">
+      <ul class="foot-links">
+        <li><a href="../">হোম</a></li>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex আর ChatGPT</a></li>
+        <li><a href="./" aria-current="page">ইনস্টল</a></li>
+        <li><a href="../guides/">গাইড</a></li>
+        <li><a href="../run-multiple-coding-agents/">একাধিক এজেন্ট চালান</a></li>
+        <li><a href="../working-copies/">ওয়ার্কিং কপি</a></li>
+        <li><a href="../queue-and-schedules/">কিউ আর শিডিউল</a></li>
+        <li><a href="../security/">নিরাপত্তা</a></li>
+        <li><a href="../roadmap/">রোডম্যাপ</a></li>
+        <li><a href="../faq/">প্রশ্নোত্তর</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">Aubergine বিনামূল্যে ও ওপেন সোর্স, <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">MIT লাইসেন্সে</a>, আর চলে আপনার নিজের কম্পিউটারে।</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+</script>
+</body>
+</html>

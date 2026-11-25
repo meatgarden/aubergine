@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="fr" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sécurité et confidentialité | Aubergine</title>
+<meta name="description" content="Aubergine ne tourne que sur votre ordinateur, écoute sur 127.0.0.1, vérifie chaque requête, limite la portée de chaque jeton, et dit clairement contre quoi elle ne protège pas.">
+<link rel="canonical" href="https://thirstyeggplant.com/fr/security/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/security/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/security/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/security/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/security/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/security/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/security/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/security/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/security/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/security/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/security/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/security/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/security/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/security/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="theme-color" content="#120f14" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#faf6f2" media="(prefers-color-scheme: light)">
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="Sécurité et confidentialité | Aubergine">
+<meta property="og:description" content="Aubergine ne tourne que sur votre ordinateur, écoute sur 127.0.0.1, vérifie chaque requête, limite la portée de chaque jeton, et dit clairement contre quoi elle ne protège pas.">
+<meta property="og:url" content="https://thirstyeggplant.com/fr/security/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine : un canevas de terminaux, l’un occupé et l’autre qui vous attend">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine : un canevas de terminaux, l’un occupé et l’autre qui vous attend">
+<meta name="twitter:title" content="Sécurité et confidentialité | Aubergine">
+<meta name="twitter:description" content="Aubergine ne tourne que sur votre ordinateur, écoute sur 127.0.0.1, vérifie chaque requête, limite la portée de chaque jeton, et dit clairement contre quoi elle ne protège pas.">
+<link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">Aller au contenu</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="Pages">
+      <ul>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">Installer</a></li>
+        <li><a href="../guides/">Guides</a></li>
+        <li><a href="./" aria-current="page">Sécurité</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="Langue: Français"><span class="lang-long" aria-hidden="true">Français</span><span class="lang-short" aria-hidden="true">FR</span></summary>
+      <ul class="menu-list"><li><a href="../../security/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="../../es/security/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="../../pt/security/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="./" hreflang="fr" lang="fr" dir="ltr" aria-current="true">Français</a></li><li><a href="../../de/security/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="../../ja/security/" hreflang="ja" lang="ja" dir="ltr">日本語</a></li><li><a href="../../zh/security/" hreflang="zh-Hans" lang="zh-Hans" dir="ltr">简体中文</a></li><li><a href="../../ko/security/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="../../id/security/" hreflang="id" lang="id" dir="ltr">Bahasa Indonesia</a></li><li><a href="../../hi/security/" hreflang="hi" lang="hi" dir="ltr">हिन्दी</a></li><li><a href="../../bn/security/" hreflang="bn" lang="bn" dir="ltr">বাংলা</a></li><li><a href="../../ar/security/" hreflang="ar" lang="ar" dir="rtl">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>Menu</summary>
+      <ul class="menu-list">
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">Installer</a></li>
+        <li><a href="../guides/">Guides</a></li>
+        <li><a href="./" aria-current="page">Sécurité</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="wrap translated">
+  <p class="note">Aubergine elle-même est en anglais : ses boutons, ses menus et ses images sont ceux de la version anglaise.</p>
+  <p class="note">Cette page a été traduite de l’anglais par une machine. <a href="https://github.com/thirstyeggplant/aubergine/issues">Proposer une correction</a>.</p>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://thirstyeggplant.com/fr/security/#article",
+      "headline": "Sécurité et confidentialité",
+      "description": "Aubergine ne tourne que sur votre ordinateur, écoute sur 127.0.0.1, vérifie chaque requête, limite la portée de chaque jeton, et dit clairement contre quoi elle ne protège pas.",
+      "url": "https://thirstyeggplant.com/fr/security/",
+      "mainEntityOfPage": "https://thirstyeggplant.com/fr/security/",
+      "datePublished": "2026-11-18",
+      "inLanguage": "fr",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Sécurité", "item": "https://thirstyeggplant.com/fr/security/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://thirstyeggplant.com/fr/security/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "Aubergine envoie-t-elle mes terminaux ou mon code quelque part ?", "acceptedAnswer": { "@type": "Answer", "text": "Non. Le serveur n’écoute que sur 127.0.0.1 : il est donc joignable depuis votre ordinateur et nulle part ailleurs, tant que vous n’avez pas configuré l’usage depuis un autre appareil. Aubergine n’appelle aucun modèle et ne récupère rien, sauf si vous ajoutez vous-même une source de bibliothèque ; là où votre propre outil gh est installé, elle lui demande la pull request de la branche d’un terminal." } },
+        { "@type": "Question", "name": "Un agent peut-il modifier les réglages d’Aubergine ou se créer un jeton ?", "acceptedAnswer": { "@type": "Answer", "text": "Non. Créer des jetons, modifier les réglages, lire le journal d’activité et tout ce qui concerne les terminaux hors d’Aubergine ne sont jamais permis à un jeton, quelles que soient ses portées." } },
+        { "@type": "Question", "name": "Une approbation empêche-t-elle l’agent du propriétaire de s’approuver lui-même ?", "acceptedAnswer": { "@type": "Answer", "text": "Non. Un agent qui tourne en votre nom peut agir en votre nom. Les approbations sont enregistrées, pas imposées à votre propre agent." } },
+        { "@type": "Question", "name": "Les copies de travail sont-elles un bac à sable ?", "acceptedAnswer": { "@type": "Answer", "text": "Non. Elles gardent le travail séparé mais n’enferment pas un agent. Les agents tournent en votre nom." } }
+      ]
+    }
+  ]
+}
+</script>
+<div class="wrap page-head">
+  <nav class="crumbs" aria-label="Où vous êtes"><ol><li><a href="../">Aubergine</a></li><li>Sécurité</li></ol></nav>
+  <h1>Sécurité et confidentialité</h1>
+  <p class="lead">Ce que fait Aubergine pour protéger vos terminaux, et, tout aussi important, ce qu’elle ne fait pas. En bref : elle est locale, elle demande avant d’agir pour un agent, et les agents tournent toujours en votre nom.</p>
+</div>
+<div class="wrap page-body">
+  <div class="prose">
+    <h2>Tout reste sur votre ordinateur</h2>
+    <ul>
+      <li>Le serveur n’écoute que sur <code>127.0.0.1</code>. Chaque requête, et chaque passage en WebSocket, voit son <code>Host</code> et son <code>Origin</code> vérifiés, et le navigateur doit détenir un cookie d’accès.</li>
+      <li>L’usage d’Aubergine depuis un autre appareil est désactivé tant que vous ne l’avez pas configuré : quelque chose sur le même ordinateur lui achemine le HTTPS sous un nom que vous écrivez dans les réglages, et chaque navigateur est appairé avec un code à usage unique et peut être révoqué. Un appareil appairé peut faire tout ce que peut faire le propriétaire. <a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/remote.md">Utiliser Aubergine depuis ailleurs</a> explique comment.</li>
+      <li>Aubergine n’appelle aucun modèle et ne lance aucune requête réseau de son propre chef, à deux exceptions près : récupérer une source de bibliothèque (une adresse Git) quand <em>vous</em> le demandez, et demander à votre propre outil <code>gh</code>, là où il est installé et connecté, la pull request de la branche d’un terminal.</li>
+      <li>Les notifications du bureau viennent de la page ouverte. Rien ne quitte votre ordinateur.</li>
+    </ul>
+    <h2>Trois sortes d’appelants, chacun jugé à part</h2>
+    <p>Chaque requête est comparée à ce que l’appelant a le droit de faire avant que quoi que ce soit ne soit consulté, si bien qu’un appelant sans ce droit n’apprend rien de la réponse. Les appelants sont vous (connecté dans le navigateur), la session d’un agent, et un jeton d’API.</p>
+    <ul>
+      <li><strong>Les jetons d’API ont des portées.</strong> Le secret est affiché une fois et jamais stocké ; seul un hachage est gardé. Les appels faits avec un jeton vont dans un journal d’activité : qui, quoi et comment ça s’est terminé, jamais le secret et jamais ce qui a été envoyé.</li>
+      <li><strong>Certaines choses, aucun jeton ne peut jamais les faire :</strong> créer ou révoquer des jetons, lire le journal d’activité, modifier les réglages, et tout ce qui concerne les terminaux hors d’Aubergine.</li>
+      <li><strong>L’accès aux terminaux, ce sont deux portées distinctes</strong>, l’une pour lire et l’autre pour taper, chacune limitée aux sessions que vous choisissez. Vous pouvez marquer un terminal <em>people only</em> (personnes uniquement) pour le fermer à tout jeton.</li>
+      <li><strong>L’identifiant propre d’un agent est étroit.</strong> Il peut signaler sa propre attention, ajouter à ses propres notes, indiquer son propre état et lire l’exécution sur laquelle il est. Il ne peut atteindre ni d’autres terminaux, ni des canevas, ni des jetons.</li>
+    </ul>
+    <h2>Ce qu’un agent ne peut pas faire seul</h2>
+    <ul>
+      <li>Ce qu’écrit un agent ou un programme (un workflow, une étape) arrive comme <strong>brouillon</strong> que vous relisez. Accepter vous revient à vous seul.</li>
+      <li>Une étape qui attend une personne ne peut être approuvée ou renvoyée que par une personne. Les règles, les planifications et la démo sont à vous seul.</li>
+      <li>Aubergine ne tape que quelques phrases fixes dans le terminal d’un agent, comme « read your next step ». Rien de ce que vous avez stocké, et rien de ce qu’un agent a écrit, n’est tapé.</li>
+      <li>Installer depuis une bibliothèque demande que vous acceptiez exactement le contenu qui vous a été montré.</li>
+    </ul>
+    <h2>Ce contre quoi cela ne protège pas</h2>
+    <p class="note"><strong>Les agents tournent en votre nom.</strong> Un agent dans un terminal peut faire tout ce que vous pouvez faire dans ce terminal, y compris exécuter des commandes, lire des fichiers et, s’il le décide, utiliser votre propre session de navigateur.</p>
+    <ul>
+      <li><strong>Les approbations ne sont pas un verrou.</strong> Un agent qui tourne en votre nom peut décider en votre nom. La décision est enregistrée, pas empêchée.</li>
+      <li><strong>Les copies de travail ne sont pas un bac à sable.</strong> Elles gardent le travail séparé et n’enferment pas un agent.</li>
+      <li><strong>L’écran de relecture est le contrôle des éléments de bibliothèque.</strong> Un élément, ce sont des instructions qu’un agent suivra avec tout ce que cet agent a le droit de faire. N’installez pas ce que vous n’avez pas lu.</li>
+      <li><strong>Le guide pour les agents est un conseil</strong>, pas un verrou.</li>
+    </ul>
+    <h2>Le script d’installation</h2>
+    <p>Il modifie deux choses : son propre dossier et un lien nommé <code>aubergine</code>. Pas de <code>sudo</code>, aucune modification des fichiers de démarrage de votre shell, et il ne touche jamais à votre dossier de données. <code>aubergine uninstall</code> ne retire que ce qu’il a créé.</p>
+    <h2>Signaler un problème</h2>
+    <p>Ouvrez une issue sur <a href="https://github.com/thirstyeggplant/aubergine/issues">GitHub</a>. N’y mettez ni secrets ni jetons.</p>
+    <p>Voir aussi : <a href="../working-copies/">copies de travail</a> · <a href="../faq/">FAQ</a> · <a href="../roadmap/">feuille de route</a> (les modes d’approbation et la politique des commandes sont prévus, pas construits)</p>
+  </div>
+</div>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <nav aria-label="Toutes les pages">
+      <ul class="foot-links">
+        <li><a href="../">Accueil</a></li>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex et ChatGPT</a></li>
+        <li><a href="../install/">Installer</a></li>
+        <li><a href="../guides/">Guides</a></li>
+        <li><a href="../run-multiple-coding-agents/">Plusieurs agents à la fois</a></li>
+        <li><a href="../working-copies/">Copies de travail</a></li>
+        <li><a href="../queue-and-schedules/">File d’attente et planifications</a></li>
+        <li><a href="./" aria-current="page">Sécurité</a></li>
+        <li><a href="../roadmap/">Feuille de route</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">Aubergine est libre et gratuite, sous <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">licence MIT</a>, et tourne sur votre propre ordinateur.</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+</script>
+</body>
+</html>

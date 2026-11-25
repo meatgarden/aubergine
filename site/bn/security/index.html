@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="bn" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>নিরাপত্তা আর গোপনীয়তা | Aubergine</title>
+<meta name="description" content="Aubergine শুধু আপনার কম্পিউটারে চলে, 127.0.0.1-এ শোনে, প্রতিটি অনুরোধ যাচাই করে, প্রতিটি টোকেনের স্কোপ বেঁধে দেয়, আর স্পষ্ট বলে কী থেকে এটি সুরক্ষা দেয় না।">
+<link rel="canonical" href="https://thirstyeggplant.com/bn/security/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/security/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/security/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/security/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/security/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/security/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/security/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/security/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/security/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/security/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/security/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/security/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/security/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/security/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="theme-color" content="#120f14" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#faf6f2" media="(prefers-color-scheme: light)">
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="নিরাপত্তা আর গোপনীয়তা | Aubergine">
+<meta property="og:description" content="Aubergine শুধু আপনার কম্পিউটারে চলে, 127.0.0.1-এ শোনে, প্রতিটি অনুরোধ যাচাই করে, প্রতিটি টোকেনের স্কোপ বেঁধে দেয়, আর স্পষ্ট বলে কী থেকে এটি সুরক্ষা দেয় না।">
+<meta property="og:url" content="https://thirstyeggplant.com/bn/security/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine: টার্মিনালের একটি ক্যানভাস, একটি কাজে ব্যস্ত আর একটি আপনার অপেক্ষায়">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine: টার্মিনালের একটি ক্যানভাস, একটি কাজে ব্যস্ত আর একটি আপনার অপেক্ষায়">
+<meta name="twitter:title" content="নিরাপত্তা আর গোপনীয়তা | Aubergine">
+<meta name="twitter:description" content="Aubergine শুধু আপনার কম্পিউটারে চলে, 127.0.0.1-এ শোনে, প্রতিটি অনুরোধ যাচাই করে, প্রতিটি টোকেনের স্কোপ বেঁধে দেয়, আর স্পষ্ট বলে কী থেকে এটি সুরক্ষা দেয় না।">
+<link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">পেজে যান</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="পেজ">
+      <ul>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">ইনস্টল</a></li>
+        <li><a href="../guides/">গাইড</a></li>
+        <li><a href="./" aria-current="page">নিরাপত্তা</a></li>
+        <li><a href="../faq/">প্রশ্নোত্তর</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="ভাষা: বাংলা"><span class="lang-long" aria-hidden="true">বাংলা</span><span class="lang-short" aria-hidden="true">BN</span></summary>
+      <ul class="menu-list"><li><a href="../../security/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="../../es/security/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="../../pt/security/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="../../fr/security/" hreflang="fr" lang="fr" dir="ltr">Français</a></li><li><a href="../../de/security/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="../../ja/security/" hreflang="ja" lang="ja" dir="ltr">日本語</a></li><li><a href="../../zh/security/" hreflang="zh-Hans" lang="zh-Hans" dir="ltr">简体中文</a></li><li><a href="../../ko/security/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="../../id/security/" hreflang="id" lang="id" dir="ltr">Bahasa Indonesia</a></li><li><a href="../../hi/security/" hreflang="hi" lang="hi" dir="ltr">हिन्दी</a></li><li><a href="./" hreflang="bn" lang="bn" dir="ltr" aria-current="true">বাংলা</a></li><li><a href="../../ar/security/" hreflang="ar" lang="ar" dir="rtl">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>মেনু</summary>
+      <ul class="menu-list">
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">ইনস্টল</a></li>
+        <li><a href="../guides/">গাইড</a></li>
+        <li><a href="./" aria-current="page">নিরাপত্তা</a></li>
+        <li><a href="../faq/">প্রশ্নোত্তর</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="wrap translated">
+  <p class="note">Aubergine নিজে ইংরেজিতে: এর বোতাম, মেনু আর ছবি সবই ইংরেজি।</p>
+  <p class="note">এই পেজটি ইংরেজি থেকে মেশিন দিয়ে অনুবাদ করা। <a href="https://github.com/thirstyeggplant/aubergine/issues">সংশোধন পাঠান</a>।</p>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://thirstyeggplant.com/bn/security/#article",
+      "headline": "নিরাপত্তা আর গোপনীয়তা",
+      "description": "Aubergine শুধু আপনার কম্পিউটারে চলে, 127.0.0.1-এ শোনে, প্রতিটি অনুরোধ যাচাই করে, প্রতিটি টোকেনের স্কোপ বেঁধে দেয়, আর স্পষ্ট বলে কী থেকে এটি সুরক্ষা দেয় না।",
+      "url": "https://thirstyeggplant.com/bn/security/",
+      "mainEntityOfPage": "https://thirstyeggplant.com/bn/security/",
+      "datePublished": "2026-11-18",
+      "inLanguage": "bn",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "নিরাপত্তা", "item": "https://thirstyeggplant.com/bn/security/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://thirstyeggplant.com/bn/security/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "Aubergine কি আমার টার্মিনাল বা কোড কোথাও পাঠায়?", "acceptedAnswer": { "@type": "Answer", "text": "না। সার্ভার শুধু 127.0.0.1-এ শোনে, তাই অন্য ডিভাইস থেকে ব্যবহার সেট আপ না করা পর্যন্ত এটি শুধু আপনার কম্পিউটার থেকেই পৌঁছানো যায়, আর কোথাও থেকে নয়। Aubergine কোনো মডেল কল করে না আর কিছুই ফেচ করে না যদি না আপনি নিজে একটি লাইব্রেরি সোর্স যোগ করেন; যেখানে আপনার নিজের gh টুল ইনস্টল করা, সেখানে এটি তাকে কোনো টার্মিনালের ব্রাঞ্চের pull request জিজ্ঞেস করে।" } },
+        { "@type": "Question", "name": "কোনো এজেন্ট কি Aubergine-এর সেটিংস বদলাতে বা নিজের জন্য টোকেন বানাতে পারে?", "acceptedAnswer": { "@type": "Answer", "text": "না। টোকেন তৈরি, সেটিংস বদলানো, activity log পড়া আর Aubergine-এর বাইরের টার্মিনাল নিয়ে যেকোনো কিছু কোনো টোকেনকে কখনো দেওয়া হয় না, তার স্কোপ যা-ই হোক।" } },
+        { "@type": "Question", "name": "অনুমোদন কি মালিকের নিজের এজেন্টকে নিজেকে অনুমোদন করা থেকে আটকায়?", "acceptedAnswer": { "@type": "Answer", "text": "না। যে এজেন্ট আপনার পরিচয়ে চলে, সে আপনার হয়ে কাজ করতে পারে। অনুমোদন রেকর্ড হয়, আপনার নিজের এজেন্টের ওপর জোর করে প্রয়োগ হয় না।" } },
+        { "@type": "Question", "name": "ওয়ার্কিং কপি কি স্যান্ডবক্স?", "acceptedAnswer": { "@type": "Answer", "text": "না। এগুলো কাজ আলাদা রাখে কিন্তু এজেন্টকে আটকে রাখে না। এজেন্টরা আপনার পরিচয়ে চলে।" } }
+      ]
+    }
+  ]
+}
+</script>
+<div class="wrap page-head">
+  <nav class="crumbs" aria-label="আপনি কোথায় আছেন"><ol><li><a href="../">Aubergine</a></li><li>নিরাপত্তা</li></ol></nav>
+  <h1>নিরাপত্তা আর গোপনীয়তা</h1>
+  <p class="lead">আপনার টার্মিনাল সুরক্ষিত রাখতে Aubergine কী করে, আর, ঠিক ততটাই গুরুত্বপূর্ণ, কী করে না। সংক্ষেপে: এটি লোকাল, কোনো এজেন্টের হয়ে কিছু করার আগে জিজ্ঞেস করে, আর এজেন্টরা তবুও আপনার পরিচয়ে চলে।</p>
+</div>
+<div class="wrap page-body">
+  <div class="prose">
+    <h2>সবকিছু আপনার কম্পিউটারেই থাকে</h2>
+    <ul>
+      <li>সার্ভার শুধু <code>127.0.0.1</code>-এ বাঁধা। প্রতিটি অনুরোধ, আর প্রতিটি WebSocket আপগ্রেডের <code>Host</code> আর <code>Origin</code> যাচাই করা হয়, আর ব্রাউজারের কাছে একটি অ্যাক্সেস কুকি থাকতে হয়।</li>
+      <li>অন্য ডিভাইস থেকে Aubergine ব্যবহার বন্ধ থাকে যতক্ষণ না আপনি তা সেট আপ করেন: একই কম্পিউটারে কিছু একটা HTTPS তার কাছে পৌঁছে দেয়, সেই নামে যা আপনি সেটিংসে লেখেন, আর প্রতিটি ব্রাউজার একবারের একটি কোড দিয়ে যুক্ত হয় এবং তা বাতিল করা যায়। যুক্ত ডিভাইস মালিক যা পারেন তার সবই করতে পারে। <a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/remote.md">Using Aubergine from elsewhere</a> বলে কীভাবে।</li>
+      <li>Aubergine কোনো মডেল কল করে না আর নিজে থেকে কোনো নেটওয়ার্ক অনুরোধ শুরু করে না, দুটি ব্যতিক্রম ছাড়া: <em>আপনি</em> চাইলে একটি লাইব্রেরি সোর্স (একটি Git ঠিকানা) ফেচ করা, আর আপনার নিজের <code>gh</code> টুলকে, যেখানে তা ইনস্টল ও সাইন ইন করা, কোনো টার্মিনালের ব্রাঞ্চের pull request জিজ্ঞেস করা।</li>
+      <li>ডেস্কটপ নোটিফিকেশন আসে খোলা পেজ থেকে। কিছুই আপনার কম্পিউটারের বাইরে যায় না।</li>
+    </ul>
+    <h2>তিন ধরনের কলার, প্রত্যেককে আলাদাভাবে বিচার করা হয়</h2>
+    <p>কিছু খোঁজার আগেই প্রতিটি অনুরোধ যাচাই করা হয় কলার কী করতে পারে তার বিপরীতে, যাতে অধিকারহীন কলার উত্তর থেকে কিছুই না জানে। কলাররা হলো আপনি (ব্রাউজারে সাইন ইন করা), একটি এজেন্টের সেশন, আর একটি API টোকেন।</p>
+    <ul>
+      <li><strong>API টোকেনের স্কোপ থাকে।</strong> গোপন অংশটি একবার দেখানো হয় আর কখনো সংরক্ষণ করা হয় না; শুধু একটি হ্যাশ রাখা হয়। টোকেন দিয়ে করা কল একটি activity log-এ যায়: কে, কী আর কীভাবে শেষ হলো, কখনো গোপন অংশ নয় আর কখনো যা পাঠানো হয়েছে তা নয়।</li>
+      <li><strong>কিছু কাজ কোনো টোকেন কখনো করতে পারে না:</strong> টোকেন তৈরি বা বাতিল করা, activity log পড়া, সেটিংস বদলানো, আর Aubergine-এর বাইরের টার্মিনাল নিয়ে যেকোনো কিছু।</li>
+      <li><strong>টার্মিনাল অ্যাক্সেস দুটি আলাদা স্কোপ</strong>, একটি পড়ার আর একটি টাইপ করার, প্রতিটি আপনার বেছে নেওয়া সেশনে সীমিত। কোনো টার্মিনালকে <em>people only</em> (শুধু মানুষ) চিহ্নিত করে সব টোকেনের জন্য বন্ধ করতে পারেন।</li>
+      <li><strong>এজেন্টের নিজের ক্রেডেনশিয়াল সংকীর্ণ।</strong> এটি নিজের মনোযোগ-সংকেত সেট করতে, নিজের নোটে যোগ করতে, নিজের অবস্থা জানাতে আর যে রানে আছে তা পড়তে পারে। এটি অন্য টার্মিনাল, ক্যানভাস বা টোকেনে পৌঁছাতে পারে না।</li>
+    </ul>
+    <h2>এজেন্ট একা যা করতে পারে না</h2>
+    <ul>
+      <li>একটি এজেন্ট বা প্রোগ্রাম যা লেখে (একটি ওয়ার্কফ্লো, একটি ধাপ) তা একটি <strong>ড্রাফট</strong> হিসেবে আসে যা আপনি পর্যালোচনা করেন। গ্রহণ করা শুধু আপনার কাজ।</li>
+      <li>যে ধাপ একজন মানুষের অপেক্ষা করে, তা শুধু একজন মানুষই অনুমোদন করতে বা ফেরত পাঠাতে পারেন। নিয়ম, শিডিউল আর ডেমো শুধু আপনার।</li>
+      <li>Aubergine একটি এজেন্টের টার্মিনালে শুধু কয়েকটি নির্দিষ্ট বাক্য টাইপ করে, যেমন “read your next step”। আপনি যা সংরক্ষণ করেছেন আর কোনো এজেন্ট যা লিখেছে, তার কিছুই টাইপ হয় না।</li>
+      <li>লাইব্রেরি থেকে ইনস্টল করতে হলে আপনাকে ঠিক সেই কনটেন্টটিই গ্রহণ করতে হবে যা আপনাকে দেখানো হয়েছিল।</li>
+    </ul>
+    <h2>এটি যা থেকে সুরক্ষা দেয় না</h2>
+    <p class="note"><strong>এজেন্টরা আপনার পরিচয়ে চলে।</strong> টার্মিনালের একটি এজেন্ট সেই টার্মিনালে আপনি যা পারেন সবই পারে, যার মধ্যে আছে কমান্ড চালানো, ফাইল পড়া আর, চাইলে, আপনার নিজের ব্রাউজার সেশন ব্যবহার করা।</p>
+    <ul>
+      <li><strong>অনুমোদন কোনো তালা নয়।</strong> যে এজেন্ট আপনার পরিচয়ে চলে, সে আপনার হয়ে সিদ্ধান্ত নিতে পারে। সিদ্ধান্তটি রেকর্ড হয়, আটকানো হয় না।</li>
+      <li><strong>ওয়ার্কিং কপি স্যান্ডবক্স নয়।</strong> এগুলো কাজ আলাদা রাখে, এজেন্টকে আটকে রাখে না।</li>
+      <li><strong>লাইব্রেরি আইটেমের জন্য পর্যালোচনার স্ক্রিনই নিয়ন্ত্রণ।</strong> একটি আইটেম হলো এমন নির্দেশনা যা একটি এজেন্ট তার পক্ষে সম্ভব সবকিছু দিয়ে অনুসরণ করবে। যা পড়েননি তা ইনস্টল করবেন না।</li>
+      <li><strong>এজেন্টদের গাইড একটি পরামর্শ</strong>, তালা নয়।</li>
+    </ul>
+    <h2>ইনস্টলার</h2>
+    <p>এটি দুটি জিনিস বদলায়: নিজের ফোল্ডার আর <code>aubergine</code> নামের একটি লিংক। কোনো <code>sudo</code> নয়, আপনার শেলের স্টার্টআপ ফাইলে কোনো সম্পাদনা নয়, আর এটি কখনো আপনার ডেটা ফোল্ডারে হাত দেয় না। <code>aubergine uninstall</code> শুধু তা-ই সরায় যা এটি বানিয়েছে।</p>
+    <h2>সমস্যা জানান</h2>
+    <p><a href="https://github.com/thirstyeggplant/aubergine/issues">GitHub</a>-এ একটি issue খুলুন। তাতে গোপন তথ্য বা টোকেন দেবেন না।</p>
+    <p>সম্পর্কিত: <a href="../working-copies/">ওয়ার্কিং কপি</a> · <a href="../faq/">প্রশ্নোত্তর</a> · <a href="../roadmap/">রোডম্যাপ</a> (অনুমোদনের মোড আর কমান্ড নীতি পরিকল্পনায় আছে, তৈরি হয়নি)</p>
+  </div>
+</div>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <nav aria-label="সব পেজ">
+      <ul class="foot-links">
+        <li><a href="../">হোম</a></li>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex আর ChatGPT</a></li>
+        <li><a href="../install/">ইনস্টল</a></li>
+        <li><a href="../guides/">গাইড</a></li>
+        <li><a href="../run-multiple-coding-agents/">একাধিক এজেন্ট চালান</a></li>
+        <li><a href="../working-copies/">ওয়ার্কিং কপি</a></li>
+        <li><a href="../queue-and-schedules/">কিউ আর শিডিউল</a></li>
+        <li><a href="./" aria-current="page">নিরাপত্তা</a></li>
+        <li><a href="../roadmap/">রোডম্যাপ</a></li>
+        <li><a href="../faq/">প্রশ্নোত্তর</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">Aubergine বিনামূল্যে ও ওপেন সোর্স, <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">MIT লাইসেন্সে</a>, আর চলে আপনার নিজের কম্পিউটারে।</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+</script>
+</body>
+</html>

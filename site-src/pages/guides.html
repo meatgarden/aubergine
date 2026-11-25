@@ -1,0 +1,39 @@
+<!--page {"order": 4, "llms": null}-->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": {{json:guides.crumb}}, "item": "{{=url}}" }
+      ]
+    }
+  ]
+}
+</script>
+<div class="wrap page-head">
+  <nav class="crumbs" aria-label="{{attr:site.crumbs}}"><ol><li><a href="/">Aubergine</a></li><li>{{guides.crumb}}</li></ol></nav>
+  <h1>{{guides.title}}</h1>
+  <p class="lead">{{guides.lead}}</p>
+</div>
+<div class="wrap page-body">
+  <ul class="rows">
+    <li><h2><a class="row-link" href="/install/">{{guides.install.name}}</a></h2><p>{{guides.install.text}}</p></li>
+    <li><h2><a class="row-link" href="/run-multiple-coding-agents/">{{guides.several.name}}</a></h2><p>{{guides.several.text}}</p></li>
+    <li><h2><a class="row-link" href="/claude/">{{guides.claude.name}}</a></h2><p>{{guides.claude.text}}</p></li>
+    <li><h2><a class="row-link" href="/chatgpt/">{{guides.codex.name}}</a></h2><p>{{guides.codex.text}}</p></li>
+    <li><h2><a class="row-link" href="/working-copies/">{{guides.copies.name}}</a></h2><p>{{guides.copies.text}}</p></li>
+    <li><h2><a class="row-link" href="/queue-and-schedules/">{{guides.queue.name}}</a></h2><p>{{guides.queue.text}}</p></li>
+    <li><h2><a class="row-link" href="/security/">{{guides.security.name}}</a></h2><p>{{guides.security.text}}</p></li>
+    <li><h2><a class="row-link" href="/faq/">{{guides.faq.name}}</a></h2><p>{{guides.faq.text}}</p></li>
+  </ul>
+</div>

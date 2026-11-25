@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="fr" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>La file d’attente, la liste For you et les planifications | Aubergine</title>
+<meta name="description" content="Écrivez une tâche une fois et laissez un agent libre la prendre, voyez tout ce qui vous attend dans une seule liste, et lancez des tâches à heure fixe avec des planifications.">
+<link rel="canonical" href="https://thirstyeggplant.com/fr/queue-and-schedules/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/queue-and-schedules/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/queue-and-schedules/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/queue-and-schedules/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/queue-and-schedules/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/queue-and-schedules/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/queue-and-schedules/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/queue-and-schedules/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/queue-and-schedules/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/queue-and-schedules/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/queue-and-schedules/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/queue-and-schedules/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/queue-and-schedules/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/queue-and-schedules/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="theme-color" content="#120f14" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#faf6f2" media="(prefers-color-scheme: light)">
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="La file d’attente, la liste For you et les planifications | Aubergine">
+<meta property="og:description" content="Écrivez une tâche une fois et laissez un agent libre la prendre, voyez tout ce qui vous attend dans une seule liste, et lancez des tâches à heure fixe avec des planifications.">
+<meta property="og:url" content="https://thirstyeggplant.com/fr/queue-and-schedules/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine : un canevas de terminaux, l’un occupé et l’autre qui vous attend">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine : un canevas de terminaux, l’un occupé et l’autre qui vous attend">
+<meta name="twitter:title" content="La file d’attente, la liste For you et les planifications | Aubergine">
+<meta name="twitter:description" content="Écrivez une tâche une fois et laissez un agent libre la prendre, voyez tout ce qui vous attend dans une seule liste, et lancez des tâches à heure fixe avec des planifications.">
+<link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">Aller au contenu</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="Pages">
+      <ul>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">Installer</a></li>
+        <li><a href="../guides/">Guides</a></li>
+        <li><a href="../security/">Sécurité</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="Langue: Français"><span class="lang-long" aria-hidden="true">Français</span><span class="lang-short" aria-hidden="true">FR</span></summary>
+      <ul class="menu-list"><li><a href="../../queue-and-schedules/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="../../es/queue-and-schedules/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="../../pt/queue-and-schedules/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="./" hreflang="fr" lang="fr" dir="ltr" aria-current="true">Français</a></li><li><a href="../../de/queue-and-schedules/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="../../ja/queue-and-schedules/" hreflang="ja" lang="ja" dir="ltr">日本語</a></li><li><a href="../../zh/queue-and-schedules/" hreflang="zh-Hans" lang="zh-Hans" dir="ltr">简体中文</a></li><li><a href="../../ko/queue-and-schedules/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="../../id/queue-and-schedules/" hreflang="id" lang="id" dir="ltr">Bahasa Indonesia</a></li><li><a href="../../hi/queue-and-schedules/" hreflang="hi" lang="hi" dir="ltr">हिन्दी</a></li><li><a href="../../bn/queue-and-schedules/" hreflang="bn" lang="bn" dir="ltr">বাংলা</a></li><li><a href="../../ar/queue-and-schedules/" hreflang="ar" lang="ar" dir="rtl">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>Menu</summary>
+      <ul class="menu-list">
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">Installer</a></li>
+        <li><a href="../guides/">Guides</a></li>
+        <li><a href="../security/">Sécurité</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="wrap translated">
+  <p class="note">Aubergine elle-même est en anglais : ses boutons, ses menus et ses images sont ceux de la version anglaise.</p>
+  <p class="note">Cette page a été traduite de l’anglais par une machine. <a href="https://github.com/thirstyeggplant/aubergine/issues">Proposer une correction</a>.</p>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://thirstyeggplant.com/fr/queue-and-schedules/#article",
+      "headline": "La file d’attente, la liste For you et les planifications",
+      "description": "Écrivez une tâche une fois et laissez un agent libre la prendre, voyez tout ce qui vous attend dans une seule liste, et lancez des tâches à heure fixe avec des planifications.",
+      "url": "https://thirstyeggplant.com/fr/queue-and-schedules/",
+      "mainEntityOfPage": "https://thirstyeggplant.com/fr/queue-and-schedules/",
+      "datePublished": "2026-11-18",
+      "inLanguage": "fr",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Guides", "item": "https://thirstyeggplant.com/guides/" },
+        { "@type": "ListItem", "position": 3, "name": "File d’attente et planifications", "item": "https://thirstyeggplant.com/fr/queue-and-schedules/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://thirstyeggplant.com/fr/queue-and-schedules/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "Qu’est-ce que la file d’attente dans Aubergine ?", "acceptedAnswer": { "@type": "Answer", "text": "Du travail pour les agents. Vous écrivez une tâche une fois, avec un titre, des détails et éventuellement un dossier, un workflow et qui peut la prendre. Un agent libre la prend quand vous le dites." } },
+        { "@type": "Question", "name": "Qu’est-ce que la liste For you ?", "acceptedAnswer": { "@type": "Answer", "text": "Tout ce qui attend une personne, en un seul endroit : les terminaux qui ont une question, les exécutions à approuver, les brouillons à lire, les tâches terminées et échouées, et les listes remises par des agents." } },
+        { "@type": "Question", "name": "Un agent peut-il commencer un travail de lui-même ?", "acceptedAnswer": { "@type": "Answer", "text": "Un agent peut proposer une tâche ou vous demander quelque chose, mais une proposition ne lance rien tant que vous ne l’avez pas acceptée." } },
+        { "@type": "Question", "name": "Que devient une planification quand mon ordinateur est en veille ?", "acceptedAnswer": { "@type": "Answer", "text": "Rien ne réveille l’ordinateur. Une heure passée pendant qu’il dormait s’exécute une fois à son retour, marquée en retard, si elle date de moins de six heures. Au-delà, elle est marquée manquée." } }
+      ]
+    }
+  ]
+}
+</script>
+<div class="wrap page-head">
+  <nav class="crumbs" aria-label="Où vous êtes"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">Guides</a></li><li>File d’attente et planifications</li></ol></nav>
+  <h1>La file d’attente, « For you » et les planifications</h1>
+  <p class="lead">Deux listes qui s’alimentent l’une l’autre : la file d’attente contient le travail des agents, et <em>For you</em> (pour vous) contient tout ce qui attend une personne. Les planifications ajoutent des tâches à la file d’attente à heure fixe.</p>
+</div>
+<div class="wrap page-body">
+  <div class="prose">
+    <h2>La file d’attente</h2>
+    <p>Ouvrez <strong>Runs</strong> en haut de la page (ou appuyez sur <code>Q</code>) et cliquez sur <strong>Add task</strong> (ajouter une tâche). Une tâche a un titre, ce qu’il faut faire, et éventuellement un dossier, un workflow et qui peut la prendre. Par défaut, n’importe quel terminal où un agent est libre peut la prendre ; vous pouvez nommer un terminal, ou faire lancer pour elle un nouveau terminal d’agent, dans sa propre copie de travail quand le dossier est dans un dépôt.</p>
+    <ul>
+      <li><strong>Start next</strong> lance la première tâche que quelqu’un peut prendre maintenant. Un simple shell ne reçoit jamais de tâche.</li>
+      <li><strong>At most N at once</strong> (au plus N à la fois), trois sauf si vous changez ce nombre. <strong>Hold</strong> (pause) arrête les nouveaux lancements et ne touche à rien de ce qui tourne.</li>
+      <li><strong>Start by itself</strong> (démarrer tout seul) est désactivé tant que vous ne l’activez pas. Rien ne vérifie sur minuterie.</li>
+      <li>L’ordre vous appartient : faites glisser une tâche, ou utilisez les touches fléchées.</li>
+      <li>Une tâche suit son exécution : <em>needs you</em> tant qu’une exécution attend une approbation, <em>done</em> quand elle se termine, <em>failed</em> avec une phrase quand elle s’arrête. Rien n’est réessayé de soi-même.</li>
+    </ul>
+    <h2>For you</h2>
+    <p>Les terminaux qui ont une question, les exécutions à approuver ou bloquées, les brouillons et les installations à lire, les tâches proposées pour la file d’attente, les tâches terminées et échouées, les listes remises par un agent, et les copies de travail dont le terminal n’est plus là. Le compteur à côté de For you en haut et « next waiting » sont la même liste. L’essentiel est rassemblé, pas écrit : un élément disparaît quand la chose elle-même est faite.</p>
+    <figure class="pic"><a href="../../screenshots/for-you.png"><img src="../../screenshots/for-you.png" width="990" height="570" loading="lazy" alt="La colonne Waiting for you de la page Runs : un champ pour ajouter une chose à faire, puis la question d’un agent factice, un brouillon à lire et une liste remise."></a><figcaption>For you sur la page Runs : une question, un brouillon à lire et une liste remise, chacun avec ce qu’il est.</figcaption></figure>
+    <p>Un agent qui trouve du travail qu’il ne devrait pas faire maintenant peut proposer une tâche, et un agent qui a besoin d’une personne peut vous demander :</p>
+    <pre><code>aubergine task add "Add a test for the retry" --details "it should fail without the fix"
+aubergine ask "the staging key expires this week: rotate it, or say who can"</code></pre>
+    <p>Les deux arrivent dans votre liste. Une proposition ne lance rien tant que vous ne l’avez pas acceptée.</p>
+    <h2>Planifications</h2>
+    <p>Une planification, c’est une heure de la journée, des jours de la semaine, quelque chose à exécuter et un endroit où l’exécuter. À l’heure dite, elle ajoute une tâche à la file d’attente, et la file d’attente la lance. Sous <strong>Schedules</strong> sur la page Runs, ou <code>aubergine schedule</code>. L’heure est celle de l’horloge de cet ordinateur ; il n’y a pas d’expressions et rien de plus fréquent qu’une fois par jour.</p>
+    <pre><code>aubergine schedule add "My morning list" --at 08:30 --days weekdays \
+  --element "Morning list" --new Main
+aubergine schedule run "My morning list"</code></pre>
+    <p><code>aubergine schedule run</code> essaie une planification maintenant.</p>
+    <h3>Quand les choses ne se passent pas comme prévu</h3>
+    <ul>
+      <li>L’ordinateur doit être éveillé et Aubergine en marche. Une heure passée pendant qu’il dormait s’exécute <strong>une fois</strong> à son retour, marquée en retard, si elle date de moins de six heures. Sinon, elle est marquée <strong>missed</strong> (manquée).</li>
+      <li>Tant que la tâche précédente d’une planification attend encore ou est en cours, elle n’en ajoute pas d’autre, et indique qu’elle a été sautée.</li>
+      <li>Si quelque chose qu’elle nomme n’existe plus (le terminal, l’étape, le canevas), elle ne s’exécute pas, et un élément de votre liste le signale.</li>
+    </ul>
+    <h2>Règles</h2>
+    <p>Sous <strong>Rules</strong>, vous pouvez dire « quand une tâche est terminée, a échoué ou a besoin de moi, ou qu’une planification s’est déclenchée ou a été manquée, alors préviens-moi ou exécute une étape enregistrée ». Les règles, c’est à vous seul de les écrire : aucun programme ni aucun agent ne peut en ajouter ou en modifier une, et une règle ne peut pas se déclencher elle-même.</p>
+    <p>Aubergine n’appelle aucun modèle et ne détient d’identifiant pour aucune application. Une tâche ou une planification ne fait que lancer une exécution ; l’agent qui la prend fait le travail avec ses propres outils.</p>
+    <p>Voir aussi : <a href="../working-copies/">copies de travail</a> · <a href="../run-multiple-coding-agents/">faire tourner plusieurs agents de code à la fois</a></p>
+  </div>
+</div>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <nav aria-label="Toutes les pages">
+      <ul class="foot-links">
+        <li><a href="../">Accueil</a></li>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex et ChatGPT</a></li>
+        <li><a href="../install/">Installer</a></li>
+        <li><a href="../guides/">Guides</a></li>
+        <li><a href="../run-multiple-coding-agents/">Plusieurs agents à la fois</a></li>
+        <li><a href="../working-copies/">Copies de travail</a></li>
+        <li><a href="./" aria-current="page">File d’attente et planifications</a></li>
+        <li><a href="../security/">Sécurité</a></li>
+        <li><a href="../roadmap/">Feuille de route</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">Aubergine est libre et gratuite, sous <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">licence MIT</a>, et tourne sur votre propre ordinateur.</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+</script>
+</body>
+</html>

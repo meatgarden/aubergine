@@ -1,0 +1,90 @@
+<!--page {"order": 8, "llms": {"name": "Security and privacy", "about": "what is and is not protected"}}-->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "{{=url}}#article",
+      "headline": {{json:security.title}},
+      "description": {{json:security.meta.description}},
+      "url": "{{=url}}",
+      "mainEntityOfPage": "{{=url}}",
+      "datePublished": "2026-11-18",
+      "inLanguage": "{{=lang}}",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": {{json:security.crumb}}, "item": "{{=url}}" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "{{=url}}#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": {{json:security.ld.q1}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:security.ld.a1}} } },
+        { "@type": "Question", "name": {{json:security.ld.q2}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:security.ld.a2}} } },
+        { "@type": "Question", "name": {{json:security.ld.q3}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:security.ld.a3}} } },
+        { "@type": "Question", "name": {{json:security.ld.q4}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:security.ld.a4}} } }
+      ]
+    }
+  ]
+}
+</script>
+<div class="wrap page-head">
+  <nav class="crumbs" aria-label="{{attr:site.crumbs}}"><ol><li><a href="/">Aubergine</a></li><li>{{security.crumb}}</li></ol></nav>
+  <h1>{{security.title}}</h1>
+  <p class="lead">{{security.lead}}</p>
+</div>
+<div class="wrap page-body">
+  <div class="prose">
+    <h2>{{security.local.title}}</h2>
+    <ul>
+      <li>{{security.local.bind}}</li>
+      <li>{{security.local.elsewhere}}</li>
+      <li>{{security.local.network}}</li>
+      <li>{{security.local.notify}}</li>
+    </ul>
+    <h2>{{security.callers.title}}</h2>
+    <p>{{security.callers.text}}</p>
+    <ul>
+      <li>{{security.callers.scopes}}</li>
+      <li>{{security.callers.never}}</li>
+      <li>{{security.callers.terminal}}</li>
+      <li>{{security.callers.agent}}</li>
+    </ul>
+    <h2>{{security.alone.title}}</h2>
+    <ul>
+      <li>{{security.alone.draft}}</li>
+      <li>{{security.alone.person}}</li>
+      <li>{{security.alone.typed}}</li>
+      <li>{{security.alone.library}}</li>
+    </ul>
+    <h2>{{security.not.title}}</h2>
+    <p class="note">{{security.not.asyou}}</p>
+    <ul>
+      <li>{{security.not.approvals}}</li>
+      <li>{{security.not.copies}}</li>
+      <li>{{security.not.review}}</li>
+      <li>{{security.not.guide}}</li>
+    </ul>
+    <h2>{{security.installer.title}}</h2>
+    <p>{{security.installer.text}}</p>
+    <h2>{{security.report.title}}</h2>
+    <p>{{security.report.text}}</p>
+    <p>{{security.related}}</p>
+  </div>
+</div>

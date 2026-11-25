@@ -1,30 +1,119 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Page not found | Aubergine</title>
 <meta name="description" content="This page does not exist. Go back to the Aubergine guides.">
+
+
 <meta name="robots" content="noindex">
+<meta name="theme-color" content="#120f14" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#faf6f2" media="(prefers-color-scheme: light)">
 <link rel="icon" href="/icon.svg" type="image/svg+xml">
+<link rel="preload" href="/fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="Page not found | Aubergine">
+<meta property="og:description" content="This page does not exist. Go back to the Aubergine guides.">
+<meta property="og:url" content="https://thirstyeggplant.com/404.html">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine: a canvas of terminals, one busy and one waiting for you">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine: a canvas of terminals, one busy and one waiting for you">
+<meta name="twitter:title" content="Page not found | Aubergine">
+<meta name="twitter:description" content="This page does not exist. Go back to the Aubergine guides.">
+<link rel="alternate" type="text/plain" href="/llms.txt" title="llms.txt">
 </head>
 <body>
-<div class="glow" aria-hidden="true"></div>
-<div class="wrap">
-  <header class="top">
-    <a class="brand" href="/"><img src="/icon.svg" alt="" width="30" height="30">Aubergine</a>
-  </header>
-  <main class="prose">
-    <h1>That page is not here</h1>
-    <p class="lead">The address may be mistyped or the page may have moved. These might help:</p>
-    <ul>
-      <li><a href="/">The Aubergine home page</a></li>
-      <li><a href="/install/">Install Aubergine</a></li>
-      <li><a href="/guides/">Guides</a></li>
-      <li><a href="/faq/">Frequently asked questions</a></li>
-    </ul>
-  </main>
+<a class="skip" href="#main">Skip to the page</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="/"><img src="/icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="Pages">
+      <ul>
+        <li><a href="/claude/">Claude Code</a></li>
+        <li><a href="/chatgpt/">Codex</a></li>
+        <li><a href="/install/">Install</a></li>
+        <li><a href="/guides/">Guides</a></li>
+        <li><a href="/security/">Security</a></li>
+        <li><a href="/faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+        <details class="menu pages">
+      <summary>Menu</summary>
+      <ul class="menu-list">
+        <li><a href="/claude/">Claude Code</a></li>
+        <li><a href="/chatgpt/">Codex</a></li>
+        <li><a href="/install/">Install</a></li>
+        <li><a href="/guides/">Guides</a></li>
+        <li><a href="/security/">Security</a></li>
+        <li><a href="/faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+<main id="main" tabindex="-1">
+<div class="wrap page-head">
+  <h1>That page is not here</h1>
+  <p class="lead">The address may be mistyped or the page may have moved. These might help:</p>
 </div>
+<div class="wrap page-body">
+  <ul class="rows">
+    <li><h2><a class="row-link" href="/">The Aubergine home page</a></h2></li>
+    <li><h2><a class="row-link" href="/install/">Install Aubergine</a></h2></li>
+    <li><h2><a class="row-link" href="/guides/">Guides</a></h2></li>
+    <li><h2><a class="row-link" href="/faq/">Frequently asked questions</a></h2></li>
+  </ul>
+</div>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <nav aria-label="Every page">
+      <ul class="foot-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/claude/">Claude Code</a></li>
+        <li><a href="/chatgpt/">Codex and ChatGPT</a></li>
+        <li><a href="/install/">Install</a></li>
+        <li><a href="/guides/">Guides</a></li>
+        <li><a href="/run-multiple-coding-agents/">Run several agents</a></li>
+        <li><a href="/working-copies/">Working copies</a></li>
+        <li><a href="/queue-and-schedules/">Queue and schedules</a></li>
+        <li><a href="/security/">Security</a></li>
+        <li><a href="/roadmap/">Roadmap</a></li>
+        <li><a href="/faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="/llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">Aubergine is free and open source under the <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">MIT license</a>, and runs on your own computer.</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+</script>
 </body>
 </html>

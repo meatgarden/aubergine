@@ -1,0 +1,2218 @@
+{
+  "site.skip": {
+    "text": "本文へ移動",
+    "from": "c1da0f1587b7"
+  },
+  "site.nav.label": {
+    "text": "ページ",
+    "from": "9046da16aea9"
+  },
+  "site.nav.claude": {
+    "text": "Claude Code",
+    "from": "246ef8c1130d"
+  },
+  "site.nav.codex": {
+    "text": "Codex",
+    "from": "616efbe96852"
+  },
+  "site.nav.install": {
+    "text": "インストール",
+    "from": "569ca49f4aaf"
+  },
+  "site.nav.guides": {
+    "text": "ガイド",
+    "from": "572cd72feb9a"
+  },
+  "site.nav.security": {
+    "text": "セキュリティ",
+    "from": "8f6fb4eb7f42"
+  },
+  "site.nav.faq": {
+    "text": "FAQ",
+    "from": "dbc468a14b60"
+  },
+  "site.menu": {
+    "text": "メニュー",
+    "from": "99af6606ff9d"
+  },
+  "site.languages.label": {
+    "text": "言語",
+    "from": "a4fe65264ef7"
+  },
+  "site.crumbs": {
+    "text": "現在の位置",
+    "from": "54cd982fb2dd"
+  },
+  "site.copy": {
+    "text": "コピー",
+    "from": "e21f935f11d7"
+  },
+  "site.copied": {
+    "text": "コピーしました",
+    "from": "8d525e5f158b"
+  },
+  "site.og.alt": {
+    "text": "Aubergine：ターミナルが並ぶキャンバス。1つは処理中、1つはあなたを待っています",
+    "from": "25b02deb2ff8"
+  },
+  "site.translated.app": {
+    "text": "Aubergine 本体は英語です。ボタン、メニュー、画像はすべて英語版のものです。",
+    "from": "a81916766b4d"
+  },
+  "site.translated.machine": {
+    "text": "このページは英語版から機械翻訳されています。<a href=\"https://github.com/thirstyeggplant/aubergine/issues\">修正を送る</a>。",
+    "from": "e0f116b75aa8"
+  },
+  "site.foot.label": {
+    "text": "すべてのページ",
+    "from": "b879e5a49e14"
+  },
+  "site.foot.home": {
+    "text": "ホーム",
+    "from": "3a78695388b3"
+  },
+  "site.foot.claude": {
+    "text": "Claude Code",
+    "from": "246ef8c1130d"
+  },
+  "site.foot.codex": {
+    "text": "Codex と ChatGPT",
+    "from": "38c13bed7dca"
+  },
+  "site.foot.install": {
+    "text": "インストール",
+    "from": "569ca49f4aaf"
+  },
+  "site.foot.guides": {
+    "text": "ガイド",
+    "from": "572cd72feb9a"
+  },
+  "site.foot.several": {
+    "text": "複数のエージェントを動かす",
+    "from": "8b0dc326e0f4"
+  },
+  "site.foot.copies": {
+    "text": "作業コピー",
+    "from": "9660dc116131"
+  },
+  "site.foot.queue": {
+    "text": "キューとスケジュール",
+    "from": "403b3a701d15"
+  },
+  "site.foot.security": {
+    "text": "セキュリティ",
+    "from": "8f6fb4eb7f42"
+  },
+  "site.foot.roadmap": {
+    "text": "ロードマップ",
+    "from": "92375f997ffe"
+  },
+  "site.foot.faq": {
+    "text": "FAQ",
+    "from": "dbc468a14b60"
+  },
+  "site.foot.license": {
+    "text": "Aubergine は <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE\">MIT ライセンス</a>のもとで公開された無料のオープンソースで、あなた自身のコンピューターで動きます。",
+    "from": "21c2472673d7"
+  },
+  "home.meta.title": {
+    "text": "Aubergine：すべてのターミナルを1つのキャンバスに、いつものエージェントのまま",
+    "from": "620bab21c0b6"
+  },
+  "home.meta.description": {
+    "text": "Aubergine は、すべてのターミナルをブラウザーの1つのキャンバスに並べます。いつも使っているエージェントとモデルのまま好きなだけ動かし、どれがあなたを必要としているかが分かります。無料、ローカル、オープンソース。",
+    "from": "71a14cde3a05"
+  },
+  "home.ld.category": {
+    "text": "ターミナルマルチプレクサーとエージェントの作業場",
+    "from": "d32b7b10eecd"
+  },
+  "home.ld.requires": {
+    "text": "tmux 3.2 以降、Node.js 22 以降",
+    "from": "6fadbd03c20d"
+  },
+  "home.hero.kicker": {
+    "text": "無料 · オープンソース · あなたのコンピューターで動作",
+    "from": "28742c2f94e7"
+  },
+  "home.hero.title": {
+    "text": "すべてのターミナルを横に並べて。どのエージェントが<em>あなたを必要としている</em>か分かる。",
+    "from": "7be0ec221ba9"
+  },
+  "home.hero.lead": {
+    "text": "Aubergine は、すべてのターミナルをブラウザーの1つのキャンバスに並べます。いつも使っているエージェントとモデルのまま、好きなだけ動かせます。Aubergine 自身はモデルを持たず、キーを求めることもありません。",
+    "from": "c8c8b75e9e20"
+  },
+  "home.hero.after": {
+    "text": "続けて <code>aubergine start --open</code>。macOS 用で、tmux 3.2 以降と Node.js 22 以降が必要です。",
+    "from": "bed0cbea0b2d"
+  },
+  "home.hero.install": {
+    "text": "インストール",
+    "from": "569ca49f4aaf"
+  },
+  "home.hero.source": {
+    "text": "ソースを読む",
+    "from": "625b22ba31d0"
+  },
+  "home.canvas.caption": {
+    "text": "画面のキャプチャではなくイラストです。キャンバス上の5つのターミナルと、あなたを待っている1つを描いています。",
+    "from": "413e282f8a9d"
+  },
+  "home.see.title": {
+    "text": "どんな見た目か",
+    "from": "9a5d81b4a5f3"
+  },
+  "home.see.intro": {
+    "text": "Aubergine に付属するデモの実際のキャプチャです。本物のエージェントではなく、代役のエージェントが動いています。",
+    "from": "61f7034f8117"
+  },
+  "home.see.canvas.claim": {
+    "text": "すべてのターミナルを1つのキャンバスに",
+    "from": "51af5aa39147"
+  },
+  "home.see.canvas.text": {
+    "text": "好きなだけ並べられ、画面に見えている間はそれぞれがライブで動きます。",
+    "from": "e5c7903b1535"
+  },
+  "home.see.canvas.caption": {
+    "text": "一覧が各ターミナルの状態を伝え、その横にターミナルそのものがあります。",
+    "from": "40d3143df913"
+  },
+  "home.see.canvas.alt": {
+    "text": "5つのターミナルを状態の言葉（working、waiting for you、finished、parked）とともに並べたサイドパネルと、ライブのシェルが映るキャンバスの一部。",
+    "from": "2bb1af139cbc"
+  },
+  "home.see.waits.claim": {
+    "text": "待っているターミナルが目立つ",
+    "from": "7d5fd4d29cc6"
+  },
+  "home.see.waits.text": {
+    "text": "エージェントがあなたを必要とすると、キャンバスの離れた場所からでも分かり、<code>W</code> キーでそこへ移動できます。",
+    "from": "d1db837c4eb1"
+  },
+  "home.see.waits.caption": {
+    "text": "枠線が待機中の色になり、タイトルに waiting for you と表示されます。",
+    "from": "56be14801975"
+  },
+  "home.see.waits.alt": {
+    "text": "エージェントが質問をしているターミナル。タイトルに waiting for you と表示され、枠線は待機中の色です。",
+    "from": "90d945c1648c"
+  },
+  "home.see.focus.claim": {
+    "text": "ターミナルを単独で開く",
+    "from": "0ddd4013565e"
+  },
+  "home.see.focus.text": {
+    "text": "どのターミナルも専用のブラウザータブで開けます。コピーではなく、同じターミナルです。",
+    "from": "ba54fa6c02df"
+  },
+  "home.see.focus.caption": {
+    "text": "詳細とノートは求めたときに横に開き、それぞれのボタンで閉じられます。",
+    "from": "95b86a5cd8de"
+  },
+  "home.see.focus.alt": {
+    "text": "ブラウザータブに1つだけ開いたターミナル。ヘッダーに名前、詳細にワークフローのステップ、フォルダー、フィールドがあり、その横にライブのターミナル。",
+    "from": "3b3df705e912"
+  },
+  "home.agents.title": {
+    "text": "エージェントは持ち込みで",
+    "from": "053237049eea"
+  },
+  "home.agents.intro": {
+    "text": "Aubergine は普通のターミナルを動かします。モデルを呼ばず、キーを持たず、アカウントもありません。すでに使っているコマンドラインのエージェントが、あなたとしてサインインしたまま、あなたが選んだモデルでターミナルの中で動きます。Aubergine がエージェントのために自ら行うことは、現在は Claude Code 向けに作られています。ほかのエージェントも <code>aubergine</code> コマンドを通じて同じことを伝えられます。",
+    "from": "9e12708b9129"
+  },
+  "home.agents.claude": {
+    "text": "New terminal（新しいターミナル）メニューから起動すると、作業中・あなた待ち・完了を自ら伝えます。Aubergine はその会話を再開でき、どう設定されているかも表示できます。",
+    "from": "493938fd27d5"
+  },
+  "home.agents.codex.name": {
+    "text": "Codex と ChatGPT",
+    "from": "38c13bed7dca"
+  },
+  "home.agents.codex": {
+    "text": "Codex はほかのプログラムと同じようにターミナルで動き、指示で伝えれば <code>aubergine</code> コマンドを通じて状況を報告します。ブラウザーの ChatGPT はターミナルのプログラムではありません。",
+    "from": "57da92f4d853"
+  },
+  "home.agents.other.name": {
+    "text": "ほかのコマンドラインエージェント、または普通のシェル",
+    "from": "ee656f2d4bf2"
+  },
+  "home.agents.other": {
+    "text": "どのターミナルにも <code>aubergine</code> コマンドがあり、<code>aubergine guide --snippet</code> はエージェント自身の指示に入れる5行を出力します。",
+    "from": "bd4153cd9ede"
+  },
+  "home.built.title": {
+    "text": "ほかにできること",
+    "from": "67ca3d0bd3e6"
+  },
+  "home.built.intro": {
+    "text": "ここにあるものはすべて、今日あなたのコンピューターで動きます。",
+    "from": "e6025b6fd725"
+  },
+  "home.built.canvas.name": {
+    "text": "ターミナルのキャンバス",
+    "from": "efed05a9a763"
+  },
+  "home.built.canvas.text": {
+    "text": "本物のターミナルをパン、ズーム、配置し、1回のクリックで入力できます。ターミナルをパークして後で戻したり、詳細とノートを横に添えてブラウザータブで単独で開いたりできます。",
+    "from": "062fb655d54f"
+  },
+  "home.built.waiting.name": {
+    "text": "誰が待っているか分かる",
+    "from": "a8dd066ebe3d"
+  },
+  "home.built.waiting.text": {
+    "text": "すべてのターミナルに、処理中・アイドル・あなた待ちが表示されます。「For you」の一覧と「next waiting」で、人の手が必要なところへ直接移動できます。",
+    "from": "d2f2b06c77b4"
+  },
+  "home.built.queue.name": {
+    "text": "キューとスケジュール",
+    "from": "403b3a701d15"
+  },
+  "home.built.queue.text": {
+    "text": "タスクを一度書けば、空いているエージェントが引き受けます。選んだ曜日の決まった時刻に実行するよう予定することもできます。",
+    "from": "ca6521d877a6"
+  },
+  "home.built.copies.name": {
+    "text": "作業コピー",
+    "from": "9660dc116131"
+  },
+  "home.built.copies.text": {
+    "text": "エージェントごとに、専用のブランチ上にリポジトリのコピーを渡します。2つのエージェントが同じファイルを編集することはありません。",
+    "from": "4230039c27f0"
+  },
+  "home.built.projects.name": {
+    "text": "プロジェクト",
+    "from": "04e2a9728af7"
+  },
+  "home.built.projects.text": {
+    "text": "1つのサーバーに複数のコントロールルーム。プロジェクトごとにキャンバス、キュー、スケジュール、ルールを持ち、ファイルやテンプレートとして保存できます。",
+    "from": "e0961f503387"
+  },
+  "home.built.workflows.name": {
+    "text": "ワークフローと承認",
+    "from": "cefa6bb93441"
+  },
+  "home.built.workflows.text": {
+    "text": "エージェントに従うべきステップを渡し、人を待つステップで止め、進行中のすべての実行を1つのボードで見られます。",
+    "from": "7b456d89fd1e"
+  },
+  "home.built.messages.name": {
+    "text": "ターミナル間のメッセージ",
+    "from": "48b5af2c48ad"
+  },
+  "home.built.messages.text": {
+    "text": "エージェント同士で話をさせられます。送り手の名前、上限、一時停止があり、キャンバスごとに初期状態では閉じています。",
+    "from": "785ee3f85615"
+  },
+  "home.built.api.name": {
+    "text": "API と MCP サーバー",
+    "from": "1a84834881e1"
+  },
+  "home.built.api.text": {
+    "text": "スコープ付きトークンを使うローカル HTTP API、型付きクライアント、そして資格情報が使えるツールだけを一覧する MCP サーバー。",
+    "from": "f9999af55d29"
+  },
+  "home.built.cli.name": {
+    "text": "コマンドライン",
+    "from": "f8709772ea07"
+  },
+  "home.built.cli.text": {
+    "text": "<code>aubergine</code> コマンドは、マシン上のどのターミナルからでも、ターミナルを起動し、タスクをキューに入れ、スケジュールを設定し、ボードを読み、実行を承認できます。",
+    "from": "7c132e9877d8"
+  },
+  "home.built.recaps.name": {
+    "text": "振り返りと履歴",
+    "from": "2ea7a47cfa76"
+  },
+  "home.built.recaps.text": {
+    "text": "離れている間に何が変わったかを確認し、ターミナルの出力を検索し、過去の会話をパレットから開き直せます。",
+    "from": "1a640de790ee"
+  },
+  "home.trust.title": {
+    "text": "ターミナルはあなたのもの",
+    "from": "c6f11f794209"
+  },
+  "home.trust.local.name": {
+    "text": "ローカルのみ",
+    "from": "c905013aab29"
+  },
+  "home.trust.local.text": {
+    "text": "サーバーは 127.0.0.1 で待ち受け、すべてのリクエストの Host と Origin を確認します。ほかのデバイスからの利用は、あなたが設定するまでオフです。",
+    "from": "cd7a0d902e0f"
+  },
+  "home.trust.outlive.name": {
+    "text": "ターミナルはアプリより長生き",
+    "from": "2c75df8acfc1"
+  },
+  "home.trust.outlive.text": {
+    "text": "どのターミナルも tmux セッションです。ブラウザーを閉じても Aubergine を再起動しても、作業は動き続けます。",
+    "from": "f913c3351663"
+  },
+  "home.trust.nomodel.name": {
+    "text": "モデルなし、キーなし",
+    "from": "2f070717231f"
+  },
+  "home.trust.nomodel.text": {
+    "text": "Aubergine はモデルを選ばず、呼び出さず、そのためのキーも持ちません。モデルはエージェントが自分で持ち込みます。",
+    "from": "fe25a0ed6b54"
+  },
+  "home.trust.decide.name": {
+    "text": "決めるのはあなた",
+    "from": "6a93d45962ec"
+  },
+  "home.trust.decide.text": {
+    "text": "トークンにはスコープがあり、エージェントが書いたものはあなたのレビューを待ち、承認は人が行います。",
+    "from": "7e1645184727"
+  },
+  "home.trust.more": {
+    "text": "守られているもの、守られていないもの",
+    "from": "f0da10ecfe7d"
+  },
+  "home.install.title": {
+    "text": "5分で動かす",
+    "from": "ade3bbf9af01"
+  },
+  "home.install.intro": {
+    "text": "tmux 3.2 以降と Node.js 22 以降の入った macOS が必要です。<code>brew install tmux node</code> で両方が入ります。",
+    "from": "fabf8314c9cb"
+  },
+  "home.install.s1.title": {
+    "text": "インストール",
+    "from": "569ca49f4aaf"
+  },
+  "home.install.s1.text": {
+    "text": "または、ソースから pnpm でビルドする<a href=\"/install/\">インストーラー</a>を使います。",
+    "from": "506eece86d4a"
+  },
+  "home.install.s2.title": {
+    "text": "起動してブラウザーを開く",
+    "from": "09b350acdba9"
+  },
+  "home.install.s2.text": {
+    "text": "サーバーを起動し、サインイン済みの状態でブラウザーを開きます。",
+    "from": "cc6fc15c6b0d"
+  },
+  "home.install.s3.title": {
+    "text": "ツアーを試す",
+    "from": "a83c4366d2df"
+  },
+  "home.install.s3.text": {
+    "text": "空のキャンバスで <strong>Show me around</strong>（案内して）をクリックします。代役のエージェントが並ぶ Demo キャンバスが作られ、8つの短いステップで案内します。<code>aubergine demo --remove</code> で取り除けます。",
+    "from": "b20f7c13bc30"
+  },
+  "home.install.note": {
+    "text": "インストーラーが変更するのは <code>~/.aubergine</code> と、<code>aubergine</code> という名前のリンク1つだけです。sudo は使わず、シェルの起動ファイルも編集しません。",
+    "from": "1b03983d93c3"
+  },
+  "home.faq.title": {
+    "text": "よくある質問",
+    "from": "9a72221a2747"
+  },
+  "home.faq.what.q": {
+    "text": "Aubergine とは何ですか？",
+    "from": "34bffd794522"
+  },
+  "home.faq.what.a": {
+    "text": "ローカルで動く、ブラウザーベースのターミナルセッションのキャンバスです。各ターミナルは配置して使えるノードなので、複数のコーディングエージェントを同時に動かし、どれがあなたを待っているかを確認できます。",
+    "from": "e2699684c13a"
+  },
+  "home.faq.send.q": {
+    "text": "Aubergine はターミナルやコードをどこかに送りますか？",
+    "from": "8e3369fd3214"
+  },
+  "home.faq.send.a": {
+    "text": "いいえ。すべてあなた自身のコンピューターで動きます。サーバーは 127.0.0.1 でのみ待ち受け、すべてのリクエストの Host と Origin を確認します。",
+    "from": "df08013e9725"
+  },
+  "home.faq.need.q": {
+    "text": "Aubergine を動かすには何が必要ですか？",
+    "from": "efe26fb96381"
+  },
+  "home.faq.need.a": {
+    "text": "tmux 3.2 以降と Node.js 22 以降の入った macOS です。インストーラーには pnpm も必要です。Linux でも動くはずですが、まだテストしていません。",
+    "from": "50e15eb9d5c0"
+  },
+  "home.faq.byhand.q": {
+    "text": "ターミナルで Claude Code を自分で起動したらどうなりますか？",
+    "from": "e8281791e5fb"
+  },
+  "home.faq.byhand.a": {
+    "text": "ほかのプログラムと同じように動き、いつもどおり入力できます。ただし Aubergine がエージェントの存在を知るのは、自分でエージェントを起動したとき（New terminal、続いて Claude Code）だけです。そのとき、エージェントの動きを報告する小さなフックをいくつか加えるからです。手で起動した場合、ターミナルは <code>claude</code> を実行して処理中だと表示されるだけです。何か尋ねてきても waiting for you にはならず、そこでワークフローを始めても何も入力されません。中から使える <code>aubergine workflow status</code> を実行するよう自分で伝えるか、代わりに New terminal メニューからエージェントを起動してください。",
+    "from": "23c877f7b9d5"
+  },
+  "home.faq.free.q": {
+    "text": "Aubergine は無料ですか？",
+    "from": "ff46b785dd7f"
+  },
+  "home.faq.free.a": {
+    "text": "はい。<a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE\">MIT ライセンス</a>のもとで無料のオープンソースで、ソースは GitHub にあります。",
+    "from": "30fae4a08af7"
+  },
+  "home.faq.more": {
+    "text": "すべての質問",
+    "from": "57bf5a60dd59"
+  },
+  "home.planned.title": {
+    "text": "予定していること",
+    "from": "e10eed0040ae"
+  },
+  "home.planned.line": {
+    "text": "マルチプレイヤー、クラウド上のエージェント、承認モードなどは予定中で、まだ作られていません。<a href=\"/roadmap/\">ロードマップを見る</a>。",
+    "from": "5c6d1db70932"
+  },
+  "claude.meta.title": {
+    "text": "Aubergine の Claude Code | Aubergine",
+    "from": "964ec2c2f3df"
+  },
+  "claude.meta.description": {
+    "text": "Aubergine が Claude Code のために自ら行うこと：メニューからの起動、待っていることの把握、会話の再開、過去の会話、設定の確認、ツール。",
+    "from": "53c5a33c5a7d"
+  },
+  "claude.title": {
+    "text": "Aubergine が Claude Code のためにすること",
+    "from": "d05c8e0b3f82"
+  },
+  "claude.lead": {
+    "text": "Claude Code はほかのプログラムと同じように Aubergine のターミナルで動きます。Aubergine から起動すると、自分が何をしているかをキャンバスにも伝え、Aubergine はそれに指示を伝え、再開し、どう設定されているかを表示できます。ここにあるのがそのすべてで、出会う順に並べています。",
+    "from": "48626cf950ce"
+  },
+  "claude.yours": {
+    "text": "Claude Code のインストールとサインインはご自身で行います。Aubergine はモデルを呼ばず、キーも持ちません。すでにある <code>claude</code> コマンドを起動するだけです。",
+    "from": "49c81d042977"
+  },
+  "claude.start.title": {
+    "text": "メニューから起動する",
+    "from": "f2e4406e142f"
+  },
+  "claude.start.text": {
+    "text": "<strong>New terminal ▾ → Claude Code</strong>、またはどのターミナルもキーボードを持っていないときに <code>C</code> を押すと、新しいターミナルで <code>claude</code> が起動します。その際、Aubergine が自分のデータフォルダーに書く設定ファイルが使われます。あなた自身の Claude Code の設定には触れません。",
+    "from": "58f4f8786edb"
+  },
+  "claude.start.command": {
+    "text": "起動するコマンドは設定の <code>agents.claudeCommand</code> で、変更しなければ <code>claude</code> です。Aubergine は自分のフラグを末尾に加えます。",
+    "from": "cadf315d3f4f"
+  },
+  "claude.start.where": {
+    "text": "場所：ターミナル一覧の上にある New terminal（新しいターミナル）の横のメニュー。",
+    "from": "8535ecc3618e"
+  },
+  "claude.state.title": {
+    "text": "作業中、待機、完了が分かる",
+    "from": "762bb49f53ad"
+  },
+  "claude.state.text": {
+    "text": "その設定ファイルのフックが、エージェントの動きをキャンバスに伝えます。プロンプトを送ると、プロンプトがターミナルのノートのログに加わり、ターミナルは <strong>working</strong>（作業中）と表示します。権限の確認や、入力を待ってアイドルになったためにエージェントがあなたを必要とすると、枠線が待機中の色になり、タイトルと一覧の行に <strong>waiting for you</strong>（あなた待ち）と出ます。止まると <strong>finished</strong>（完了）と表示します。",
+    "from": "64ec1f0a81c2"
+  },
+  "claude.state.more": {
+    "text": "<code>W</code> で次に待っているターミナルへ移動し、<strong>Notify</strong> で待機を始めたターミナルのデスクトップ通知をオンにします。プロンプトには秘密が含まれることがあります。<code>\"agents\": { \"logPrompts\": false }</code> を <code>config.json</code> に書くと、ノートのログに残りません。",
+    "from": "8d17a75b0b6f"
+  },
+  "claude.state.where": {
+    "text": "場所：ターミナルのタイトル、一覧の行、そして上部の For you の横の数。",
+    "from": "4069b9f958a3"
+  },
+  "claude.byhand.title": {
+    "text": "自分で起動した Claude Code",
+    "from": "4e9410ab2c6a"
+  },
+  "claude.byhand.text": {
+    "text": "普通のターミナルで手で入力した <code>claude</code> はほかのプログラムと同じように動きますが、Aubergine に見えるのはそれを実行中のシェルだけです。waiting for you にはならず、そこでワークフローを始めても何も入力されません。変えたい場合は、フックを出力して自分の Claude Code の設定に手で加えてください。Aubergine のターミナルの外では何もしません。",
+    "from": "fa6fba9030be"
+  },
+  "claude.describe.title": {
+    "text": "自分で名前を付け、要約を保つ",
+    "from": "d093aa41e5df"
+  },
+  "claude.describe.text": {
+    "text": "Aubergine が起動したエージェントは、始めるときに <code>aubergine describe</code>、<code>aubergine link add</code>、<code>aubergine field set</code> を使ってターミナルに作業に合った名前を付け、要約を保つよう伝えられます。止まったときに自分の名前や要約がなければ、一度だけ促されます。あなたが自分で書いたものが優先され、同じ点についてエージェントが言うことは <strong>Use this</strong>（これを使う）とともに横で待ちます。この促しは <strong>Settings</strong> でオフにできます。",
+    "from": "b3ada1af2f57"
+  },
+  "claude.describe.where": {
+    "text": "場所：ターミナルの詳細。名前、要約、フィールド、リンクがあります。",
+    "from": "14d403dcf75f"
+  },
+  "claude.told.title": {
+    "text": "ワークフロー、タスク、振り返り、メッセージが届く",
+    "from": "65f0d98fe0d0"
+  },
+  "claude.told.text": {
+    "text": "Aubergine がターミナルに入力するのは4つの決まった文だけです。ワークフローが始まったこと、エージェントに何かを書くよう頼んだこと、あなたが振り返りを求めたこと、メッセージが待っていること。それぞれが、エージェントが実行すべきコマンドを1つ示します。文が入力されるのは、エージェントがキーボードを持っていると分かる場所だけです。Aubergine が起動したエージェントか、設定に <code>aubergine hooks print</code> のフックが入っているエージェントです。",
+    "from": "a965be64fc8b"
+  },
+  "claude.told.more": {
+    "text": "同じように、キューのタスクは、そうしたエージェントが前面にいて空いているターミナルにだけ渡ります。<strong>Claude Code on a workflow…</strong> は新しいターミナルを起動し、そのエージェントは最初のプロンプトで実行について伝えられます。",
+    "from": "4db5493b4c50"
+  },
+  "claude.told.where": {
+    "text": "場所：ターミナルのタイトルのメニューにある <strong>Run a workflow…</strong> と、ページ上部の <strong>Runs</strong>。",
+    "from": "85ec8e15f827"
+  },
+  "claude.resume.title": {
+    "text": "Resume agent",
+    "from": "0bb60c450191"
+  },
+  "claude.resume.text": {
+    "text": "Aubergine は、エージェントのターミナルがどの会話にいたかを覚えています。エージェントを終了した、またはコンピューターが再起動したためにシェルがプロンプトに戻ると、ターミナルに <strong>Resume agent</strong>（エージェントを再開）が出て、その会話でエージェントを再び起動します。実行の途中にあるターミナルでは、その実行についてもう一度エージェントに伝えます。",
+    "from": "bad9c16cacaa"
+  },
+  "claude.resume.where": {
+    "text": "場所：ターミナルのタイトルバー。",
+    "from": "f9a5a6f578cf"
+  },
+  "claude.history.title": {
+    "text": "過去の会話",
+    "from": "93b87f3b2adf"
+  },
+  "claude.history.text": {
+    "text": "<strong>Past conversations…</strong> は、あるフォルダーでのエージェントの以前の会話を一覧します。読む、キャンバスで開く、元をそのまま残すコピーを開く、ができます。パレットで <code>@</code> といくつかの語を入力すると検索でき、<code>aubergine history</code> はコマンドラインで一覧します。読んだものは保存されず、トークンもエージェントも Aubergine を通じて会話を読むことはできません。",
+    "from": "168514a264d1"
+  },
+  "claude.history.form": {
+    "text": "Claude Code が保存するファイルを読みます。その形式は Claude Code の内部のもので、バージョンによって変わります。エージェントを更新した後は、名前や記録が薄くなることがあります。Aubergine が読めない記録は、読めないと表示され、空として見せることはありません。",
+    "from": "0d92e097b755"
+  },
+  "claude.history.where": {
+    "text": "場所：パレット（<code>⌘K</code>）と、ターミナルの詳細にある「Past conversations in this folder…」。",
+    "from": "3477b0fbf75a"
+  },
+  "claude.setup.title": {
+    "text": "どう設定されているか",
+    "from": "af61266588a1"
+  },
+  "claude.setup.text": {
+    "text": "エージェントの設定ファイルに書かれた、エージェントに与えられたものの一覧です。MCP サーバー、プラグイン、フック、スキル、権限ルール、設定ファイルを、それぞれの出どころと、Aubergine が加えたものとともに示します。名前だけで、値や秘密は決して出しません。どう設定されているかを示すもので、動いているエージェントが何を読み込んだかではありません。アカウントに付いてくるコネクターのように、分からないことははっきりそう言います。",
+    "from": "c514bb19fdee"
+  },
+  "claude.setup.where": {
+    "text": "場所：ターミナルの <strong>⚙ on</strong>、パレットの「What is switched on for this agent…」、ターミナルの詳細。",
+    "from": "a8c53c214fcc"
+  },
+  "claude.tools.title": {
+    "text": "エージェントのための Aubergine のツール",
+    "from": "e66ee8e8e0bc"
+  },
+  "claude.tools.text": {
+    "text": "<strong>Claude Code with Aubergine tools…</strong> は、まずエージェントに何を許すかを尋ねます。<strong>None</strong>（なし）、ターミナル自身の資格情報で <strong>Its own work only</strong>（自分の作業のみ）、または <strong>More…</strong>（あなたが選ぶスコープ）。最後の場合はそのターミナル専用のトークンが作られ、ターミナルが完全に終了したときに失効します。ツールは <code>aubergine mcp</code> で、起動行でエージェントに渡されます。エージェント自身の設定は書き換えません。",
+    "from": "6f42a9f284d0"
+  },
+  "claude.tools.where": {
+    "text": "場所：New terminal の横のメニュー。",
+    "from": "33b77d6aeba6"
+  },
+  "claude.move.title": {
+    "text": "すでに開いている Claude Code を持ってくる",
+    "from": "71713eb1febd"
+  },
+  "claude.move.text": {
+    "text": "動いているエージェントは移せませんが、その会話は移せます。<strong>Open elsewhere</strong> はあなたの Claude Code のタブを一覧し、<strong>Fork to canvas</strong> と、アイドルのエージェントには <strong>Stop and resume here</strong> があります（先に確認します）。ターミナルからは <code>aubergine move</code> が同じことをし、<code>aubergine here --claude</code> はそのフォルダーの最後の会話の続きとしてキャンバスで Claude Code を起動します。",
+    "from": "2710d35e40f6"
+  },
+  "claude.move.where": {
+    "text": "場所：キャンバス上のバーにある <strong>Open elsewhere</strong>、または <code>O</code>。",
+    "from": "957b9c5d2c08"
+  },
+  "claude.copy.title": {
+    "text": "専用の作業コピーで",
+    "from": "88b0fbc30823"
+  },
+  "claude.copy.text": {
+    "text": "<code>aubergine here --copy --claude</code> は、リポジトリの専用チェックアウトの、専用ブランチで Claude Code を起動します。2つのエージェントが同じファイルを編集することはありません。ツール付き Claude Code ターミナルのダイアログにも同じ選択肢があります。",
+    "from": "d952aaa25439"
+  },
+  "claude.tried.title": {
+    "text": "試したこと",
+    "from": "dc4245eb9cbd"
+  },
+  "claude.tried.text": {
+    "text": "Aubergine に付属するデモは、本物の Claude Code ではなく代役を使います。本物のエージェントと同じコマンドとフックを実行する短いスクリプトです。本物のエージェントでは、承認、作業コピー、キューのタスク、スケジュールはまだ試していません。",
+    "from": "d7b31de7e83d"
+  },
+  "claude.others": {
+    "text": "ほかのエージェントも、このほとんどを <code>aubergine</code> コマンドを通じて伝えられます。<a href=\"/chatgpt/\">Codex と ChatGPT</a> を参照してください。",
+    "from": "a37bd1ffdb77"
+  },
+  "claude.mark": {
+    "text": "Aubergine は Anthropic と提携していません。Claude および Claude Code は Anthropic の商標です。",
+    "from": "cdae060f0648"
+  },
+  "chatgpt.meta.title": {
+    "text": "Aubergine の Codex と ChatGPT | Aubergine",
+    "from": "8dcd1dde8945"
+  },
+  "chatgpt.meta.description": {
+    "text": "OpenAI のコマンドラインのコーディングエージェント Codex は、ほかのプログラムと同じように Aubergine のターミナルで動きます。今日できること、aubergine コマンドで報告できること、Claude Code 向けにだけ作られているもの。",
+    "from": "6f8c78d52c06"
+  },
+  "chatgpt.crumb": {
+    "text": "Codex と ChatGPT",
+    "from": "38c13bed7dca"
+  },
+  "chatgpt.title": {
+    "text": "Codex と ChatGPT",
+    "from": "38c13bed7dca"
+  },
+  "chatgpt.lead": {
+    "text": "Codex は OpenAI のコマンドラインのコーディングエージェントです。インストールとサインインはご自身で行います。Aubergine では、ほかのプログラムと同じようにターミナルで動きます。",
+    "from": "70f25216735c"
+  },
+  "chatgpt.untried.title": {
+    "text": "まだ試していません",
+    "from": "b0889cc96cfa"
+  },
+  "chatgpt.untried.text": {
+    "text": "Aubergine で本物の Codex を動かした人はまだいません。このページに書いてあるのは、ターミナル内のあらゆるプログラムと <code>aubergine</code> コマンドのために Aubergine が行うことで、これは作られテストされています。Codex 自体がそこでどう振る舞うかは、まだ見ていません。試したら<a href=\"https://github.com/thirstyeggplant/aubergine/issues\">結果を教えてください</a>。",
+    "from": "fbfa21211143"
+  },
+  "chatgpt.start.title": {
+    "text": "起動する",
+    "from": "4238a078a056"
+  },
+  "chatgpt.start.text": {
+    "text": "<strong>New terminal</strong>（新しいターミナル）または <code>N</code> でターミナルを開き、ほかのターミナルと同じように Codex を起動します。Aubergine はモデルを呼ばず、キーも持ちません。Codex に必要なものは、サインインしたときにあなたが渡しています。",
+    "from": "382ba4da4e80"
+  },
+  "chatgpt.works.title": {
+    "text": "今日できること",
+    "from": "e34f6b7e46b1"
+  },
+  "chatgpt.works.intro": {
+    "text": "Aubergine があらゆるターミナルのために行うことすべて：",
+    "from": "12590cf44023"
+  },
+  "chatgpt.works.side.name": {
+    "text": "横に並べる",
+    "from": "a3d7b387c34d"
+  },
+  "chatgpt.works.side.text": {
+    "text": "1つのキャンバスに好きなだけターミナルを置き、キャンバスはタブで切り替えます。",
+    "from": "dbf89836ed55"
+  },
+  "chatgpt.works.status.name": {
+    "text": "コマンドの状態",
+    "from": "fe494b43cb4b"
+  },
+  "chatgpt.works.status.text": {
+    "text": "zsh なら、ターミナルのタイトルにコマンドが実行中であることと、そのコマンドが表示されます。",
+    "from": "4c2760707e62"
+  },
+  "chatgpt.works.keep.name": {
+    "text": "色、ノート、フィールド",
+    "from": "6a46e4fad859"
+  },
+  "chatgpt.works.keep.text": {
+    "text": "ターミナルに色を付け、要約とログのあるノートを残し、チケットや担当者のようなフィールドを持たせられます。",
+    "from": "ee6d1af56cf5"
+  },
+  "chatgpt.works.park.name": {
+    "text": "パーク",
+    "from": "4a64d6c849df"
+  },
+  "chatgpt.works.park.text": {
+    "text": "× でターミナルをパークします。キャンバスから外れても動き続け、<strong>Parked</strong> で戻せます。",
+    "from": "ddc50d8a2017"
+  },
+  "chatgpt.works.focus.name": {
+    "text": "ターミナルを単独で開く",
+    "from": "0ddd4013565e"
+  },
+  "chatgpt.works.focus.text": {
+    "text": "ターミナルを専用のブラウザータブで開き、詳細とノートを横に添えられます。",
+    "from": "55d7e4f4f460"
+  },
+  "chatgpt.works.copy.name": {
+    "text": "作業コピー",
+    "from": "2e0960650715"
+  },
+  "chatgpt.works.copy.text": {
+    "text": "<strong>Shell in a folder or a working copy…</strong> または <code>aubergine new --copy</code> は、専用のチェックアウトの専用ブランチでターミナルを起動します。2つのエージェントが同じファイルを編集することはありません。",
+    "from": "9abe578a4127"
+  },
+  "chatgpt.works.search.name": {
+    "text": "出力の検索",
+    "from": "0f487fa9a292"
+  },
+  "chatgpt.works.search.text": {
+    "text": "<code>⌘K</code> はすべてのターミナルが出力したものを検索し、一致した箇所までスクロールした状態でターミナルを開きます。",
+    "from": "60d93140539a"
+  },
+  "chatgpt.report.title": {
+    "text": "コマンドで伝えられること",
+    "from": "0e02d0340875"
+  },
+  "chatgpt.report.intro": {
+    "text": "Aubergine のどのターミナルにも <code>aubergine</code> コマンドと、そのターミナル専用の資格情報があります。そこで動くプログラムは、Codex も含め、それを使えます：",
+    "from": "60b4ba06f8a5"
+  },
+  "chatgpt.report.attention": {
+    "text": "ターミナルを waiting for you（あなた待ち）にし、必要なことを添えます。残りは <code>aubergine attention working</code> と <code>aubergine attention done</code> で伝えます。",
+    "from": "ed9452d7523a"
+  },
+  "chatgpt.report.note": {
+    "text": "ターミナルのノートのログに1行加えます。",
+    "from": "a99a9a2851ea"
+  },
+  "chatgpt.report.describe": {
+    "text": "ターミナルに作業に合った名前を付け、要約を保ちます。<code>aubergine link add</code> と <code>aubergine field set</code> で作業のリンクとフィールドを加えます。あなたが自分で書いたものが優先されます。",
+    "from": "4a69c7925e1d"
+  },
+  "chatgpt.report.workflow": {
+    "text": "ワークフローの現在のステップを読みます。<code>aubergine workflow done</code> で完了を報告し、次のステップを出力します。",
+    "from": "bfa2482d9f38"
+  },
+  "chatgpt.report.task": {
+    "text": "キューにタスクを提案します。<code>aubergine ask</code> は人にしかできないことをあなたに頼みます。どちらもあなたの一覧で待ちます。",
+    "from": "f6a6658159c8"
+  },
+  "chatgpt.tell.title": {
+    "text": "伝え方",
+    "from": "808fc16a4b54"
+  },
+  "chatgpt.tell.text": {
+    "text": "Codex は伝えられるまで Aubergine のことを知りません。これは、プロジェクトでの会話のたびに最初にエージェントが読む指示に貼り付ける5行を出力します。どこに置くかはエージェント自身のドキュメントに書かれています：",
+    "from": "ad7d9c3cdf01"
+  },
+  "chatgpt.tell.after": {
+    "text": "その行は、Aubergine のターミナルにいるときに一度 <code>aubergine guide</code> を実行するよう伝え、残りはガイドが説明します。Aubergine は行を出力するだけで、どのファイルにも書き込みません。",
+    "from": "24aa468975b7"
+  },
+  "chatgpt.tell.mcp": {
+    "text": "エージェントが MCP サーバーを起動できるなら、<code>aubergine mcp</code> が同じことをツールとして提供します。Aubergine のターミナル内では、そのターミナル自身の作業にアドレスもトークンも要りません。",
+    "from": "7e1e9649a26d"
+  },
+  "chatgpt.only.title": {
+    "text": "現在は Claude Code 向けにだけ作られているもの",
+    "from": "13e4ac762aab"
+  },
+  "chatgpt.only.intro": {
+    "text": "Aubergine がエージェントのために自ら行うことは、Claude Code 向けに作られています。Codex については、現在：",
+    "from": "dcf7194de658"
+  },
+  "chatgpt.only.menu": {
+    "text": "New terminal メニューにはありません。ターミナルで自分で起動します。",
+    "from": "51fe40c6c0b7"
+  },
+  "chatgpt.only.seen": {
+    "text": "Aubergine はそれをエージェントとして見ません。自動では waiting や finished にならず、<code>aubergine attention</code> を実行したときだけです。",
+    "from": "94d90e71f3eb"
+  },
+  "chatgpt.only.typed": {
+    "text": "何も入力されません。そのターミナルでワークフローを始めても何も入力されず、自分で伝えるための行が表示されます。振り返りやメッセージも知らされません。",
+    "from": "1b4e07823075"
+  },
+  "chatgpt.only.queue": {
+    "text": "キューはタスクを渡しません。タスクは、エージェントが見えていて空いているターミナルにだけ渡ります。",
+    "from": "6a80a3e587a3"
+  },
+  "chatgpt.only.resume": {
+    "text": "Resume agent も、過去の会話の一覧も、設定の一覧も、Aubergine のツールのダイアログもありません。",
+    "from": "ce8c093c0018"
+  },
+  "chatgpt.only.move": {
+    "text": "<code>aubergine move</code> と <code>aubergine here --claude</code> が持ってくるのは Claude Code だけです。",
+    "from": "66352f237ada"
+  },
+  "chatgpt.only.remind": {
+    "text": "ターミナルに名前を付けることや要約を保つことは促されません。",
+    "from": "0b61446686d8"
+  },
+  "chatgpt.only.more": {
+    "text": "すべては <a href=\"/claude/\">Claude Code</a> のページにあります。",
+    "from": "0bd32ffbda24"
+  },
+  "chatgpt.browser.title": {
+    "text": "ブラウザーの ChatGPT",
+    "from": "586ec4475558"
+  },
+  "chatgpt.browser.text": {
+    "text": "ブラウザータブの ChatGPT はウェブページで、ターミナルのプログラムではありません。そのためキャンバスでは動きません。",
+    "from": "580874279183"
+  },
+  "chatgpt.mark": {
+    "text": "Aubergine は OpenAI と提携していません。Codex および ChatGPT は OpenAI の商標です。",
+    "from": "a897a2ac5a2d"
+  },
+  "install.meta.title": {
+    "text": "macOS に Aubergine をインストールする方法 | Aubergine",
+    "from": "a8bd952c734f"
+  },
+  "install.meta.description": {
+    "text": "1つのコマンドで Aubergine をインストールして起動し、5分のツアーを試しましょう。必要なもの、インストーラーが変えるもの、よくある問題の解決方法。",
+    "from": "abcd815ec344"
+  },
+  "install.crumb": {
+    "text": "インストール",
+    "from": "569ca49f4aaf"
+  },
+  "install.title": {
+    "text": "Aubergine のインストール方法",
+    "from": "71f80d2b2ec8"
+  },
+  "install.lead": {
+    "text": "1つのコマンドでインストールし、1つのコマンドで起動します。ツアーを含めて約5分です。",
+    "from": "8924d3085c0c"
+  },
+  "install.req.title": {
+    "text": "必要なもの",
+    "from": "e0cdd07f6a27"
+  },
+  "install.req.os": {
+    "text": "macOS。Linux でも同じように動くはずですが、まだテストしていません。",
+    "from": "e896cb710692"
+  },
+  "install.req.tools": {
+    "text": "<a href=\"https://github.com/tmux/tmux\">tmux</a> 3.2 以降と Node.js 22 以降。インストーラーには pnpm も必要です。",
+    "from": "588e2ab2ee94"
+  },
+  "install.req.brew": {
+    "text": "<a href=\"https://brew.sh\">Homebrew</a> なら、1行で両方が入ります（インストーラーを使うなら <code>pnpm</code> も加えます）：",
+    "from": "9c116b9ec828"
+  },
+  "install.steps.title": {
+    "text": "インストールと起動",
+    "from": "945ef89608d4"
+  },
+  "install.steps.npm": {
+    "text": "npm から <strong>Aubergine をインストール</strong>します（必要なのは tmux と Node.js だけです）：",
+    "from": "eea62c4639cd"
+  },
+  "install.steps.script": {
+    "text": "または、pnpm も必要でソースからビルドするインストーラーを使います：",
+    "from": "d6b9bd23fe72"
+  },
+  "install.steps.start": {
+    "text": "<strong>起動して、サインイン済みのブラウザーを開きます。</strong>",
+    "from": "37654a734fd0"
+  },
+  "install.steps.tour": {
+    "text": "<strong>ツアーを試します。</strong>空のキャンバスの中央にある <em>Show me around</em>（案内して）をクリックします。代役のエージェントがいくつか並ぶ「Demo」という名前のキャンバスが作られ、8つの短いステップで案内します。デモの中に本物はなく、<code>aubergine demo --remove</code> で取り除けます。",
+    "from": "e7f179f7c61a"
+  },
+  "install.steps.read": {
+    "text": "先にスクリプトを読みたいですか？ダウンロードして読み、<code>sh install.sh --dry-run</code> を実行すれば、何も変えずに何をするかが分かります。",
+    "from": "6a20dd49876a"
+  },
+  "install.changes.title": {
+    "text": "インストーラーが変えるもの",
+    "from": "0563a99f51ff"
+  },
+  "install.changes.text": {
+    "text": "2つだけです。インストールフォルダー（<code>~/.aubergine</code>、または <code>AUBERGINE_HOME</code>）と、<code>aubergine</code> という名前のリンク1つで、リンクは <code>PATH</code> 上の書き込めるフォルダーに置かれます。先にすべてを確認し、何か足りなければ何も変えません。",
+    "from": "0a825e326d78"
+  },
+  "install.changes.not": {
+    "text": "<strong>しないこと：</strong><code>sudo</code> の使用、シェルの起動ファイルの編集、Node.js・pnpm・tmux のインストール、データフォルダーへの変更。",
+    "from": "2515db06f3ef"
+  },
+  "install.wrong.title": {
+    "text": "うまくいかないとき",
+    "from": "1a766f8f96ef"
+  },
+  "install.wrong.doctor": {
+    "text": "まず <code>aubergine doctor</code> を実行してください。よくある原因を確認します。",
+    "from": "41b2c2485b07"
+  },
+  "install.wrong.see": {
+    "text": "見えるもの",
+    "from": "fd4e554fab6a"
+  },
+  "install.wrong.do": {
+    "text": "すること",
+    "from": "f47f1edc44ed"
+  },
+  "install.wrong.signin.see": {
+    "text": "「This browser is not signed in yet」",
+    "from": "9f5b94b25ed4"
+  },
+  "install.wrong.signin.do": {
+    "text": "そのブラウザーでサインインのリンクを一度開きます。<code>aubergine open --print</code> で再び出力されます。",
+    "from": "965c7c3ed508"
+  },
+  "install.wrong.tmux.see": {
+    "text": "tmux がない、または古すぎるというページ",
+    "from": "ef3468da7805"
+  },
+  "install.wrong.tmux.do": {
+    "text": "tmux をインストールまたは更新し（<code>brew install tmux</code>）、サーバーを再起動します。",
+    "from": "9be03214def8"
+  },
+  "install.wrong.port.see": {
+    "text": "ポートが使用中でサーバーが起動しない",
+    "from": "aa6f2b6e17dc"
+  },
+  "install.wrong.port.do": {
+    "text": "別のポートを使います：<code>AUBERGINE_PORT=4700 aubergine start</code>。",
+    "from": "25b1179a84ca"
+  },
+  "install.wrong.path.do": {
+    "text": "リンクが <code>PATH</code> にありません。インストーラーが、シェルの起動ファイルに加える1行を出力します。",
+    "from": "c15d51fbb74f"
+  },
+  "install.wrong.badges.see": {
+    "text": "ターミナルに状態のバッジが出ない",
+    "from": "00220a528dae"
+  },
+  "install.wrong.badges.do": {
+    "text": "状態の表示には zsh が必要で、更新前に作られたセッションは古いシェルのままです。パークして、新しいターミナルを起動してください。",
+    "from": "a82cc898a1f3"
+  },
+  "install.later.title": {
+    "text": "停止、更新、アンインストール",
+    "from": "8c6be2046c96"
+  },
+  "install.later.stop": {
+    "text": "Ctrl+C でサーバーを<strong>停止</strong>します。ターミナルは動き続けます。サーバーを再び起動してページを再読み込みすれば戻ります。",
+    "from": "1ef7650944a8"
+  },
+  "install.later.update": {
+    "text": "<strong>更新</strong>は、npm でインストールした場合は <code>npm install -g @meatgarden/aubergine@latest</code>、インストーラーを使った場合は <code>aubergine update</code> で行います。その後サーバーを再起動します。",
+    "from": "a07a85ca11ea"
+  },
+  "install.later.uninstall": {
+    "text": "<strong>アンインストール</strong>は <code>aubergine uninstall</code> で行います。リンクを削除し、確認の後でインストーラーが作ったコピーを削除します。データは決して削除せず、ターミナルも終了しません。",
+    "from": "6d77ba78aea3"
+  },
+  "install.later.login": {
+    "text": "<strong>ログイン時に起動</strong>するには <code>aubergine service install</code> を使います。そうすれば、あとはブラウザーを開くだけです。",
+    "from": "e90077683d1e"
+  },
+  "install.next.title": {
+    "text": "次へ",
+    "from": "1ff57a29d7c9"
+  },
+  "install.next.text": {
+    "text": "<a href=\"/run-multiple-coding-agents/\">複数のコーディングエージェントを同時に動かす方法</a>や<a href=\"/guides/\">ガイド</a>を読んでください。完全なリファレンスは <a href=\"https://github.com/thirstyeggplant/aubergine#readme\">README</a> にあります。",
+    "from": "e0f26d3bf925"
+  },
+  "install.ld.howto": {
+    "text": "Aubergine をインストールして起動する方法",
+    "from": "7a2473f8500b"
+  },
+  "install.ld.howtoAbout": {
+    "text": "1つのコマンドで macOS に Aubergine をインストールし、起動して、ツアーを試します。",
+    "from": "e0aeedb8e5ed"
+  },
+  "install.ld.s1": {
+    "text": "必要なものをインストールする",
+    "from": "058debbaf60f"
+  },
+  "install.ld.s2": {
+    "text": "Aubergine をインストールする",
+    "from": "733a8757545c"
+  },
+  "install.ld.s3": {
+    "text": "起動してブラウザーを開く",
+    "from": "8c7a8d4cca8c"
+  },
+  "install.ld.s4": {
+    "text": "ツアーを試す",
+    "from": "a83c4366d2df"
+  },
+  "install.ld.q1": {
+    "text": "Aubergine のインストーラーは何を変更しますか？",
+    "from": "3abbf9c3de69"
+  },
+  "install.ld.a1": {
+    "text": "2つです。インストールフォルダー（~/.aubergine、または AUBERGINE_HOME）と、PATH 上の aubergine という名前のリンク1つ。sudo は使わず、シェルの起動ファイルを編集せず、Node.js・pnpm・tmux をインストールすることもありません。",
+    "from": "fc93852fb9a6"
+  },
+  "install.ld.q2": {
+    "text": "Aubergine はどう更新しますか？",
+    "from": "ac62d764ea7a"
+  },
+  "install.ld.a2": {
+    "text": "npm でインストールした場合：npm install -g @meatgarden/aubergine@latest を実行します。インストーラーでインストールした場合：aubergine update を実行するか、インストーラーをもう一度実行します。その後サーバーを再起動します。",
+    "from": "96bfcbba99a6"
+  },
+  "install.ld.q3": {
+    "text": "Aubergine はどうアンインストールしますか？",
+    "from": "5dbaf4c141c9"
+  },
+  "install.ld.a3": {
+    "text": "aubergine uninstall を実行します。リンクを削除し、確認の後でインストーラーが作ったコピーを削除します。データを削除したり、ターミナルを終了したりすることはありません。",
+    "from": "829813dbf528"
+  },
+  "install.ld.q4": {
+    "text": "Aubergine は Linux や Windows で動きますか？",
+    "from": "e3df2a3fd915"
+  },
+  "install.ld.a4": {
+    "text": "Linux でも動くはずですが、まだテストしていません。Windows はサポートしていません。",
+    "from": "b8b7b1d1037d"
+  },
+  "guides.meta.title": {
+    "text": "Aubergine のガイド | Aubergine",
+    "from": "0d501fb6af2e"
+  },
+  "guides.meta.description": {
+    "text": "Aubergine で複数のコーディングエージェントを動かすためのガイド：概要、Claude Code と Codex、作業コピー、キューとスケジュール。",
+    "from": "813ebf5cbbed"
+  },
+  "guides.crumb": {
+    "text": "ガイド",
+    "from": "572cd72feb9a"
+  },
+  "guides.title": {
+    "text": "ガイド",
+    "from": "572cd72feb9a"
+  },
+  "guides.lead": {
+    "text": "短く実践的なガイドです。完全なリファレンスは <a href=\"https://github.com/thirstyeggplant/aubergine#readme\">README</a> です。",
+    "from": "4235a66ec40d"
+  },
+  "guides.install.name": {
+    "text": "Aubergine をインストールする",
+    "from": "733a8757545c"
+  },
+  "guides.install.text": {
+    "text": "必要なもの、1行のインストーラー、それが変えるもの、よくある問題の解決方法。",
+    "from": "0c229f404056"
+  },
+  "guides.several.name": {
+    "text": "複数のコーディングエージェントを同時に動かす",
+    "from": "d9bedb06d9bf"
+  },
+  "guides.several.text": {
+    "text": "キャンバス、待機の数、キュー、作業コピー、ワークフローを1つのツアーで。",
+    "from": "432d38d0ca9c"
+  },
+  "guides.claude.name": {
+    "text": "Aubergine の Claude Code",
+    "from": "f05972fd315a"
+  },
+  "guides.claude.text": {
+    "text": "Aubergine が Claude Code のために自ら行うことと、それぞれがどこにあるか。",
+    "from": "f77c6acef73f"
+  },
+  "guides.codex.name": {
+    "text": "Codex と ChatGPT",
+    "from": "38c13bed7dca"
+  },
+  "guides.codex.text": {
+    "text": "ほかのプログラムと同じようにターミナルで動く Codex、それが報告できること、Claude Code 向けにだけ作られているもの。",
+    "from": "406a9eebc6ae"
+  },
+  "guides.copies.name": {
+    "text": "作業コピー",
+    "from": "9660dc116131"
+  },
+  "guides.copies.text": {
+    "text": "エージェントごとに専用のチェックアウトとブランチを渡し、2つのエージェントが同じファイルを編集しないようにします。",
+    "from": "58872d0caca2"
+  },
+  "guides.queue.name": {
+    "text": "キュー、For you、スケジュール",
+    "from": "61c48ccc941d"
+  },
+  "guides.queue.text": {
+    "text": "仕事を一度で割り振り、あなたを待っているものをすべて確認し、決まった時刻にタスクを実行します。",
+    "from": "28336b44a14a"
+  },
+  "guides.security.name": {
+    "text": "セキュリティとプライバシー",
+    "from": "1418baab9c29"
+  },
+  "guides.security.text": {
+    "text": "守られているもの、守られていないもの。",
+    "from": "87046dc292ef"
+  },
+  "guides.faq.name": {
+    "text": "FAQ",
+    "from": "dbc468a14b60"
+  },
+  "guides.faq.text": {
+    "text": "よくある質問への短い答え。",
+    "from": "ba6e629d77f3"
+  },
+  "several.meta.title": {
+    "text": "複数のコーディングエージェントを同時に動かす方法 | Aubergine",
+    "from": "edfa22b644ca"
+  },
+  "several.meta.description": {
+    "text": "コーディングエージェントを1つずつ専用のターミナルに入れて1つのキャンバスに並べ、どれがあなたを待っているかを確認し、キューから仕事を割り振り、エージェントごとの変更を分けておきます。",
+    "from": "0886bd4868f2"
+  },
+  "several.crumb": {
+    "text": "複数のエージェントを動かす",
+    "from": "8b0dc326e0f4"
+  },
+  "several.title": {
+    "text": "複数のコーディングエージェントを同時に動かす方法",
+    "from": "fcc048eb4346"
+  },
+  "several.lead": {
+    "text": "エージェント2つなら簡単です。5つになると混乱します。どれが止まっているのか、どれがあなたを待っているのか、どれがあのファイルを変えたのか。Aubergine はまさにそのときのために作られています。あなた自身のコンピューターで動きます。",
+    "from": "66c0ad369837"
+  },
+  "several.canvas.title": {
+    "text": "1. エージェントごとに、1つのキャンバス上のターミナルを渡す",
+    "from": "4866382ee0cb"
+  },
+  "several.canvas.text": {
+    "text": "ターミナル一覧の上にある <strong>New terminal</strong>（新しいターミナル）をクリックするか <code>N</code> を押して、そこでエージェントを起動します。ターミナルはタイトルバーでドラッグし、サイズを変え、フレームでまとめられます。関連する作業は1つのキャンバスに、別々の作業は別々のキャンバス（タブ）や<em>プロジェクト</em>に置きます。プロジェクトはそれぞれ自分のターミナル、キュー、スケジュールを持ちます。",
+    "from": "1670aca324d5"
+  },
+  "several.canvas.tmux": {
+    "text": "どのターミナルも tmux セッション内の本物のシェルです。ブラウザーを閉じても Aubergine を止めても、エージェントは動き続けます。",
+    "from": "fcd6a03136f7"
+  },
+  "several.waits.title": {
+    "text": "2. どのエージェントがあなたを必要としているかを見る",
+    "from": "02af5cc81964"
+  },
+  "several.waits.text": {
+    "text": "各ターミナルは、処理中・アイドル・あなた待ちのどれかを表示します。その状態は画面を読んで得たものではなく、シェルのフックとエージェント自身から来ます。上部の <strong>For you</strong> の横の数と <code>W</code> キーで、次に待っているターミナルへ直接移動できます。",
+    "from": "aa2e391970e3"
+  },
+  "several.waits.foryou": {
+    "text": "<strong>For you</strong> という1つの一覧に、人を待つものがすべて集まります。質問、承認する実行、確認すべき完了したタスク、そして理由付きの失敗したタスク。",
+    "from": "0791b2b7f30f"
+  },
+  "several.queue.title": {
+    "text": "3. キューから仕事を割り振る",
+    "from": "876879f17f0c"
+  },
+  "several.queue.text": {
+    "text": "タスクを一度書いて<a href=\"/queue-and-schedules/\">キュー</a>に入れます。あなたが指示すると空いているエージェントが引き受け、同時に動く数には上限があります。繰り返す仕事にはスケジュールを設定します。エージェントはタスクを提案したりあなたに質問したりできますが、あなたが受け入れるまで何も始まりません。",
+    "from": "65372959c515"
+  },
+  "several.apart.title": {
+    "text": "4. エージェントごとの変更を分けておく",
+    "from": "819cc99b8d5c"
+  },
+  "several.apart.text": {
+    "text": "1つのフォルダーにいる2つのエージェントは同じファイルを編集します。それぞれを専用の<a href=\"/working-copies/\">作業コピー</a>で起動しましょう。専用のブランチ上の別のチェックアウトなので、各エージェントの作業を分けて読めます。Aubergine があなたの代わりにマージ、プッシュ、リベースすることはありません。",
+    "from": "5f5f23de12b5"
+  },
+  "several.steps.title": {
+    "text": "5. エージェントにステップを渡し、関門で決める",
+    "from": "33923fa2da4c"
+  },
+  "several.steps.text": {
+    "text": "ワークフローは、エージェントが従う順番付きのステップの一覧で、今どこにいるかを示す帯が付きます。ステップは、あなたが承認するか差し戻すのを待つこともできます。進行中のすべての実行が1つのボードに表示されます。",
+    "from": "f0912196c0fb"
+  },
+  "several.not.title": {
+    "text": "しないこと",
+    "from": "b3a53baf5dfd"
+  },
+  "several.not.model": {
+    "text": "モデルを呼ぶことも、あなたの代わりに選ぶこともしません。エージェントはあなたのものです。",
+    "from": "0735098d7a82"
+  },
+  "several.not.asyou": {
+    "text": "あなたにできることをエージェントがするのを防ぎはしません。エージェントはあなたとして動きます。何が守られ何が守られないかは<a href=\"/security/\">セキュリティ</a>を参照してください。",
+    "from": "a24f01fbd135"
+  },
+  "several.not.one": {
+    "text": "現在は1台のコンピューターで動きます。ほかの人とのキャンバスの共有やクラウドでのエージェントの実行は<a href=\"/roadmap/\">ロードマップ</a>にあり、まだ作られていません。",
+    "from": "ac3140a055a6"
+  },
+  "several.install": {
+    "text": "Aubergine をインストールする",
+    "from": "733a8757545c"
+  },
+  "several.ld.q1": {
+    "text": "複数のコーディングエージェントを同時に動かすには？",
+    "from": "42c519b36444"
+  },
+  "several.ld.a1": {
+    "text": "エージェントを1つずつ、Aubergine のキャンバス上の専用ターミナルに入れます。キャンバスはどれが処理中・アイドル・あなた待ちかを示し、For you という1つの一覧にすべての質問と承認が集まります。",
+    "from": "b878f9a6290f"
+  },
+  "several.ld.q2": {
+    "text": "2つのエージェントが同じファイルを編集しないようにするには？",
+    "from": "50c7b0247257"
+  },
+  "several.ld.a2": {
+    "text": "各ターミナルを専用の作業コピーで起動します。専用のブランチ上にある、リポジトリの専用チェックアウトです。Aubergine があなたの代わりにマージやプッシュをすることはありません。",
+    "from": "7da5b34834bf"
+  },
+  "several.ld.q3": {
+    "text": "どのコーディングエージェントでも使えますか？",
+    "from": "a17347c2058b"
+  },
+  "several.ld.a3": {
+    "text": "はい。Aubergine は普通のターミナルを動かすので、どのコマンドラインエージェントも動かせます。Aubergine がエージェントのために自ら行うことは Claude Code 向けに作られており、ほかのエージェントは aubergine コマンドを通じて報告できます。",
+    "from": "60142c410708"
+  },
+  "copies.meta.title": {
+    "text": "作業コピーで2つのコーディングエージェントを1つのリポジトリで動かす | Aubergine",
+    "from": "22fa024200af"
+  },
+  "copies.meta.description": {
+    "text": "作業コピーは各エージェントにリポジトリの専用チェックアウトとブランチを渡します。2つのエージェントが同じファイルを編集することはなく、それぞれの作業を分けて読めます。",
+    "from": "a293deb1c990"
+  },
+  "copies.crumb": {
+    "text": "作業コピー",
+    "from": "9660dc116131"
+  },
+  "copies.title": {
+    "text": "2つのエージェント、1つのリポジトリ：作業コピー",
+    "from": "acd55dc99e6b"
+  },
+  "copies.lead": {
+    "text": "通常、どのターミナルもあなたの実際のフォルダーで作業します。すると1つのリポジトリにいる2つのエージェントは同じファイルを編集し、どの変更が誰のものか分からなくなります。作業コピーは、各ターミナルに専用のブランチ上の専用チェックアウトを渡します。",
+    "from": "bca0754aab05"
+  },
+  "copies.start.title": {
+    "text": "作業コピーでターミナルを起動する",
+    "from": "288cfa5a3c70"
+  },
+  "copies.start.s1": {
+    "text": "ターミナル一覧の上にある <strong>New terminal</strong> の端の <strong>▾</strong> を押し、<strong>Shell in a folder or a working copy…</strong> を選びます。",
+    "from": "1b1addf2a211"
+  },
+  "copies.start.s2": {
+    "text": "フォルダーを指定し、<strong>In its own working copy</strong>（専用の作業コピーで）を選びます。この選択肢は使える場合にだけ出て、使えない場合はその理由を示します。Git リポジトリではない、ベアリポジトリである、まだコミットがない、のいずれかです。",
+    "from": "8299d8f71e82"
+  },
+  "copies.start.cli": {
+    "text": "ターミナルからも同じことができます：",
+    "from": "2e409315b41b"
+  },
+  "copies.get.title": {
+    "text": "得られるもの",
+    "from": "41a1acbef296"
+  },
+  "copies.get.text": {
+    "text": "Git の worktree です。リポジトリの中ではなく、Aubergine がデータフォルダーの下に置くフォルダーにあり、<code>aubergine/&lt;terminal name&gt;-&lt;six characters&gt;</code> という名前の新しいブランチ上にあります。チェックアウトが今いるコミットから始まり、ターミナルはあなたがいたのと同じサブフォルダーで起動します。あなた自身のチェックアウトは決して変わりません。ファイルも、ステージしたものも、チェックアウト中のブランチもです。",
+    "from": "c06801122abd"
+  },
+  "copies.get.not": {
+    "text": "<strong>引き継がれないもの：</strong>コミットしていない変更（あなたの代わりにスタッシュもコミットもしません）と、Git が無視するファイルや追跡していないファイル（インストール済みの依存関係やローカルの設定など）。インストール手順が必要なプロジェクトは、作業コピーでももう一度必要です。",
+    "from": "131b661ca520"
+  },
+  "copies.read.title": {
+    "text": "エージェントが変えたものを読む",
+    "from": "d455bd023725"
+  },
+  "copies.read.text": {
+    "text": "作業コピーにいるターミナルは、タイトルバーにブランチと差分のあるファイルの数を表示します。クリックすると、変更・追加・削除されたファイルが、どのコミットにもない作業に印を付けて表示され、選んだファイルの読み取り専用の差分を見られます。",
+    "from": "20954eec8106"
+  },
+  "copies.end.title": {
+    "text": "ターミナルが終了したら",
+    "from": "250be513dcc7"
+  },
+  "copies.end.text": {
+    "text": "ターミナルが終了したというだけで作業コピーが削除されることはありません。あなたが選びます：",
+    "from": "b2d17861d25a"
+  },
+  "copies.end.branch": {
+    "text": "すべてコミット済みなら <strong>Keep the branch, remove the folder</strong>（ブランチを残してフォルダーを削除）。",
+    "from": "5d0203e6fc80"
+  },
+  "copies.end.keep": {
+    "text": "<strong>Keep everything.</strong>（すべて残す）一覧に残り、ターミナルがなくなったことが表示されます。",
+    "from": "a03d07a03a5a"
+  },
+  "copies.end.discard": {
+    "text": "<strong>Discard both</strong>（両方を破棄）。ほかのどこにもない作業がコピーにある場合は、もう一度確認します。",
+    "from": "6ae2c654ddf6"
+  },
+  "copies.end.never": {
+    "text": "Aubergine はマージ、プッシュ、リベースを一切しません。残したブランチをどうするかはあなた次第です。",
+    "from": "e9af3c7c1ccd"
+  },
+  "copies.git.title": {
+    "text": "Aubergine があなたのリポジトリで実行するもの",
+    "from": "3a32836a0505"
+  },
+  "copies.git.text": {
+    "text": "Aubergine が使う <code>git</code> は、<code>PATH</code> 上にあるもの（2.31 以降）です。起動するどの Git コマンドでも、フックは動かず、何も入力を求めず、ネットワークにも接続せず、サブモジュールも取得しません。大きなファイルのストレージのように、あなた自身の Git の設定に書かれたフィルターは、あなたが <code>git status</code> を実行したときと同じように動きます。",
+    "from": "b36bf6176964"
+  },
+  "copies.sandbox.title": {
+    "text": "サンドボックスではありません",
+    "from": "a4e45939dc38"
+  },
+  "copies.sandbox.text": {
+    "text": "作業コピーは作業を分けておくものです。エージェントを閉じ込めるものではありません。エージェントはあなたとして動き、あなた自身のチェックアウトを含め、あなたが読み書きできるすべてのファイルを読み書きできます。間違ったことをするエージェントを抑えるために頼らないでください。<a href=\"/security/\">セキュリティ</a>を参照してください。",
+    "from": "12f777412114"
+  },
+  "copies.related": {
+    "text": "関連：<a href=\"/run-multiple-coding-agents/\">複数のコーディングエージェントを同時に動かす</a> · <a href=\"/queue-and-schedules/\">キューとスケジュール</a>（新しいターミナルで始めたタスクは、フォルダーがリポジトリ内にあれば専用の作業コピーを得ます）。",
+    "from": "489f01eef5df"
+  },
+  "copies.ld.howto": {
+    "text": "エージェントを専用の作業コピーで動かす方法",
+    "from": "6a1451788037"
+  },
+  "copies.ld.howtoAbout": {
+    "text": "ターミナルにリポジトリの専用チェックアウトとブランチを渡します。",
+    "from": "64a170729926"
+  },
+  "copies.ld.s1": {
+    "text": "新しいターミナルのダイアログを開く",
+    "from": "5bde830139dc"
+  },
+  "copies.ld.s1text": {
+    "text": "ターミナル一覧の上にある New terminal の端の矢印を押し、Shell in a folder or a working copy を選びます。",
+    "from": "32bded457fe9"
+  },
+  "copies.ld.s2": {
+    "text": "In its own working copy を選ぶ",
+    "from": "63c9214f2664"
+  },
+  "copies.ld.s2text": {
+    "text": "少なくとも1つのコミットがある Git リポジトリ内のフォルダーを指定し、In its own working copy を選びます。",
+    "from": "e0d93261f9f0"
+  },
+  "copies.ld.s3": {
+    "text": "またはコマンドラインを使う",
+    "from": "0ee1f2056fa4"
+  },
+  "copies.ld.s4": {
+    "text": "変わったものを読む",
+    "from": "bab32518bbd7"
+  },
+  "copies.ld.s4text": {
+    "text": "ターミナルのタイトルバーのブランチをクリックすると、変更・追加・削除されたファイルと各ファイルの差分が見られます。",
+    "from": "357674609610"
+  },
+  "copies.ld.s5": {
+    "text": "その後どうするかを決める",
+    "from": "b2b7c44a3193"
+  },
+  "copies.ld.s5text": {
+    "text": "ターミナルが終了したら、ブランチを残してフォルダーを削除する、すべて残す、両方を破棄する、のどれかを選びます。",
+    "from": "9fb24490ab62"
+  },
+  "copies.ld.q1": {
+    "text": "Aubergine の作業コピーとは何ですか？",
+    "from": "c29a3dde79ad"
+  },
+  "copies.ld.a1": {
+    "text": "Git の worktree です。同じリポジトリの2つ目のチェックアウトで、専用の新しいブランチ上にあり、Aubergine のデータフォルダーに置かれ、リポジトリの中には決して置かれません。",
+    "from": "ece33bda8bd9"
+  },
+  "copies.ld.q2": {
+    "text": "作業コピーにはコミットしていない変更も含まれますか？",
+    "from": "e87c77e35caf"
+  },
+  "copies.ld.a2": {
+    "text": "いいえ。引き継がれず、触れられもしません。新しいターミナルで使いたいなら先にコミットしてください。",
+    "from": "fd51d7c79f2a"
+  },
+  "copies.ld.q3": {
+    "text": "Aubergine は作業コピーのブランチをマージやプッシュしますか？",
+    "from": "5ed71f558894"
+  },
+  "copies.ld.a3": {
+    "text": "いいえ。Aubergine はマージ、プッシュ、リベースを一切せず、チェックアウト中のブランチも決して変えません。",
+    "from": "c35bdaa3b9fd"
+  },
+  "copies.ld.q4": {
+    "text": "作業コピーはサンドボックスですか？",
+    "from": "43526bb8ae8a"
+  },
+  "copies.ld.a4": {
+    "text": "いいえ。作業を分けておくもので、エージェントを閉じ込めるものではありません。エージェントはあなたとして動き、あなたが読み書きできるすべてのファイルを読み書きできます。",
+    "from": "8b760eb225ac"
+  },
+  "queue.meta.title": {
+    "text": "キュー、For you の一覧、スケジュール | Aubergine",
+    "from": "aaf91b58a021"
+  },
+  "queue.meta.description": {
+    "text": "タスクを一度書けば空いているエージェントが引き受けます。あなたを待っているものを1つの一覧で確認し、スケジュールで決まった時刻にタスクを実行します。",
+    "from": "1eede965ade8"
+  },
+  "queue.crumb": {
+    "text": "キューとスケジュール",
+    "from": "403b3a701d15"
+  },
+  "queue.title": {
+    "text": "キュー、「For you」、スケジュール",
+    "from": "7f3e0c94e636"
+  },
+  "queue.lead": {
+    "text": "互いにつながる2つの一覧です。キューはエージェントの仕事を、<em>For you</em> は人を待つものすべてを持ちます。スケジュールは決まった時刻にキューへタスクを加えます。",
+    "from": "b208af706f74"
+  },
+  "queue.queue.title": {
+    "text": "キュー",
+    "from": "0d95744a342b"
+  },
+  "queue.queue.text": {
+    "text": "ページ上部の <strong>Runs</strong> を開き（または <code>Q</code> を押し）、<strong>Add task</strong>（タスクを追加）をクリックします。タスクにはタイトル、すること、そして任意でフォルダー、ワークフロー、誰が引き受けてよいかがあります。初期状態では、エージェントが空いているどのターミナルでも引き受けられます。ターミナルを1つ指定することも、新しいエージェントのターミナルを起動させることもでき、フォルダーがリポジトリ内にあればそのターミナルは専用の作業コピーで動きます。",
+    "from": "989827036836"
+  },
+  "queue.queue.next": {
+    "text": "<strong>Start next</strong> は、今引き受け手のいる最初のタスクを始めます。普通のシェルにタスクが渡されることはありません。",
+    "from": "ae7829bbd4d8"
+  },
+  "queue.queue.limit": {
+    "text": "<strong>At most N at once</strong>（同時に最大 N 個）、変えなければ3です。<strong>Hold</strong> は新しい開始を止め、動いているものには触れません。",
+    "from": "e2f51053f100"
+  },
+  "queue.queue.itself": {
+    "text": "<strong>Start by itself</strong> は、あなたがオンにするまでオフです。タイマーで確認するものはありません。",
+    "from": "c2a89a6c6733"
+  },
+  "queue.queue.order": {
+    "text": "順番はあなたが決めます。タスクをドラッグするか、矢印キーを使います。",
+    "from": "e3aa94f38bbc"
+  },
+  "queue.queue.follows": {
+    "text": "タスクは自分の実行に従います。実行が承認を待つ間は <em>needs you</em>、終わると <em>done</em>、止まると理由の文とともに <em>failed</em>。自動で再試行されることはありません。",
+    "from": "a1dc88999acf"
+  },
+  "queue.pic.caption": {
+    "text": "Runs ページの For you：質問、読むべき下書き、提出された一覧が、それぞれ何かとともに並びます。",
+    "from": "b25234fa54ca"
+  },
+  "queue.pic.alt": {
+    "text": "Runs ページの Waiting for you の列：To-do を追加する欄、続いて代役のエージェントの質問、読むべき下書き、提出された一覧。",
+    "from": "9bc144e9c95e"
+  },
+  "queue.foryou.title": {
+    "text": "For you",
+    "from": "143134f93925"
+  },
+  "queue.foryou.text": {
+    "text": "質問のあるターミナル、承認待ちやブロックされた実行、読むべき下書きやインストール、キューに提案されたタスク、完了したタスクと失敗したタスク、エージェントが提出した一覧、ターミナルがなくなった作業コピー。上部の For you の横の数と「next waiting」は同じ一覧です。ほとんどは書かれたものではなく集められたもので、対象そのものが済むと項目は消えます。",
+    "from": "f0987632af6e"
+  },
+  "queue.foryou.propose": {
+    "text": "今やるべきではない仕事を見つけたエージェントはタスクを提案でき、人が必要なエージェントはあなたに頼めます：",
+    "from": "6cab942ae32c"
+  },
+  "queue.foryou.land": {
+    "text": "どちらもあなたの一覧に届きます。提案は、あなたが受け入れるまで何も始めません。",
+    "from": "b9045f914e0b"
+  },
+  "queue.schedules.title": {
+    "text": "スケジュール",
+    "from": "221ff19c904c"
+  },
+  "queue.schedules.text": {
+    "text": "スケジュールは、時刻、曜日、実行するもの、実行する場所です。時刻になるとキューにタスクを1つ加え、キューがそれを始めます。Runs ページの <strong>Schedules</strong> の下、または <code>aubergine schedule</code> で扱います。時刻はこのコンピューターの時計によります。式はなく、1日1回より頻繁なものはありません。",
+    "from": "a43d6965e12f"
+  },
+  "queue.schedules.run": {
+    "text": "<code>aubergine schedule run</code> はスケジュールを今すぐ試します。",
+    "from": "433ccf3d7204"
+  },
+  "queue.plan.title": {
+    "text": "予定どおりにいかないとき",
+    "from": "0474d0b379f1"
+  },
+  "queue.plan.awake": {
+    "text": "コンピューターが起きていて、Aubergine が動いている必要があります。スリープ中に過ぎた時刻は、6時間以内であれば復帰したときに遅れとして<strong>1回</strong>だけ実行されます。それ以外は <strong>missed</strong>（逃した）と記録されます。",
+    "from": "da52cc0d963c"
+  },
+  "queue.plan.skipped": {
+    "text": "スケジュールの前のタスクがまだ待っているか作業中の間は、新しいタスクを加えず、スキップしたと表示します。",
+    "from": "f076f68e0964"
+  },
+  "queue.plan.gone": {
+    "text": "指定したもの（ターミナル、ステップ、キャンバス）がなくなっていれば実行せず、あなたの一覧に1つの項目でそう伝えます。",
+    "from": "bc76023361ed"
+  },
+  "queue.rules.title": {
+    "text": "ルール",
+    "from": "4228aeb07c41"
+  },
+  "queue.rules.text": {
+    "text": "<strong>Rules</strong> では、「タスクが完了・失敗・自分待ちになったとき、またはスケジュールが発火・見逃されたとき、通知する、または保存済みのステップを実行する」と決められます。ルールを書けるのはあなただけです。プログラムもエージェントもルールを追加・変更できず、ルールが自分自身を発火させることもできません。",
+    "from": "b4ec8a0da4e6"
+  },
+  "queue.rules.nothing": {
+    "text": "Aubergine はモデルを呼ばず、どのアプリの資格情報も持ちません。タスクやスケジュールは実行を始めるだけで、仕事は引き受けたエージェントが自分のツールで行います。",
+    "from": "635fa52c391c"
+  },
+  "queue.related": {
+    "text": "関連：<a href=\"/working-copies/\">作業コピー</a> · <a href=\"/run-multiple-coding-agents/\">複数のコーディングエージェントを同時に動かす</a>",
+    "from": "a1b112595d4a"
+  },
+  "queue.ld.headline": {
+    "text": "キュー、For you の一覧、スケジュール",
+    "from": "e7aa7f29e008"
+  },
+  "queue.ld.q1": {
+    "text": "Aubergine のキューとは何ですか？",
+    "from": "f483ddf62dfe"
+  },
+  "queue.ld.a1": {
+    "text": "エージェントのための仕事です。タイトル、詳細、そして任意でフォルダー、ワークフロー、誰が引き受けてよいかを添えて、タスクを一度書きます。あなたが指示すると空いているエージェントが引き受けます。",
+    "from": "3d99add6ea00"
+  },
+  "queue.ld.q2": {
+    "text": "For you の一覧とは何ですか？",
+    "from": "10295c2a2707"
+  },
+  "queue.ld.a2": {
+    "text": "人を待つものすべてを1か所に集めたものです。質問のあるターミナル、承認する実行、読むべき下書き、完了したタスクと失敗したタスク、エージェントが提出した一覧。",
+    "from": "4167a6eb1070"
+  },
+  "queue.ld.q3": {
+    "text": "エージェントが自分で仕事を始めることはできますか？",
+    "from": "a9a38a49db05"
+  },
+  "queue.ld.a3": {
+    "text": "エージェントはタスクを提案したり何かを頼んだりできますが、提案はあなたが受け入れるまで何も始めません。",
+    "from": "75c93148284c"
+  },
+  "queue.ld.q4": {
+    "text": "コンピューターがスリープ中のとき、スケジュールはどうなりますか？",
+    "from": "09ef41a88ccf"
+  },
+  "queue.ld.a4": {
+    "text": "コンピューターを起こすものはありません。スリープ中に過ぎた時刻は、6時間未満であれば復帰したときに遅れとして1回実行されます。それより古ければ missed と記録されます。",
+    "from": "28be43f4ec53"
+  },
+  "security.meta.title": {
+    "text": "セキュリティとプライバシー | Aubergine",
+    "from": "ceea0328314d"
+  },
+  "security.meta.description": {
+    "text": "Aubergine はあなたのコンピューターだけで動き、127.0.0.1 で待ち受け、すべてのリクエストを確認し、すべてのトークンにスコープを付け、守れないものははっきり伝えます。",
+    "from": "d44a642ead3b"
+  },
+  "security.crumb": {
+    "text": "セキュリティ",
+    "from": "8f6fb4eb7f42"
+  },
+  "security.title": {
+    "text": "セキュリティとプライバシー",
+    "from": "1418baab9c29"
+  },
+  "security.lead": {
+    "text": "Aubergine がターミナルを守るためにすること、そして同じくらい大事な、しないこと。要するに、ローカルで動き、エージェントのために動く前に尋ね、それでもエージェントはあなたとして動く、ということです。",
+    "from": "1026aabf288c"
+  },
+  "security.local.title": {
+    "text": "すべてはあなたのコンピューターに",
+    "from": "793ac3d2607e"
+  },
+  "security.local.bind": {
+    "text": "サーバーは <code>127.0.0.1</code> にだけバインドします。すべてのリクエストとすべての WebSocket のアップグレードで <code>Host</code> と <code>Origin</code> が確認され、ブラウザーはアクセス用の Cookie を持っている必要があります。",
+    "from": "6a7b211aac87"
+  },
+  "security.local.elsewhere": {
+    "text": "ほかのデバイスからの Aubergine の利用は、あなたが設定するまでオフです。同じコンピューター上の何かが、設定に書いた名前で HTTPS を中継し、各ブラウザーは使い捨てのコードでペアリングされ、失効させられます。ペアリングしたデバイスは、オーナーにできることをすべてできます。方法は <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/remote.md\">Using Aubergine from elsewhere</a> にあります。",
+    "from": "31531be51b00"
+  },
+  "security.local.network": {
+    "text": "Aubergine はモデルを呼ばず、自分からネットワークリクエストを始めることもありません。例外は2つです。<em>あなた</em>が求めたときにライブラリのソース（Git のアドレス）を取得すること、そしてインストールされサインイン済みの場合に、あなた自身の <code>gh</code> ツールにターミナルのブランチのプルリクエストを尋ねることです。",
+    "from": "09a9d3b11a3f"
+  },
+  "security.local.notify": {
+    "text": "デスクトップ通知は開いているページから出ます。あなたのコンピューターから外に出るものはありません。",
+    "from": "a061f94decff"
+  },
+  "security.callers.title": {
+    "text": "3種類の呼び出し元、それぞれを個別に判断",
+    "from": "70f1b55254c0"
+  },
+  "security.callers.text": {
+    "text": "すべてのリクエストは、何かを調べる前に、呼び出し元が何をしてよいかと照らし合わせて確認されます。権限のない呼び出し元は、答えから何も知ることができません。呼び出し元は、あなた（ブラウザーでサインイン済み）、エージェントのセッション、API トークンです。",
+    "from": "c126625e9b6c"
+  },
+  "security.callers.scopes": {
+    "text": "<strong>API トークンにはスコープがあります。</strong>秘密は一度だけ表示され、保存されません。保存されるのはハッシュだけです。トークンでの呼び出しはアクティビティログに記録されます。誰が、何を、どう終わったか。秘密も送った内容も記録しません。",
+    "from": "4c7141504f63"
+  },
+  "security.callers.never": {
+    "text": "<strong>どのトークンにも決してできないこと：</strong>トークンの作成や失効、アクティビティログの閲覧、設定の変更、そして Aubergine の外のターミナルに関すること全般。",
+    "from": "72b0d531789b"
+  },
+  "security.callers.terminal": {
+    "text": "<strong>ターミナルへのアクセスは2つの別々のスコープです。</strong>読むためのものと入力するためのもので、それぞれあなたが選ぶセッションに限られます。ターミナルを <em>people only</em>（人だけ）にすると、すべてのトークンに対して閉じられます。",
+    "from": "25a56b3d0365"
+  },
+  "security.callers.agent": {
+    "text": "<strong>エージェント自身の資格情報は狭いものです。</strong>自分の注意状態の設定、自分のノートへの追記、自分の状態の報告、自分がいる実行の読み取りができます。ほかのターミナル、キャンバス、トークンには届きません。",
+    "from": "e256c4165a46"
+  },
+  "security.alone.title": {
+    "text": "エージェントが単独ではできないこと",
+    "from": "03326de9b26e"
+  },
+  "security.alone.draft": {
+    "text": "エージェントやプログラムが書いたもの（ワークフローやステップ）は、あなたがレビューする<strong>下書き</strong>として届きます。受け入れられるのはあなただけです。",
+    "from": "4170ed1f1019"
+  },
+  "security.alone.person": {
+    "text": "人を待つステップを承認したり差し戻したりできるのは人だけです。ルール、スケジュール、デモはあなただけのものです。",
+    "from": "d50827bd1466"
+  },
+  "security.alone.typed": {
+    "text": "Aubergine がエージェントのターミナルに入力するのは、「次のステップを読んで」のような少数の決まった文だけです。あなたが保存したものも、エージェントが書いたものも入力されません。",
+    "from": "fbf9087a8e44"
+  },
+  "security.alone.library": {
+    "text": "ライブラリからインストールするには、表示されたとおりの内容をあなたが受け入れる必要があります。",
+    "from": "6d62284139e3"
+  },
+  "security.not.title": {
+    "text": "これが守らないもの",
+    "from": "664cb80d250f"
+  },
+  "security.not.asyou": {
+    "text": "<strong>エージェントはあなたとして動きます。</strong>ターミナルのエージェントは、コマンドの実行、ファイルの読み取り、そしてその気になればあなた自身のブラウザーのセッションの利用も含め、そのターミナルであなたができることは何でもできます。",
+    "from": "179663eb5387"
+  },
+  "security.not.approvals": {
+    "text": "<strong>承認は鍵ではありません。</strong>あなたとして動くエージェントは、あなたとして決められます。決定は記録されますが、防がれはしません。",
+    "from": "dc58a76bd541"
+  },
+  "security.not.copies": {
+    "text": "<strong>作業コピーはサンドボックスではありません。</strong>作業を分けておくもので、エージェントを閉じ込めるものではありません。",
+    "from": "de9877dffd91"
+  },
+  "security.not.review": {
+    "text": "<strong>ライブラリの項目に対する管理はレビュー画面です。</strong>項目は、エージェントが自分にできるすべてを使って従う指示です。読んでいないものはインストールしないでください。",
+    "from": "1972614790c0"
+  },
+  "security.not.guide": {
+    "text": "<strong>エージェント向けのガイドは助言であって</strong>、鍵ではありません。",
+    "from": "79f0576917ce"
+  },
+  "security.installer.title": {
+    "text": "インストーラー",
+    "from": "26ab59561d68"
+  },
+  "security.installer.text": {
+    "text": "変えるのは2つです。自分のフォルダーと、<code>aubergine</code> という名前のリンク1つ。<code>sudo</code> は使わず、シェルの起動ファイルも編集せず、データフォルダーには決して触れません。<code>aubergine uninstall</code> は自分が作ったものだけを削除します。",
+    "from": "0dd991c78883"
+  },
+  "security.report.title": {
+    "text": "問題を報告する",
+    "from": "53de38dec81e"
+  },
+  "security.report.text": {
+    "text": "<a href=\"https://github.com/thirstyeggplant/aubergine/issues\">GitHub</a> で issue を作成してください。秘密やトークンは書かないでください。",
+    "from": "578a2c2c1f9c"
+  },
+  "security.related": {
+    "text": "関連：<a href=\"/working-copies/\">作業コピー</a> · <a href=\"/faq/\">FAQ</a> · <a href=\"/roadmap/\">ロードマップ</a>（承認モードとコマンドのポリシーは予定中で、まだ作られていません）",
+    "from": "f7672fdbd012"
+  },
+  "security.ld.q1": {
+    "text": "Aubergine はターミナルやコードをどこかに送りますか？",
+    "from": "8e3369fd3214"
+  },
+  "security.ld.a1": {
+    "text": "いいえ。サーバーは 127.0.0.1 でのみ待ち受けるので、ほかのデバイスからの利用を設定するまでは、あなたのコンピューターからしか届きません。Aubergine はモデルを呼ばず、あなた自身がライブラリのソースを加えない限り何も取得しません。あなた自身の gh ツールがインストールされている場合は、ターミナルのブランチのプルリクエストをそれに尋ねます。",
+    "from": "d6089c695fd7"
+  },
+  "security.ld.q2": {
+    "text": "エージェントが Aubergine の設定を変えたり、自分のトークンを作ったりできますか？",
+    "from": "50baf59f3f49"
+  },
+  "security.ld.a2": {
+    "text": "いいえ。トークンの作成、設定の変更、アクティビティログの閲覧、Aubergine の外のターミナルに関することは、どんなスコープを持っていてもトークンには決して許されません。",
+    "from": "83dbce1b8ba8"
+  },
+  "security.ld.q3": {
+    "text": "承認は、オーナー自身のエージェントが自分を承認するのを止めますか？",
+    "from": "44ef09ccbdb5"
+  },
+  "security.ld.a3": {
+    "text": "いいえ。あなたとして動くエージェントは、あなたとして行動できます。承認は記録されますが、あなた自身のエージェントに対して強制されるものではありません。",
+    "from": "218bd3880939"
+  },
+  "security.ld.q4": {
+    "text": "作業コピーはサンドボックスですか？",
+    "from": "8fba34c387fd"
+  },
+  "security.ld.a4": {
+    "text": "いいえ。作業を分けておきますが、エージェントを閉じ込めはしません。エージェントはあなたとして動きます。",
+    "from": "00ac8e54df7b"
+  },
+  "roadmap.meta.title": {
+    "text": "ロードマップ：Aubergine で予定していること | Aubergine",
+    "from": "f82b67c7e4ed"
+  },
+  "roadmap.meta.description": {
+    "text": "Aubergine が今日できることと、予定中でまだ作られていないこと：マルチプレイヤー、サンドボックス化されたクラウドのエージェント、承認モード、品質ゲート、SDK など。",
+    "from": "eae564891939"
+  },
+  "roadmap.crumb": {
+    "text": "ロードマップ",
+    "from": "92375f997ffe"
+  },
+  "roadmap.tag": {
+    "text": "予定中、まだ作られていません",
+    "from": "8520b04b5a47"
+  },
+  "roadmap.title": {
+    "text": "ロードマップ",
+    "from": "92375f997ffe"
+  },
+  "roadmap.lead": {
+    "text": "ここにあるものは、今日どれも存在しません。私たちが向かいたい方向で、順番は変わるかもしれません。今作られているものは<a href=\"/guides/\">ガイド</a>を参照してください。",
+    "from": "905a1a4e53eb"
+  },
+  "roadmap.note": {
+    "text": "予定中の作業は方向であって、約束ではありません。リリース済みのものは<a href=\"https://github.com/thirstyeggplant/aubergine\">リポジトリ</a>で分かります。",
+    "from": "2a77383dd929"
+  },
+  "roadmap.teams.title": {
+    "text": "チームとつながり",
+    "from": "4e0046ce8160"
+  },
+  "roadmap.teams.sub": {
+    "text": "人が一緒に働くこと、そしてすでに使っているツールからエージェントに届くこと。",
+    "from": "b79bf222234e"
+  },
+  "roadmap.teams.multiplayer.name": {
+    "text": "マルチプレイヤー",
+    "from": "563370a7b0ef"
+  },
+  "roadmap.teams.multiplayer.text": {
+    "text": "ほかの人やそのエージェントとキャンバスを共有します。誰がどこで作業しているかを見て、待っているエージェントをチームメイトに渡し、一緒に答えます。",
+    "from": "b11467b3847f"
+  },
+  "roadmap.teams.chat.name": {
+    "text": "チャットのインターフェース",
+    "from": "2d4271591981"
+  },
+  "roadmap.teams.chat.text": {
+    "text": "チームのチャットアプリからエージェントに頼み、その質問に答えます。ブラウザーと同じ ID と設定で。",
+    "from": "e030fc9eb4b5"
+  },
+  "roadmap.teams.tickets.name": {
+    "text": "チケットとプルリクエスト",
+    "from": "c18d1bcc516f"
+  },
+  "roadmap.teams.tickets.text": {
+    "text": "issue をキューのタスクにし、作業コピーからプルリクエストを開き、結果をチケットに報告します。",
+    "from": "4641289cfa30"
+  },
+  "roadmap.teams.watches.name": {
+    "text": "監視、Webhook、トリアージ",
+    "from": "9c51f5013534"
+  },
+  "roadmap.teams.watches.text": {
+    "text": "何かが起きたら作業を始めます。失敗した CI ジョブ、アラート、監視している変更、ほかのサービスからの呼び出し。何をタスクにするかはルールが決めます。",
+    "from": "1c497d4b9a99"
+  },
+  "roadmap.teams.skills.name": {
+    "text": "共有スキルとマーケットプレイス",
+    "from": "31d4586cb1ae"
+  },
+  "roadmap.teams.skills.text": {
+    "text": "エージェントのスキルを許可によって共有し、承認を経てチーム全体に広げ、Git から取り込み、公開カタログでレビュー済みの項目を見つけます。",
+    "from": "fd5d82778447"
+  },
+  "roadmap.teams.memory.name": {
+    "text": "人と部屋のための記憶",
+    "from": "ad614cac170e"
+  },
+  "roadmap.teams.memory.text": {
+    "text": "エージェントが学んだことを、人ごと、共有の部屋ごとに、ほかと分けて保ちます。",
+    "from": "416f752e7296"
+  },
+  "roadmap.teams.more": {
+    "text": "ほかにも：モデル、共有、厳しさに関する管理者の設定 · セルフホストのチームサーバー · チーム向けのサインイン（SSO と MFA） · 人、トークン、エージェントごとの使用量の上限 · ターミナルを共有せずに共有できる読み取り専用のレポート · 「For you」の一覧のスマートフォン向け表示 · 社内ツールへのレビュー済みコネクター · ほかのチャットアプリ · 選んだ人に公開する小さな社内ウェブアプリ。",
+    "from": "481fe85556f5"
+  },
+  "roadmap.cloud.title": {
+    "text": "クラウド",
+    "from": "b977b950c1ae"
+  },
+  "roadmap.cloud.sub": {
+    "text": "ノートパソコンを起こしておかなくても動くエージェント。",
+    "from": "87fb76b1a7f8"
+  },
+  "roadmap.cloud.sandbox.name": {
+    "text": "クラウドのサンドボックスで動くエージェント",
+    "from": "afb143bae999"
+  },
+  "roadmap.cloud.sandbox.text": {
+    "text": "エージェントを隔離されたクラウドのサンドボックスで動かし、ローカルのものと同じキャンバスで見ます。サンドボックスはアイドル時に眠り、必要に応じて起き、実行の間もストレージを保ちます。",
+    "from": "a53d1378b583"
+  },
+  "roadmap.cloud.pool.name": {
+    "text": "エージェントのプール",
+    "from": "7d3bca9c3c41"
+  },
+  "roadmap.cloud.pool.text": {
+    "text": "タスクごとにターミナルを指定する代わりに、仕事を説明してエージェントのプールに引き受けさせます。",
+    "from": "f9b895723ae8"
+  },
+  "roadmap.cloud.envs.name": {
+    "text": "用意済みの環境",
+    "from": "ed1697ee039b"
+  },
+  "roadmap.cloud.envs.text": {
+    "text": "依存関係、ツール、スキル、ファイル、変数を一度保存し、新しいターミナルやクラウドのエージェントをそこから始めます。",
+    "from": "d97c932492be"
+  },
+  "roadmap.cloud.long.name": {
+    "text": "長い、複数段階の作業",
+    "from": "1207d0ac598f"
+  },
+  "roadmap.cloud.long.text": {
+    "text": "何時間も何日も段階的に動くタスク。各段階の後に確認があり、進み具合は再起動しても残ります。",
+    "from": "a1e631232a28"
+  },
+  "roadmap.cloud.deploy.name": {
+    "text": "1コマンドでクラウドにデプロイ",
+    "from": "dabcec83058d"
+  },
+  "roadmap.cloud.deploy.text": {
+    "text": "チームで共有する Aubergine を、1つのコマンドであなた自身のクラウドアカウントに置きます。",
+    "from": "6a0dc41e1a38"
+  },
+  "roadmap.cloud.see.name": {
+    "text": "目で見られる作業",
+    "from": "dae8006cad9a"
+  },
+  "roadmap.cloud.see.text": {
+    "text": "クラウドのエージェントが、作ったもののスクリーンショットや短い録画を、あなたの「For you」の一覧に返します。",
+    "from": "34843169f72f"
+  },
+  "roadmap.cloud.more": {
+    "text": "ほかにも：ほかのマシンのエージェントのための HTTP 経由の MCP · テスト済みの Linux サポート · zsh 以外のシェル統合。",
+    "from": "ab24c1d11df2"
+  },
+  "roadmap.control.title": {
+    "text": "制御",
+    "from": "32d7e8208247"
+  },
+  "roadmap.control.sub": {
+    "text": "エージェントがどこまでしてよいか、そして何をしたかの記録。",
+    "from": "9b7292a38acb"
+  },
+  "roadmap.control.approval.name": {
+    "text": "承認モード",
+    "from": "7bd88c9e6d2d"
+  },
+  "roadmap.control.approval.text": {
+    "text": "エージェントが単独でどこまでしてよいかを選びます。すべての操作を承認する、危険なものだけ承認する、または何も承認しない。",
+    "from": "b9608d55fca3"
+  },
+  "roadmap.control.policy.name": {
+    "text": "コマンドのポリシーとスクリーニング",
+    "from": "c3c9b7fc9194"
+  },
+  "roadmap.control.policy.text": {
+    "text": "承認が必要なコマンドや常に拒否するコマンドのルール、そしてエージェントが読む前に外部の内容をスクリーニングする任意の機能。",
+    "from": "6697b64fab83"
+  },
+  "roadmap.control.risk.name": {
+    "text": "リポジトリごとのリスクレベル",
+    "from": "989a1686d169"
+  },
+  "roadmap.control.risk.text": {
+    "text": "大事なところでは厳しく、そうでないところでは緩く。",
+    "from": "10639df3756c"
+  },
+  "roadmap.control.audit.name": {
+    "text": "完全な監査証跡",
+    "from": "dfb67e3ffb15"
+  },
+  "roadmap.control.audit.text": {
+    "text": "今日記録されているトークンの呼び出しを超えて、誰が、または何が何をしたかをプロジェクトごとに記録します。",
+    "from": "c97e6d6355c9"
+  },
+  "roadmap.control.undo.name": {
+    "text": "エージェントの作業を元に戻す",
+    "from": "f031a385eb84"
+  },
+  "roadmap.control.undo.text": {
+    "text": "作業コピーをタスクの前まで戻す、またはそのブランチを一度に破棄します。",
+    "from": "8a76ddeef3eb"
+  },
+  "roadmap.control.admin.name": {
+    "text": "管理者の設定",
+    "from": "9636c9a17dce"
+  },
+  "roadmap.control.admin.text": {
+    "text": "どのモデルを使ってよいか、共有をどう扱うかについてのチーム全体の設定。",
+    "from": "2e27927bdc87"
+  },
+  "roadmap.control.more": {
+    "text": "ほかにも：ターミナル、タスク、スケジュールごとのモデルの選択。",
+    "from": "f596795919fb"
+  },
+  "roadmap.quality.title": {
+    "text": "品質",
+    "from": "1b2c08a8733d"
+  },
+  "roadmap.quality.sub": {
+    "text": "作業が完了と呼ばれる前に行われる確認。",
+    "from": "d384d12758ef"
+  },
+  "roadmap.quality.gates.name": {
+    "text": "品質ゲート",
+    "from": "94515eddaac8"
+  },
+  "roadmap.quality.gates.text": {
+    "text": "レビュー、テスト、セキュリティチェックが合格を報告するまで、実行は終われません。",
+    "from": "cb60bf40a980"
+  },
+  "roadmap.quality.review.name": {
+    "text": "プルリクエストのレビュー",
+    "from": "88740e3ab820"
+  },
+  "roadmap.quality.review.text": {
+    "text": "エージェントがプルリクエストをレビューし、あなたの「For you」の一覧に報告します。",
+    "from": "f2cb7f3e314f"
+  },
+  "roadmap.quality.browser.name": {
+    "text": "ブラウザーを使ったテスト",
+    "from": "7c8b76a0df2d"
+  },
+  "roadmap.quality.browser.text": {
+    "text": "エージェントがブラウザーを操作して変更をテストし、結果を返します。",
+    "from": "35d5c9f82525"
+  },
+  "roadmap.quality.plan.name": {
+    "text": "作る前に計画",
+    "from": "c1b4e7cda45f"
+  },
+  "roadmap.quality.plan.text": {
+    "text": "エージェントが計画を提案し、ファイルに触れる前にあなたの承認を待ちます。",
+    "from": "bfe188b91109"
+  },
+  "roadmap.quality.recipes.name": {
+    "text": "タスクのレシピ",
+    "from": "a907955cd430"
+  },
+  "roadmap.quality.recipes.text": {
+    "text": "テストの生成、レビュー、依存関係と秘密のスキャン、ドキュメントを最新に保つための、用意済みのワークフロー。",
+    "from": "d2b3c5c8eb35"
+  },
+  "roadmap.quality.metrics.name": {
+    "text": "成果の指標",
+    "from": "0663013cf8b2"
+  },
+  "roadmap.quality.metrics.text": {
+    "text": "タスクから完了までの時間、エージェントがあなたを待った頻度、誰が始めたかごとの使用量を、プロジェクトごとに。",
+    "from": "cc91d3e1b4a9"
+  },
+  "roadmap.quality.more": {
+    "text": "ほかにも：障害の報告書。エージェントが調査し、ポストモーテムの下書きを作ります。",
+    "from": "38f56a594979"
+  },
+  "roadmap.everywhere.title": {
+    "text": "あらゆる場所で",
+    "from": "dcc10bfd55ac"
+  },
+  "roadmap.everywhere.sub": {
+    "text": "Aubergine に届き、その上に作るための、より多くの方法。",
+    "from": "738934daa2cd"
+  },
+  "roadmap.everywhere.sdk.name": {
+    "text": "公開 SDK",
+    "from": "02aa38383381"
+  },
+  "roadmap.everywhere.sdk.text": {
+    "text": "型付きクライアントをインストール可能なパッケージとして、その後 Python などほかの言語のクライアントも。",
+    "from": "a3e3521d038a"
+  },
+  "roadmap.everywhere.editor.name": {
+    "text": "エディターの拡張機能",
+    "from": "92399ab4236f"
+  },
+  "roadmap.everywhere.editor.text": {
+    "text": "VS Code などのエディターの中に、ターミナルと「For you」の一覧を表示します。エディターを離れる必要はありません。",
+    "from": "f8f4319dbbe7"
+  },
+  "roadmap.everywhere.desktop.name": {
+    "text": "デスクトップアプリ",
+    "from": "7102842054a4"
+  },
+  "roadmap.everywhere.desktop.text": {
+    "text": "ブラウザータブの代わりに、メニューバーのアイコンを持つパッケージ化されたアプリ。",
+    "from": "2a56e82d4a02"
+  },
+  "roadmap.everywhere.windows.name": {
+    "text": "Windows のサポート",
+    "from": "e61744d0c993"
+  },
+  "roadmap.everywhere.windows.text": {
+    "text": "Windows で Aubergine を動かします。現在サポートしているのは macOS だけで、Linux は未テストです。",
+    "from": "6eb34c4aada3"
+  },
+  "faq.meta.title": {
+    "text": "よくある質問 | Aubergine",
+    "from": "0956334109a5"
+  },
+  "faq.meta.description": {
+    "text": "Aubergine についての答え：何なのか、何が必要か、プライベートか、コーディングエージェントとどう連携するか、何を予定しているか。",
+    "from": "b4a8a7a10267"
+  },
+  "faq.crumb": {
+    "text": "FAQ",
+    "from": "dbc468a14b60"
+  },
+  "faq.title": {
+    "text": "よくある質問",
+    "from": "e956a9404b46"
+  },
+  "faq.lead": {
+    "text": "短い答えです。詳しくは<a href=\"/guides/\">ガイド</a>にあります。",
+    "from": "cc5a52e1d739"
+  },
+  "faq.what.q": {
+    "text": "Aubergine とは何ですか？",
+    "from": "34bffd794522"
+  },
+  "faq.what.a": {
+    "text": "ローカルで動く、ブラウザーベースのターミナルセッションのキャンバスです。各ターミナルは配置して使えるノードなので、複数のコーディングエージェントを同時に動かし、どれがあなたを待っているかを確認できます。",
+    "from": "e2699684c13a"
+  },
+  "faq.free.q": {
+    "text": "Aubergine は無料でオープンソースですか？",
+    "from": "0084cd893989"
+  },
+  "faq.free.a": {
+    "text": "はい。無料で、ソースは GitHub にあります。",
+    "from": "7ac926cbb182"
+  },
+  "faq.need.q": {
+    "text": "Aubergine を動かすには何が必要ですか？",
+    "from": "efe26fb96381"
+  },
+  "faq.need.a": {
+    "text": "tmux 3.2 以降と Node.js 22 以降の入った macOS です。インストーラーには pnpm も必要です。Linux でも動くはずですが、まだテストしていません。Windows はサポートしていません。",
+    "from": "d0ea17ebbaa3"
+  },
+  "faq.agents.q": {
+    "text": "どのコーディングエージェントでも使えますか？",
+    "from": "a17347c2058b"
+  },
+  "faq.agents.a": {
+    "text": "Aubergine は普通のターミナルを動かすので、どのコマンドラインエージェントも動かせます。待っていることの把握など、Aubergine がエージェントのために自ら行うことは <a href=\"/claude/\">Claude Code</a> 向けに作られています。<a href=\"/chatgpt/\">Codex</a> を含むほかのエージェントは、<code>aubergine</code> コマンドとローカル API で状態を報告でき、トークンが許すものだけを一覧する MCP サーバーも使えます。",
+    "from": "f2ff9ce8d976"
+  },
+  "faq.send.q": {
+    "text": "Aubergine はターミナルやコードをどこかに送りますか？",
+    "from": "8e3369fd3214"
+  },
+  "faq.send.a": {
+    "text": "いいえ。すべてあなた自身のコンピューターで動きます。サーバーは 127.0.0.1 でのみ待ち受けます。",
+    "from": "3b02bfd4cab9"
+  },
+  "faq.model.q": {
+    "text": "Aubergine は AI モデルを呼び出しますか？",
+    "from": "f7d8f06fe992"
+  },
+  "faq.model.a": {
+    "text": "いいえ。呼び出すのはあなたのエージェントです。Aubergine はそのターミナルを動かして状況を追うだけで、どのモデルのキーも持ちません。",
+    "from": "b237bbedc740"
+  },
+  "faq.close.q": {
+    "text": "ブラウザーを閉じるとターミナルはどうなりますか？",
+    "from": "b5dd88540c71"
+  },
+  "faq.close.a": {
+    "text": "動き続けます。各セッションは tmux セッションで、ブラウザーと Aubergine のサーバーの両方より長く生きます。",
+    "from": "7871478dcac5"
+  },
+  "faq.waiting.q": {
+    "text": "どのエージェントが自分を待っているか、どう分かりますか？",
+    "from": "7430a38bad53"
+  },
+  "faq.waiting.a": {
+    "text": "各ターミナルは、処理中・アイドル・待機中のどれかを表示します。ページ上部の For you の横の数と For you の一覧に、あなたを必要とするものすべてが集まります。",
+    "from": "35f55955a398"
+  },
+  "faq.apart.q": {
+    "text": "2つのエージェントが同じファイルを編集しないようにするには？",
+    "from": "50c7b0247257"
+  },
+  "faq.apart.a": {
+    "text": "各ターミナルを専用の作業コピーで起動します。専用のブランチ上の専用チェックアウトです。Aubergine があなたの代わりにマージやプッシュをすることはありません。",
+    "from": "823333cbb2a8"
+  },
+  "faq.steps.q": {
+    "text": "エージェントに従うべきステップの一覧を渡せますか？",
+    "from": "76d449645ba9"
+  },
+  "faq.steps.a": {
+    "text": "はい。ワークフローは順番付きのステップの一覧で、エージェントが今どこにいるかを示す帯が付きます。ステップは、あなたが承認するか差し戻すのを待つこともできます。",
+    "from": "9bc235f9572a"
+  },
+  "faq.talk.q": {
+    "text": "エージェント同士で話せますか？",
+    "from": "bb3d5c828a26"
+  },
+  "faq.talk.a": {
+    "text": "はい、制限の範囲内で。ターミナル間のメッセージには送り手の名前、一時停止、ブロックがあり、キャンバスごとに初期状態では閉じています。",
+    "from": "b84d014d23cc"
+  },
+  "faq.api.q": {
+    "text": "API はありますか？",
+    "from": "e5876c15cf79"
+  },
+  "faq.api.a": {
+    "text": "はい。スコープ付きトークンを使うローカル HTTP API、型付きクライアント、そして資格情報が使えるツールだけを一覧する MCP サーバーがあります。",
+    "from": "70b05cca5923"
+  },
+  "faq.focus.q": {
+    "text": "ターミナルを1つだけ単独で開けますか？",
+    "from": "4e72afdbfe4a"
+  },
+  "faq.focus.a": {
+    "text": "はい。ターミナルのタイトルにある <strong>Tab ↗</strong> で、専用のブラウザータブに開きます。コピーではなく同じターミナルで、求めれば詳細とノートが横に出ます。タブを閉じても何も終了しません。",
+    "from": "0909e72f8382"
+  },
+  "faq.fields.q": {
+    "text": "ターミナルにチケットや担当者を記録できますか？",
+    "from": "92b518e794bd"
+  },
+  "faq.fields.a": {
+    "text": "はい。ターミナルの詳細には、ラベルと値の組であるフィールドがあります。中のエージェントは <code>aubergine field set</code> で自分のフィールドを設定でき、あなたが同じラベルを設定した場合はあなたのものが残ります。",
+    "from": "595a80f0d504"
+  },
+  "faq.cloud.q": {
+    "text": "Aubergine は複数の人やクラウドのエージェントに対応しますか？",
+    "from": "3c1035134c8f"
+  },
+  "faq.cloud.a": {
+    "text": "どちらも予定中で、まだどちらも作られていません。<a href=\"/roadmap/\">ロードマップ</a>を参照してください。現在はすべて1台のコンピューターで動きます。",
+    "from": "02eb76c521d2"
+  },
+  "faq.installer.q": {
+    "text": "インストーラーは私のコンピューターで何を変更しますか？",
+    "from": "e6f26b5fdca4"
+  },
+  "faq.installer.a": {
+    "text": "2つです。インストールフォルダー（~/.aubergine）と、aubergine という名前のリンク1つ。sudo は使わず、シェルの起動ファイルを編集せず、Node.js・pnpm・tmux をインストールすることもありません。",
+    "from": "00c4335ab841"
+  },
+  "404.meta.title": {
+    "text": "ページが見つかりません | Aubergine",
+    "from": "19d867c4b2d8"
+  },
+  "404.meta.description": {
+    "text": "このページは存在しません。Aubergine のガイドに戻ってください。",
+    "from": "920927185e61"
+  },
+  "404.title": {
+    "text": "そのページはここにありません",
+    "from": "fecba20c2c31"
+  },
+  "404.lead": {
+    "text": "アドレスの入力ミスか、ページが移動したのかもしれません。こちらが役に立つかもしれません：",
+    "from": "679fc5b22fd6"
+  },
+  "404.home": {
+    "text": "Aubergine のホームページ",
+    "from": "c340078688b5"
+  },
+  "404.install": {
+    "text": "Aubergine をインストールする",
+    "from": "733a8757545c"
+  },
+  "404.guides": {
+    "text": "ガイド",
+    "from": "572cd72feb9a"
+  },
+  "404.faq": {
+    "text": "よくある質問",
+    "from": "e956a9404b46"
+  }
+}

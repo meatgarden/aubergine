@@ -1,0 +1,69 @@
+<!--page {"order": 10, "llms": {"name": "FAQ", "about": null}}-->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": {{json:faq.crumb}}, "item": "{{=url}}" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "{{=url}}#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": {{json:faq.what.q}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:faq.what.a}} } },
+        { "@type": "Question", "name": {{json:faq.free.q}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:faq.free.a}} } },
+        { "@type": "Question", "name": {{json:faq.need.q}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:faq.need.a}} } },
+        { "@type": "Question", "name": {{json:faq.agents.q}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:faq.agents.a}} } },
+        { "@type": "Question", "name": {{json:faq.send.q}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:faq.send.a}} } },
+        { "@type": "Question", "name": {{json:faq.model.q}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:faq.model.a}} } },
+        { "@type": "Question", "name": {{json:faq.close.q}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:faq.close.a}} } },
+        { "@type": "Question", "name": {{json:faq.waiting.q}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:faq.waiting.a}} } },
+        { "@type": "Question", "name": {{json:faq.apart.q}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:faq.apart.a}} } },
+        { "@type": "Question", "name": {{json:faq.steps.q}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:faq.steps.a}} } },
+        { "@type": "Question", "name": {{json:faq.talk.q}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:faq.talk.a}} } },
+        { "@type": "Question", "name": {{json:faq.api.q}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:faq.api.a}} } },
+        { "@type": "Question", "name": {{json:faq.focus.q}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:faq.focus.a}} } },
+        { "@type": "Question", "name": {{json:faq.fields.q}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:faq.fields.a}} } },
+        { "@type": "Question", "name": {{json:faq.cloud.q}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:faq.cloud.a}} } },
+        { "@type": "Question", "name": {{json:faq.installer.q}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:faq.installer.a}} } }
+      ]
+    }
+  ]
+}
+</script>
+<div class="wrap page-head">
+  <nav class="crumbs" aria-label="{{attr:site.crumbs}}"><ol><li><a href="/">Aubergine</a></li><li>{{faq.crumb}}</li></ol></nav>
+  <h1>{{faq.title}}</h1>
+  <p class="lead">{{faq.lead}}</p>
+</div>
+<div class="wrap page-body">
+  <div class="questions">
+    <details><summary>{{faq.what.q}}</summary><p>{{faq.what.a}}</p></details>
+    <details><summary>{{faq.free.q}}</summary><p>{{faq.free.a}}</p></details>
+    <details><summary>{{faq.need.q}}</summary><p>{{faq.need.a}}</p></details>
+    <details><summary>{{faq.agents.q}}</summary><p>{{faq.agents.a}}</p></details>
+    <details><summary>{{faq.send.q}}</summary><p>{{faq.send.a}}</p></details>
+    <details><summary>{{faq.model.q}}</summary><p>{{faq.model.a}}</p></details>
+    <details><summary>{{faq.close.q}}</summary><p>{{faq.close.a}}</p></details>
+    <details><summary>{{faq.waiting.q}}</summary><p>{{faq.waiting.a}}</p></details>
+    <details><summary>{{faq.apart.q}}</summary><p>{{faq.apart.a}}</p></details>
+    <details><summary>{{faq.steps.q}}</summary><p>{{faq.steps.a}}</p></details>
+    <details><summary>{{faq.talk.q}}</summary><p>{{faq.talk.a}}</p></details>
+    <details><summary>{{faq.api.q}}</summary><p>{{faq.api.a}}</p></details>
+    <details><summary>{{faq.focus.q}}</summary><p>{{faq.focus.a}}</p></details>
+    <details><summary>{{faq.fields.q}}</summary><p>{{faq.fields.a}}</p></details>
+    <details><summary>{{faq.cloud.q}}</summary><p>{{faq.cloud.a}}</p></details>
+    <details><summary>{{faq.installer.q}}</summary><p>{{faq.installer.a}}</p></details>
+  </div>
+</div>

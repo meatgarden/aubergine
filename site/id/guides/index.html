@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="id" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Panduan Aubergine | Aubergine</title>
+<meta name="description" content="Panduan menjalankan beberapa agen coding dengan Aubergine: gambaran umum, Claude Code dan Codex, salinan kerja, serta antrean dan jadwal.">
+<link rel="canonical" href="https://thirstyeggplant.com/id/guides/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/guides/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/guides/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/guides/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/guides/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/guides/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/guides/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/guides/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/guides/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/guides/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/guides/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/guides/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/guides/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/guides/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="theme-color" content="#120f14" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#faf6f2" media="(prefers-color-scheme: light)">
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="Panduan Aubergine | Aubergine">
+<meta property="og:description" content="Panduan menjalankan beberapa agen coding dengan Aubergine: gambaran umum, Claude Code dan Codex, salinan kerja, serta antrean dan jadwal.">
+<meta property="og:url" content="https://thirstyeggplant.com/id/guides/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine: kanvas berisi terminal, satu sedang sibuk dan satu menunggu Anda">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine: kanvas berisi terminal, satu sedang sibuk dan satu menunggu Anda">
+<meta name="twitter:title" content="Panduan Aubergine | Aubergine">
+<meta name="twitter:description" content="Panduan menjalankan beberapa agen coding dengan Aubergine: gambaran umum, Claude Code dan Codex, salinan kerja, serta antrean dan jadwal.">
+<link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">Langsung ke isi halaman</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="Halaman">
+      <ul>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">Instalasi</a></li>
+        <li><a href="./" aria-current="page">Panduan</a></li>
+        <li><a href="../security/">Keamanan</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="Bahasa: Bahasa Indonesia"><span class="lang-long" aria-hidden="true">Bahasa Indonesia</span><span class="lang-short" aria-hidden="true">ID</span></summary>
+      <ul class="menu-list"><li><a href="../../guides/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="../../es/guides/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="../../pt/guides/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="../../fr/guides/" hreflang="fr" lang="fr" dir="ltr">Français</a></li><li><a href="../../de/guides/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="../../ja/guides/" hreflang="ja" lang="ja" dir="ltr">日本語</a></li><li><a href="../../zh/guides/" hreflang="zh-Hans" lang="zh-Hans" dir="ltr">简体中文</a></li><li><a href="../../ko/guides/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="./" hreflang="id" lang="id" dir="ltr" aria-current="true">Bahasa Indonesia</a></li><li><a href="../../hi/guides/" hreflang="hi" lang="hi" dir="ltr">हिन्दी</a></li><li><a href="../../bn/guides/" hreflang="bn" lang="bn" dir="ltr">বাংলা</a></li><li><a href="../../ar/guides/" hreflang="ar" lang="ar" dir="rtl">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>Menu</summary>
+      <ul class="menu-list">
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">Instalasi</a></li>
+        <li><a href="./" aria-current="page">Panduan</a></li>
+        <li><a href="../security/">Keamanan</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="wrap translated">
+  <p class="note">Aubergine sendiri berbahasa Inggris: tombol, menu, dan gambarnya adalah versi bahasa Inggris.</p>
+  <p class="note">Halaman ini diterjemahkan oleh mesin dari bahasa Inggris. <a href="https://github.com/thirstyeggplant/aubergine/issues">Kirim koreksi</a>.</p>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Panduan", "item": "https://thirstyeggplant.com/id/guides/" }
+      ]
+    }
+  ]
+}
+</script>
+<div class="wrap page-head">
+  <nav class="crumbs" aria-label="Posisi Anda"><ol><li><a href="../">Aubergine</a></li><li>Panduan</li></ol></nav>
+  <h1>Panduan</h1>
+  <p class="lead">Panduan singkat dan praktis. Referensi lengkapnya adalah <a href="https://github.com/thirstyeggplant/aubergine#readme">README</a>.</p>
+</div>
+<div class="wrap page-body">
+  <ul class="rows">
+    <li><h2><a class="row-link" href="../install/">Instal Aubergine</a></h2><p>Persyaratan, installer satu baris, apa yang diubahnya, dan solusi untuk masalah umum.</p></li>
+    <li><h2><a class="row-link" href="../run-multiple-coding-agents/">Menjalankan beberapa agen coding sekaligus</a></h2><p>Kanvas, jumlah yang menunggu, antrean, salinan kerja, dan workflow dalam satu tur.</p></li>
+    <li><h2><a class="row-link" href="../claude/">Claude Code di Aubergine</a></h2><p>Apa yang dilakukan Aubergine sendiri untuk Claude Code, dan di mana letak masing-masing.</p></li>
+    <li><h2><a class="row-link" href="../chatgpt/">Codex dan ChatGPT</a></h2><p>Codex di terminal seperti program lain, apa yang bisa ia laporkan, dan apa yang hanya dibuat untuk Claude Code.</p></li>
+    <li><h2><a class="row-link" href="../working-copies/">Salinan kerja</a></h2><p>Beri setiap agen checkout dan branch sendiri agar dua agen tidak pernah mengedit file yang sama.</p></li>
+    <li><h2><a class="row-link" href="../queue-and-schedules/">Antrean, For you, dan jadwal</a></h2><p>Bagikan pekerjaan sekali, lihat semua yang menunggu Anda, dan jalankan tugas pada waktu tertentu.</p></li>
+    <li><h2><a class="row-link" href="../security/">Keamanan dan privasi</a></h2><p>Apa yang dilindungi, dan apa yang tidak.</p></li>
+    <li><h2><a class="row-link" href="../faq/">FAQ</a></h2><p>Jawaban singkat untuk pertanyaan umum.</p></li>
+  </ul>
+</div>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <nav aria-label="Semua halaman">
+      <ul class="foot-links">
+        <li><a href="../">Beranda</a></li>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex dan ChatGPT</a></li>
+        <li><a href="../install/">Instalasi</a></li>
+        <li><a href="./" aria-current="page">Panduan</a></li>
+        <li><a href="../run-multiple-coding-agents/">Menjalankan beberapa agen</a></li>
+        <li><a href="../working-copies/">Salinan kerja</a></li>
+        <li><a href="../queue-and-schedules/">Antrean dan jadwal</a></li>
+        <li><a href="../security/">Keamanan</a></li>
+        <li><a href="../roadmap/">Peta jalan</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">Aubergine gratis dan open source di bawah <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">lisensi MIT</a>, dan berjalan di komputer Anda sendiri.</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+</script>
+</body>
+</html>

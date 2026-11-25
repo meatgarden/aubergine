@@ -1,14 +1,30 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Roadmap: what is planned for Aubergine | Aubergine</title>
 <meta name="description" content="What Aubergine does today and what is planned and not built yet: multiplayer, sandboxed cloud agents, approval modes, quality gates, an SDK and more.">
 <link rel="canonical" href="https://thirstyeggplant.com/roadmap/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/roadmap/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/roadmap/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/roadmap/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/roadmap/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/roadmap/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/roadmap/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/roadmap/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/roadmap/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/roadmap/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/roadmap/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/roadmap/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/roadmap/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/roadmap/">
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-<meta name="theme-color" content="#14151a">
+<meta name="theme-color" content="#120f14" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#faf6f2" media="(prefers-color-scheme: light)">
 <link rel="icon" href="../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../style.css">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="Aubergine">
 <meta property="og:title" content="Roadmap: what is planned for Aubergine | Aubergine">
@@ -23,7 +39,44 @@
 <meta name="twitter:image:alt" content="Aubergine: a canvas of terminals, one busy and one waiting for you">
 <meta name="twitter:title" content="Roadmap: what is planned for Aubergine | Aubergine">
 <meta name="twitter:description" content="What Aubergine does today and what is planned and not built yet: multiplayer, sandboxed cloud agents, approval modes, quality gates, an SDK and more.">
-<link rel="stylesheet" href="../style.css">
+<link rel="alternate" type="text/plain" href="../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">Skip to the page</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../"><img src="../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="Pages">
+      <ul>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">Install</a></li>
+        <li><a href="../guides/">Guides</a></li>
+        <li><a href="../security/">Security</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="Language: English"><span class="lang-long" aria-hidden="true">English</span><span class="lang-short" aria-hidden="true">EN</span></summary>
+      <ul class="menu-list"><li><a href="./" hreflang="en" lang="en" dir="ltr" aria-current="true">English</a></li><li><a href="../es/roadmap/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="../pt/roadmap/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="../fr/roadmap/" hreflang="fr" lang="fr" dir="ltr">Français</a></li><li><a href="../de/roadmap/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="../ja/roadmap/" hreflang="ja" lang="ja" dir="ltr">日本語</a></li><li><a href="../zh/roadmap/" hreflang="zh-Hans" lang="zh-Hans" dir="ltr">简体中文</a></li><li><a href="../ko/roadmap/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="../id/roadmap/" hreflang="id" lang="id" dir="ltr">Bahasa Indonesia</a></li><li><a href="../hi/roadmap/" hreflang="hi" lang="hi" dir="ltr">हिन्दी</a></li><li><a href="../bn/roadmap/" hreflang="bn" lang="bn" dir="ltr">বাংলা</a></li><li><a href="../ar/roadmap/" hreflang="ar" lang="ar" dir="rtl">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>Menu</summary>
+      <ul class="menu-list">
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">Install</a></li>
+        <li><a href="../guides/">Guides</a></li>
+        <li><a href="../security/">Security</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+<main id="main" tabindex="-1">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -38,94 +91,121 @@
     {
       "@type": "BreadcrumbList",
       "itemListElement": [
-        {
-          "@type": "ListItem",
-          "position": 1,
-          "name": "Aubergine",
-          "item": "https://thirstyeggplant.com/"
-        },
-        {
-          "@type": "ListItem",
-          "position": 2,
-          "name": "Roadmap",
-          "item": "https://thirstyeggplant.com/roadmap/"
-        }
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Roadmap", "item": "https://thirstyeggplant.com/roadmap/" }
       ]
     }
   ]
 }
 </script>
-</head>
-<body>
-<div class="glow" aria-hidden="true"></div>
-<div class="wrap">
-  <header class="top">
-    <a class="brand" href="../"><img src="../icon.svg" alt="" width="30" height="30">Aubergine</a>
-    <nav aria-label="Main"><a href="../install/">Install</a><a href="../guides/">Guides</a><a href="../security/">Security</a><a href="../roadmap/">Roadmap</a><a href="../faq/">FAQ</a><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></nav>
-  </header>
-  <main class="prose">
-    <p class="crumbs"><a href="../">Aubergine</a> / <span aria-current="page">Roadmap</span></p>
-    <span class="tag">Planned, not built yet</span>
-    <h1>Roadmap</h1>
-    <p class="lead">None of this exists today. It is where we want to go, and the order may change. For what is built now, see the <a href="../guides/">guides</a>.</p>
-    <h2>Teams and connections</h2>
-    <p class="grp-sub">People working together, and agents reached from the tools you already use.</p>
-    <div class="grid road">
-      <article class="card"><div class="ic" aria-hidden="true">☻☻</div><h3>Multiplayer</h3><p>Share a canvas with other people and their agents. See who is working where, hand a waiting agent to a teammate, and answer together.</p></article>
-      <article class="card"><div class="ic" aria-hidden="true">#</div><h3>Chat interface</h3><p>Ask agents and answer their questions from a team chat app, with the same identity and settings as in the browser.</p></article>
-      <article class="card"><div class="ic" aria-hidden="true">⌁</div><h3>Tickets and pull requests</h3><p>Turn an issue into a queued task, open a pull request from a working copy, and report the result back to the ticket.</p></article>
-      <article class="card"><div class="ic" aria-hidden="true">⏲</div><h3>Watches, webhooks and triage</h3><p>Start work when something happens: a failed CI job, an alert, a watched change or a call from another service. Rules decide what becomes a task.</p></article>
-      <article class="card"><div class="ic" aria-hidden="true">✦</div><h3>Shared skills and a marketplace</h3><p>Share an agent&#x27;s skills by grant, promote them team-wide with approval, import them from Git, and find reviewed items in a public catalog.</p></article>
-      <article class="card"><div class="ic" aria-hidden="true">⌂</div><h3>Memory for people and rooms</h3><p>Keep what an agent has learned for each person and each shared room, apart from the others.</p></article>
-    </div>
-    <ul class="more"><li>Admin controls for models, sharing and strictness</li><li>A self-hosted team server</li><li>Sign-in for teams (SSO and MFA)</li><li>Usage limits per person, token or agent</li><li>Read-only reports to share without sharing terminals</li><li>A phone view of the “For you” list</li><li>Reviewed connectors to company tools</li><li>More chat apps</li><li>Small internal web apps published to chosen people</li></ul>
-    <h2>Cloud</h2>
-    <p class="grp-sub">Agents that do not need your laptop awake.</p>
-    <div class="grid road">
-      <article class="card"><div class="ic" aria-hidden="true">☁</div><h3>Sandboxed agents in the cloud</h3><p>Run an agent in an isolated cloud sandbox and watch it on the same canvas as your local ones. Sandboxes sleep when idle, wake on demand and keep storage between runs.</p></article>
-      <article class="card"><div class="ic" aria-hidden="true">⚑</div><h3>A pool of agents</h3><p>Describe the work and let a pool of agents pick it up, instead of naming a terminal for each task.</p></article>
-      <article class="card"><div class="ic" aria-hidden="true">▤</div><h3>Ready-made environments</h3><p>Save dependencies, tools, skills, files and variables once, and start any new terminal or cloud agent from them.</p></article>
-      <article class="card"><div class="ic" aria-hidden="true">⏳</div><h3>Long, multi-phase work</h3><p>Tasks that run for hours or days in stages, with a check-in after each stage and progress that survives restarts.</p></article>
-      <article class="card"><div class="ic" aria-hidden="true">⇪</div><h3>One-command cloud deploy</h3><p>Put a team&#x27;s shared Aubergine on your own cloud account with one command.</p></article>
-      <article class="card"><div class="ic" aria-hidden="true">▶</div><h3>Work you can see</h3><p>A cloud agent hands back screenshots or a short recording of what it built, in your “For you” list.</p></article>
-    </div>
-    <ul class="more"><li>MCP over HTTP, for agents on other machines</li><li>Tested Linux support</li><li>Shell integration beyond zsh</li></ul>
-    <h2>Control</h2>
-    <p class="grp-sub">How much an agent may do, and a record of what it did.</p>
-    <div class="grid road">
-      <article class="card"><div class="ic" aria-hidden="true">🔒</div><h3>Approval modes</h3><p>Choose how much an agent may do alone: approve every action, approve the risky ones, or none.</p></article>
-      <article class="card"><div class="ic" aria-hidden="true">⛨</div><h3>Command policy and screening</h3><p>Rules for commands that need approval or are always refused, and optional screening of outside content before an agent reads it.</p></article>
-      <article class="card"><div class="ic" aria-hidden="true">◧</div><h3>Risk levels per repository</h3><p>Stricter limits where it matters, looser where it does not.</p></article>
-      <article class="card"><div class="ic" aria-hidden="true">☰</div><h3>A full audit trail</h3><p>A record of who or what did what, per project, beyond the token calls recorded today.</p></article>
-      <article class="card"><div class="ic" aria-hidden="true">↶</div><h3>Undo an agent&#x27;s work</h3><p>Roll a working copy back to before a task, or discard its branch in one step.</p></article>
-      <article class="card"><div class="ic" aria-hidden="true">⚙</div><h3>Admin controls</h3><p>Team-wide settings for which models may be used and how sharing works.</p></article>
-    </div>
-    <ul class="more"><li>Model choice per terminal, task or schedule</li></ul>
-    <h2>Quality</h2>
-    <p class="grp-sub">Checks that happen before work is called done.</p>
-    <div class="grid road">
-      <article class="card"><div class="ic" aria-hidden="true">✔</div><h3>Quality gates</h3><p>A run cannot finish until review, tests or a security check report a pass.</p></article>
-      <article class="card"><div class="ic" aria-hidden="true">⎘</div><h3>Pull request review</h3><p>An agent reviews a pull request and reports to your “For you” list.</p></article>
-      <article class="card"><div class="ic" aria-hidden="true">▣</div><h3>Browser-driven testing</h3><p>An agent drives a browser to test a change and hands back the results.</p></article>
-      <article class="card"><div class="ic" aria-hidden="true">✎</div><h3>Plan before build</h3><p>An agent proposes a plan and waits for your approval before touching files.</p></article>
-      <article class="card"><div class="ic" aria-hidden="true">❖</div><h3>Task recipes</h3><p>Ready-made workflows for test generation, review, dependency and secret scans, and keeping docs current.</p></article>
-      <article class="card"><div class="ic" aria-hidden="true">📈</div><h3>Outcome metrics</h3><p>Time from task to done, how often an agent waited on you, and usage by who started it, per project.</p></article>
-    </div>
-    <ul class="more"><li>Incident write-ups: an agent investigates and drafts a postmortem</li></ul>
-    <h2>Everywhere</h2>
-    <p class="grp-sub">More ways to reach and build on Aubergine.</p>
-    <div class="grid road">
-      <article class="card"><div class="ic" aria-hidden="true">⬡</div><h3>Published SDK</h3><p>The typed client as an installable package, then clients for other languages such as Python.</p></article>
-      <article class="card"><div class="ic" aria-hidden="true">⌥</div><h3>Editor extension</h3><p>Show your terminals and “For you” list inside VS Code and similar editors, without leaving the editor.</p></article>
-      <article class="card"><div class="ic" aria-hidden="true">▭</div><h3>Desktop app</h3><p>A packaged app with a menu-bar icon, instead of a browser tab.</p></article>
-      <article class="card"><div class="ic" aria-hidden="true">⊞</div><h3>Windows support</h3><p>Run Aubergine on Windows. Only macOS is supported today, and Linux is untested.</p></article>
-    </div>
-    <p class="note">Planned work is a direction, not a promise. The <a href="https://github.com/thirstyeggplant/aubergine">repository</a> shows what is shipped.</p>
-  </main>
-  <footer>
-    <span>Aubergine is open source. <a href="https://github.com/thirstyeggplant/aubergine">GitHub</a> · <a href="../llms.txt">llms.txt</a></span>
-    <span class="flinks"><a href="../install/">Install</a> · <a href="../guides/">Guides</a> · <a href="../run-multiple-coding-agents/">Run several agents</a> · <a href="../working-copies/">Working copies</a> · <a href="../queue-and-schedules/">Queue and schedules</a> · <a href="../security/">Security</a> · <a href="../roadmap/">Roadmap</a> · <a href="../faq/">FAQ</a></span>
-  </footer>
+<div class="wrap page-head">
+  <nav class="crumbs" aria-label="Where you are"><ol><li><a href="../">Aubergine</a></li><li>Roadmap</li></ol></nav>
+  <p class="tag">Planned, not built yet</p>
+  <h1>Roadmap</h1>
+  <p class="lead">None of this exists today. It is where we want to go, and the order may change. For what is built now, see the <a href="../guides/">guides</a>.</p>
 </div>
+<div class="wrap page-body roadmap">
+    <h2>Teams and connections</h2>
+    <p class="intro">People working together, and agents reached from the tools you already use.</p>
+    <ul class="planned">
+      <li><h3>Multiplayer</h3><p>Share a canvas with other people and their agents. See who is working where, hand a waiting agent to a teammate, and answer together.</p></li>
+      <li><h3>Chat interface</h3><p>Ask agents and answer their questions from a team chat app, with the same identity and settings as in the browser.</p></li>
+      <li><h3>Tickets and pull requests</h3><p>Turn an issue into a queued task, open a pull request from a working copy, and report the result back to the ticket.</p></li>
+      <li><h3>Watches, webhooks and triage</h3><p>Start work when something happens: a failed CI job, an alert, a watched change or a call from another service. Rules decide what becomes a task.</p></li>
+      <li><h3>Shared skills and a marketplace</h3><p>Share an agent's skills by grant, promote them team-wide with approval, import them from Git, and find reviewed items in a public catalog.</p></li>
+      <li><h3>Memory for people and rooms</h3><p>Keep what an agent has learned for each person and each shared room, apart from the others.</p></li>
+    </ul>
+    <p class="also">Also: admin controls for models, sharing and strictness · a self-hosted team server · sign-in for teams (SSO and MFA) · usage limits per person, token or agent · read-only reports to share without sharing terminals · a phone view of the “For you” list · reviewed connectors to company tools · more chat apps · small internal web apps published to chosen people.</p>
+
+    <h2>Cloud</h2>
+    <p class="intro">Agents that do not need your laptop awake.</p>
+    <ul class="planned">
+      <li><h3>Sandboxed agents in the cloud</h3><p>Run an agent in an isolated cloud sandbox and watch it on the same canvas as your local ones. Sandboxes sleep when idle, wake on demand and keep storage between runs.</p></li>
+      <li><h3>A pool of agents</h3><p>Describe the work and let a pool of agents pick it up, instead of naming a terminal for each task.</p></li>
+      <li><h3>Ready-made environments</h3><p>Save dependencies, tools, skills, files and variables once, and start any new terminal or cloud agent from them.</p></li>
+      <li><h3>Long, multi-phase work</h3><p>Tasks that run for hours or days in stages, with a check-in after each stage and progress that survives restarts.</p></li>
+      <li><h3>One-command cloud deploy</h3><p>Put a team's shared Aubergine on your own cloud account with one command.</p></li>
+      <li><h3>Work you can see</h3><p>A cloud agent hands back screenshots or a short recording of what it built, in your “For you” list.</p></li>
+    </ul>
+    <p class="also">Also: MCP over HTTP, for agents on other machines · tested Linux support · shell integration beyond zsh.</p>
+
+    <h2>Control</h2>
+    <p class="intro">How much an agent may do, and a record of what it did.</p>
+    <ul class="planned">
+      <li><h3>Approval modes</h3><p>Choose how much an agent may do alone: approve every action, approve the risky ones, or none.</p></li>
+      <li><h3>Command policy and screening</h3><p>Rules for commands that need approval or are always refused, and optional screening of outside content before an agent reads it.</p></li>
+      <li><h3>Risk levels per repository</h3><p>Stricter limits where it matters, looser where it does not.</p></li>
+      <li><h3>A full audit trail</h3><p>A record of who or what did what, per project, beyond the token calls recorded today.</p></li>
+      <li><h3>Undo an agent's work</h3><p>Roll a working copy back to before a task, or discard its branch in one step.</p></li>
+      <li><h3>Admin controls</h3><p>Team-wide settings for which models may be used and how sharing works.</p></li>
+    </ul>
+    <p class="also">Also: model choice per terminal, task or schedule.</p>
+
+    <h2>Quality</h2>
+    <p class="intro">Checks that happen before work is called done.</p>
+    <ul class="planned">
+      <li><h3>Quality gates</h3><p>A run cannot finish until review, tests or a security check report a pass.</p></li>
+      <li><h3>Pull request review</h3><p>An agent reviews a pull request and reports to your “For you” list.</p></li>
+      <li><h3>Browser-driven testing</h3><p>An agent drives a browser to test a change and hands back the results.</p></li>
+      <li><h3>Plan before build</h3><p>An agent proposes a plan and waits for your approval before touching files.</p></li>
+      <li><h3>Task recipes</h3><p>Ready-made workflows for test generation, review, dependency and secret scans, and keeping docs current.</p></li>
+      <li><h3>Outcome metrics</h3><p>Time from task to done, how often an agent waited on you, and usage by who started it, per project.</p></li>
+    </ul>
+    <p class="also">Also: incident write-ups, where an agent investigates and drafts a postmortem.</p>
+
+    <h2>Everywhere</h2>
+    <p class="intro">More ways to reach and build on Aubergine.</p>
+    <ul class="planned">
+      <li><h3>Published SDK</h3><p>The typed client as an installable package, then clients for other languages such as Python.</p></li>
+      <li><h3>Editor extension</h3><p>Show your terminals and “For you” list inside VS Code and similar editors, without leaving the editor.</p></li>
+      <li><h3>Desktop app</h3><p>A packaged app with a menu-bar icon, instead of a browser tab.</p></li>
+      <li><h3>Windows support</h3><p>Run Aubergine on Windows. Only macOS is supported today, and Linux is untested.</p></li>
+    </ul>
+
+    <p class="note">Planned work is a direction, not a promise. The <a href="https://github.com/thirstyeggplant/aubergine">repository</a> shows what is shipped.</p>
+</div>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <nav aria-label="Every page">
+      <ul class="foot-links">
+        <li><a href="../">Home</a></li>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex and ChatGPT</a></li>
+        <li><a href="../install/">Install</a></li>
+        <li><a href="../guides/">Guides</a></li>
+        <li><a href="../run-multiple-coding-agents/">Run several agents</a></li>
+        <li><a href="../working-copies/">Working copies</a></li>
+        <li><a href="../queue-and-schedules/">Queue and schedules</a></li>
+        <li><a href="../security/">Security</a></li>
+        <li><a href="./" aria-current="page">Roadmap</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">Aubergine is free and open source under the <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">MIT license</a>, and runs on your own computer.</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+</script>
 </body>
 </html>

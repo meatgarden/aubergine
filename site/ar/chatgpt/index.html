@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Codex و ChatGPT في Aubergine | Aubergine</title>
+<meta name="description" content="Codex، وكيل البرمجة لسطر الأوامر من OpenAI، يعمل في طرفية Aubergine مثل أي برنامج. ما يعمل اليوم، وما يستطيع التبليغ عنه عبر أوامر aubergine، وما هو مبني لـ Claude Code وحده.">
+<link rel="canonical" href="https://thirstyeggplant.com/ar/chatgpt/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/chatgpt/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/chatgpt/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/chatgpt/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/chatgpt/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/chatgpt/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/chatgpt/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/chatgpt/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/chatgpt/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/chatgpt/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/chatgpt/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/chatgpt/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/chatgpt/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/chatgpt/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="theme-color" content="#120f14" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#faf6f2" media="(prefers-color-scheme: light)">
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="Codex و ChatGPT في Aubergine | Aubergine">
+<meta property="og:description" content="Codex، وكيل البرمجة لسطر الأوامر من OpenAI، يعمل في طرفية Aubergine مثل أي برنامج. ما يعمل اليوم، وما يستطيع التبليغ عنه عبر أوامر aubergine، وما هو مبني لـ Claude Code وحده.">
+<meta property="og:url" content="https://thirstyeggplant.com/ar/chatgpt/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine: لوحة من الطرفيات، إحداها مشغولة وأخرى بانتظارك">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine: لوحة من الطرفيات، إحداها مشغولة وأخرى بانتظارك">
+<meta name="twitter:title" content="Codex و ChatGPT في Aubergine | Aubergine">
+<meta name="twitter:description" content="Codex، وكيل البرمجة لسطر الأوامر من OpenAI، يعمل في طرفية Aubergine مثل أي برنامج. ما يعمل اليوم، وما يستطيع التبليغ عنه عبر أوامر aubergine، وما هو مبني لـ Claude Code وحده.">
+<link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">انتقل إلى محتوى الصفحة</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="الصفحات">
+      <ul>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="./" aria-current="page">Codex</a></li>
+        <li><a href="../install/">التثبيت</a></li>
+        <li><a href="../guides/">الأدلة</a></li>
+        <li><a href="../security/">الأمان</a></li>
+        <li><a href="../faq/">الأسئلة الشائعة</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="اللغة: العربية"><span class="lang-long" aria-hidden="true">العربية</span><span class="lang-short" aria-hidden="true">AR</span></summary>
+      <ul class="menu-list"><li><a href="../../chatgpt/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="../../es/chatgpt/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="../../pt/chatgpt/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="../../fr/chatgpt/" hreflang="fr" lang="fr" dir="ltr">Français</a></li><li><a href="../../de/chatgpt/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="../../ja/chatgpt/" hreflang="ja" lang="ja" dir="ltr">日本語</a></li><li><a href="../../zh/chatgpt/" hreflang="zh-Hans" lang="zh-Hans" dir="ltr">简体中文</a></li><li><a href="../../ko/chatgpt/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="../../id/chatgpt/" hreflang="id" lang="id" dir="ltr">Bahasa Indonesia</a></li><li><a href="../../hi/chatgpt/" hreflang="hi" lang="hi" dir="ltr">हिन्दी</a></li><li><a href="../../bn/chatgpt/" hreflang="bn" lang="bn" dir="ltr">বাংলা</a></li><li><a href="./" hreflang="ar" lang="ar" dir="rtl" aria-current="true">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>القائمة</summary>
+      <ul class="menu-list">
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="./" aria-current="page">Codex</a></li>
+        <li><a href="../install/">التثبيت</a></li>
+        <li><a href="../guides/">الأدلة</a></li>
+        <li><a href="../security/">الأمان</a></li>
+        <li><a href="../faq/">الأسئلة الشائعة</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="wrap translated">
+  <p class="note">تطبيق Aubergine نفسه باللغة الإنجليزية: أزراره وقوائمه وصوره كلها بالإنجليزية.</p>
+  <p class="note">ترجمت آلةٌ هذه الصفحة عن الإنجليزية. <a href="https://github.com/thirstyeggplant/aubergine/issues">أرسل تصحيحًا</a>.</p>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "TechArticle",
+      "@id": "https://thirstyeggplant.com/ar/chatgpt/#article",
+      "headline": "Codex و ChatGPT",
+      "description": "Codex، وكيل البرمجة لسطر الأوامر من OpenAI، يعمل في طرفية Aubergine مثل أي برنامج. ما يعمل اليوم، وما يستطيع التبليغ عنه عبر أوامر aubergine، وما هو مبني لـ Claude Code وحده.",
+      "url": "https://thirstyeggplant.com/ar/chatgpt/",
+      "inLanguage": "ar",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Codex و ChatGPT", "item": "https://thirstyeggplant.com/ar/chatgpt/" }
+      ]
+    }
+  ]
+}
+</script>
+<div class="wrap page-head">
+  <nav class="crumbs" aria-label="أين أنت"><ol><li><a href="../">Aubergine</a></li><li>Codex و ChatGPT</li></ol></nav>
+  <h1>Codex و ChatGPT</h1>
+  <p class="lead">Codex هو وكيل البرمجة لسطر الأوامر من OpenAI. تثبّته وتسجّل الدخول إليه بنفسك؛ وفي Aubergine يعمل في طرفية مثل أي برنامج آخر.</p>
+</div>
+<div class="wrap page-body">
+  <div class="prose">
+    <h2>لم يُجرَّب بعد</h2>
+    <p>لم يشغّل أحد Codex حقيقيًا في Aubergine بعد. ما تقوله هذه الصفحة هو ما يفعله Aubergine لأي برنامج في طرفية ولأوامر <code>aubergine</code>، وهذا مبني ومختبَر؛ أما سلوك Codex نفسه هناك فلم يُشاهَد. إذا جرّبته، <a href="https://github.com/thirstyeggplant/aubergine/issues">أخبرنا كيف جرى الأمر</a>.</p>
+
+    <h2>شغّله</h2>
+    <p>افتح طرفية بـ <strong>New terminal</strong>، أو <code>N</code>، وشغّل Codex فيها كما تفعل في أي طرفية. لا يستدعي Aubergine أي نموذج ولا يحتفظ بأي مفتاح: ما يحتاجه Codex أعطيته إياه حين سجّلت الدخول إليه.</p>
+
+    <h2>ما يعمل اليوم</h2>
+    <p>كل ما يفعله Aubergine لأي طرفية:</p>
+  </div>
+  <ul class="rows">
+    <li><h3>جنبًا إلى جنب</h3><p>ما شئت من الطرفيات على لوحة واحدة، واللوحات علامات تبويب.</p></li>
+    <li><h3>حالة الأوامر</h3><p>مع zsh، يُظهر عنوان الطرفية أن أمرًا يعمل، وأيّ أمر هو.</p></li>
+    <li><h3>الألوان والملاحظات والحقول</h3><p>أعطِ طرفيته لونًا، واحتفظ بملاحظة فيها ملخص وسجل، وبحقول مثل تذكرة أو مسؤول.</p></li>
+    <li><h3>الركن</h3><p>العلامة × تركن الطرفية: تغادر اللوحة وتبقى تعمل، و<strong>Parked</strong> يعيدها.</p></li>
+    <li><h3>طرفية واحدة وحدها</h3><p>افتح الطرفية في علامة تبويب خاصة بها في المتصفح، مع تفاصيلها وملاحظتها بجانبها.</p></li>
+    <li><h3>نسخة عمل</h3><p><strong>Shell in a folder or a working copy…‎</strong>، أو <code>aubergine new --copy</code>، يشغّل الطرفية في نسختها المسحوبة الخاصة على فرعها الخاص، فلا يعدّل وكيلان الملفات نفسها أبدًا.</p></li>
+    <li><h3>البحث في المخرجات</h3><p><code>⌘K</code> يبحث فيما طبعته كل طرفية، ويفتح الطرفية مرجوعًا بها إلى موضع التطابق.</p></li>
+  </ul>
+  <div class="prose">
+    <h2>ما يستطيع قوله عبر الأوامر</h2>
+    <p>في كل طرفية Aubergine الأمر <code>aubergine</code> وبيانات اعتماد لتلك الطرفية وحدها. أي برنامج هناك، ومنه Codex، يستطيع استخدامهما:</p>
+  </div>
+  <ul class="rows">
+    <li><h3><code>aubergine attention waiting "…"</code></h3><p>يعلّم الطرفية بأنها بانتظارك، مع ما تحتاجه؛ و<code>aubergine attention working</code> و<code>aubergine attention done</code> يقولان الباقي.</p></li>
+    <li><h3><code>aubergine note "…"</code></h3><p>يضيف سطرًا إلى سجل ملاحظات الطرفية.</p></li>
+    <li><h3><code>aubergine describe</code></h3><p>يسمّي الطرفية باسم العمل ويحتفظ بملخصها؛ و<code>aubergine link add</code> و<code>aubergine field set</code> يضيفان روابط العمل وحقوله. ما كتبته أنت يغلب.</p></li>
+    <li><h3><code>aubergine workflow status</code></h3><p>يقرأ الخطوة الحالية من سير العمل؛ و<code>aubergine workflow done</code> يبلّغ بإتمامها ويطبع التالية.</p></li>
+    <li><h3><code>aubergine task add</code></h3><p>يقترح مهمة للطابور، و<code>aubergine ask</code> يطلب منك شيئًا لا يستطيعه إلا إنسان. كلاهما ينتظر في قائمتك.</p></li>
+  </ul>
+  <div class="prose">
+    <h3>كيف تخبره</h3>
+    <p>لا يعرف Codex شيئًا عن Aubergine حتى يُخبَر. هذا يطبع خمسة أسطر تلصقها في التعليمات التي يقرؤها وكيلك في بداية كل محادثة في المشروع؛ ووثائقه هو تقول أين توضع:</p>
+    <p class="cmd"><code>aubergine guide --snippet</code><button type="button" class="copy" data-copy data-copied="تم النسخ" aria-live="polite" hidden>نسخ</button></p>
+    <p>تطلب منه الأسطر أن يشغّل <code>aubergine guide</code> مرة واحدة حين يكون في طرفية Aubergine، والدليل يقول الباقي. يطبع Aubergine الأسطر ولا يكتبها في أي ملف أبدًا.</p>
+    <p>إذا كان وكيلك يستطيع تشغيل خادم MCP، فإن <code>aubergine mcp</code> يقدّم الشيء نفسه أدواتٍ؛ وداخل طرفية Aubergine لا يحتاج إلى عنوان ولا إلى رمز لعمل الطرفية نفسها.</p>
+
+    <h2>مبني لـ Claude Code وحده اليوم</h2>
+    <p>ما يفعله Aubergine من تلقاء نفسه لوكيلٍ مبني لـ Claude Code. أما لـ Codex، فاليوم:</p>
+    <ul>
+      <li>ليس في قائمة New terminal: تشغّله في طرفية بنفسك.</li>
+      <li>لا يراه Aubergine وكيلًا: لا يُعلَّم بأنه ينتظر أو انتهى من تلقاء نفسه، بل فقط حين يشغّل <code>aubergine attention</code>.</li>
+      <li>لا يُكتب له شيء: سير العمل الذي يبدأ في طرفيته لا يكتب شيئًا ويعرض السطر لتعطيه إياه بنفسك، ولا يُعلَن له عن ملخص أو رسالة.</li>
+      <li>لا يعطيه الطابور أي مهمة: المهمة لا تذهب إلا إلى طرفية يُرى فيها وكيل متفرغ.</li>
+      <li>لا يوجد Resume agent، ولا قائمة بالمحادثات السابقة، ولا قائمة بطريقة إعداده، ولا نافذة لأدوات Aubergine.</li>
+      <li>الأمران <code>aubergine move</code> و<code>aubergine here --claude</code> ينقلان Claude Code فقط.</li>
+      <li>لا يُذكَّر بأن يسمّي طرفيته أو يحتفظ بملخص.</li>
+    </ul>
+    <p>كل ذلك في صفحة <a href="../claude/">Claude Code</a>.</p>
+
+    <h2>ChatGPT في المتصفح</h2>
+    <p>ChatGPT في علامة تبويب في المتصفح صفحة ويب، لا برنامج في طرفية، فلا يعمل على اللوحة.</p>
+
+    <p class="note">Aubergine غير تابع لـ OpenAI. Codex وChatGPT علامتان تجاريتان لـ OpenAI.</p>
+  </div>
+</div>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <nav aria-label="كل الصفحات">
+      <ul class="foot-links">
+        <li><a href="../">الرئيسية</a></li>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="./" aria-current="page">Codex و ChatGPT</a></li>
+        <li><a href="../install/">التثبيت</a></li>
+        <li><a href="../guides/">الأدلة</a></li>
+        <li><a href="../run-multiple-coding-agents/">تشغيل عدة وكلاء</a></li>
+        <li><a href="../working-copies/">نسخ العمل</a></li>
+        <li><a href="../queue-and-schedules/">الطابور والجداول الزمنية</a></li>
+        <li><a href="../security/">الأمان</a></li>
+        <li><a href="../roadmap/">خارطة الطريق</a></li>
+        <li><a href="../faq/">الأسئلة الشائعة</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">Aubergine مجاني ومفتوح المصدر بموجب <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">رخصة MIT</a>، ويعمل على حاسوبك أنت.</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+</script>
+</body>
+</html>

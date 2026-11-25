@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="bn" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ওয়ার্কিং কপি দিয়ে এক রিপোজিটরিতে দুটি কোডিং এজেন্ট চালান | Aubergine</title>
+<meta name="description" content="ওয়ার্কিং কপি প্রতিটি এজেন্টকে রিপোজিটরির নিজস্ব চেকআউট আর ব্রাঞ্চ দেয়, যাতে দুটি এজেন্ট কখনো একই ফাইল না বদলায় আর আপনি প্রত্যেকের কাজ আলাদা করে পড়তে পারেন।">
+<link rel="canonical" href="https://thirstyeggplant.com/bn/working-copies/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/working-copies/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/working-copies/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/working-copies/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/working-copies/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/working-copies/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/working-copies/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/working-copies/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/working-copies/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/working-copies/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/working-copies/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/working-copies/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/working-copies/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/working-copies/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="theme-color" content="#120f14" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#faf6f2" media="(prefers-color-scheme: light)">
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="ওয়ার্কিং কপি দিয়ে এক রিপোজিটরিতে দুটি কোডিং এজেন্ট চালান | Aubergine">
+<meta property="og:description" content="ওয়ার্কিং কপি প্রতিটি এজেন্টকে রিপোজিটরির নিজস্ব চেকআউট আর ব্রাঞ্চ দেয়, যাতে দুটি এজেন্ট কখনো একই ফাইল না বদলায় আর আপনি প্রত্যেকের কাজ আলাদা করে পড়তে পারেন।">
+<meta property="og:url" content="https://thirstyeggplant.com/bn/working-copies/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine: টার্মিনালের একটি ক্যানভাস, একটি কাজে ব্যস্ত আর একটি আপনার অপেক্ষায়">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine: টার্মিনালের একটি ক্যানভাস, একটি কাজে ব্যস্ত আর একটি আপনার অপেক্ষায়">
+<meta name="twitter:title" content="ওয়ার্কিং কপি দিয়ে এক রিপোজিটরিতে দুটি কোডিং এজেন্ট চালান | Aubergine">
+<meta name="twitter:description" content="ওয়ার্কিং কপি প্রতিটি এজেন্টকে রিপোজিটরির নিজস্ব চেকআউট আর ব্রাঞ্চ দেয়, যাতে দুটি এজেন্ট কখনো একই ফাইল না বদলায় আর আপনি প্রত্যেকের কাজ আলাদা করে পড়তে পারেন।">
+<link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">পেজে যান</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="পেজ">
+      <ul>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">ইনস্টল</a></li>
+        <li><a href="../guides/">গাইড</a></li>
+        <li><a href="../security/">নিরাপত্তা</a></li>
+        <li><a href="../faq/">প্রশ্নোত্তর</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="ভাষা: বাংলা"><span class="lang-long" aria-hidden="true">বাংলা</span><span class="lang-short" aria-hidden="true">BN</span></summary>
+      <ul class="menu-list"><li><a href="../../working-copies/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="../../es/working-copies/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="../../pt/working-copies/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="../../fr/working-copies/" hreflang="fr" lang="fr" dir="ltr">Français</a></li><li><a href="../../de/working-copies/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="../../ja/working-copies/" hreflang="ja" lang="ja" dir="ltr">日本語</a></li><li><a href="../../zh/working-copies/" hreflang="zh-Hans" lang="zh-Hans" dir="ltr">简体中文</a></li><li><a href="../../ko/working-copies/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="../../id/working-copies/" hreflang="id" lang="id" dir="ltr">Bahasa Indonesia</a></li><li><a href="../../hi/working-copies/" hreflang="hi" lang="hi" dir="ltr">हिन्दी</a></li><li><a href="./" hreflang="bn" lang="bn" dir="ltr" aria-current="true">বাংলা</a></li><li><a href="../../ar/working-copies/" hreflang="ar" lang="ar" dir="rtl">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>মেনু</summary>
+      <ul class="menu-list">
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">ইনস্টল</a></li>
+        <li><a href="../guides/">গাইড</a></li>
+        <li><a href="../security/">নিরাপত্তা</a></li>
+        <li><a href="../faq/">প্রশ্নোত্তর</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="wrap translated">
+  <p class="note">Aubergine নিজে ইংরেজিতে: এর বোতাম, মেনু আর ছবি সবই ইংরেজি।</p>
+  <p class="note">এই পেজটি ইংরেজি থেকে মেশিন দিয়ে অনুবাদ করা। <a href="https://github.com/thirstyeggplant/aubergine/issues">সংশোধন পাঠান</a>।</p>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://thirstyeggplant.com/bn/working-copies/#article",
+      "headline": "দুটি এজেন্ট, একটি রিপোজিটরি: ওয়ার্কিং কপি",
+      "description": "ওয়ার্কিং কপি প্রতিটি এজেন্টকে রিপোজিটরির নিজস্ব চেকআউট আর ব্রাঞ্চ দেয়, যাতে দুটি এজেন্ট কখনো একই ফাইল না বদলায় আর আপনি প্রত্যেকের কাজ আলাদা করে পড়তে পারেন।",
+      "url": "https://thirstyeggplant.com/bn/working-copies/",
+      "mainEntityOfPage": "https://thirstyeggplant.com/bn/working-copies/",
+      "datePublished": "2026-11-18",
+      "inLanguage": "bn",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "গাইড", "item": "https://thirstyeggplant.com/guides/" },
+        { "@type": "ListItem", "position": 3, "name": "ওয়ার্কিং কপি", "item": "https://thirstyeggplant.com/bn/working-copies/" }
+      ]
+    },
+    {
+      "@type": "HowTo",
+      "@id": "https://thirstyeggplant.com/bn/working-copies/#howto",
+      "name": "একটি এজেন্টকে তার নিজস্ব ওয়ার্কিং কপিতে কীভাবে চালাবেন",
+      "description": "একটি টার্মিনালকে রিপোজিটরির নিজস্ব চেকআউট আর ব্রাঞ্চ দিন।",
+      "tool": [{ "@type": "HowToTool", "name": "Git 2.31" }],
+      "step": [
+        { "@type": "HowToStep", "position": 1, "name": "নতুন টার্মিনালের ডায়ালগ খুলুন", "text": "টার্মিনালের তালিকার একদম উপরে New terminal-এর শেষের তীর চাপুন, তারপর Shell in a folder or a working copy।" },
+        { "@type": "HowToStep", "position": 2, "name": "In its own working copy বেছে নিন", "text": "ফোল্ডারটি দিন, যা অন্তত একটি কমিট সহ একটি Git রিপোজিটরিতে থাকতে হবে, আর In its own working copy বেছে নিন।" },
+        { "@type": "HowToStep", "position": 3, "name": "অথবা কমান্ড লাইন ব্যবহার করুন", "text": "aubergine here --copy" },
+        { "@type": "HowToStep", "position": 4, "name": "কী বদলেছে পড়ুন", "text": "বদলানো, যোগ করা আর মোছা ফাইল আর প্রতিটি ফাইলের পার্থক্য দেখতে টার্মিনালের টাইটেল বারে ব্রাঞ্চে ক্লিক করুন।" },
+        { "@type": "HowToStep", "position": 5, "name": "এর কী হবে ঠিক করুন", "text": "টার্মিনাল শেষ হলে ব্রাঞ্চ রাখুন আর ফোল্ডার সরান, সব রাখুন, বা দুটোই বাদ দিন।" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://thirstyeggplant.com/bn/working-copies/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "Aubergine-এ ওয়ার্কিং কপি কী?", "acceptedAnswer": { "@type": "Answer", "text": "একটি Git worktree: একই রিপোজিটরির দ্বিতীয় চেকআউট, নিজস্ব নতুন ব্রাঞ্চে, Aubergine-এর ডেটা ফোল্ডারে রাখা আর কখনো আপনার রিপোজিটরির ভেতরে নয়।" } },
+        { "@type": "Question", "name": "ওয়ার্কিং কপিতে কি আমার কমিট না করা পরিবর্তন থাকে?", "acceptedAnswer": { "@type": "Answer", "text": "না। সেগুলো সঙ্গে আসে না আর তাতে হাতও দেওয়া হয় না। নতুন টার্মিনালে সেগুলো চাইলে আগে কমিট করুন।" } },
+        { "@type": "Question", "name": "Aubergine কি ওয়ার্কিং কপির ব্রাঞ্চ merge বা push করে?", "acceptedAnswer": { "@type": "Answer", "text": "না। Aubergine কখনো merge, push বা rebase করে না, আর কখনো আপনার চেকআউট করা ব্রাঞ্চ বদলায় না।" } },
+        { "@type": "Question", "name": "ওয়ার্কিং কপি কি স্যান্ডবক্স?", "acceptedAnswer": { "@type": "Answer", "text": "না। এটি কাজ আলাদা রাখে; এজেন্টকে আটকে রাখে না। এজেন্ট আপনার পরিচয়ে চলে আর এখনো আপনি যে ফাইল পড়তে ও বদলাতে পারেন সবই পারে।" } }
+      ]
+    }
+  ]
+}
+</script>
+<div class="wrap page-head">
+  <nav class="crumbs" aria-label="আপনি কোথায় আছেন"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">গাইড</a></li><li>ওয়ার্কিং কপি</li></ol></nav>
+  <h1>দুটি এজেন্ট, একটি রিপোজিটরি: ওয়ার্কিং কপি</h1>
+  <p class="lead">সাধারণত প্রতিটি টার্মিনাল আপনার আসল ফোল্ডারে কাজ করে। তখন এক রিপোজিটরিতে দুটি এজেন্ট একই ফাইল বদলায়, আর কোন পরিবর্তন কার তা বোঝা যায় না। ওয়ার্কিং কপি প্রতিটি টার্মিনালকে তার নিজস্ব চেকআউট দেয়, নিজস্ব ব্রাঞ্চে।</p>
+</div>
+<div class="wrap page-body">
+  <div class="prose">
+    <h2>ওয়ার্কিং কপিতে একটি টার্মিনাল চালু করুন</h2>
+    <ol>
+      <li>টার্মিনালের তালিকার একদম উপরে <strong>New terminal</strong>-এর শেষে <strong>▾</strong> চাপুন, তারপর <strong>Shell in a folder or a working copy…</strong>।</li>
+      <li>ফোল্ডারটি দিন আর <strong>In its own working copy</strong> বেছে নিন। বিকল্পটি শুধু সেখানেই দেওয়া হয় যেখানে তা সম্ভব, আর যেখানে সম্ভব নয় সেখানে কারণ বলে: Git রিপোজিটরি নয়, bare রিপোজিটরি, বা এখনো কোনো কমিট নেই।</li>
+    </ol>
+    <p>টার্মিনাল থেকে, একই কাজ:</p>
+    <pre><code>aubergine here --copy
+aubergine new "api" --copy --in ~/code/my-project</code></pre>
+    <h2>আপনি যা পান</h2>
+    <p>একটি Git worktree, এমন একটি ফোল্ডারে যা Aubergine তার ডেটা ফোল্ডারের নিচে রাখে, কখনো আপনার রিপোজিটরির ভেতরে নয়, <code>aubergine/&lt;terminal name&gt;-&lt;six characters&gt;</code> নামের একটি নতুন ব্রাঞ্চে। এটি শুরু হয় সেই কমিট থেকে যেখানে আপনার চেকআউট আছে, আর টার্মিনাল চালু হয় একই সাবফোল্ডারে যেখানে আপনি ছিলেন। আপনার নিজের চেকআউট কখনো বদলায় না: না তার ফাইল, না যা stage করা আছে, না যে ব্রাঞ্চটি আপনি চেকআউট করে রেখেছেন।</p>
+    <p class="note"><strong>যা সঙ্গে আসে না:</strong> আপনার কমিট না করা পরিবর্তন (আপনার হয়ে কিছু stash বা কমিট করা হয় না), আর যে ফাইলগুলো Git উপেক্ষা করে বা ট্র্যাক করে না, যেমন ইনস্টল করা ডিপেন্ডেন্সি আর লোকাল সেটিংস। যে প্রজেক্টে ইনস্টল ধাপ লাগে, ওয়ার্কিং কপিতে আবার তা লাগে।</p>
+    <h2>এজেন্ট কী বদলেছে পড়ুন</h2>
+    <p>ওয়ার্কিং কপির টার্মিনাল তার টাইটেল বারে নিজের ব্রাঞ্চ আর আলাদা হওয়া ফাইলের সংখ্যা দেখায়। বদলানো, যোগ করা আর মোছা ফাইল দেখতে তাতে ক্লিক করুন, যেখানে কোনো কমিটে না থাকা কাজ চিহ্নিত থাকে, আর আপনার বেছে নেওয়া যেকোনো ফাইলের শুধু-পড়ার পার্থক্য।</p>
+    <h2>টার্মিনাল শেষ হলে</h2>
+    <p>শুধু টার্মিনাল শেষ হয়েছে বলে কোনো ওয়ার্কিং কপি কখনো মোছা হয় না। আপনি বেছে নেন:</p>
+    <ul>
+      <li><strong>Keep the branch, remove the folder</strong> (ব্রাঞ্চ রাখুন, ফোল্ডার সরান), যখন সবকিছু কমিট করা।</li>
+      <li><strong>Keep everything.</strong> (সব রাখুন।) এটি তালিকায় থাকে, বলে যে এর টার্মিনাল আর নেই।</li>
+      <li><strong>Discard both</strong> (দুটোই বাদ দিন), যা দ্বিতীয়বার জিজ্ঞেস করে যখন কপিতে এমন কাজ থাকে যা আর কোথাও নেই।</li>
+    </ul>
+    <pre><code>aubergine copies
+aubergine copies show api
+aubergine copies keep-branch api
+aubergine copies discard api</code></pre>
+    <p>Aubergine কখনো merge, push বা rebase করে না। রাখা ব্রাঞ্চ নিয়ে কী করবেন, তা আপনার ব্যাপার।</p>
+    <h2>Aubergine আপনার রিপোজিটরিতে কী চালায়</h2>
+    <p>Aubergine সেই <code>git</code> ব্যবহার করে যা আপনার <code>PATH</code>-এ আছে (2.31 বা নতুনতর)। এটি যে প্রতিটি Git কমান্ড চালু করে, তাতে কোনো হুক চলে না, কিছু জিজ্ঞেস করা হয় না, কিছুই নেটওয়ার্কে পৌঁছায় না, আর submodule ফেচ করা হয় না। আপনার নিজের Git কনফিগারেশনে নাম দেওয়া ফিল্টার, যেমন large-file storage, চলে, যেমন আপনার নিজের <code>git status</code>-এর জন্য চলে।</p>
+    <h2>এটি স্যান্ডবক্স নয়</h2>
+    <p>ওয়ার্কিং কপি কাজ আলাদা রাখে। এটি এজেন্টকে আটকে রাখে না: এজেন্ট আপনার পরিচয়ে চলে আর আপনি যে ফাইল পড়তে ও বদলাতে পারেন সবই পারে, আপনার নিজের চেকআউট সহ। ভুল কাজ করা এজেন্টকে থামাতে এর ওপর ভরসা করবেন না। <a href="../security/">নিরাপত্তা</a> দেখুন।</p>
+    <p>সম্পর্কিত: <a href="../run-multiple-coding-agents/">একসঙ্গে কয়েকটি কোডিং এজেন্ট চালান</a> · <a href="../queue-and-schedules/">কিউ আর শিডিউল</a> (নতুন টার্মিনালে শুরু হওয়া টাস্ক নিজস্ব ওয়ার্কিং কপি পায়, যেখানে ফোল্ডারটি কোনো রিপোজিটরিতে আছে)।</p>
+  </div>
+</div>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <nav aria-label="সব পেজ">
+      <ul class="foot-links">
+        <li><a href="../">হোম</a></li>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex আর ChatGPT</a></li>
+        <li><a href="../install/">ইনস্টল</a></li>
+        <li><a href="../guides/">গাইড</a></li>
+        <li><a href="../run-multiple-coding-agents/">একাধিক এজেন্ট চালান</a></li>
+        <li><a href="./" aria-current="page">ওয়ার্কিং কপি</a></li>
+        <li><a href="../queue-and-schedules/">কিউ আর শিডিউল</a></li>
+        <li><a href="../security/">নিরাপত্তা</a></li>
+        <li><a href="../roadmap/">রোডম্যাপ</a></li>
+        <li><a href="../faq/">প্রশ্নোত্তর</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">Aubergine বিনামূল্যে ও ওপেন সোর্স, <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">MIT লাইসেন্সে</a>, আর চলে আপনার নিজের কম্পিউটারে।</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+</script>
+</body>
+</html>

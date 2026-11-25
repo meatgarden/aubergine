@@ -1,0 +1,2218 @@
+{
+  "site.skip": {
+    "text": "Ir a la página",
+    "from": "c1da0f1587b7"
+  },
+  "site.nav.label": {
+    "text": "Páginas",
+    "from": "9046da16aea9"
+  },
+  "site.nav.claude": {
+    "text": "Claude Code",
+    "from": "246ef8c1130d"
+  },
+  "site.nav.codex": {
+    "text": "Codex",
+    "from": "616efbe96852"
+  },
+  "site.nav.install": {
+    "text": "Instalar",
+    "from": "569ca49f4aaf"
+  },
+  "site.nav.guides": {
+    "text": "Guías",
+    "from": "572cd72feb9a"
+  },
+  "site.nav.security": {
+    "text": "Seguridad",
+    "from": "8f6fb4eb7f42"
+  },
+  "site.nav.faq": {
+    "text": "FAQ",
+    "from": "dbc468a14b60"
+  },
+  "site.menu": {
+    "text": "Menú",
+    "from": "99af6606ff9d"
+  },
+  "site.languages.label": {
+    "text": "Idioma",
+    "from": "a4fe65264ef7"
+  },
+  "site.crumbs": {
+    "text": "Dónde estás",
+    "from": "54cd982fb2dd"
+  },
+  "site.copy": {
+    "text": "Copiar",
+    "from": "e21f935f11d7"
+  },
+  "site.copied": {
+    "text": "Copiado",
+    "from": "8d525e5f158b"
+  },
+  "site.og.alt": {
+    "text": "Aubergine: un lienzo de terminales, una ocupada y otra esperándote",
+    "from": "25b02deb2ff8"
+  },
+  "site.translated.app": {
+    "text": "Aubergine en sí está en inglés: sus botones, menús e imágenes son los de la versión en inglés.",
+    "from": "a81916766b4d"
+  },
+  "site.translated.machine": {
+    "text": "Esta página la tradujo una máquina a partir del inglés. <a href=\"https://github.com/thirstyeggplant/aubergine/issues\">Envía una corrección</a>.",
+    "from": "e0f116b75aa8"
+  },
+  "site.foot.label": {
+    "text": "Todas las páginas",
+    "from": "b879e5a49e14"
+  },
+  "site.foot.home": {
+    "text": "Inicio",
+    "from": "3a78695388b3"
+  },
+  "site.foot.claude": {
+    "text": "Claude Code",
+    "from": "246ef8c1130d"
+  },
+  "site.foot.codex": {
+    "text": "Codex y ChatGPT",
+    "from": "38c13bed7dca"
+  },
+  "site.foot.install": {
+    "text": "Instalar",
+    "from": "569ca49f4aaf"
+  },
+  "site.foot.guides": {
+    "text": "Guías",
+    "from": "572cd72feb9a"
+  },
+  "site.foot.several": {
+    "text": "Varios agentes a la vez",
+    "from": "8b0dc326e0f4"
+  },
+  "site.foot.copies": {
+    "text": "Copias de trabajo",
+    "from": "9660dc116131"
+  },
+  "site.foot.queue": {
+    "text": "Cola y programaciones",
+    "from": "403b3a701d15"
+  },
+  "site.foot.security": {
+    "text": "Seguridad",
+    "from": "8f6fb4eb7f42"
+  },
+  "site.foot.roadmap": {
+    "text": "Hoja de ruta",
+    "from": "92375f997ffe"
+  },
+  "site.foot.faq": {
+    "text": "Preguntas frecuentes",
+    "from": "dbc468a14b60"
+  },
+  "site.foot.license": {
+    "text": "Aubergine es libre y de código abierto bajo la <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE\">licencia MIT</a>, y se ejecuta en tu propio ordenador.",
+    "from": "21c2472673d7"
+  },
+  "home.meta.title": {
+    "text": "Aubergine: todas tus terminales en un solo lienzo, con los agentes que ya usas",
+    "from": "620bab21c0b6"
+  },
+  "home.meta.description": {
+    "text": "Aubergine pone todas tus terminales una al lado de la otra en un solo lienzo, en tu navegador. Ejecuta tantas como quieras, con los agentes y modelos que ya usas, y mira cuál te necesita. Gratis, local y de código abierto.",
+    "from": "71a14cde3a05"
+  },
+  "home.ld.category": {
+    "text": "Multiplexor de terminales y espacio de trabajo para agentes",
+    "from": "d32b7b10eecd"
+  },
+  "home.ld.requires": {
+    "text": "tmux 3.2 o posterior, Node.js 22 o posterior",
+    "from": "6fadbd03c20d"
+  },
+  "home.hero.kicker": {
+    "text": "Gratis · Código abierto · Se ejecuta en tu ordenador",
+    "from": "28742c2f94e7"
+  },
+  "home.hero.title": {
+    "text": "Todas tus terminales, una al lado de la otra. Mira qué agente <em>te necesita</em>.",
+    "from": "7be0ec221ba9"
+  },
+  "home.hero.lead": {
+    "text": "Aubergine pone todas tus terminales una al lado de la otra en un solo lienzo, en tu navegador. Ejecuta tantas como quieras, con los agentes y modelos que ya usas. No tiene modelo propio y nunca te pide una clave.",
+    "from": "c8c8b75e9e20"
+  },
+  "home.hero.after": {
+    "text": "Después, <code>aubergine start --open</code>. Para macOS, con tmux 3.2 o posterior y Node.js 22 o posterior.",
+    "from": "bed0cbea0b2d"
+  },
+  "home.hero.install": {
+    "text": "Instalar",
+    "from": "569ca49f4aaf"
+  },
+  "home.hero.source": {
+    "text": "Leer el código",
+    "from": "625b22ba31d0"
+  },
+  "home.canvas.caption": {
+    "text": "Una ilustración, no una captura: cinco terminales en un lienzo y la que te está esperando.",
+    "from": "413e282f8a9d"
+  },
+  "home.see.title": {
+    "text": "Cómo se ve",
+    "from": "9a5d81b4a5f3"
+  },
+  "home.see.intro": {
+    "text": "Capturas reales de la demo que viene con Aubergine: agentes simulados, ninguno real.",
+    "from": "61f7034f8117"
+  },
+  "home.see.canvas.claim": {
+    "text": "Todas las terminales en un solo lienzo",
+    "from": "51af5aa39147"
+  },
+  "home.see.canvas.text": {
+    "text": "Tantas como quieras, una al lado de la otra, cada una en vivo mientras está a la vista.",
+    "from": "e5c7903b1535"
+  },
+  "home.see.canvas.caption": {
+    "text": "La lista dice qué está haciendo cada terminal; a su lado, las propias terminales.",
+    "from": "40d3143df913"
+  },
+  "home.see.canvas.alt": {
+    "text": "El panel lateral con cinco terminales y su estado en palabras (working, waiting for you, finished, parked), junto a una parte del lienzo con una shell en vivo.",
+    "from": "2bb1af139cbc"
+  },
+  "home.see.waits.claim": {
+    "text": "La que espera destaca",
+    "from": "7d5fd4d29cc6"
+  },
+  "home.see.waits.text": {
+    "text": "Cuando un agente te necesita, lo ves desde el otro lado del lienzo, y <code>W</code> te lleva hasta él.",
+    "from": "d1db837c4eb1"
+  },
+  "home.see.waits.caption": {
+    "text": "Su borde toma el color de la espera y su título dice waiting for you (te está esperando).",
+    "from": "56be14801975"
+  },
+  "home.see.waits.alt": {
+    "text": "Una terminal cuyo agente hace una pregunta, con el título waiting for you y el borde del color de la espera.",
+    "from": "90d945c1648c"
+  },
+  "home.see.focus.claim": {
+    "text": "Una terminal por sí sola",
+    "from": "0ddd4013565e"
+  },
+  "home.see.focus.text": {
+    "text": "Abre cualquier terminal en una pestaña del navegador propia: la misma terminal, no una copia.",
+    "from": "ba54fa6c02df"
+  },
+  "home.see.focus.caption": {
+    "text": "Sus detalles y su nota se abren a su lado cuando los pides, y se cierran de nuevo con sus botones.",
+    "from": "95b86a5cd8de"
+  },
+  "home.see.focus.alt": {
+    "text": "Una terminal sola en una pestaña del navegador: su nombre en la cabecera, sus detalles con el paso del flujo de trabajo, su carpeta y sus campos, y la terminal en vivo al lado.",
+    "from": "3b3df705e912"
+  },
+  "home.agents.title": {
+    "text": "Trae tu propio agente",
+    "from": "053237049eea"
+  },
+  "home.agents.intro": {
+    "text": "Aubergine ejecuta terminales normales. No llama a ningún modelo, no guarda ninguna clave y no tiene cuentas: los agentes de línea de comandos que ya usas, con tu sesión iniciada, se ejecutan en sus terminales con el modelo que hayas elegido para ellos. Lo que Aubergine hace por sí mismo para un agente está hecho hoy para Claude Code; cualquier otro agente puede decir lo mismo con los comandos <code>aubergine</code>.",
+    "from": "9e12708b9129"
+  },
+  "home.agents.claude": {
+    "text": "Inícialo desde el menú New terminal y dirá por sí mismo cuándo trabaja, cuándo te espera o cuándo termina; Aubergine puede reanudar sus conversaciones y mostrar cómo está configurado.",
+    "from": "493938fd27d5"
+  },
+  "home.agents.codex.name": {
+    "text": "Codex y ChatGPT",
+    "from": "38c13bed7dca"
+  },
+  "home.agents.codex": {
+    "text": "Codex se ejecuta en una terminal como cualquier programa, e informa mediante los comandos <code>aubergine</code> una vez que sus instrucciones se lo indican. ChatGPT en un navegador no es un programa de terminal.",
+    "from": "57da92f4d853"
+  },
+  "home.agents.other.name": {
+    "text": "Cualquier otro agente de línea de comandos, o una shell sin más",
+    "from": "ee656f2d4bf2"
+  },
+  "home.agents.other": {
+    "text": "Todas las terminales tienen el comando <code>aubergine</code>, y <code>aubergine guide --snippet</code> imprime cinco líneas para las propias instrucciones de tu agente.",
+    "from": "bd4153cd9ede"
+  },
+  "home.built.title": {
+    "text": "Qué más ya está hecho",
+    "from": "67ca3d0bd3e6"
+  },
+  "home.built.intro": {
+    "text": "Todo esto funciona hoy en tu ordenador.",
+    "from": "e6025b6fd725"
+  },
+  "home.built.canvas.name": {
+    "text": "Un lienzo de terminales",
+    "from": "efed05a9a763"
+  },
+  "home.built.canvas.text": {
+    "text": "Desplaza, haz zoom y coloca terminales reales; un clic para escribir; aparca una y tráela de vuelta más tarde, o abre una sola en una pestaña del navegador con sus detalles y su nota al lado.",
+    "from": "062fb655d54f"
+  },
+  "home.built.waiting.name": {
+    "text": "Mira quién está esperando",
+    "from": "a8dd066ebe3d"
+  },
+  "home.built.waiting.text": {
+    "text": "Ocupada, inactiva o esperándote, en cada terminal; y la lista «For you» y «next waiting» te llevan directamente a lo que necesita a una persona.",
+    "from": "d2f2b06c77b4"
+  },
+  "home.built.queue.name": {
+    "text": "Cola y programaciones",
+    "from": "403b3a701d15"
+  },
+  "home.built.queue.text": {
+    "text": "Escribe una tarea una vez y deja que la tome un agente libre, o prográmala para una hora del día en los días que elijas.",
+    "from": "ca6521d877a6"
+  },
+  "home.built.copies.name": {
+    "text": "Copias de trabajo",
+    "from": "9660dc116131"
+  },
+  "home.built.copies.text": {
+    "text": "Dale a cada agente su propia copia de un repositorio en su propia rama, para que dos agentes nunca editen los mismos archivos.",
+    "from": "4230039c27f0"
+  },
+  "home.built.projects.name": {
+    "text": "Proyectos",
+    "from": "04e2a9728af7"
+  },
+  "home.built.projects.text": {
+    "text": "Un servidor, varias salas de control: cada proyecto tiene sus propios lienzos, cola, programaciones y reglas, y se puede guardar como archivo o como plantilla.",
+    "from": "e0961f503387"
+  },
+  "home.built.workflows.name": {
+    "text": "Flujos de trabajo y aprobaciones",
+    "from": "cefa6bb93441"
+  },
+  "home.built.workflows.text": {
+    "text": "Dale a un agente pasos que seguir, detente en un paso que espera a una persona y sigue cada ejecución en curso en un solo tablero.",
+    "from": "7b456d89fd1e"
+  },
+  "home.built.messages.name": {
+    "text": "Mensajes entre terminales",
+    "from": "48b5af2c48ad"
+  },
+  "home.built.messages.text": {
+    "text": "Deja que los agentes hablen entre sí con remitentes con nombre, límites y pausas, cerrado por defecto en cada lienzo.",
+    "from": "785ee3f85615"
+  },
+  "home.built.api.name": {
+    "text": "API y servidor MCP",
+    "from": "1a84834881e1"
+  },
+  "home.built.api.text": {
+    "text": "Una API HTTP local con tokens con alcances, un cliente tipado y un servidor MCP que solo lista las herramientas que una credencial puede usar.",
+    "from": "f9999af55d29"
+  },
+  "home.built.cli.name": {
+    "text": "Una línea de comandos",
+    "from": "f8709772ea07"
+  },
+  "home.built.cli.text": {
+    "text": "El comando <code>aubergine</code> inicia terminales, pone tareas en cola, define programaciones, lee el tablero y aprueba ejecuciones, desde cualquier terminal de la máquina.",
+    "from": "7c132e9877d8"
+  },
+  "home.built.recaps.name": {
+    "text": "Resúmenes e historial",
+    "from": "2ea7a47cfa76"
+  },
+  "home.built.recaps.text": {
+    "text": "Mira qué cambió mientras no estabas, busca en la salida de las terminales y vuelve a abrir conversaciones pasadas desde la paleta.",
+    "from": "1a640de790ee"
+  },
+  "home.trust.title": {
+    "text": "Tus terminales siguen siendo tuyas",
+    "from": "c6f11f794209"
+  },
+  "home.trust.local.name": {
+    "text": "Solo local",
+    "from": "c905013aab29"
+  },
+  "home.trust.local.text": {
+    "text": "El servidor escucha en 127.0.0.1 y comprueba el Host y el Origin de cada petición; el uso desde otro dispositivo está desactivado hasta que lo configures.",
+    "from": "cd7a0d902e0f"
+  },
+  "home.trust.outlive.name": {
+    "text": "Las terminales sobreviven a la app",
+    "from": "2c75df8acfc1"
+  },
+  "home.trust.outlive.text": {
+    "text": "Cada terminal es una sesión de tmux: cierra el navegador o reinicia Aubergine y tu trabajo sigue en marcha.",
+    "from": "f913c3351663"
+  },
+  "home.trust.nomodel.name": {
+    "text": "Sin modelo, sin clave",
+    "from": "2f070717231f"
+  },
+  "home.trust.nomodel.text": {
+    "text": "Aubergine no elige ni llama a ningún modelo, y no guarda ninguna clave para uno; tus agentes traen los suyos.",
+    "from": "fe25a0ed6b54"
+  },
+  "home.trust.decide.name": {
+    "text": "Tú decides",
+    "from": "6a93d45962ec"
+  },
+  "home.trust.decide.text": {
+    "text": "Los tokens tienen alcances, lo que escriben los agentes espera tu revisión y las aprobaciones las da una persona.",
+    "from": "7e1645184727"
+  },
+  "home.trust.more": {
+    "text": "Qué está protegido y qué no",
+    "from": "f0da10ecfe7d"
+  },
+  "home.install.title": {
+    "text": "En marcha en cinco minutos",
+    "from": "ade3bbf9af01"
+  },
+  "home.install.intro": {
+    "text": "Necesitas macOS con tmux 3.2 o posterior y Node.js 22 o posterior. <code>brew install tmux node</code> instala ambos.",
+    "from": "fabf8314c9cb"
+  },
+  "home.install.s1.title": {
+    "text": "Instala",
+    "from": "569ca49f4aaf"
+  },
+  "home.install.s1.text": {
+    "text": "O usa el <a href=\"/install/\">instalador</a>, que compila desde el código fuente con pnpm.",
+    "from": "506eece86d4a"
+  },
+  "home.install.s2.title": {
+    "text": "Inícialo y abre tu navegador",
+    "from": "09b350acdba9"
+  },
+  "home.install.s2.text": {
+    "text": "Inicia el servidor y abre tu navegador con la sesión iniciada.",
+    "from": "cc6fc15c6b0d"
+  },
+  "home.install.s3.title": {
+    "text": "Haz el recorrido",
+    "from": "a83c4366d2df"
+  },
+  "home.install.s3.text": {
+    "text": "Haz clic en <strong>Show me around</strong> (enséñame cómo funciona) en el lienzo vacío. Crea un lienzo Demo con agentes simulados y te guía en ocho pasos cortos; <code>aubergine demo --remove</code> lo quita.",
+    "from": "b20f7c13bc30"
+  },
+  "home.install.note": {
+    "text": "El instalador solo cambia <code>~/.aubergine</code> y un enlace llamado <code>aubergine</code>. Nunca usa sudo y nunca edita los archivos de inicio de tu shell.",
+    "from": "1b03983d93c3"
+  },
+  "home.faq.title": {
+    "text": "Preguntas",
+    "from": "9a72221a2747"
+  },
+  "home.faq.what.q": {
+    "text": "¿Qué es Aubergine?",
+    "from": "34bffd794522"
+  },
+  "home.faq.what.a": {
+    "text": "Un lienzo local, en el navegador, de sesiones de terminal. Cada terminal es un nodo que puedes colocar y usar, así que puedes ejecutar varios agentes de programación a la vez y ver cuál te está esperando.",
+    "from": "e2699684c13a"
+  },
+  "home.faq.send.q": {
+    "text": "¿Envía Aubergine mis terminales o mi código a algún sitio?",
+    "from": "8e3369fd3214"
+  },
+  "home.faq.send.a": {
+    "text": "No. Todo se ejecuta en tu propio ordenador. El servidor escucha solo en 127.0.0.1 y comprueba el Host y el Origin de cada petición.",
+    "from": "df08013e9725"
+  },
+  "home.faq.need.q": {
+    "text": "¿Qué necesito para ejecutar Aubergine?",
+    "from": "efe26fb96381"
+  },
+  "home.faq.need.a": {
+    "text": "macOS con tmux 3.2 o posterior y Node.js 22 o posterior; el instalador también necesita pnpm. Linux debería funcionar, pero aún no se ha probado.",
+    "from": "50e15eb9d5c0"
+  },
+  "home.faq.byhand.q": {
+    "text": "¿Y si inicio Claude Code yo mismo en una terminal?",
+    "from": "e8281791e5fb"
+  },
+  "home.faq.byhand.a": {
+    "text": "Funciona como cualquier programa: le escribes como siempre. Pero Aubergine solo sabe que hay un agente cuando lo inició él mismo (New terminal y luego Claude Code), porque añade unos pequeños hooks que informan de lo que hace el agente. Si lo inicias a mano, la terminal solo aparece ocupada ejecutando <code>claude</code>: no se marca como esperándote cuando pregunta algo, y cuando inicias un flujo de trabajo ahí, no se escribe nada para él. Dile tú mismo que ejecute <code>aubergine workflow status</code>, que sigue funcionando desde dentro, o inicia el agente desde el menú New terminal.",
+    "from": "23c877f7b9d5"
+  },
+  "home.faq.free.q": {
+    "text": "¿Aubergine es gratis?",
+    "from": "ff46b785dd7f"
+  },
+  "home.faq.free.a": {
+    "text": "Sí. Es libre y de código abierto bajo la <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE\">licencia MIT</a>, y su código está en GitHub.",
+    "from": "30fae4a08af7"
+  },
+  "home.faq.more": {
+    "text": "Todas las preguntas",
+    "from": "57bf5a60dd59"
+  },
+  "home.planned.title": {
+    "text": "Qué está previsto",
+    "from": "e10eed0040ae"
+  },
+  "home.planned.line": {
+    "text": "El modo multijugador, los agentes en la nube, los modos de aprobación y más cosas están previstos y no están hechos. <a href=\"/roadmap/\">Mira la hoja de ruta</a>.",
+    "from": "5c6d1db70932"
+  },
+  "claude.meta.title": {
+    "text": "Claude Code en Aubergine | Aubergine",
+    "from": "964ec2c2f3df"
+  },
+  "claude.meta.description": {
+    "text": "Lo que Aubergine hace por sí mismo para Claude Code: iniciarlo desde el menú, ver cuándo espera, reanudar una conversación, las conversaciones pasadas, cómo está configurado y las herramientas.",
+    "from": "53c5a33c5a7d"
+  },
+  "claude.title": {
+    "text": "Qué hace Aubergine por Claude Code",
+    "from": "d05c8e0b3f82"
+  },
+  "claude.lead": {
+    "text": "Claude Code se ejecuta en una terminal de Aubergine como cualquier programa. Si lo inicias desde Aubergine, además le dice al lienzo qué está haciendo, y Aubergine puede ponerlo al tanto, reanudarlo y mostrar cómo está configurado. Esto es todo, en el orden en que te lo encuentras.",
+    "from": "48626cf950ce"
+  },
+  "claude.yours": {
+    "text": "Tú instalas Claude Code e inicias sesión en él. Aubergine no llama a ningún modelo ni guarda ninguna clave: inicia el comando <code>claude</code> que ya tienes.",
+    "from": "49c81d042977"
+  },
+  "claude.start.title": {
+    "text": "Inícialo desde el menú",
+    "from": "f2e4406e142f"
+  },
+  "claude.start.text": {
+    "text": "<strong>New terminal ▾ → Claude Code</strong>, o <code>C</code> mientras ninguna terminal tiene el teclado, inicia <code>claude</code> en una terminal nueva con un archivo de ajustes que Aubergine escribe en su propia carpeta de datos. Tu propia configuración de Claude Code no se toca.",
+    "from": "58f4f8786edb"
+  },
+  "claude.start.command": {
+    "text": "El comando que inicia es <code>agents.claudeCommand</code> en los ajustes, <code>claude</code> salvo que lo cambies; Aubergine añade sus propias opciones al final.",
+    "from": "cadf315d3f4f"
+  },
+  "claude.start.where": {
+    "text": "Dónde: el menú junto a New terminal, arriba de la lista de terminales.",
+    "from": "8535ecc3618e"
+  },
+  "claude.state.title": {
+    "text": "Mira cuándo trabaja, espera y termina",
+    "from": "762bb49f53ad"
+  },
+  "claude.state.text": {
+    "text": "Los hooks de ese archivo de ajustes le dicen al lienzo qué está haciendo el agente. Cuando envías un prompt, se añade al registro de notas de la terminal y la terminal muestra <strong>working</strong> (trabajando). Cuando el agente te necesita, por una pregunta de permisos o porque está inactivo esperando una entrada, su borde toma el color de la espera y su título y su fila dicen <strong>waiting for you</strong> (te está esperando). Cuando se detiene, muestra <strong>finished</strong> (terminado).",
+    "from": "64ec1f0a81c2"
+  },
+  "claude.state.more": {
+    "text": "<code>W</code> va a la siguiente terminal que espera, y <strong>Notify</strong> activa las notificaciones de escritorio para las terminales que empiezan a esperar. Los prompts pueden contener secretos: <code>\"agents\": { \"logPrompts\": false }</code> en <code>config.json</code> los deja fuera del registro de notas.",
+    "from": "8d17a75b0b6f"
+  },
+  "claude.state.where": {
+    "text": "Dónde: el título de la terminal, su fila en la lista y el contador junto a For you, arriba.",
+    "from": "4069b9f958a3"
+  },
+  "claude.byhand.title": {
+    "text": "Un Claude Code que iniciaste tú",
+    "from": "4e9410ab2c6a"
+  },
+  "claude.byhand.text": {
+    "text": "Si lo escribes a mano en una terminal normal, <code>claude</code> funciona como cualquier programa, pero Aubergine solo ve una shell ocupada ejecutándolo: no hay waiting for you, y no se escribe nada para él cuando inicias ahí un flujo de trabajo. Para cambiarlo, imprime los hooks y añádelos a mano a tus propios ajustes de Claude Code. Fuera de una terminal de Aubergine no hacen nada.",
+    "from": "fa6fba9030be"
+  },
+  "claude.describe.title": {
+    "text": "Se pone nombre y mantiene un resumen",
+    "from": "d093aa41e5df"
+  },
+  "claude.describe.text": {
+    "text": "A un agente que inicia Aubergine se le dice, al empezar, que ponga a su terminal el nombre del trabajo y mantenga un resumen, con <code>aubergine describe</code>, <code>aubergine link add</code> y <code>aubergine field set</code>, y se le recuerda una vez cuando se detiene sin nombre propio o sin resumen. Lo que escribes tú gana; lo que el agente dice sobre lo mismo espera al lado con <strong>Use this</strong> (usar esto). El recordatorio se puede desactivar en <strong>Settings</strong>.",
+    "from": "b3ada1af2f57"
+  },
+  "claude.describe.where": {
+    "text": "Dónde: los detalles de la terminal, con su nombre, resumen, campos y enlaces.",
+    "from": "14d403dcf75f"
+  },
+  "claude.told.title": {
+    "text": "Le llegan flujos de trabajo, tareas, resúmenes y mensajes",
+    "from": "65f0d98fe0d0"
+  },
+  "claude.told.text": {
+    "text": "Aubergine escribe cuatro frases fijas en una terminal, y solo estas: que se inició un flujo de trabajo, que se le pidió al agente que escribiera algo, que pediste un resumen y que hay un mensaje esperando. Cada una nombra un comando para que el agente lo ejecute. Una frase solo se escribe donde se ve que un agente tiene el teclado: uno que inició Aubergine, o uno cuyos ajustes tienen los hooks de <code>aubergine hooks print</code>.",
+    "from": "a965be64fc8b"
+  },
+  "claude.told.more": {
+    "text": "Del mismo modo, una tarea de la cola solo va a una terminal donde un agente así está delante y libre, y <strong>Claude Code on a workflow…</strong> inicia una terminal nueva a cuyo agente se le habla de la ejecución en su primer prompt.",
+    "from": "4db5493b4c50"
+  },
+  "claude.told.where": {
+    "text": "Dónde: <strong>Run a workflow…</strong> en el menú del título de una terminal, y <strong>Runs</strong> arriba de la página.",
+    "from": "85ec8e15f827"
+  },
+  "claude.resume.title": {
+    "text": "Resume agent",
+    "from": "0bb60c450191"
+  },
+  "claude.resume.text": {
+    "text": "Aubergine recuerda en qué conversación estaba una terminal de agente. Cuando su shell vuelve a un prompt, porque saliste del agente o se reinició el ordenador, la terminal ofrece <strong>Resume agent</strong> (reanudar el agente), que vuelve a iniciar el agente en esa conversación. En una terminal que está en una ejecución, también le vuelve a hablar al agente de la ejecución.",
+    "from": "bad9c16cacaa"
+  },
+  "claude.resume.where": {
+    "text": "Dónde: la barra de título de la terminal.",
+    "from": "f9a5a6f578cf"
+  },
+  "claude.history.title": {
+    "text": "Conversaciones pasadas",
+    "from": "93b87f3b2adf"
+  },
+  "claude.history.text": {
+    "text": "<strong>Past conversations…</strong> lista las conversaciones anteriores del agente en una carpeta: lee una, ábrela en el lienzo o abre una copia que deja el original como está. Escribe <code>@</code> y algunas palabras en la paleta para buscarlas; <code>aubergine history</code> las lista en la línea de comandos. No se guarda nada de lo leído, y ningún token ni ningún agente puede leer conversaciones a través de Aubergine.",
+    "from": "168514a264d1"
+  },
+  "claude.history.form": {
+    "text": "Lee los archivos que guarda Claude Code. Su formato es interno de Claude Code y cambia entre versiones. Tras una actualización del agente, los nombres y las transcripciones pueden salir más escuetos, y de un registro que Aubergine no puede leer se dice que no se puede leer, nunca se muestra como vacío.",
+    "from": "0d92e097b755"
+  },
+  "claude.history.where": {
+    "text": "Dónde: la paleta (<code>⌘K</code>), y «Past conversations in this folder…» en los detalles de una terminal.",
+    "from": "3477b0fbf75a"
+  },
+  "claude.setup.title": {
+    "text": "Cómo está configurado",
+    "from": "af61266588a1"
+  },
+  "claude.setup.text": {
+    "text": "Una lista de lo que los archivos de configuración del agente dicen que se le ha dado: servidores MCP, plugins, hooks, skills, reglas de permisos y archivos de ajustes, cada uno con su origen, y lo que añadió Aubergine. Solo nombres, nunca un valor ni un secreto. Dice cómo está configurado el agente, no qué ha cargado el agente en ejecución, y dice claramente lo que no puede saber, como los conectores que vienen con tu cuenta.",
+    "from": "c514bb19fdee"
+  },
+  "claude.setup.where": {
+    "text": "Dónde: <strong>⚙ on</strong> en la terminal, «What is switched on for this agent…» en la paleta, y los detalles de la terminal.",
+    "from": "a8c53c214fcc"
+  },
+  "claude.tools.title": {
+    "text": "Las herramientas de Aubergine para él",
+    "from": "e66ee8e8e0bc"
+  },
+  "claude.tools.text": {
+    "text": "<strong>Claude Code with Aubergine tools…</strong> pregunta primero qué puede hacer el agente: <strong>None</strong> (nada); <strong>Its own work only</strong> (solo su propio trabajo), con la credencial propia de la terminal; o <strong>More…</strong> (más), alcances que tú eliges, para los que se crea un token solo para esa terminal, que se revoca cuando la terminal se cierra definitivamente. Las herramientas son <code>aubergine mcp</code>, que se pasa al agente en su línea de arranque; su propia configuración no se escribe.",
+    "from": "6f42a9f284d0"
+  },
+  "claude.tools.where": {
+    "text": "Dónde: el menú junto a New terminal.",
+    "from": "33b77d6aeba6"
+  },
+  "claude.move.title": {
+    "text": "Trae un Claude Code que ya tienes abierto",
+    "from": "71713eb1febd"
+  },
+  "claude.move.text": {
+    "text": "Un agente en ejecución no se puede mover, pero su conversación sí. <strong>Open elsewhere</strong> (abiertas en otro sitio) lista tus pestañas de Claude Code, con <strong>Fork to canvas</strong> (bifurcar al lienzo) y, para un agente inactivo, <strong>Stop and resume here</strong> (detener y reanudar aquí), que te pregunta antes. Desde una terminal, <code>aubergine move</code> hace lo mismo, y <code>aubergine here --claude</code> inicia Claude Code en el lienzo continuando la última conversación de esa carpeta.",
+    "from": "2710d35e40f6"
+  },
+  "claude.move.where": {
+    "text": "Dónde: <strong>Open elsewhere</strong> en la barra sobre el lienzo, o <code>O</code>.",
+    "from": "957b9c5d2c08"
+  },
+  "claude.copy.title": {
+    "text": "En una copia de trabajo propia",
+    "from": "88b0fbc30823"
+  },
+  "claude.copy.text": {
+    "text": "<code>aubergine here --copy --claude</code> inicia Claude Code en su propio checkout del repositorio, en su propia rama, para que dos agentes nunca editen los mismos archivos. El diálogo de una terminal de Claude Code con herramientas ofrece la misma opción.",
+    "from": "d952aaa25439"
+  },
+  "claude.tried.title": {
+    "text": "Qué se ha probado",
+    "from": "dc4245eb9cbd"
+  },
+  "claude.tried.text": {
+    "text": "La demo que viene con Aubergine usa agentes simulados, scripts cortos que ejecutan los mismos comandos y hooks que un agente real, no un Claude Code real. Con un agente real aún no se han probado una aprobación, una copia de trabajo, una tarea de la cola ni una programación.",
+    "from": "d7b31de7e83d"
+  },
+  "claude.others": {
+    "text": "Otro agente puede decir casi todo esto mediante los comandos <code>aubergine</code>: mira <a href=\"/chatgpt/\">Codex y ChatGPT</a>.",
+    "from": "a37bd1ffdb77"
+  },
+  "claude.mark": {
+    "text": "Aubergine no está afiliado a Anthropic. Claude y Claude Code son marcas registradas de Anthropic.",
+    "from": "cdae060f0648"
+  },
+  "chatgpt.meta.title": {
+    "text": "Codex y ChatGPT en Aubergine | Aubergine",
+    "from": "8dcd1dde8945"
+  },
+  "chatgpt.meta.description": {
+    "text": "Codex, el agente de programación de línea de comandos de OpenAI, se ejecuta en una terminal de Aubergine como cualquier programa. Qué funciona hoy, qué puede informar mediante los comandos aubergine y qué está hecho solo para Claude Code.",
+    "from": "6f8c78d52c06"
+  },
+  "chatgpt.crumb": {
+    "text": "Codex y ChatGPT",
+    "from": "38c13bed7dca"
+  },
+  "chatgpt.title": {
+    "text": "Codex y ChatGPT",
+    "from": "38c13bed7dca"
+  },
+  "chatgpt.lead": {
+    "text": "Codex es el agente de programación de línea de comandos de OpenAI. Lo instalas e inicias sesión en él tú mismo; en Aubergine se ejecuta en una terminal como cualquier otro programa.",
+    "from": "70f25216735c"
+  },
+  "chatgpt.untried.title": {
+    "text": "Aún no probado",
+    "from": "b0889cc96cfa"
+  },
+  "chatgpt.untried.text": {
+    "text": "Nadie ha ejecutado todavía un Codex real en Aubergine. Lo que dice esta página es lo que Aubergine hace por cualquier programa en una terminal y por los comandos <code>aubergine</code>, que está hecho y probado; cómo se comporta Codex ahí no se ha visto. Si lo pruebas, <a href=\"https://github.com/thirstyeggplant/aubergine/issues\">cuéntanos cómo te fue</a>.",
+    "from": "fbfa21211143"
+  },
+  "chatgpt.start.title": {
+    "text": "Inícialo",
+    "from": "4238a078a056"
+  },
+  "chatgpt.start.text": {
+    "text": "Abre una terminal con <strong>New terminal</strong>, o <code>N</code>, e inicia Codex en ella como harías en cualquier terminal. Aubergine no llama a ningún modelo ni guarda ninguna clave: lo que Codex necesita se lo diste al iniciar sesión en él.",
+    "from": "382ba4da4e80"
+  },
+  "chatgpt.works.title": {
+    "text": "Qué funciona hoy",
+    "from": "e34f6b7e46b1"
+  },
+  "chatgpt.works.intro": {
+    "text": "Todo lo que Aubergine hace por cualquier terminal:",
+    "from": "12590cf44023"
+  },
+  "chatgpt.works.side.name": {
+    "text": "Una al lado de la otra",
+    "from": "a3d7b387c34d"
+  },
+  "chatgpt.works.side.text": {
+    "text": "Tantas terminales como quieras en un solo lienzo, y los lienzos como pestañas.",
+    "from": "dbf89836ed55"
+  },
+  "chatgpt.works.status.name": {
+    "text": "Estado de los comandos",
+    "from": "fe494b43cb4b"
+  },
+  "chatgpt.works.status.text": {
+    "text": "Con zsh, el título de una terminal muestra que se está ejecutando un comando, y cuál.",
+    "from": "4c2760707e62"
+  },
+  "chatgpt.works.keep.name": {
+    "text": "Colores, notas y campos",
+    "from": "6a46e4fad859"
+  },
+  "chatgpt.works.keep.text": {
+    "text": "Dale un color a su terminal, lleva una nota con un resumen y un registro, y campos como un ticket o un responsable.",
+    "from": "ee6d1af56cf5"
+  },
+  "chatgpt.works.park.name": {
+    "text": "Aparcar",
+    "from": "4a64d6c849df"
+  },
+  "chatgpt.works.park.text": {
+    "text": "× aparca la terminal: sale del lienzo y sigue en marcha, y <strong>Parked</strong> (aparcadas) la trae de vuelta.",
+    "from": "ddc50d8a2017"
+  },
+  "chatgpt.works.focus.name": {
+    "text": "Una terminal por sí sola",
+    "from": "0ddd4013565e"
+  },
+  "chatgpt.works.focus.text": {
+    "text": "Abre la terminal en una pestaña del navegador propia, con sus detalles y su nota al lado.",
+    "from": "55d7e4f4f460"
+  },
+  "chatgpt.works.copy.name": {
+    "text": "Una copia de trabajo",
+    "from": "2e0960650715"
+  },
+  "chatgpt.works.copy.text": {
+    "text": "<strong>Shell in a folder or a working copy…</strong>, o <code>aubergine new --copy</code>, inicia la terminal en su propio checkout en su propia rama, para que dos agentes nunca editen los mismos archivos.",
+    "from": "9abe578a4127"
+  },
+  "chatgpt.works.search.name": {
+    "text": "Búsqueda en la salida",
+    "from": "0f487fa9a292"
+  },
+  "chatgpt.works.search.text": {
+    "text": "<code>⌘K</code> busca en lo que ha imprimido cada terminal, y abre la terminal desplazada hasta la coincidencia.",
+    "from": "60d93140539a"
+  },
+  "chatgpt.report.title": {
+    "text": "Qué puede decir mediante los comandos",
+    "from": "0e02d0340875"
+  },
+  "chatgpt.report.intro": {
+    "text": "Cada terminal de Aubergine tiene el comando <code>aubergine</code> y una credencial solo para esa terminal. Cualquier programa que esté ahí, Codex incluido, puede usarlos:",
+    "from": "60b4ba06f8a5"
+  },
+  "chatgpt.report.attention": {
+    "text": "Marca la terminal como esperándote, con lo que necesita; <code>aubergine attention working</code> y <code>aubergine attention done</code> dicen el resto.",
+    "from": "ed9452d7523a"
+  },
+  "chatgpt.report.note": {
+    "text": "Añade una línea al registro de notas de la terminal.",
+    "from": "a99a9a2851ea"
+  },
+  "chatgpt.report.describe": {
+    "text": "Pone a la terminal el nombre del trabajo y mantiene su resumen; <code>aubergine link add</code> y <code>aubergine field set</code> añaden los enlaces y campos del trabajo. Lo que escribiste tú gana.",
+    "from": "4a69c7925e1d"
+  },
+  "chatgpt.report.workflow": {
+    "text": "Lee el paso actual de un flujo de trabajo; <code>aubergine workflow done</code> lo da por hecho e imprime el siguiente.",
+    "from": "bfa2482d9f38"
+  },
+  "chatgpt.report.task": {
+    "text": "Propone una tarea para la cola, y <code>aubergine ask</code> te pide algo que solo puede hacer una persona. Ambas cosas esperan en tu lista.",
+    "from": "f6a6658159c8"
+  },
+  "chatgpt.tell.title": {
+    "text": "Cómo decírselo",
+    "from": "808fc16a4b54"
+  },
+  "chatgpt.tell.text": {
+    "text": "Codex no sabe nada de Aubergine hasta que se lo dicen. Esto imprime cinco líneas para pegar en las instrucciones que tu agente lee al inicio de cada conversación en un proyecto; su propia documentación dice dónde van:",
+    "from": "ad7d9c3cdf01"
+  },
+  "chatgpt.tell.after": {
+    "text": "Las líneas le dicen que ejecute <code>aubergine guide</code> una vez cuando esté en una terminal de Aubergine, y la guía dice el resto. Aubergine imprime las líneas y nunca las escribe en ningún archivo.",
+    "from": "24aa468975b7"
+  },
+  "chatgpt.tell.mcp": {
+    "text": "Si tu agente puede iniciar un servidor MCP, <code>aubergine mcp</code> ofrece lo mismo como herramientas; dentro de una terminal de Aubergine no necesita dirección ni token para el trabajo propio de la terminal.",
+    "from": "7e1e9649a26d"
+  },
+  "chatgpt.only.title": {
+    "text": "Hecho hoy solo para Claude Code",
+    "from": "13e4ac762aab"
+  },
+  "chatgpt.only.intro": {
+    "text": "Lo que Aubergine hace por sí mismo para un agente está hecho para Claude Code. Para Codex, hoy:",
+    "from": "dcf7194de658"
+  },
+  "chatgpt.only.menu": {
+    "text": "No está en el menú New terminal: lo inicias tú en una terminal.",
+    "from": "51fe40c6c0b7"
+  },
+  "chatgpt.only.seen": {
+    "text": "Aubergine no lo ve como un agente: no se marca como esperando ni terminado por sí solo, solo cuando ejecuta <code>aubergine attention</code>.",
+    "from": "94d90e71f3eb"
+  },
+  "chatgpt.only.typed": {
+    "text": "No se escribe nada para él: un flujo de trabajo iniciado en su terminal no escribe nada y muestra la línea para que se la des tú, y no se le anuncia un resumen ni un mensaje.",
+    "from": "1b4e07823075"
+  },
+  "chatgpt.only.queue": {
+    "text": "La cola no le da ninguna tarea: una tarea solo va a una terminal donde se ve un agente y está libre.",
+    "from": "6a80a3e587a3"
+  },
+  "chatgpt.only.resume": {
+    "text": "No hay Resume agent, ni lista de conversaciones pasadas, ni lista de cómo está configurado, ni diálogo para las herramientas de Aubergine.",
+    "from": "ce8c093c0018"
+  },
+  "chatgpt.only.move": {
+    "text": "<code>aubergine move</code> y <code>aubergine here --claude</code> solo traen Claude Code.",
+    "from": "66352f237ada"
+  },
+  "chatgpt.only.remind": {
+    "text": "No se le recuerda que ponga nombre a su terminal ni que mantenga un resumen.",
+    "from": "0b61446686d8"
+  },
+  "chatgpt.only.more": {
+    "text": "Todo eso está en la página de <a href=\"/claude/\">Claude Code</a>.",
+    "from": "0bd32ffbda24"
+  },
+  "chatgpt.browser.title": {
+    "text": "ChatGPT en un navegador",
+    "from": "586ec4475558"
+  },
+  "chatgpt.browser.text": {
+    "text": "ChatGPT en una pestaña del navegador es una página web, no un programa en una terminal, así que no se ejecuta en el lienzo.",
+    "from": "580874279183"
+  },
+  "chatgpt.mark": {
+    "text": "Aubergine no está afiliado a OpenAI. Codex y ChatGPT son marcas registradas de OpenAI.",
+    "from": "a897a2ac5a2d"
+  },
+  "install.meta.title": {
+    "text": "Cómo instalar Aubergine en macOS | Aubergine",
+    "from": "a8bd952c734f"
+  },
+  "install.meta.description": {
+    "text": "Instala Aubergine con un comando, inícialo y haz el recorrido de cinco minutos. Requisitos, qué cambia el instalador y soluciones a problemas habituales.",
+    "from": "abcd815ec344"
+  },
+  "install.crumb": {
+    "text": "Instalar",
+    "from": "569ca49f4aaf"
+  },
+  "install.title": {
+    "text": "Cómo instalar Aubergine",
+    "from": "71f80d2b2ec8"
+  },
+  "install.lead": {
+    "text": "Un comando lo instala y otro lo inicia. Unos cinco minutos, recorrido incluido.",
+    "from": "8924d3085c0c"
+  },
+  "install.req.title": {
+    "text": "Requisitos",
+    "from": "e0cdd07f6a27"
+  },
+  "install.req.os": {
+    "text": "macOS. Linux debería funcionar igual, pero aún no se ha probado.",
+    "from": "e896cb710692"
+  },
+  "install.req.tools": {
+    "text": "<a href=\"https://github.com/tmux/tmux\">tmux</a> 3.2 o posterior y Node.js 22 o posterior. El instalador también necesita pnpm.",
+    "from": "588e2ab2ee94"
+  },
+  "install.req.brew": {
+    "text": "Con <a href=\"https://brew.sh\">Homebrew</a>, una línea instala ambos (añade <code>pnpm</code> para el instalador):",
+    "from": "9c116b9ec828"
+  },
+  "install.steps.title": {
+    "text": "Instala e inicia",
+    "from": "945ef89608d4"
+  },
+  "install.steps.npm": {
+    "text": "<strong>Instala Aubergine</strong> desde npm (solo necesita tmux y Node.js):",
+    "from": "eea62c4639cd"
+  },
+  "install.steps.script": {
+    "text": "O con el instalador, que también necesita pnpm y compila desde el código fuente:",
+    "from": "d6b9bd23fe72"
+  },
+  "install.steps.start": {
+    "text": "<strong>Inícialo y abre tu navegador con la sesión iniciada.</strong>",
+    "from": "37654a734fd0"
+  },
+  "install.steps.tour": {
+    "text": "<strong>Haz el recorrido.</strong> Haz clic en <em>Show me around</em> en el centro del lienzo vacío. Crea un lienzo llamado «Demo» con unos cuantos agentes simulados y te guía en ocho pasos cortos. Nada de la demo es real, y <code>aubergine demo --remove</code> la quita.",
+    "from": "e7f179f7c61a"
+  },
+  "install.steps.read": {
+    "text": "¿Prefieres leer el script antes? Descárgalo, léelo y ejecuta <code>sh install.sh --dry-run</code> para ver qué haría sin cambiar nada.",
+    "from": "6a20dd49876a"
+  },
+  "install.changes.title": {
+    "text": "Qué cambia el instalador",
+    "from": "0563a99f51ff"
+  },
+  "install.changes.text": {
+    "text": "Solo dos cosas: la carpeta de instalación (<code>~/.aubergine</code>, o <code>AUBERGINE_HOME</code>) y un enlace llamado <code>aubergine</code> en una carpeta de tu <code>PATH</code> en la que puedas escribir. Lo comprueba todo antes y no cambia nada si falta algo.",
+    "from": "0a825e326d78"
+  },
+  "install.changes.not": {
+    "text": "<strong>No</strong> usa <code>sudo</code>, no edita los archivos de inicio de tu shell, no instala Node.js, pnpm ni tmux, y no toca tu carpeta de datos.",
+    "from": "2515db06f3ef"
+  },
+  "install.wrong.title": {
+    "text": "Si algo sale mal",
+    "from": "1a766f8f96ef"
+  },
+  "install.wrong.doctor": {
+    "text": "Ejecuta primero <code>aubergine doctor</code>. Comprueba las causas habituales.",
+    "from": "41b2c2485b07"
+  },
+  "install.wrong.see": {
+    "text": "Lo que ves",
+    "from": "fd4e554fab6a"
+  },
+  "install.wrong.do": {
+    "text": "Qué hacer",
+    "from": "f47f1edc44ed"
+  },
+  "install.wrong.signin.see": {
+    "text": "«This browser is not signed in yet» (este navegador aún no tiene la sesión iniciada)",
+    "from": "9f5b94b25ed4"
+  },
+  "install.wrong.signin.do": {
+    "text": "Abre una vez el enlace de inicio de sesión en ese navegador. <code>aubergine open --print</code> lo vuelve a imprimir.",
+    "from": "965c7c3ed508"
+  },
+  "install.wrong.tmux.see": {
+    "text": "Una página que dice que falta tmux o que es demasiado antiguo",
+    "from": "ef3468da7805"
+  },
+  "install.wrong.tmux.do": {
+    "text": "Instala o actualiza tmux (<code>brew install tmux</code>) y reinicia el servidor.",
+    "from": "9be03214def8"
+  },
+  "install.wrong.port.see": {
+    "text": "El servidor no arranca porque el puerto está ocupado",
+    "from": "aa6f2b6e17dc"
+  },
+  "install.wrong.port.do": {
+    "text": "Usa otro puerto: <code>AUBERGINE_PORT=4700 aubergine start</code>.",
+    "from": "25b1179a84ca"
+  },
+  "install.wrong.path.do": {
+    "text": "El enlace no está en tu <code>PATH</code>. El instalador imprime la línea que debes añadir al archivo de inicio de tu shell.",
+    "from": "c15d51fbb74f"
+  },
+  "install.wrong.badges.see": {
+    "text": "Una terminal no muestra indicadores de estado",
+    "from": "00220a528dae"
+  },
+  "install.wrong.badges.do": {
+    "text": "El estado necesita zsh, y una sesión creada antes de una actualización conserva su shell antigua. Apárcala e inicia una nueva.",
+    "from": "a82cc898a1f3"
+  },
+  "install.later.title": {
+    "text": "Detener, actualizar, desinstalar",
+    "from": "8c6be2046c96"
+  },
+  "install.later.stop": {
+    "text": "<strong>Detén</strong> el servidor con Ctrl+C. Tus terminales siguen en marcha; vuelve a iniciar el servidor y recarga la página para recuperarlas.",
+    "from": "1ef7650944a8"
+  },
+  "install.later.update": {
+    "text": "<strong>Actualiza</strong>, si instalaste con npm, con <code>npm install -g @meatgarden/aubergine@latest</code>; si usaste el instalador, con <code>aubergine update</code>. Después reinicia el servidor.",
+    "from": "a07a85ca11ea"
+  },
+  "install.later.uninstall": {
+    "text": "<strong>Desinstala</strong> con <code>aubergine uninstall</code>. Quita el enlace y, tras preguntar, la copia que hizo el instalador. Nunca borra tus datos y nunca cierra tus terminales.",
+    "from": "6d77ba78aea3"
+  },
+  "install.later.login": {
+    "text": "<strong>Inícialo al arrancar la sesión</strong> con <code>aubergine service install</code>, y así solo tendrás que abrir el navegador.",
+    "from": "e90077683d1e"
+  },
+  "install.next.title": {
+    "text": "Siguiente",
+    "from": "1ff57a29d7c9"
+  },
+  "install.next.text": {
+    "text": "Lee <a href=\"/run-multiple-coding-agents/\">cómo ejecutar varios agentes de programación a la vez</a>, o las <a href=\"/guides/\">guías</a>. La referencia completa está en el <a href=\"https://github.com/thirstyeggplant/aubergine#readme\">README</a>.",
+    "from": "e0f26d3bf925"
+  },
+  "install.ld.howto": {
+    "text": "Cómo instalar e iniciar Aubergine",
+    "from": "7a2473f8500b"
+  },
+  "install.ld.howtoAbout": {
+    "text": "Instala Aubergine en macOS con un comando, inícialo y haz el recorrido.",
+    "from": "e0aeedb8e5ed"
+  },
+  "install.ld.s1": {
+    "text": "Instala los requisitos",
+    "from": "058debbaf60f"
+  },
+  "install.ld.s2": {
+    "text": "Instala Aubergine",
+    "from": "733a8757545c"
+  },
+  "install.ld.s3": {
+    "text": "Inícialo y abre el navegador",
+    "from": "8c7a8d4cca8c"
+  },
+  "install.ld.s4": {
+    "text": "Haz el recorrido",
+    "from": "a83c4366d2df"
+  },
+  "install.ld.q1": {
+    "text": "¿Qué cambia el instalador de Aubergine?",
+    "from": "3abbf9c3de69"
+  },
+  "install.ld.a1": {
+    "text": "Dos cosas: la carpeta de instalación (~/.aubergine, o AUBERGINE_HOME) y un enlace llamado aubergine en tu PATH. Nunca usa sudo, nunca edita los archivos de inicio de tu shell y nunca instala Node.js, pnpm ni tmux.",
+    "from": "fc93852fb9a6"
+  },
+  "install.ld.q2": {
+    "text": "¿Cómo actualizo Aubergine?",
+    "from": "ac62d764ea7a"
+  },
+  "install.ld.a2": {
+    "text": "Si lo instalaste con npm: ejecuta npm install -g @meatgarden/aubergine@latest. Si lo instalaste con el instalador: ejecuta aubergine update, o vuelve a ejecutar el instalador. Después reinicia el servidor.",
+    "from": "96bfcbba99a6"
+  },
+  "install.ld.q3": {
+    "text": "¿Cómo desinstalo Aubergine?",
+    "from": "5dbaf4c141c9"
+  },
+  "install.ld.a3": {
+    "text": "Ejecuta aubergine uninstall. Quita el enlace y, tras preguntar, la copia que hizo el instalador. Nunca borra tus datos ni cierra tus terminales.",
+    "from": "829813dbf528"
+  },
+  "install.ld.q4": {
+    "text": "¿Funciona Aubergine en Linux o Windows?",
+    "from": "e3df2a3fd915"
+  },
+  "install.ld.a4": {
+    "text": "Linux debería funcionar, pero aún no se ha probado. Windows no está soportado.",
+    "from": "b8b7b1d1037d"
+  },
+  "guides.meta.title": {
+    "text": "Guías de Aubergine | Aubergine",
+    "from": "0d501fb6af2e"
+  },
+  "guides.meta.description": {
+    "text": "Guías para ejecutar varios agentes de programación con Aubergine: la visión general, Claude Code y Codex, las copias de trabajo, y la cola y las programaciones.",
+    "from": "813ebf5cbbed"
+  },
+  "guides.crumb": {
+    "text": "Guías",
+    "from": "572cd72feb9a"
+  },
+  "guides.title": {
+    "text": "Guías",
+    "from": "572cd72feb9a"
+  },
+  "guides.lead": {
+    "text": "Guías cortas y prácticas. La referencia completa es el <a href=\"https://github.com/thirstyeggplant/aubergine#readme\">README</a>.",
+    "from": "4235a66ec40d"
+  },
+  "guides.install.name": {
+    "text": "Instalar Aubergine",
+    "from": "733a8757545c"
+  },
+  "guides.install.text": {
+    "text": "Requisitos, el instalador de una línea, qué cambia y soluciones a problemas habituales.",
+    "from": "0c229f404056"
+  },
+  "guides.several.name": {
+    "text": "Ejecutar varios agentes de programación a la vez",
+    "from": "d9bedb06d9bf"
+  },
+  "guides.several.text": {
+    "text": "El lienzo, el contador de espera, la cola, las copias de trabajo y los flujos de trabajo en un solo recorrido.",
+    "from": "432d38d0ca9c"
+  },
+  "guides.claude.name": {
+    "text": "Claude Code en Aubergine",
+    "from": "f05972fd315a"
+  },
+  "guides.claude.text": {
+    "text": "Lo que Aubergine hace por sí mismo para Claude Code, y dónde está cada cosa.",
+    "from": "f77c6acef73f"
+  },
+  "guides.codex.name": {
+    "text": "Codex y ChatGPT",
+    "from": "38c13bed7dca"
+  },
+  "guides.codex.text": {
+    "text": "Codex en una terminal como cualquier programa, qué puede informar y qué está hecho solo para Claude Code.",
+    "from": "406a9eebc6ae"
+  },
+  "guides.copies.name": {
+    "text": "Copias de trabajo",
+    "from": "9660dc116131"
+  },
+  "guides.copies.text": {
+    "text": "Dale a cada agente su propio checkout y su propia rama para que dos agentes nunca editen los mismos archivos.",
+    "from": "58872d0caca2"
+  },
+  "guides.queue.name": {
+    "text": "La cola, For you y las programaciones",
+    "from": "61c48ccc941d"
+  },
+  "guides.queue.text": {
+    "text": "Reparte el trabajo una vez, mira todo lo que te espera y ejecuta tareas a horas fijas.",
+    "from": "28336b44a14a"
+  },
+  "guides.security.name": {
+    "text": "Seguridad y privacidad",
+    "from": "1418baab9c29"
+  },
+  "guides.security.text": {
+    "text": "Qué está protegido y qué no.",
+    "from": "87046dc292ef"
+  },
+  "guides.faq.name": {
+    "text": "Preguntas frecuentes",
+    "from": "dbc468a14b60"
+  },
+  "guides.faq.text": {
+    "text": "Respuestas cortas a preguntas habituales.",
+    "from": "ba6e629d77f3"
+  },
+  "several.meta.title": {
+    "text": "Cómo ejecutar varios agentes de programación a la vez | Aubergine",
+    "from": "edfa22b644ca"
+  },
+  "several.meta.description": {
+    "text": "Pon cada agente de programación en su propia terminal en un solo lienzo, mira cuál te está esperando, reparte el trabajo desde una cola y mantén separados los cambios de cada agente.",
+    "from": "0886bd4868f2"
+  },
+  "several.crumb": {
+    "text": "Varios agentes a la vez",
+    "from": "8b0dc326e0f4"
+  },
+  "several.title": {
+    "text": "Cómo ejecutar varios agentes de programación a la vez",
+    "from": "fcc048eb4346"
+  },
+  "several.lead": {
+    "text": "Dos agentes son fáciles. Cinco son un caos: ¿cuál está atascado, cuál te está esperando, cuál cambió ese archivo? Aubergine está hecho para ese momento. Se ejecuta en tu propio ordenador.",
+    "from": "66c0ad369837"
+  },
+  "several.canvas.title": {
+    "text": "1. Dale a cada agente una terminal en un solo lienzo",
+    "from": "4866382ee0cb"
+  },
+  "several.canvas.text": {
+    "text": "Haz clic en <strong>New terminal</strong>, arriba de la lista de terminales (o pulsa <code>N</code>), e inicia un agente en ella. Arrastra las terminales por su barra de título, cámbialas de tamaño y agrúpalas en marcos. El trabajo relacionado va en un lienzo; los trabajos separados van en lienzos (pestañas) o <em>proyectos</em> distintos, cada uno con sus propias terminales, cola y programaciones.",
+    "from": "1670aca324d5"
+  },
+  "several.canvas.tmux": {
+    "text": "Cada terminal es una shell real en una sesión de tmux. Cierra el navegador, o detén Aubergine, y tus agentes siguen en marcha.",
+    "from": "fcd6a03136f7"
+  },
+  "several.waits.title": {
+    "text": "2. Mira qué agente te necesita",
+    "from": "02af5cc81964"
+  },
+  "several.waits.text": {
+    "text": "Cada terminal muestra si está ocupada, inactiva o esperándote. Ese estado viene de hooks en tu shell y de los propios agentes, no de leer la pantalla. El contador junto a <strong>For you</strong> (para ti), arriba, y la tecla <code>W</code> te llevan directamente a la siguiente que está esperando.",
+    "from": "aa2e391970e3"
+  },
+  "several.waits.foryou": {
+    "text": "Una sola lista, <strong>For you</strong>, reúne todo lo que espera a una persona: preguntas, ejecuciones que aprobar, tareas terminadas que revisar y las que fallaron, con el motivo.",
+    "from": "0791b2b7f30f"
+  },
+  "several.queue.title": {
+    "text": "3. Reparte el trabajo desde una cola",
+    "from": "876879f17f0c"
+  },
+  "several.queue.text": {
+    "text": "Escribe una tarea una vez y ponla en la <a href=\"/queue-and-schedules/\">cola</a>. Un agente libre la toma cuando tú lo digas, con un límite de cuántas se ejecutan a la vez. Para el trabajo que se repite, define una programación. Los agentes pueden proponer tareas y hacerte preguntas, pero nada empieza hasta que lo aceptas.",
+    "from": "65372959c515"
+  },
+  "several.apart.title": {
+    "text": "4. Mantén separados los cambios de cada agente",
+    "from": "819cc99b8d5c"
+  },
+  "several.apart.text": {
+    "text": "Dos agentes en una misma carpeta editan los mismos archivos. Inicia cada uno en su propia <a href=\"/working-copies/\">copia de trabajo</a>: un checkout aparte en su propia rama, para que puedas leer el trabajo de cada agente por separado. Aubergine nunca hace merge, push ni rebase por ti.",
+    "from": "5f5f23de12b5"
+  },
+  "several.steps.title": {
+    "text": "5. Dales pasos a los agentes y decide en los puntos de control",
+    "from": "33923fa2da4c"
+  },
+  "several.steps.text": {
+    "text": "Un flujo de trabajo es una lista ordenada de pasos que sigue un agente, con una franja que muestra dónde está. Un paso puede esperar a que lo apruebes o lo devuelvas. Todas las ejecuciones en curso aparecen en un solo tablero.",
+    "from": "f0912196c0fb"
+  },
+  "several.not.title": {
+    "text": "Lo que no hace",
+    "from": "b3a53baf5dfd"
+  },
+  "several.not.model": {
+    "text": "No llama a ningún modelo ni elige uno por ti. Los agentes son tuyos.",
+    "from": "0735098d7a82"
+  },
+  "several.not.asyou": {
+    "text": "No impide que un agente haga algo que podrías hacer tú. Los agentes se ejecutan como tú. Mira <a href=\"/security/\">seguridad</a> para saber qué está protegido y qué no.",
+    "from": "a24f01fbd135"
+  },
+  "several.not.one": {
+    "text": "Hoy se ejecuta en un solo ordenador. Compartir un lienzo con otras personas y ejecutar agentes en la nube están en la <a href=\"/roadmap/\">hoja de ruta</a>, y no están hechos.",
+    "from": "ac3140a055a6"
+  },
+  "several.install": {
+    "text": "Instalar Aubergine",
+    "from": "733a8757545c"
+  },
+  "several.ld.q1": {
+    "text": "¿Cómo ejecuto varios agentes de programación a la vez?",
+    "from": "42c519b36444"
+  },
+  "several.ld.a1": {
+    "text": "Pon cada agente en su propia terminal en un lienzo de Aubergine. El lienzo muestra cuáles están ocupados, inactivos o esperándote, y una lista llamada For you reúne todas las preguntas y aprobaciones.",
+    "from": "b878f9a6290f"
+  },
+  "several.ld.q2": {
+    "text": "¿Cómo evito que dos agentes editen los mismos archivos?",
+    "from": "50c7b0247257"
+  },
+  "several.ld.a2": {
+    "text": "Inicia cada terminal en su propia copia de trabajo: su propio checkout del repositorio en su propia rama. Aubergine nunca hace merge ni push por ti.",
+    "from": "7da5b34834bf"
+  },
+  "several.ld.q3": {
+    "text": "¿Funciona con cualquier agente de programación?",
+    "from": "a17347c2058b"
+  },
+  "several.ld.a3": {
+    "text": "Sí. Aubergine ejecuta terminales normales, así que cualquier agente de línea de comandos puede ejecutarse en una. Lo que Aubergine hace por sí mismo para un agente está hecho para Claude Code; cualquier otro agente puede informar mediante los comandos aubergine.",
+    "from": "60142c410708"
+  },
+  "copies.meta.title": {
+    "text": "Dos agentes de programación en un repositorio con copias de trabajo | Aubergine",
+    "from": "22fa024200af"
+  },
+  "copies.meta.description": {
+    "text": "Una copia de trabajo le da a cada agente su propio checkout y su propia rama de un repositorio, para que dos agentes nunca editen los mismos archivos y puedas leer el trabajo de cada uno por separado.",
+    "from": "a293deb1c990"
+  },
+  "copies.crumb": {
+    "text": "Copias de trabajo",
+    "from": "9660dc116131"
+  },
+  "copies.title": {
+    "text": "Dos agentes, un repositorio: copias de trabajo",
+    "from": "acd55dc99e6b"
+  },
+  "copies.lead": {
+    "text": "Normalmente cada terminal trabaja en tu carpeta real. Entonces dos agentes en un mismo repositorio editan los mismos archivos, y no puedes saber qué cambio es de quién. Una copia de trabajo le da a cada terminal su propio checkout, en su propia rama.",
+    "from": "bca0754aab05"
+  },
+  "copies.start.title": {
+    "text": "Inicia una terminal en una copia de trabajo",
+    "from": "288cfa5a3c70"
+  },
+  "copies.start.s1": {
+    "text": "Pulsa <strong>▾</strong> al final de <strong>New terminal</strong>, arriba de la lista de terminales, y luego <strong>Shell in a folder or a working copy…</strong>.",
+    "from": "1b1addf2a211"
+  },
+  "copies.start.s2": {
+    "text": "Indica la carpeta y elige <strong>In its own working copy</strong> (en su propia copia de trabajo). La opción solo se ofrece donde es posible, y dice por qué donde no lo es: no es un repositorio Git, es un repositorio bare o aún no tiene ningún commit.",
+    "from": "8299d8f71e82"
+  },
+  "copies.start.cli": {
+    "text": "Desde una terminal, lo mismo:",
+    "from": "2e409315b41b"
+  },
+  "copies.get.title": {
+    "text": "Qué obtienes",
+    "from": "41a1acbef296"
+  },
+  "copies.get.text": {
+    "text": "Un worktree de Git en una carpeta que Aubergine guarda dentro de su carpeta de datos, nunca dentro de tu repositorio, en una rama nueva llamada <code>aubergine/&lt;terminal name&gt;-&lt;six characters&gt;</code>. Parte del commit en el que está tu checkout, y la terminal empieza en la misma subcarpeta en la que estabas. Tu propio checkout nunca se cambia: ni sus archivos, ni lo que está en el staging, ni la rama que tienes activa.",
+    "from": "c06801122abd"
+  },
+  "copies.get.not": {
+    "text": "<strong>No se trasladan:</strong> tus cambios sin commit (no se hace stash ni commit de nada por ti), ni los archivos que Git ignora o no sigue, como las dependencias instaladas y los ajustes locales. Un proyecto que necesita un paso de instalación lo necesita de nuevo en la copia de trabajo.",
+    "from": "131b661ca520"
+  },
+  "copies.read.title": {
+    "text": "Lee lo que cambió un agente",
+    "from": "d455bd023725"
+  },
+  "copies.read.text": {
+    "text": "Una terminal en una copia de trabajo muestra en su barra de título su rama y el número de archivos que difieren. Haz clic ahí para ver los archivos cambiados, añadidos y eliminados, con el trabajo que no está en ningún commit marcado, y la diferencia, de solo lectura, de cualquier archivo que elijas.",
+    "from": "20954eec8106"
+  },
+  "copies.end.title": {
+    "text": "Cuando la terminal termina",
+    "from": "250be513dcc7"
+  },
+  "copies.end.text": {
+    "text": "Una copia de trabajo nunca se elimina solo porque su terminal haya terminado. Tú eliges:",
+    "from": "b2d17861d25a"
+  },
+  "copies.end.branch": {
+    "text": "<strong>Keep the branch, remove the folder</strong> (conservar la rama, eliminar la carpeta), cuando todo está en commits.",
+    "from": "5d0203e6fc80"
+  },
+  "copies.end.keep": {
+    "text": "<strong>Keep everything.</strong> (Conservarlo todo). Se queda en la lista, indicando que su terminal ya no existe.",
+    "from": "a03d07a03a5a"
+  },
+  "copies.end.discard": {
+    "text": "<strong>Discard both</strong> (descartar ambas), que pregunta una segunda vez cuando la copia contiene trabajo que no existe en ningún otro sitio.",
+    "from": "6ae2c654ddf6"
+  },
+  "copies.end.never": {
+    "text": "Aubergine nunca hace merge, push ni rebase. Lo que hagas con una rama conservada es cosa tuya.",
+    "from": "e9af3c7c1ccd"
+  },
+  "copies.git.title": {
+    "text": "Qué ejecuta Aubergine en tu repositorio",
+    "from": "3a32836a0505"
+  },
+  "copies.git.text": {
+    "text": "Aubergine usa el <code>git</code> de tu <code>PATH</code> (2.31 o posterior). En cada comando de Git que inicia, no se ejecuta ningún hook, nada pide confirmación, nada sale a la red y no se descargan los submódulos. Los filtros que nombra tu propia configuración de Git, como el almacenamiento de archivos grandes, sí se ejecutan, igual que en tu propio <code>git status</code>.",
+    "from": "b36bf6176964"
+  },
+  "copies.sandbox.title": {
+    "text": "No es un sandbox",
+    "from": "a4e45939dc38"
+  },
+  "copies.sandbox.text": {
+    "text": "Una copia de trabajo mantiene el trabajo separado. No encierra a un agente: el agente se ejecuta como tú y puede leer y cambiar cualquier archivo que puedas tú, incluido tu propio checkout. No confíes en ella para frenar a un agente que haga algo mal. Mira <a href=\"/security/\">seguridad</a>.",
+    "from": "12f777412114"
+  },
+  "copies.related": {
+    "text": "Relacionado: <a href=\"/run-multiple-coding-agents/\">ejecutar varios agentes de programación a la vez</a> · <a href=\"/queue-and-schedules/\">la cola y las programaciones</a> (una tarea iniciada en una terminal nueva recibe una copia de trabajo propia cuando la carpeta está en un repositorio).",
+    "from": "489f01eef5df"
+  },
+  "copies.ld.howto": {
+    "text": "Cómo ejecutar un agente en su propia copia de trabajo",
+    "from": "6a1451788037"
+  },
+  "copies.ld.howtoAbout": {
+    "text": "Dale a una terminal su propio checkout y su propia rama de un repositorio.",
+    "from": "64a170729926"
+  },
+  "copies.ld.s1": {
+    "text": "Abre el diálogo de nueva terminal",
+    "from": "5bde830139dc"
+  },
+  "copies.ld.s1text": {
+    "text": "Pulsa la flecha al final de New terminal, arriba de la lista de terminales, y luego Shell in a folder or a working copy.",
+    "from": "32bded457fe9"
+  },
+  "copies.ld.s2": {
+    "text": "Elige In its own working copy",
+    "from": "63c9214f2664"
+  },
+  "copies.ld.s2text": {
+    "text": "Indica la carpeta, que debe estar en un repositorio Git con al menos un commit, y elige In its own working copy.",
+    "from": "e0d93261f9f0"
+  },
+  "copies.ld.s3": {
+    "text": "O usa la línea de comandos",
+    "from": "0ee1f2056fa4"
+  },
+  "copies.ld.s4": {
+    "text": "Lee lo que cambió",
+    "from": "bab32518bbd7"
+  },
+  "copies.ld.s4text": {
+    "text": "Haz clic en la rama, en la barra de título de la terminal, para ver los archivos cambiados, añadidos y eliminados, y la diferencia de cada archivo.",
+    "from": "357674609610"
+  },
+  "copies.ld.s5": {
+    "text": "Decide qué pasa con ella",
+    "from": "b2b7c44a3193"
+  },
+  "copies.ld.s5text": {
+    "text": "Cuando la terminal termina, conserva la rama y elimina la carpeta, consérvalo todo o descarta ambas.",
+    "from": "9fb24490ab62"
+  },
+  "copies.ld.q1": {
+    "text": "¿Qué es una copia de trabajo en Aubergine?",
+    "from": "c29a3dde79ad"
+  },
+  "copies.ld.a1": {
+    "text": "Un worktree de Git: un segundo checkout del mismo repositorio, en su propia rama nueva, guardado en la carpeta de datos de Aubergine y nunca dentro de tu repositorio.",
+    "from": "ece33bda8bd9"
+  },
+  "copies.ld.q2": {
+    "text": "¿Incluye una copia de trabajo mis cambios sin commit?",
+    "from": "e87c77e35caf"
+  },
+  "copies.ld.a2": {
+    "text": "No. No se trasladan ni se tocan. Haz commit antes si la nueva terminal debe tenerlos.",
+    "from": "fd51d7c79f2a"
+  },
+  "copies.ld.q3": {
+    "text": "¿Hace Aubergine merge o push de la rama de una copia de trabajo?",
+    "from": "5ed71f558894"
+  },
+  "copies.ld.a3": {
+    "text": "No. Aubergine nunca hace merge, push ni rebase, y nunca cambia la rama que tienes activa.",
+    "from": "c35bdaa3b9fd"
+  },
+  "copies.ld.q4": {
+    "text": "¿Es una copia de trabajo un sandbox?",
+    "from": "43526bb8ae8a"
+  },
+  "copies.ld.a4": {
+    "text": "No. Mantiene el trabajo separado; no encierra a un agente. El agente se ejecuta como tú y aun así puede leer y cambiar cualquier archivo que puedas tú.",
+    "from": "8b760eb225ac"
+  },
+  "queue.meta.title": {
+    "text": "La cola, la lista For you y las programaciones | Aubergine",
+    "from": "aaf91b58a021"
+  },
+  "queue.meta.description": {
+    "text": "Escribe una tarea una vez y deja que la tome un agente libre, mira en una sola lista todo lo que te espera y ejecuta tareas a horas fijas con programaciones.",
+    "from": "1eede965ade8"
+  },
+  "queue.crumb": {
+    "text": "Cola y programaciones",
+    "from": "403b3a701d15"
+  },
+  "queue.title": {
+    "text": "La cola, «For you» y las programaciones",
+    "from": "7f3e0c94e636"
+  },
+  "queue.lead": {
+    "text": "Dos listas que se alimentan entre sí: la cola guarda el trabajo para los agentes, y <em>For you</em> (para ti) guarda todo lo que espera a una persona. Las programaciones añaden tareas a la cola a horas fijas.",
+    "from": "b208af706f74"
+  },
+  "queue.queue.title": {
+    "text": "La cola",
+    "from": "0d95744a342b"
+  },
+  "queue.queue.text": {
+    "text": "Abre <strong>Runs</strong> (ejecuciones) arriba de la página (o pulsa <code>Q</code>) y haz clic en <strong>Add task</strong> (añadir tarea). Una tarea tiene un título, qué hacer y, opcionalmente, una carpeta, un flujo de trabajo y quién puede tomarla. Por defecto puede tomarla cualquier terminal donde haya un agente libre; puedes indicar una terminal concreta, o hacer que se inicie para ella una terminal de agente nueva, en una copia de trabajo propia cuando la carpeta está en un repositorio.",
+    "from": "989827036836"
+  },
+  "queue.queue.next": {
+    "text": "<strong>Start next</strong> (iniciar la siguiente) inicia la primera tarea que alguien puede tomar ahora. A una shell sin más nunca se le da una tarea.",
+    "from": "ae7829bbd4d8"
+  },
+  "queue.queue.limit": {
+    "text": "<strong>At most N at once</strong> (como mucho N a la vez), tres salvo que lo cambies. <strong>Hold</strong> (retener) detiene los nuevos inicios y no toca nada de lo que está en marcha.",
+    "from": "e2f51053f100"
+  },
+  "queue.queue.itself": {
+    "text": "<strong>Start by itself</strong> (iniciar sola) está desactivado hasta que lo actives. Nada comprueba nada con un temporizador.",
+    "from": "c2a89a6c6733"
+  },
+  "queue.queue.order": {
+    "text": "El orden lo decides tú: arrastra una tarea o usa las flechas del teclado.",
+    "from": "e3aa94f38bbc"
+  },
+  "queue.queue.follows": {
+    "text": "Una tarea sigue a su ejecución: <em>needs you</em> (te necesita) mientras una ejecución espera aprobación, <em>done</em> (hecha) cuando termina, <em>failed</em> (fallida) con una frase cuando se detiene. Nada se reintenta por sí solo.",
+    "from": "a1dc88999acf"
+  },
+  "queue.pic.caption": {
+    "text": "For you en la página Runs: una pregunta, un borrador que leer y una lista entregada, cada uno con lo que es.",
+    "from": "b25234fa54ca"
+  },
+  "queue.pic.alt": {
+    "text": "La columna Waiting for you de la página Runs: un cuadro para añadir un pendiente, y después la pregunta de un agente simulado, un borrador que leer y una lista entregada.",
+    "from": "9bc144e9c95e"
+  },
+  "queue.foryou.title": {
+    "text": "For you",
+    "from": "143134f93925"
+  },
+  "queue.foryou.text": {
+    "text": "Terminales con una pregunta, ejecuciones que aprobar o bloqueadas, borradores e instalaciones que leer, tareas propuestas para la cola, tareas terminadas y fallidas, listas que ha entregado un agente y copias de trabajo cuya terminal ya no existe. El contador junto a For you, arriba, y «next waiting» son la misma lista. La mayor parte se recopila, no se escribe: un elemento desaparece cuando la cosa en sí está hecha.",
+    "from": "f0987632af6e"
+  },
+  "queue.foryou.propose": {
+    "text": "Un agente que encuentra trabajo que no debería hacer ahora puede proponer una tarea, y uno que necesita a una persona puede preguntarte:",
+    "from": "6cab942ae32c"
+  },
+  "queue.foryou.land": {
+    "text": "Ambas cosas llegan a tu lista. Una propuesta no inicia nada hasta que la aceptas.",
+    "from": "b9045f914e0b"
+  },
+  "queue.schedules.title": {
+    "text": "Programaciones",
+    "from": "221ff19c904c"
+  },
+  "queue.schedules.text": {
+    "text": "Una programación es una hora del día, unos días de la semana, algo que ejecutar y un sitio donde ejecutarlo. Cuando llega su hora, añade una tarea a la cola, y la cola la inicia. En <strong>Schedules</strong> (programaciones), en la página Runs, o con <code>aubergine schedule</code>. La hora es la del reloj de este ordenador; no hay expresiones, y nada se repite más de una vez al día.",
+    "from": "a43d6965e12f"
+  },
+  "queue.schedules.run": {
+    "text": "<code>aubergine schedule run</code> prueba una programación ahora.",
+    "from": "433ccf3d7204"
+  },
+  "queue.plan.title": {
+    "text": "Cuando las cosas no salen como estaba previsto",
+    "from": "0474d0b379f1"
+  },
+  "queue.plan.awake": {
+    "text": "El ordenador debe estar despierto y Aubergine en marcha. Una hora que pasó mientras dormía se ejecuta <strong>una vez</strong> cuando vuelve, marcada como tardía, si tiene menos de seis horas. Si no, se marca como <strong>perdida</strong>.",
+    "from": "da52cc0d963c"
+  },
+  "queue.plan.skipped": {
+    "text": "Mientras la tarea anterior de una programación siga esperando o en marcha, no añade otra, y dice que se la saltó.",
+    "from": "f076f68e0964"
+  },
+  "queue.plan.gone": {
+    "text": "Si algo que nombra ya no existe (la terminal, el paso, el lienzo), no se ejecuta, y un elemento de tu lista lo dice.",
+    "from": "bc76023361ed"
+  },
+  "queue.rules.title": {
+    "text": "Reglas",
+    "from": "4228aeb07c41"
+  },
+  "queue.rules.text": {
+    "text": "En <strong>Rules</strong> (reglas) puedes decir «cuando una tarea esté hecha, falle o me necesite, o una programación se dispare o se pierda, avísame o ejecuta un paso guardado». Las reglas solo las escribes tú: ningún programa ni ningún agente puede añadir o cambiar una, y una regla no puede dispararse a sí misma.",
+    "from": "b4ec8a0da4e6"
+  },
+  "queue.rules.nothing": {
+    "text": "Aubergine no llama a ningún modelo ni guarda credenciales de ninguna app. Una tarea o una programación solo inicia una ejecución; el agente que la toma hace el trabajo con sus propias herramientas.",
+    "from": "635fa52c391c"
+  },
+  "queue.related": {
+    "text": "Relacionado: <a href=\"/working-copies/\">copias de trabajo</a> · <a href=\"/run-multiple-coding-agents/\">ejecutar varios agentes de programación a la vez</a>",
+    "from": "a1b112595d4a"
+  },
+  "queue.ld.headline": {
+    "text": "La cola, la lista For you y las programaciones",
+    "from": "e7aa7f29e008"
+  },
+  "queue.ld.q1": {
+    "text": "¿Qué es la cola en Aubergine?",
+    "from": "f483ddf62dfe"
+  },
+  "queue.ld.a1": {
+    "text": "Trabajo para los agentes. Escribes una tarea una vez, con un título, detalles y, opcionalmente, una carpeta, un flujo de trabajo y quién puede tomarla. Un agente libre la toma cuando tú lo digas.",
+    "from": "3d99add6ea00"
+  },
+  "queue.ld.q2": {
+    "text": "¿Qué es la lista For you?",
+    "from": "10295c2a2707"
+  },
+  "queue.ld.a2": {
+    "text": "Todo lo que espera a una persona en un solo sitio: terminales con una pregunta, ejecuciones que aprobar, borradores que leer, tareas terminadas y fallidas, y listas que han entregado los agentes.",
+    "from": "4167a6eb1070"
+  },
+  "queue.ld.q3": {
+    "text": "¿Puede un agente empezar a trabajar por su cuenta?",
+    "from": "a9a38a49db05"
+  },
+  "queue.ld.a3": {
+    "text": "Un agente puede proponer una tarea o preguntarte algo, pero una propuesta no inicia nada hasta que la aceptas.",
+    "from": "75c93148284c"
+  },
+  "queue.ld.q4": {
+    "text": "¿Qué le pasa a una programación cuando mi ordenador está en reposo?",
+    "from": "09ef41a88ccf"
+  },
+  "queue.ld.a4": {
+    "text": "Nada despierta al ordenador. Una hora que pasó mientras dormía se ejecuta una vez cuando vuelve, marcada como tardía, si tiene menos de seis horas. Si es más antigua, se marca como perdida.",
+    "from": "28be43f4ec53"
+  },
+  "security.meta.title": {
+    "text": "Seguridad y privacidad | Aubergine",
+    "from": "ceea0328314d"
+  },
+  "security.meta.description": {
+    "text": "Aubergine se ejecuta solo en tu ordenador, escucha en 127.0.0.1, comprueba cada petición, limita el alcance de cada token y dice claramente contra qué no protege.",
+    "from": "d44a642ead3b"
+  },
+  "security.crumb": {
+    "text": "Seguridad",
+    "from": "8f6fb4eb7f42"
+  },
+  "security.title": {
+    "text": "Seguridad y privacidad",
+    "from": "1418baab9c29"
+  },
+  "security.lead": {
+    "text": "Lo que hace Aubergine para proteger tus terminales y, igual de importante, lo que no hace. En resumen: es local, pregunta antes de actuar en nombre de un agente, y los agentes siguen ejecutándose como tú.",
+    "from": "1026aabf288c"
+  },
+  "security.local.title": {
+    "text": "Todo se queda en tu ordenador",
+    "from": "793ac3d2607e"
+  },
+  "security.local.bind": {
+    "text": "El servidor se enlaza solo a <code>127.0.0.1</code>. En cada petición, y en cada upgrade de WebSocket, se comprueban <code>Host</code> y <code>Origin</code>, y el navegador debe tener una cookie de acceso.",
+    "from": "6a7b211aac87"
+  },
+  "security.local.elsewhere": {
+    "text": "Usar Aubergine desde otro dispositivo está desactivado hasta que lo configures: algo en el mismo ordenador le lleva HTTPS bajo un nombre que escribes en los ajustes, y cada navegador se empareja con un código de un solo uso y se puede revocar. Un dispositivo emparejado puede hacer todo lo que puede hacer el propietario. <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/remote.md\">Usar Aubergine desde otro sitio</a> explica cómo.",
+    "from": "31531be51b00"
+  },
+  "security.local.network": {
+    "text": "Aubergine no llama a ningún modelo ni inicia ninguna petición de red propia, con dos excepciones: descargar una fuente de la biblioteca (una dirección Git) cuando <em>tú</em> lo pides, y preguntar a tu propia herramienta <code>gh</code>, donde está instalada y con la sesión iniciada, por la pull request de la rama de una terminal.",
+    "from": "09a9d3b11a3f"
+  },
+  "security.local.notify": {
+    "text": "Las notificaciones de escritorio vienen de la página abierta. Nada sale de tu ordenador.",
+    "from": "a061f94decff"
+  },
+  "security.callers.title": {
+    "text": "Tres tipos de llamante, cada uno juzgado por separado",
+    "from": "70f1b55254c0"
+  },
+  "security.callers.text": {
+    "text": "Cada petición se comprueba contra lo que el llamante puede hacer antes de buscar nada, así que un llamante sin permiso no averigua nada por la respuesta. Los llamantes son tú (con la sesión iniciada en el navegador), la sesión de un agente y un token de API.",
+    "from": "c126625e9b6c"
+  },
+  "security.callers.scopes": {
+    "text": "<strong>Los tokens de API tienen alcances.</strong> El secreto se muestra una vez y nunca se guarda; solo se conserva un hash. Las llamadas hechas con un token van a un registro de actividad: quién, qué y cómo terminó, nunca el secreto y nunca lo que se envió.",
+    "from": "4c7141504f63"
+  },
+  "security.callers.never": {
+    "text": "<strong>Hay cosas que ningún token puede hacer nunca:</strong> crear o revocar tokens, leer el registro de actividad, cambiar los ajustes, y nada que tenga que ver con terminales fuera de Aubergine.",
+    "from": "72b0d531789b"
+  },
+  "security.callers.terminal": {
+    "text": "<strong>El acceso a las terminales son dos alcances distintos</strong>, uno para leer y otro para escribir, cada uno limitado a las sesiones que elijas. Puedes marcar una terminal como <em>people only</em> (solo personas) para cerrarla a todos los tokens.",
+    "from": "25a56b3d0365"
+  },
+  "security.callers.agent": {
+    "text": "<strong>La credencial propia de un agente es limitada.</strong> Puede marcar su propia atención, añadir a sus propias notas, informar de su propio estado y leer la ejecución en la que está. No puede llegar a otras terminales, lienzos ni tokens.",
+    "from": "e256c4165a46"
+  },
+  "security.alone.title": {
+    "text": "Lo que un agente no puede hacer solo",
+    "from": "03326de9b26e"
+  },
+  "security.alone.draft": {
+    "text": "Lo que escribe un agente o un programa (un flujo de trabajo, un paso) llega como un <strong>borrador</strong> que tú revisas. Aceptarlo te corresponde solo a ti.",
+    "from": "4170ed1f1019"
+  },
+  "security.alone.person": {
+    "text": "Un paso que espera a una persona solo puede aprobarlo o devolverlo una persona. Las reglas, las programaciones y la demo son solo tuyas.",
+    "from": "d50827bd1466"
+  },
+  "security.alone.typed": {
+    "text": "Aubergine solo escribe unas pocas frases fijas en la terminal de un agente, como «lee tu siguiente paso». No se escribe nada que hayas guardado ni nada que haya escrito un agente.",
+    "from": "fbf9087a8e44"
+  },
+  "security.alone.library": {
+    "text": "Instalar desde una biblioteca requiere que aceptes exactamente el contenido que se te mostró.",
+    "from": "6d62284139e3"
+  },
+  "security.not.title": {
+    "text": "Contra qué no protege esto",
+    "from": "664cb80d250f"
+  },
+  "security.not.asyou": {
+    "text": "<strong>Los agentes se ejecutan como tú.</strong> Un agente en una terminal puede hacer cualquier cosa que puedas hacer tú en esa terminal, incluido ejecutar comandos, leer archivos y, si quiere, usar la sesión de tu propio navegador.",
+    "from": "179663eb5387"
+  },
+  "security.not.approvals": {
+    "text": "<strong>Las aprobaciones no son un candado.</strong> Un agente que se ejecuta como tú puede decidir como tú. La decisión queda registrada, no se impide.",
+    "from": "dc58a76bd541"
+  },
+  "security.not.copies": {
+    "text": "<strong>Las copias de trabajo no son un sandbox.</strong> Mantienen el trabajo separado y no encierran a un agente.",
+    "from": "de9877dffd91"
+  },
+  "security.not.review": {
+    "text": "<strong>La pantalla de revisión es el control de los elementos de la biblioteca.</strong> Un elemento son instrucciones que un agente seguirá con todo lo que ese agente puede hacer. No instales lo que no hayas leído.",
+    "from": "1972614790c0"
+  },
+  "security.not.guide": {
+    "text": "<strong>La guía para agentes es un consejo</strong>, no un candado.",
+    "from": "79f0576917ce"
+  },
+  "security.installer.title": {
+    "text": "El instalador",
+    "from": "26ab59561d68"
+  },
+  "security.installer.text": {
+    "text": "Cambia dos cosas: su propia carpeta y un enlace llamado <code>aubergine</code>. Sin <code>sudo</code>, sin editar los archivos de inicio de tu shell, y nunca toca tu carpeta de datos. <code>aubergine uninstall</code> solo quita lo que creó.",
+    "from": "0dd991c78883"
+  },
+  "security.report.title": {
+    "text": "Informar de un problema",
+    "from": "53de38dec81e"
+  },
+  "security.report.text": {
+    "text": "Abre una issue en <a href=\"https://github.com/thirstyeggplant/aubergine/issues\">GitHub</a>. No incluyas secretos ni tokens.",
+    "from": "578a2c2c1f9c"
+  },
+  "security.related": {
+    "text": "Relacionado: <a href=\"/working-copies/\">copias de trabajo</a> · <a href=\"/faq/\">preguntas frecuentes</a> · <a href=\"/roadmap/\">hoja de ruta</a> (los modos de aprobación y la política de comandos están previstos, no hechos)",
+    "from": "f7672fdbd012"
+  },
+  "security.ld.q1": {
+    "text": "¿Envía Aubergine mis terminales o mi código a algún sitio?",
+    "from": "8e3369fd3214"
+  },
+  "security.ld.a1": {
+    "text": "No. El servidor escucha solo en 127.0.0.1, así que es accesible desde tu ordenador y desde ningún otro sitio hasta que configures el uso desde otro dispositivo. Aubergine no llama a ningún modelo y no descarga nada salvo que tú añadas una fuente de biblioteca; donde tu propia herramienta gh está instalada, le pregunta por la pull request de la rama de una terminal.",
+    "from": "d6089c695fd7"
+  },
+  "security.ld.q2": {
+    "text": "¿Puede un agente cambiar los ajustes de Aubergine o crearse un token?",
+    "from": "50baf59f3f49"
+  },
+  "security.ld.a2": {
+    "text": "No. Crear tokens, cambiar los ajustes, leer el registro de actividad y cualquier cosa sobre terminales fuera de Aubergine nunca se le permiten a un token, tenga los alcances que tenga.",
+    "from": "83dbce1b8ba8"
+  },
+  "security.ld.q3": {
+    "text": "¿Impide una aprobación que el propio agente del propietario se apruebe a sí mismo?",
+    "from": "44ef09ccbdb5"
+  },
+  "security.ld.a3": {
+    "text": "No. Un agente que se ejecuta como tú puede actuar como tú. Las aprobaciones se registran; no se imponen frente a tu propio agente.",
+    "from": "218bd3880939"
+  },
+  "security.ld.q4": {
+    "text": "¿Son las copias de trabajo un sandbox?",
+    "from": "8fba34c387fd"
+  },
+  "security.ld.a4": {
+    "text": "No. Mantienen el trabajo separado, pero no encierran a un agente. Los agentes se ejecutan como tú.",
+    "from": "00ac8e54df7b"
+  },
+  "roadmap.meta.title": {
+    "text": "Hoja de ruta: qué está previsto para Aubergine | Aubergine",
+    "from": "f82b67c7e4ed"
+  },
+  "roadmap.meta.description": {
+    "text": "Lo que hace Aubergine hoy y lo que está previsto y aún no está hecho: multijugador, agentes en la nube en sandbox, modos de aprobación, controles de calidad, un SDK y más.",
+    "from": "eae564891939"
+  },
+  "roadmap.crumb": {
+    "text": "Hoja de ruta",
+    "from": "92375f997ffe"
+  },
+  "roadmap.tag": {
+    "text": "Previsto, aún no hecho",
+    "from": "8520b04b5a47"
+  },
+  "roadmap.title": {
+    "text": "Hoja de ruta",
+    "from": "92375f997ffe"
+  },
+  "roadmap.lead": {
+    "text": "Nada de esto existe hoy. Es hacia donde queremos ir, y el orden puede cambiar. Para lo que está hecho ahora, mira las <a href=\"/guides/\">guías</a>.",
+    "from": "905a1a4e53eb"
+  },
+  "roadmap.note": {
+    "text": "El trabajo previsto es una dirección, no una promesa. El <a href=\"https://github.com/thirstyeggplant/aubergine\">repositorio</a> muestra lo que está publicado.",
+    "from": "2a77383dd929"
+  },
+  "roadmap.teams.title": {
+    "text": "Equipos y conexiones",
+    "from": "4e0046ce8160"
+  },
+  "roadmap.teams.sub": {
+    "text": "Personas que trabajan juntas, y agentes a los que se llega desde las herramientas que ya usas.",
+    "from": "b79bf222234e"
+  },
+  "roadmap.teams.multiplayer.name": {
+    "text": "Multijugador",
+    "from": "563370a7b0ef"
+  },
+  "roadmap.teams.multiplayer.text": {
+    "text": "Comparte un lienzo con otras personas y sus agentes. Mira quién trabaja dónde, pasa un agente que espera a un compañero y respondan juntos.",
+    "from": "b11467b3847f"
+  },
+  "roadmap.teams.chat.name": {
+    "text": "Interfaz de chat",
+    "from": "2d4271591981"
+  },
+  "roadmap.teams.chat.text": {
+    "text": "Pide cosas a los agentes y responde a sus preguntas desde una app de chat de equipo, con la misma identidad y los mismos ajustes que en el navegador.",
+    "from": "e030fc9eb4b5"
+  },
+  "roadmap.teams.tickets.name": {
+    "text": "Tickets y pull requests",
+    "from": "c18d1bcc516f"
+  },
+  "roadmap.teams.tickets.text": {
+    "text": "Convierte una issue en una tarea en cola, abre una pull request desde una copia de trabajo e informa del resultado en el ticket.",
+    "from": "4641289cfa30"
+  },
+  "roadmap.teams.watches.name": {
+    "text": "Vigilancias, webhooks y triaje",
+    "from": "9c51f5013534"
+  },
+  "roadmap.teams.watches.text": {
+    "text": "Empieza a trabajar cuando pase algo: un job de CI fallido, una alerta, un cambio vigilado o una llamada de otro servicio. Las reglas deciden qué se convierte en tarea.",
+    "from": "1c497d4b9a99"
+  },
+  "roadmap.teams.skills.name": {
+    "text": "Skills compartidas y un marketplace",
+    "from": "31d4586cb1ae"
+  },
+  "roadmap.teams.skills.text": {
+    "text": "Comparte las skills de un agente mediante permisos, extiéndelas a todo el equipo con aprobación, impórtalas desde Git y encuentra elementos revisados en un catálogo público.",
+    "from": "fd5d82778447"
+  },
+  "roadmap.teams.memory.name": {
+    "text": "Memoria para personas y salas",
+    "from": "ad614cac170e"
+  },
+  "roadmap.teams.memory.text": {
+    "text": "Guarda lo que un agente ha aprendido para cada persona y cada sala compartida, separado de lo demás.",
+    "from": "416f752e7296"
+  },
+  "roadmap.teams.more": {
+    "text": "Además: controles de administración para modelos, uso compartido y nivel de exigencia · un servidor de equipo autoalojado · inicio de sesión para equipos (SSO y MFA) · límites de uso por persona, token o agente · informes de solo lectura para compartir sin compartir terminales · una vista para el móvil de la lista «For you» · conectores revisados a herramientas de la empresa · más apps de chat · pequeñas apps web internas publicadas para las personas que elijas.",
+    "from": "481fe85556f5"
+  },
+  "roadmap.cloud.title": {
+    "text": "Nube",
+    "from": "b977b950c1ae"
+  },
+  "roadmap.cloud.sub": {
+    "text": "Agentes que no necesitan tu portátil despierto.",
+    "from": "87fb76b1a7f8"
+  },
+  "roadmap.cloud.sandbox.name": {
+    "text": "Agentes en sandbox en la nube",
+    "from": "afb143bae999"
+  },
+  "roadmap.cloud.sandbox.text": {
+    "text": "Ejecuta un agente en un sandbox aislado en la nube y síguelo en el mismo lienzo que los locales. Los sandboxes duermen cuando están inactivos, se despiertan cuando hace falta y conservan el almacenamiento entre ejecuciones.",
+    "from": "a53d1378b583"
+  },
+  "roadmap.cloud.pool.name": {
+    "text": "Un grupo de agentes",
+    "from": "7d3bca9c3c41"
+  },
+  "roadmap.cloud.pool.text": {
+    "text": "Describe el trabajo y deja que lo recoja un grupo de agentes, en lugar de indicar una terminal para cada tarea.",
+    "from": "f9b895723ae8"
+  },
+  "roadmap.cloud.envs.name": {
+    "text": "Entornos listos para usar",
+    "from": "ed1697ee039b"
+  },
+  "roadmap.cloud.envs.text": {
+    "text": "Guarda una vez dependencias, herramientas, skills, archivos y variables, e inicia a partir de ellos cualquier terminal nueva o agente en la nube.",
+    "from": "d97c932492be"
+  },
+  "roadmap.cloud.long.name": {
+    "text": "Trabajo largo, en varias fases",
+    "from": "1207d0ac598f"
+  },
+  "roadmap.cloud.long.text": {
+    "text": "Tareas que duran horas o días por etapas, con una revisión tras cada etapa y un progreso que sobrevive a los reinicios.",
+    "from": "a1e631232a28"
+  },
+  "roadmap.cloud.deploy.name": {
+    "text": "Despliegue en la nube con un comando",
+    "from": "dabcec83058d"
+  },
+  "roadmap.cloud.deploy.text": {
+    "text": "Pon el Aubergine compartido de un equipo en tu propia cuenta en la nube con un comando.",
+    "from": "6a0dc41e1a38"
+  },
+  "roadmap.cloud.see.name": {
+    "text": "Trabajo que puedes ver",
+    "from": "dae8006cad9a"
+  },
+  "roadmap.cloud.see.text": {
+    "text": "Un agente en la nube te devuelve capturas de pantalla o una grabación corta de lo que ha hecho, en tu lista «For you».",
+    "from": "34843169f72f"
+  },
+  "roadmap.cloud.more": {
+    "text": "Además: MCP sobre HTTP, para agentes en otras máquinas · soporte probado para Linux · integración con shells más allá de zsh.",
+    "from": "ab24c1d11df2"
+  },
+  "roadmap.control.title": {
+    "text": "Control",
+    "from": "32d7e8208247"
+  },
+  "roadmap.control.sub": {
+    "text": "Cuánto puede hacer un agente, y un registro de lo que hizo.",
+    "from": "9b7292a38acb"
+  },
+  "roadmap.control.approval.name": {
+    "text": "Modos de aprobación",
+    "from": "7bd88c9e6d2d"
+  },
+  "roadmap.control.approval.text": {
+    "text": "Elige cuánto puede hacer un agente solo: aprobar cada acción, aprobar las arriesgadas o ninguna.",
+    "from": "b9608d55fca3"
+  },
+  "roadmap.control.policy.name": {
+    "text": "Política de comandos y filtrado",
+    "from": "c3c9b7fc9194"
+  },
+  "roadmap.control.policy.text": {
+    "text": "Reglas para comandos que necesitan aprobación o que siempre se rechazan, y un filtrado opcional del contenido externo antes de que lo lea un agente.",
+    "from": "6697b64fab83"
+  },
+  "roadmap.control.risk.name": {
+    "text": "Niveles de riesgo por repositorio",
+    "from": "989a1686d169"
+  },
+  "roadmap.control.risk.text": {
+    "text": "Límites más estrictos donde importa, más laxos donde no.",
+    "from": "10639df3756c"
+  },
+  "roadmap.control.audit.name": {
+    "text": "Un registro de auditoría completo",
+    "from": "dfb67e3ffb15"
+  },
+  "roadmap.control.audit.text": {
+    "text": "Un registro de quién o qué hizo qué, por proyecto, más allá de las llamadas con token que se registran hoy.",
+    "from": "c97e6d6355c9"
+  },
+  "roadmap.control.undo.name": {
+    "text": "Deshacer el trabajo de un agente",
+    "from": "f031a385eb84"
+  },
+  "roadmap.control.undo.text": {
+    "text": "Devuelve una copia de trabajo a como estaba antes de una tarea, o descarta su rama en un solo paso.",
+    "from": "8a76ddeef3eb"
+  },
+  "roadmap.control.admin.name": {
+    "text": "Controles de administración",
+    "from": "9636c9a17dce"
+  },
+  "roadmap.control.admin.text": {
+    "text": "Ajustes para todo el equipo sobre qué modelos se pueden usar y cómo funciona el uso compartido.",
+    "from": "2e27927bdc87"
+  },
+  "roadmap.control.more": {
+    "text": "Además: elección de modelo por terminal, tarea o programación.",
+    "from": "f596795919fb"
+  },
+  "roadmap.quality.title": {
+    "text": "Calidad",
+    "from": "1b2c08a8733d"
+  },
+  "roadmap.quality.sub": {
+    "text": "Comprobaciones que ocurren antes de dar un trabajo por hecho.",
+    "from": "d384d12758ef"
+  },
+  "roadmap.quality.gates.name": {
+    "text": "Controles de calidad",
+    "from": "94515eddaac8"
+  },
+  "roadmap.quality.gates.text": {
+    "text": "Una ejecución no puede terminar hasta que la revisión, las pruebas o una comprobación de seguridad den el visto bueno.",
+    "from": "cb60bf40a980"
+  },
+  "roadmap.quality.review.name": {
+    "text": "Revisión de pull requests",
+    "from": "88740e3ab820"
+  },
+  "roadmap.quality.review.text": {
+    "text": "Un agente revisa una pull request e informa en tu lista «For you».",
+    "from": "f2cb7f3e314f"
+  },
+  "roadmap.quality.browser.name": {
+    "text": "Pruebas guiadas en el navegador",
+    "from": "7c8b76a0df2d"
+  },
+  "roadmap.quality.browser.text": {
+    "text": "Un agente maneja un navegador para probar un cambio y te devuelve los resultados.",
+    "from": "35d5c9f82525"
+  },
+  "roadmap.quality.plan.name": {
+    "text": "Planificar antes de construir",
+    "from": "c1b4e7cda45f"
+  },
+  "roadmap.quality.plan.text": {
+    "text": "Un agente propone un plan y espera tu aprobación antes de tocar archivos.",
+    "from": "bfe188b91109"
+  },
+  "roadmap.quality.recipes.name": {
+    "text": "Recetas de tareas",
+    "from": "a907955cd430"
+  },
+  "roadmap.quality.recipes.text": {
+    "text": "Flujos de trabajo listos para usar para generar pruebas, revisar, analizar dependencias y secretos, y mantener la documentación al día.",
+    "from": "d2b3c5c8eb35"
+  },
+  "roadmap.quality.metrics.name": {
+    "text": "Métricas de resultados",
+    "from": "0663013cf8b2"
+  },
+  "roadmap.quality.metrics.text": {
+    "text": "Tiempo de tarea a hecho, cuántas veces un agente te esperó y el uso según quién lo inició, por proyecto.",
+    "from": "cc91d3e1b4a9"
+  },
+  "roadmap.quality.more": {
+    "text": "Además: informes de incidentes, en los que un agente investiga y redacta un postmortem.",
+    "from": "38f56a594979"
+  },
+  "roadmap.everywhere.title": {
+    "text": "En todas partes",
+    "from": "dcc10bfd55ac"
+  },
+  "roadmap.everywhere.sub": {
+    "text": "Más formas de llegar a Aubergine y de construir sobre él.",
+    "from": "738934daa2cd"
+  },
+  "roadmap.everywhere.sdk.name": {
+    "text": "SDK publicado",
+    "from": "02aa38383381"
+  },
+  "roadmap.everywhere.sdk.text": {
+    "text": "El cliente tipado como paquete instalable, y después clientes para otros lenguajes, como Python.",
+    "from": "a3e3521d038a"
+  },
+  "roadmap.everywhere.editor.name": {
+    "text": "Extensión para editores",
+    "from": "92399ab4236f"
+  },
+  "roadmap.everywhere.editor.text": {
+    "text": "Muestra tus terminales y tu lista «For you» dentro de VS Code y editores similares, sin salir del editor.",
+    "from": "f8f4319dbbe7"
+  },
+  "roadmap.everywhere.desktop.name": {
+    "text": "App de escritorio",
+    "from": "7102842054a4"
+  },
+  "roadmap.everywhere.desktop.text": {
+    "text": "Una app empaquetada con un icono en la barra de menús, en lugar de una pestaña del navegador.",
+    "from": "2a56e82d4a02"
+  },
+  "roadmap.everywhere.windows.name": {
+    "text": "Soporte para Windows",
+    "from": "e61744d0c993"
+  },
+  "roadmap.everywhere.windows.text": {
+    "text": "Ejecutar Aubergine en Windows. Hoy solo está soportado macOS, y Linux no se ha probado.",
+    "from": "6eb34c4aada3"
+  },
+  "faq.meta.title": {
+    "text": "Preguntas frecuentes | Aubergine",
+    "from": "0956334109a5"
+  },
+  "faq.meta.description": {
+    "text": "Respuestas sobre Aubergine: qué es, qué necesita, si es privado, cómo funciona con agentes de programación y qué está previsto.",
+    "from": "b4a8a7a10267"
+  },
+  "faq.crumb": {
+    "text": "Preguntas frecuentes",
+    "from": "dbc468a14b60"
+  },
+  "faq.title": {
+    "text": "Preguntas frecuentes",
+    "from": "e956a9404b46"
+  },
+  "faq.lead": {
+    "text": "Respuestas cortas. Las <a href=\"/guides/\">guías</a> profundizan más.",
+    "from": "cc5a52e1d739"
+  },
+  "faq.what.q": {
+    "text": "¿Qué es Aubergine?",
+    "from": "34bffd794522"
+  },
+  "faq.what.a": {
+    "text": "Un lienzo local, en el navegador, de sesiones de terminal. Cada terminal es un nodo que puedes colocar y usar, así que puedes ejecutar varios agentes de programación a la vez y ver cuál te está esperando.",
+    "from": "e2699684c13a"
+  },
+  "faq.free.q": {
+    "text": "¿Aubergine es gratis y de código abierto?",
+    "from": "0084cd893989"
+  },
+  "faq.free.a": {
+    "text": "Sí. Es gratis y su código está en GitHub.",
+    "from": "7ac926cbb182"
+  },
+  "faq.need.q": {
+    "text": "¿Qué necesito para ejecutar Aubergine?",
+    "from": "efe26fb96381"
+  },
+  "faq.need.a": {
+    "text": "macOS con tmux 3.2 o posterior y Node.js 22 o posterior; el instalador también necesita pnpm. Linux debería funcionar, pero aún no se ha probado. Windows no está soportado.",
+    "from": "d0ea17ebbaa3"
+  },
+  "faq.agents.q": {
+    "text": "¿Funciona con cualquier agente de programación?",
+    "from": "a17347c2058b"
+  },
+  "faq.agents.a": {
+    "text": "Aubergine ejecuta terminales normales, así que cualquier agente de línea de comandos puede ejecutarse en una. Lo que Aubergine hace por sí mismo para un agente, como ver que espera, está hecho para <a href=\"/claude/\">Claude Code</a>; cualquier otro agente, <a href=\"/chatgpt/\">Codex</a> entre ellos, puede informar de su estado mediante los comandos <code>aubergine</code> y una API local, y puede usar un servidor MCP que solo lista lo que su token permite.",
+    "from": "f2ff9ce8d976"
+  },
+  "faq.send.q": {
+    "text": "¿Envía Aubergine mis terminales o mi código a algún sitio?",
+    "from": "8e3369fd3214"
+  },
+  "faq.send.a": {
+    "text": "No. Todo se ejecuta en tu propio ordenador. El servidor escucha solo en 127.0.0.1.",
+    "from": "3b02bfd4cab9"
+  },
+  "faq.model.q": {
+    "text": "¿Llama Aubergine a un modelo de IA?",
+    "from": "f7d8f06fe992"
+  },
+  "faq.model.a": {
+    "text": "No. Lo hacen tus agentes. Aubergine solo ejecuta sus terminales y lleva la cuenta de ellas, y no guarda ninguna clave para ningún modelo.",
+    "from": "b237bbedc740"
+  },
+  "faq.close.q": {
+    "text": "¿Qué les pasa a mis terminales cuando cierro el navegador?",
+    "from": "b5dd88540c71"
+  },
+  "faq.close.a": {
+    "text": "Siguen en marcha. Cada sesión es una sesión de tmux que sobrevive tanto al navegador como al servidor de Aubergine.",
+    "from": "7871478dcac5"
+  },
+  "faq.waiting.q": {
+    "text": "¿Cómo sé qué agente me está esperando?",
+    "from": "7430a38bad53"
+  },
+  "faq.waiting.a": {
+    "text": "Cada terminal muestra si está ocupada, inactiva o esperando. El contador junto a For you, arriba de la página, y la lista For you reúnen todo lo que te necesita.",
+    "from": "35f55955a398"
+  },
+  "faq.apart.q": {
+    "text": "¿Cómo evito que dos agentes editen los mismos archivos?",
+    "from": "50c7b0247257"
+  },
+  "faq.apart.a": {
+    "text": "Inicia cada terminal en su propia copia de trabajo: su propio checkout en su propia rama. Aubergine nunca hace merge ni push por ti.",
+    "from": "823333cbb2a8"
+  },
+  "faq.steps.q": {
+    "text": "¿Puedo darle a un agente una lista de pasos que seguir?",
+    "from": "76d449645ba9"
+  },
+  "faq.steps.a": {
+    "text": "Sí. Un flujo de trabajo es una lista ordenada de pasos, con una franja que muestra dónde está el agente. Un paso puede esperar a que lo apruebes o lo devuelvas.",
+    "from": "9bc235f9572a"
+  },
+  "faq.talk.q": {
+    "text": "¿Pueden los agentes hablar entre sí?",
+    "from": "bb3d5c828a26"
+  },
+  "faq.talk.a": {
+    "text": "Sí, con límites. Los mensajes entre terminales tienen remitentes con nombre, pausas y bloqueos, y están cerrados por defecto en cada lienzo.",
+    "from": "b84d014d23cc"
+  },
+  "faq.api.q": {
+    "text": "¿Hay una API?",
+    "from": "e5876c15cf79"
+  },
+  "faq.api.a": {
+    "text": "Sí. Una API HTTP local con tokens con alcances, un cliente tipado y un servidor MCP que solo lista las herramientas que una credencial puede usar.",
+    "from": "70b05cca5923"
+  },
+  "faq.focus.q": {
+    "text": "¿Puedo abrir una terminal por sí sola?",
+    "from": "4e72afdbfe4a"
+  },
+  "faq.focus.a": {
+    "text": "Sí. <strong>Tab ↗</strong> en el título de una terminal la abre en una pestaña del navegador propia, la misma terminal y no una copia, con sus detalles y su nota al lado cuando los pides. Cerrar la pestaña no termina nada.",
+    "from": "0909e72f8382"
+  },
+  "faq.fields.q": {
+    "text": "¿Puedo guardar un ticket o un responsable junto a una terminal?",
+    "from": "92b518e794bd"
+  },
+  "faq.fields.a": {
+    "text": "Sí. Una terminal tiene campos, pares de una etiqueta y un valor, en sus detalles. El agente que hay en ella puede definir los suyos con <code>aubergine field set</code>; donde tú defines la misma etiqueta, se queda la tuya.",
+    "from": "595a80f0d504"
+  },
+  "faq.cloud.q": {
+    "text": "¿Soportará Aubergine varias personas o agentes en la nube?",
+    "from": "3c1035134c8f"
+  },
+  "faq.cloud.a": {
+    "text": "Ambas cosas están previstas y ninguna está hecha. Mira la <a href=\"/roadmap/\">hoja de ruta</a>. Hoy todo se ejecuta en un solo ordenador.",
+    "from": "02eb76c521d2"
+  },
+  "faq.installer.q": {
+    "text": "¿Qué cambia el instalador en mi ordenador?",
+    "from": "e6f26b5fdca4"
+  },
+  "faq.installer.a": {
+    "text": "Dos cosas: la carpeta de instalación (~/.aubergine) y un enlace llamado aubergine. Nunca usa sudo, nunca edita los archivos de inicio de tu shell y nunca instala Node.js, pnpm ni tmux.",
+    "from": "00c4335ab841"
+  },
+  "404.meta.title": {
+    "text": "Página no encontrada | Aubergine",
+    "from": "19d867c4b2d8"
+  },
+  "404.meta.description": {
+    "text": "Esta página no existe. Vuelve a las guías de Aubergine.",
+    "from": "920927185e61"
+  },
+  "404.title": {
+    "text": "Esa página no está aquí",
+    "from": "fecba20c2c31"
+  },
+  "404.lead": {
+    "text": "Puede que la dirección esté mal escrita o que la página se haya movido. Esto puede ayudarte:",
+    "from": "679fc5b22fd6"
+  },
+  "404.home": {
+    "text": "La página de inicio de Aubergine",
+    "from": "c340078688b5"
+  },
+  "404.install": {
+    "text": "Instalar Aubergine",
+    "from": "733a8757545c"
+  },
+  "404.guides": {
+    "text": "Guías",
+    "from": "572cd72feb9a"
+  },
+  "404.faq": {
+    "text": "Preguntas frecuentes",
+    "from": "e956a9404b46"
+  }
+}

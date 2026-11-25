@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Claude Code في Aubergine | Aubergine</title>
+<meta name="description" content="ما يفعله Aubergine من تلقاء نفسه لـ Claude Code: تشغيله من القائمة، ومعرفة متى ينتظر، واستئناف محادثة، والمحادثات السابقة، وطريقة إعداده، والأدوات.">
+<link rel="canonical" href="https://thirstyeggplant.com/ar/claude/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/claude/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/claude/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/claude/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/claude/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/claude/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/claude/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/claude/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/claude/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/claude/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/claude/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/claude/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/claude/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/claude/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="theme-color" content="#120f14" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#faf6f2" media="(prefers-color-scheme: light)">
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="Claude Code في Aubergine | Aubergine">
+<meta property="og:description" content="ما يفعله Aubergine من تلقاء نفسه لـ Claude Code: تشغيله من القائمة، ومعرفة متى ينتظر، واستئناف محادثة، والمحادثات السابقة، وطريقة إعداده، والأدوات.">
+<meta property="og:url" content="https://thirstyeggplant.com/ar/claude/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine: لوحة من الطرفيات، إحداها مشغولة وأخرى بانتظارك">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine: لوحة من الطرفيات، إحداها مشغولة وأخرى بانتظارك">
+<meta name="twitter:title" content="Claude Code في Aubergine | Aubergine">
+<meta name="twitter:description" content="ما يفعله Aubergine من تلقاء نفسه لـ Claude Code: تشغيله من القائمة، ومعرفة متى ينتظر، واستئناف محادثة، والمحادثات السابقة، وطريقة إعداده، والأدوات.">
+<link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">انتقل إلى محتوى الصفحة</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="الصفحات">
+      <ul>
+        <li><a href="./" aria-current="page">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">التثبيت</a></li>
+        <li><a href="../guides/">الأدلة</a></li>
+        <li><a href="../security/">الأمان</a></li>
+        <li><a href="../faq/">الأسئلة الشائعة</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="اللغة: العربية"><span class="lang-long" aria-hidden="true">العربية</span><span class="lang-short" aria-hidden="true">AR</span></summary>
+      <ul class="menu-list"><li><a href="../../claude/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="../../es/claude/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="../../pt/claude/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="../../fr/claude/" hreflang="fr" lang="fr" dir="ltr">Français</a></li><li><a href="../../de/claude/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="../../ja/claude/" hreflang="ja" lang="ja" dir="ltr">日本語</a></li><li><a href="../../zh/claude/" hreflang="zh-Hans" lang="zh-Hans" dir="ltr">简体中文</a></li><li><a href="../../ko/claude/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="../../id/claude/" hreflang="id" lang="id" dir="ltr">Bahasa Indonesia</a></li><li><a href="../../hi/claude/" hreflang="hi" lang="hi" dir="ltr">हिन्दी</a></li><li><a href="../../bn/claude/" hreflang="bn" lang="bn" dir="ltr">বাংলা</a></li><li><a href="./" hreflang="ar" lang="ar" dir="rtl" aria-current="true">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>القائمة</summary>
+      <ul class="menu-list">
+        <li><a href="./" aria-current="page">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">التثبيت</a></li>
+        <li><a href="../guides/">الأدلة</a></li>
+        <li><a href="../security/">الأمان</a></li>
+        <li><a href="../faq/">الأسئلة الشائعة</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="wrap translated">
+  <p class="note">تطبيق Aubergine نفسه باللغة الإنجليزية: أزراره وقوائمه وصوره كلها بالإنجليزية.</p>
+  <p class="note">ترجمت آلةٌ هذه الصفحة عن الإنجليزية. <a href="https://github.com/thirstyeggplant/aubergine/issues">أرسل تصحيحًا</a>.</p>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "TechArticle",
+      "@id": "https://thirstyeggplant.com/ar/claude/#article",
+      "headline": "ما يفعله Aubergine لـ Claude Code",
+      "description": "ما يفعله Aubergine من تلقاء نفسه لـ Claude Code: تشغيله من القائمة، ومعرفة متى ينتظر، واستئناف محادثة، والمحادثات السابقة، وطريقة إعداده، والأدوات.",
+      "url": "https://thirstyeggplant.com/ar/claude/",
+      "inLanguage": "ar",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Claude Code", "item": "https://thirstyeggplant.com/ar/claude/" }
+      ]
+    }
+  ]
+}
+</script>
+<div class="wrap page-head">
+  <nav class="crumbs" aria-label="أين أنت"><ol><li><a href="../">Aubergine</a></li><li>Claude Code</li></ol></nav>
+  <h1>ما يفعله Aubergine لـ Claude Code</h1>
+  <p class="lead">يعمل Claude Code في طرفية Aubergine مثل أي برنامج. وإذا شُغّل من Aubergine، يخبر اللوحة أيضًا بما يفعله، ويستطيع Aubergine أن يطلعه على المطلوب، وأن يستأنفه، وأن يعرض طريقة إعداده. هذا كل شيء، بالترتيب الذي تلقاه به.</p>
+</div>
+<div class="wrap page-body">
+  <div class="prose">
+    <p class="note">تثبّت Claude Code وتسجّل الدخول إليه بنفسك. لا يستدعي Aubergine أي نموذج ولا يحتفظ بأي مفتاح: إنه يشغّل الأمر <code>claude</code> الموجود لديك أصلًا.</p>
+
+    <h2>شغّله من القائمة</h2>
+    <p><strong>New terminal ▾ → Claude Code</strong>، أو <code>C</code> حين لا تكون لوحة المفاتيح مع أي طرفية، يشغّل <code>claude</code> في طرفية جديدة مع ملف إعدادات يكتبه Aubergine في مجلد بياناته الخاص. إعدادات Claude Code الخاصة بك لا تُمس.</p>
+    <p>الأمر الذي يشغّله هو <code>agents.claudeCommand</code> في الإعدادات، وهو <code>claude</code> ما لم تغيّره؛ ويضيف Aubergine خياراته الخاصة في آخره.</p>
+    <p class="note">أين: القائمة بجانب New terminal، أعلى قائمة الطرفيات.</p>
+
+    <h2>اعرف متى يعمل وينتظر وينتهي</h2>
+    <p>الخطافات في ملف الإعدادات ذاك تخبر اللوحة بما يفعله الوكيل. حين ترسل موجّهًا، يُضاف الموجّه إلى سجل ملاحظات الطرفية وتُظهر الطرفية <strong>working</strong> (يعمل). وحين يحتاج إليك الوكيل، بسؤال عن إذن أو لأنه خامل ينتظر مدخلات، يتحوّل إطاره إلى لون الانتظار ويقول عنوانه وصفّه <strong>waiting for you</strong> (بانتظارك). وحين يتوقف، يُظهر <strong>finished</strong> (انتهى).</p>
+    <p>المفتاح <code>W</code> ينتقل إلى الطرفية التالية التي تنتظر، و<strong>Notify</strong> يشغّل إشعارات سطح المكتب للطرفيات التي تبدأ الانتظار. قد تحوي الموجّهات أسرارًا: <code>"agents": { "logPrompts": false }</code> في <code>config.json</code> يُبقيها خارج سجل الملاحظات.</p>
+    <p class="note">أين: عنوان الطرفية، وصفّها في القائمة، والعدد بجانب For you في الأعلى.</p>
+
+    <h2>Claude Code شغّلته بنفسك</h2>
+    <p>إذا كُتب <code>claude</code> يدويًا في طرفية عادية فإنه يعمل مثل أي برنامج، لكن Aubergine لا يرى إلا صدفة مشغولة بتشغيله: لا waiting for you، ولا يُكتب له شيء حين تبدأ سير عمل فيها. لتغيير ذلك، اطبع الخطافات وأضفها يدويًا إلى إعدادات Claude Code الخاصة بك. لا تفعل شيئًا خارج طرفية Aubergine.</p>
+    <p class="cmd"><code>aubergine hooks print</code><button type="button" class="copy" data-copy data-copied="تم النسخ" aria-live="polite" hidden>نسخ</button></p>
+
+    <h2>يسمّي نفسه ويحتفظ بملخص</h2>
+    <p>الوكيل الذي يشغّله Aubergine يُطلب منه عند بدئه أن يسمّي طرفيته باسم العمل وأن يحتفظ بملخص، باستخدام <code>aubergine describe</code> و<code>aubergine link add</code> و<code>aubergine field set</code>، ويُذكَّر مرة واحدة حين يتوقف بلا اسم من عنده أو بلا ملخص. ما تكتبه أنت يغلب؛ وما يقوله الوكيل عن الشيء نفسه ينتظر بجانبه مع <strong>Use this</strong> (استخدم هذا). ويمكن إيقاف التذكير في <strong>Settings</strong>.</p>
+    <p class="note">أين: تفاصيل الطرفية، مع اسمها وملخصها وحقولها وروابطها.</p>
+
+    <h2>سير العمل والمهام والملخصات والرسائل تصل إليه</h2>
+    <p>يكتب Aubergine أربع جمل ثابتة في الطرفية، وهذه فقط: أن سير عمل قد بدأ، وأن الوكيل طُلب منه كتابة شيء، وأنك طلبت ملخصًا، وأن رسالة تنتظر. كل جملة تسمّي أمرًا واحدًا يشغّله الوكيل. ولا تُكتب جملة إلا حيث يُرى أن لوحة المفاتيح مع وكيل: وكيل شغّله Aubergine، أو وكيل في إعداداته الخطافات الناتجة عن <code>aubergine hooks print</code>.</p>
+    <p>وبالطريقة نفسها، لا تذهب مهمة من الطابور إلا إلى طرفية فيها وكيل كهذا في الواجهة ومتفرغ، و<strong>Claude Code on a workflow…‎</strong> يشغّل طرفية جديدة يُخبَر وكيلها بالتشغيل في أول موجّه له.</p>
+    <p class="note">أين: <strong>Run a workflow…‎</strong> في قائمة عنوان الطرفية، و<strong>Runs</strong> في أعلى الصفحة.</p>
+
+    <h2>Resume agent (استئناف الوكيل)</h2>
+    <p>يتذكر Aubergine المحادثة التي كانت فيها طرفية الوكيل. حين تعود صدفتها إلى المحث، لأنك خرجت من الوكيل أو أُعيد تشغيل الحاسوب، تعرض الطرفية <strong>Resume agent</strong>، الذي يشغّل الوكيل من جديد في تلك المحادثة. وفي طرفية مرتبطة بتشغيل، يخبر الوكيل بالتشغيل من جديد أيضًا.</p>
+    <p class="note">أين: شريط عنوان الطرفية.</p>
+
+    <h2>المحادثات السابقة</h2>
+    <p><strong>Past conversations…‎</strong> يعرض المحادثات السابقة للوكيل في مجلد: اقرأ واحدة، أو افتحها على اللوحة، أو افتح نسخة تترك الأصل كما هو. اكتب <code>@</code> وبعض الكلمات في لوحة الأوامر للبحث فيها؛ والأمر <code>aubergine history</code> يعرضها في سطر الأوامر. لا يُحتفظ بشيء مما يُقرأ، ولا يستطيع أي رمز ولا أي وكيل قراءة المحادثات عبر Aubergine.</p>
+    <p>يقرأ الملفات التي يحتفظ بها Claude Code. وشكلها داخلي خاص بـ Claude Code ويتغيّر بين الإصدارات. بعد تحديث الوكيل قد تقلّ الأسماء والنصوص، والسجل الذي لا يستطيع Aubergine قراءته يُقال عنه ذلك، ولا يُعرض فارغًا أبدًا.</p>
+    <p class="note">أين: لوحة الأوامر (<code>⌘K</code>)، و«Past conversations in this folder…‎» في تفاصيل الطرفية.</p>
+
+    <h2>طريقة إعداده</h2>
+    <p>قائمة بما تقول ملفات إعدادات الوكيل إنه أُعطيه: خوادم MCP، والإضافات، والخطافات، والمهارات، وقواعد الأذونات، وملفات الإعدادات، كلٌّ مع مصدره، وما أضافه Aubergine. أسماء فقط، لا قيمة ولا سرّ أبدًا. تقول كيف أُعدّ الوكيل، لا ما حمّله الوكيل الجاري، وتقول صراحة ما لا يمكنها معرفته، مثل الموصلات التي تأتي مع حسابك.</p>
+    <p class="note">أين: <strong>‎⚙ on</strong> على الطرفية، و«What is switched on for this agent…‎» في لوحة الأوامر، وتفاصيل الطرفية.</p>
+
+    <h2>أدوات Aubergine له</h2>
+    <p><strong>Claude Code with Aubergine tools…‎</strong> يسأل أولًا عمّا يجوز للوكيل فعله: <strong>None</strong> (لا شيء)؛ أو <strong>Its own work only</strong> (عمله فقط)، ببيانات اعتماد الطرفية نفسها؛ أو <strong>More…‎</strong> (المزيد)، نطاقات تختارها، يُصنع لها رمز لتلك الطرفية وحدها ويُلغى حين تُنهى الطرفية نهائيًا. الأدوات هي <code>aubergine mcp</code>، تُمرَّر إلى الوكيل في سطر تشغيله؛ ولا تُكتب إعداداته الخاصة.</p>
+    <p class="note">أين: القائمة بجانب New terminal.</p>
+
+    <h2>انقل Claude Code مفتوحًا لديك أصلًا</h2>
+    <p>لا يمكن نقل وكيل يعمل، لكن يمكن نقل محادثته. <strong>Open elsewhere</strong> يعرض علامات تبويب Claude Code لديك، مع <strong>Fork to canvas</strong> و، لوكيل خامل، <strong>Stop and resume here</strong>، الذي يسألك أولًا. ومن طرفية، يفعل <code>aubergine move</code> الشيء نفسه، و<code>aubergine here --claude</code> يشغّل Claude Code على اللوحة مكمّلًا آخر محادثة في ذلك المجلد.</p>
+    <p class="note">أين: <strong>Open elsewhere</strong> في الشريط فوق اللوحة، أو <code>O</code>.</p>
+
+    <h2>في نسخة عمل خاصة به</h2>
+    <p>الأمر <code>aubergine here --copy --claude</code> يشغّل Claude Code في نسخته المسحوبة الخاصة من المستودع، على فرعه الخاص، فلا يعدّل وكيلان الملفات نفسها أبدًا. ونافذة طرفية Claude Code مع الأدوات فيها الخيار نفسه.</p>
+
+    <h2>ما الذي جُرّب</h2>
+    <p>العرض التجريبي المرفق مع Aubergine يستخدم بدلاء، نصوصًا برمجية قصيرة تشغّل الأوامر والخطافات نفسها التي يشغّلها وكيل حقيقي، لا Claude Code حقيقيًا. ومع وكيل حقيقي، لم تُجرَّب بعدُ الموافقة، ونسخة العمل، والمهمة من الطابور، والجدول الزمني.</p>
+
+    <p>يستطيع وكيل آخر أن يقول معظم هذا عبر أوامر <code>aubergine</code>: انظر <a href="../chatgpt/">Codex و ChatGPT</a>.</p>
+    <p class="note">Aubergine غير تابع لـ Anthropic. Claude وClaude Code علامتان تجاريتان لـ Anthropic.</p>
+  </div>
+</div>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <nav aria-label="كل الصفحات">
+      <ul class="foot-links">
+        <li><a href="../">الرئيسية</a></li>
+        <li><a href="./" aria-current="page">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex و ChatGPT</a></li>
+        <li><a href="../install/">التثبيت</a></li>
+        <li><a href="../guides/">الأدلة</a></li>
+        <li><a href="../run-multiple-coding-agents/">تشغيل عدة وكلاء</a></li>
+        <li><a href="../working-copies/">نسخ العمل</a></li>
+        <li><a href="../queue-and-schedules/">الطابور والجداول الزمنية</a></li>
+        <li><a href="../security/">الأمان</a></li>
+        <li><a href="../roadmap/">خارطة الطريق</a></li>
+        <li><a href="../faq/">الأسئلة الشائعة</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">Aubergine مجاني ومفتوح المصدر بموجب <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">رخصة MIT</a>، ويعمل على حاسوبك أنت.</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+</script>
+</body>
+</html>

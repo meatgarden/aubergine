@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="zh-Hans" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aubergine：所有终端放在一张画布上，用你已有的智能体</title>
+<meta name="description" content="Aubergine 把你所有的终端并排放在浏览器里的一张画布上。想开多少就开多少，用你已经在用的智能体和模型，并看清哪一个需要你。免费、本地、开源。">
+<link rel="canonical" href="https://thirstyeggplant.com/zh/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="theme-color" content="#120f14" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#faf6f2" media="(prefers-color-scheme: light)">
+<link rel="icon" href="../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../style.css">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="Aubergine：所有终端放在一张画布上，用你已有的智能体">
+<meta property="og:description" content="Aubergine 把你所有的终端并排放在浏览器里的一张画布上。想开多少就开多少，用你已经在用的智能体和模型，并看清哪一个需要你。免费、本地、开源。">
+<meta property="og:url" content="https://thirstyeggplant.com/zh/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine：一张摆满终端的画布，一个正在忙，一个在等你">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine：一张摆满终端的画布，一个正在忙，一个在等你">
+<meta name="twitter:title" content="Aubergine：所有终端放在一张画布上，用你已有的智能体">
+<meta name="twitter:description" content="Aubergine 把你所有的终端并排放在浏览器里的一张画布上。想开多少就开多少，用你已经在用的智能体和模型，并看清哪一个需要你。免费、本地、开源。">
+<link rel="alternate" type="text/plain" href="../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">跳到正文</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="./"><img src="../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="页面">
+      <ul>
+        <li><a href="claude/">Claude Code</a></li>
+        <li><a href="chatgpt/">Codex</a></li>
+        <li><a href="install/">安装</a></li>
+        <li><a href="guides/">指南</a></li>
+        <li><a href="security/">安全</a></li>
+        <li><a href="faq/">常见问题</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="语言: 简体中文"><span class="lang-long" aria-hidden="true">简体中文</span><span class="lang-short" aria-hidden="true">ZH</span></summary>
+      <ul class="menu-list"><li><a href="../" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="../es/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="../pt/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="../fr/" hreflang="fr" lang="fr" dir="ltr">Français</a></li><li><a href="../de/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="../ja/" hreflang="ja" lang="ja" dir="ltr">日本語</a></li><li><a href="./" hreflang="zh-Hans" lang="zh-Hans" dir="ltr" aria-current="true">简体中文</a></li><li><a href="../ko/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="../id/" hreflang="id" lang="id" dir="ltr">Bahasa Indonesia</a></li><li><a href="../hi/" hreflang="hi" lang="hi" dir="ltr">हिन्दी</a></li><li><a href="../bn/" hreflang="bn" lang="bn" dir="ltr">বাংলা</a></li><li><a href="../ar/" hreflang="ar" lang="ar" dir="rtl">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>菜单</summary>
+      <ul class="menu-list">
+        <li><a href="claude/">Claude Code</a></li>
+        <li><a href="chatgpt/">Codex</a></li>
+        <li><a href="install/">安装</a></li>
+        <li><a href="guides/">指南</a></li>
+        <li><a href="security/">安全</a></li>
+        <li><a href="faq/">常见问题</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="wrap translated">
+  <p class="note">Aubergine 本身是英文的：它的按钮、菜单和截图都是英文版。</p>
+  <p class="note">本页由机器从英文翻译而来。<a href="https://github.com/thirstyeggplant/aubergine/issues">提交修正</a>。</p>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg",
+      "sameAs": ["https://github.com/thirstyeggplant"]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://thirstyeggplant.com/#website",
+      "url": "https://thirstyeggplant.com/",
+      "name": "Aubergine",
+      "inLanguage": "zh-Hans",
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://thirstyeggplant.com/zh/#webpage",
+      "url": "https://thirstyeggplant.com/zh/",
+      "name": "Aubergine：所有终端放在一张画布上，用你已有的智能体",
+      "description": "Aubergine 把你所有的终端并排放在浏览器里的一张画布上。想开多少就开多少，用你已经在用的智能体和模型，并看清哪一个需要你。免费、本地、开源。",
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" },
+      "primaryImageOfPage": "https://thirstyeggplant.com/og.png",
+      "inLanguage": "zh-Hans"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://thirstyeggplant.com/#software",
+      "name": "Aubergine",
+      "description": "Aubergine 把你所有的终端并排放在浏览器里的一张画布上。想开多少就开多少，用你已经在用的智能体和模型。它自己没有模型，也从不向你要密钥。",
+      "applicationCategory": "DeveloperApplication",
+      "applicationSubCategory": "终端复用器与智能体工作区",
+      "operatingSystem": "macOS",
+      "softwareRequirements": "tmux 3.2 或更高版本，Node.js 22 或更高版本",
+      "url": "https://thirstyeggplant.com/",
+      "installUrl": "https://www.npmjs.com/package/@meatgarden/aubergine",
+      "codeRepository": "https://github.com/thirstyeggplant/aubergine",
+      "image": "https://thirstyeggplant.com/og.png",
+      "isAccessibleForFree": true,
+      "license": "https://opensource.org/licenses/MIT",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD", "availability": "https://schema.org/InStock" },
+      "featureList": [
+        "一张终端画布",
+        "看清谁在等",
+        "队列与定时计划",
+        "工作副本",
+        "项目",
+        "工作流与审批",
+        "终端之间的消息",
+        "API 与 MCP 服务器",
+        "命令行",
+        "回顾与历史"
+      ],
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" }
+    },
+    {
+      "@type": "HowTo",
+      "@id": "https://thirstyeggplant.com/zh/#install",
+      "name": "五分钟上手",
+      "description": "你需要 macOS，以及 tmux 3.2 或更高版本和 Node.js 22 或更高版本。brew install tmux node 可以一次装好两者。",
+      "totalTime": "PT5M",
+      "tool": [
+        { "@type": "HowToTool", "name": "tmux 3.2" },
+        { "@type": "HowToTool", "name": "Node.js 22" }
+      ],
+      "step": [
+        { "@type": "HowToStep", "position": 1, "name": "安装", "text": "npm install -g @meatgarden/aubergine" },
+        { "@type": "HowToStep", "position": 2, "name": "启动并打开浏览器", "text": "aubergine start --open" },
+        { "@type": "HowToStep", "position": 3, "name": "跟着导览走一遍", "text": "在空画布上点击 Show me around（带我看看）。它会创建一张由替身智能体组成的 Demo 画布，用八个简短步骤带你走一遍；aubergine demo --remove 会把它移除。" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://thirstyeggplant.com/zh/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "Aubergine 是什么？", "acceptedAnswer": { "@type": "Answer", "text": "一个在本地运行、基于浏览器的终端会话画布。每个终端都是一个可以排列和使用的节点，所以你可以同时运行多个编程智能体，并看清哪一个在等你。" } },
+        { "@type": "Question", "name": "Aubergine 会把我的终端或代码发送到别处吗？", "acceptedAnswer": { "@type": "Answer", "text": "不会。一切都在你自己的电脑上运行。服务器只监听 127.0.0.1，并检查每个请求的 Host 和 Origin。" } },
+        { "@type": "Question", "name": "运行 Aubergine 需要什么？", "acceptedAnswer": { "@type": "Answer", "text": "macOS，以及 tmux 3.2 或更高版本和 Node.js 22 或更高版本；安装脚本还需要 pnpm。Linux 应该也能用，但还没有测试过。" } },
+        { "@type": "Question", "name": "如果我自己在终端里启动 Claude Code 会怎样？", "acceptedAnswer": { "@type": "Answer", "text": "它像任何程序一样工作：你照常向它输入。但只有当 Aubergine 自己启动了智能体时（New terminal，然后选 Claude Code），它才知道那里有一个智能体，因为它会加上几个小钩子来报告智能体在做什么。手动启动时，终端只会显示正忙于运行 claude：它提问时不会标为 waiting for you，你在那里启动工作流时也不会替它输入任何内容。你可以自己让它运行 aubergine workflow status，这在终端内仍然有效；或者改从 New terminal 菜单启动智能体。" } },
+        { "@type": "Question", "name": "Aubergine 免费吗？", "acceptedAnswer": { "@type": "Answer", "text": "免费。它采用 MIT 许可证，免费开源，源码在 GitHub 上。" } }
+      ]
+    }
+  ]
+}
+</script>
+
+<section class="hero" aria-labelledby="hero-h">
+  <div class="wrap hero-in">
+    <div>
+      <p class="kicker">免费 · 开源 · 运行在你的电脑上</p>
+      <h1 id="hero-h">所有终端，并排摆开。看清哪个智能体<em>需要你</em>。</h1>
+      <p class="lead">Aubergine 把你所有的终端并排放在浏览器里的一张画布上。想开多少就开多少，用你已经在用的智能体和模型。它自己没有模型，也从不向你要密钥。</p>
+      <p class="cmd"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="已复制" aria-live="polite" hidden>复制</button></p>
+      <p class="after">然后运行 <code>aubergine start --open</code>。适用于 macOS，需要 tmux 3.2 或更高版本以及 Node.js 22 或更高版本。</p>
+      <p class="actions"><a class="button primary" href="install/">安装</a><a class="button" href="https://github.com/thirstyeggplant/aubergine">阅读源码</a></p>
+    </div>
+    <figure class="canvas">
+      <div class="canvas-field" dir="ltr" aria-hidden="true">
+        <div class="term term-1 waits"><div class="term-bar"><span class="term-name">claude · fix-login</span><span class="term-state">waiting for you</span></div>
+<pre><i>?</i> Two files use the old check.
+  Change both, or only /auth?
+<i>›</i> </pre></div>
+        <div class="term term-2 working"><div class="term-bar"><span class="term-name">codex · migrate-db</span><span class="term-state">working</span></div>
+<pre>› step 3 of 5
+<b>✓</b> schema read
+<b>✓</b> 41 tests pass
+› writing the migration…</pre></div>
+        <div class="term term-3"><div class="term-bar"><span class="term-name">zsh · tests</span><span class="term-state">running</span></div>
+<pre><b>$</b> pnpm test --watch
+<b>✓</b> 212 passed
+  watching for changes…</pre></div>
+        <div class="term term-4 done"><div class="term-bar"><span class="term-name">claude · release-notes</span><span class="term-state">finished</span></div>
+<pre><b>✓</b> notes written
+  handed in: 6 changes</pre></div>
+        <div class="term term-5"><div class="term-bar"><span class="term-name">zsh · api</span><span class="term-state">idle</span></div>
+<pre><b>$</b> git status
+  nothing to commit
+<b>$</b> </pre></div>
+      </div>
+      <figcaption>这是示意图，不是截图：画布上的五个终端，以及在等你的那一个。</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="section" id="see" aria-labelledby="see-h">
+  <div class="wrap">
+    <h2 id="see-h">它是什么样子</h2>
+    <p class="intro">以下是 Aubergine 自带演示的真实截图：用的是替身智能体，不是真的智能体。</p>
+    <div class="shows">
+      <div class="show">
+        <div><h3>所有终端都在一张画布上</h3><p>想开多少就开多少，并排摆放，每个终端在可见时都是实时的。</p></div>
+        <figure class="pic"><a href="../screenshots/list.png"><img src="../screenshots/list.png" width="1440" height="1008" loading="lazy" alt="侧边栏列出五个终端，并用文字写出各自的状态（working、waiting for you、finished、parked），旁边是画布的一部分，其中有一个实时的 shell。"></a><figcaption>列表说明每个终端在做什么；旁边就是终端本身。</figcaption></figure>
+      </div>
+      <div class="show">
+        <div><h3>在等你的那个一眼就能看到</h3><p>当某个智能体需要你时，隔着整张画布也能看到，按 <code>W</code> 就能过去。</p></div>
+        <figure class="pic"><a href="../screenshots/waiting.png"><img src="../screenshots/waiting.png" width="1496" height="600" loading="lazy" alt="一个终端，其中的智能体在提问，标题显示 waiting for you，边框是等待的颜色。"></a><figcaption>它的边框变成等待的颜色，标题显示 waiting for you。</figcaption></figure>
+      </div>
+      <div class="show">
+        <div><h3>单独打开一个终端</h3><p>任何终端都可以在单独的浏览器标签页中打开，是同一个终端，不是副本。</p></div>
+        <figure class="pic"><a href="../screenshots/focus-part.png"><img src="../screenshots/focus-part.png" width="1344" height="1172" loading="lazy" alt="浏览器标签页中单独的一个终端：顶部是名称，详情里有工作流步骤、文件夹和字段，旁边是实时终端。"></a><figcaption>需要时，它的详情和笔记会在旁边打开，用各自的按钮再关上。</figcaption></figure>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="agents" aria-labelledby="agents-h">
+  <div class="wrap">
+    <h2 id="agents-h">自带你的智能体</h2>
+    <p class="intro">Aubergine 运行的是普通终端。它不调用模型，不持有密钥，也没有账号：你已经在用的命令行智能体，以你的身份登录，带着你为它们选的模型，在它的终端里运行。Aubergine 为智能体自动做的事，目前是为 Claude Code 构建的；其他任何智能体都可以通过 <code>aubergine</code> 命令告诉它同样的事。</p>
+    <ul class="rows">
+      <li><h3><a class="row-link" href="claude/">Claude Code</a></h3><p>从 New terminal（新建终端）菜单启动它，它会自己报告何时在工作、在等你或已完成；Aubergine 可以恢复它的对话，并显示它是如何配置的。</p></li>
+      <li><h3><a class="row-link" href="chatgpt/">Codex 与 ChatGPT</a></h3><p>Codex 像任何程序一样在终端里运行；只要它的指令告诉它，它就会通过 <code>aubergine</code> 命令报告。浏览器里的 ChatGPT 不是终端程序。</p></li>
+      <li><h3><a class="row-link" href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/for-agents.md">任何其他命令行智能体，或普通 shell</a></h3><p>每个终端都有 <code>aubergine</code> 命令，<code>aubergine guide --snippet</code> 会打印五行，供你放进智能体自己的指令里。</p></li>
+    </ul>
+  </div>
+</section>
+
+<section class="section" id="features" aria-labelledby="features-h">
+  <div class="wrap">
+    <h2 id="features-h">还做好了什么</h2>
+    <p class="intro">以下这些今天都能在你的电脑上运行。</p>
+    <ul class="rows">
+      <li><h3>一张终端画布</h3><p>平移、缩放、排列真正的终端，点一下就能输入；把一个终端停放起来稍后再拿回来，或在浏览器标签页中单独打开它，旁边是它的详情和笔记。</p></li>
+      <li><h3>看清谁在等</h3><p>每个终端都显示忙碌、空闲或在等你；“For you”列表和“next waiting”直接带你去需要人处理的地方。</p></li>
+      <li><h3>队列与定时计划</h3><p>任务写一次，让空闲的智能体去接；或者安排它在你选定的日子、每天的某个时间运行。</p></li>
+      <li><h3>工作副本</h3><p>给每个智能体一份仓库副本，放在它自己的分支上，两个智能体永远不会编辑同一批文件。</p></li>
+      <li><h3>项目</h3><p>一个服务器，多个控制室：每个项目有自己的画布、队列、定时计划和规则，并可以保存为文件或模板。</p></li>
+      <li><h3>工作流与审批</h3><p>给智能体一系列要遵循的步骤，在等待人的步骤处停下，并在一块看板上查看所有正在进行的运行。</p></li>
+      <li><h3>终端之间的消息</h3><p>让智能体彼此对话，带有署名的发送者、限额和暂停，每张画布默认关闭。</p></li>
+      <li><h3>API 与 MCP 服务器</h3><p>带有限定权限令牌的本地 HTTP API、一个有类型的客户端，以及一个只列出凭据可用工具的 MCP 服务器。</p></li>
+      <li><h3>命令行</h3><p><code>aubergine</code> 命令可以从这台机器上的任何终端启动终端、把任务加入队列、设置定时计划、读取看板和审批运行。</p></li>
+      <li><h3>回顾与历史</h3><p>查看你不在时发生了什么变化，搜索终端输出，并从命令面板重新打开过去的对话。</p></li>
+    </ul>
+  </div>
+</section>
+
+<section class="section" id="trust" aria-labelledby="trust-h">
+  <div class="wrap">
+    <h2 id="trust-h">你的终端始终属于你</h2>
+    <ul class="rows">
+      <li><h3>仅限本地</h3><p>服务器监听 127.0.0.1，并检查每个请求的 Host 和 Origin；从其他设备使用默认关闭，直到你自己设置。</p></li>
+      <li><h3>终端比应用活得更久</h3><p>每个终端都是一个 tmux 会话：关掉浏览器或重启 Aubergine，你的工作照常运行。</p></li>
+      <li><h3>没有模型，没有密钥</h3><p>Aubergine 不挑选也不调用模型，也不持有任何模型的密钥；模型由你的智能体自带。</p></li>
+      <li><h3>由你决定</h3><p>令牌有权限范围，智能体写的东西等你审阅，审批由人来做。</p></li>
+    </ul>
+    <p class="more-link"><a href="security/">哪些受保护，哪些不受保护</a></p>
+  </div>
+</section>
+
+<section class="section" id="install" aria-labelledby="install-h">
+  <div class="wrap">
+    <h2 id="install-h">五分钟上手</h2>
+    <p class="intro">你需要 macOS，以及 tmux 3.2 或更高版本和 Node.js 22 或更高版本。<code>brew install tmux node</code> 可以一次装好两者。</p>
+    <ol class="steps">
+      <li><h3>安装</h3><p class="cmd"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="已复制" aria-live="polite" hidden>复制</button></p><p>或者使用<a href="install/">安装脚本</a>，它会用 pnpm 从源码构建。</p></li>
+      <li><h3>启动并打开浏览器</h3><p class="cmd"><code>aubergine start --open</code><button type="button" class="copy" data-copy data-copied="已复制" aria-live="polite" hidden>复制</button></p><p>它会启动服务器并打开已登录的浏览器。</p></li>
+      <li><h3>跟着导览走一遍</h3><p>在空画布上点击 <strong>Show me around</strong>（带我看看）。它会创建一张由替身智能体组成的 Demo 画布，用八个简短步骤带你走一遍；<code>aubergine demo --remove</code> 会把它移除。</p></li>
+    </ol>
+    <p class="note more-link">安装脚本只改动 <code>~/.aubergine</code> 和一个名为 <code>aubergine</code> 的链接。它从不使用 sudo，也从不编辑你的 shell 启动文件。</p>
+  </div>
+</section>
+
+<section class="section" id="faq" aria-labelledby="faq-h">
+  <div class="wrap">
+    <h2 id="faq-h">常见问题</h2>
+    <div class="questions">
+      <details><summary>Aubergine 是什么？</summary><p>一个在本地运行、基于浏览器的终端会话画布。每个终端都是一个可以排列和使用的节点，所以你可以同时运行多个编程智能体，并看清哪一个在等你。</p></details>
+      <details><summary>Aubergine 会把我的终端或代码发送到别处吗？</summary><p>不会。一切都在你自己的电脑上运行。服务器只监听 127.0.0.1，并检查每个请求的 Host 和 Origin。</p></details>
+      <details><summary>运行 Aubergine 需要什么？</summary><p>macOS，以及 tmux 3.2 或更高版本和 Node.js 22 或更高版本；安装脚本还需要 pnpm。Linux 应该也能用，但还没有测试过。</p></details>
+      <details><summary>如果我自己在终端里启动 Claude Code 会怎样？</summary><p>它像任何程序一样工作：你照常向它输入。但只有当 Aubergine 自己启动了智能体时（New terminal，然后选 Claude Code），它才知道那里有一个智能体，因为它会加上几个小钩子来报告智能体在做什么。手动启动时，终端只会显示正忙于运行 <code>claude</code>：它提问时不会标为 waiting for you，你在那里启动工作流时也不会替它输入任何内容。你可以自己让它运行 <code>aubergine workflow status</code>，这在终端内仍然有效；或者改从 New terminal 菜单启动智能体。</p></details>
+      <details><summary>Aubergine 免费吗？</summary><p>免费。它采用 <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">MIT 许可证</a>，免费开源，源码在 GitHub 上。</p></details>
+    </div>
+    <p class="more-link"><a href="faq/">全部问题</a></p>
+  </div>
+</section>
+
+<section class="section" id="planned" aria-labelledby="planned-h">
+  <div class="wrap">
+    <h2 id="planned-h">计划中的内容</h2>
+    <p class="note">多人协作、云端智能体、审批模式等都在计划中，尚未构建。<a href="roadmap/">查看路线图</a>。</p>
+  </div>
+</section>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <nav aria-label="所有页面">
+      <ul class="foot-links">
+        <li><a href="./" aria-current="page">首页</a></li>
+        <li><a href="claude/">Claude Code</a></li>
+        <li><a href="chatgpt/">Codex 与 ChatGPT</a></li>
+        <li><a href="install/">安装</a></li>
+        <li><a href="guides/">指南</a></li>
+        <li><a href="run-multiple-coding-agents/">运行多个智能体</a></li>
+        <li><a href="working-copies/">工作副本</a></li>
+        <li><a href="queue-and-schedules/">队列与定时计划</a></li>
+        <li><a href="security/">安全</a></li>
+        <li><a href="roadmap/">路线图</a></li>
+        <li><a href="faq/">常见问题</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">Aubergine 免费开源，采用 <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">MIT 许可证</a>，运行在你自己的电脑上。</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+</script>
+</body>
+</html>

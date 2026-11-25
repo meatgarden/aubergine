@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>الأمان والخصوصية | Aubergine</title>
+<meta name="description" content="يعمل Aubergine على حاسوبك فقط، ويستمع على 127.0.0.1، ويتحقق من كل طلب، ويحدّد نطاق كل رمز، ويقول صراحة ما لا يحمي منه.">
+<link rel="canonical" href="https://thirstyeggplant.com/ar/security/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/security/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/security/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/security/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/security/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/security/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/security/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/security/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/security/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/security/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/security/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/security/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/security/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/security/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="theme-color" content="#120f14" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#faf6f2" media="(prefers-color-scheme: light)">
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="الأمان والخصوصية | Aubergine">
+<meta property="og:description" content="يعمل Aubergine على حاسوبك فقط، ويستمع على 127.0.0.1، ويتحقق من كل طلب، ويحدّد نطاق كل رمز، ويقول صراحة ما لا يحمي منه.">
+<meta property="og:url" content="https://thirstyeggplant.com/ar/security/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine: لوحة من الطرفيات، إحداها مشغولة وأخرى بانتظارك">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine: لوحة من الطرفيات، إحداها مشغولة وأخرى بانتظارك">
+<meta name="twitter:title" content="الأمان والخصوصية | Aubergine">
+<meta name="twitter:description" content="يعمل Aubergine على حاسوبك فقط، ويستمع على 127.0.0.1، ويتحقق من كل طلب، ويحدّد نطاق كل رمز، ويقول صراحة ما لا يحمي منه.">
+<link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">انتقل إلى محتوى الصفحة</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="الصفحات">
+      <ul>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">التثبيت</a></li>
+        <li><a href="../guides/">الأدلة</a></li>
+        <li><a href="./" aria-current="page">الأمان</a></li>
+        <li><a href="../faq/">الأسئلة الشائعة</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="اللغة: العربية"><span class="lang-long" aria-hidden="true">العربية</span><span class="lang-short" aria-hidden="true">AR</span></summary>
+      <ul class="menu-list"><li><a href="../../security/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="../../es/security/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="../../pt/security/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="../../fr/security/" hreflang="fr" lang="fr" dir="ltr">Français</a></li><li><a href="../../de/security/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="../../ja/security/" hreflang="ja" lang="ja" dir="ltr">日本語</a></li><li><a href="../../zh/security/" hreflang="zh-Hans" lang="zh-Hans" dir="ltr">简体中文</a></li><li><a href="../../ko/security/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="../../id/security/" hreflang="id" lang="id" dir="ltr">Bahasa Indonesia</a></li><li><a href="../../hi/security/" hreflang="hi" lang="hi" dir="ltr">हिन्दी</a></li><li><a href="../../bn/security/" hreflang="bn" lang="bn" dir="ltr">বাংলা</a></li><li><a href="./" hreflang="ar" lang="ar" dir="rtl" aria-current="true">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>القائمة</summary>
+      <ul class="menu-list">
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">التثبيت</a></li>
+        <li><a href="../guides/">الأدلة</a></li>
+        <li><a href="./" aria-current="page">الأمان</a></li>
+        <li><a href="../faq/">الأسئلة الشائعة</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="wrap translated">
+  <p class="note">تطبيق Aubergine نفسه باللغة الإنجليزية: أزراره وقوائمه وصوره كلها بالإنجليزية.</p>
+  <p class="note">ترجمت آلةٌ هذه الصفحة عن الإنجليزية. <a href="https://github.com/thirstyeggplant/aubergine/issues">أرسل تصحيحًا</a>.</p>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://thirstyeggplant.com/ar/security/#article",
+      "headline": "الأمان والخصوصية",
+      "description": "يعمل Aubergine على حاسوبك فقط، ويستمع على 127.0.0.1، ويتحقق من كل طلب، ويحدّد نطاق كل رمز، ويقول صراحة ما لا يحمي منه.",
+      "url": "https://thirstyeggplant.com/ar/security/",
+      "mainEntityOfPage": "https://thirstyeggplant.com/ar/security/",
+      "datePublished": "2026-11-18",
+      "inLanguage": "ar",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "الأمان", "item": "https://thirstyeggplant.com/ar/security/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://thirstyeggplant.com/ar/security/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "هل يرسل Aubergine طرفياتي أو شيفرتي إلى أي مكان؟", "acceptedAnswer": { "@type": "Answer", "text": "لا. يستمع الخادم على 127.0.0.1 فقط، فيمكن الوصول إليه من حاسوبك ولا مكان غيره حتى تعدّ الاستخدام من جهاز آخر. لا يستدعي Aubergine أي نموذج ولا يجلب شيئًا ما لم تضف مصدر مكتبة بنفسك؛ وحيث تكون أداة gh الخاصة بك مثبتة، يسألها عن طلب السحب لفرع طرفية." } },
+        { "@type": "Question", "name": "هل يستطيع وكيل تغيير إعدادات Aubergine أو صنع رمز لنفسه؟", "acceptedAnswer": { "@type": "Answer", "text": "لا. إنشاء الرموز، وتغيير الإعدادات، وقراءة سجل النشاط، وأي شيء يخص طرفيات خارج Aubergine، كلها غير مسموحة لأي رمز أبدًا، مهما كانت نطاقاته." } },
+        { "@type": "Question", "name": "هل تمنع الموافقة وكيل المالك نفسه من الموافقة لنفسه؟", "acceptedAnswer": { "@type": "Answer", "text": "لا. الوكيل الذي يعمل باسمك يستطيع التصرف باسمك. الموافقات تُسجَّل، ولا تُفرض على وكيلك الخاص." } },
+        { "@type": "Question", "name": "هل نسخ العمل صندوق عزل؟", "acceptedAnswer": { "@type": "Answer", "text": "لا. تُبقي الأعمال منفصلة لكنها لا تحبس الوكيل. الوكلاء يعملون باسمك." } }
+      ]
+    }
+  ]
+}
+</script>
+<div class="wrap page-head">
+  <nav class="crumbs" aria-label="أين أنت"><ol><li><a href="../">Aubergine</a></li><li>الأمان</li></ol></nav>
+  <h1>الأمان والخصوصية</h1>
+  <p class="lead">ما يفعله Aubergine لحماية طرفياتك، وبالأهمية نفسها، ما لا يفعله. باختصار: إنه محلي، ويسأل قبل أن يتصرف لوكيل، والوكلاء لا يزالون يعملون باسمك.</p>
+</div>
+<div class="wrap page-body">
+  <div class="prose">
+    <h2>كل شيء يبقى على حاسوبك</h2>
+    <ul>
+      <li>يرتبط الخادم بـ <code>127.0.0.1</code> فقط. كل طلب، وكل ترقية WebSocket، يُتحقَّق من <code>Host</code> و<code>Origin</code> فيه، ويجب أن يحمل المتصفح ملف تعريف ارتباط للوصول.</li>
+      <li>استخدام Aubergine من جهاز آخر معطّل حتى تعدّه: شيء على الحاسوب نفسه يوصل إليه HTTPS تحت اسم تكتبه في الإعدادات، وكل متصفح يُقرَن برمز لمرة واحدة ويمكن إلغاؤه. والجهاز المقترن يستطيع أن يفعل كل ما يستطيعه المالك. <a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/remote.md">Using Aubergine from elsewhere</a> يقول كيف.</li>
+      <li>لا يستدعي Aubergine أي نموذج ولا يبدأ أي طلب شبكة من تلقاء نفسه، مع استثناءين: جلب مصدر مكتبة (عنوان Git) حين تطلب <em>أنت</em> ذلك، وسؤال أداة <code>gh</code> الخاصة بك، حيث تكون مثبتة ومسجَّلًا الدخول فيها، عن طلب السحب لفرع طرفية.</li>
+      <li>إشعارات سطح المكتب تأتي من الصفحة المفتوحة. لا شيء يغادر حاسوبك.</li>
+    </ul>
+    <h2>ثلاثة أنواع من المستدعين، ويُحكم على كلٍّ منها على حدة</h2>
+    <p>يُتحقَّق من كل طلب مقابل ما يجوز للمستدعي فعله قبل البحث عن أي شيء، فلا يعرف المستدعي الذي ليس له الحق شيئًا من الجواب. المستدعون هم: أنت (مسجَّل الدخول في المتصفح)، وجلسة وكيل، ورمز API.</p>
+    <ul>
+      <li><strong>لرموز API نطاقات.</strong> يُعرض السرّ مرة واحدة ولا يُخزَّن أبدًا؛ لا يُحتفظ إلا بتجزئته. والاستدعاءات التي تتم برمز تُسجَّل في سجل النشاط: من، وماذا، وكيف انتهى، لا السرّ أبدًا ولا ما أُرسل أبدًا.</li>
+      <li><strong>أشياء لا يستطيع أي رمز فعلها أبدًا:</strong> إنشاء الرموز أو إلغاؤها، وقراءة سجل النشاط، وتغيير الإعدادات، وأي شيء يخص طرفيات خارج Aubergine.</li>
+      <li><strong>الوصول إلى الطرفية نطاقان منفصلان</strong>، واحد للقراءة وواحد للكتابة، كلٌّ منهما مقصور على الجلسات التي تختارها. ويمكنك تعليم طرفية بأنها <em>people only</em> (للأشخاص فقط) لإغلاقها أمام كل رمز.</li>
+      <li><strong>بيانات اعتماد الوكيل الخاصة ضيقة.</strong> يستطيع ضبط حالة الانتباه الخاصة به، والإضافة إلى ملاحظاته، والتبليغ عن حالته، وقراءة التشغيل الذي هو فيه. ولا يستطيع الوصول إلى طرفيات أو لوحات أو رموز أخرى.</li>
+    </ul>
+    <h2>ما لا يستطيع وكيل فعله وحده</h2>
+    <ul>
+      <li>ما يكتبه وكيل أو برنامج (سير عمل، أو خطوة) يصل بوصفه <strong>مسودة</strong> تراجعها. والقبول لك وحدك.</li>
+      <li>الخطوة التي تنتظر إنسانًا لا يوافق عليها أو يعيدها إلا إنسان. والقواعد والجداول الزمنية والعرض التجريبي لك وحدك.</li>
+      <li>لا يكتب Aubergine في طرفية الوكيل إلا بضع جمل ثابتة، مثل «اقرأ خطوتك التالية». لا شيء مما خزّنته، ولا شيء مما كتبه وكيل، يُكتب.</li>
+      <li>التثبيت من مكتبة يحتاج إلى أن تقبل المحتوى نفسه الذي عُرض عليك بالضبط.</li>
+    </ul>
+    <h2>ما لا يحمي منه هذا</h2>
+    <p class="note"><strong>الوكلاء يعملون باسمك.</strong> الوكيل في طرفية يستطيع فعل أي شيء تستطيع أنت فعله في تلك الطرفية، بما في ذلك تشغيل الأوامر، وقراءة الملفات، واستخدام جلسة متصفحك الخاصة إن اختار ذلك.</p>
+    <ul>
+      <li><strong>الموافقات ليست قفلًا.</strong> الوكيل الذي يعمل باسمك يستطيع أن يقرر باسمك. يُسجَّل القرار، ولا يُمنع.</li>
+      <li><strong>نسخ العمل ليست صندوق عزل.</strong> تُبقي الأعمال منفصلة ولا تحبس الوكيل.</li>
+      <li><strong>شاشة المراجعة هي أداة التحكم في عناصر المكتبة.</strong> العنصر تعليمات سيتبعها وكيل بكل ما يجوز لذلك الوكيل فعله. لا تثبّت ما لم تقرأه.</li>
+      <li><strong>دليل الوكلاء نصيحة</strong>، لا قفل.</li>
+    </ul>
+    <h2>المثبِّت</h2>
+    <p>يغيّر شيئين: مجلده الخاص ورابطًا واحدًا اسمه <code>aubergine</code>. لا <code>sudo</code>، ولا تعديلات على ملفات بدء الصدفة لديك، ولا يمس مجلد بياناتك أبدًا. والأمر <code>aubergine uninstall</code> لا يزيل إلا ما صنعه.</p>
+    <h2>أبلغ عن مشكلة</h2>
+    <p>افتح بلاغًا على <a href="https://github.com/thirstyeggplant/aubergine/issues">GitHub</a>. لا تضع فيه أسرارًا أو رموزًا.</p>
+    <p>ذو صلة: <a href="../working-copies/">نسخ العمل</a> · <a href="../faq/">الأسئلة الشائعة</a> · <a href="../roadmap/">خارطة الطريق</a> (أنماط الموافقة وسياسة الأوامر مخطط لها، ولم تُبنَ)</p>
+  </div>
+</div>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <nav aria-label="كل الصفحات">
+      <ul class="foot-links">
+        <li><a href="../">الرئيسية</a></li>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex و ChatGPT</a></li>
+        <li><a href="../install/">التثبيت</a></li>
+        <li><a href="../guides/">الأدلة</a></li>
+        <li><a href="../run-multiple-coding-agents/">تشغيل عدة وكلاء</a></li>
+        <li><a href="../working-copies/">نسخ العمل</a></li>
+        <li><a href="../queue-and-schedules/">الطابور والجداول الزمنية</a></li>
+        <li><a href="./" aria-current="page">الأمان</a></li>
+        <li><a href="../roadmap/">خارطة الطريق</a></li>
+        <li><a href="../faq/">الأسئلة الشائعة</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">Aubergine مجاني ومفتوح المصدر بموجب <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">رخصة MIT</a>، ويعمل على حاسوبك أنت.</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+</script>
+</body>
+</html>
