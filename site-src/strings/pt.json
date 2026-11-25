@@ -159,6 +159,14 @@
     "text": "Uma ilustração, não uma captura: cinco terminais em um canvas, e o que está esperando por você.",
     "from": "413e282f8a9d"
   },
+  "home.used.label": {
+    "text": "Usado por engenheiros de",
+    "from": "2349ce19f7df"
+  },
+  "home.used.note": {
+    "text": "São engenheiros individualmente, não seus empregadores nem suas universidades: nenhuma dessas organizações endossa o Aubergine ou tem vínculo com ele.",
+    "from": "5114b1f41a78"
+  },
   "home.powers.title": {
     "text": "Dê superpoderes aos seus terminais",
     "from": "588a8ab51054"

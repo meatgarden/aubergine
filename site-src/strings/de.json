@@ -159,6 +159,14 @@
     "text": "Eine Illustration, kein Screenshot: fünf Terminals auf einem Canvas und das eine, das auf dich wartet.",
     "from": "413e282f8a9d"
   },
+  "home.used.label": {
+    "text": "Genutzt von Engineers bei",
+    "from": "2349ce19f7df"
+  },
+  "home.used.note": {
+    "text": "Einzelne Engineers, nicht ihre Arbeitgeber oder Hochschulen: Keine dieser Organisationen empfiehlt Aubergine oder ist mit Aubergine verbunden.",
+    "from": "5114b1f41a78"
+  },
   "home.powers.title": {
     "text": "Gib deinen Terminals Superkräfte",
     "from": "588a8ab51054"
