@@ -5,6 +5,8 @@
 - Runs on your own computer, and nowhere else.
 - Terminals keep running when you close the browser or restart Aubergine.
 - Works with plain shells and with agents.
+- As many terminals as you like, side by side.
+- Bring your own agents and models: Aubergine has no model of its own, holds no key and has no account.
 
 <img src="site/screenshots/canvas.png" alt="The Aubergine canvas: three canvases in a column on the left, the list of terminals with what each is doing, and six live terminals, four in colors of their own, one waiting for an answer.">
 
