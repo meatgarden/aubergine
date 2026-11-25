@@ -1,0 +1,2210 @@
+{
+  "site.skip": {
+    "text": "跳到正文",
+    "from": "c1da0f1587b7"
+  },
+  "site.nav.label": {
+    "text": "页面",
+    "from": "9046da16aea9"
+  },
+  "site.nav.claude": {
+    "text": "Claude Code",
+    "from": "246ef8c1130d"
+  },
+  "site.nav.codex": {
+    "text": "Codex",
+    "from": "616efbe96852"
+  },
+  "site.nav.install": {
+    "text": "安装",
+    "from": "569ca49f4aaf"
+  },
+  "site.nav.guides": {
+    "text": "指南",
+    "from": "572cd72feb9a"
+  },
+  "site.nav.security": {
+    "text": "安全",
+    "from": "8f6fb4eb7f42"
+  },
+  "site.nav.faq": {
+    "text": "常见问题",
+    "from": "dbc468a14b60"
+  },
+  "site.menu": {
+    "text": "菜单",
+    "from": "99af6606ff9d"
+  },
+  "site.languages.label": {
+    "text": "语言",
+    "from": "a4fe65264ef7"
+  },
+  "site.crumbs": {
+    "text": "当前位置",
+    "from": "54cd982fb2dd"
+  },
+  "site.copy": {
+    "text": "复制",
+    "from": "e21f935f11d7"
+  },
+  "site.copied": {
+    "text": "已复制",
+    "from": "8d525e5f158b"
+  },
+  "site.og.alt": {
+    "text": "Aubergine：一张摆满终端的画布，一个正在忙，一个在等你",
+    "from": "25b02deb2ff8"
+  },
+  "site.translated.app": {
+    "text": "Aubergine 本身是英文的：它的按钮、菜单和截图都是英文版。",
+    "from": "a81916766b4d"
+  },
+  "site.translated.machine": {
+    "text": "本页由机器从英文翻译而来。<a href=\"https://github.com/thirstyeggplant/aubergine/issues\">提交修正</a>。",
+    "from": "e0f116b75aa8"
+  },
+  "site.foot.label": {
+    "text": "所有页面",
+    "from": "b879e5a49e14"
+  },
+  "site.foot.home": {
+    "text": "首页",
+    "from": "3a78695388b3"
+  },
+  "site.foot.claude": {
+    "text": "Claude Code",
+    "from": "246ef8c1130d"
+  },
+  "site.foot.codex": {
+    "text": "Codex 与 ChatGPT",
+    "from": "38c13bed7dca"
+  },
+  "site.foot.install": {
+    "text": "安装",
+    "from": "569ca49f4aaf"
+  },
+  "site.foot.guides": {
+    "text": "指南",
+    "from": "572cd72feb9a"
+  },
+  "site.foot.several": {
+    "text": "运行多个智能体",
+    "from": "8b0dc326e0f4"
+  },
+  "site.foot.copies": {
+    "text": "工作副本",
+    "from": "9660dc116131"
+  },
+  "site.foot.queue": {
+    "text": "队列与定时计划",
+    "from": "403b3a701d15"
+  },
+  "site.foot.security": {
+    "text": "安全",
+    "from": "8f6fb4eb7f42"
+  },
+  "site.foot.roadmap": {
+    "text": "路线图",
+    "from": "92375f997ffe"
+  },
+  "site.foot.faq": {
+    "text": "常见问题",
+    "from": "dbc468a14b60"
+  },
+  "site.foot.license": {
+    "text": "Aubergine 免费开源，采用 <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE\">MIT 许可证</a>，运行在你自己的电脑上。",
+    "from": "21c2472673d7"
+  },
+  "home.meta.title": {
+    "text": "Aubergine：所有终端放在一张画布上，用你已有的智能体",
+    "from": "620bab21c0b6"
+  },
+  "home.meta.description": {
+    "text": "Aubergine 把你所有的终端并排放在浏览器里的一张画布上。想开多少就开多少，用你已经在用的智能体和模型，并看清哪一个需要你。免费、本地、开源。",
+    "from": "71a14cde3a05"
+  },
+  "home.hero.kicker": {
+    "text": "免费 · 开源 · 运行在你的电脑上",
+    "from": "28742c2f94e7"
+  },
+  "home.hero.title": {
+    "text": "所有终端，并排摆开。看清哪个智能体<em>需要你</em>。",
+    "from": "7be0ec221ba9"
+  },
+  "home.hero.lead": {
+    "text": "Aubergine 把你所有的终端并排放在浏览器里的一张画布上。想开多少就开多少，用你已经在用的智能体和模型。它自己没有模型，也从不向你要密钥。",
+    "from": "c8c8b75e9e20"
+  },
+  "home.hero.after": {
+    "text": "然后运行 <code>aubergine start --open</code>。适用于 macOS，需要 tmux 3.2 或更高版本以及 Node.js 22 或更高版本。",
+    "from": "bed0cbea0b2d"
+  },
+  "home.hero.install": {
+    "text": "安装",
+    "from": "569ca49f4aaf"
+  },
+  "home.hero.source": {
+    "text": "阅读源码",
+    "from": "625b22ba31d0"
+  },
+  "home.canvas.caption": {
+    "text": "这是示意图，不是截图：画布上的五个终端，以及在等你的那一个。",
+    "from": "413e282f8a9d"
+  },
+  "home.see.title": {
+    "text": "它是什么样子",
+    "from": "9a5d81b4a5f3"
+  },
+  "home.see.intro": {
+    "text": "以下是 Aubergine 自带演示的真实截图：用的是替身智能体，不是真的智能体。",
+    "from": "61f7034f8117"
+  },
+  "home.see.canvas.claim": {
+    "text": "所有终端都在一张画布上",
+    "from": "51af5aa39147"
+  },
+  "home.see.canvas.text": {
+    "text": "想开多少就开多少，并排摆放，每个终端在可见时都是实时的。",
+    "from": "e5c7903b1535"
+  },
+  "home.see.canvas.caption": {
+    "text": "列表说明每个终端在做什么；旁边就是终端本身。",
+    "from": "40d3143df913"
+  },
+  "home.see.canvas.alt": {
+    "text": "侧边栏列出五个终端，并用文字写出各自的状态（working、waiting for you、finished、parked），旁边是画布的一部分，其中有一个实时的 shell。",
+    "from": "2bb1af139cbc"
+  },
+  "home.see.waits.claim": {
+    "text": "在等你的那个一眼就能看到",
+    "from": "7d5fd4d29cc6"
+  },
+  "home.see.waits.text": {
+    "text": "当某个智能体需要你时，隔着整张画布也能看到，按 W 就能过去。",
+    "from": "5a95026b002e"
+  },
+  "home.see.waits.caption": {
+    "text": "它的边框变成等待的颜色，标题显示 waiting for you。",
+    "from": "56be14801975"
+  },
+  "home.see.waits.alt": {
+    "text": "一个终端，其中的智能体在提问，标题显示 waiting for you，边框是等待的颜色。",
+    "from": "90d945c1648c"
+  },
+  "home.see.focus.claim": {
+    "text": "单独打开一个终端",
+    "from": "0ddd4013565e"
+  },
+  "home.see.focus.text": {
+    "text": "任何终端都可以在单独的浏览器标签页中打开，是同一个终端，不是副本。",
+    "from": "ba54fa6c02df"
+  },
+  "home.see.focus.caption": {
+    "text": "需要时，它的详情和笔记会在旁边打开，用各自的按钮再关上。",
+    "from": "95b86a5cd8de"
+  },
+  "home.see.focus.alt": {
+    "text": "浏览器标签页中单独的一个终端：顶部是名称，详情里有工作流步骤、文件夹和字段，旁边是实时终端。",
+    "from": "3b3df705e912"
+  },
+  "home.agents.title": {
+    "text": "自带你的智能体",
+    "from": "053237049eea"
+  },
+  "home.agents.intro": {
+    "text": "Aubergine 运行的是普通终端。它不调用模型，不持有密钥，也没有账号：你已经在用的命令行智能体，以你的身份登录，带着你为它们选的模型，在它的终端里运行。Aubergine 为智能体自动做的事，目前是为 Claude Code 构建的；其他任何智能体都可以通过 <code>aubergine</code> 命令告诉它同样的事。",
+    "from": "9e12708b9129"
+  },
+  "home.agents.claude": {
+    "text": "从 New terminal（新建终端）菜单启动它，它会自己报告何时在工作、在等你或已完成；Aubergine 可以恢复它的对话，并显示它是如何配置的。",
+    "from": "493938fd27d5"
+  },
+  "home.agents.codex.name": {
+    "text": "Codex 与 ChatGPT",
+    "from": "38c13bed7dca"
+  },
+  "home.agents.codex": {
+    "text": "Codex 像任何程序一样在终端里运行；只要它的指令告诉它，它就会通过 <code>aubergine</code> 命令报告。浏览器里的 ChatGPT 不是终端程序。",
+    "from": "57da92f4d853"
+  },
+  "home.agents.other.name": {
+    "text": "任何其他命令行智能体，或普通 shell",
+    "from": "ee656f2d4bf2"
+  },
+  "home.agents.other": {
+    "text": "每个终端都有 <code>aubergine</code> 命令，<code>aubergine guide --snippet</code> 会打印五行，供你放进智能体自己的指令里。",
+    "from": "bd4153cd9ede"
+  },
+  "home.built.title": {
+    "text": "还做好了什么",
+    "from": "67ca3d0bd3e6"
+  },
+  "home.built.intro": {
+    "text": "以下这些今天都能在你的电脑上运行。",
+    "from": "e6025b6fd725"
+  },
+  "home.built.canvas.name": {
+    "text": "一张终端画布",
+    "from": "efed05a9a763"
+  },
+  "home.built.canvas.text": {
+    "text": "平移、缩放、排列真正的终端，点一下就能输入；把一个终端停放起来稍后再拿回来，或在浏览器标签页中单独打开它，旁边是它的详情和笔记。",
+    "from": "062fb655d54f"
+  },
+  "home.built.waiting.name": {
+    "text": "看清谁在等",
+    "from": "a8dd066ebe3d"
+  },
+  "home.built.waiting.text": {
+    "text": "每个终端都显示忙碌、空闲或在等你；“For you”列表和“next waiting”直接带你去需要人处理的地方。",
+    "from": "d2f2b06c77b4"
+  },
+  "home.built.queue.name": {
+    "text": "队列与定时计划",
+    "from": "403b3a701d15"
+  },
+  "home.built.queue.text": {
+    "text": "任务写一次，让空闲的智能体去接；或者安排它在你选定的日子、每天的某个时间运行。",
+    "from": "ca6521d877a6"
+  },
+  "home.built.copies.name": {
+    "text": "工作副本",
+    "from": "9660dc116131"
+  },
+  "home.built.copies.text": {
+    "text": "给每个智能体一份仓库副本，放在它自己的分支上，两个智能体永远不会编辑同一批文件。",
+    "from": "4230039c27f0"
+  },
+  "home.built.projects.name": {
+    "text": "项目",
+    "from": "04e2a9728af7"
+  },
+  "home.built.projects.text": {
+    "text": "一个服务器，多个控制室：每个项目有自己的画布、队列、定时计划和规则，并可以保存为文件或模板。",
+    "from": "e0961f503387"
+  },
+  "home.built.workflows.name": {
+    "text": "工作流与审批",
+    "from": "cefa6bb93441"
+  },
+  "home.built.workflows.text": {
+    "text": "给智能体一系列要遵循的步骤，在等待人的步骤处停下，并在一块看板上查看所有正在进行的运行。",
+    "from": "7b456d89fd1e"
+  },
+  "home.built.messages.name": {
+    "text": "终端之间的消息",
+    "from": "48b5af2c48ad"
+  },
+  "home.built.messages.text": {
+    "text": "让智能体彼此对话，带有署名的发送者、限额和暂停，每张画布默认关闭。",
+    "from": "785ee3f85615"
+  },
+  "home.built.api.name": {
+    "text": "API 与 MCP 服务器",
+    "from": "1a84834881e1"
+  },
+  "home.built.api.text": {
+    "text": "带有限定权限令牌的本地 HTTP API、一个有类型的客户端，以及一个只列出凭据可用工具的 MCP 服务器。",
+    "from": "f9999af55d29"
+  },
+  "home.built.cli.name": {
+    "text": "命令行",
+    "from": "f8709772ea07"
+  },
+  "home.built.cli.text": {
+    "text": "<code>aubergine</code> 命令可以从这台机器上的任何终端启动终端、把任务加入队列、设置定时计划、读取看板和审批运行。",
+    "from": "7c132e9877d8"
+  },
+  "home.built.recaps.name": {
+    "text": "回顾与历史",
+    "from": "2ea7a47cfa76"
+  },
+  "home.built.recaps.text": {
+    "text": "查看你不在时发生了什么变化，搜索终端输出，并从命令面板重新打开过去的对话。",
+    "from": "1a640de790ee"
+  },
+  "home.trust.title": {
+    "text": "你的终端始终属于你",
+    "from": "c6f11f794209"
+  },
+  "home.trust.local.name": {
+    "text": "仅限本地",
+    "from": "c905013aab29"
+  },
+  "home.trust.local.text": {
+    "text": "服务器监听 127.0.0.1，并检查每个请求的 Host 和 Origin；从其他设备使用默认关闭，直到你自己设置。",
+    "from": "cd7a0d902e0f"
+  },
+  "home.trust.outlive.name": {
+    "text": "终端比应用活得更久",
+    "from": "2c75df8acfc1"
+  },
+  "home.trust.outlive.text": {
+    "text": "每个终端都是一个 tmux 会话：关掉浏览器或重启 Aubergine，你的工作照常运行。",
+    "from": "f913c3351663"
+  },
+  "home.trust.nomodel.name": {
+    "text": "没有模型，没有密钥",
+    "from": "2f070717231f"
+  },
+  "home.trust.nomodel.text": {
+    "text": "Aubergine 不挑选也不调用模型，也不持有任何模型的密钥；模型由你的智能体自带。",
+    "from": "fe25a0ed6b54"
+  },
+  "home.trust.decide.name": {
+    "text": "由你决定",
+    "from": "6a93d45962ec"
+  },
+  "home.trust.decide.text": {
+    "text": "令牌有权限范围，智能体写的东西等你审阅，审批由人来做。",
+    "from": "7e1645184727"
+  },
+  "home.trust.more": {
+    "text": "哪些受保护，哪些不受保护",
+    "from": "f0da10ecfe7d"
+  },
+  "home.install.title": {
+    "text": "五分钟上手",
+    "from": "ade3bbf9af01"
+  },
+  "home.install.intro": {
+    "text": "你需要 macOS，以及 tmux 3.2 或更高版本和 Node.js 22 或更高版本。<code>brew install tmux node</code> 可以一次装好两者。",
+    "from": "fabf8314c9cb"
+  },
+  "home.install.s1.title": {
+    "text": "安装",
+    "from": "569ca49f4aaf"
+  },
+  "home.install.s1.text": {
+    "text": "或者使用<a href=\"/install/\">安装脚本</a>，它会用 pnpm 从源码构建。",
+    "from": "506eece86d4a"
+  },
+  "home.install.s2.title": {
+    "text": "启动并打开浏览器",
+    "from": "09b350acdba9"
+  },
+  "home.install.s2.text": {
+    "text": "它会启动服务器并打开已登录的浏览器。",
+    "from": "cc6fc15c6b0d"
+  },
+  "home.install.s3.title": {
+    "text": "跟着导览走一遍",
+    "from": "a83c4366d2df"
+  },
+  "home.install.s3.text": {
+    "text": "在空画布上点击 <strong>Show me around</strong>（带我看看）。它会创建一张由替身智能体组成的 Demo 画布，用八个简短步骤带你走一遍；<code>aubergine demo --remove</code> 会把它移除。",
+    "from": "b20f7c13bc30"
+  },
+  "home.install.note": {
+    "text": "安装脚本只改动 <code>~/.aubergine</code> 和一个名为 <code>aubergine</code> 的链接。它从不使用 sudo，也从不编辑你的 shell 启动文件。",
+    "from": "1b03983d93c3"
+  },
+  "home.faq.title": {
+    "text": "常见问题",
+    "from": "9a72221a2747"
+  },
+  "home.faq.what.q": {
+    "text": "Aubergine 是什么？",
+    "from": "34bffd794522"
+  },
+  "home.faq.what.a": {
+    "text": "一个在本地运行、基于浏览器的终端会话画布。每个终端都是一个可以排列和使用的节点，所以你可以同时运行多个编程智能体，并看清哪一个在等你。",
+    "from": "e2699684c13a"
+  },
+  "home.faq.send.q": {
+    "text": "Aubergine 会把我的终端或代码发送到别处吗？",
+    "from": "8e3369fd3214"
+  },
+  "home.faq.send.a": {
+    "text": "不会。一切都在你自己的电脑上运行。服务器只监听 127.0.0.1，并检查每个请求的 Host 和 Origin。",
+    "from": "df08013e9725"
+  },
+  "home.faq.need.q": {
+    "text": "运行 Aubergine 需要什么？",
+    "from": "efe26fb96381"
+  },
+  "home.faq.need.a": {
+    "text": "macOS，以及 tmux 3.2 或更高版本和 Node.js 22 或更高版本；安装脚本还需要 pnpm。Linux 应该也能用，但还没有测试过。",
+    "from": "50e15eb9d5c0"
+  },
+  "home.faq.byhand.q": {
+    "text": "如果我自己在终端里启动 Claude Code 会怎样？",
+    "from": "e8281791e5fb"
+  },
+  "home.faq.byhand.a": {
+    "text": "它像任何程序一样工作：你照常向它输入。但只有当 Aubergine 自己启动了智能体时（New terminal，然后选 Claude Code），它才知道那里有一个智能体，因为它会加上几个小钩子来报告智能体在做什么。手动启动时，终端只会显示正忙于运行 <code>claude</code>：它提问时不会标为 waiting for you，你在那里启动工作流时也不会替它输入任何内容。你可以自己让它运行 <code>aubergine workflow status</code>，这在终端内仍然有效；或者改从 New terminal 菜单启动智能体。",
+    "from": "23c877f7b9d5"
+  },
+  "home.faq.free.q": {
+    "text": "Aubergine 免费吗？",
+    "from": "ff46b785dd7f"
+  },
+  "home.faq.free.a": {
+    "text": "免费。它采用 <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE\">MIT 许可证</a>，免费开源，源码在 GitHub 上。",
+    "from": "30fae4a08af7"
+  },
+  "home.faq.more": {
+    "text": "全部问题",
+    "from": "57bf5a60dd59"
+  },
+  "home.planned.title": {
+    "text": "计划中的内容",
+    "from": "e10eed0040ae"
+  },
+  "home.planned.line": {
+    "text": "多人协作、云端智能体、审批模式等都在计划中，尚未构建。<a href=\"/roadmap/\">查看路线图</a>。",
+    "from": "5c6d1db70932"
+  },
+  "claude.meta.title": {
+    "text": "Aubergine 中的 Claude Code | Aubergine",
+    "from": "964ec2c2f3df"
+  },
+  "claude.meta.description": {
+    "text": "Aubergine 为 Claude Code 自动做的事：从菜单启动它、看到它在等待、恢复对话、过去的对话、它是如何配置的，以及工具。",
+    "from": "53c5a33c5a7d"
+  },
+  "claude.title": {
+    "text": "Aubergine 为 Claude Code 做了什么",
+    "from": "d05c8e0b3f82"
+  },
+  "claude.lead": {
+    "text": "Claude Code 像任何程序一样在 Aubergine 终端里运行。从 Aubergine 启动时，它还会告诉画布自己在做什么，Aubergine 可以向它交代任务、恢复它，并显示它是如何配置的。下面就是全部内容，按你遇到它们的顺序排列。",
+    "from": "48626cf950ce"
+  },
+  "claude.yours": {
+    "text": "Claude Code 由你自己安装和登录。Aubergine 不调用模型，也不持有密钥：它启动的是你已经有的 <code>claude</code> 命令。",
+    "from": "49c81d042977"
+  },
+  "claude.start.title": {
+    "text": "从菜单启动",
+    "from": "f2e4406e142f"
+  },
+  "claude.start.text": {
+    "text": "<strong>New terminal ▾ → Claude Code</strong>，或在没有终端占用键盘时按 <code>C</code>，会在新终端中启动 <code>claude</code>，并使用 Aubergine 写在自己数据文件夹里的一个设置文件。你自己的 Claude Code 配置不会被改动。",
+    "from": "58f4f8786edb"
+  },
+  "claude.start.command": {
+    "text": "它启动的命令是设置中的 <code>agents.claudeCommand</code>，除非你修改，否则就是 <code>claude</code>；Aubergine 会在末尾加上自己的参数。",
+    "from": "cadf315d3f4f"
+  },
+  "claude.start.where": {
+    "text": "位置：终端列表顶部 New terminal（新建终端）旁边的菜单。",
+    "from": "8535ecc3618e"
+  },
+  "claude.state.title": {
+    "text": "看到它何时在工作、在等待、已完成",
+    "from": "762bb49f53ad"
+  },
+  "claude.state.text": {
+    "text": "那个设置文件里的钩子会告诉画布智能体在做什么。你提交提示词时，提示词会加入终端的笔记日志，终端显示 <strong>working</strong>（工作中）。当智能体需要你时，无论是权限询问还是因为空闲等待输入，它的边框会变成等待的颜色，标题和列表中的行显示 <strong>waiting for you</strong>（在等你）。它停下时显示 <strong>finished</strong>（已完成）。",
+    "from": "64ec1f0a81c2"
+  },
+  "claude.state.more": {
+    "text": "<code>W</code> 跳到下一个在等待的终端，<strong>Notify</strong> 为开始等待的终端打开桌面通知。提示词里可能有机密：把 <code>\"agents\": { \"logPrompts\": false }</code> 写进 <code>config.json</code>，就不会把它们记进笔记日志。",
+    "from": "8d17a75b0b6f"
+  },
+  "claude.state.where": {
+    "text": "位置：终端的标题、它在列表中的行，以及顶部 For you 旁边的数字。",
+    "from": "4069b9f958a3"
+  },
+  "claude.byhand.title": {
+    "text": "你自己启动的 Claude Code",
+    "from": "4e9410ab2c6a"
+  },
+  "claude.byhand.text": {
+    "text": "在普通终端里手动输入的 <code>claude</code> 像任何程序一样工作，但 Aubergine 只看到一个正在运行它的 shell：不会显示 waiting for you，你在那里启动工作流时也不会替它输入任何内容。要改变这一点，可以打印出钩子，手动加到你自己的 Claude Code 设置中。它们在 Aubergine 终端之外不起任何作用。",
+    "from": "fa6fba9030be"
+  },
+  "claude.describe.title": {
+    "text": "它会给自己命名并保持摘要",
+    "from": "d093aa41e5df"
+  },
+  "claude.describe.text": {
+    "text": "Aubergine 启动的智能体在开始时会被告知：用 <code>aubergine describe</code>、<code>aubergine link add</code> 和 <code>aubergine field set</code> 按工作内容给终端命名并保持一份摘要；如果它停下时还没有自己的名称或摘要，会被提醒一次。你自己写的内容优先；智能体对同一件事的说法会带着 <strong>Use this</strong>（使用这个）在旁边等着。这个提醒可以在 <strong>Settings</strong> 中关闭。",
+    "from": "b3ada1af2f57"
+  },
+  "claude.describe.where": {
+    "text": "位置：终端的详情，其中有它的名称、摘要、字段和链接。",
+    "from": "14d403dcf75f"
+  },
+  "claude.told.title": {
+    "text": "工作流、任务、回顾和消息都能送达它",
+    "from": "65f0d98fe0d0"
+  },
+  "claude.told.text": {
+    "text": "Aubergine 只会往终端里输入四句固定的话，仅此而已：启动了一个工作流、请智能体写点东西、你要求一份回顾、有一条消息在等待。每句话都指明一条让智能体运行的命令。只有在能看出智能体占着键盘的地方才会输入：要么是 Aubergine 启动的智能体，要么是设置里装有 <code>aubergine hooks print</code> 所给钩子的智能体。",
+    "from": "a965be64fc8b"
+  },
+  "claude.told.more": {
+    "text": "同样，队列中的任务只会交给前台有这样的智能体且它空闲的终端；<strong>Claude Code on a workflow…</strong> 会启动一个新终端，其中的智能体在第一条提示词里就被告知这次运行。",
+    "from": "4db5493b4c50"
+  },
+  "claude.told.where": {
+    "text": "位置：终端标题菜单中的 <strong>Run a workflow…</strong>，以及页面顶部的 <strong>Runs</strong>。",
+    "from": "85ec8e15f827"
+  },
+  "claude.resume.title": {
+    "text": "Resume agent",
+    "from": "0bb60c450191"
+  },
+  "claude.resume.text": {
+    "text": "Aubergine 会记住一个智能体终端处于哪个对话。当它的 shell 回到提示符时，无论是因为你退出了智能体还是电脑重启了，终端都会提供 <strong>Resume agent</strong>（恢复智能体），在那个对话中再次启动智能体。在处于某次运行中的终端上，它还会再次把这次运行告诉智能体。",
+    "from": "bad9c16cacaa"
+  },
+  "claude.resume.where": {
+    "text": "位置：终端的标题栏。",
+    "from": "f9a5a6f578cf"
+  },
+  "claude.history.title": {
+    "text": "过去的对话",
+    "from": "93b87f3b2adf"
+  },
+  "claude.history.text": {
+    "text": "<strong>Past conversations…</strong> 列出某个文件夹里智能体以前的对话：可以阅读，可以在画布上打开，也可以打开一个不改动原件的副本。在命令面板中输入 <code>@</code> 和一些词来搜索；<code>aubergine history</code> 在命令行中列出它们。读取的内容不会保留，任何令牌和智能体都无法通过 Aubergine 读取对话。",
+    "from": "168514a264d1"
+  },
+  "claude.history.form": {
+    "text": "它读取 Claude Code 保存的文件，其制作方称这种格式属于内部格式，会随版本变化。智能体更新后，名称和对话记录可能会变得不完整；Aubergine 读不了的记录会明确说读不了，绝不会显示成空的。",
+    "from": "08dc0e9d555c"
+  },
+  "claude.history.where": {
+    "text": "位置：命令面板（<code>⌘K</code>），以及终端详情中的“Past conversations in this folder…”。",
+    "from": "3477b0fbf75a"
+  },
+  "claude.setup.title": {
+    "text": "它是如何配置的",
+    "from": "af61266588a1"
+  },
+  "claude.setup.text": {
+    "text": "一份清单，列出智能体的配置文件中说给了它什么：MCP 服务器、插件、钩子、技能、权限规则和设置文件，每项都注明来源，以及 Aubergine 加了什么。只显示名称，绝不显示值或机密。它说明智能体是如何配置的，而不是正在运行的智能体加载了什么；对于它无法知道的事，例如随你的账号而来的连接器，它会直接说明。",
+    "from": "c514bb19fdee"
+  },
+  "claude.setup.where": {
+    "text": "位置：终端上的 <strong>⚙ on</strong>、命令面板中的“What is switched on for this agent…”，以及终端的详情。",
+    "from": "a8c53c214fcc"
+  },
+  "claude.tools.title": {
+    "text": "为它准备的 Aubergine 工具",
+    "from": "e66ee8e8e0bc"
+  },
+  "claude.tools.text": {
+    "text": "<strong>Claude Code with Aubergine tools…</strong> 会先问智能体可以做什么：<strong>None</strong>（无）；<strong>Its own work only</strong>（仅限自己的工作），使用该终端自己的凭据；或 <strong>More…</strong>（更多），由你选择权限范围，此时会为这一个终端创建一个令牌，并在终端被彻底结束时吊销。工具是 <code>aubergine mcp</code>，通过启动命令行传给智能体；不会写入它自己的配置。",
+    "from": "6f42a9f284d0"
+  },
+  "claude.tools.where": {
+    "text": "位置：New terminal 旁边的菜单。",
+    "from": "33b77d6aeba6"
+  },
+  "claude.move.title": {
+    "text": "把已经打开的 Claude Code 搬过来",
+    "from": "71713eb1febd"
+  },
+  "claude.move.text": {
+    "text": "正在运行的智能体无法搬移，但它的对话可以。<strong>Open elsewhere</strong> 列出你的 Claude Code 标签页，提供 <strong>Fork to canvas</strong>，对于空闲的智能体还有 <strong>Stop and resume here</strong>，它会先征求你的确认。在终端中，<code>aubergine move</code> 做同样的事，<code>aubergine here --claude</code> 会在画布上启动 Claude Code，接着该文件夹的上一次对话继续。",
+    "from": "2710d35e40f6"
+  },
+  "claude.move.where": {
+    "text": "位置：画布上方工具栏中的 <strong>Open elsewhere</strong>，或按 <code>O</code>。",
+    "from": "957b9c5d2c08"
+  },
+  "claude.copy.title": {
+    "text": "在它自己的工作副本中",
+    "from": "88b0fbc30823"
+  },
+  "claude.copy.text": {
+    "text": "<code>aubergine here --copy --claude</code> 会在仓库的独立检出、独立分支中启动 Claude Code，两个智能体永远不会编辑同一批文件。带工具的 Claude Code 终端对话框中也有同样的选项。",
+    "from": "d952aaa25439"
+  },
+  "claude.tried.title": {
+    "text": "已经试过什么",
+    "from": "dc4245eb9cbd"
+  },
+  "claude.tried.text": {
+    "text": "Aubergine 自带的演示使用替身，也就是运行与真实智能体相同的命令和钩子的简短脚本，而不是真正的 Claude Code。用真实智能体尚未试过审批、工作副本、来自队列的任务和定时计划。",
+    "from": "d7b31de7e83d"
+  },
+  "claude.others": {
+    "text": "其他智能体可以通过 <code>aubergine</code> 命令告诉它其中的大部分内容：见 <a href=\"/chatgpt/\">Codex 与 ChatGPT</a>。",
+    "from": "a37bd1ffdb77"
+  },
+  "claude.mark": {
+    "text": "Aubergine 与 Anthropic 没有关联。Claude 和 Claude Code 是 Anthropic 的商标。",
+    "from": "cdae060f0648"
+  },
+  "chatgpt.meta.title": {
+    "text": "Aubergine 中的 Codex 与 ChatGPT | Aubergine",
+    "from": "8dcd1dde8945"
+  },
+  "chatgpt.meta.description": {
+    "text": "Codex 是 OpenAI 的命令行编程智能体，像任何程序一样在 Aubergine 终端中运行。今天能用什么，它能通过 aubergine 命令报告什么，以及哪些只为 Claude Code 构建。",
+    "from": "6f8c78d52c06"
+  },
+  "chatgpt.crumb": {
+    "text": "Codex 与 ChatGPT",
+    "from": "38c13bed7dca"
+  },
+  "chatgpt.title": {
+    "text": "Codex 与 ChatGPT",
+    "from": "38c13bed7dca"
+  },
+  "chatgpt.lead": {
+    "text": "Codex 是 OpenAI 的命令行编程智能体。它由你自己安装和登录；在 Aubergine 中，它像其他任何程序一样在终端里运行。",
+    "from": "70f25216735c"
+  },
+  "chatgpt.untried.title": {
+    "text": "尚未试过",
+    "from": "b0889cc96cfa"
+  },
+  "chatgpt.untried.text": {
+    "text": "还没有人在 Aubergine 中运行过真正的 Codex。本页所说的是 Aubergine 为终端中的任何程序以及为 <code>aubergine</code> 命令所做的事，这部分已构建并经过测试；Codex 本身在其中表现如何还没有人看到过。如果你试了，<a href=\"https://github.com/thirstyeggplant/aubergine/issues\">告诉我们结果</a>。",
+    "from": "fbfa21211143"
+  },
+  "chatgpt.start.title": {
+    "text": "启动它",
+    "from": "4238a078a056"
+  },
+  "chatgpt.start.text": {
+    "text": "用 <strong>New terminal</strong>（新建终端）或 <code>N</code> 打开一个终端，然后像在任何终端里一样启动 Codex。Aubergine 不调用模型，也不持有密钥：Codex 需要的东西，你在登录时已经给了它。",
+    "from": "382ba4da4e80"
+  },
+  "chatgpt.works.title": {
+    "text": "今天能用的",
+    "from": "e34f6b7e46b1"
+  },
+  "chatgpt.works.intro": {
+    "text": "Aubergine 为任何终端所做的一切：",
+    "from": "12590cf44023"
+  },
+  "chatgpt.works.side.name": {
+    "text": "并排摆放",
+    "from": "a3d7b387c34d"
+  },
+  "chatgpt.works.side.text": {
+    "text": "一张画布上想放多少终端就放多少，画布以标签页的形式呈现。",
+    "from": "dbf89836ed55"
+  },
+  "chatgpt.works.status.name": {
+    "text": "命令状态",
+    "from": "fe494b43cb4b"
+  },
+  "chatgpt.works.status.text": {
+    "text": "使用 zsh 时，终端标题会显示有命令正在运行，以及是哪条命令。",
+    "from": "4c2760707e62"
+  },
+  "chatgpt.works.keep.name": {
+    "text": "颜色、笔记和字段",
+    "from": "6a46e4fad859"
+  },
+  "chatgpt.works.keep.text": {
+    "text": "给它的终端设一个颜色，保留一份带摘要和日志的笔记，以及工单或负责人之类的字段。",
+    "from": "ee6d1af56cf5"
+  },
+  "chatgpt.works.park.name": {
+    "text": "停放",
+    "from": "4a64d6c849df"
+  },
+  "chatgpt.works.park.text": {
+    "text": "× 会停放终端：它离开画布但继续运行，<strong>Parked</strong> 可以把它拿回来。",
+    "from": "ddc50d8a2017"
+  },
+  "chatgpt.works.focus.name": {
+    "text": "单独打开一个终端",
+    "from": "0ddd4013565e"
+  },
+  "chatgpt.works.focus.text": {
+    "text": "在单独的浏览器标签页中打开终端，旁边是它的详情和笔记。",
+    "from": "55d7e4f4f460"
+  },
+  "chatgpt.works.copy.name": {
+    "text": "工作副本",
+    "from": "2e0960650715"
+  },
+  "chatgpt.works.copy.text": {
+    "text": "<strong>Shell in a folder or a working copy…</strong> 或 <code>aubergine new --copy</code> 会在独立检出、独立分支中启动终端，两个智能体永远不会编辑同一批文件。",
+    "from": "9abe578a4127"
+  },
+  "chatgpt.works.search.name": {
+    "text": "搜索输出",
+    "from": "0f487fa9a292"
+  },
+  "chatgpt.works.search.text": {
+    "text": "<code>⌘K</code> 搜索所有终端打印过的内容，并打开该终端，滚动到匹配处。",
+    "from": "60d93140539a"
+  },
+  "chatgpt.report.title": {
+    "text": "它能通过命令告诉你什么",
+    "from": "0e02d0340875"
+  },
+  "chatgpt.report.intro": {
+    "text": "每个 Aubergine 终端都有 <code>aubergine</code> 命令和一个仅属于该终端的凭据。其中的任何程序，包括 Codex，都可以使用它们：",
+    "from": "60b4ba06f8a5"
+  },
+  "chatgpt.report.attention": {
+    "text": "把终端标为 waiting for you（在等你），并附上它需要什么；<code>aubergine attention working</code> 和 <code>aubergine attention done</code> 表示其余状态。",
+    "from": "ed9452d7523a"
+  },
+  "chatgpt.report.note": {
+    "text": "向终端的笔记日志添加一行。",
+    "from": "a99a9a2851ea"
+  },
+  "chatgpt.report.describe": {
+    "text": "按工作内容给终端命名并保持摘要；<code>aubergine link add</code> 和 <code>aubergine field set</code> 添加这项工作的链接和字段。你自己写的内容优先。",
+    "from": "4a69c7925e1d"
+  },
+  "chatgpt.report.workflow": {
+    "text": "读取工作流的当前步骤；<code>aubergine workflow done</code> 报告完成并打印下一步。",
+    "from": "bfa2482d9f38"
+  },
+  "chatgpt.report.task": {
+    "text": "向队列提议一个任务，<code>aubergine ask</code> 请你做一件只有人能做的事。两者都会在你的列表上等待。",
+    "from": "f6a6658159c8"
+  },
+  "chatgpt.tell.title": {
+    "text": "怎样告诉它",
+    "from": "808fc16a4b54"
+  },
+  "chatgpt.tell.text": {
+    "text": "在被告知之前，Codex 不知道 Aubergine 的存在。下面这条命令会打印五行，粘贴到你的智能体在项目中每次对话开始时读取的指令里；放在哪里，请看它自己的文档：",
+    "from": "ad7d9c3cdf01"
+  },
+  "chatgpt.tell.after": {
+    "text": "这几行告诉它：在 Aubergine 终端中时运行一次 <code>aubergine guide</code>，其余的由指南说明。Aubergine 只打印这几行，从不把它们写进任何文件。",
+    "from": "24aa468975b7"
+  },
+  "chatgpt.tell.mcp": {
+    "text": "如果你的智能体能启动 MCP 服务器，<code>aubergine mcp</code> 会以工具的形式提供同样的功能；在 Aubergine 终端内，处理该终端自己的工作不需要地址，也不需要令牌。",
+    "from": "7e1e9649a26d"
+  },
+  "chatgpt.only.title": {
+    "text": "目前只为 Claude Code 构建的部分",
+    "from": "13e4ac762aab"
+  },
+  "chatgpt.only.intro": {
+    "text": "Aubergine 为智能体自动做的事是为 Claude Code 构建的。对于 Codex，目前：",
+    "from": "dcf7194de658"
+  },
+  "chatgpt.only.menu": {
+    "text": "它不在 New terminal 菜单中：你需要自己在终端里启动它。",
+    "from": "51fe40c6c0b7"
+  },
+  "chatgpt.only.seen": {
+    "text": "Aubergine 不会把它视为智能体：它不会自动被标为等待或已完成，只有在它运行 <code>aubergine attention</code> 时才会。",
+    "from": "94d90e71f3eb"
+  },
+  "chatgpt.only.typed": {
+    "text": "不会替它输入任何内容：在它的终端上启动的工作流不会输入任何东西，而是显示一行让你自己交给它；回顾或消息也不会通知它。",
+    "from": "1b4e07823075"
+  },
+  "chatgpt.only.queue": {
+    "text": "队列不会给它任务：任务只交给能看到智能体且它空闲的终端。",
+    "from": "6a80a3e587a3"
+  },
+  "chatgpt.only.resume": {
+    "text": "没有 Resume agent，没有过去对话的列表，没有配置清单，也没有 Aubergine 工具的对话框。",
+    "from": "ce8c093c0018"
+  },
+  "chatgpt.only.move": {
+    "text": "<code>aubergine move</code> 和 <code>aubergine here --claude</code> 只能搬来 Claude Code。",
+    "from": "66352f237ada"
+  },
+  "chatgpt.only.remind": {
+    "text": "它不会被提醒给终端命名或保持摘要。",
+    "from": "0b61446686d8"
+  },
+  "chatgpt.only.more": {
+    "text": "全部内容见 <a href=\"/claude/\">Claude Code</a> 页面。",
+    "from": "0bd32ffbda24"
+  },
+  "chatgpt.browser.title": {
+    "text": "浏览器中的 ChatGPT",
+    "from": "586ec4475558"
+  },
+  "chatgpt.browser.text": {
+    "text": "浏览器标签页中的 ChatGPT 是一个网页，不是终端里的程序，所以不能在画布上运行。",
+    "from": "580874279183"
+  },
+  "chatgpt.mark": {
+    "text": "Aubergine 与 OpenAI 没有关联。Codex 和 ChatGPT 是 OpenAI 的商标。",
+    "from": "a897a2ac5a2d"
+  },
+  "install.meta.title": {
+    "text": "如何在 macOS 上安装 Aubergine | Aubergine",
+    "from": "a8bd952c734f"
+  },
+  "install.meta.description": {
+    "text": "用一条命令安装 Aubergine，启动它，再花五分钟走一遍导览。系统要求、安装脚本会改动什么，以及常见问题的解决方法。",
+    "from": "abcd815ec344"
+  },
+  "install.crumb": {
+    "text": "安装",
+    "from": "569ca49f4aaf"
+  },
+  "install.title": {
+    "text": "如何安装 Aubergine",
+    "from": "71f80d2b2ec8"
+  },
+  "install.lead": {
+    "text": "一条命令安装，一条命令启动。包括导览在内大约五分钟。",
+    "from": "8924d3085c0c"
+  },
+  "install.req.title": {
+    "text": "系统要求",
+    "from": "e0cdd07f6a27"
+  },
+  "install.req.os": {
+    "text": "macOS。Linux 应该也能以同样方式运行，但还没有测试过。",
+    "from": "e896cb710692"
+  },
+  "install.req.tools": {
+    "text": "<a href=\"https://github.com/tmux/tmux\">tmux</a> 3.2 或更高版本，以及 Node.js 22 或更高版本。安装脚本还需要 pnpm。",
+    "from": "588e2ab2ee94"
+  },
+  "install.req.brew": {
+    "text": "用 <a href=\"https://brew.sh\">Homebrew</a>，一行就能装好两者（使用安装脚本的话再加上 <code>pnpm</code>）：",
+    "from": "9c116b9ec828"
+  },
+  "install.steps.title": {
+    "text": "安装并启动",
+    "from": "945ef89608d4"
+  },
+  "install.steps.npm": {
+    "text": "从 npm <strong>安装 Aubergine</strong>（只需要 tmux 和 Node.js）：",
+    "from": "eea62c4639cd"
+  },
+  "install.steps.script": {
+    "text": "或者使用安装脚本，它还需要 pnpm，并从源码构建：",
+    "from": "d6b9bd23fe72"
+  },
+  "install.steps.start": {
+    "text": "<strong>启动它，并打开已登录的浏览器。</strong>",
+    "from": "37654a734fd0"
+  },
+  "install.steps.tour": {
+    "text": "<strong>走一遍导览。</strong>点击空画布中间的 <em>Show me around</em>（带我看看）。它会创建一张名为“Demo”的画布，其中有几个替身智能体，并用八个简短步骤带你走一遍。演示中的一切都不是真的，<code>aubergine demo --remove</code> 会把它移除。",
+    "from": "e7f179f7c61a"
+  },
+  "install.steps.read": {
+    "text": "想先读一读脚本？下载它，读一遍，然后运行 <code>sh install.sh --dry-run</code>，看看它会做什么，而不改动任何东西。",
+    "from": "6a20dd49876a"
+  },
+  "install.changes.title": {
+    "text": "安装脚本会改动什么",
+    "from": "0563a99f51ff"
+  },
+  "install.changes.text": {
+    "text": "只有两样：安装文件夹（<code>~/.aubergine</code>，或 <code>AUBERGINE_HOME</code>），以及一个名为 <code>aubergine</code> 的链接，放在你 <code>PATH</code> 中一个你有写权限的文件夹里。它会先检查一切，缺了什么就什么都不改。",
+    "from": "0a825e326d78"
+  },
+  "install.changes.not": {
+    "text": "<strong>它不会</strong>使用 <code>sudo</code>、编辑你的 shell 启动文件、安装 Node.js、pnpm 或 tmux，也不会碰你的数据文件夹。",
+    "from": "2515db06f3ef"
+  },
+  "install.wrong.title": {
+    "text": "如果出了问题",
+    "from": "1a766f8f96ef"
+  },
+  "install.wrong.doctor": {
+    "text": "先运行 <code>aubergine doctor</code>。它会检查常见原因。",
+    "from": "41b2c2485b07"
+  },
+  "install.wrong.see": {
+    "text": "你看到的情况",
+    "from": "fd4e554fab6a"
+  },
+  "install.wrong.do": {
+    "text": "怎么做",
+    "from": "f47f1edc44ed"
+  },
+  "install.wrong.signin.see": {
+    "text": "“This browser is not signed in yet”",
+    "from": "9f5b94b25ed4"
+  },
+  "install.wrong.signin.do": {
+    "text": "在那个浏览器中打开一次登录链接。<code>aubergine open --print</code> 会再次打印它。",
+    "from": "965c7c3ed508"
+  },
+  "install.wrong.tmux.see": {
+    "text": "页面提示 tmux 缺失或版本太旧",
+    "from": "ef3468da7805"
+  },
+  "install.wrong.tmux.do": {
+    "text": "安装或升级 tmux（<code>brew install tmux</code>），然后重启服务器。",
+    "from": "9be03214def8"
+  },
+  "install.wrong.port.see": {
+    "text": "端口被占用，服务器无法启动",
+    "from": "aa6f2b6e17dc"
+  },
+  "install.wrong.port.do": {
+    "text": "换一个端口：<code>AUBERGINE_PORT=4700 aubergine start</code>。",
+    "from": "25b1179a84ca"
+  },
+  "install.wrong.path.do": {
+    "text": "链接不在你的 <code>PATH</code> 中。安装脚本会打印需要加进 shell 启动文件的那一行。",
+    "from": "c15d51fbb74f"
+  },
+  "install.wrong.badges.see": {
+    "text": "终端没有显示状态标记",
+    "from": "00220a528dae"
+  },
+  "install.wrong.badges.do": {
+    "text": "状态需要 zsh，而更新之前创建的会话会保留旧的 shell。把它停放起来，再启动一个新的。",
+    "from": "a82cc898a1f3"
+  },
+  "install.later.title": {
+    "text": "停止、更新、卸载",
+    "from": "8c6be2046c96"
+  },
+  "install.later.stop": {
+    "text": "按 Ctrl+C <strong>停止</strong>服务器。你的终端会继续运行；再次启动服务器并刷新页面即可找回它们。",
+    "from": "1ef7650944a8"
+  },
+  "install.later.update": {
+    "text": "<strong>更新</strong>：如果用 npm 安装，运行 <code>npm install -g @meatgarden/aubergine@latest</code>；如果用安装脚本，运行 <code>aubergine update</code>。然后重启服务器。",
+    "from": "a07a85ca11ea"
+  },
+  "install.later.uninstall": {
+    "text": "<strong>卸载</strong>：运行 <code>aubergine uninstall</code>。它会移除链接，并在询问后移除安装脚本创建的副本。它从不删除你的数据，也从不结束你的终端。",
+    "from": "6d77ba78aea3"
+  },
+  "install.later.login": {
+    "text": "<strong>登录时启动</strong>：运行 <code>aubergine service install</code>，以后只需打开浏览器。",
+    "from": "e90077683d1e"
+  },
+  "install.next.title": {
+    "text": "下一步",
+    "from": "1ff57a29d7c9"
+  },
+  "install.next.text": {
+    "text": "阅读<a href=\"/run-multiple-coding-agents/\">如何同时运行多个编程智能体</a>，或者看看<a href=\"/guides/\">指南</a>。完整参考在 <a href=\"https://github.com/thirstyeggplant/aubergine#readme\">README</a> 中。",
+    "from": "e0f26d3bf925"
+  },
+  "install.ld.howto": {
+    "text": "如何安装并启动 Aubergine",
+    "from": "7a2473f8500b"
+  },
+  "install.ld.howtoAbout": {
+    "text": "用一条命令在 macOS 上安装 Aubergine，启动它，然后走一遍导览。",
+    "from": "e0aeedb8e5ed"
+  },
+  "install.ld.s1": {
+    "text": "安装所需软件",
+    "from": "058debbaf60f"
+  },
+  "install.ld.s2": {
+    "text": "安装 Aubergine",
+    "from": "733a8757545c"
+  },
+  "install.ld.s3": {
+    "text": "启动并打开浏览器",
+    "from": "8c7a8d4cca8c"
+  },
+  "install.ld.s4": {
+    "text": "走一遍导览",
+    "from": "a83c4366d2df"
+  },
+  "install.ld.q1": {
+    "text": "Aubergine 安装脚本会改动什么？",
+    "from": "3abbf9c3de69"
+  },
+  "install.ld.a1": {
+    "text": "两样：安装文件夹（~/.aubergine，或 AUBERGINE_HOME），以及 PATH 中一个名为 aubergine 的链接。它从不使用 sudo，从不编辑你的 shell 启动文件，也从不安装 Node.js、pnpm 或 tmux。",
+    "from": "fc93852fb9a6"
+  },
+  "install.ld.q2": {
+    "text": "如何更新 Aubergine？",
+    "from": "ac62d764ea7a"
+  },
+  "install.ld.a2": {
+    "text": "用 npm 安装的：运行 npm install -g @meatgarden/aubergine@latest。用安装脚本安装的：运行 aubergine update，或再次运行安装脚本。然后重启服务器。",
+    "from": "96bfcbba99a6"
+  },
+  "install.ld.q3": {
+    "text": "如何卸载 Aubergine？",
+    "from": "5dbaf4c141c9"
+  },
+  "install.ld.a3": {
+    "text": "运行 aubergine uninstall。它会移除链接，并在询问后移除安装脚本创建的副本。它从不删除你的数据，也从不结束你的终端。",
+    "from": "829813dbf528"
+  },
+  "install.ld.q4": {
+    "text": "Aubergine 能在 Linux 或 Windows 上运行吗？",
+    "from": "e3df2a3fd915"
+  },
+  "install.ld.a4": {
+    "text": "Linux 应该可以，但还没有测试过。不支持 Windows。",
+    "from": "b8b7b1d1037d"
+  },
+  "guides.meta.title": {
+    "text": "Aubergine 指南 | Aubergine",
+    "from": "0d501fb6af2e"
+  },
+  "guides.meta.description": {
+    "text": "用 Aubergine 运行多个编程智能体的指南：概览、Claude Code 与 Codex、工作副本，以及队列与定时计划。",
+    "from": "813ebf5cbbed"
+  },
+  "guides.crumb": {
+    "text": "指南",
+    "from": "572cd72feb9a"
+  },
+  "guides.title": {
+    "text": "指南",
+    "from": "572cd72feb9a"
+  },
+  "guides.lead": {
+    "text": "简短、实用的指南。完整参考是 <a href=\"https://github.com/thirstyeggplant/aubergine#readme\">README</a>。",
+    "from": "4235a66ec40d"
+  },
+  "guides.install.name": {
+    "text": "安装 Aubergine",
+    "from": "733a8757545c"
+  },
+  "guides.install.text": {
+    "text": "系统要求、一行安装脚本、它会改动什么，以及常见问题的解决方法。",
+    "from": "0c229f404056"
+  },
+  "guides.several.name": {
+    "text": "同时运行多个编程智能体",
+    "from": "d9bedb06d9bf"
+  },
+  "guides.several.text": {
+    "text": "画布、等待计数、队列、工作副本和工作流，一次讲完。",
+    "from": "432d38d0ca9c"
+  },
+  "guides.claude.name": {
+    "text": "Aubergine 中的 Claude Code",
+    "from": "f05972fd315a"
+  },
+  "guides.claude.text": {
+    "text": "Aubergine 为 Claude Code 自动做的事，以及每样东西在哪里。",
+    "from": "f77c6acef73f"
+  },
+  "guides.codex.name": {
+    "text": "Codex 与 ChatGPT",
+    "from": "38c13bed7dca"
+  },
+  "guides.codex.text": {
+    "text": "Codex 像任何程序一样在终端中运行，它能报告什么，以及哪些只为 Claude Code 构建。",
+    "from": "406a9eebc6ae"
+  },
+  "guides.copies.name": {
+    "text": "工作副本",
+    "from": "9660dc116131"
+  },
+  "guides.copies.text": {
+    "text": "给每个智能体独立的检出和分支，两个智能体永远不会编辑同一批文件。",
+    "from": "58872d0caca2"
+  },
+  "guides.queue.name": {
+    "text": "队列、For you 与定时计划",
+    "from": "61c48ccc941d"
+  },
+  "guides.queue.text": {
+    "text": "工作只分派一次，看到所有在等你的事，并在设定的时间运行任务。",
+    "from": "28336b44a14a"
+  },
+  "guides.security.name": {
+    "text": "安全与隐私",
+    "from": "1418baab9c29"
+  },
+  "guides.security.text": {
+    "text": "哪些受保护，哪些不受保护。",
+    "from": "87046dc292ef"
+  },
+  "guides.faq.name": {
+    "text": "常见问题",
+    "from": "dbc468a14b60"
+  },
+  "guides.faq.text": {
+    "text": "常见问题的简短回答。",
+    "from": "ba6e629d77f3"
+  },
+  "several.meta.title": {
+    "text": "如何同时运行多个编程智能体 | Aubergine",
+    "from": "edfa22b644ca"
+  },
+  "several.meta.description": {
+    "text": "把每个编程智能体放进一张画布上各自的终端，看清哪个在等你，从队列分派工作，并把每个智能体的改动分开。",
+    "from": "0886bd4868f2"
+  },
+  "several.crumb": {
+    "text": "运行多个智能体",
+    "from": "8b0dc326e0f4"
+  },
+  "several.title": {
+    "text": "如何同时运行多个编程智能体",
+    "from": "fcc048eb4346"
+  },
+  "several.lead": {
+    "text": "两个智能体很简单。五个就是一团乱：哪个卡住了，哪个在等你，哪个改了那个文件？Aubergine 正是为这种时刻而做的。它运行在你自己的电脑上。",
+    "from": "66c0ad369837"
+  },
+  "several.canvas.title": {
+    "text": "1. 在一张画布上给每个智能体一个终端",
+    "from": "4866382ee0cb"
+  },
+  "several.canvas.text": {
+    "text": "点击终端列表顶部的 <strong>New terminal</strong>（新建终端）或按 <code>N</code>，在其中启动一个智能体。拖动终端的标题栏来移动，调整大小，并用框把它们归组。相关的工作放在一张画布上；彼此独立的工作放在不同的画布（标签页）或<em>项目</em>中，每个项目都有自己的终端、队列和定时计划。",
+    "from": "1670aca324d5"
+  },
+  "several.canvas.tmux": {
+    "text": "每个终端都是 tmux 会话中真正的 shell。关掉浏览器或停止 Aubergine，你的智能体仍会继续运行。",
+    "from": "fcd6a03136f7"
+  },
+  "several.waits.title": {
+    "text": "2. 看清哪个智能体需要你",
+    "from": "02af5cc81964"
+  },
+  "several.waits.text": {
+    "text": "每个终端都会显示它是忙碌、空闲还是在等你。这个状态来自你 shell 中的钩子和智能体本身，而不是读取屏幕内容。顶部 <strong>For you</strong> 旁边的数字和 <code>W</code> 键会直接带你去下一个在等待的终端。",
+    "from": "aa2e391970e3"
+  },
+  "several.waits.foryou": {
+    "text": "一个列表 <strong>For you</strong> 汇集所有在等人处理的事：问题、待审批的运行、需要查看的已完成任务，以及带有原因的失败任务。",
+    "from": "0791b2b7f30f"
+  },
+  "several.queue.title": {
+    "text": "3. 从队列分派工作",
+    "from": "876879f17f0c"
+  },
+  "several.queue.text": {
+    "text": "任务写一次，放进<a href=\"/queue-and-schedules/\">队列</a>。在你发话时，空闲的智能体会接手，并且同时运行的数量有上限。对于重复的工作，设置一个定时计划。智能体可以提议任务、向你提问，但在你接受之前什么都不会开始。",
+    "from": "65372959c515"
+  },
+  "several.apart.title": {
+    "text": "4. 把每个智能体的改动分开",
+    "from": "819cc99b8d5c"
+  },
+  "several.apart.text": {
+    "text": "在同一个文件夹里的两个智能体会编辑同一批文件。让每个智能体在自己的<a href=\"/working-copies/\">工作副本</a>中启动：在自己分支上的独立检出，这样你就能分开阅读每个智能体的工作。Aubergine 从不替你合并、推送或变基。",
+    "from": "5f5f23de12b5"
+  },
+  "several.steps.title": {
+    "text": "5. 给智能体步骤，在关卡处做决定",
+    "from": "33923fa2da4c"
+  },
+  "several.steps.text": {
+    "text": "工作流是智能体依次遵循的一系列步骤，并有一条进度条显示它走到了哪里。某个步骤可以等你批准或退回。所有正在进行的运行都显示在一块看板上。",
+    "from": "f0912196c0fb"
+  },
+  "several.not.title": {
+    "text": "它不做什么",
+    "from": "b3a53baf5dfd"
+  },
+  "several.not.model": {
+    "text": "它不调用模型，也不替你选模型。智能体是你的。",
+    "from": "0735098d7a82"
+  },
+  "several.not.asyou": {
+    "text": "它不会阻止智能体做你能做的事。智能体以你的身份运行。哪些受保护、哪些不受保护，见<a href=\"/security/\">安全</a>。",
+    "from": "a24f01fbd135"
+  },
+  "several.not.one": {
+    "text": "目前它在一台电脑上运行。与他人共享画布、在云端运行智能体都在<a href=\"/roadmap/\">路线图</a>上，尚未构建。",
+    "from": "ac3140a055a6"
+  },
+  "several.install": {
+    "text": "安装 Aubergine",
+    "from": "733a8757545c"
+  },
+  "several.ld.q1": {
+    "text": "如何同时运行多个编程智能体？",
+    "from": "42c519b36444"
+  },
+  "several.ld.a1": {
+    "text": "把每个智能体放进 Aubergine 画布上各自的终端。画布会显示哪些在忙、空闲或在等你，一个名为 For you 的列表汇集所有问题和审批。",
+    "from": "b878f9a6290f"
+  },
+  "several.ld.q2": {
+    "text": "如何避免两个智能体编辑同一批文件？",
+    "from": "50c7b0247257"
+  },
+  "several.ld.a2": {
+    "text": "让每个终端在自己的工作副本中启动：仓库的独立检出，位于自己的分支上。Aubergine 从不替你合并或推送。",
+    "from": "7da5b34834bf"
+  },
+  "several.ld.q3": {
+    "text": "它适用于任何编程智能体吗？",
+    "from": "a17347c2058b"
+  },
+  "several.ld.a3": {
+    "text": "是的。Aubergine 运行的是普通终端，所以任何命令行智能体都能在其中运行。Aubergine 为智能体自动做的事是为 Claude Code 构建的；其他任何智能体都可以通过 aubergine 命令报告。",
+    "from": "60142c410708"
+  },
+  "copies.meta.title": {
+    "text": "用工作副本让两个编程智能体在同一个仓库上工作 | Aubergine",
+    "from": "22fa024200af"
+  },
+  "copies.meta.description": {
+    "text": "工作副本给每个智能体一份仓库的独立检出和分支，两个智能体永远不会编辑同一批文件，你也能分开阅读各自的工作。",
+    "from": "a293deb1c990"
+  },
+  "copies.crumb": {
+    "text": "工作副本",
+    "from": "9660dc116131"
+  },
+  "copies.title": {
+    "text": "两个智能体，一个仓库：工作副本",
+    "from": "acd55dc99e6b"
+  },
+  "copies.lead": {
+    "text": "通常每个终端都在你真实的文件夹里工作。于是同一个仓库中的两个智能体会编辑同一批文件，你也分不清哪个改动是谁的。工作副本给每个终端一份独立的检出，位于它自己的分支上。",
+    "from": "bca0754aab05"
+  },
+  "copies.start.title": {
+    "text": "在工作副本中启动终端",
+    "from": "288cfa5a3c70"
+  },
+  "copies.start.s1": {
+    "text": "按下终端列表顶部 <strong>New terminal</strong> 末端的 <strong>▾</strong>，然后选择 <strong>Shell in a folder or a working copy…</strong>。",
+    "from": "1b1addf2a211"
+  },
+  "copies.start.s2": {
+    "text": "指定文件夹并选择 <strong>In its own working copy</strong>（在它自己的工作副本中）。只有在可行时才提供这个选项，不可行时会说明原因：不是 Git 仓库、是裸仓库，或者还没有提交。",
+    "from": "8299d8f71e82"
+  },
+  "copies.start.cli": {
+    "text": "在终端中也可以这样做：",
+    "from": "2e409315b41b"
+  },
+  "copies.get.title": {
+    "text": "你会得到什么",
+    "from": "41a1acbef296"
+  },
+  "copies.get.text": {
+    "text": "一个 Git worktree，位于 Aubergine 放在其数据文件夹下的一个文件夹中，绝不在你的仓库里，处于一个名为 <code>aubergine/&lt;terminal name&gt;-&lt;six characters&gt;</code> 的新分支上。它从你的检出当前所在的提交开始，终端会在你当时所在的同一个子文件夹中启动。你自己的检出永远不会被改动：文件不会，已暂存的内容不会，你检出的分支也不会。",
+    "from": "c06801122abd"
+  },
+  "copies.get.not": {
+    "text": "<strong>不会带过去的：</strong>你未提交的改动（不会替你 stash 或提交），以及 Git 忽略或不跟踪的文件，例如已安装的依赖和本地设置。需要安装步骤的项目，在工作副本中也需要再做一次。",
+    "from": "131b661ca520"
+  },
+  "copies.read.title": {
+    "text": "阅读智能体改了什么",
+    "from": "d455bd023725"
+  },
+  "copies.read.text": {
+    "text": "处于工作副本中的终端会在标题栏显示它的分支和有差异的文件数。点击它可以看到修改、新增和删除的文件，不在任何提交中的工作会被标出，还可以查看你选择的任何文件的只读差异。",
+    "from": "20954eec8106"
+  },
+  "copies.end.title": {
+    "text": "终端结束时",
+    "from": "250be513dcc7"
+  },
+  "copies.end.text": {
+    "text": "工作副本绝不会仅仅因为终端结束而被删除。由你选择：",
+    "from": "b2d17861d25a"
+  },
+  "copies.end.branch": {
+    "text": "当一切都已提交时，选 <strong>Keep the branch, remove the folder</strong>（保留分支，删除文件夹）。",
+    "from": "5d0203e6fc80"
+  },
+  "copies.end.keep": {
+    "text": "<strong>Keep everything.</strong>（全部保留）它会留在列表中，并注明它的终端已经不在了。",
+    "from": "a03d07a03a5a"
+  },
+  "copies.end.discard": {
+    "text": "<strong>Discard both</strong>（两者都丢弃），当副本中有别处没有的工作时，它会再问一次。",
+    "from": "6ae2c654ddf6"
+  },
+  "copies.end.never": {
+    "text": "Aubergine 从不合并、推送或变基。保留下来的分支怎么处理由你决定。",
+    "from": "e9af3c7c1ccd"
+  },
+  "copies.git.title": {
+    "text": "Aubergine 在你的仓库中运行什么",
+    "from": "3a32836a0505"
+  },
+  "copies.git.text": {
+    "text": "Aubergine 使用的 <code>git</code> 是你 <code>PATH</code> 中的那个（2.31 或更高版本）。它启动的每条 Git 命令都不会运行钩子、不会弹出提示、不会访问网络，也不会拉取子模块。你自己的 Git 配置中指定的过滤器（例如大文件存储）会运行，就像你自己运行 <code>git status</code> 时一样。",
+    "from": "b36bf6176964"
+  },
+  "copies.sandbox.title": {
+    "text": "它不是沙箱",
+    "from": "a4e45939dc38"
+  },
+  "copies.sandbox.text": {
+    "text": "工作副本把工作分开。它不会把智能体关在里面：智能体以你的身份运行，可以读取和修改你能读写的每个文件，包括你自己的检出。不要指望它拦住做错事的智能体。见<a href=\"/security/\">安全</a>。",
+    "from": "12f777412114"
+  },
+  "copies.related": {
+    "text": "相关：<a href=\"/run-multiple-coding-agents/\">同时运行多个编程智能体</a> · <a href=\"/queue-and-schedules/\">队列与定时计划</a>（在新终端上启动的任务，如果文件夹位于仓库中，会得到自己的工作副本）。",
+    "from": "489f01eef5df"
+  },
+  "copies.ld.howto": {
+    "text": "如何让智能体在自己的工作副本中运行",
+    "from": "6a1451788037"
+  },
+  "copies.ld.howtoAbout": {
+    "text": "给终端一份仓库的独立检出和分支。",
+    "from": "64a170729926"
+  },
+  "copies.ld.s1": {
+    "text": "打开新建终端对话框",
+    "from": "5bde830139dc"
+  },
+  "copies.ld.s1text": {
+    "text": "按下终端列表顶部 New terminal 末端的箭头，然后选择 Shell in a folder or a working copy。",
+    "from": "32bded457fe9"
+  },
+  "copies.ld.s2": {
+    "text": "选择 In its own working copy",
+    "from": "63c9214f2664"
+  },
+  "copies.ld.s2text": {
+    "text": "指定文件夹，它必须位于至少有一个提交的 Git 仓库中，然后选择 In its own working copy。",
+    "from": "e0d93261f9f0"
+  },
+  "copies.ld.s3": {
+    "text": "或者使用命令行",
+    "from": "0ee1f2056fa4"
+  },
+  "copies.ld.s4": {
+    "text": "阅读改动",
+    "from": "bab32518bbd7"
+  },
+  "copies.ld.s4text": {
+    "text": "点击终端标题栏上的分支，查看修改、新增和删除的文件以及每个文件的差异。",
+    "from": "357674609610"
+  },
+  "copies.ld.s5": {
+    "text": "决定如何处理它",
+    "from": "b2b7c44a3193"
+  },
+  "copies.ld.s5text": {
+    "text": "终端结束时，选择保留分支并删除文件夹、全部保留，或两者都丢弃。",
+    "from": "9fb24490ab62"
+  },
+  "copies.ld.q1": {
+    "text": "Aubergine 中的工作副本是什么？",
+    "from": "c29a3dde79ad"
+  },
+  "copies.ld.a1": {
+    "text": "一个 Git worktree：同一仓库的第二份检出，位于它自己的新分支上，保存在 Aubergine 的数据文件夹中，绝不在你的仓库里。",
+    "from": "ece33bda8bd9"
+  },
+  "copies.ld.q2": {
+    "text": "工作副本包含我未提交的改动吗？",
+    "from": "e87c77e35caf"
+  },
+  "copies.ld.a2": {
+    "text": "不包含。它们不会被带过去，也不会被改动。如果新终端需要它们，请先提交。",
+    "from": "fd51d7c79f2a"
+  },
+  "copies.ld.q3": {
+    "text": "Aubergine 会合并或推送工作副本的分支吗？",
+    "from": "5ed71f558894"
+  },
+  "copies.ld.a3": {
+    "text": "不会。Aubergine 从不合并、推送或变基，也从不改变你检出的分支。",
+    "from": "c35bdaa3b9fd"
+  },
+  "copies.ld.q4": {
+    "text": "工作副本是沙箱吗？",
+    "from": "43526bb8ae8a"
+  },
+  "copies.ld.a4": {
+    "text": "不是。它把工作分开，但不会把智能体关在里面。智能体以你的身份运行，仍然可以读取和修改你能读写的每个文件。",
+    "from": "8b760eb225ac"
+  },
+  "queue.meta.title": {
+    "text": "队列、For you 列表与定时计划 | Aubergine",
+    "from": "aaf91b58a021"
+  },
+  "queue.meta.description": {
+    "text": "任务写一次，让空闲的智能体去接；在一个列表中看到所有在等你的事；用定时计划在设定的时间运行任务。",
+    "from": "1eede965ade8"
+  },
+  "queue.crumb": {
+    "text": "队列与定时计划",
+    "from": "403b3a701d15"
+  },
+  "queue.title": {
+    "text": "队列、“For you”与定时计划",
+    "from": "7f3e0c94e636"
+  },
+  "queue.lead": {
+    "text": "两个相互衔接的列表：队列存放给智能体的工作，<em>For you</em> 存放所有在等人处理的事。定时计划在设定的时间把任务加入队列。",
+    "from": "b208af706f74"
+  },
+  "queue.queue.title": {
+    "text": "队列",
+    "from": "0d95744a342b"
+  },
+  "queue.queue.text": {
+    "text": "打开页面顶部的 <strong>Runs</strong>（或按 <code>Q</code>），点击 <strong>Add task</strong>（添加任务）。任务有标题、要做什么，以及可选的文件夹、工作流和谁可以接手。默认情况下，任何有空闲智能体的终端都可以接手；你也可以指定一个终端，或为它启动一个新的智能体终端，当文件夹位于仓库中时，这个终端会在自己的工作副本中运行。",
+    "from": "989827036836"
+  },
+  "queue.queue.next": {
+    "text": "<strong>Start next</strong> 会启动第一个现在有人能接手的任务。普通 shell 永远不会被分到任务。",
+    "from": "ae7829bbd4d8"
+  },
+  "queue.queue.limit": {
+    "text": "<strong>At most N at once</strong>（同时最多 N 个），除非你修改，否则为三个。<strong>Hold</strong> 会停止新的启动，不影响正在运行的任何东西。",
+    "from": "e2f51053f100"
+  },
+  "queue.queue.itself": {
+    "text": "<strong>Start by itself</strong> 在你打开之前一直是关闭的。没有任何东西靠定时器检查。",
+    "from": "c2a89a6c6733"
+  },
+  "queue.queue.order": {
+    "text": "顺序由你决定：拖动任务，或使用方向键。",
+    "from": "e3aa94f38bbc"
+  },
+  "queue.queue.follows": {
+    "text": "任务跟随它的运行：运行等待审批时为 <em>needs you</em>，完成时为 <em>done</em>，停下时为 <em>failed</em> 并附一句原因。不会自动重试任何东西。",
+    "from": "a1dc88999acf"
+  },
+  "queue.pic.caption": {
+    "text": "Runs 页面上的 For you：一个问题、一份待读的草稿和一份交上来的清单，每项都注明是什么。",
+    "from": "b25234fa54ca"
+  },
+  "queue.pic.alt": {
+    "text": "Runs 页面的 Waiting for you 列：一个添加待办的输入框，然后是一个替身智能体的问题、一份待读的草稿和一份交上来的清单。",
+    "from": "9bc144e9c95e"
+  },
+  "queue.foryou.title": {
+    "text": "For you",
+    "from": "143134f93925"
+  },
+  "queue.foryou.text": {
+    "text": "有问题的终端、待审批或受阻的运行、待读的草稿和待安装项、提议加入队列的任务、已完成和失败的任务、智能体交上来的清单，以及终端已不在的工作副本。顶部 For you 旁边的数字和“next waiting”是同一个列表。其中大部分是汇集来的，不是写进去的：事情本身处理完了，条目就会消失。",
+    "from": "f0987632af6e"
+  },
+  "queue.foryou.propose": {
+    "text": "发现现在不该做的工作的智能体可以提议一个任务，需要人的智能体可以向你提出请求：",
+    "from": "6cab942ae32c"
+  },
+  "queue.foryou.land": {
+    "text": "两者都会出现在你的列表上。提议在你接受之前不会启动任何东西。",
+    "from": "b9045f914e0b"
+  },
+  "queue.schedules.title": {
+    "text": "定时计划",
+    "from": "221ff19c904c"
+  },
+  "queue.schedules.text": {
+    "text": "定时计划就是一天中的某个时间、一周中的某几天、要运行的东西和运行的地方。时间一到，它向队列添加一个任务，由队列启动。在 Runs 页面的 <strong>Schedules</strong> 下设置，或使用 <code>aubergine schedule</code>。时间以这台电脑的时钟为准；没有表达式，频率最多一天一次。",
+    "from": "a43d6965e12f"
+  },
+  "queue.schedules.run": {
+    "text": "<code>aubergine schedule run</code> 会立即试运行一个定时计划。",
+    "from": "433ccf3d7204"
+  },
+  "queue.plan.title": {
+    "text": "事情没有按计划进行时",
+    "from": "0474d0b379f1"
+  },
+  "queue.plan.awake": {
+    "text": "电脑必须醒着，并且 Aubergine 在运行。电脑睡眠期间错过的时间，如果不超过六小时，会在恢复时运行<strong>一次</strong>，并标为迟到。否则标为 <strong>missed</strong>（已错过）。",
+    "from": "da52cc0d963c"
+  },
+  "queue.plan.skipped": {
+    "text": "当定时计划的上一个任务仍在等待或正在执行时，它不会再添加新任务，并注明已跳过。",
+    "from": "f076f68e0964"
+  },
+  "queue.plan.gone": {
+    "text": "如果它指定的东西（终端、步骤、画布）已经不在，它不会运行，并在你的列表上用一个条目说明。",
+    "from": "bc76023361ed"
+  },
+  "queue.rules.title": {
+    "text": "规则",
+    "from": "4228aeb07c41"
+  },
+  "queue.rules.text": {
+    "text": "在 <strong>Rules</strong> 下，你可以设定“当任务完成、失败或需要我时，或者定时计划触发或被错过时，就通知我或运行一个已保存的步骤”。规则只能由你来写：任何程序和智能体都不能添加或修改规则，规则也不能触发自己。",
+    "from": "b4ec8a0da4e6"
+  },
+  "queue.rules.nothing": {
+    "text": "Aubergine 不调用模型，也不持有任何应用的凭据。任务或定时计划只会启动一次运行；接手的智能体用它自己的工具完成工作。",
+    "from": "635fa52c391c"
+  },
+  "queue.related": {
+    "text": "相关：<a href=\"/working-copies/\">工作副本</a> · <a href=\"/run-multiple-coding-agents/\">同时运行多个编程智能体</a>",
+    "from": "a1b112595d4a"
+  },
+  "queue.ld.headline": {
+    "text": "队列、For you 列表与定时计划",
+    "from": "e7aa7f29e008"
+  },
+  "queue.ld.q1": {
+    "text": "Aubergine 中的队列是什么？",
+    "from": "f483ddf62dfe"
+  },
+  "queue.ld.a1": {
+    "text": "给智能体的工作。你把任务写一次，包括标题、详情，以及可选的文件夹、工作流和谁可以接手。在你发话时，空闲的智能体会接手。",
+    "from": "3d99add6ea00"
+  },
+  "queue.ld.q2": {
+    "text": "For you 列表是什么？",
+    "from": "10295c2a2707"
+  },
+  "queue.ld.a2": {
+    "text": "所有在等人处理的事集中在一处：有问题的终端、待审批的运行、待读的草稿、已完成和失败的任务，以及智能体交上来的清单。",
+    "from": "4167a6eb1070"
+  },
+  "queue.ld.q3": {
+    "text": "智能体能自己开始工作吗？",
+    "from": "a9a38a49db05"
+  },
+  "queue.ld.a3": {
+    "text": "智能体可以提议任务或向你提出请求，但提议在你接受之前不会启动任何东西。",
+    "from": "75c93148284c"
+  },
+  "queue.ld.q4": {
+    "text": "电脑睡眠时，定时计划会怎样？",
+    "from": "09ef41a88ccf"
+  },
+  "queue.ld.a4": {
+    "text": "没有任何东西会唤醒电脑。睡眠期间错过的时间，如果不到六小时，会在恢复时运行一次并标为迟到。超过这个时间则标为已错过。",
+    "from": "28be43f4ec53"
+  },
+  "security.meta.title": {
+    "text": "安全与隐私 | Aubergine",
+    "from": "ceea0328314d"
+  },
+  "security.meta.description": {
+    "text": "Aubergine 只在你的电脑上运行，监听 127.0.0.1，检查每个请求，为每个令牌限定权限范围，并直接说明它防不住什么。",
+    "from": "d44a642ead3b"
+  },
+  "security.crumb": {
+    "text": "安全",
+    "from": "8f6fb4eb7f42"
+  },
+  "security.title": {
+    "text": "安全与隐私",
+    "from": "1418baab9c29"
+  },
+  "security.lead": {
+    "text": "Aubergine 为保护你的终端做了什么，以及同样重要的，它没有做什么。简而言之：它在本地运行，替智能体行动前会先询问，而智能体仍然以你的身份运行。",
+    "from": "1026aabf288c"
+  },
+  "security.local.title": {
+    "text": "一切都留在你的电脑上",
+    "from": "793ac3d2607e"
+  },
+  "security.local.bind": {
+    "text": "服务器只绑定 <code>127.0.0.1</code>。每个请求和每次 WebSocket 升级都会检查 <code>Host</code> 和 <code>Origin</code>，浏览器还必须持有访问 Cookie。",
+    "from": "6a7b211aac87"
+  },
+  "security.local.elsewhere": {
+    "text": "从其他设备使用 Aubergine 默认关闭，直到你自己设置：同一台电脑上的某个程序以你在设置中写的名称为它提供 HTTPS，每个浏览器都用一次性代码配对，并且可以吊销。已配对的设备拥有全部所有者权限。<a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/remote.md\">Using Aubergine from elsewhere</a> 说明了具体做法。",
+    "from": "d67b1b7a16b7"
+  },
+  "security.local.network": {
+    "text": "Aubergine 不调用模型，也不会自行发起网络请求，只有两个例外：在<em>你</em>要求时获取一个库来源（Git 地址），以及在你自己的 <code>gh</code> 工具已安装并登录时，向它查询某个终端分支的拉取请求。",
+    "from": "09a9d3b11a3f"
+  },
+  "security.local.notify": {
+    "text": "桌面通知来自打开的页面。没有任何东西离开你的电脑。",
+    "from": "a061f94decff"
+  },
+  "security.callers.title": {
+    "text": "三类调用方，各自单独判断",
+    "from": "70f1b55254c0"
+  },
+  "security.callers.text": {
+    "text": "每个请求在查找任何内容之前，都会先对照调用方被允许做什么进行检查，因此没有权限的调用方从回应中什么也得不到。调用方有三种：你（在浏览器中登录）、智能体的会话，以及 API 令牌。",
+    "from": "c126625e9b6c"
+  },
+  "security.callers.scopes": {
+    "text": "<strong>API 令牌有权限范围。</strong>密钥只显示一次，从不保存；只保留一个哈希。用令牌发起的调用会记入活动日志：谁、做了什么、结果如何，从不记录密钥，也从不记录发送的内容。",
+    "from": "4c7141504f63"
+  },
+  "security.callers.never": {
+    "text": "<strong>有些事任何令牌都永远做不到：</strong>创建或吊销令牌、读取活动日志、修改设置，以及任何与 Aubergine 之外的终端有关的事。",
+    "from": "72b0d531789b"
+  },
+  "security.callers.terminal": {
+    "text": "<strong>终端访问是两个独立的权限范围</strong>，一个用于读取，一个用于输入，各自只限于你选择的会话。你可以把一个终端标为 <em>people only</em>（仅限人），对所有令牌关闭它。",
+    "from": "25a56b3d0365"
+  },
+  "security.callers.agent": {
+    "text": "<strong>智能体自己的凭据范围很窄。</strong>它可以设置自己的关注状态、向自己的笔记添加内容、报告自己的状态，以及读取自己所在的运行。它无法触及其他终端、画布或令牌。",
+    "from": "e256c4165a46"
+  },
+  "security.alone.title": {
+    "text": "智能体不能独自做的事",
+    "from": "03326de9b26e"
+  },
+  "security.alone.draft": {
+    "text": "智能体或程序写的东西（工作流、步骤）会作为<strong>草稿</strong>交给你审阅。只有你能接受。",
+    "from": "4170ed1f1019"
+  },
+  "security.alone.person": {
+    "text": "等待人的步骤只能由人批准或退回。规则、定时计划和演示都只属于你。",
+    "from": "d50827bd1466"
+  },
+  "security.alone.typed": {
+    "text": "Aubergine 只会往智能体的终端里输入几句固定的话，比如“读取你的下一步”。你保存的任何内容、智能体写的任何内容都不会被输入。",
+    "from": "fbf9087a8e44"
+  },
+  "security.alone.library": {
+    "text": "从库中安装需要你接受与你所看到的完全相同的内容。",
+    "from": "6d62284139e3"
+  },
+  "security.not.title": {
+    "text": "这些防不住什么",
+    "from": "664cb80d250f"
+  },
+  "security.not.asyou": {
+    "text": "<strong>智能体以你的身份运行。</strong>终端里的智能体能做你在那个终端里能做的任何事，包括运行命令、读取文件，以及在它愿意时使用你自己的浏览器会话。",
+    "from": "179663eb5387"
+  },
+  "security.not.approvals": {
+    "text": "<strong>审批不是锁。</strong>以你的身份运行的智能体可以以你的身份做决定。决定会被记录，而不会被阻止。",
+    "from": "dc58a76bd541"
+  },
+  "security.not.copies": {
+    "text": "<strong>工作副本不是沙箱。</strong>它们把工作分开，但不会把智能体关在里面。",
+    "from": "de9877dffd91"
+  },
+  "security.not.review": {
+    "text": "<strong>审阅界面是库条目的把关手段。</strong>一个条目就是一组指令，智能体会用它被允许做的一切去执行。没读过的东西不要安装。",
+    "from": "1972614790c0"
+  },
+  "security.not.guide": {
+    "text": "<strong>给智能体的指南是建议</strong>，不是锁。",
+    "from": "79f0576917ce"
+  },
+  "security.installer.title": {
+    "text": "安装脚本",
+    "from": "26ab59561d68"
+  },
+  "security.installer.text": {
+    "text": "它只改动两样东西：它自己的文件夹，以及一个名为 <code>aubergine</code> 的链接。不用 <code>sudo</code>，不编辑你的 shell 启动文件，也从不碰你的数据文件夹。<code>aubergine uninstall</code> 只移除它自己创建的东西。",
+    "from": "0dd991c78883"
+  },
+  "security.report.title": {
+    "text": "报告问题",
+    "from": "53de38dec81e"
+  },
+  "security.report.text": {
+    "text": "在 <a href=\"https://github.com/thirstyeggplant/aubergine/issues\">GitHub</a> 上提一个 issue。不要在里面放机密或令牌。",
+    "from": "578a2c2c1f9c"
+  },
+  "security.related": {
+    "text": "相关：<a href=\"/working-copies/\">工作副本</a> · <a href=\"/faq/\">常见问题</a> · <a href=\"/roadmap/\">路线图</a>（审批模式和命令策略在计划中，尚未构建）",
+    "from": "f7672fdbd012"
+  },
+  "security.ld.q1": {
+    "text": "Aubergine 会把我的终端或代码发送到别处吗？",
+    "from": "8e3369fd3214"
+  },
+  "security.ld.a1": {
+    "text": "不会。服务器只监听 127.0.0.1，因此在你设置从其他设备使用之前，只能从你的电脑访问，别处都访问不到。Aubergine 不调用模型，除非你自己添加库来源，否则不获取任何东西；在你自己的 gh 工具已安装时，它会向其查询某个终端分支的拉取请求。",
+    "from": "d6089c695fd7"
+  },
+  "security.ld.q2": {
+    "text": "智能体能修改 Aubergine 的设置或给自己创建令牌吗？",
+    "from": "50baf59f3f49"
+  },
+  "security.ld.a2": {
+    "text": "不能。创建令牌、修改设置、读取活动日志，以及任何与 Aubergine 之外的终端有关的事，无论令牌有什么权限范围，都永远不允许。",
+    "from": "83dbce1b8ba8"
+  },
+  "security.ld.q3": {
+    "text": "审批能阻止所有者自己的智能体给自己批准吗？",
+    "from": "44ef09ccbdb5"
+  },
+  "security.ld.a3": {
+    "text": "不能。以你的身份运行的智能体可以以你的身份行事。审批会被记录，但不会针对你自己的智能体强制执行。",
+    "from": "218bd3880939"
+  },
+  "security.ld.q4": {
+    "text": "工作副本是沙箱吗？",
+    "from": "8fba34c387fd"
+  },
+  "security.ld.a4": {
+    "text": "不是。它们把工作分开，但不会把智能体关在里面。智能体以你的身份运行。",
+    "from": "00ac8e54df7b"
+  },
+  "roadmap.meta.title": {
+    "text": "路线图：Aubergine 的计划 | Aubergine",
+    "from": "f82b67c7e4ed"
+  },
+  "roadmap.meta.description": {
+    "text": "Aubergine 今天能做什么，以及哪些在计划中、尚未构建：多人协作、沙箱化的云端智能体、审批模式、质量关卡、SDK 等。",
+    "from": "eae564891939"
+  },
+  "roadmap.crumb": {
+    "text": "路线图",
+    "from": "92375f997ffe"
+  },
+  "roadmap.tag": {
+    "text": "计划中，尚未构建",
+    "from": "8520b04b5a47"
+  },
+  "roadmap.title": {
+    "text": "路线图",
+    "from": "92375f997ffe"
+  },
+  "roadmap.lead": {
+    "text": "这里的一切目前都还不存在。这是我们想去的方向，顺序可能会变。现在已经构建了什么，请看<a href=\"/guides/\">指南</a>。",
+    "from": "905a1a4e53eb"
+  },
+  "roadmap.note": {
+    "text": "计划中的工作是方向，不是承诺。已发布的内容以<a href=\"https://github.com/thirstyeggplant/aubergine\">代码仓库</a>为准。",
+    "from": "2a77383dd929"
+  },
+  "roadmap.teams.title": {
+    "text": "团队与连接",
+    "from": "4e0046ce8160"
+  },
+  "roadmap.teams.sub": {
+    "text": "人们一起工作，并从你已经在用的工具中调动智能体。",
+    "from": "b79bf222234e"
+  },
+  "roadmap.teams.multiplayer.name": {
+    "text": "多人协作",
+    "from": "563370a7b0ef"
+  },
+  "roadmap.teams.multiplayer.text": {
+    "text": "与其他人及其智能体共享画布。看到谁在哪里工作，把一个在等待的智能体交给队友，一起回答。",
+    "from": "b11467b3847f"
+  },
+  "roadmap.teams.chat.name": {
+    "text": "聊天界面",
+    "from": "2d4271591981"
+  },
+  "roadmap.teams.chat.text": {
+    "text": "在团队聊天应用中向智能体提出请求并回答它们的问题，使用与浏览器中相同的身份和设置。",
+    "from": "e030fc9eb4b5"
+  },
+  "roadmap.teams.tickets.name": {
+    "text": "工单与拉取请求",
+    "from": "c18d1bcc516f"
+  },
+  "roadmap.teams.tickets.text": {
+    "text": "把一个 issue 变成队列中的任务，从工作副本打开拉取请求，并把结果报告回工单。",
+    "from": "4641289cfa30"
+  },
+  "roadmap.teams.watches.name": {
+    "text": "监视、Webhook 与分诊",
+    "from": "9c51f5013534"
+  },
+  "roadmap.teams.watches.text": {
+    "text": "事情发生时开始工作：CI 任务失败、告警、被监视的变更，或来自其他服务的调用。由规则决定什么变成任务。",
+    "from": "1c497d4b9a99"
+  },
+  "roadmap.teams.skills.name": {
+    "text": "共享技能与市场",
+    "from": "31d4586cb1ae"
+  },
+  "roadmap.teams.skills.text": {
+    "text": "通过授权共享智能体的技能，经审批推广到整个团队，从 Git 导入，并在公开目录中找到审阅过的条目。",
+    "from": "fd5d82778447"
+  },
+  "roadmap.teams.memory.name": {
+    "text": "面向个人和房间的记忆",
+    "from": "ad614cac170e"
+  },
+  "roadmap.teams.memory.text": {
+    "text": "为每个人和每个共享房间分别保存智能体学到的东西，彼此隔开。",
+    "from": "416f752e7296"
+  },
+  "roadmap.teams.more": {
+    "text": "此外：关于模型、共享和严格程度的管理员控制 · 自托管的团队服务器 · 团队登录（SSO 与 MFA） · 按人、令牌或智能体的用量限制 · 无需共享终端即可分享的只读报告 · “For you”列表的手机视图 · 经审阅的公司工具连接器 · 更多聊天应用 · 发布给指定人员的小型内部 Web 应用。",
+    "from": "481fe85556f5"
+  },
+  "roadmap.cloud.title": {
+    "text": "云端",
+    "from": "b977b950c1ae"
+  },
+  "roadmap.cloud.sub": {
+    "text": "不需要你的笔记本醒着的智能体。",
+    "from": "87fb76b1a7f8"
+  },
+  "roadmap.cloud.sandbox.name": {
+    "text": "云端沙箱中的智能体",
+    "from": "afb143bae999"
+  },
+  "roadmap.cloud.sandbox.text": {
+    "text": "在隔离的云端沙箱中运行智能体，并在与本地智能体相同的画布上查看它。沙箱空闲时休眠，按需唤醒，并在多次运行之间保留存储。",
+    "from": "a53d1378b583"
+  },
+  "roadmap.cloud.pool.name": {
+    "text": "智能体池",
+    "from": "7d3bca9c3c41"
+  },
+  "roadmap.cloud.pool.text": {
+    "text": "描述工作，让一个智能体池去认领，而不是为每个任务指定一个终端。",
+    "from": "f9b895723ae8"
+  },
+  "roadmap.cloud.envs.name": {
+    "text": "现成的环境",
+    "from": "ed1697ee039b"
+  },
+  "roadmap.cloud.envs.text": {
+    "text": "把依赖、工具、技能、文件和变量保存一次，以后任何新终端或云端智能体都可以从中启动。",
+    "from": "d97c932492be"
+  },
+  "roadmap.cloud.long.name": {
+    "text": "长时间、多阶段的工作",
+    "from": "1207d0ac598f"
+  },
+  "roadmap.cloud.long.text": {
+    "text": "分阶段运行数小时或数天的任务，每个阶段后都有一次确认，进度在重启后也能保留。",
+    "from": "a1e631232a28"
+  },
+  "roadmap.cloud.deploy.name": {
+    "text": "一条命令部署到云端",
+    "from": "dabcec83058d"
+  },
+  "roadmap.cloud.deploy.text": {
+    "text": "用一条命令把团队共享的 Aubergine 部署到你自己的云账号上。",
+    "from": "6a0dc41e1a38"
+  },
+  "roadmap.cloud.see.name": {
+    "text": "看得见的工作",
+    "from": "dae8006cad9a"
+  },
+  "roadmap.cloud.see.text": {
+    "text": "云端智能体把它所做东西的截图或简短录屏交回到你的“For you”列表。",
+    "from": "34843169f72f"
+  },
+  "roadmap.cloud.more": {
+    "text": "此外：基于 HTTP 的 MCP，供其他机器上的智能体使用 · 经过测试的 Linux 支持 · zsh 之外的 shell 集成。",
+    "from": "ab24c1d11df2"
+  },
+  "roadmap.control.title": {
+    "text": "控制",
+    "from": "32d7e8208247"
+  },
+  "roadmap.control.sub": {
+    "text": "智能体可以做多少，以及它做过什么的记录。",
+    "from": "9b7292a38acb"
+  },
+  "roadmap.control.approval.name": {
+    "text": "审批模式",
+    "from": "7bd88c9e6d2d"
+  },
+  "roadmap.control.approval.text": {
+    "text": "选择智能体可以独自做多少：每个操作都审批、只审批有风险的，或都不审批。",
+    "from": "b9608d55fca3"
+  },
+  "roadmap.control.policy.name": {
+    "text": "命令策略与筛查",
+    "from": "c3c9b7fc9194"
+  },
+  "roadmap.control.policy.text": {
+    "text": "规定哪些命令需要审批、哪些始终拒绝，以及在智能体读取外部内容之前对其进行可选的筛查。",
+    "from": "6697b64fab83"
+  },
+  "roadmap.control.risk.name": {
+    "text": "按仓库设定风险等级",
+    "from": "989a1686d169"
+  },
+  "roadmap.control.risk.text": {
+    "text": "重要的地方限制更严，不重要的地方更宽松。",
+    "from": "10639df3756c"
+  },
+  "roadmap.control.audit.name": {
+    "text": "完整的审计记录",
+    "from": "dfb67e3ffb15"
+  },
+  "roadmap.control.audit.text": {
+    "text": "按项目记录谁或什么做了什么，范围超出今天已记录的令牌调用。",
+    "from": "c97e6d6355c9"
+  },
+  "roadmap.control.undo.name": {
+    "text": "撤销智能体的工作",
+    "from": "f031a385eb84"
+  },
+  "roadmap.control.undo.text": {
+    "text": "把工作副本回滚到某个任务之前，或一步丢弃它的分支。",
+    "from": "8a76ddeef3eb"
+  },
+  "roadmap.control.admin.name": {
+    "text": "管理员控制",
+    "from": "9636c9a17dce"
+  },
+  "roadmap.control.admin.text": {
+    "text": "团队范围的设置：可以使用哪些模型，共享如何运作。",
+    "from": "2e27927bdc87"
+  },
+  "roadmap.control.more": {
+    "text": "此外：按终端、任务或定时计划选择模型。",
+    "from": "f596795919fb"
+  },
+  "roadmap.quality.title": {
+    "text": "质量",
+    "from": "1b2c08a8733d"
+  },
+  "roadmap.quality.sub": {
+    "text": "在工作被称为完成之前进行的检查。",
+    "from": "d384d12758ef"
+  },
+  "roadmap.quality.gates.name": {
+    "text": "质量关卡",
+    "from": "94515eddaac8"
+  },
+  "roadmap.quality.gates.text": {
+    "text": "在审阅、测试或安全检查报告通过之前，运行无法结束。",
+    "from": "cb60bf40a980"
+  },
+  "roadmap.quality.review.name": {
+    "text": "拉取请求审阅",
+    "from": "88740e3ab820"
+  },
+  "roadmap.quality.review.text": {
+    "text": "智能体审阅一个拉取请求，并把结果报告到你的“For you”列表。",
+    "from": "f2cb7f3e314f"
+  },
+  "roadmap.quality.browser.name": {
+    "text": "浏览器驱动的测试",
+    "from": "7c8b76a0df2d"
+  },
+  "roadmap.quality.browser.text": {
+    "text": "智能体操作浏览器来测试一项改动，并交回结果。",
+    "from": "35d5c9f82525"
+  },
+  "roadmap.quality.plan.name": {
+    "text": "先规划，后构建",
+    "from": "c1b4e7cda45f"
+  },
+  "roadmap.quality.plan.text": {
+    "text": "智能体提出一个计划，在动文件之前等你批准。",
+    "from": "bfe188b91109"
+  },
+  "roadmap.quality.recipes.name": {
+    "text": "任务配方",
+    "from": "a907955cd430"
+  },
+  "roadmap.quality.recipes.text": {
+    "text": "现成的工作流，用于生成测试、审阅、依赖与机密扫描，以及保持文档更新。",
+    "from": "d2b3c5c8eb35"
+  },
+  "roadmap.quality.metrics.name": {
+    "text": "成果指标",
+    "from": "0663013cf8b2"
+  },
+  "roadmap.quality.metrics.text": {
+    "text": "按项目统计从任务到完成的时间、智能体等你的频率，以及按发起人划分的用量。",
+    "from": "cc91d3e1b4a9"
+  },
+  "roadmap.quality.more": {
+    "text": "此外：事故报告，由智能体调查并起草事后复盘。",
+    "from": "38f56a594979"
+  },
+  "roadmap.everywhere.title": {
+    "text": "无处不在",
+    "from": "dcc10bfd55ac"
+  },
+  "roadmap.everywhere.sub": {
+    "text": "更多访问 Aubergine 和在其上构建的方式。",
+    "from": "738934daa2cd"
+  },
+  "roadmap.everywhere.sdk.name": {
+    "text": "正式发布的 SDK",
+    "from": "02aa38383381"
+  },
+  "roadmap.everywhere.sdk.text": {
+    "text": "把有类型的客户端发布为可安装的包，然后提供 Python 等其他语言的客户端。",
+    "from": "a3e3521d038a"
+  },
+  "roadmap.everywhere.editor.name": {
+    "text": "编辑器扩展",
+    "from": "92399ab4236f"
+  },
+  "roadmap.everywhere.editor.text": {
+    "text": "在 VS Code 及类似编辑器中显示你的终端和“For you”列表，无需离开编辑器。",
+    "from": "f8f4319dbbe7"
+  },
+  "roadmap.everywhere.desktop.name": {
+    "text": "桌面应用",
+    "from": "7102842054a4"
+  },
+  "roadmap.everywhere.desktop.text": {
+    "text": "一个带菜单栏图标的打包应用，取代浏览器标签页。",
+    "from": "2a56e82d4a02"
+  },
+  "roadmap.everywhere.windows.name": {
+    "text": "Windows 支持",
+    "from": "e61744d0c993"
+  },
+  "roadmap.everywhere.windows.text": {
+    "text": "在 Windows 上运行 Aubergine。目前只支持 macOS，Linux 尚未测试。",
+    "from": "6eb34c4aada3"
+  },
+  "faq.meta.title": {
+    "text": "常见问题 | Aubergine",
+    "from": "0956334109a5"
+  },
+  "faq.meta.description": {
+    "text": "关于 Aubergine 的解答：它是什么、需要什么、是否私密、如何与编程智能体配合，以及有哪些计划。",
+    "from": "b4a8a7a10267"
+  },
+  "faq.crumb": {
+    "text": "常见问题",
+    "from": "dbc468a14b60"
+  },
+  "faq.title": {
+    "text": "常见问题",
+    "from": "e956a9404b46"
+  },
+  "faq.lead": {
+    "text": "简短的回答。<a href=\"/guides/\">指南</a>讲得更深入。",
+    "from": "cc5a52e1d739"
+  },
+  "faq.what.q": {
+    "text": "Aubergine 是什么？",
+    "from": "34bffd794522"
+  },
+  "faq.what.a": {
+    "text": "一个在本地运行、基于浏览器的终端会话画布。每个终端都是一个可以排列和使用的节点，所以你可以同时运行多个编程智能体，并看清哪一个在等你。",
+    "from": "e2699684c13a"
+  },
+  "faq.free.q": {
+    "text": "Aubergine 免费开源吗？",
+    "from": "0084cd893989"
+  },
+  "faq.free.a": {
+    "text": "是的。它是免费的，源码在 GitHub 上。",
+    "from": "7ac926cbb182"
+  },
+  "faq.need.q": {
+    "text": "运行 Aubergine 需要什么？",
+    "from": "efe26fb96381"
+  },
+  "faq.need.a": {
+    "text": "macOS，以及 tmux 3.2 或更高版本和 Node.js 22 或更高版本；安装脚本还需要 pnpm。Linux 应该也能用，但还没有测试过。不支持 Windows。",
+    "from": "d0ea17ebbaa3"
+  },
+  "faq.agents.q": {
+    "text": "它适用于任何编程智能体吗？",
+    "from": "a17347c2058b"
+  },
+  "faq.agents.a": {
+    "text": "Aubergine 运行的是普通终端，所以任何命令行智能体都能在其中运行。Aubergine 为智能体自动做的事，比如看到它在等待，是为 <a href=\"/claude/\">Claude Code</a> 构建的；其他任何智能体，包括 <a href=\"/chatgpt/\">Codex</a>，都可以通过 <code>aubergine</code> 命令和本地 API 报告自己的状态，还可以使用一个只列出其令牌所允许内容的 MCP 服务器。",
+    "from": "f2ff9ce8d976"
+  },
+  "faq.send.q": {
+    "text": "Aubergine 会把我的终端或代码发送到别处吗？",
+    "from": "8e3369fd3214"
+  },
+  "faq.send.a": {
+    "text": "不会。一切都在你自己的电脑上运行。服务器只监听 127.0.0.1。",
+    "from": "3b02bfd4cab9"
+  },
+  "faq.model.q": {
+    "text": "Aubergine 会调用 AI 模型吗？",
+    "from": "f7d8f06fe992"
+  },
+  "faq.model.a": {
+    "text": "不会。调用模型的是你的智能体。Aubergine 只运行它们的终端并跟踪它们，不持有任何模型的密钥。",
+    "from": "b237bbedc740"
+  },
+  "faq.close.q": {
+    "text": "关掉浏览器后，我的终端会怎样？",
+    "from": "b5dd88540c71"
+  },
+  "faq.close.a": {
+    "text": "它们会继续运行。每个会话都是一个 tmux 会话，比浏览器和 Aubergine 服务器都活得更久。",
+    "from": "7871478dcac5"
+  },
+  "faq.waiting.q": {
+    "text": "我怎么知道哪个智能体在等我？",
+    "from": "7430a38bad53"
+  },
+  "faq.waiting.a": {
+    "text": "每个终端都会显示它是忙碌、空闲还是在等待。页面顶部 For you 旁边的数字和 For you 列表汇集了所有需要你的事。",
+    "from": "35f55955a398"
+  },
+  "faq.apart.q": {
+    "text": "如何避免两个智能体编辑同一批文件？",
+    "from": "50c7b0247257"
+  },
+  "faq.apart.a": {
+    "text": "让每个终端在自己的工作副本中启动：独立的检出，位于自己的分支上。Aubergine 从不替你合并或推送。",
+    "from": "823333cbb2a8"
+  },
+  "faq.steps.q": {
+    "text": "我能给智能体一份要遵循的步骤清单吗？",
+    "from": "76d449645ba9"
+  },
+  "faq.steps.a": {
+    "text": "可以。工作流就是一系列有序的步骤，并有一条进度条显示智能体走到了哪里。某个步骤可以等你批准或退回。",
+    "from": "9bc235f9572a"
+  },
+  "faq.talk.q": {
+    "text": "智能体之间能对话吗？",
+    "from": "bb3d5c828a26"
+  },
+  "faq.talk.a": {
+    "text": "能，在限制范围内。终端之间的消息带有署名的发送者、暂停和屏蔽，每张画布默认关闭。",
+    "from": "b84d014d23cc"
+  },
+  "faq.api.q": {
+    "text": "有 API 吗？",
+    "from": "e5876c15cf79"
+  },
+  "faq.api.a": {
+    "text": "有。带有限定权限令牌的本地 HTTP API、一个有类型的客户端，以及一个只列出凭据可用工具的 MCP 服务器。",
+    "from": "70b05cca5923"
+  },
+  "faq.focus.q": {
+    "text": "我能单独打开一个终端吗？",
+    "from": "4e72afdbfe4a"
+  },
+  "faq.focus.a": {
+    "text": "可以。终端标题中的 <strong>Tab ↗</strong> 会在单独的浏览器标签页中打开它，是同一个终端，不是副本，需要时旁边会显示它的详情和笔记。关闭标签页不会结束任何东西。",
+    "from": "0909e72f8382"
+  },
+  "faq.fields.q": {
+    "text": "我能给终端记上工单或负责人吗？",
+    "from": "92b518e794bd"
+  },
+  "faq.fields.a": {
+    "text": "可以。终端在详情中有字段，也就是标签和值的配对。其中的智能体可以用 <code>aubergine field set</code> 设置自己的字段；如果你设置了同一个标签，保留的是你的。",
+    "from": "595a80f0d504"
+  },
+  "faq.cloud.q": {
+    "text": "Aubergine 会支持多人或云端智能体吗？",
+    "from": "3c1035134c8f"
+  },
+  "faq.cloud.a": {
+    "text": "两者都在计划中，目前都还没有构建。见<a href=\"/roadmap/\">路线图</a>。今天一切都在一台电脑上运行。",
+    "from": "02eb76c521d2"
+  },
+  "faq.installer.q": {
+    "text": "安装脚本会在我的电脑上改动什么？",
+    "from": "e6f26b5fdca4"
+  },
+  "faq.installer.a": {
+    "text": "两样：安装文件夹（~/.aubergine），以及一个名为 aubergine 的链接。它从不使用 sudo，从不编辑你的 shell 启动文件，也从不安装 Node.js、pnpm 或 tmux。",
+    "from": "00c4335ab841"
+  },
+  "404.meta.title": {
+    "text": "找不到页面 | Aubergine",
+    "from": "19d867c4b2d8"
+  },
+  "404.meta.description": {
+    "text": "此页面不存在。返回 Aubergine 指南。",
+    "from": "920927185e61"
+  },
+  "404.title": {
+    "text": "这个页面不在这里",
+    "from": "fecba20c2c31"
+  },
+  "404.lead": {
+    "text": "地址可能输错了，或者页面已经移动。这些也许有帮助：",
+    "from": "679fc5b22fd6"
+  },
+  "404.home": {
+    "text": "Aubergine 首页",
+    "from": "c340078688b5"
+  },
+  "404.install": {
+    "text": "安装 Aubergine",
+    "from": "733a8757545c"
+  },
+  "404.guides": {
+    "text": "指南",
+    "from": "572cd72feb9a"
+  },
+  "404.faq": {
+    "text": "常见问题",
+    "from": "e956a9404b46"
+  }
+}
