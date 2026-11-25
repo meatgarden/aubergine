@@ -5510,6 +5510,19 @@ test('new browser tabs: a canvas opens in one from its tab, and a running termin
   // Nothing of the canvas is in that tab, and its title is the terminal's name.
   await expect(alone.getByTestId('tabbar')).toHaveCount(0);
   await expect(alone.getByTestId('terminal-node')).toHaveCount(0);
+  // Its head begins with the app's name, the same piece as at the start of the canvas page's top bar, left of Canvases.
+  const aloneHead = alone.getByTestId('terminal-page-head');
+  await expect(aloneHead.locator('> *').first()).toHaveAttribute('data-testid', 'brand');
+  await expect(aloneHead.getByTestId('brand')).toHaveText('Aubergine');
+  await expect(aloneHead.getByTestId('brand')).toHaveClass('brand');
+  const nameLook = (brand: Locator): Promise<string[]> =>
+    brand.evaluate((el) => {
+      const style = getComputedStyle(el);
+      return [style.fontSize, style.fontWeight, style.color];
+    });
+  expect(await nameLook(aloneHead.getByTestId('brand'))).toEqual(await nameLook(page.getByTestId('appbar').getByTestId('brand')));
+  const brandBox = (await aloneHead.getByTestId('brand').boundingBox())!;
+  expect(brandBox.x + brandBox.width).toBeLessThanOrEqual((await alone.getByTestId('focus-canvases-toggle').boundingBox())!.x);
   // It is drawn with the same pieces and sizes as every other screen ("one look").
   expect(await measureLook(alone), 'the terminal by itself').toEqual([]);
   await expect(alone).toHaveTitle(new RegExp(((await alone.getByTestId('terminal-page-name').textContent()) ?? '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
@@ -5651,7 +5664,7 @@ test('new browser tabs: a canvas opens in one from its tab, and a running termin
   // The head is one row, also at 900 pixels wide.
   await alone.setViewportSize({ width: 900, height: 700 });
   const head = await box(alone.locator('.terminal-page-head'));
-  for (const id of ['focus-canvases-toggle', 'terminal-page-name', 'focus-details-toggle', 'focus-note-toggle', 'terminal-page-canvas']) {
+  for (const id of ['brand', 'focus-canvases-toggle', 'terminal-page-name', 'focus-details-toggle', 'focus-note-toggle', 'terminal-page-canvas']) {
     const part = await box(alone.getByTestId(id));
     expect(part.y, id).toBeGreaterThanOrEqual(head.y);
     expect(part.y + part.height, id).toBeLessThanOrEqual(head.y + head.height);

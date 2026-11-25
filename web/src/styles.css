@@ -511,6 +511,10 @@ code {
     var(--shadow-bar);
   background: color-mix(in srgb, var(--swatch) 16%, var(--surface));
 }
+/* The app's name stands where it does in the top bar: on the same gutter, with as much room before Canvases. */
+.terminal-page-head > .brand {
+  margin: 0 var(--space-2);
+}
 .terminal-page-head > .terminal-page-toggle,
 .terminal-page-actions > * {
   flex: none;
