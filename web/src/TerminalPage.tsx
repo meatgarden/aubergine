@@ -62,6 +62,10 @@ export function TerminalPage({ sessionId }: { sessionId: string }) {
   return (
     <main className="terminal-page" data-testid="terminal-page" data-session={sessionId}>
       <header className={`terminal-page-head ${colorClass(color)}`} style={colorStyle(color)} data-color={color} data-testid="terminal-page-head">
+        {/* The app's name, as at the start of the top bar: a tab that shows one terminal still says what it is a tab of. */}
+        <span className="brand" data-testid="brand">
+          Aubergine
+        </span>
         <Button
           kind="quiet"
           className="terminal-page-toggle"
