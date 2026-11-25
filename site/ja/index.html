@@ -166,7 +166,7 @@
       "mainEntity": [
         { "@type": "Question", "name": "Aubergine とは何ですか？", "acceptedAnswer": { "@type": "Answer", "text": "ローカルで動く、ブラウザーベースのターミナルセッションのキャンバスです。各ターミナルは配置して使えるノードなので、複数のコーディングエージェントを同時に動かし、どれがあなたを待っているかを確認できます。" } },
         { "@type": "Question", "name": "Aubergine はターミナルやコードをどこかに送りますか？", "acceptedAnswer": { "@type": "Answer", "text": "いいえ。すべてあなた自身のコンピューターで動きます。サーバーは 127.0.0.1 でのみ待ち受け、すべてのリクエストの Host と Origin を確認します。" } },
-        { "@type": "Question", "name": "Aubergine を動かすには何が必要ですか？", "acceptedAnswer": { "@type": "Answer", "text": "tmux 3.2 以降と Node.js 22 以降の入った macOS です。インストーラーには pnpm も必要です。Linux でも動くはずですが、まだテストしていません。" } },
+        { "@type": "Question", "name": "Aubergine を動かすには何が必要ですか？", "acceptedAnswer": { "@type": "Answer", "text": "tmux 3.2 以降と Node.js 22 以降を入れた macOS。インストーラーには pnpm も必要です。Linux ではコンテナの中でだけ動かしました。Windows では WSL 2 の中でだけ動き、それもまだ試していません。Windows 向けのガイドを見てください。" } },
         { "@type": "Question", "name": "ターミナルで Claude Code を自分で起動したらどうなりますか？", "acceptedAnswer": { "@type": "Answer", "text": "ほかのプログラムと同じように動き、いつもどおり入力できます。ただし Aubergine がエージェントの存在を知るのは、自分でエージェントを起動したとき（New terminal、続いて Claude Code）だけです。そのとき、エージェントの動きを報告する小さなフックをいくつか加えるからです。手で起動した場合、ターミナルは claude を実行して処理中だと表示されるだけです。何か尋ねてきても waiting for you にはならず、そこでワークフローを始めても何も入力されません。中から使える aubergine workflow status を実行するよう自分で伝えるか、代わりに New terminal メニューからエージェントを起動してください。" } },
         { "@type": "Question", "name": "Aubergine は無料ですか？", "acceptedAnswer": { "@type": "Answer", "text": "はい。MIT ライセンスのもとで無料のオープンソースで、ソースは GitHub にあります。" } }
       ]
@@ -309,7 +309,7 @@
     <div class="questions">
       <details><summary>Aubergine とは何ですか？</summary><p>ローカルで動く、ブラウザーベースのターミナルセッションのキャンバスです。各ターミナルは配置して使えるノードなので、複数のコーディングエージェントを同時に動かし、どれがあなたを待っているかを確認できます。</p></details>
       <details><summary>Aubergine はターミナルやコードをどこかに送りますか？</summary><p>いいえ。すべてあなた自身のコンピューターで動きます。サーバーは 127.0.0.1 でのみ待ち受け、すべてのリクエストの Host と Origin を確認します。</p></details>
-      <details><summary>Aubergine を動かすには何が必要ですか？</summary><p>tmux 3.2 以降と Node.js 22 以降の入った macOS です。インストーラーには pnpm も必要です。Linux でも動くはずですが、まだテストしていません。</p></details>
+      <details><summary>Aubergine を動かすには何が必要ですか？</summary><p>tmux 3.2 以降と Node.js 22 以降を入れた macOS。インストーラーには pnpm も必要です。Linux ではコンテナの中でだけ動かしました。Windows では WSL 2 の中でだけ動き、それもまだ試していません。<a href="windows/">Windows 向けのガイド</a>を見てください。</p></details>
       <details><summary>ターミナルで Claude Code を自分で起動したらどうなりますか？</summary><p>ほかのプログラムと同じように動き、いつもどおり入力できます。ただし Aubergine がエージェントの存在を知るのは、自分でエージェントを起動したとき（New terminal、続いて Claude Code）だけです。そのとき、エージェントの動きを報告する小さなフックをいくつか加えるからです。手で起動した場合、ターミナルは <code>claude</code> を実行して処理中だと表示されるだけです。何か尋ねてきても waiting for you にはならず、そこでワークフローを始めても何も入力されません。中から使える <code>aubergine workflow status</code> を実行するよう自分で伝えるか、代わりに New terminal メニューからエージェントを起動してください。</p></details>
       <details><summary>Aubergine は無料ですか？</summary><p>はい。<a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">MIT ライセンス</a>のもとで無料のオープンソースで、ソースは GitHub にあります。</p></details>
     </div>

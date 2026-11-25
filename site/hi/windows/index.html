@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="hi" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WSL के साथ Windows पर Aubergine इंस्टॉल करें | Aubergine</title>
+<meta name="description" content="Aubergine सीधे Windows पर नहीं चलता, पर WSL 2 के अंदर चल सकता है और Windows ब्राउज़र से इस्तेमाल हो सकता है। कदम, क्या आज़माया गया और क्या नहीं, और समाधान।">
+<link rel="canonical" href="https://thirstyeggplant.com/hi/windows/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/windows/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/windows/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/windows/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/windows/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/windows/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/windows/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/windows/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/windows/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/windows/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/windows/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/windows/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/windows/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/windows/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="theme-color" content="#120f14" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#faf6f2" media="(prefers-color-scheme: light)">
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="WSL के साथ Windows पर Aubergine इंस्टॉल करें | Aubergine">
+<meta property="og:description" content="Aubergine सीधे Windows पर नहीं चलता, पर WSL 2 के अंदर चल सकता है और Windows ब्राउज़र से इस्तेमाल हो सकता है। कदम, क्या आज़माया गया और क्या नहीं, और समाधान।">
+<meta property="og:url" content="https://thirstyeggplant.com/hi/windows/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine: टर्मिनलों का एक कैनवस, एक काम में लगा हुआ और एक आपका इंतज़ार करता हुआ">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine: टर्मिनलों का एक कैनवस, एक काम में लगा हुआ और एक आपका इंतज़ार करता हुआ">
+<meta name="twitter:title" content="WSL के साथ Windows पर Aubergine इंस्टॉल करें | Aubergine">
+<meta name="twitter:description" content="Aubergine सीधे Windows पर नहीं चलता, पर WSL 2 के अंदर चल सकता है और Windows ब्राउज़र से इस्तेमाल हो सकता है। कदम, क्या आज़माया गया और क्या नहीं, और समाधान।">
+<link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">पेज पर जाएँ</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="पेज">
+      <ul>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">इंस्टॉल</a></li>
+        <li><a href="../guides/">गाइड</a></li>
+        <li><a href="../security/">सुरक्षा</a></li>
+        <li><a href="../faq/">सवाल-जवाब</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="भाषा: हिन्दी"><span class="lang-long" aria-hidden="true">हिन्दी</span><span class="lang-short" aria-hidden="true">HI</span></summary>
+      <ul class="menu-list"><li><a href="../../windows/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="../../es/windows/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="../../pt/windows/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="../../fr/windows/" hreflang="fr" lang="fr" dir="ltr">Français</a></li><li><a href="../../de/windows/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="../../ja/windows/" hreflang="ja" lang="ja" dir="ltr">日本語</a></li><li><a href="../../zh/windows/" hreflang="zh-Hans" lang="zh-Hans" dir="ltr">简体中文</a></li><li><a href="../../ko/windows/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="../../id/windows/" hreflang="id" lang="id" dir="ltr">Bahasa Indonesia</a></li><li><a href="./" hreflang="hi" lang="hi" dir="ltr" aria-current="true">हिन्दी</a></li><li><a href="../../bn/windows/" hreflang="bn" lang="bn" dir="ltr">বাংলা</a></li><li><a href="../../ar/windows/" hreflang="ar" lang="ar" dir="rtl">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>मेन्यू</summary>
+      <ul class="menu-list">
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">इंस्टॉल</a></li>
+        <li><a href="../guides/">गाइड</a></li>
+        <li><a href="../security/">सुरक्षा</a></li>
+        <li><a href="../faq/">सवाल-जवाब</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="wrap translated">
+  <p class="note">Aubergine खुद अंग्रेज़ी में है: उसके बटन, मेन्यू और तस्वीरें अंग्रेज़ी वाली ही हैं।</p>
+  <p class="note">इस पेज का अंग्रेज़ी से अनुवाद मशीन ने किया है। <a href="https://github.com/thirstyeggplant/aubergine/issues">सुधार भेजें</a>।</p>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://thirstyeggplant.com/hi/windows/#article",
+      "headline": "WSL के साथ Windows पर Aubergine इंस्टॉल करें",
+      "description": "Aubergine सीधे Windows पर नहीं चलता, पर WSL 2 के अंदर चल सकता है और Windows ब्राउज़र से इस्तेमाल हो सकता है। कदम, क्या आज़माया गया और क्या नहीं, और समाधान।",
+      "url": "https://thirstyeggplant.com/hi/windows/",
+      "mainEntityOfPage": "https://thirstyeggplant.com/hi/windows/",
+      "datePublished": "2026-11-25",
+      "dateModified": "2026-11-25",
+      "inLanguage": "hi",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "WSL के साथ Windows", "item": "https://thirstyeggplant.com/hi/windows/" }
+      ]
+    },
+    {
+      "@type": "HowTo",
+      "@id": "https://thirstyeggplant.com/hi/windows/#howto",
+      "name": "WSL के साथ Windows पर Aubergine इंस्टॉल करें",
+      "description": "Aubergine सीधे Windows पर नहीं चलता, पर WSL 2 के अंदर चल सकता है और Windows ब्राउज़र से इस्तेमाल हो सकता है। कदम, क्या आज़माया गया और क्या नहीं, और समाधान।",
+      "step": [
+        { "@type": "HowToStep", "position": 1, "name": "WSL इंस्टॉल करें", "text": "wsl --install" },
+        { "@type": "HowToStep", "position": 2, "name": "tmux, बिल्ड टूल और Node.js 22 इंस्टॉल करें", "text": "sudo apt install -y tmux zsh git build-essential python3" },
+        { "@type": "HowToStep", "position": 3, "name": "Aubergine इंस्टॉल करें", "text": "npm install -g @meatgarden/aubergine" },
+        { "@type": "HowToStep", "position": 4, "name": "इसे शुरू करें और ब्राउज़र साइन इन करें", "text": "aubergine start" }
+      ]
+    }
+  ]
+}
+</script>
+<div class="wrap page-head">
+  <nav class="crumbs" aria-label="आप कहाँ हैं"><ol><li><a href="../">Aubergine</a></li><li>WSL के साथ Windows</li></ol></nav>
+  <h1>WSL के साथ Windows पर Aubergine इंस्टॉल करें</h1>
+  <p class="lead">Aubergine सीधे Windows पर नहीं चलता। यह WSL 2 के अंदर चलता है, जो Windows का दिया हुआ Linux है, और आप इसे अपने Windows ब्राउज़र से इस्तेमाल करते हैं।</p>
+</div>
+<div class="wrap page-body">
+  <div class="prose">
+    <p class="note"><strong>क्या आज़माया गया।</strong> Linux वाले कदम 25 नवंबर 2026 को एक कंटेनर में Ubuntu 24.04.5 (x86_64) पर चलाए गए, WSL में नहीं, npm से Aubergine 0.2.2 के साथ: इसने अपनी टर्मिनल लाइब्रेरी कंपाइल की, शुरू हुआ, एक ब्राउज़र साइन इन किया, और एक टर्मिनल और डेमो चलाया। nvm से Node.js इंस्टॉल करना वहाँ नहीं चलाया गया, क्योंकि Node.js 22 पहले से इंस्टॉल था। इस पेज की कोई भी चीज़ अभी Windows पर नहीं चलाई गई है। अगर आप आज़माएँ, तो <a href="https://github.com/thirstyeggplant/aubergine/issues">हमें बताएँ कि कैसा रहा</a>।</p>
+
+    <h2>आपको क्या चाहिए</h2>
+    <p>Windows 11, या Windows 10 वर्शन 2004 (बिल्ड 19041) या नया, जहाँ WSL 2 एक कमांड से इंस्टॉल हो जाता है। ब्योरे Microsoft के <a href="https://learn.microsoft.com/windows/wsl/install">WSL इंस्टॉल करने वाले पेज</a> पर हैं।</p>
+
+    <h2>इंस्टॉल करें और शुरू करें</h2>
+    <ol>
+      <li><p><strong>WSL इंस्टॉल करें।</strong> PowerShell को एडमिनिस्ट्रेटर के रूप में खोलें, यह चलाएँ, और पूरा होने पर Windows रीस्टार्ट करें। यह Ubuntu के साथ WSL 2 इंस्टॉल करता है।</p>
+        <p class="cmd multi"><code>wsl --install</code><button type="button" class="copy" data-copy data-copied="कॉपी हो गया" aria-live="polite" hidden>कॉपी करें</button></p>
+        <p>रीस्टार्ट के बाद, Start मेन्यू से <strong>Ubuntu</strong> खोलें और उसके लिए एक यूज़र नेम और पासवर्ड चुनें। नीचे की हर कमांड वहीं, Ubuntu में टाइप होती है।</p></li>
+      <li><p><strong>Aubergine की ज़रूरत की चीज़ें इंस्टॉल करें</strong>: tmux, zsh और Git, और वे टूल जो इसकी टर्मिनल लाइब्रेरी कंपाइल करते हैं, क्योंकि Linux के लिए उसका कुछ भी पहले से बना नहीं है।</p>
+        <div class="cmds">
+          <p class="cmd"><code>sudo apt update</code><button type="button" class="copy" data-copy data-copied="कॉपी हो गया" aria-live="polite" hidden>कॉपी करें</button></p>
+          <p class="cmd"><code>sudo apt install -y tmux zsh git build-essential python3</code><button type="button" class="copy" data-copy data-copied="कॉपी हो गया" aria-live="polite" hidden>कॉपी करें</button></p>
+        </div>
+        <p><strong>Node.js 22 इंस्टॉल करें।</strong> Ubuntu का अपना पैकेज वर्शन 18 है, जो बहुत पुराना है। एक जाना-माना तरीका <a href="https://github.com/nvm-sh/nvm">nvm</a> है: उसे इंस्टॉल करें, एक नई Ubuntu विंडो खोलें, फिर Node.js 22 इंस्टॉल करें।</p>
+        <div class="cmds">
+          <p class="cmd"><code>curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash</code><button type="button" class="copy" data-copy data-copied="कॉपी हो गया" aria-live="polite" hidden>कॉपी करें</button></p>
+          <p class="cmd"><code>nvm install 22</code><button type="button" class="copy" data-copy data-copied="कॉपी हो गया" aria-live="polite" hidden>कॉपी करें</button></p>
+        </div>
+        <p>अब <code>node -v</code> को v22 या नया दिखाना चाहिए।</p></li>
+      <li><p>npm से <strong>Aubergine इंस्टॉल करें</strong>। इंस्टॉल होते समय यह अपनी टर्मिनल लाइब्रेरी कंपाइल करता है; ट्रायल में पूरा इंस्टॉल 13 सेकंड में हुआ।</p>
+        <p class="cmd"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="कॉपी हो गया" aria-live="polite" hidden>कॉपी करें</button></p></li>
+      <li><p><strong>इसे शुरू करें</strong>, और वह विंडो खुली छोड़ दें:</p>
+        <p class="cmd"><code>aubergine start</code><button type="button" class="copy" data-copy data-copied="कॉपी हो गया" aria-live="polite" hidden>कॉपी करें</button></p>
+        <p><strong>अपना ब्राउज़र साइन इन करें।</strong> एक दूसरी Ubuntu विंडो में साइन-इन पता प्रिंट करें, फिर उसे Windows पर अपने ब्राउज़र में खोलें। यह उस ब्राउज़र को साइन इन करता है, इसलिए इसे पासवर्ड की तरह रखें।</p>
+        <p class="cmd"><code>aubergine open --print</code><button type="button" class="copy" data-copy data-copied="कॉपी हो गया" aria-live="polite" hidden>कॉपी करें</button></p>
+        <p>उसके बाद, उस ब्राउज़र में <code>http://127.0.0.1:4600</code> अपने आप काम करता है। खाली कैनवस पर <em>Show me around</em> टूर शुरू करता है।</p></li>
+    </ol>
+
+    <h2>जानने लायक</h2>
+    <ul>
+      <li><strong>अपने प्रोजेक्ट Ubuntu में रखें</strong>, उसके होम फ़ोल्डर में, <code>/mnt/c</code> के नीचे नहीं, जहाँ Windows की फ़ाइलों तक एक धीमे पुल से पहुँचा जाता है।</li>
+      <li><strong>अपने एजेंट Ubuntu के अंदर इंस्टॉल करें</strong>, Claude Code, Codex या कोई और, जैसे किसी भी Linux पर। Windows में इंस्टॉल किया गया एजेंट Aubergine के टर्मिनलों में नहीं होता।</li>
+      <li><strong>टर्मिनल तब तक चलते हैं जब तक WSL चलता है।</strong> ब्राउज़र बंद करने से कुछ खत्म नहीं होता, और <code>aubergine start</code> की विंडो में Ctrl+C सिर्फ़ सर्वर रोकता है। जब WSL रुकता है, Windows रीस्टार्ट होने से या <code>wsl --shutdown</code> के बाद, तो टर्मिनल खत्म हो जाते हैं, और अगला <code>aubergine start</code> उनके आख़िरी फ़ोल्डरों में नए शेल खोलता है, जैसे Mac रीस्टार्ट होने के बाद।</li>
+      <li><strong>bash या zsh।</strong> Ubuntu का शेल bash है, और टर्मिनल उसमें ठीक चलते हैं। टर्मिनल पर कमांड का स्टेटस (व्यस्त, फ़ेल हुई कमांड का एग्ज़िट कोड) सिर्फ़ zsh से आता है: ट्रायल में एक zsh टर्मिनल ने फ़ेल हुई कमांड के बाद <code>exit 3</code> दिखाया। यह पाने के लिए Ubuntu में zsh को अपना शेल बनाएँ।</li>
+      <li><strong>जो वहाँ नहीं है</strong>: लॉगिन पर शुरू होना सिर्फ़ macOS पर काम करता है (<code>aubergine service install</code> यही बताता है), और <em>Open on desktop</em> में Windows के टर्मिनल ऐप की कोई सेटिंग नहीं है। ट्रायल में <code>aubergine open</code> को खोलने के लिए कोई ब्राउज़र नहीं मिला; <code>aubergine open --print</code> हमेशा काम करता है।</li>
+      <li>Windows पर <strong>कीज़</strong> ब्राउज़रों के दस्तावेज़ों के आधार पर चुनी गई हैं और मापी नहीं गईं: देखें <a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/keys.md">docs/keys.md</a>। पैलेट हमेशा काम करता है।</li>
+    </ul>
+
+    <h2>अगर कुछ गड़बड़ हो</h2>
+    <p>पहले Ubuntu में <code>aubergine doctor</code> चलाएँ। यह Node.js, tmux, Git और सर्वर जाँचता है।</p>
+    <div class="table">
+      <table>
+        <thead><tr><th>आपको क्या दिखता है</th><th>क्या करें</th></tr></thead>
+        <tbody>
+          <tr><td>Aubergine इंस्टॉल करते समय <code>node-pty</code> कंपाइल करने में फ़ेल होता है</td><td>बिल्ड टूल नहीं हैं। कदम 2 की <code>apt</code> वाली लाइनें चलाएँ, फिर Aubergine दोबारा इंस्टॉल करें।</td></tr>
+          <tr><td>एक पेज जो कहता है कि tmux नहीं है या बहुत पुराना है</td><td>Ubuntu 24.04 का tmux 3.4 है, जो काफ़ी नया है: <code>sudo apt install -y tmux</code>, फिर सर्वर दोबारा शुरू करें।</td></tr>
+          <tr><td><code>node -v</code> v22 से पुराना वर्शन दिखाता है</td><td>कदम 2 की तरह Node.js 22 इंस्टॉल करें, एक नई Ubuntu विंडो खोलें, और Aubergine दोबारा इंस्टॉल करें।</td></tr>
+          <tr><td>पता Windows के ब्राउज़र में नहीं खुलता</td><td>जाँचें कि <code>aubergine start</code> अब भी Ubuntu में चल रहा है। फिर Microsoft का <a href="https://learn.microsoft.com/windows/wsl/networking">WSL में नेटवर्किंग वाला पेज</a> देखें; इसे Aubergine के साथ आज़माया नहीं गया है।</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>आगे</h2>
+    <p>रोकना, अपडेट करना और अनइंस्टॉल करना <a href="../install/">इंस्टॉल पेज</a> जैसा ही है, और बाकी सब <a href="https://github.com/thirstyeggplant/aubergine#readme">README</a> में है।</p>
+  </div>
+</div>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <nav aria-label="सभी पेज">
+      <ul class="foot-links">
+        <li><a href="../">होम</a></li>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex और ChatGPT</a></li>
+        <li><a href="../install/">इंस्टॉल</a></li>
+        <li><a href="../guides/">गाइड</a></li>
+        <li><a href="../run-multiple-coding-agents/">कई एजेंट चलाएँ</a></li>
+        <li><a href="../working-copies/">वर्किंग कॉपी</a></li>
+        <li><a href="../queue-and-schedules/">क्यू और शेड्यूल</a></li>
+        <li><a href="../security/">सुरक्षा</a></li>
+        <li><a href="../roadmap/">रोडमैप</a></li>
+        <li><a href="../faq/">सवाल-जवाब</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">Aubergine मुफ़्त और ओपन सोर्स है, <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">MIT लाइसेंस</a> के तहत, और आपके अपने कंप्यूटर पर चलता है।</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+</script>
+</body>
+</html>

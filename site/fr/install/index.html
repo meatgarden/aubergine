@@ -137,7 +137,7 @@
         { "@type": "Question", "name": "Que modifie le script d’installation d’Aubergine ?", "acceptedAnswer": { "@type": "Answer", "text": "Deux choses : le dossier d’installation (~/.aubergine, ou AUBERGINE_HOME) et un lien nommé aubergine dans votre PATH. Il n’utilise jamais sudo, ne modifie jamais les fichiers de démarrage de votre shell et n’installe jamais Node.js, pnpm ou tmux." } },
         { "@type": "Question", "name": "Comment mettre à jour Aubergine ?", "acceptedAnswer": { "@type": "Answer", "text": "Installée avec npm : exécutez npm install -g @meatgarden/aubergine@latest. Installée avec le script d’installation : exécutez aubergine update, ou relancez le script. Puis redémarrez le serveur." } },
         { "@type": "Question", "name": "Comment désinstaller Aubergine ?", "acceptedAnswer": { "@type": "Answer", "text": "Exécutez aubergine uninstall. Cela retire le lien et, après vous l’avoir demandé, la copie créée par le script d’installation. Vos données ne sont jamais supprimées et vos terminaux jamais fermés." } },
-        { "@type": "Question", "name": "Aubergine tourne-t-elle sur Linux ou Windows ?", "acceptedAnswer": { "@type": "Answer", "text": "Linux devrait fonctionner mais n’a pas encore été testé. Windows n’est pas pris en charge." } }
+        { "@type": "Question", "name": "Aubergine tourne-t-elle sur Linux ou Windows ?", "acceptedAnswer": { "@type": "Answer", "text": "Sous Linux, il n’a été lancé que dans des conteneurs (Ubuntu 24.04 et Debian), pas encore sur un poste Linux. Windows lui-même n’est pas pris en charge ; Aubergine peut tourner dans WSL 2, le Linux fourni par Windows, ce qui n’a pas encore été essayé." } }
       ]
     }
   ]
@@ -152,7 +152,7 @@
   <div class="prose">
     <h2>Prérequis</h2>
     <ul>
-      <li>macOS. Linux devrait fonctionner de la même façon mais n’a pas encore été testé.</li>
+      <li>macOS. Sous Linux, il n’a été lancé que dans des conteneurs : le paquet npm sous Ubuntu 24.04 et l’image de conteneur sous Debian. Windows lui-même n’est pas pris en charge ; Aubergine peut tourner dans WSL 2, ce qui n’a pas encore été essayé : voir <a href="../windows/">Installer sous Windows avec WSL</a>.</li>
       <li><a href="https://github.com/tmux/tmux">tmux</a> 3.2 ou plus récent et Node.js 22 ou plus récent. Le script d’installation a aussi besoin de pnpm.</li>
     </ul>
     <p>Avec <a href="https://brew.sh">Homebrew</a>, une ligne installe les deux (ajoutez <code>pnpm</code> pour le script d’installation) :</p>

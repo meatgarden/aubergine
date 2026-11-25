@@ -464,8 +464,8 @@
     "from": "efe26fb96381"
   },
   "home.faq.need.a": {
-    "text": "macOS, সঙ্গে tmux 3.2 বা নতুনতর আর Node.js 22 বা নতুনতর; ইনস্টলারের pnpm-ও লাগে। Linux-এ চলার কথা, কিন্তু এখনো পরীক্ষা করা হয়নি।",
-    "from": "50e15eb9d5c0"
+    "text": "tmux 3.2 বা নতুন এবং Node.js 22 বা নতুনসহ macOS; ইনস্টলারের pnpm-ও লাগে। Linux-এ এখন পর্যন্ত কেবল কন্টেইনারের ভেতরে চালানো হয়েছে। Windows-এ এটি কেবল WSL 2-এর ভেতরে চলে, যা এখনো চেষ্টা করা হয়নি: দেখুন <a href=\"/windows/\">Windows-এর গাইড</a>।",
+    "from": "95fd7d6edbbc"
   },
   "home.faq.byhand.q": {
     "text": "আমি যদি নিজে কোনো টার্মিনালে Claude Code চালু করি?",
@@ -892,8 +892,8 @@
     "from": "e0cdd07f6a27"
   },
   "install.req.os": {
-    "text": "macOS। Linux-এও একইভাবে চলার কথা, কিন্তু এখনো পরীক্ষা করা হয়নি।",
-    "from": "e896cb710692"
+    "text": "macOS. Linux-এ এখন পর্যন্ত কেবল কন্টেইনারের ভেতরে চালানো হয়েছে: Ubuntu 24.04-এ npm প্যাকেজ আর Debian-এ কন্টেইনার ইমেজ। Windows নিজে সমর্থিত নয়; Aubergine WSL 2-এর ভেতরে চলতে পারে, যা এখনো চেষ্টা করা হয়নি: দেখুন <a href=\"/windows/\">WSL দিয়ে Windows-এ ইনস্টল করুন</a>।",
+    "from": "4ec6a50d42d5"
   },
   "install.req.tools": {
     "text": "<a href=\"https://github.com/tmux/tmux\">tmux</a> 3.2 বা নতুনতর আর Node.js 22 বা নতুনতর। ইনস্টলারের pnpm-ও লাগে।",
@@ -1072,8 +1072,160 @@
     "from": "e3df2a3fd915"
   },
   "install.ld.a4": {
-    "text": "Linux-এ চলার কথা, কিন্তু এখনো পরীক্ষা করা হয়নি। Windows সমর্থিত নয়।",
-    "from": "b8b7b1d1037d"
+    "text": "Linux-এ এখন পর্যন্ত কেবল কন্টেইনারের ভেতরে চালানো হয়েছে (Ubuntu 24.04 আর Debian), এখনো Linux ডেস্কটপে নয়। Windows নিজে সমর্থিত নয়; Aubergine WSL 2-এর ভেতরে চলতে পারে, যা Windows-এর দেওয়া Linux, কিন্তু তা এখনো চেষ্টা করা হয়নি।",
+    "from": "c293e731fea8"
+  },
+  "windows.meta.title": {
+    "text": "WSL দিয়ে Windows-এ Aubergine ইনস্টল করুন | Aubergine",
+    "from": "82c0a75bef8c"
+  },
+  "windows.meta.description": {
+    "text": "Aubergine সরাসরি Windows-এ চলে না, তবে WSL 2-এর ভেতরে চলতে পারে আর Windows ব্রাউজার থেকে ব্যবহার করা যায়। ধাপগুলো, কী চেষ্টা করা হয়েছে আর কী হয়নি, এবং সমাধান।",
+    "from": "eef730b3d958"
+  },
+  "windows.crumb": {
+    "text": "WSL দিয়ে Windows",
+    "from": "26529d6498df"
+  },
+  "windows.title": {
+    "text": "WSL দিয়ে Windows-এ Aubergine ইনস্টল করুন",
+    "from": "c966f630ebab"
+  },
+  "windows.lead": {
+    "text": "Aubergine সরাসরি Windows-এ চলে না। এটি WSL 2-এর ভেতরে চলে, যা Windows-এর দেওয়া Linux, আর আপনি এটি আপনার Windows ব্রাউজার থেকে ব্যবহার করেন।",
+    "from": "81a98c345b2a"
+  },
+  "windows.tried": {
+    "text": "<strong>কী চেষ্টা করা হয়েছে।</strong> Linux-এর ধাপগুলো ২৫ নভেম্বর ২০২৬-এ একটি কন্টেইনারে Ubuntu 24.04.5 (x86_64)-এ চালানো হয়েছে, WSL-এ নয়, npm থেকে Aubergine 0.2.2 দিয়ে: এটি নিজের টার্মিনাল লাইব্রেরি কম্পাইল করেছে, চালু হয়েছে, একটি ব্রাউজারকে সাইন ইন করিয়েছে, আর একটি টার্মিনাল ও ডেমো চালিয়েছে। nvm দিয়ে Node.js ইনস্টল করা সেখানে চালানো হয়নি, কারণ Node.js 22 আগে থেকেই ইনস্টল করা ছিল। এই পেজের কিছুই এখনো Windows-এ চালানো হয়নি। আপনি চেষ্টা করলে <a href=\"https://github.com/thirstyeggplant/aubergine/issues\">আমাদের জানান কেমন হলো</a>।",
+    "from": "75b38b261d19"
+  },
+  "windows.req.title": {
+    "text": "আপনার যা লাগবে",
+    "from": "e17c85cc990b"
+  },
+  "windows.req.text": {
+    "text": "Windows 11, বা Windows 10 ভার্সন 2004 (বিল্ড 19041) বা নতুন, যেখানে একটি কমান্ডে WSL 2 ইনস্টল করা যায়। বিস্তারিত আছে Microsoft-এর <a href=\"https://learn.microsoft.com/windows/wsl/install\">WSL ইনস্টল করার পেজে</a>।",
+    "from": "43ee5c74e4e3"
+  },
+  "windows.steps.title": {
+    "text": "ইনস্টল করুন আর চালু করুন",
+    "from": "945ef89608d4"
+  },
+  "windows.steps.wsl": {
+    "text": "<strong>WSL ইনস্টল করুন।</strong> PowerShell অ্যাডমিনিস্ট্রেটর হিসেবে খুলুন, এটি চালান, আর শেষ হলে Windows রিস্টার্ট করুন। এটি Ubuntu-সহ WSL 2 ইনস্টল করে।",
+    "from": "0f31c56ce2e5"
+  },
+  "windows.steps.ubuntu": {
+    "text": "রিস্টার্টের পরে Start মেনু থেকে <strong>Ubuntu</strong> খুলুন আর তার জন্য একটি ইউজার নেম ও পাসওয়ার্ড বেছে নিন। নিচের প্রতিটি কমান্ড সেখানেই, Ubuntu-তে টাইপ করা হয়।",
+    "from": "4d3436ccad7d"
+  },
+  "windows.steps.apt": {
+    "text": "<strong>Aubergine-এর যা লাগে তা ইনস্টল করুন</strong>: tmux, zsh আর Git, এবং যে টুলগুলো এর টার্মিনাল লাইব্রেরি কম্পাইল করে, কারণ Linux-এর জন্য এর কিছুই আগে থেকে বানানো নেই।",
+    "from": "f8e116fdd0eb"
+  },
+  "windows.steps.node": {
+    "text": "<strong>Node.js 22 ইনস্টল করুন।</strong> Ubuntu-র নিজের প্যাকেজটি ভার্সন 18, যা খুব পুরোনো। একটি পরিচিত উপায় হলো <a href=\"https://github.com/nvm-sh/nvm\">nvm</a>: এটি ইনস্টল করুন, একটি নতুন Ubuntu উইন্ডো খুলুন, তারপর Node.js 22 ইনস্টল করুন।",
+    "from": "8e6d6af1ee88"
+  },
+  "windows.steps.nodeCheck": {
+    "text": "এখন <code>node -v</code>-এর v22 বা নতুন দেখানোর কথা।",
+    "from": "872ffc8f2dfd"
+  },
+  "windows.steps.npm": {
+    "text": "npm থেকে <strong>Aubergine ইনস্টল করুন</strong>। ইনস্টলের সময় এটি নিজের টার্মিনাল লাইব্রেরি কম্পাইল করে; পরীক্ষায় পুরো ইনস্টলে ১৩ সেকেন্ড লেগেছিল।",
+    "from": "d0686af8f780"
+  },
+  "windows.steps.start": {
+    "text": "<strong>চালু করুন</strong>, আর ওই উইন্ডোটি খোলা রাখুন:",
+    "from": "0fc463357411"
+  },
+  "windows.steps.open": {
+    "text": "<strong>আপনার ব্রাউজার সাইন ইন করুন।</strong> দ্বিতীয় একটি Ubuntu উইন্ডোতে সাইন-ইন ঠিকানাটি প্রিন্ট করুন, তারপর Windows-এ আপনার ব্রাউজারে খুলুন। এটি ওই ব্রাউজারকে সাইন ইন করায়, তাই একে পাসওয়ার্ডের মতো রাখুন।",
+    "from": "4eedb1a24642"
+  },
+  "windows.steps.after": {
+    "text": "এরপর ওই ব্রাউজারে <code>http://127.0.0.1:4600</code> নিজেই কাজ করে। ফাঁকা ক্যানভাসে <em>Show me around</em> ট্যুর শুরু করে।",
+    "from": "6d1885774f0b"
+  },
+  "windows.good.title": {
+    "text": "জেনে রাখা ভালো",
+    "from": "aab7685123cf"
+  },
+  "windows.good.files": {
+    "text": "<strong>আপনার প্রজেক্টগুলো Ubuntu-তে রাখুন</strong>, তার হোম ফোল্ডারে, <code>/mnt/c</code>-এর নিচে নয়, যেখানে Windows-এর ফাইলে একটি ধীর সেতু দিয়ে পৌঁছাতে হয়।",
+    "from": "3e2e6716da83"
+  },
+  "windows.good.agents": {
+    "text": "<strong>আপনার এজেন্টগুলো Ubuntu-র ভেতরে ইনস্টল করুন</strong>, Claude Code, Codex বা অন্য যেকোনোটি, যেকোনো Linux-এর মতোই। Windows-এ ইনস্টল করা এজেন্ট Aubergine-এর টার্মিনালে থাকে না।",
+    "from": "f32d6f1d347e"
+  },
+  "windows.good.running": {
+    "text": "<strong>WSL যতক্ষণ চলে, টার্মিনালগুলোও ততক্ষণ থাকে।</strong> ব্রাউজার বন্ধ করলে কিছুই শেষ হয় না, আর <code>aubergine start</code>-এর উইন্ডোতে Ctrl+C কেবল সার্ভার থামায়। WSL থামলে, Windows রিস্টার্ট হলে বা <code>wsl --shutdown</code>-এর পরে, টার্মিনালগুলো শেষ হয়, আর পরের <code>aubergine start</code> তাদের শেষ ফোল্ডারে নতুন শেল খোলে, যেমন Mac রিস্টার্টের পরে।",
+    "from": "5a110c9f034d"
+  },
+  "windows.good.shell": {
+    "text": "<strong>bash না zsh।</strong> Ubuntu-র শেল bash, আর টার্মিনাল তাতে ঠিকমতো চলে। টার্মিনালে কমান্ডের অবস্থা (ব্যস্ত, ব্যর্থ কমান্ডের এক্সিট কোড) কেবল zsh থেকে আসে: পরীক্ষায় একটি zsh টার্মিনাল ব্যর্থ কমান্ডের পরে <code>exit 3</code> দেখিয়েছিল। এটি পেতে Ubuntu-তে zsh-কে আপনার শেল করুন।",
+    "from": "98e4ede36c4f"
+  },
+  "windows.good.missing": {
+    "text": "<strong>যা সেখানে নেই</strong>: লগইনে চালু হওয়া কেবল macOS-এ কাজ করে (<code>aubergine service install</code> তা-ই বলে), আর <em>Open on desktop</em>-এ Windows-এর টার্মিনাল অ্যাপের কোনো সেটিং নেই। পরীক্ষায় <code>aubergine open</code> খোলার মতো কোনো ব্রাউজার পায়নি; <code>aubergine open --print</code> সবসময় কাজ করে।",
+    "from": "19d811a81126"
+  },
+  "windows.good.keys": {
+    "text": "Windows-এ <strong>কী</strong>গুলো ব্রাউজারের ডকুমেন্টেশন দেখে বেছে নেওয়া, মাপা হয়নি: দেখুন <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/keys.md\">docs/keys.md</a>। প্যালেট সবসময় কাজ করে।",
+    "from": "beb021d09a79"
+  },
+  "windows.wrong.doctor": {
+    "text": "প্রথমে Ubuntu-তে <code>aubergine doctor</code> চালান। এটি Node.js, tmux, Git আর সার্ভার পরীক্ষা করে।",
+    "from": "99c6773e6fc4"
+  },
+  "windows.wrong.compile.see": {
+    "text": "Aubergine ইনস্টল করার সময় <code>node-pty</code> কম্পাইল করতে গিয়ে ব্যর্থ হয়",
+    "from": "2f7790e9150b"
+  },
+  "windows.wrong.compile.do": {
+    "text": "বিল্ড টুলগুলো নেই। ধাপ ২-এর <code>apt</code> লাইনগুলো চালান, তারপর Aubergine আবার ইনস্টল করুন।",
+    "from": "6ce6d003e421"
+  },
+  "windows.wrong.tmux.do": {
+    "text": "Ubuntu 24.04-এর tmux হলো 3.4, যথেষ্ট নতুন: <code>sudo apt install -y tmux</code>, তারপর সার্ভার আবার চালু করুন।",
+    "from": "f726aafbf8b6"
+  },
+  "windows.wrong.node.see": {
+    "text": "<code>node -v</code> v22-এর চেয়ে পুরোনো ভার্সন দেখায়",
+    "from": "6d3b5a77d630"
+  },
+  "windows.wrong.node.do": {
+    "text": "ধাপ ২-এর মতো Node.js 22 ইনস্টল করুন, একটি নতুন Ubuntu উইন্ডো খুলুন, আর Aubergine আবার ইনস্টল করুন।",
+    "from": "0f197e36ca93"
+  },
+  "windows.wrong.address.see": {
+    "text": "ঠিকানাটি Windows-এর ব্রাউজারে খোলে না",
+    "from": "5517022ccb2e"
+  },
+  "windows.wrong.address.do": {
+    "text": "দেখুন <code>aubergine start</code> এখনো Ubuntu-তে চলছে কি না। তারপর Microsoft-এর <a href=\"https://learn.microsoft.com/windows/wsl/networking\">WSL-এ নেটওয়ার্কিং-এর পেজ</a> দেখুন; এটি Aubergine দিয়ে চেষ্টা করা হয়নি।",
+    "from": "f58f31689a94"
+  },
+  "windows.next.text": {
+    "text": "থামানো, আপডেট করা আর আনইনস্টল করা <a href=\"/install/\">ইনস্টল পেজের</a> মতোই, আর বাকি সবকিছু <a href=\"https://github.com/thirstyeggplant/aubergine#readme\">README</a>-তে আছে।",
+    "from": "e99167a76e7b"
+  },
+  "windows.ld.s1": {
+    "text": "WSL ইনস্টল করুন",
+    "from": "013b9cd3a82f"
+  },
+  "windows.ld.s2": {
+    "text": "tmux, বিল্ড টুল আর Node.js 22 ইনস্টল করুন",
+    "from": "24bc20fedab8"
+  },
+  "windows.ld.s3": {
+    "text": "Aubergine ইনস্টল করুন",
+    "from": "733a8757545c"
+  },
+  "windows.ld.s4": {
+    "text": "চালু করুন আর ব্রাউজার সাইন ইন করুন",
+    "from": "6ee5544f775e"
   },
   "guides.meta.title": {
     "text": "Aubergine গাইড | Aubergine",
@@ -1102,6 +1254,14 @@
   "guides.install.text": {
     "text": "যা লাগবে, এক লাইনের ইনস্টলার, এটি কী বদলায়, আর সাধারণ সমস্যার সমাধান।",
     "from": "0c229f404056"
+  },
+  "guides.windows.name": {
+    "text": "WSL দিয়ে Windows-এ ইনস্টল করুন",
+    "from": "336ff91588a7"
+  },
+  "guides.windows.text": {
+    "text": "Aubergine WSL 2-এর ভেতরে চালান আর আপনার Windows ব্রাউজার থেকে ব্যবহার করুন। Linux-এর ধাপগুলো চালানো হয়েছে; Windows-এ এখনো কিছু চেষ্টা করা হয়নি।",
+    "from": "582c5ec5ff77"
   },
   "guides.several.name": {
     "text": "একসঙ্গে কয়েকটি কোডিং এজেন্ট চালান",
@@ -2064,8 +2224,8 @@
     "from": "e61744d0c993"
   },
   "roadmap.everywhere.windows.text": {
-    "text": "Windows-এ Aubergine চালান। আজ শুধু macOS সমর্থিত, আর Linux পরীক্ষা করা হয়নি।",
-    "from": "6eb34c4aada3"
+    "text": "Aubergine সরাসরি Windows-এ চালানো। আজ এটি কেবল WSL 2-এর ভেতরে চলে, যেমন <a href=\"/windows/\">Windows-এর গাইড</a> বলে, আর Windows-এ এটা এখনো কেউ চেষ্টা করেনি।",
+    "from": "25c43f0bde14"
   },
   "faq.meta.title": {
     "text": "প্রায়ই জিজ্ঞাসিত প্রশ্ন | Aubergine",
@@ -2108,8 +2268,8 @@
     "from": "efe26fb96381"
   },
   "faq.need.a": {
-    "text": "macOS, সঙ্গে tmux 3.2 বা নতুনতর আর Node.js 22 বা নতুনতর; ইনস্টলারের pnpm-ও লাগে। Linux-এ চলার কথা, কিন্তু এখনো পরীক্ষা করা হয়নি। Windows সমর্থিত নয়।",
-    "from": "d0ea17ebbaa3"
+    "text": "tmux 3.2 বা নতুন এবং Node.js 22 বা নতুনসহ macOS; ইনস্টলারের pnpm-ও লাগে। Linux-এ এখন পর্যন্ত কেবল কন্টেইনারের ভেতরে চালানো হয়েছে। Windows-এ এটি কেবল WSL 2-এর ভেতরে চলে, যা এখনো চেষ্টা করা হয়নি: দেখুন <a href=\"/windows/\">Windows-এর গাইড</a>।",
+    "from": "95fd7d6edbbc"
   },
   "faq.agents.q": {
     "text": "এটি কি যেকোনো কোডিং এজেন্টের সঙ্গে কাজ করে?",

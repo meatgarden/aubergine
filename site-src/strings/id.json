@@ -464,8 +464,8 @@
     "from": "efe26fb96381"
   },
   "home.faq.need.a": {
-    "text": "macOS dengan tmux 3.2 atau lebih baru dan Node.js 22 atau lebih baru; installer juga memerlukan pnpm. Linux seharusnya bisa, tetapi belum diuji.",
-    "from": "50e15eb9d5c0"
+    "text": "macOS dengan tmux 3.2 atau lebih baru dan Node.js 22 atau lebih baru; installer juga membutuhkan pnpm. Di Linux baru dijalankan di dalam kontainer. Di Windows hanya berjalan di dalam WSL 2, dan itu belum dicoba: lihat <a href=\"/windows/\">panduan untuk Windows</a>.",
+    "from": "95fd7d6edbbc"
   },
   "home.faq.byhand.q": {
     "text": "Bagaimana jika saya menjalankan Claude Code sendiri di terminal?",
@@ -892,8 +892,8 @@
     "from": "e0cdd07f6a27"
   },
   "install.req.os": {
-    "text": "macOS. Linux seharusnya bekerja dengan cara yang sama, tetapi belum diuji.",
-    "from": "e896cb710692"
+    "text": "macOS. Di Linux baru dijalankan di dalam kontainer: paket npm di Ubuntu 24.04 dan image kontainer di Debian. Windows sendiri tidak didukung; Aubergine bisa berjalan di dalam WSL 2, tetapi itu belum dicoba: lihat <a href=\"/windows/\">Instal di Windows dengan WSL</a>.",
+    "from": "4ec6a50d42d5"
   },
   "install.req.tools": {
     "text": "<a href=\"https://github.com/tmux/tmux\">tmux</a> 3.2 atau lebih baru dan Node.js 22 atau lebih baru. Installer juga memerlukan pnpm.",
@@ -1072,8 +1072,160 @@
     "from": "e3df2a3fd915"
   },
   "install.ld.a4": {
-    "text": "Linux seharusnya bisa, tetapi belum diuji. Windows tidak didukung.",
-    "from": "b8b7b1d1037d"
+    "text": "Di Linux baru dijalankan di dalam kontainer (Ubuntu 24.04 dan Debian), belum di desktop Linux. Windows sendiri tidak didukung; Aubergine bisa berjalan di dalam WSL 2, Linux yang disediakan Windows, tetapi itu belum dicoba.",
+    "from": "c293e731fea8"
+  },
+  "windows.meta.title": {
+    "text": "Instal Aubergine di Windows dengan WSL | Aubergine",
+    "from": "82c0a75bef8c"
+  },
+  "windows.meta.description": {
+    "text": "Aubergine tidak berjalan di Windows sendiri, tetapi bisa berjalan di dalam WSL 2 dan dipakai dari browser Windows. Langkah-langkahnya, apa yang sudah dan belum dicoba, dan cara memperbaiki masalah.",
+    "from": "eef730b3d958"
+  },
+  "windows.crumb": {
+    "text": "Windows dengan WSL",
+    "from": "26529d6498df"
+  },
+  "windows.title": {
+    "text": "Instal Aubergine di Windows dengan WSL",
+    "from": "c966f630ebab"
+  },
+  "windows.lead": {
+    "text": "Aubergine tidak berjalan di Windows sendiri. Ia berjalan di dalam WSL 2, Linux yang disediakan Windows, dan Anda memakainya dari browser Windows Anda.",
+    "from": "81a98c345b2a"
+  },
+  "windows.tried": {
+    "text": "<strong>Apa yang dicoba.</strong> Langkah Linux dijalankan pada 25 November 2026 di Ubuntu 24.04.5 (x86_64) di dalam kontainer, bukan di WSL, dengan Aubergine 0.2.2 dari npm: ia mengompilasi pustaka terminalnya, berjalan, memasukkan sebuah browser, serta menjalankan terminal dan demo. Instalasi Node.js dengan nvm tidak dijalankan di sana, karena Node.js 22 sudah terpasang. Belum ada isi halaman ini yang dijalankan di Windows. Jika Anda mencobanya, <a href=\"https://github.com/thirstyeggplant/aubergine/issues\">ceritakan hasilnya</a>.",
+    "from": "75b38b261d19"
+  },
+  "windows.req.title": {
+    "text": "Yang Anda butuhkan",
+    "from": "e17c85cc990b"
+  },
+  "windows.req.text": {
+    "text": "Windows 11, atau Windows 10 versi 2004 (build 19041) atau lebih baru, tempat WSL 2 bisa dipasang dengan satu perintah. <a href=\"https://learn.microsoft.com/windows/wsl/install\">Halaman Microsoft tentang memasang WSL</a> berisi rinciannya.",
+    "from": "43ee5c74e4e3"
+  },
+  "windows.steps.title": {
+    "text": "Instal dan jalankan",
+    "from": "945ef89608d4"
+  },
+  "windows.steps.wsl": {
+    "text": "<strong>Pasang WSL.</strong> Buka PowerShell sebagai administrator, jalankan ini, lalu mulai ulang Windows setelah selesai. Ini memasang WSL 2 dengan Ubuntu.",
+    "from": "0f31c56ce2e5"
+  },
+  "windows.steps.ubuntu": {
+    "text": "Setelah dimulai ulang, buka <strong>Ubuntu</strong> dari menu Start dan pilih nama pengguna serta kata sandi untuknya. Semua perintah di bawah diketik di sana, di Ubuntu.",
+    "from": "4d3436ccad7d"
+  },
+  "windows.steps.apt": {
+    "text": "<strong>Pasang yang dibutuhkan Aubergine</strong>: tmux, zsh, dan Git, serta alat yang mengompilasi pustaka terminalnya, yang tidak punya versi siap pakai untuk Linux.",
+    "from": "f8e116fdd0eb"
+  },
+  "windows.steps.node": {
+    "text": "<strong>Pasang Node.js 22.</strong> Paket bawaan Ubuntu adalah versi 18, terlalu lama. Salah satu cara yang dikenal luas adalah <a href=\"https://github.com/nvm-sh/nvm\">nvm</a>: pasang nvm, buka jendela Ubuntu baru, lalu pasang Node.js 22.",
+    "from": "8e6d6af1ee88"
+  },
+  "windows.steps.nodeCheck": {
+    "text": "<code>node -v</code> sekarang seharusnya menunjukkan v22 atau lebih baru.",
+    "from": "872ffc8f2dfd"
+  },
+  "windows.steps.npm": {
+    "text": "<strong>Pasang Aubergine</strong> dari npm. Ia mengompilasi pustaka terminalnya saat dipasang; dalam uji coba, seluruh instalasi memakan 13 detik.",
+    "from": "d0686af8f780"
+  },
+  "windows.steps.start": {
+    "text": "<strong>Jalankan</strong>, dan biarkan jendela itu terbuka:",
+    "from": "0fc463357411"
+  },
+  "windows.steps.open": {
+    "text": "<strong>Masukkan browser Anda.</strong> Di jendela Ubuntu kedua, tampilkan alamat masuk, lalu buka di browser Anda di Windows. Alamat itu memasukkan browser tersebut, jadi perlakukan seperti kata sandi.",
+    "from": "4eedb1a24642"
+  },
+  "windows.steps.after": {
+    "text": "Setelah itu, <code>http://127.0.0.1:4600</code> bisa dibuka langsung di browser itu. Di kanvas kosong, <em>Show me around</em> memulai tur.",
+    "from": "6d1885774f0b"
+  },
+  "windows.good.title": {
+    "text": "Perlu diketahui",
+    "from": "aab7685123cf"
+  },
+  "windows.good.files": {
+    "text": "<strong>Simpan proyek Anda di Ubuntu</strong>, di folder rumahnya, bukan di bawah <code>/mnt/c</code>, tempat berkas Windows dijangkau lewat jembatan yang lebih lambat.",
+    "from": "3e2e6716da83"
+  },
+  "windows.good.agents": {
+    "text": "<strong>Pasang agen Anda di dalam Ubuntu</strong>, Claude Code, Codex, atau yang lain, seperti di Linux mana pun. Agen yang dipasang di Windows tidak ada di terminal Aubergine.",
+    "from": "f32d6f1d347e"
+  },
+  "windows.good.running": {
+    "text": "<strong>Terminal hidup selama WSL berjalan.</strong> Menutup browser tidak mengakhiri apa pun, dan Ctrl+C di jendela <code>aubergine start</code> hanya menghentikan server. Saat WSL berhenti, karena Windows dimulai ulang atau setelah <code>wsl --shutdown</code>, terminal berakhir, dan <code>aubergine start</code> berikutnya membuka shell baru di folder terakhirnya, seperti setelah Mac dimulai ulang.",
+    "from": "5a110c9f034d"
+  },
+  "windows.good.shell": {
+    "text": "<strong>bash atau zsh.</strong> Shell Ubuntu adalah bash, dan terminal berfungsi di dalamnya. Status perintah di terminal (sibuk, kode keluar perintah yang gagal) hanya datang dari zsh: dalam uji coba, terminal zsh menampilkan <code>exit 3</code> setelah perintah gagal. Jadikan zsh shell Anda di Ubuntu untuk mendapatkannya.",
+    "from": "98e4ede36c4f"
+  },
+  "windows.good.missing": {
+    "text": "<strong>Yang tidak ada</strong>: mulai saat login hanya berfungsi di macOS (<code>aubergine service install</code> mengatakannya), dan <em>Open on desktop</em> tidak punya pengaturan untuk aplikasi terminal Windows. <code>aubergine open</code> tidak menemukan browser untuk dibuka dalam uji coba; <code>aubergine open --print</code> selalu berfungsi.",
+    "from": "19d811a81126"
+  },
+  "windows.good.keys": {
+    "text": "<strong>Pintasan tombol</strong> di Windows dipilih dari dokumentasi browser dan belum diukur: lihat <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/keys.md\">docs/keys.md</a>. Palet selalu berfungsi.",
+    "from": "beb021d09a79"
+  },
+  "windows.wrong.doctor": {
+    "text": "Jalankan dulu <code>aubergine doctor</code> di Ubuntu. Ia memeriksa Node.js, tmux, Git, dan server.",
+    "from": "99c6773e6fc4"
+  },
+  "windows.wrong.compile.see": {
+    "text": "Instalasi Aubergine gagal saat mengompilasi <code>node-pty</code>",
+    "from": "2f7790e9150b"
+  },
+  "windows.wrong.compile.do": {
+    "text": "Alat build tidak ada. Jalankan baris <code>apt</code> dari langkah 2, lalu pasang Aubergine lagi.",
+    "from": "6ce6d003e421"
+  },
+  "windows.wrong.tmux.do": {
+    "text": "tmux di Ubuntu 24.04 adalah 3.4, cukup baru: <code>sudo apt install -y tmux</code>, lalu jalankan server lagi.",
+    "from": "f726aafbf8b6"
+  },
+  "windows.wrong.node.see": {
+    "text": "<code>node -v</code> menunjukkan versi lebih lama dari v22",
+    "from": "6d3b5a77d630"
+  },
+  "windows.wrong.node.do": {
+    "text": "Pasang Node.js 22 seperti di langkah 2, buka jendela Ubuntu baru, lalu pasang Aubergine lagi.",
+    "from": "0f197e36ca93"
+  },
+  "windows.wrong.address.see": {
+    "text": "Alamat tidak terbuka di browser di Windows",
+    "from": "5517022ccb2e"
+  },
+  "windows.wrong.address.do": {
+    "text": "Periksa bahwa <code>aubergine start</code> masih berjalan di Ubuntu. Lalu lihat <a href=\"https://learn.microsoft.com/windows/wsl/networking\">halaman Microsoft tentang jaringan di WSL</a>; ini belum dicoba dengan Aubergine.",
+    "from": "f58f31689a94"
+  },
+  "windows.next.text": {
+    "text": "Menghentikan, memperbarui, dan mencopot sama seperti di <a href=\"/install/\">halaman instalasi</a>, dan selebihnya ada di <a href=\"https://github.com/thirstyeggplant/aubergine#readme\">README</a>.",
+    "from": "e99167a76e7b"
+  },
+  "windows.ld.s1": {
+    "text": "Pasang WSL",
+    "from": "013b9cd3a82f"
+  },
+  "windows.ld.s2": {
+    "text": "Pasang tmux, alat build, dan Node.js 22",
+    "from": "24bc20fedab8"
+  },
+  "windows.ld.s3": {
+    "text": "Pasang Aubergine",
+    "from": "733a8757545c"
+  },
+  "windows.ld.s4": {
+    "text": "Jalankan dan masukkan browser Anda",
+    "from": "6ee5544f775e"
   },
   "guides.meta.title": {
     "text": "Panduan Aubergine | Aubergine",
@@ -1102,6 +1254,14 @@
   "guides.install.text": {
     "text": "Persyaratan, installer satu baris, apa yang diubahnya, dan solusi untuk masalah umum.",
     "from": "0c229f404056"
+  },
+  "guides.windows.name": {
+    "text": "Instal di Windows dengan WSL",
+    "from": "336ff91588a7"
+  },
+  "guides.windows.text": {
+    "text": "Jalankan Aubergine di dalam WSL 2 dan gunakan dari browser Windows Anda. Langkah Linux sudah dijalankan; belum ada yang dicoba di Windows.",
+    "from": "582c5ec5ff77"
   },
   "guides.several.name": {
     "text": "Menjalankan beberapa agen coding sekaligus",
@@ -2064,8 +2224,8 @@
     "from": "e61744d0c993"
   },
   "roadmap.everywhere.windows.text": {
-    "text": "Menjalankan Aubergine di Windows. Hari ini hanya macOS yang didukung, dan Linux belum diuji.",
-    "from": "6eb34c4aada3"
+    "text": "Menjalankan Aubergine di Windows sendiri. Saat ini ia hanya berjalan di dalam WSL 2, seperti yang dijelaskan <a href=\"/windows/\">panduan untuk Windows</a>, dan belum ada yang mencobanya di Windows.",
+    "from": "25c43f0bde14"
   },
   "faq.meta.title": {
     "text": "Pertanyaan yang sering diajukan | Aubergine",
@@ -2108,8 +2268,8 @@
     "from": "efe26fb96381"
   },
   "faq.need.a": {
-    "text": "macOS dengan tmux 3.2 atau lebih baru dan Node.js 22 atau lebih baru; installer juga memerlukan pnpm. Linux seharusnya bisa, tetapi belum diuji. Windows tidak didukung.",
-    "from": "d0ea17ebbaa3"
+    "text": "macOS dengan tmux 3.2 atau lebih baru dan Node.js 22 atau lebih baru; installer juga membutuhkan pnpm. Di Linux baru dijalankan di dalam kontainer. Di Windows hanya berjalan di dalam WSL 2, dan itu belum dicoba: lihat <a href=\"/windows/\">panduan untuk Windows</a>.",
+    "from": "95fd7d6edbbc"
   },
   "faq.agents.q": {
     "text": "Apakah ia bekerja dengan agen coding apa pun?",

@@ -174,7 +174,7 @@ main { display: block; padding-block-end: var(--section); }
 .cmd.multi code::before { content: none; }
 .cmd.multi { align-items: flex-start; }
 .cmd .copy { flex: none; }
-.cmds { display: grid; gap: 10px; }
+.cmds { display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; }
 
 /* Buttons and links that look like them. */
 .button, .copy {

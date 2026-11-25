@@ -137,7 +137,7 @@
         { "@type": "Question", "name": "Aubergine ইনস্টলার কী বদলায়?", "acceptedAnswer": { "@type": "Answer", "text": "দুটি জিনিস: ইনস্টল ফোল্ডার (~/.aubergine, বা AUBERGINE_HOME) আর আপনার PATH-এ aubergine নামের একটি লিংক। এটি কখনো sudo ব্যবহার করে না, কখনো আপনার শেলের স্টার্টআপ ফাইল সম্পাদনা করে না, আর কখনো Node.js, pnpm বা tmux ইনস্টল করে না।" } },
         { "@type": "Question", "name": "Aubergine কীভাবে আপডেট করব?", "acceptedAnswer": { "@type": "Answer", "text": "npm দিয়ে ইনস্টল করা: npm install -g @meatgarden/aubergine@latest চালান। ইনস্টলার দিয়ে ইনস্টল করা: aubergine update চালান, বা আবার ইনস্টলার। তারপর সার্ভার রিস্টার্ট করুন।" } },
         { "@type": "Question", "name": "Aubergine কীভাবে আনইনস্টল করব?", "acceptedAnswer": { "@type": "Answer", "text": "aubergine uninstall চালান। এটি লিংকটি সরায় আর, জিজ্ঞেস করার পরে, ইনস্টলারের বানানো কপিটি। এটি কখনো আপনার ডেটা মোছে না বা আপনার টার্মিনাল বন্ধ করে না।" } },
-        { "@type": "Question", "name": "Aubergine কি Linux বা Windows-এ চলে?", "acceptedAnswer": { "@type": "Answer", "text": "Linux-এ চলার কথা, কিন্তু এখনো পরীক্ষা করা হয়নি। Windows সমর্থিত নয়।" } }
+        { "@type": "Question", "name": "Aubergine কি Linux বা Windows-এ চলে?", "acceptedAnswer": { "@type": "Answer", "text": "Linux-এ এখন পর্যন্ত কেবল কন্টেইনারের ভেতরে চালানো হয়েছে (Ubuntu 24.04 আর Debian), এখনো Linux ডেস্কটপে নয়। Windows নিজে সমর্থিত নয়; Aubergine WSL 2-এর ভেতরে চলতে পারে, যা Windows-এর দেওয়া Linux, কিন্তু তা এখনো চেষ্টা করা হয়নি।" } }
       ]
     }
   ]
@@ -152,7 +152,7 @@
   <div class="prose">
     <h2>যা লাগবে</h2>
     <ul>
-      <li>macOS। Linux-এও একইভাবে চলার কথা, কিন্তু এখনো পরীক্ষা করা হয়নি।</li>
+      <li>macOS. Linux-এ এখন পর্যন্ত কেবল কন্টেইনারের ভেতরে চালানো হয়েছে: Ubuntu 24.04-এ npm প্যাকেজ আর Debian-এ কন্টেইনার ইমেজ। Windows নিজে সমর্থিত নয়; Aubergine WSL 2-এর ভেতরে চলতে পারে, যা এখনো চেষ্টা করা হয়নি: দেখুন <a href="../windows/">WSL দিয়ে Windows-এ ইনস্টল করুন</a>।</li>
       <li><a href="https://github.com/tmux/tmux">tmux</a> 3.2 বা নতুনতর আর Node.js 22 বা নতুনতর। ইনস্টলারের pnpm-ও লাগে।</li>
     </ul>
     <p><a href="https://brew.sh">Homebrew</a> থাকলে একটি লাইনেই দুটো পাবেন (ইনস্টলারের জন্য <code>pnpm</code> যোগ করুন):</p>

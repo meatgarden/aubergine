@@ -137,7 +137,7 @@
         { "@type": "Question", "name": "Was ändert der Aubergine-Installer?", "acceptedAnswer": { "@type": "Answer", "text": "Zwei Dinge: den Installationsordner (~/.aubergine oder AUBERGINE_HOME) und einen Link namens aubergine auf deinem PATH. Er nutzt nie sudo, bearbeitet nie die Startdateien deiner Shell und installiert nie Node.js, pnpm oder tmux." } },
         { "@type": "Question", "name": "Wie aktualisiere ich Aubergine?", "acceptedAnswer": { "@type": "Answer", "text": "Mit npm installiert: Führ npm install -g @meatgarden/aubergine@latest aus. Mit dem Installer installiert: Führ aubergine update oder den Installer noch einmal aus. Starte danach den Server neu." } },
         { "@type": "Question", "name": "Wie deinstalliere ich Aubergine?", "acceptedAnswer": { "@type": "Answer", "text": "Führ aubergine uninstall aus. Es entfernt den Link und, nach Rückfrage, die Kopie, die der Installer angelegt hat. Es entfernt nie deine Daten und beendet nie deine Terminals." } },
-        { "@type": "Question", "name": "Läuft Aubergine unter Linux oder Windows?", "acceptedAnswer": { "@type": "Answer", "text": "Linux sollte funktionieren, ist aber noch nicht getestet. Windows wird nicht unterstützt." } }
+        { "@type": "Question", "name": "Läuft Aubergine unter Linux oder Windows?", "acceptedAnswer": { "@type": "Answer", "text": "Unter Linux lief es bisher nur in Containern (Ubuntu 24.04 und Debian), noch nicht auf einem Linux-Desktop. Windows selbst wird nicht unterstützt; Aubergine kann in WSL 2 laufen, dem Linux, das Windows mitbringt, was noch nicht ausprobiert wurde." } }
       ]
     }
   ]
@@ -152,7 +152,7 @@
   <div class="prose">
     <h2>Voraussetzungen</h2>
     <ul>
-      <li>macOS. Linux sollte genauso funktionieren, ist aber noch nicht getestet.</li>
+      <li>macOS. Unter Linux lief es bisher nur in Containern: das npm-Paket unter Ubuntu 24.04 und das Container-Image unter Debian. Windows selbst wird nicht unterstützt; Aubergine kann in WSL 2 laufen, was noch nicht ausprobiert wurde: siehe <a href="../windows/">Unter Windows mit WSL installieren</a>.</li>
       <li><a href="https://github.com/tmux/tmux">tmux</a> 3.2 oder neuer und Node.js 22 oder neuer. Der Installer braucht außerdem pnpm.</li>
     </ul>
     <p>Mit <a href="https://brew.sh">Homebrew</a> holt eine Zeile beides (füg <code>pnpm</code> für den Installer hinzu):</p>

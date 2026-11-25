@@ -137,7 +137,7 @@
         { "@type": "Question", "name": "Aubergine इंस्टॉलर क्या बदलता है?", "acceptedAnswer": { "@type": "Answer", "text": "दो चीज़ें: इंस्टॉल फ़ोल्डर (~/.aubergine, या AUBERGINE_HOME) और आपके PATH पर aubergine नाम का एक लिंक। यह कभी sudo इस्तेमाल नहीं करता, कभी आपकी शेल स्टार्टअप फ़ाइलें नहीं बदलता, और कभी Node.js, pnpm या tmux इंस्टॉल नहीं करता।" } },
         { "@type": "Question", "name": "मैं Aubergine को अपडेट कैसे करूँ?", "acceptedAnswer": { "@type": "Answer", "text": "npm से इंस्टॉल किया है: npm install -g @meatgarden/aubergine@latest चलाएँ। इंस्टॉलर से इंस्टॉल किया है: aubergine update चलाएँ, या इंस्टॉलर फिर से। फिर सर्वर रीस्टार्ट करें।" } },
         { "@type": "Question", "name": "मैं Aubergine को अनइंस्टॉल कैसे करूँ?", "acceptedAnswer": { "@type": "Answer", "text": "aubergine uninstall चलाएँ। यह लिंक हटाता है और, पूछने के बाद, वह कॉपी जो इंस्टॉलर ने बनाई। यह कभी आपका डेटा नहीं हटाता और न आपके टर्मिनल बंद करता है।" } },
-        { "@type": "Question", "name": "क्या Aubergine Linux या Windows पर चलता है?", "acceptedAnswer": { "@type": "Answer", "text": "Linux पर चलना चाहिए, पर अभी तक टेस्ट नहीं हुआ है। Windows सपोर्टेड नहीं है।" } }
+        { "@type": "Question", "name": "क्या Aubergine Linux या Windows पर चलता है?", "acceptedAnswer": { "@type": "Answer", "text": "Linux पर इसे अभी तक सिर्फ़ कंटेनर में चलाया गया है (Ubuntu 24.04 और Debian), Linux डेस्कटॉप पर अभी नहीं। Windows अपने आप में समर्थित नहीं है; Aubergine WSL 2 के अंदर चल सकता है, जो Windows का दिया हुआ Linux है, पर इसे अभी आज़माया नहीं गया है।" } }
       ]
     }
   ]
@@ -152,7 +152,7 @@
   <div class="prose">
     <h2>ज़रूरतें</h2>
     <ul>
-      <li>macOS। Linux पर भी ऐसे ही चलना चाहिए, पर अभी तक टेस्ट नहीं हुआ है।</li>
+      <li>macOS. Linux पर इसे अभी तक सिर्फ़ कंटेनर में चलाया गया है: Ubuntu 24.04 पर npm पैकेज और Debian पर कंटेनर इमेज। Windows अपने आप में समर्थित नहीं है; Aubergine WSL 2 के अंदर चल सकता है, जिसे अभी आज़माया नहीं गया है: देखें <a href="../windows/">WSL के साथ Windows पर इंस्टॉल करें</a>।</li>
       <li><a href="https://github.com/tmux/tmux">tmux</a> 3.2 या नया और Node.js 22 या नया। इंस्टॉलर को pnpm भी चाहिए।</li>
     </ul>
     <p><a href="https://brew.sh">Homebrew</a> के साथ, एक लाइन दोनों ले आती है (इंस्टॉलर के लिए <code>pnpm</code> जोड़ें):</p>

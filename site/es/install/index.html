@@ -137,7 +137,7 @@
         { "@type": "Question", "name": "¿Qué cambia el instalador de Aubergine?", "acceptedAnswer": { "@type": "Answer", "text": "Dos cosas: la carpeta de instalación (~/.aubergine, o AUBERGINE_HOME) y un enlace llamado aubergine en tu PATH. Nunca usa sudo, nunca edita los archivos de inicio de tu shell y nunca instala Node.js, pnpm ni tmux." } },
         { "@type": "Question", "name": "¿Cómo actualizo Aubergine?", "acceptedAnswer": { "@type": "Answer", "text": "Si lo instalaste con npm: ejecuta npm install -g @meatgarden/aubergine@latest. Si lo instalaste con el instalador: ejecuta aubergine update, o vuelve a ejecutar el instalador. Después reinicia el servidor." } },
         { "@type": "Question", "name": "¿Cómo desinstalo Aubergine?", "acceptedAnswer": { "@type": "Answer", "text": "Ejecuta aubergine uninstall. Quita el enlace y, tras preguntar, la copia que hizo el instalador. Nunca borra tus datos ni cierra tus terminales." } },
-        { "@type": "Question", "name": "¿Funciona Aubergine en Linux o Windows?", "acceptedAnswer": { "@type": "Answer", "text": "Linux debería funcionar, pero aún no se ha probado. Windows no está soportado." } }
+        { "@type": "Question", "name": "¿Funciona Aubergine en Linux o Windows?", "acceptedAnswer": { "@type": "Answer", "text": "En Linux se ha ejecutado solo en contenedores (Ubuntu 24.04 y Debian), todavía no en un escritorio Linux. Windows en sí no es compatible; Aubergine puede ejecutarse dentro de WSL 2, el Linux que ofrece Windows, algo que aún no se ha probado." } }
       ]
     }
   ]
@@ -152,7 +152,7 @@
   <div class="prose">
     <h2>Requisitos</h2>
     <ul>
-      <li>macOS. Linux debería funcionar igual, pero aún no se ha probado.</li>
+      <li>macOS. En Linux se ha ejecutado solo en contenedores: el paquete de npm en Ubuntu 24.04 y la imagen de contenedor en Debian. Windows en sí no es compatible; Aubergine puede ejecutarse dentro de WSL 2, algo que aún no se ha probado: consulta <a href="../windows/">Instalar en Windows con WSL</a>.</li>
       <li><a href="https://github.com/tmux/tmux">tmux</a> 3.2 o posterior y Node.js 22 o posterior. El instalador también necesita pnpm.</li>
     </ul>
     <p>Con <a href="https://brew.sh">Homebrew</a>, una línea instala ambos (añade <code>pnpm</code> para el instalador):</p>

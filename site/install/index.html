@@ -132,7 +132,7 @@
         { "@type": "Question", "name": "What does the Aubergine installer change?", "acceptedAnswer": { "@type": "Answer", "text": "Two things: the install folder (~/.aubergine, or AUBERGINE_HOME) and one link named aubergine on your PATH. It never uses sudo, never edits your shell startup files, and never installs Node.js, pnpm or tmux." } },
         { "@type": "Question", "name": "How do I update Aubergine?", "acceptedAnswer": { "@type": "Answer", "text": "Installed with npm: run npm install -g @meatgarden/aubergine@latest. Installed with the installer: run aubergine update, or the installer again. Then restart the server." } },
         { "@type": "Question", "name": "How do I uninstall Aubergine?", "acceptedAnswer": { "@type": "Answer", "text": "Run aubergine uninstall. It removes the link and, after asking, the copy the installer made. It never removes your data or ends your terminals." } },
-        { "@type": "Question", "name": "Does Aubergine run on Linux or Windows?", "acceptedAnswer": { "@type": "Answer", "text": "Linux should work but has not been tested yet. Windows is not supported." } }
+        { "@type": "Question", "name": "Does Aubergine run on Linux or Windows?", "acceptedAnswer": { "@type": "Answer", "text": "On Linux it has been run in containers only (Ubuntu 24.04 and Debian), not yet on a Linux desktop. Windows itself is not supported; Aubergine can run inside WSL 2, the Linux that Windows provides, which has not been tried yet." } }
       ]
     }
   ]
@@ -147,7 +147,7 @@
   <div class="prose">
     <h2>Requirements</h2>
     <ul>
-      <li>macOS. Linux should work the same way but has not been tested yet.</li>
+      <li>macOS. On Linux it has been run, in containers only: the npm package on Ubuntu 24.04 and the container image on Debian. Windows itself is not supported; Aubergine can run inside WSL 2, which has not been tried yet: see <a href="../windows/">Install on Windows with WSL</a>.</li>
       <li><a href="https://github.com/tmux/tmux">tmux</a> 3.2 or newer and Node.js 22 or newer. The installer also needs pnpm.</li>
     </ul>
     <p>With <a href="https://brew.sh">Homebrew</a>, one line gets both (add <code>pnpm</code> for the installer):</p>

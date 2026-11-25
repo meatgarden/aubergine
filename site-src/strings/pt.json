@@ -464,8 +464,8 @@
     "from": "efe26fb96381"
   },
   "home.faq.need.a": {
-    "text": "macOS com tmux 3.2 ou mais recente e Node.js 22 ou mais recente; o instalador também precisa de pnpm. O Linux deve funcionar, mas ainda não foi testado.",
-    "from": "50e15eb9d5c0"
+    "text": "macOS com tmux 3.2 ou mais recente e Node.js 22 ou mais recente; o instalador também precisa do pnpm. No Linux foi executado só em contêineres. No Windows ele roda só dentro do WSL 2, o que ainda não foi testado: veja <a href=\"/windows/\">o guia para Windows</a>.",
+    "from": "95fd7d6edbbc"
   },
   "home.faq.byhand.q": {
     "text": "E se eu mesmo iniciar o Claude Code em um terminal?",
@@ -892,8 +892,8 @@
     "from": "e0cdd07f6a27"
   },
   "install.req.os": {
-    "text": "macOS. O Linux deve funcionar do mesmo jeito, mas ainda não foi testado.",
-    "from": "e896cb710692"
+    "text": "macOS. No Linux foi executado só em contêineres: o pacote do npm no Ubuntu 24.04 e a imagem de contêiner no Debian. O Windows em si não é suportado; o Aubergine pode rodar dentro do WSL 2, o que ainda não foi testado: veja <a href=\"/windows/\">Instalar no Windows com WSL</a>.",
+    "from": "4ec6a50d42d5"
   },
   "install.req.tools": {
     "text": "<a href=\"https://github.com/tmux/tmux\">tmux</a> 3.2 ou mais recente e Node.js 22 ou mais recente. O instalador também precisa de pnpm.",
@@ -1072,8 +1072,160 @@
     "from": "e3df2a3fd915"
   },
   "install.ld.a4": {
-    "text": "O Linux deve funcionar, mas ainda não foi testado. O Windows não é suportado.",
-    "from": "b8b7b1d1037d"
+    "text": "No Linux foi executado só em contêineres (Ubuntu 24.04 e Debian), ainda não em um desktop Linux. O Windows em si não é suportado; o Aubergine pode rodar dentro do WSL 2, o Linux que o Windows oferece, o que ainda não foi testado.",
+    "from": "c293e731fea8"
+  },
+  "windows.meta.title": {
+    "text": "Instalar o Aubergine no Windows com WSL | Aubergine",
+    "from": "82c0a75bef8c"
+  },
+  "windows.meta.description": {
+    "text": "O Aubergine não roda no próprio Windows, mas pode rodar dentro do WSL 2 e ser usado por um navegador do Windows. Os passos, o que foi testado e o que não foi, e soluções.",
+    "from": "eef730b3d958"
+  },
+  "windows.crumb": {
+    "text": "Windows com WSL",
+    "from": "26529d6498df"
+  },
+  "windows.title": {
+    "text": "Instalar o Aubergine no Windows com WSL",
+    "from": "c966f630ebab"
+  },
+  "windows.lead": {
+    "text": "O Aubergine não roda no próprio Windows. Ele roda dentro do WSL 2, o Linux que o Windows oferece, e você o usa pelo navegador do Windows.",
+    "from": "81a98c345b2a"
+  },
+  "windows.tried": {
+    "text": "<strong>O que foi testado.</strong> Os passos de Linux foram executados em 25 de novembro de 2026 no Ubuntu 24.04.5 (x86_64) em um contêiner, não no WSL, com o Aubergine 0.2.2 do npm: ele compilou sua biblioteca de terminal, iniciou, fez login em um navegador e rodou um terminal e a demo. A instalação do Node.js com nvm não foi executada lá, pois o Node.js 22 já estava instalado. Nada nesta página foi executado no Windows ainda. Se você testar, <a href=\"https://github.com/thirstyeggplant/aubergine/issues\">conte para a gente como foi</a>.",
+    "from": "75b38b261d19"
+  },
+  "windows.req.title": {
+    "text": "Do que você precisa",
+    "from": "e17c85cc990b"
+  },
+  "windows.req.text": {
+    "text": "Windows 11, ou Windows 10 versão 2004 (build 19041) ou mais recente, em que o WSL 2 se instala com um único comando. A <a href=\"https://learn.microsoft.com/windows/wsl/install\">página da Microsoft sobre como instalar o WSL</a> tem os detalhes.",
+    "from": "43ee5c74e4e3"
+  },
+  "windows.steps.title": {
+    "text": "Instalar e iniciar",
+    "from": "945ef89608d4"
+  },
+  "windows.steps.wsl": {
+    "text": "<strong>Instale o WSL.</strong> Abra o PowerShell como administrador, rode isto e reinicie o Windows quando terminar. Ele instala o WSL 2 com Ubuntu.",
+    "from": "0f31c56ce2e5"
+  },
+  "windows.steps.ubuntu": {
+    "text": "Depois de reiniciar, abra o <strong>Ubuntu</strong> pelo menu Iniciar e escolha um nome de usuário e uma senha para ele. Todos os comandos abaixo são digitados lá, no Ubuntu.",
+    "from": "4d3436ccad7d"
+  },
+  "windows.steps.apt": {
+    "text": "<strong>Instale o que o Aubergine precisa</strong>: tmux, zsh e Git, e as ferramentas que compilam sua biblioteca de terminal, que não tem nada pronto para Linux.",
+    "from": "f8e116fdd0eb"
+  },
+  "windows.steps.node": {
+    "text": "<strong>Instale o Node.js 22.</strong> O pacote do próprio Ubuntu é a versão 18, antiga demais. Um jeito bem conhecido é o <a href=\"https://github.com/nvm-sh/nvm\">nvm</a>: instale-o, abra uma nova janela do Ubuntu e então instale o Node.js 22.",
+    "from": "8e6d6af1ee88"
+  },
+  "windows.steps.nodeCheck": {
+    "text": "<code>node -v</code> agora deve mostrar v22 ou mais recente.",
+    "from": "872ffc8f2dfd"
+  },
+  "windows.steps.npm": {
+    "text": "<strong>Instale o Aubergine</strong> pelo npm. Ele compila sua biblioteca de terminal durante a instalação; no teste, a instalação inteira levou 13 segundos.",
+    "from": "d0686af8f780"
+  },
+  "windows.steps.start": {
+    "text": "<strong>Inicie-o</strong> e deixe essa janela aberta:",
+    "from": "0fc463357411"
+  },
+  "windows.steps.open": {
+    "text": "<strong>Faça login no navegador.</strong> Em uma segunda janela do Ubuntu, mostre o endereço de login e abra-o no seu navegador do Windows. Ele faz login nesse navegador, então trate-o como uma senha.",
+    "from": "4eedb1a24642"
+  },
+  "windows.steps.after": {
+    "text": "Depois disso, <code>http://127.0.0.1:4600</code> funciona sozinho nesse navegador. Em um canvas vazio, <em>Show me around</em> inicia o tour.",
+    "from": "6d1885774f0b"
+  },
+  "windows.good.title": {
+    "text": "Bom saber",
+    "from": "aab7685123cf"
+  },
+  "windows.good.files": {
+    "text": "<strong>Mantenha seus projetos no Ubuntu</strong>, na pasta pessoal dele, não em <code>/mnt/c</code>, onde os arquivos do Windows são acessados por uma ponte mais lenta.",
+    "from": "3e2e6716da83"
+  },
+  "windows.good.agents": {
+    "text": "<strong>Instale seus agentes dentro do Ubuntu</strong>, Claude Code, Codex ou qualquer outro, como em qualquer Linux. Um agente instalado no Windows não está nos terminais do Aubergine.",
+    "from": "f32d6f1d347e"
+  },
+  "windows.good.running": {
+    "text": "<strong>Os terminais vivem enquanto o WSL estiver rodando.</strong> Fechar o navegador não encerra nada, e Ctrl+C na janela do <code>aubergine start</code> para só o servidor. Quando o WSL para, porque o Windows reinicia ou depois de <code>wsl --shutdown</code>, os terminais terminam, e o próximo <code>aubergine start</code> abre shells novos nas últimas pastas deles, como depois de reiniciar um Mac.",
+    "from": "5a110c9f034d"
+  },
+  "windows.good.shell": {
+    "text": "<strong>bash ou zsh.</strong> O shell do Ubuntu é o bash, e os terminais funcionam nele. O status dos comandos em um terminal (ocupado, o código de saída de um comando que falhou) vem só do zsh: no teste, um terminal com zsh mostrou <code>exit 3</code> depois de um comando que falhou. Faça do zsh o seu shell no Ubuntu para ter isso.",
+    "from": "98e4ede36c4f"
+  },
+  "windows.good.missing": {
+    "text": "<strong>O que não existe lá</strong>: iniciar no login funciona só no macOS (<code>aubergine service install</code> avisa), e <em>Open on desktop</em> não tem configuração para um app de terminal do Windows. O <code>aubergine open</code> não encontrou um navegador para abrir no teste; <code>aubergine open --print</code> sempre funciona.",
+    "from": "19d811a81126"
+  },
+  "windows.good.keys": {
+    "text": "<strong>Os atalhos</strong> no Windows foram escolhidos pelo que os navegadores documentam e não foram medidos: veja <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/keys.md\">docs/keys.md</a>. A paleta sempre funciona.",
+    "from": "beb021d09a79"
+  },
+  "windows.wrong.doctor": {
+    "text": "Rode primeiro <code>aubergine doctor</code> no Ubuntu. Ele verifica Node.js, tmux, Git e o servidor.",
+    "from": "99c6773e6fc4"
+  },
+  "windows.wrong.compile.see": {
+    "text": "A instalação do Aubergine falha ao compilar o <code>node-pty</code>",
+    "from": "2f7790e9150b"
+  },
+  "windows.wrong.compile.do": {
+    "text": "Faltam as ferramentas de compilação. Rode as linhas de <code>apt</code> do passo 2 e instale o Aubergine de novo.",
+    "from": "6ce6d003e421"
+  },
+  "windows.wrong.tmux.do": {
+    "text": "O tmux do Ubuntu 24.04 é a versão 3.4, recente o bastante: <code>sudo apt install -y tmux</code> e inicie o servidor de novo.",
+    "from": "f726aafbf8b6"
+  },
+  "windows.wrong.node.see": {
+    "text": "<code>node -v</code> mostra uma versão anterior à v22",
+    "from": "6d3b5a77d630"
+  },
+  "windows.wrong.node.do": {
+    "text": "Instale o Node.js 22 como no passo 2, abra uma nova janela do Ubuntu e instale o Aubergine de novo.",
+    "from": "0f197e36ca93"
+  },
+  "windows.wrong.address.see": {
+    "text": "O endereço não abre no navegador do Windows",
+    "from": "5517022ccb2e"
+  },
+  "windows.wrong.address.do": {
+    "text": "Verifique se o <code>aubergine start</code> ainda está rodando no Ubuntu. Depois veja a <a href=\"https://learn.microsoft.com/windows/wsl/networking\">página da Microsoft sobre rede no WSL</a>; isso não foi testado com o Aubergine.",
+    "from": "f58f31689a94"
+  },
+  "windows.next.text": {
+    "text": "Parar, atualizar e desinstalar funcionam como na <a href=\"/install/\">página de instalação</a>, e todo o resto está no <a href=\"https://github.com/thirstyeggplant/aubergine#readme\">README</a>.",
+    "from": "e99167a76e7b"
+  },
+  "windows.ld.s1": {
+    "text": "Instalar o WSL",
+    "from": "013b9cd3a82f"
+  },
+  "windows.ld.s2": {
+    "text": "Instalar o tmux, as ferramentas de compilação e o Node.js 22",
+    "from": "24bc20fedab8"
+  },
+  "windows.ld.s3": {
+    "text": "Instalar o Aubergine",
+    "from": "733a8757545c"
+  },
+  "windows.ld.s4": {
+    "text": "Iniciar e fazer login no navegador",
+    "from": "6ee5544f775e"
   },
   "guides.meta.title": {
     "text": "Guias do Aubergine | Aubergine",
@@ -1102,6 +1254,14 @@
   "guides.install.text": {
     "text": "Requisitos, o instalador de uma linha, o que ele muda e soluções para problemas comuns.",
     "from": "0c229f404056"
+  },
+  "guides.windows.name": {
+    "text": "Instalar no Windows com WSL",
+    "from": "336ff91588a7"
+  },
+  "guides.windows.text": {
+    "text": "Rode o Aubergine dentro do WSL 2 e use-o pelo navegador do Windows. Os passos de Linux foram executados; nada foi testado no Windows ainda.",
+    "from": "582c5ec5ff77"
   },
   "guides.several.name": {
     "text": "Rodar vários agentes de programação ao mesmo tempo",
@@ -2064,8 +2224,8 @@
     "from": "e61744d0c993"
   },
   "roadmap.everywhere.windows.text": {
-    "text": "Rodar o Aubergine no Windows. Hoje só o macOS é suportado, e o Linux não foi testado.",
-    "from": "6eb34c4aada3"
+    "text": "Rodar o Aubergine no próprio Windows. Hoje ele roda só dentro do WSL 2, como <a href=\"/windows/\">o guia para Windows</a> descreve, e ninguém testou isso no Windows ainda.",
+    "from": "25c43f0bde14"
   },
   "faq.meta.title": {
     "text": "Perguntas frequentes | Aubergine",
@@ -2108,8 +2268,8 @@
     "from": "efe26fb96381"
   },
   "faq.need.a": {
-    "text": "macOS com tmux 3.2 ou mais recente e Node.js 22 ou mais recente; o instalador também precisa de pnpm. O Linux deve funcionar, mas ainda não foi testado. O Windows não é suportado.",
-    "from": "d0ea17ebbaa3"
+    "text": "macOS com tmux 3.2 ou mais recente e Node.js 22 ou mais recente; o instalador também precisa do pnpm. No Linux foi executado só em contêineres. No Windows ele roda só dentro do WSL 2, o que ainda não foi testado: veja <a href=\"/windows/\">o guia para Windows</a>.",
+    "from": "95fd7d6edbbc"
   },
   "faq.agents.q": {
     "text": "Funciona com qualquer agente de programação?",

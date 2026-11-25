@@ -166,7 +166,7 @@
       "mainEntity": [
         { "@type": "Question", "name": "Aubergine 是什么？", "acceptedAnswer": { "@type": "Answer", "text": "一个在本地运行、基于浏览器的终端会话画布。每个终端都是一个可以排列和使用的节点，所以你可以同时运行多个编程智能体，并看清哪一个在等你。" } },
         { "@type": "Question", "name": "Aubergine 会把我的终端或代码发送到别处吗？", "acceptedAnswer": { "@type": "Answer", "text": "不会。一切都在你自己的电脑上运行。服务器只监听 127.0.0.1，并检查每个请求的 Host 和 Origin。" } },
-        { "@type": "Question", "name": "运行 Aubergine 需要什么？", "acceptedAnswer": { "@type": "Answer", "text": "macOS，以及 tmux 3.2 或更高版本和 Node.js 22 或更高版本；安装脚本还需要 pnpm。Linux 应该也能用，但还没有测试过。" } },
+        { "@type": "Question", "name": "运行 Aubergine 需要什么？", "acceptedAnswer": { "@type": "Answer", "text": "装有 tmux 3.2 或更新版本以及 Node.js 22 或更新版本的 macOS；安装脚本还需要 pnpm。在 Linux 上只在容器里运行过。在 Windows 上只能在 WSL 2 里运行，而这还没有试过：见Windows 指南。" } },
         { "@type": "Question", "name": "如果我自己在终端里启动 Claude Code 会怎样？", "acceptedAnswer": { "@type": "Answer", "text": "它像任何程序一样工作：你照常向它输入。但只有当 Aubergine 自己启动了智能体时（New terminal，然后选 Claude Code），它才知道那里有一个智能体，因为它会加上几个小钩子来报告智能体在做什么。手动启动时，终端只会显示正忙于运行 claude：它提问时不会标为 waiting for you，你在那里启动工作流时也不会替它输入任何内容。你可以自己让它运行 aubergine workflow status，这在终端内仍然有效；或者改从 New terminal 菜单启动智能体。" } },
         { "@type": "Question", "name": "Aubergine 免费吗？", "acceptedAnswer": { "@type": "Answer", "text": "免费。它采用 MIT 许可证，免费开源，源码在 GitHub 上。" } }
       ]
@@ -309,7 +309,7 @@
     <div class="questions">
       <details><summary>Aubergine 是什么？</summary><p>一个在本地运行、基于浏览器的终端会话画布。每个终端都是一个可以排列和使用的节点，所以你可以同时运行多个编程智能体，并看清哪一个在等你。</p></details>
       <details><summary>Aubergine 会把我的终端或代码发送到别处吗？</summary><p>不会。一切都在你自己的电脑上运行。服务器只监听 127.0.0.1，并检查每个请求的 Host 和 Origin。</p></details>
-      <details><summary>运行 Aubergine 需要什么？</summary><p>macOS，以及 tmux 3.2 或更高版本和 Node.js 22 或更高版本；安装脚本还需要 pnpm。Linux 应该也能用，但还没有测试过。</p></details>
+      <details><summary>运行 Aubergine 需要什么？</summary><p>装有 tmux 3.2 或更新版本以及 Node.js 22 或更新版本的 macOS；安装脚本还需要 pnpm。在 Linux 上只在容器里运行过。在 Windows 上只能在 WSL 2 里运行，而这还没有试过：见<a href="windows/">Windows 指南</a>。</p></details>
       <details><summary>如果我自己在终端里启动 Claude Code 会怎样？</summary><p>它像任何程序一样工作：你照常向它输入。但只有当 Aubergine 自己启动了智能体时（New terminal，然后选 Claude Code），它才知道那里有一个智能体，因为它会加上几个小钩子来报告智能体在做什么。手动启动时，终端只会显示正忙于运行 <code>claude</code>：它提问时不会标为 waiting for you，你在那里启动工作流时也不会替它输入任何内容。你可以自己让它运行 <code>aubergine workflow status</code>，这在终端内仍然有效；或者改从 New terminal 菜单启动智能体。</p></details>
       <details><summary>Aubergine 免费吗？</summary><p>免费。它采用 <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">MIT 许可证</a>，免费开源，源码在 GitHub 上。</p></details>
     </div>

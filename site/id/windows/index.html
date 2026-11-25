@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="id" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Instal Aubergine di Windows dengan WSL | Aubergine</title>
+<meta name="description" content="Aubergine tidak berjalan di Windows sendiri, tetapi bisa berjalan di dalam WSL 2 dan dipakai dari browser Windows. Langkah-langkahnya, apa yang sudah dan belum dicoba, dan cara memperbaiki masalah.">
+<link rel="canonical" href="https://thirstyeggplant.com/id/windows/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/windows/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/windows/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/windows/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/windows/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/windows/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/windows/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/windows/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/windows/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/windows/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/windows/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/windows/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/windows/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/windows/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="theme-color" content="#120f14" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#faf6f2" media="(prefers-color-scheme: light)">
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="Instal Aubergine di Windows dengan WSL | Aubergine">
+<meta property="og:description" content="Aubergine tidak berjalan di Windows sendiri, tetapi bisa berjalan di dalam WSL 2 dan dipakai dari browser Windows. Langkah-langkahnya, apa yang sudah dan belum dicoba, dan cara memperbaiki masalah.">
+<meta property="og:url" content="https://thirstyeggplant.com/id/windows/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine: kanvas berisi terminal, satu sedang sibuk dan satu menunggu Anda">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine: kanvas berisi terminal, satu sedang sibuk dan satu menunggu Anda">
+<meta name="twitter:title" content="Instal Aubergine di Windows dengan WSL | Aubergine">
+<meta name="twitter:description" content="Aubergine tidak berjalan di Windows sendiri, tetapi bisa berjalan di dalam WSL 2 dan dipakai dari browser Windows. Langkah-langkahnya, apa yang sudah dan belum dicoba, dan cara memperbaiki masalah.">
+<link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">Langsung ke isi halaman</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="Halaman">
+      <ul>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">Instalasi</a></li>
+        <li><a href="../guides/">Panduan</a></li>
+        <li><a href="../security/">Keamanan</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="Bahasa: Bahasa Indonesia"><span class="lang-long" aria-hidden="true">Bahasa Indonesia</span><span class="lang-short" aria-hidden="true">ID</span></summary>
+      <ul class="menu-list"><li><a href="../../windows/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="../../es/windows/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="../../pt/windows/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="../../fr/windows/" hreflang="fr" lang="fr" dir="ltr">Français</a></li><li><a href="../../de/windows/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="../../ja/windows/" hreflang="ja" lang="ja" dir="ltr">日本語</a></li><li><a href="../../zh/windows/" hreflang="zh-Hans" lang="zh-Hans" dir="ltr">简体中文</a></li><li><a href="../../ko/windows/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="./" hreflang="id" lang="id" dir="ltr" aria-current="true">Bahasa Indonesia</a></li><li><a href="../../hi/windows/" hreflang="hi" lang="hi" dir="ltr">हिन्दी</a></li><li><a href="../../bn/windows/" hreflang="bn" lang="bn" dir="ltr">বাংলা</a></li><li><a href="../../ar/windows/" hreflang="ar" lang="ar" dir="rtl">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>Menu</summary>
+      <ul class="menu-list">
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">Instalasi</a></li>
+        <li><a href="../guides/">Panduan</a></li>
+        <li><a href="../security/">Keamanan</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="wrap translated">
+  <p class="note">Aubergine sendiri berbahasa Inggris: tombol, menu, dan gambarnya adalah versi bahasa Inggris.</p>
+  <p class="note">Halaman ini diterjemahkan oleh mesin dari bahasa Inggris. <a href="https://github.com/thirstyeggplant/aubergine/issues">Kirim koreksi</a>.</p>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://thirstyeggplant.com/id/windows/#article",
+      "headline": "Instal Aubergine di Windows dengan WSL",
+      "description": "Aubergine tidak berjalan di Windows sendiri, tetapi bisa berjalan di dalam WSL 2 dan dipakai dari browser Windows. Langkah-langkahnya, apa yang sudah dan belum dicoba, dan cara memperbaiki masalah.",
+      "url": "https://thirstyeggplant.com/id/windows/",
+      "mainEntityOfPage": "https://thirstyeggplant.com/id/windows/",
+      "datePublished": "2026-11-25",
+      "dateModified": "2026-11-25",
+      "inLanguage": "id",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Windows dengan WSL", "item": "https://thirstyeggplant.com/id/windows/" }
+      ]
+    },
+    {
+      "@type": "HowTo",
+      "@id": "https://thirstyeggplant.com/id/windows/#howto",
+      "name": "Instal Aubergine di Windows dengan WSL",
+      "description": "Aubergine tidak berjalan di Windows sendiri, tetapi bisa berjalan di dalam WSL 2 dan dipakai dari browser Windows. Langkah-langkahnya, apa yang sudah dan belum dicoba, dan cara memperbaiki masalah.",
+      "step": [
+        { "@type": "HowToStep", "position": 1, "name": "Pasang WSL", "text": "wsl --install" },
+        { "@type": "HowToStep", "position": 2, "name": "Pasang tmux, alat build, dan Node.js 22", "text": "sudo apt install -y tmux zsh git build-essential python3" },
+        { "@type": "HowToStep", "position": 3, "name": "Pasang Aubergine", "text": "npm install -g @meatgarden/aubergine" },
+        { "@type": "HowToStep", "position": 4, "name": "Jalankan dan masukkan browser Anda", "text": "aubergine start" }
+      ]
+    }
+  ]
+}
+</script>
+<div class="wrap page-head">
+  <nav class="crumbs" aria-label="Posisi Anda"><ol><li><a href="../">Aubergine</a></li><li>Windows dengan WSL</li></ol></nav>
+  <h1>Instal Aubergine di Windows dengan WSL</h1>
+  <p class="lead">Aubergine tidak berjalan di Windows sendiri. Ia berjalan di dalam WSL 2, Linux yang disediakan Windows, dan Anda memakainya dari browser Windows Anda.</p>
+</div>
+<div class="wrap page-body">
+  <div class="prose">
+    <p class="note"><strong>Apa yang dicoba.</strong> Langkah Linux dijalankan pada 25 November 2026 di Ubuntu 24.04.5 (x86_64) di dalam kontainer, bukan di WSL, dengan Aubergine 0.2.2 dari npm: ia mengompilasi pustaka terminalnya, berjalan, memasukkan sebuah browser, serta menjalankan terminal dan demo. Instalasi Node.js dengan nvm tidak dijalankan di sana, karena Node.js 22 sudah terpasang. Belum ada isi halaman ini yang dijalankan di Windows. Jika Anda mencobanya, <a href="https://github.com/thirstyeggplant/aubergine/issues">ceritakan hasilnya</a>.</p>
+
+    <h2>Yang Anda butuhkan</h2>
+    <p>Windows 11, atau Windows 10 versi 2004 (build 19041) atau lebih baru, tempat WSL 2 bisa dipasang dengan satu perintah. <a href="https://learn.microsoft.com/windows/wsl/install">Halaman Microsoft tentang memasang WSL</a> berisi rinciannya.</p>
+
+    <h2>Instal dan jalankan</h2>
+    <ol>
+      <li><p><strong>Pasang WSL.</strong> Buka PowerShell sebagai administrator, jalankan ini, lalu mulai ulang Windows setelah selesai. Ini memasang WSL 2 dengan Ubuntu.</p>
+        <p class="cmd multi"><code>wsl --install</code><button type="button" class="copy" data-copy data-copied="Tersalin" aria-live="polite" hidden>Salin</button></p>
+        <p>Setelah dimulai ulang, buka <strong>Ubuntu</strong> dari menu Start dan pilih nama pengguna serta kata sandi untuknya. Semua perintah di bawah diketik di sana, di Ubuntu.</p></li>
+      <li><p><strong>Pasang yang dibutuhkan Aubergine</strong>: tmux, zsh, dan Git, serta alat yang mengompilasi pustaka terminalnya, yang tidak punya versi siap pakai untuk Linux.</p>
+        <div class="cmds">
+          <p class="cmd"><code>sudo apt update</code><button type="button" class="copy" data-copy data-copied="Tersalin" aria-live="polite" hidden>Salin</button></p>
+          <p class="cmd"><code>sudo apt install -y tmux zsh git build-essential python3</code><button type="button" class="copy" data-copy data-copied="Tersalin" aria-live="polite" hidden>Salin</button></p>
+        </div>
+        <p><strong>Pasang Node.js 22.</strong> Paket bawaan Ubuntu adalah versi 18, terlalu lama. Salah satu cara yang dikenal luas adalah <a href="https://github.com/nvm-sh/nvm">nvm</a>: pasang nvm, buka jendela Ubuntu baru, lalu pasang Node.js 22.</p>
+        <div class="cmds">
+          <p class="cmd"><code>curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash</code><button type="button" class="copy" data-copy data-copied="Tersalin" aria-live="polite" hidden>Salin</button></p>
+          <p class="cmd"><code>nvm install 22</code><button type="button" class="copy" data-copy data-copied="Tersalin" aria-live="polite" hidden>Salin</button></p>
+        </div>
+        <p><code>node -v</code> sekarang seharusnya menunjukkan v22 atau lebih baru.</p></li>
+      <li><p><strong>Pasang Aubergine</strong> dari npm. Ia mengompilasi pustaka terminalnya saat dipasang; dalam uji coba, seluruh instalasi memakan 13 detik.</p>
+        <p class="cmd"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="Tersalin" aria-live="polite" hidden>Salin</button></p></li>
+      <li><p><strong>Jalankan</strong>, dan biarkan jendela itu terbuka:</p>
+        <p class="cmd"><code>aubergine start</code><button type="button" class="copy" data-copy data-copied="Tersalin" aria-live="polite" hidden>Salin</button></p>
+        <p><strong>Masukkan browser Anda.</strong> Di jendela Ubuntu kedua, tampilkan alamat masuk, lalu buka di browser Anda di Windows. Alamat itu memasukkan browser tersebut, jadi perlakukan seperti kata sandi.</p>
+        <p class="cmd"><code>aubergine open --print</code><button type="button" class="copy" data-copy data-copied="Tersalin" aria-live="polite" hidden>Salin</button></p>
+        <p>Setelah itu, <code>http://127.0.0.1:4600</code> bisa dibuka langsung di browser itu. Di kanvas kosong, <em>Show me around</em> memulai tur.</p></li>
+    </ol>
+
+    <h2>Perlu diketahui</h2>
+    <ul>
+      <li><strong>Simpan proyek Anda di Ubuntu</strong>, di folder rumahnya, bukan di bawah <code>/mnt/c</code>, tempat berkas Windows dijangkau lewat jembatan yang lebih lambat.</li>
+      <li><strong>Pasang agen Anda di dalam Ubuntu</strong>, Claude Code, Codex, atau yang lain, seperti di Linux mana pun. Agen yang dipasang di Windows tidak ada di terminal Aubergine.</li>
+      <li><strong>Terminal hidup selama WSL berjalan.</strong> Menutup browser tidak mengakhiri apa pun, dan Ctrl+C di jendela <code>aubergine start</code> hanya menghentikan server. Saat WSL berhenti, karena Windows dimulai ulang atau setelah <code>wsl --shutdown</code>, terminal berakhir, dan <code>aubergine start</code> berikutnya membuka shell baru di folder terakhirnya, seperti setelah Mac dimulai ulang.</li>
+      <li><strong>bash atau zsh.</strong> Shell Ubuntu adalah bash, dan terminal berfungsi di dalamnya. Status perintah di terminal (sibuk, kode keluar perintah yang gagal) hanya datang dari zsh: dalam uji coba, terminal zsh menampilkan <code>exit 3</code> setelah perintah gagal. Jadikan zsh shell Anda di Ubuntu untuk mendapatkannya.</li>
+      <li><strong>Yang tidak ada</strong>: mulai saat login hanya berfungsi di macOS (<code>aubergine service install</code> mengatakannya), dan <em>Open on desktop</em> tidak punya pengaturan untuk aplikasi terminal Windows. <code>aubergine open</code> tidak menemukan browser untuk dibuka dalam uji coba; <code>aubergine open --print</code> selalu berfungsi.</li>
+      <li><strong>Pintasan tombol</strong> di Windows dipilih dari dokumentasi browser dan belum diukur: lihat <a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/keys.md">docs/keys.md</a>. Palet selalu berfungsi.</li>
+    </ul>
+
+    <h2>Jika ada yang salah</h2>
+    <p>Jalankan dulu <code>aubergine doctor</code> di Ubuntu. Ia memeriksa Node.js, tmux, Git, dan server.</p>
+    <div class="table">
+      <table>
+        <thead><tr><th>Yang Anda lihat</th><th>Yang perlu dilakukan</th></tr></thead>
+        <tbody>
+          <tr><td>Instalasi Aubergine gagal saat mengompilasi <code>node-pty</code></td><td>Alat build tidak ada. Jalankan baris <code>apt</code> dari langkah 2, lalu pasang Aubergine lagi.</td></tr>
+          <tr><td>Halaman yang menyatakan tmux tidak ada atau terlalu lama</td><td>tmux di Ubuntu 24.04 adalah 3.4, cukup baru: <code>sudo apt install -y tmux</code>, lalu jalankan server lagi.</td></tr>
+          <tr><td><code>node -v</code> menunjukkan versi lebih lama dari v22</td><td>Pasang Node.js 22 seperti di langkah 2, buka jendela Ubuntu baru, lalu pasang Aubergine lagi.</td></tr>
+          <tr><td>Alamat tidak terbuka di browser di Windows</td><td>Periksa bahwa <code>aubergine start</code> masih berjalan di Ubuntu. Lalu lihat <a href="https://learn.microsoft.com/windows/wsl/networking">halaman Microsoft tentang jaringan di WSL</a>; ini belum dicoba dengan Aubergine.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>Selanjutnya</h2>
+    <p>Menghentikan, memperbarui, dan mencopot sama seperti di <a href="../install/">halaman instalasi</a>, dan selebihnya ada di <a href="https://github.com/thirstyeggplant/aubergine#readme">README</a>.</p>
+  </div>
+</div>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <nav aria-label="Semua halaman">
+      <ul class="foot-links">
+        <li><a href="../">Beranda</a></li>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex dan ChatGPT</a></li>
+        <li><a href="../install/">Instalasi</a></li>
+        <li><a href="../guides/">Panduan</a></li>
+        <li><a href="../run-multiple-coding-agents/">Menjalankan beberapa agen</a></li>
+        <li><a href="../working-copies/">Salinan kerja</a></li>
+        <li><a href="../queue-and-schedules/">Antrean dan jadwal</a></li>
+        <li><a href="../security/">Keamanan</a></li>
+        <li><a href="../roadmap/">Peta jalan</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">Aubergine gratis dan open source di bawah <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">lisensi MIT</a>, dan berjalan di komputer Anda sendiri.</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+</script>
+</body>
+</html>

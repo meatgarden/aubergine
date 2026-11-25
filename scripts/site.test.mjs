@@ -385,8 +385,9 @@ describe('the sitemap', () => {
       }
     });
 
-    test('robots.txt names it', () => {
+    test('robots.txt names it, and llms.txt lists every page that asks to be listed', () => {
       assert.match(page(result, 'robots.txt'), new RegExp(`^Sitemap: ${ORIGIN}/sitemap\\.xml$`, 'm'));
+      assert.match(page(result, 'llms.txt'), new RegExp(`\\(${ORIGIN}/windows/\\)`));
     });
   });
 });
