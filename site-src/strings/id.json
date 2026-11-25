@@ -123,6 +123,14 @@
     "text": "Aubergine menempatkan semua terminal Anda berdampingan di satu kanvas di browser. Jalankan sebanyak yang Anda mau, dengan agen dan model yang sudah Anda pakai, dan lihat mana yang membutuhkan Anda. Gratis, lokal, open source.",
     "from": "71a14cde3a05"
   },
+  "home.ld.category": {
+    "text": "Multiplexer terminal dan ruang kerja agen",
+    "from": "d32b7b10eecd"
+  },
+  "home.ld.requires": {
+    "text": "tmux 3.2 atau lebih baru, Node.js 22 atau lebih baru",
+    "from": "6fadbd03c20d"
+  },
   "home.hero.kicker": {
     "text": "Gratis · Open source · Berjalan di komputer Anda",
     "from": "28742c2f94e7"
@@ -180,8 +188,8 @@
     "from": "7d5fd4d29cc6"
   },
   "home.see.waits.text": {
-    "text": "Saat sebuah agen membutuhkan Anda, Anda melihatnya dari seberang kanvas, dan W membawa Anda ke sana.",
-    "from": "5a95026b002e"
+    "text": "Saat sebuah agen membutuhkan Anda, Anda melihatnya dari seberang kanvas, dan <code>W</code> membawa Anda ke sana.",
+    "from": "d1db837c4eb1"
   },
   "home.see.waits.caption": {
     "text": "Garis tepinya berganti ke warna menunggu, dan judulnya bertuliskan waiting for you.",
@@ -564,8 +572,8 @@
     "from": "168514a264d1"
   },
   "claude.history.form": {
-    "text": "Ia membaca file yang disimpan Claude Code, yang formatnya menurut pembuatnya adalah urusan internal dan berubah antarversi. Setelah agen diperbarui, nama dan transkrip mungkin lebih sedikit, dan catatan yang tidak bisa dibaca Aubergine dinyatakan begitu, tidak pernah ditampilkan sebagai kosong.",
-    "from": "08dc0e9d555c"
+    "text": "Ia membaca file yang disimpan Claude Code. Formatnya bersifat internal bagi Claude Code dan berubah antarversi. Setelah agen diperbarui, nama dan transkrip mungkin lebih sedikit, dan catatan yang tidak bisa dibaca Aubergine dinyatakan begitu, tidak pernah ditampilkan sebagai kosong.",
+    "from": "0d92e097b755"
   },
   "claude.history.where": {
     "text": "Lokasi: palet (<code>⌘K</code>), dan “Past conversations in this folder…” di detail terminal.",
@@ -1588,8 +1596,8 @@
     "from": "6a7b211aac87"
   },
   "security.local.elsewhere": {
-    "text": "Memakai Aubergine dari perangkat lain mati sampai Anda menyiapkannya: sesuatu di komputer yang sama meneruskan HTTPS kepadanya dengan nama yang Anda tulis di pengaturan, dan setiap browser dipasangkan dengan kode sekali pakai dan bisa dicabut. Perangkat yang dipasangkan memiliki hak penuh sebagai pemilik. <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/remote.md\">Memakai Aubergine dari tempat lain</a> menjelaskan caranya.",
-    "from": "d67b1b7a16b7"
+    "text": "Memakai Aubergine dari perangkat lain mati sampai Anda menyiapkannya: sesuatu di komputer yang sama meneruskan HTTPS kepadanya dengan nama yang Anda tulis di pengaturan, dan setiap browser dipasangkan dengan kode sekali pakai dan bisa dicabut. Perangkat yang dipasangkan bisa melakukan semua yang bisa dilakukan pemilik. <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/remote.md\">Memakai Aubergine dari tempat lain</a> menjelaskan caranya.",
+    "from": "31531be51b00"
   },
   "security.local.network": {
     "text": "Aubergine tidak memanggil model dan tidak memulai permintaan jaringan sendiri, dengan dua pengecualian: mengambil sumber library (alamat Git) saat <em>Anda</em> memintanya, dan menanyakan pull request dari branch sebuah terminal ke alat <code>gh</code> milik Anda sendiri, jika terpasang dan sudah masuk.",

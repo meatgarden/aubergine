@@ -123,6 +123,14 @@
     "text": "Aubergine 把你所有的终端并排放在浏览器里的一张画布上。想开多少就开多少，用你已经在用的智能体和模型，并看清哪一个需要你。免费、本地、开源。",
     "from": "71a14cde3a05"
   },
+  "home.ld.category": {
+    "text": "终端复用器与智能体工作区",
+    "from": "d32b7b10eecd"
+  },
+  "home.ld.requires": {
+    "text": "tmux 3.2 或更高版本，Node.js 22 或更高版本",
+    "from": "6fadbd03c20d"
+  },
   "home.hero.kicker": {
     "text": "免费 · 开源 · 运行在你的电脑上",
     "from": "28742c2f94e7"
@@ -180,8 +188,8 @@
     "from": "7d5fd4d29cc6"
   },
   "home.see.waits.text": {
-    "text": "当某个智能体需要你时，隔着整张画布也能看到，按 W 就能过去。",
-    "from": "5a95026b002e"
+    "text": "当某个智能体需要你时，隔着整张画布也能看到，按 <code>W</code> 就能过去。",
+    "from": "d1db837c4eb1"
   },
   "home.see.waits.caption": {
     "text": "它的边框变成等待的颜色，标题显示 waiting for you。",
@@ -564,8 +572,8 @@
     "from": "168514a264d1"
   },
   "claude.history.form": {
-    "text": "它读取 Claude Code 保存的文件，其制作方称这种格式属于内部格式，会随版本变化。智能体更新后，名称和对话记录可能会变得不完整；Aubergine 读不了的记录会明确说读不了，绝不会显示成空的。",
-    "from": "08dc0e9d555c"
+    "text": "它读取 Claude Code 保存的文件。这些文件的格式是 Claude Code 的内部格式，会随版本变化。智能体更新后，名称和对话记录可能会变得不完整；Aubergine 读不了的记录会明确说读不了，绝不会显示成空的。",
+    "from": "0d92e097b755"
   },
   "claude.history.where": {
     "text": "位置：命令面板（<code>⌘K</code>），以及终端详情中的“Past conversations in this folder…”。",
@@ -1588,8 +1596,8 @@
     "from": "6a7b211aac87"
   },
   "security.local.elsewhere": {
-    "text": "从其他设备使用 Aubergine 默认关闭，直到你自己设置：同一台电脑上的某个程序以你在设置中写的名称为它提供 HTTPS，每个浏览器都用一次性代码配对，并且可以吊销。已配对的设备拥有全部所有者权限。<a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/remote.md\">Using Aubergine from elsewhere</a> 说明了具体做法。",
-    "from": "d67b1b7a16b7"
+    "text": "从其他设备使用 Aubergine 默认关闭，直到你自己设置：同一台电脑上的某个程序以你在设置中写的名称为它提供 HTTPS，每个浏览器都用一次性代码配对，并且可以吊销。已配对的设备能做所有者能做的一切。<a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/remote.md\">Using Aubergine from elsewhere</a> 说明了具体做法。",
+    "from": "31531be51b00"
   },
   "security.local.network": {
     "text": "Aubergine 不调用模型，也不会自行发起网络请求，只有两个例外：在<em>你</em>要求时获取一个库来源（Git 地址），以及在你自己的 <code>gh</code> 工具已安装并登录时，向它查询某个终端分支的拉取请求。",

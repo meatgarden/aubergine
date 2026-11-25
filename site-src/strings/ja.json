@@ -123,6 +123,14 @@
     "text": "Aubergine は、すべてのターミナルをブラウザーの1つのキャンバスに並べます。いつも使っているエージェントとモデルのまま好きなだけ動かし、どれがあなたを必要としているかが分かります。無料、ローカル、オープンソース。",
     "from": "71a14cde3a05"
   },
+  "home.ld.category": {
+    "text": "ターミナルマルチプレクサーとエージェントの作業場",
+    "from": "d32b7b10eecd"
+  },
+  "home.ld.requires": {
+    "text": "tmux 3.2 以降、Node.js 22 以降",
+    "from": "6fadbd03c20d"
+  },
   "home.hero.kicker": {
     "text": "無料 · オープンソース · あなたのコンピューターで動作",
     "from": "28742c2f94e7"
@@ -180,8 +188,8 @@
     "from": "7d5fd4d29cc6"
   },
   "home.see.waits.text": {
-    "text": "エージェントがあなたを必要とすると、キャンバスの離れた場所からでも分かり、W キーでそこへ移動できます。",
-    "from": "5a95026b002e"
+    "text": "エージェントがあなたを必要とすると、キャンバスの離れた場所からでも分かり、<code>W</code> キーでそこへ移動できます。",
+    "from": "d1db837c4eb1"
   },
   "home.see.waits.caption": {
     "text": "枠線が待機中の色になり、タイトルに waiting for you と表示されます。",
@@ -564,8 +572,8 @@
     "from": "168514a264d1"
   },
   "claude.history.form": {
-    "text": "Claude Code が保存するファイルを読みます。その形式は作り手によれば内部のもので、バージョンによって変わります。エージェントを更新した後は、名前や記録が薄くなることがあります。Aubergine が読めない記録は、読めないと表示され、空として見せることはありません。",
-    "from": "08dc0e9d555c"
+    "text": "Claude Code が保存するファイルを読みます。その形式は Claude Code の内部のもので、バージョンによって変わります。エージェントを更新した後は、名前や記録が薄くなることがあります。Aubergine が読めない記録は、読めないと表示され、空として見せることはありません。",
+    "from": "0d92e097b755"
   },
   "claude.history.where": {
     "text": "場所：パレット（<code>⌘K</code>）と、ターミナルの詳細にある「Past conversations in this folder…」。",
@@ -1588,8 +1596,8 @@
     "from": "6a7b211aac87"
   },
   "security.local.elsewhere": {
-    "text": "ほかのデバイスからの Aubergine の利用は、あなたが設定するまでオフです。同じコンピューター上の何かが、設定に書いた名前で HTTPS を中継し、各ブラウザーは使い捨てのコードでペアリングされ、失効させられます。ペアリングしたデバイスは完全なオーナーです。方法は <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/remote.md\">Using Aubergine from elsewhere</a> にあります。",
-    "from": "d67b1b7a16b7"
+    "text": "ほかのデバイスからの Aubergine の利用は、あなたが設定するまでオフです。同じコンピューター上の何かが、設定に書いた名前で HTTPS を中継し、各ブラウザーは使い捨てのコードでペアリングされ、失効させられます。ペアリングしたデバイスは、オーナーにできることをすべてできます。方法は <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/remote.md\">Using Aubergine from elsewhere</a> にあります。",
+    "from": "31531be51b00"
   },
   "security.local.network": {
     "text": "Aubergine はモデルを呼ばず、自分からネットワークリクエストを始めることもありません。例外は2つです。<em>あなた</em>が求めたときにライブラリのソース（Git のアドレス）を取得すること、そしてインストールされサインイン済みの場合に、あなた自身の <code>gh</code> ツールにターミナルのブランチのプルリクエストを尋ねることです。",

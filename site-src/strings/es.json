@@ -123,6 +123,14 @@
     "text": "Aubergine pone todas tus terminales una al lado de la otra en un solo lienzo, en tu navegador. Ejecuta tantas como quieras, con los agentes y modelos que ya usas, y mira cuál te necesita. Gratis, local y de código abierto.",
     "from": "71a14cde3a05"
   },
+  "home.ld.category": {
+    "text": "Multiplexor de terminales y espacio de trabajo para agentes",
+    "from": "d32b7b10eecd"
+  },
+  "home.ld.requires": {
+    "text": "tmux 3.2 o posterior, Node.js 22 o posterior",
+    "from": "6fadbd03c20d"
+  },
   "home.hero.kicker": {
     "text": "Gratis · Código abierto · Se ejecuta en tu ordenador",
     "from": "28742c2f94e7"
@@ -180,8 +188,8 @@
     "from": "7d5fd4d29cc6"
   },
   "home.see.waits.text": {
-    "text": "Cuando un agente te necesita, lo ves desde el otro lado del lienzo, y W te lleva hasta él.",
-    "from": "5a95026b002e"
+    "text": "Cuando un agente te necesita, lo ves desde el otro lado del lienzo, y <code>W</code> te lleva hasta él.",
+    "from": "d1db837c4eb1"
   },
   "home.see.waits.caption": {
     "text": "Su borde toma el color de la espera y su título dice waiting for you (te está esperando).",
@@ -564,8 +572,8 @@
     "from": "168514a264d1"
   },
   "claude.history.form": {
-    "text": "Lee los archivos que guarda Claude Code, cuyo formato su creador dice que es propio y que cambia entre versiones. Tras una actualización del agente, los nombres y las transcripciones pueden salir más escuetos, y de un registro que Aubergine no puede leer se dice que no se puede leer, nunca se muestra como vacío.",
-    "from": "08dc0e9d555c"
+    "text": "Lee los archivos que guarda Claude Code. Su formato es interno de Claude Code y cambia entre versiones. Tras una actualización del agente, los nombres y las transcripciones pueden salir más escuetos, y de un registro que Aubergine no puede leer se dice que no se puede leer, nunca se muestra como vacío.",
+    "from": "0d92e097b755"
   },
   "claude.history.where": {
     "text": "Dónde: la paleta (<code>⌘K</code>), y «Past conversations in this folder…» en los detalles de una terminal.",
@@ -1588,8 +1596,8 @@
     "from": "6a7b211aac87"
   },
   "security.local.elsewhere": {
-    "text": "Usar Aubergine desde otro dispositivo está desactivado hasta que lo configures: algo en el mismo ordenador le lleva HTTPS bajo un nombre que escribes en los ajustes, y cada navegador se empareja con un código de un solo uso y se puede revocar. Un dispositivo emparejado es el propietario con todos sus permisos. <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/remote.md\">Usar Aubergine desde otro sitio</a> explica cómo.",
-    "from": "d67b1b7a16b7"
+    "text": "Usar Aubergine desde otro dispositivo está desactivado hasta que lo configures: algo en el mismo ordenador le lleva HTTPS bajo un nombre que escribes en los ajustes, y cada navegador se empareja con un código de un solo uso y se puede revocar. Un dispositivo emparejado puede hacer todo lo que puede hacer el propietario. <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/remote.md\">Usar Aubergine desde otro sitio</a> explica cómo.",
+    "from": "31531be51b00"
   },
   "security.local.network": {
     "text": "Aubergine no llama a ningún modelo ni inicia ninguna petición de red propia, con dos excepciones: descargar una fuente de la biblioteca (una dirección Git) cuando <em>tú</em> lo pides, y preguntar a tu propia herramienta <code>gh</code>, donde está instalada y con la sesión iniciada, por la pull request de la rama de una terminal.",

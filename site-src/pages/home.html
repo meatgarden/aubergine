@@ -36,9 +36,9 @@
       "name": "Aubergine",
       "description": {{json:home.hero.lead}},
       "applicationCategory": "DeveloperApplication",
-      "applicationSubCategory": "Terminal multiplexer and agent workspace",
+      "applicationSubCategory": {{json:home.ld.category}},
       "operatingSystem": "macOS",
-      "softwareRequirements": "tmux 3.2 or newer, Node.js 22 or newer",
+      "softwareRequirements": {{json:home.ld.requires}},
       "url": "https://thirstyeggplant.com/",
       "installUrl": "https://www.npmjs.com/package/@meatgarden/aubergine",
       "codeRepository": "https://github.com/thirstyeggplant/aubergine",
@@ -103,7 +103,7 @@
       <p class="actions"><a class="button primary" href="/install/">{{home.hero.install}}</a><a class="button" href="https://github.com/thirstyeggplant/aubergine">{{home.hero.source}}</a></p>
     </div>
     <figure class="canvas">
-      <div class="canvas-field" aria-hidden="true">
+      <div class="canvas-field" dir="ltr" aria-hidden="true">
         <div class="term term-1 waits"><div class="term-bar"><span class="term-name">claude · fix-login</span><span class="term-state">waiting for you</span></div>
 <pre><i>?</i> Two files use the old check.
   Change both, or only /auth?

@@ -123,6 +123,14 @@
     "text": "Aubergine legt alle deine Terminals nebeneinander auf ein Canvas in deinem Browser. Starte so viele, wie du willst, mit den Agenten und Modellen, die du schon nutzt, und sieh, welcher dich braucht. Kostenlos, lokal, Open Source.",
     "from": "71a14cde3a05"
   },
+  "home.ld.category": {
+    "text": "Terminal-Multiplexer und Arbeitsplatz für Agenten",
+    "from": "d32b7b10eecd"
+  },
+  "home.ld.requires": {
+    "text": "tmux 3.2 oder neuer, Node.js 22 oder neuer",
+    "from": "6fadbd03c20d"
+  },
   "home.hero.kicker": {
     "text": "Kostenlos · Open Source · Läuft auf deinem Rechner",
     "from": "28742c2f94e7"
@@ -180,8 +188,8 @@
     "from": "7d5fd4d29cc6"
   },
   "home.see.waits.text": {
-    "text": "Wenn ein Agent dich braucht, siehst du es quer über das ganze Canvas, und W bringt dich hin.",
-    "from": "5a95026b002e"
+    "text": "Wenn ein Agent dich braucht, siehst du es quer über das ganze Canvas, und <code>W</code> bringt dich hin.",
+    "from": "d1db837c4eb1"
   },
   "home.see.waits.caption": {
     "text": "Sein Rahmen nimmt die Farbe des Wartens an, und sein Titel sagt waiting for you.",
@@ -564,8 +572,8 @@
     "from": "168514a264d1"
   },
   "claude.history.form": {
-    "text": "Es liest die Dateien, die Claude Code aufbewahrt und deren Format laut Hersteller dessen eigenes ist und sich zwischen Versionen ändert. Nach einem Update des Agenten können Namen und Transkripte dünner ausfallen, und ein Eintrag, den Aubergine nicht lesen kann, wird als solcher benannt und nie als leer gezeigt.",
-    "from": "08dc0e9d555c"
+    "text": "Es liest die Dateien, die Claude Code aufbewahrt. Ihr Format ist ein internes von Claude Code und ändert sich zwischen Versionen. Nach einem Update des Agenten können Namen und Transkripte dünner ausfallen, und ein Eintrag, den Aubergine nicht lesen kann, wird als solcher benannt und nie als leer gezeigt.",
+    "from": "0d92e097b755"
   },
   "claude.history.where": {
     "text": "Wo: die Palette (<code>⌘K</code>) und „Past conversations in this folder…“ in den Details eines Terminals.",
@@ -1588,8 +1596,8 @@
     "from": "6a7b211aac87"
   },
   "security.local.elsewhere": {
-    "text": "Die Nutzung von Aubergine von einem anderen Gerät ist aus, bis du sie einrichtest: Etwas auf demselben Rechner leitet HTTPS unter einem Namen dorthin, den du in die Einstellungen schreibst, und jeder Browser wird mit einem Einmalcode gekoppelt und kann widerrufen werden. Ein gekoppeltes Gerät hat alle Rechte des Besitzers. <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/remote.md\">Aubergine von anderswo nutzen</a> erklärt, wie.",
-    "from": "d67b1b7a16b7"
+    "text": "Die Nutzung von Aubergine von einem anderen Gerät ist aus, bis du sie einrichtest: Etwas auf demselben Rechner leitet HTTPS unter einem Namen dorthin, den du in die Einstellungen schreibst, und jeder Browser wird mit einem Einmalcode gekoppelt und kann widerrufen werden. Ein gekoppeltes Gerät kann alles, was der Besitzer kann. <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/remote.md\">Aubergine von anderswo nutzen</a> erklärt, wie.",
+    "from": "31531be51b00"
   },
   "security.local.network": {
     "text": "Aubergine ruft kein Modell auf und startet von sich aus keine Netzwerkanfrage, mit zwei Ausnahmen: eine Bibliotheksquelle (eine Git-Adresse) holen, wenn <em>du</em> danach fragst, und dein eigenes <code>gh</code>-Tool, wo es installiert und angemeldet ist, nach dem Pull Request zum Branch eines Terminals fragen.",
