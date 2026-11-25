@@ -639,3 +639,7 @@ h1, h2, h3 { hyphens: manual; }
 }
 /* In a right-to-left page the language menu reads from the right, whatever each name's own direction. */
 [dir="rtl"] .languages .menu-list a[dir="ltr"] { flex-direction: row-reverse; }
+/* On a wide screen a command in a sentence stays on one line, so "--" never ends a line; narrower, it may wrap. */
+@media (min-width: 68.0625rem) {
+  :not(pre) > code:not(.cmd code) { white-space: nowrap; }
+}

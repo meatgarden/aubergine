@@ -36,7 +36,7 @@ One idea: Aubergine on cream. A warm paper ground with near-black aubergine ink,
 - **The hard shadow** is the one shadow: a flat ink offset of 3px under a button, 6px under a menu, a command on purple, a card and the boxed note, and 6–18px under a framed capture. It falls toward the end edge and the bottom; on a right-to-left page `--shadow-dir` is −1 and every shadow falls to the left.
 - **Pieces**:
   - *the top bar*: cream with a 2px ink rule under it; the mark, the pages, and the language menu as a bordered box (all 12 languages, the current one inked with a tick, the open list boxed with the hard shadow).
-  - *the command*: an ink box, the `$` in lavender, a cream Copy button; on purple it turns cream with a purple Copy and the hard shadow; `cmd-big` is the closing band's large one.
+  - *the command*: an ink box, the `$` in lavender, a cream Copy button; on purple it turns cream with a purple Copy and the hard shadow; `cmd-big` is the closing band's large one. A long command wraps inside its box rather than hiding its end; a command inside a sentence stays on one line from 1090px up and may wrap below that.
   - *the button*: squarish (8px), 2px ink border, a 3px hard shadow that it presses into when pointed at; purple, cream (quiet), or ink on purple.
   - *the frame*: a real capture in a window with a cream title bar, three circles (the first purple) and `localhost · Aubergine`, a cream caption under a 2px rule, the hard shadow.
   - *rows under thick rules*: a name and what it says, each under a 2px ink rule (the powers with their 01/02/03, the "what else is built" grid with small purple mono numbers, the trust pairs, the commands of the Codex page, the roadmap's groups under dashed rules).
