@@ -386,6 +386,8 @@ pre code { font-size: 1em; overflow-wrap: normal; }
 
 .page-head { padding-block: clamp(2.5rem, 1.5rem + 3vw, 5rem) clamp(2.5rem, 1.5rem + 3vw, 4.5rem); border-block-end: var(--rule) solid var(--ink); }
 .crumbs { font: var(--weight-bold) var(--size-xs) / 1.4 var(--font-mono); text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+/* Letter spacing breaks the joining of Arabic letters, and capitals mean nothing in these scripts. */
+.crumbs:is(:lang(ja), :lang(zh), :lang(ko), :lang(hi), :lang(bn), :lang(ar)) { letter-spacing: 0; text-transform: none; font-family: inherit; }
 .crumbs ol { display: flex; flex-wrap: wrap; gap: var(--s-2); list-style: none; margin: 0; padding: 0; }
 .crumbs li + li::before { content: "/"; margin-inline-end: var(--s-2); color: var(--purple); }
 .crumbs a { color: var(--ink); }
