@@ -385,6 +385,13 @@ describe('the sitemap', () => {
       }
     });
 
+    test('the look is one theme: no switch by prefers-color-scheme, and color-scheme light on the stylesheet and every page', () => {
+      const css = readFileSync(path.join(root, 'site-src', 'style.css'), 'utf8');
+      assert.doesNotMatch(css, /prefers-color-scheme/);
+      assert.match(css, /color-scheme:\s*light/);
+      for (const file of indexable) assert.match(page(result, file), /<meta name="color-scheme" content="light">/, file);
+    });
+
     test('robots.txt names it, and llms.txt lists every page that asks to be listed', () => {
       assert.match(page(result, 'robots.txt'), new RegExp(`^Sitemap: ${ORIGIN}/sitemap\\.xml$`, 'm'));
       assert.match(page(result, 'llms.txt'), new RegExp(`\\(${ORIGIN}/windows/\\)`));
