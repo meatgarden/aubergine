@@ -131,13 +131,33 @@
     "text": "tmux 3.2 이상, Node.js 22 이상",
     "from": "6fadbd03c20d"
   },
-  "home.hero.kicker": {
-    "text": "터미널을 한층 강력하게 · 무료 · 오픈 소스 · 내 컴퓨터에서 실행",
-    "from": "a61d5f4f3b3a"
+  "home.hero.tag.lead": {
+    "text": "터미널을 한층 강력하게",
+    "from": "eb13de4649f0"
   },
-  "home.hero.title": {
-    "text": "모든 터미널을 나란히. 어느 에이전트가 <em>나를 기다리는지</em> 한눈에.",
-    "from": "7be0ec221ba9"
+  "home.hero.tag.free": {
+    "text": "무료",
+    "from": "f411a1fb6275"
+  },
+  "home.hero.tag.open": {
+    "text": "오픈 소스",
+    "from": "67a0d2e0dab4"
+  },
+  "home.hero.tag.local": {
+    "text": "내 컴퓨터에서 실행",
+    "from": "cd90f9395587"
+  },
+  "home.hero.title.a": {
+    "text": "모든 터미널을",
+    "from": "8dd2aa1cda63"
+  },
+  "home.hero.title.b": {
+    "text": "나란히.",
+    "from": "eb95eacfe17a"
+  },
+  "home.hero.title.c": {
+    "text": "<em>에이전트</em>는 직접 가져오세요.",
+    "from": "4728f2abc24b"
   },
   "home.hero.lead": {
     "text": "Aubergine은 모든 터미널을 브라우저 속 하나의 캔버스에 나란히 놓습니다. 이미 쓰고 있는 에이전트와 모델로 원하는 만큼 실행하세요. Aubergine에는 자체 모델이 없고, 키를 요구하지도 않습니다.",
@@ -155,9 +175,13 @@
     "text": "소스 보기",
     "from": "625b22ba31d0"
   },
-  "home.canvas.caption": {
-    "text": "실제 화면이 아닌 그림입니다. 캔버스 위의 터미널 다섯 개와, 그중 여러분을 기다리는 하나.",
-    "from": "413e282f8a9d"
+  "home.stage.caption": {
+    "text": "Aubergine에 포함된 데모의 실제 화면입니다. 캔버스 하나에 터미널 여섯 개, 그리고 나를 기다리는 하나.",
+    "from": "21a1f62e34b1"
+  },
+  "home.stage.alt": {
+    "text": "앱 전체 화면: 왼쪽에 캔버스와 터미널 목록, 캔버스 위에 실행 중인 터미널 여섯 개. 그중 Login bug · question은 대기 색으로 테두리가 그려져 있고 waiting for you라고 표시합니다.",
+    "from": "2288db7c750f"
   },
   "home.powers.title": {
     "text": "터미널에 슈퍼파워를",

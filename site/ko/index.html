@@ -20,8 +20,8 @@
 <link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/">
 <link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/">
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-<meta name="theme-color" content="#120f14" media="(prefers-color-scheme: dark)">
-<meta name="theme-color" content="#faf6f2" media="(prefers-color-scheme: light)">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F7F0E4">
 <link rel="icon" href="../icon.svg" type="image/svg+xml">
 <link rel="preload" href="../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="../style.css">
@@ -45,7 +45,7 @@
 <a class="skip" href="#main">본문으로 건너뛰기</a>
 <header class="top">
   <div class="wrap top-in">
-    <a class="mark" href="./"><img src="../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <a class="mark" href="./"><img src="../icon.svg" alt="" width="32" height="32"><span>Aubergine</span></a>
     <nav class="nav" aria-label="페이지">
       <ul>
         <li><a href="claude/">Claude Code</a></li>
@@ -77,9 +77,11 @@
   </div>
 </header>
 
-<div class="wrap translated">
-  <p class="note">Aubergine 앱 자체는 영어로 되어 있습니다. 버튼, 메뉴, 그림은 모두 영어판 그대로입니다.</p>
-  <p class="note">이 페이지는 영어 원문을 기계 번역한 것입니다. <a href="https://github.com/thirstyeggplant/aubergine/issues">수정 제안 보내기</a>.</p>
+<div class="translated">
+  <div class="wrap translated-in">
+    <p>Aubergine 앱 자체는 영어로 되어 있습니다. 버튼, 메뉴, 그림은 모두 영어판 그대로입니다.</p>
+    <p>이 페이지는 영어 원문을 기계 번역한 것입니다. <a href="https://github.com/thirstyeggplant/aubergine/issues">수정 제안 보내기</a>.</p>
+  </div>
 </div>
 <main id="main" tabindex="-1">
 <script type="application/ld+json">
@@ -176,95 +178,95 @@
 </script>
 
 <section class="hero" aria-labelledby="hero-h">
-  <div class="wrap hero-in">
-    <div>
-      <p class="kicker">터미널을 한층 강력하게 · 무료 · 오픈 소스 · 내 컴퓨터에서 실행</p>
-      <h1 id="hero-h">모든 터미널을 나란히. 어느 에이전트가 <em>나를 기다리는지</em> 한눈에.</h1>
-      <p class="lead">Aubergine은 모든 터미널을 브라우저 속 하나의 캔버스에 나란히 놓습니다. 이미 쓰고 있는 에이전트와 모델로 원하는 만큼 실행하세요. Aubergine에는 자체 모델이 없고, 키를 요구하지도 않습니다.</p>
-      <p class="cmd"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="복사됨" aria-live="polite" hidden>복사</button></p>
-      <p class="after">그다음 <code>aubergine start --open</code>. macOS용이며 tmux 3.2 이상과 Node.js 22 이상이 필요합니다.</p>
-      <p class="actions"><a class="button primary" href="install/">설치</a><a class="button" href="https://github.com/thirstyeggplant/aubergine">소스 보기</a></p>
-    </div>
-    <figure class="canvas">
-      <div class="canvas-field" dir="ltr" aria-hidden="true">
-        <div class="term term-1 waits"><div class="term-bar"><span class="term-name">claude · fix-login</span><span class="term-state">waiting for you</span></div>
-<pre><i>?</i> Two files use the old check.
-  Change both, or only /auth?
-<i>›</i> </pre></div>
-        <div class="term term-2 working"><div class="term-bar"><span class="term-name">codex · migrate-db</span><span class="term-state">working</span></div>
-<pre>› step 3 of 5
-<b>✓</b> schema read
-<b>✓</b> 41 tests pass
-› writing the migration…</pre></div>
-        <div class="term term-3"><div class="term-bar"><span class="term-name">zsh · tests</span><span class="term-state">running</span></div>
-<pre><b>$</b> pnpm test --watch
-<b>✓</b> 212 passed
-  watching for changes…</pre></div>
-        <div class="term term-4 done"><div class="term-bar"><span class="term-name">claude · release-notes</span><span class="term-state">finished</span></div>
-<pre><b>✓</b> notes written
-  handed in: 6 changes</pre></div>
-        <div class="term term-5"><div class="term-bar"><span class="term-name">zsh · api</span><span class="term-state">idle</span></div>
-<pre><b>$</b> git status
-  nothing to commit
-<b>$</b> </pre></div>
-      </div>
-      <figcaption>실제 화면이 아닌 그림입니다. 캔버스 위의 터미널 다섯 개와, 그중 여러분을 기다리는 하나.</figcaption>
-    </figure>
-  </div>
-</section>
-
-<section class="section" id="powers" aria-labelledby="powers-h">
   <div class="wrap">
-    <h2 id="powers-h">터미널에 슈퍼파워를</h2>
-    <p class="intro">이미 쓰고 있는 터미널에 그동안 없던 것을 더합니다. 나란히 놓일 자리, 기억, 그리고 여러분이 필요할 때 알려 주는 방법입니다.</p>
-    <ul class="rows across">
-      <li><h3>생산성 향상</h3><p>여러 에이전트가 각자의 터미널에서 동시에 일합니다. 기다리는 에이전트에만 답하고 나머지는 계속 실행되게 두세요.</p></li>
-      <li><h3>더 나은 개발자 경험</h3><p>모든 터미널에는 이름, 색, 노트, 캔버스 위의 자리가 있습니다. 브라우저를 닫거나 Aubergine을 다시 시작해도 그대로 남아 있습니다.</p></li>
-      <li><h3>갈아탈 필요 없음</h3><p>셸, 도구, 에이전트, 모델 모두 지금 그대로입니다. Aubergine은 그 주위에 캔버스를 더할 뿐, 자체 모델이 없습니다.</p></li>
+    <ul class="kicker">
+      <li>터미널을 한층 강력하게</li>
+      <li>무료</li>
+      <li>오픈 소스</li>
+      <li>내 컴퓨터에서 실행</li>
     </ul>
+    <h1 id="hero-h"><span class="line">모든 터미널을</span> <span class="line">나란히.</span> <span class="line"><em>에이전트</em>는 직접 가져오세요.</span></h1>
+    <div class="hero-under">
+      <p class="lead">Aubergine은 모든 터미널을 브라우저 속 하나의 캔버스에 나란히 놓습니다. 이미 쓰고 있는 에이전트와 모델로 원하는 만큼 실행하세요. Aubergine에는 자체 모델이 없고, 키를 요구하지도 않습니다.</p>
+      <div class="hero-do">
+        <p class="cmd"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="복사됨" aria-live="polite" hidden>복사</button></p>
+        <p class="actions"><a class="button" href="install/">설치</a><a class="button button-quiet" href="https://github.com/thirstyeggplant/aubergine">소스 보기</a></p>
+        <p class="after">그다음 <code>aubergine start --open</code>. macOS용이며 tmux 3.2 이상과 Node.js 22 이상이 필요합니다.</p>
+      </div>
+    </div>
   </div>
 </section>
 
-<section class="section" id="see" aria-labelledby="see-h">
+<section class="stage">
   <div class="wrap">
-    <h2 id="see-h">실제 모습</h2>
-    <p class="intro">Aubergine에 포함된 데모의 실제 화면입니다. 진짜 에이전트가 아닌 대역 에이전트입니다.</p>
+    <figure class="frame frame-big">
+      <div class="frame-bar" dir="ltr" aria-hidden="true"><i></i><i></i><i></i><span>localhost · Aubergine</span></div>
+      <a href="../screenshots/canvas.png" class="frame-pic"><img src="../screenshots/canvas.png" width="3840" height="2400" alt="앱 전체 화면: 왼쪽에 캔버스와 터미널 목록, 캔버스 위에 실행 중인 터미널 여섯 개. 그중 Login bug · question은 대기 색으로 테두리가 그려져 있고 waiting for you라고 표시합니다."></a>
+    </figure>
+    <p class="stage-caption">Aubergine에 포함된 데모의 실제 화면입니다. 캔버스 하나에 터미널 여섯 개, 그리고 나를 기다리는 하나.</p>
+  </div>
+</section>
+
+<section class="band band-cream" id="powers" aria-labelledby="powers-h">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 id="powers-h">터미널에 슈퍼파워를</h2>
+      <p class="intro">이미 쓰고 있는 터미널에 그동안 없던 것을 더합니다. 나란히 놓일 자리, 기억, 그리고 여러분이 필요할 때 알려 주는 방법입니다.</p>
+    </div>
+    <ol class="powers">
+      <li><span class="num" aria-hidden="true">01</span><h3>생산성 향상</h3><p>여러 에이전트가 각자의 터미널에서 동시에 일합니다. 기다리는 에이전트에만 답하고 나머지는 계속 실행되게 두세요.</p></li>
+      <li><span class="num" aria-hidden="true">02</span><h3>더 나은 개발자 경험</h3><p>모든 터미널에는 이름, 색, 노트, 캔버스 위의 자리가 있습니다. 브라우저를 닫거나 Aubergine을 다시 시작해도 그대로 남아 있습니다.</p></li>
+      <li><span class="num" aria-hidden="true">03</span><h3>갈아탈 필요 없음</h3><p>셸, 도구, 에이전트, 모델 모두 지금 그대로입니다. Aubergine은 그 주위에 캔버스를 더할 뿐, 자체 모델이 없습니다.</p></li>
+    </ol>
+  </div>
+</section>
+
+<section class="band band-lilac" id="see" aria-labelledby="see-h">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 id="see-h">실제 모습</h2>
+      <p class="intro">Aubergine에 포함된 데모의 실제 화면입니다. 진짜 에이전트가 아닌 대역 에이전트입니다.</p>
+    </div>
     <div class="shows">
       <div class="show">
-        <div><h3>모든 터미널을 하나의 캔버스에</h3><p>원하는 만큼 나란히 놓을 수 있고, 화면에 보이는 동안 각각 실시간으로 동작합니다.</p></div>
-        <figure class="pic"><a href="../screenshots/list.png"><img src="../screenshots/list.png" width="1440" height="1008" loading="lazy" alt="다섯 개의 터미널과 그 상태(working, waiting for you, finished, parked)를 글로 보여 주는 사이드 패널과, 실시간 셸이 있는 캔버스의 일부."></a><figcaption>목록은 각 터미널이 무엇을 하고 있는지 알려 주고, 그 옆에는 터미널 자체가 있습니다.</figcaption></figure>
+        <div class="show-words"><h3>모든 터미널을 하나의 캔버스에</h3><p>원하는 만큼 나란히 놓을 수 있고, 화면에 보이는 동안 각각 실시간으로 동작합니다.</p></div>
+        <figure class="frame"><a href="../screenshots/list.png" class="frame-pic"><img src="../screenshots/list.png" width="1440" height="1008" loading="lazy" alt="다섯 개의 터미널과 그 상태(working, waiting for you, finished, parked)를 글로 보여 주는 사이드 패널과, 실시간 셸이 있는 캔버스의 일부."></a><figcaption>목록은 각 터미널이 무엇을 하고 있는지 알려 주고, 그 옆에는 터미널 자체가 있습니다.</figcaption></figure>
+      </div>
+      <div class="show show-flip">
+        <div class="show-words"><h3><span class="waits">기다리는 터미널이 눈에 띕니다</span></h3><p>에이전트가 여러분을 필요로 하면 캔버스 반대편에서도 알아볼 수 있고, <code>W</code> 키로 바로 그곳에 갈 수 있습니다.</p></div>
+        <figure class="frame"><a href="../screenshots/waiting.png" class="frame-pic"><img src="../screenshots/waiting.png" width="1496" height="600" loading="lazy" alt="에이전트가 질문을 하고 있는 터미널 하나. 제목에는 waiting for you라고 표시되고, 테두리 선은 대기 색입니다."></a><figcaption>테두리 선은 대기 색으로 바뀌고, 제목에는 waiting for you라고 표시됩니다.</figcaption></figure>
       </div>
       <div class="show">
-        <div><h3>기다리는 터미널이 눈에 띕니다</h3><p>에이전트가 여러분을 필요로 하면 캔버스 반대편에서도 알아볼 수 있고, <code>W</code> 키로 바로 그곳에 갈 수 있습니다.</p></div>
-        <figure class="pic"><a href="../screenshots/waiting.png"><img src="../screenshots/waiting.png" width="1496" height="600" loading="lazy" alt="에이전트가 질문을 하고 있는 터미널 하나. 제목에는 waiting for you라고 표시되고, 테두리 선은 대기 색입니다."></a><figcaption>테두리 선은 대기 색으로 바뀌고, 제목에는 waiting for you라고 표시됩니다.</figcaption></figure>
-      </div>
-      <div class="show">
-        <div><h3>터미널 하나만 따로</h3><p>어떤 터미널이든 별도의 브라우저 탭에서 열 수 있습니다. 사본이 아니라 같은 터미널입니다.</p></div>
-        <figure class="pic"><a href="../screenshots/focus-part.png"><img src="../screenshots/focus-part.png" width="1344" height="1172" loading="lazy" alt="브라우저 탭에 홀로 열린 터미널 하나. 머리글에 이름이 있고, 워크플로 단계, 폴더, 필드가 담긴 세부 정보와 실시간 터미널이 나란히 있습니다."></a><figcaption>요청하면 세부 정보와 노트가 옆에 열리고, 각자의 버튼으로 다시 닫힙니다.</figcaption></figure>
+        <div class="show-words"><h3>터미널 하나만 따로</h3><p>어떤 터미널이든 별도의 브라우저 탭에서 열 수 있습니다. 사본이 아니라 같은 터미널입니다.</p></div>
+        <figure class="frame"><a href="../screenshots/focus-part.png" class="frame-pic"><img src="../screenshots/focus-part.png" width="1344" height="1172" loading="lazy" alt="브라우저 탭에 홀로 열린 터미널 하나. 머리글에 이름이 있고, 워크플로 단계, 폴더, 필드가 담긴 세부 정보와 실시간 터미널이 나란히 있습니다."></a><figcaption>요청하면 세부 정보와 노트가 옆에 열리고, 각자의 버튼으로 다시 닫힙니다.</figcaption></figure>
       </div>
     </div>
   </div>
 </section>
 
-<section class="section" id="agents" aria-labelledby="agents-h">
+<section class="band band-dark" id="agents" aria-labelledby="agents-h">
   <div class="wrap">
-    <h2 id="agents-h">에이전트는 직접 가져오세요</h2>
-    <p class="intro">Aubergine은 평범한 터미널을 실행합니다. 모델을 호출하지 않고, 키를 보관하지 않으며, 계정도 없습니다. 이미 쓰고 있는 명령줄 에이전트가 여러분의 계정으로 로그인한 채, 여러분이 고른 모델로 그 터미널에서 실행됩니다. Aubergine이 에이전트를 위해 스스로 해 주는 일은 현재 Claude Code에 맞춰 만들어져 있습니다. 다른 에이전트도 <code>aubergine</code> 명령으로 같은 내용을 알릴 수 있습니다.</p>
-    <ul class="rows">
-      <li><h3><a class="row-link" href="claude/">Claude Code</a></h3><p>New terminal 메뉴에서 시작하면 작업 중인지, 여러분을 기다리는지, 끝났는지를 스스로 알립니다. Aubergine은 대화를 이어서 재개하고, 설정 상태를 보여 줄 수 있습니다.</p></li>
-      <li><h3><a class="row-link" href="chatgpt/">Codex와 ChatGPT</a></h3><p>Codex는 여느 프로그램처럼 터미널에서 실행되며, 지침에서 그렇게 하라고 알려 주면 <code>aubergine</code> 명령으로 상태를 보고합니다. 브라우저의 ChatGPT는 터미널 프로그램이 아닙니다.</p></li>
-      <li><h3><a class="row-link" href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/for-agents.md">그 밖의 명령줄 에이전트 또는 일반 셸</a></h3><p>모든 터미널에는 <code>aubergine</code> 명령이 있고, <code>aubergine guide --snippet</code>은 에이전트 자체 지침에 넣을 다섯 줄을 출력합니다.</p></li>
+    <div class="section-head">
+      <h2 id="agents-h">에이전트는 직접 가져오세요</h2>
+      <p class="intro">Aubergine은 평범한 터미널을 실행합니다. 모델을 호출하지 않고, 키를 보관하지 않으며, 계정도 없습니다. 이미 쓰고 있는 명령줄 에이전트가 여러분의 계정으로 로그인한 채, 여러분이 고른 모델로 그 터미널에서 실행됩니다. Aubergine이 에이전트를 위해 스스로 해 주는 일은 현재 Claude Code에 맞춰 만들어져 있습니다. 다른 에이전트도 <code>aubergine</code> 명령으로 같은 내용을 알릴 수 있습니다.</p>
+    </div>
+    <ul class="agents">
+      <li><h3><a href="claude/">Claude Code</a></h3><p>New terminal 메뉴에서 시작하면 작업 중인지, 여러분을 기다리는지, 끝났는지를 스스로 알립니다. Aubergine은 대화를 이어서 재개하고, 설정 상태를 보여 줄 수 있습니다.</p></li>
+      <li><h3><a href="chatgpt/">Codex와 ChatGPT</a></h3><p>Codex는 여느 프로그램처럼 터미널에서 실행되며, 지침에서 그렇게 하라고 알려 주면 <code>aubergine</code> 명령으로 상태를 보고합니다. 브라우저의 ChatGPT는 터미널 프로그램이 아닙니다.</p></li>
+      <li><h3><a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/for-agents.md">그 밖의 명령줄 에이전트 또는 일반 셸</a></h3><p>모든 터미널에는 <code>aubergine</code> 명령이 있고, <code>aubergine guide --snippet</code>은 에이전트 자체 지침에 넣을 다섯 줄을 출력합니다.</p></li>
     </ul>
   </div>
 </section>
 
-<section class="section" id="features" aria-labelledby="features-h">
+<section class="band band-cream" id="features" aria-labelledby="features-h">
   <div class="wrap">
-    <h2 id="features-h">그 밖에 만들어진 것</h2>
-    <p class="intro">이 모든 것이 지금 여러분의 컴퓨터에서 동작합니다.</p>
-    <ul class="rows">
+    <div class="section-head">
+      <h2 id="features-h">그 밖에 만들어진 것</h2>
+      <p class="intro">이 모든 것이 지금 여러분의 컴퓨터에서 동작합니다.</p>
+    </div>
+    <ul class="built">
       <li><h3>터미널 캔버스</h3><p>실제 터미널을 이동하고 확대·축소하며 배치하고, 한 번 클릭해 입력하고, 잠시 치워 두었다가 나중에 다시 불러오거나, 세부 정보와 노트를 옆에 둔 채 브라우저 탭에서 따로 열 수 있습니다.</p></li>
-      <li><h3>누가 기다리는지 보기</h3><p>모든 터미널에 작업 중, 유휴, 대기(waiting for you) 상태가 표시되고, “For you” 목록과 “next waiting”이 사람이 필요한 곳으로 바로 데려갑니다.</p></li>
+      <li><h3><span class="waits">누가 기다리는지 보기</span></h3><p>모든 터미널에 작업 중, 유휴, 대기(waiting for you) 상태가 표시되고, “For you” 목록과 “next waiting”이 사람이 필요한 곳으로 바로 데려갑니다.</p></li>
       <li><h3>대기열과 일정</h3><p>작업을 한 번 적어 두면 한가한 에이전트가 가져가게 하거나, 원하는 요일의 정해진 시각에 실행되도록 예약할 수 있습니다.</p></li>
       <li><h3>작업 사본</h3><p>각 에이전트에게 저장소의 사본을 자기 브랜치로 따로 주어, 두 에이전트가 같은 파일을 편집하는 일이 없게 합니다.</p></li>
       <li><h3>프로젝트</h3><p>서버 하나에 관제실 여러 개. 프로젝트마다 자체 캔버스, 대기열, 일정, 규칙이 있고, 파일이나 템플릿으로 저장할 수 있습니다.</p></li>
@@ -277,35 +279,27 @@
   </div>
 </section>
 
-<section class="section" id="trust" aria-labelledby="trust-h">
+<section class="band band-lilac" id="trust" aria-labelledby="trust-h">
   <div class="wrap">
-    <h2 id="trust-h">터미널은 여러분의 것으로 남습니다</h2>
-    <ul class="rows">
+    <div class="section-head">
+      <h2 id="trust-h">터미널은 여러분의 것으로 남습니다</h2>
+      <p class="intro"><a class="onward" href="security/">무엇이 보호되고 무엇이 보호되지 않는지</a></p>
+    </div>
+    <ul class="pairs">
       <li><h3>로컬 전용</h3><p>서버는 127.0.0.1에서만 수신하며 모든 요청의 Host와 Origin을 확인합니다. 다른 기기에서의 사용은 여러분이 직접 설정하기 전까지 꺼져 있습니다.</p></li>
       <li><h3>앱보다 오래 사는 터미널</h3><p>모든 터미널은 tmux 세션입니다. 브라우저를 닫거나 Aubergine을 다시 시작해도 작업은 계속 실행됩니다.</p></li>
       <li><h3>모델도, 키도 없음</h3><p>Aubergine은 모델을 고르거나 호출하지 않으며, 모델용 키도 보관하지 않습니다. 에이전트가 각자 가져옵니다.</p></li>
       <li><h3>결정은 여러분이</h3><p>토큰에는 범위가 있고, 에이전트가 작성한 것은 여러분의 검토를 기다리며, 승인은 사람이 합니다.</p></li>
     </ul>
-    <p class="more-link"><a href="security/">무엇이 보호되고 무엇이 보호되지 않는지</a></p>
   </div>
 </section>
 
-<section class="section" id="install" aria-labelledby="install-h">
+<section class="band band-cream" id="faq" aria-labelledby="faq-h">
   <div class="wrap">
-    <h2 id="install-h">5분이면 시작합니다</h2>
-    <p class="intro">tmux 3.2 이상과 Node.js 22 이상이 설치된 macOS가 필요합니다. <code>brew install tmux node</code>로 둘 다 설치할 수 있습니다.</p>
-    <ol class="steps">
-      <li><h3>설치</h3><p class="cmd"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="복사됨" aria-live="polite" hidden>복사</button></p><p>또는 소스에서 pnpm으로 빌드하는 <a href="install/">설치 프로그램</a>을 사용하세요.</p></li>
-      <li><h3>시작하고 브라우저 열기</h3><p class="cmd"><code>aubergine start --open</code><button type="button" class="copy" data-copy data-copied="복사됨" aria-live="polite" hidden>복사</button></p><p>서버를 시작하고, 로그인된 상태로 브라우저를 엽니다.</p></li>
-      <li><h3>둘러보기</h3><p>빈 캔버스에서 <strong>Show me around</strong>(둘러보기)를 클릭하세요. 대역 에이전트가 있는 Demo 캔버스를 만들고 여덟 개의 짧은 단계로 안내합니다. <code>aubergine demo --remove</code>로 없앨 수 있습니다.</p></li>
-    </ol>
-    <p class="note more-link">설치 프로그램은 <code>~/.aubergine</code>과 <code>aubergine</code>이라는 링크 하나만 변경합니다. sudo를 쓰지 않으며, 셸 시작 파일을 편집하지 않습니다.</p>
-  </div>
-</section>
-
-<section class="section" id="faq" aria-labelledby="faq-h">
-  <div class="wrap">
-    <h2 id="faq-h">질문</h2>
+    <div class="section-head">
+      <h2 id="faq-h">질문</h2>
+      <p class="intro"><a class="onward" href="faq/">모든 질문 보기</a></p>
+    </div>
     <div class="questions">
       <details><summary>Aubergine은 무엇인가요?</summary><p>터미널 세션을 올려 두는, 브라우저 기반의 로컬 캔버스입니다. 각 터미널은 배치하고 사용할 수 있는 노드이므로, 여러 코딩 에이전트를 한꺼번에 실행하면서 어느 것이 여러분을 기다리는지 볼 수 있습니다.</p></details>
       <details><summary>Aubergine이 제 터미널이나 코드를 어딘가로 보내나요?</summary><p>아니요. 모든 것이 여러분의 컴퓨터에서 실행됩니다. 서버는 127.0.0.1에서만 수신하며 모든 요청의 Host와 Origin을 확인합니다.</p></details>
@@ -313,20 +307,35 @@
       <details><summary>터미널에서 Claude Code를 직접 시작하면 어떻게 되나요?</summary><p>여느 프로그램처럼 동작하며, 평소대로 입력하면 됩니다. 다만 Aubergine은 자신이 직접 시작한 에이전트만(New terminal에서 Claude Code) 에이전트로 인식합니다. 에이전트가 하는 일을 보고하는 작은 훅 몇 개를 추가하기 때문입니다. 직접 시작하면 터미널은 <code>claude</code>를 실행 중인 busy 상태로만 보입니다. 무언가를 물어도 waiting for you로 표시되지 않고, 그곳에서 워크플로를 시작해도 아무것도 입력되지 않습니다. 안에서도 여전히 동작하는 <code>aubergine workflow status</code>를 실행하라고 직접 알려 주거나, 대신 New terminal 메뉴에서 에이전트를 시작하세요.</p></details>
       <details><summary>Aubergine은 무료인가요?</summary><p>네. <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">MIT 라이선스</a>로 공개된 무료 오픈 소스이며, 소스는 GitHub에 있습니다.</p></details>
     </div>
-    <p class="more-link"><a href="faq/">모든 질문 보기</a></p>
   </div>
 </section>
 
-<section class="section" id="planned" aria-labelledby="planned-h">
-  <div class="wrap">
+<section class="band band-lilac band-slim" id="planned" aria-labelledby="planned-h">
+  <div class="wrap planned-line">
     <h2 id="planned-h">계획 중인 것</h2>
-    <p class="note">멀티플레이어, 클라우드 에이전트, 승인 모드 등은 계획 중이며 아직 만들어지지 않았습니다. <a href="roadmap/">로드맵 보기</a>.</p>
+    <p>멀티플레이어, 클라우드 에이전트, 승인 모드 등은 계획 중이며 아직 만들어지지 않았습니다. <a href="roadmap/">로드맵 보기</a>.</p>
+  </div>
+</section>
+
+<section class="band band-purple" id="install" aria-labelledby="install-h">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 id="install-h">5분이면 시작합니다</h2>
+      <p class="intro">tmux 3.2 이상과 Node.js 22 이상이 설치된 macOS가 필요합니다. <code>brew install tmux node</code>로 둘 다 설치할 수 있습니다.</p>
+    </div>
+    <ol class="steps">
+      <li><h3>설치</h3><p class="cmd"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="복사됨" aria-live="polite" hidden>복사</button></p><p>또는 소스에서 pnpm으로 빌드하는 <a href="install/">설치 프로그램</a>을 사용하세요.</p></li>
+      <li><h3>시작하고 브라우저 열기</h3><p class="cmd"><code>aubergine start --open</code><button type="button" class="copy" data-copy data-copied="복사됨" aria-live="polite" hidden>복사</button></p><p>서버를 시작하고, 로그인된 상태로 브라우저를 엽니다.</p></li>
+      <li><h3>둘러보기</h3><p>빈 캔버스에서 <strong>Show me around</strong>(둘러보기)를 클릭하세요. 대역 에이전트가 있는 Demo 캔버스를 만들고 여덟 개의 짧은 단계로 안내합니다. <code>aubergine demo --remove</code>로 없앨 수 있습니다.</p></li>
+    </ol>
+    <p class="install-note">설치 프로그램은 <code>~/.aubergine</code>과 <code>aubergine</code>이라는 링크 하나만 변경합니다. sudo를 쓰지 않으며, 셸 시작 파일을 편집하지 않습니다.</p>
   </div>
 </section>
 
 </main>
 <footer class="foot">
   <div class="wrap foot-in">
+    <a class="mark" href="./"><img src="../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
     <nav aria-label="전체 페이지">
       <ul class="foot-links">
         <li><a href="./" aria-current="page">홈</a></li>
@@ -352,6 +361,7 @@ document.querySelectorAll('[data-copy]').forEach(function (button) {
   button.hidden = false;
   button.addEventListener('click', function () {
     var words = button.textContent;
+    if (!navigator.clipboard) return;
     navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
       button.textContent = button.getAttribute('data-copied');
       setTimeout(function () { button.textContent = words; }, 1600);
@@ -364,6 +374,12 @@ document.addEventListener('keydown', function (event) {
 });
 document.addEventListener('click', function (event) {
   document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+document.querySelectorAll('details.menu').forEach(function (menu) {
+  menu.addEventListener('toggle', function () {
+    if (!menu.open) return;
+    document.querySelectorAll('details.menu[open]').forEach(function (other) { if (other !== menu) other.open = false; });
+  });
 });
 </script>
 </body>

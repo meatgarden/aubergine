@@ -131,13 +131,33 @@
     "text": "tmux 3.2 o posterior, Node.js 22 o posterior",
     "from": "6fadbd03c20d"
   },
-  "home.hero.kicker": {
-    "text": "Potencia tu terminal · Gratis · Código abierto · Se ejecuta en tu ordenador",
-    "from": "a61d5f4f3b3a"
+  "home.hero.tag.lead": {
+    "text": "Potencia tu terminal",
+    "from": "eb13de4649f0"
   },
-  "home.hero.title": {
-    "text": "Todas tus terminales, una al lado de la otra. Mira qué agente <em>te necesita</em>.",
-    "from": "7be0ec221ba9"
+  "home.hero.tag.free": {
+    "text": "Gratis",
+    "from": "f411a1fb6275"
+  },
+  "home.hero.tag.open": {
+    "text": "Código abierto",
+    "from": "67a0d2e0dab4"
+  },
+  "home.hero.tag.local": {
+    "text": "Se ejecuta en tu ordenador",
+    "from": "cd90f9395587"
+  },
+  "home.hero.title.a": {
+    "text": "Todas tus terminales,",
+    "from": "8dd2aa1cda63"
+  },
+  "home.hero.title.b": {
+    "text": "una al lado de la otra.",
+    "from": "eb95eacfe17a"
+  },
+  "home.hero.title.c": {
+    "text": "Trae tus propios <em>agentes</em>.",
+    "from": "4728f2abc24b"
   },
   "home.hero.lead": {
     "text": "Aubergine pone todas tus terminales una al lado de la otra en un solo lienzo, en tu navegador. Ejecuta tantas como quieras, con los agentes y modelos que ya usas. No tiene modelo propio y nunca te pide una clave.",
@@ -155,9 +175,13 @@
     "text": "Leer el código",
     "from": "625b22ba31d0"
   },
-  "home.canvas.caption": {
-    "text": "Una ilustración, no una captura: cinco terminales en un lienzo y la que te está esperando.",
-    "from": "413e282f8a9d"
+  "home.stage.caption": {
+    "text": "Una captura real de la demo que viene con Aubergine: seis terminales en un lienzo y la que te está esperando.",
+    "from": "21a1f62e34b1"
+  },
+  "home.stage.alt": {
+    "text": "La aplicación entera: la lista de lienzos y terminales a la izquierda y seis terminales en vivo en un lienzo; una de ellas, Login bug · question, con el borde del color de la espera y el aviso waiting for you.",
+    "from": "2288db7c750f"
   },
   "home.powers.title": {
     "text": "Dale superpoderes a tus terminales",

@@ -20,8 +20,8 @@
 <link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/working-copies/">
 <link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/working-copies/">
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-<meta name="theme-color" content="#120f14" media="(prefers-color-scheme: dark)">
-<meta name="theme-color" content="#faf6f2" media="(prefers-color-scheme: light)">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F7F0E4">
 <link rel="icon" href="../../icon.svg" type="image/svg+xml">
 <link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="../../style.css">
@@ -45,7 +45,7 @@
 <a class="skip" href="#main">本文へ移動</a>
 <header class="top">
   <div class="wrap top-in">
-    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="32" height="32"><span>Aubergine</span></a>
     <nav class="nav" aria-label="ページ">
       <ul>
         <li><a href="../claude/">Claude Code</a></li>
@@ -77,9 +77,11 @@
   </div>
 </header>
 
-<div class="wrap translated">
-  <p class="note">Aubergine 本体は英語です。ボタン、メニュー、画像はすべて英語版のものです。</p>
-  <p class="note">このページは英語版から機械翻訳されています。<a href="https://github.com/thirstyeggplant/aubergine/issues">修正を送る</a>。</p>
+<div class="translated">
+  <div class="wrap translated-in">
+    <p>Aubergine 本体は英語です。ボタン、メニュー、画像はすべて英語版のものです。</p>
+    <p>このページは英語版から機械翻訳されています。<a href="https://github.com/thirstyeggplant/aubergine/issues">修正を送る</a>。</p>
+  </div>
 </div>
 <main id="main" tabindex="-1">
 <script type="application/ld+json">
@@ -185,6 +187,7 @@ aubergine copies discard api</code></pre>
 </main>
 <footer class="foot">
   <div class="wrap foot-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
     <nav aria-label="すべてのページ">
       <ul class="foot-links">
         <li><a href="../">ホーム</a></li>
@@ -210,6 +213,7 @@ document.querySelectorAll('[data-copy]').forEach(function (button) {
   button.hidden = false;
   button.addEventListener('click', function () {
     var words = button.textContent;
+    if (!navigator.clipboard) return;
     navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
       button.textContent = button.getAttribute('data-copied');
       setTimeout(function () { button.textContent = words; }, 1600);
@@ -222,6 +226,12 @@ document.addEventListener('keydown', function (event) {
 });
 document.addEventListener('click', function (event) {
   document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+document.querySelectorAll('details.menu').forEach(function (menu) {
+  menu.addEventListener('toggle', function () {
+    if (!menu.open) return;
+    document.querySelectorAll('details.menu[open]').forEach(function (other) { if (other !== menu) other.open = false; });
+  });
 });
 </script>
 </body>

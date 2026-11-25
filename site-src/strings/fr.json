@@ -131,13 +131,33 @@
     "text": "tmux 3.2 ou plus récent, Node.js 22 ou plus récent",
     "from": "6fadbd03c20d"
   },
-  "home.hero.kicker": {
-    "text": "Boostez votre terminal · Gratuite · Open source · Tourne sur votre ordinateur",
-    "from": "a61d5f4f3b3a"
+  "home.hero.tag.lead": {
+    "text": "Boostez votre terminal",
+    "from": "eb13de4649f0"
   },
-  "home.hero.title": {
-    "text": "Tous vos terminaux, côte à côte. Voyez quel agent <em>a besoin de vous</em>.",
-    "from": "7be0ec221ba9"
+  "home.hero.tag.free": {
+    "text": "Gratuite",
+    "from": "f411a1fb6275"
+  },
+  "home.hero.tag.open": {
+    "text": "Open source",
+    "from": "67a0d2e0dab4"
+  },
+  "home.hero.tag.local": {
+    "text": "Tourne sur votre ordinateur",
+    "from": "cd90f9395587"
+  },
+  "home.hero.title.a": {
+    "text": "Tous vos terminaux,",
+    "from": "8dd2aa1cda63"
+  },
+  "home.hero.title.b": {
+    "text": "côte à côte.",
+    "from": "eb95eacfe17a"
+  },
+  "home.hero.title.c": {
+    "text": "Apportez vos propres <em>agents</em>.",
+    "from": "4728f2abc24b"
   },
   "home.hero.lead": {
     "text": "Aubergine place tous vos terminaux côte à côte sur un seul canevas, dans votre navigateur. Lancez-en autant que vous voulez, avec les agents et les modèles que vous utilisez déjà. Elle n’a pas de modèle à elle et ne vous demande jamais de clé.",
@@ -155,9 +175,13 @@
     "text": "Lire le code source",
     "from": "625b22ba31d0"
   },
-  "home.canvas.caption": {
-    "text": "Une illustration, pas une capture : cinq terminaux sur un canevas, et celui qui vous attend.",
-    "from": "413e282f8a9d"
+  "home.stage.caption": {
+    "text": "Une vraie capture de la démo fournie avec Aubergine : six terminaux sur un canevas, et celui qui vous attend.",
+    "from": "21a1f62e34b1"
+  },
+  "home.stage.alt": {
+    "text": "L’application entière : la liste des canevas et des terminaux à gauche, et six terminaux en direct sur un canevas ; l’un d’eux, Login bug · question, est entouré de la couleur de l’attente et affiche waiting for you.",
+    "from": "2288db7c750f"
   },
   "home.powers.title": {
     "text": "Donnez des super-pouvoirs à vos terminaux",

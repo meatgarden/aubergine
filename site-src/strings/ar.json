@@ -131,13 +131,33 @@
     "text": "tmux 3.2 أو أحدث، Node.js 22 أو أحدث",
     "from": "6fadbd03c20d"
   },
-  "home.hero.kicker": {
-    "text": "ارتقِ بطرفيتك · مجاني · مفتوح المصدر · يعمل على حاسوبك",
-    "from": "a61d5f4f3b3a"
+  "home.hero.tag.lead": {
+    "text": "ارتقِ بطرفيتك",
+    "from": "eb13de4649f0"
   },
-  "home.hero.title": {
-    "text": "كل طرفياتك، جنبًا إلى جنب. واعرف أي وكيل <em>يحتاج إليك</em>.",
-    "from": "7be0ec221ba9"
+  "home.hero.tag.free": {
+    "text": "مجاني",
+    "from": "f411a1fb6275"
+  },
+  "home.hero.tag.open": {
+    "text": "مفتوح المصدر",
+    "from": "67a0d2e0dab4"
+  },
+  "home.hero.tag.local": {
+    "text": "يعمل على حاسوبك",
+    "from": "cd90f9395587"
+  },
+  "home.hero.title.a": {
+    "text": "كل طرفياتك،",
+    "from": "8dd2aa1cda63"
+  },
+  "home.hero.title.b": {
+    "text": "جنبًا إلى جنب.",
+    "from": "eb95eacfe17a"
+  },
+  "home.hero.title.c": {
+    "text": "أحضِر <em>وكلاءك</em> الخاصين.",
+    "from": "4728f2abc24b"
   },
   "home.hero.lead": {
     "text": "يضع Aubergine كل طرفياتك جنبًا إلى جنب على لوحة واحدة في متصفحك. شغّل منها ما شئت، بالوكلاء والنماذج التي تستخدمها أصلًا. ليس له نموذج خاص به، ولا يطلب منك مفتاحًا أبدًا.",
@@ -155,9 +175,13 @@
     "text": "اقرأ الشيفرة المصدرية",
     "from": "625b22ba31d0"
   },
-  "home.canvas.caption": {
-    "text": "رسم توضيحي لا لقطة حقيقية: خمس طرفيات على لوحة، والطرفية التي تنتظرك.",
-    "from": "413e282f8a9d"
+  "home.stage.caption": {
+    "text": "لقطة حقيقية من العرض التجريبي المرفق مع Aubergine: ست طرفيات على لوحة واحدة، والطرفية التي تنتظرك.",
+    "from": "21a1f62e34b1"
+  },
+  "home.stage.alt": {
+    "text": "التطبيق كاملًا: قائمة اللوحات والطرفيات على اليسار، وست طرفيات حية على لوحة؛ إحداها، Login bug · question، محاطة بلون الانتظار وتعرض waiting for you.",
+    "from": "2288db7c750f"
   },
   "home.powers.title": {
     "text": "امنح طرفياتك قوى خارقة",

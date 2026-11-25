@@ -131,13 +131,33 @@
     "text": "tmux 3.2 atau lebih baru, Node.js 22 atau lebih baru",
     "from": "6fadbd03c20d"
   },
-  "home.hero.kicker": {
-    "text": "Perkuat terminal Anda · Gratis · Open source · Berjalan di komputer Anda",
-    "from": "a61d5f4f3b3a"
+  "home.hero.tag.lead": {
+    "text": "Perkuat terminal Anda",
+    "from": "eb13de4649f0"
   },
-  "home.hero.title": {
-    "text": "Semua terminal Anda, berjajar. Lihat agen mana yang <em>butuh Anda</em>.",
-    "from": "7be0ec221ba9"
+  "home.hero.tag.free": {
+    "text": "Gratis",
+    "from": "f411a1fb6275"
+  },
+  "home.hero.tag.open": {
+    "text": "Open source",
+    "from": "67a0d2e0dab4"
+  },
+  "home.hero.tag.local": {
+    "text": "Berjalan di komputer Anda",
+    "from": "cd90f9395587"
+  },
+  "home.hero.title.a": {
+    "text": "Semua terminal Anda,",
+    "from": "8dd2aa1cda63"
+  },
+  "home.hero.title.b": {
+    "text": "berjajar.",
+    "from": "eb95eacfe17a"
+  },
+  "home.hero.title.c": {
+    "text": "Bawa <em>agen</em> Anda sendiri.",
+    "from": "4728f2abc24b"
   },
   "home.hero.lead": {
     "text": "Aubergine menempatkan semua terminal Anda berdampingan di satu kanvas di browser. Jalankan sebanyak yang Anda mau, dengan agen dan model yang sudah Anda pakai. Aubergine tidak punya model sendiri dan tidak pernah meminta kunci.",
@@ -155,9 +175,13 @@
     "text": "Baca kode sumbernya",
     "from": "625b22ba31d0"
   },
-  "home.canvas.caption": {
-    "text": "Ilustrasi, bukan tangkapan layar: lima terminal di sebuah kanvas, dan satu yang menunggu Anda.",
-    "from": "413e282f8a9d"
+  "home.stage.caption": {
+    "text": "Tangkapan layar asli dari demo yang disertakan Aubergine: enam terminal di satu kanvas, dan satu yang menunggu Anda.",
+    "from": "21a1f62e34b1"
+  },
+  "home.stage.alt": {
+    "text": "Seluruh aplikasi: daftar kanvas dan terminal di kiri, dan enam terminal aktif di sebuah kanvas; salah satunya, Login bug · question, diberi garis berwarna menunggu dan bertuliskan waiting for you.",
+    "from": "2288db7c750f"
   },
   "home.powers.title": {
     "text": "Beri terminal Anda kekuatan super",

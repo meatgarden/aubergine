@@ -93,95 +93,95 @@
 </script>
 
 <section class="hero" aria-labelledby="hero-h">
-  <div class="wrap hero-in">
-    <div>
-      <p class="kicker">{{home.hero.kicker}}</p>
-      <h1 id="hero-h">{{home.hero.title}}</h1>
-      <p class="lead">{{home.hero.lead}}</p>
-      <p class="cmd"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="{{attr:site.copied}}" aria-live="polite" hidden>{{site.copy}}</button></p>
-      <p class="after">{{home.hero.after}}</p>
-      <p class="actions"><a class="button primary" href="/install/">{{home.hero.install}}</a><a class="button" href="https://github.com/thirstyeggplant/aubergine">{{home.hero.source}}</a></p>
-    </div>
-    <figure class="canvas">
-      <div class="canvas-field" dir="ltr" aria-hidden="true">
-        <div class="term term-1 waits"><div class="term-bar"><span class="term-name">claude · fix-login</span><span class="term-state">waiting for you</span></div>
-<pre><i>?</i> Two files use the old check.
-  Change both, or only /auth?
-<i>›</i> </pre></div>
-        <div class="term term-2 working"><div class="term-bar"><span class="term-name">codex · migrate-db</span><span class="term-state">working</span></div>
-<pre>› step 3 of 5
-<b>✓</b> schema read
-<b>✓</b> 41 tests pass
-› writing the migration…</pre></div>
-        <div class="term term-3"><div class="term-bar"><span class="term-name">zsh · tests</span><span class="term-state">running</span></div>
-<pre><b>$</b> pnpm test --watch
-<b>✓</b> 212 passed
-  watching for changes…</pre></div>
-        <div class="term term-4 done"><div class="term-bar"><span class="term-name">claude · release-notes</span><span class="term-state">finished</span></div>
-<pre><b>✓</b> notes written
-  handed in: 6 changes</pre></div>
-        <div class="term term-5"><div class="term-bar"><span class="term-name">zsh · api</span><span class="term-state">idle</span></div>
-<pre><b>$</b> git status
-  nothing to commit
-<b>$</b> </pre></div>
-      </div>
-      <figcaption>{{home.canvas.caption}}</figcaption>
-    </figure>
-  </div>
-</section>
-
-<section class="section" id="powers" aria-labelledby="powers-h">
   <div class="wrap">
-    <h2 id="powers-h">{{home.powers.title}}</h2>
-    <p class="intro">{{home.powers.lead}}</p>
-    <ul class="rows across">
-      <li><h3>{{home.powers.fast.name}}</h3><p>{{home.powers.fast.text}}</p></li>
-      <li><h3>{{home.powers.dx.name}}</h3><p>{{home.powers.dx.text}}</p></li>
-      <li><h3>{{home.powers.own.name}}</h3><p>{{home.powers.own.text}}</p></li>
+    <ul class="kicker">
+      <li>{{home.hero.tag.lead}}</li>
+      <li>{{home.hero.tag.free}}</li>
+      <li>{{home.hero.tag.open}}</li>
+      <li>{{home.hero.tag.local}}</li>
     </ul>
+    <h1 id="hero-h"><span class="line">{{home.hero.title.a}}</span> <span class="line">{{home.hero.title.b}}</span> <span class="line">{{home.hero.title.c}}</span></h1>
+    <div class="hero-under">
+      <p class="lead">{{home.hero.lead}}</p>
+      <div class="hero-do">
+        <p class="cmd"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="{{attr:site.copied}}" aria-live="polite" hidden>{{site.copy}}</button></p>
+        <p class="actions"><a class="button" href="/install/">{{home.hero.install}}</a><a class="button button-quiet" href="https://github.com/thirstyeggplant/aubergine">{{home.hero.source}}</a></p>
+        <p class="after">{{home.hero.after}}</p>
+      </div>
+    </div>
   </div>
 </section>
 
-<section class="section" id="see" aria-labelledby="see-h">
+<section class="stage">
   <div class="wrap">
-    <h2 id="see-h">{{home.see.title}}</h2>
-    <p class="intro">{{home.see.intro}}</p>
+    <figure class="frame frame-big">
+      <div class="frame-bar" dir="ltr" aria-hidden="true"><i></i><i></i><i></i><span>localhost · Aubergine</span></div>
+      <a href="/screenshots/canvas.png" class="frame-pic"><img src="/screenshots/canvas.png" width="3840" height="2400" alt="{{attr:home.stage.alt}}"></a>
+    </figure>
+    <p class="stage-caption">{{home.stage.caption}}</p>
+  </div>
+</section>
+
+<section class="band band-cream" id="powers" aria-labelledby="powers-h">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 id="powers-h">{{home.powers.title}}</h2>
+      <p class="intro">{{home.powers.lead}}</p>
+    </div>
+    <ol class="powers">
+      <li><span class="num" aria-hidden="true">01</span><h3>{{home.powers.fast.name}}</h3><p>{{home.powers.fast.text}}</p></li>
+      <li><span class="num" aria-hidden="true">02</span><h3>{{home.powers.dx.name}}</h3><p>{{home.powers.dx.text}}</p></li>
+      <li><span class="num" aria-hidden="true">03</span><h3>{{home.powers.own.name}}</h3><p>{{home.powers.own.text}}</p></li>
+    </ol>
+  </div>
+</section>
+
+<section class="band band-lilac" id="see" aria-labelledby="see-h">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 id="see-h">{{home.see.title}}</h2>
+      <p class="intro">{{home.see.intro}}</p>
+    </div>
     <div class="shows">
       <div class="show">
-        <div><h3>{{home.see.canvas.claim}}</h3><p>{{home.see.canvas.text}}</p></div>
-        <figure class="pic"><a href="/screenshots/list.png"><img src="/screenshots/list.png" width="1440" height="1008" loading="lazy" alt="{{attr:home.see.canvas.alt}}"></a><figcaption>{{home.see.canvas.caption}}</figcaption></figure>
+        <div class="show-words"><h3>{{home.see.canvas.claim}}</h3><p>{{home.see.canvas.text}}</p></div>
+        <figure class="frame"><a href="/screenshots/list.png" class="frame-pic"><img src="/screenshots/list.png" width="1440" height="1008" loading="lazy" alt="{{attr:home.see.canvas.alt}}"></a><figcaption>{{home.see.canvas.caption}}</figcaption></figure>
+      </div>
+      <div class="show show-flip">
+        <div class="show-words"><h3><span class="waits">{{home.see.waits.claim}}</span></h3><p>{{home.see.waits.text}}</p></div>
+        <figure class="frame"><a href="/screenshots/waiting.png" class="frame-pic"><img src="/screenshots/waiting.png" width="1496" height="600" loading="lazy" alt="{{attr:home.see.waits.alt}}"></a><figcaption>{{home.see.waits.caption}}</figcaption></figure>
       </div>
       <div class="show">
-        <div><h3>{{home.see.waits.claim}}</h3><p>{{home.see.waits.text}}</p></div>
-        <figure class="pic"><a href="/screenshots/waiting.png"><img src="/screenshots/waiting.png" width="1496" height="600" loading="lazy" alt="{{attr:home.see.waits.alt}}"></a><figcaption>{{home.see.waits.caption}}</figcaption></figure>
-      </div>
-      <div class="show">
-        <div><h3>{{home.see.focus.claim}}</h3><p>{{home.see.focus.text}}</p></div>
-        <figure class="pic"><a href="/screenshots/focus-part.png"><img src="/screenshots/focus-part.png" width="1344" height="1172" loading="lazy" alt="{{attr:home.see.focus.alt}}"></a><figcaption>{{home.see.focus.caption}}</figcaption></figure>
+        <div class="show-words"><h3>{{home.see.focus.claim}}</h3><p>{{home.see.focus.text}}</p></div>
+        <figure class="frame"><a href="/screenshots/focus-part.png" class="frame-pic"><img src="/screenshots/focus-part.png" width="1344" height="1172" loading="lazy" alt="{{attr:home.see.focus.alt}}"></a><figcaption>{{home.see.focus.caption}}</figcaption></figure>
       </div>
     </div>
   </div>
 </section>
 
-<section class="section" id="agents" aria-labelledby="agents-h">
+<section class="band band-dark" id="agents" aria-labelledby="agents-h">
   <div class="wrap">
-    <h2 id="agents-h">{{home.agents.title}}</h2>
-    <p class="intro">{{home.agents.intro}}</p>
-    <ul class="rows">
-      <li><h3><a class="row-link" href="/claude/">Claude Code</a></h3><p>{{home.agents.claude}}</p></li>
-      <li><h3><a class="row-link" href="/chatgpt/">{{home.agents.codex.name}}</a></h3><p>{{home.agents.codex}}</p></li>
-      <li><h3><a class="row-link" href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/for-agents.md">{{home.agents.other.name}}</a></h3><p>{{home.agents.other}}</p></li>
+    <div class="section-head">
+      <h2 id="agents-h">{{home.agents.title}}</h2>
+      <p class="intro">{{home.agents.intro}}</p>
+    </div>
+    <ul class="agents">
+      <li><h3><a href="/claude/">Claude Code</a></h3><p>{{home.agents.claude}}</p></li>
+      <li><h3><a href="/chatgpt/">{{home.agents.codex.name}}</a></h3><p>{{home.agents.codex}}</p></li>
+      <li><h3><a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/for-agents.md">{{home.agents.other.name}}</a></h3><p>{{home.agents.other}}</p></li>
     </ul>
   </div>
 </section>
 
-<section class="section" id="features" aria-labelledby="features-h">
+<section class="band band-cream" id="features" aria-labelledby="features-h">
   <div class="wrap">
-    <h2 id="features-h">{{home.built.title}}</h2>
-    <p class="intro">{{home.built.intro}}</p>
-    <ul class="rows">
+    <div class="section-head">
+      <h2 id="features-h">{{home.built.title}}</h2>
+      <p class="intro">{{home.built.intro}}</p>
+    </div>
+    <ul class="built">
       <li><h3>{{home.built.canvas.name}}</h3><p>{{home.built.canvas.text}}</p></li>
-      <li><h3>{{home.built.waiting.name}}</h3><p>{{home.built.waiting.text}}</p></li>
+      <li><h3><span class="waits">{{home.built.waiting.name}}</span></h3><p>{{home.built.waiting.text}}</p></li>
       <li><h3>{{home.built.queue.name}}</h3><p>{{home.built.queue.text}}</p></li>
       <li><h3>{{home.built.copies.name}}</h3><p>{{home.built.copies.text}}</p></li>
       <li><h3>{{home.built.projects.name}}</h3><p>{{home.built.projects.text}}</p></li>
@@ -194,35 +194,27 @@
   </div>
 </section>
 
-<section class="section" id="trust" aria-labelledby="trust-h">
+<section class="band band-lilac" id="trust" aria-labelledby="trust-h">
   <div class="wrap">
-    <h2 id="trust-h">{{home.trust.title}}</h2>
-    <ul class="rows">
+    <div class="section-head">
+      <h2 id="trust-h">{{home.trust.title}}</h2>
+      <p class="intro"><a class="onward" href="/security/">{{home.trust.more}}</a></p>
+    </div>
+    <ul class="pairs">
       <li><h3>{{home.trust.local.name}}</h3><p>{{home.trust.local.text}}</p></li>
       <li><h3>{{home.trust.outlive.name}}</h3><p>{{home.trust.outlive.text}}</p></li>
       <li><h3>{{home.trust.nomodel.name}}</h3><p>{{home.trust.nomodel.text}}</p></li>
       <li><h3>{{home.trust.decide.name}}</h3><p>{{home.trust.decide.text}}</p></li>
     </ul>
-    <p class="more-link"><a href="/security/">{{home.trust.more}}</a></p>
   </div>
 </section>
 
-<section class="section" id="install" aria-labelledby="install-h">
+<section class="band band-cream" id="faq" aria-labelledby="faq-h">
   <div class="wrap">
-    <h2 id="install-h">{{home.install.title}}</h2>
-    <p class="intro">{{home.install.intro}}</p>
-    <ol class="steps">
-      <li><h3>{{home.install.s1.title}}</h3><p class="cmd"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="{{attr:site.copied}}" aria-live="polite" hidden>{{site.copy}}</button></p><p>{{home.install.s1.text}}</p></li>
-      <li><h3>{{home.install.s2.title}}</h3><p class="cmd"><code>aubergine start --open</code><button type="button" class="copy" data-copy data-copied="{{attr:site.copied}}" aria-live="polite" hidden>{{site.copy}}</button></p><p>{{home.install.s2.text}}</p></li>
-      <li><h3>{{home.install.s3.title}}</h3><p>{{home.install.s3.text}}</p></li>
-    </ol>
-    <p class="note more-link">{{home.install.note}}</p>
-  </div>
-</section>
-
-<section class="section" id="faq" aria-labelledby="faq-h">
-  <div class="wrap">
-    <h2 id="faq-h">{{home.faq.title}}</h2>
+    <div class="section-head">
+      <h2 id="faq-h">{{home.faq.title}}</h2>
+      <p class="intro"><a class="onward" href="/faq/">{{home.faq.more}}</a></p>
+    </div>
     <div class="questions">
       <details><summary>{{home.faq.what.q}}</summary><p>{{home.faq.what.a}}</p></details>
       <details><summary>{{home.faq.send.q}}</summary><p>{{home.faq.send.a}}</p></details>
@@ -230,13 +222,27 @@
       <details><summary>{{home.faq.byhand.q}}</summary><p>{{home.faq.byhand.a}}</p></details>
       <details><summary>{{home.faq.free.q}}</summary><p>{{home.faq.free.a}}</p></details>
     </div>
-    <p class="more-link"><a href="/faq/">{{home.faq.more}}</a></p>
   </div>
 </section>
 
-<section class="section" id="planned" aria-labelledby="planned-h">
-  <div class="wrap">
+<section class="band band-lilac band-slim" id="planned" aria-labelledby="planned-h">
+  <div class="wrap planned-line">
     <h2 id="planned-h">{{home.planned.title}}</h2>
-    <p class="note">{{home.planned.line}}</p>
+    <p>{{home.planned.line}}</p>
+  </div>
+</section>
+
+<section class="band band-purple" id="install" aria-labelledby="install-h">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 id="install-h">{{home.install.title}}</h2>
+      <p class="intro">{{home.install.intro}}</p>
+    </div>
+    <ol class="steps">
+      <li><h3>{{home.install.s1.title}}</h3><p class="cmd"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="{{attr:site.copied}}" aria-live="polite" hidden>{{site.copy}}</button></p><p>{{home.install.s1.text}}</p></li>
+      <li><h3>{{home.install.s2.title}}</h3><p class="cmd"><code>aubergine start --open</code><button type="button" class="copy" data-copy data-copied="{{attr:site.copied}}" aria-live="polite" hidden>{{site.copy}}</button></p><p>{{home.install.s2.text}}</p></li>
+      <li><h3>{{home.install.s3.title}}</h3><p>{{home.install.s3.text}}</p></li>
+    </ol>
+    <p class="install-note">{{home.install.note}}</p>
   </div>
 </section>
