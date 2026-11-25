@@ -12,9 +12,11 @@
 
 <img src="../../site/screenshots/canvas.png" alt="Aubergine का कैनवस: बाईं ओर एक कॉलम में तीन कैनवस, टर्मिनलों की सूची जिसमें हर एक क्या कर रहा है, और छह लाइव टर्मिनल, चार अपने-अपने रंगों में, एक जवाब का इंतज़ार करता हुआ।">
 
-<sub>Aubergine के साथ आने वाला डेमो: नकली एजेंट, असली नहीं। ज़्यादा <a href="../../README.md#what-it-looks-like">What it looks like</a> में।</sub>
+<sub>Aubergine के साथ आने वाला डेमो: नकली एजेंट, असली नहीं। ज़्यादा <a href="#what-it-looks-like">यह दिखता कैसा है</a> में।</sub>
 
 ---
+
+<a id="what-it-looks-like"></a>
 
 ## यह दिखता कैसा है
 

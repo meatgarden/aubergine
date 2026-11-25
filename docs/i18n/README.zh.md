@@ -12,9 +12,11 @@
 
 <img src="../../site/screenshots/canvas.png" alt="Aubergine 画布：左侧一列三张画布，终端列表注明每个终端在做什么，以及六个实时终端，其中四个有各自的颜色，一个在等待回答。">
 
-<sub>Aubergine 自带的演示：用的是替身智能体，不是真的智能体。更多内容见<a href="#它是什么样子">它是什么样子</a>。</sub>
+<sub>Aubergine 自带的演示：用的是替身智能体，不是真的智能体。更多内容见<a href="#what-it-looks-like">它是什么样子</a>。</sub>
 
 ---
+
+<a id="what-it-looks-like"></a>
 
 ## 它是什么样子
 

@@ -12,9 +12,11 @@
 
 <img src="../../site/screenshots/canvas.png" alt="Kanvas Aubergine: tiga kanvas dalam satu kolom di kiri, daftar terminal beserta apa yang sedang dikerjakan masing-masing, dan enam terminal yang hidup, empat dengan warnanya sendiri, satu menunggu jawaban.">
 
-<sub>Demo yang disertakan dengan Aubergine: agen pengganti, bukan agen sungguhan. Selengkapnya di <a href="#seperti-apa-tampilannya">Seperti apa tampilannya</a>.</sub>
+<sub>Demo yang disertakan dengan Aubergine: agen pengganti, bukan agen sungguhan. Selengkapnya di <a href="#what-it-looks-like">Seperti apa tampilannya</a>.</sub>
 
 ---
+
+<a id="what-it-looks-like"></a>
 
 ## Seperti apa tampilannya
 

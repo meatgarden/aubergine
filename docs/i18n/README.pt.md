@@ -12,9 +12,11 @@
 
 <img src="../../site/screenshots/canvas.png" alt="O canvas do Aubergine: três canvases em uma coluna à esquerda, a lista de terminais com o que cada um está fazendo, e seis terminais ao vivo, quatro com cores próprias e um esperando uma resposta.">
 
-<sub>A demo que vem com o Aubergine: agentes simulados, nenhum de verdade. Mais em <a href="#como-é">Como é</a>.</sub>
+<sub>A demo que vem com o Aubergine: agentes simulados, nenhum de verdade. Mais em <a href="#what-it-looks-like">Como é</a>.</sub>
 
 ---
+
+<a id="what-it-looks-like"></a>
 
 ## Como é
 

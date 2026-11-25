@@ -12,9 +12,11 @@
 
 <img src="../../site/screenshots/canvas.png" alt="El lienzo de Aubergine: tres lienzos en una columna a la izquierda, la lista de terminales con lo que hace cada una, y seis terminales en vivo, cuatro con colores propios y una esperando una respuesta.">
 
-<sub>La demo que viene con Aubergine: agentes simulados, ninguno real. Más en <a href="#cómo-se-ve">Cómo se ve</a>.</sub>
+<sub>La demo que viene con Aubergine: agentes simulados, ninguno real. Más en <a href="#what-it-looks-like">Cómo se ve</a>.</sub>
 
 ---
+
+<a id="what-it-looks-like"></a>
 
 ## Cómo se ve
 

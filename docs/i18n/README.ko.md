@@ -12,9 +12,11 @@
 
 <img src="../../site/screenshots/canvas.png" alt="Aubergine 캔버스: 왼쪽 열에 캔버스 세 개, 각 터미널이 무엇을 하고 있는지 보여 주는 터미널 목록, 그리고 실시간 터미널 여섯 개. 그중 네 개는 저마다의 색이 있고, 하나는 답을 기다리고 있습니다.">
 
-<sub>Aubergine에 포함된 데모입니다. 진짜 에이전트가 아닌 대역 에이전트입니다. 더 많은 화면은 <a href="#실제-모습">실제 모습</a>에 있습니다.</sub>
+<sub>Aubergine에 포함된 데모입니다. 진짜 에이전트가 아닌 대역 에이전트입니다. 더 많은 화면은 <a href="#what-it-looks-like">실제 모습</a>에 있습니다.</sub>
 
 ---
+
+<a id="what-it-looks-like"></a>
 
 ## 실제 모습
 
