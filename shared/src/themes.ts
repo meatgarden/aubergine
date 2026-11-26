@@ -107,8 +107,8 @@ export function resolveColors(raw: unknown, themeId: ColorThemeId): ResolvedColo
   if (raw === undefined || raw === null) return { colors, problems };
   if (!isRecord(raw)) return { colors, problems: ['appearance.colors is not a list of colors by name: it is left out.'] };
   const known = new Set<string>(THEME_COLORS);
-  const take = (entries: Record<string, unknown>, where: string): void => {
-    for (const [name, value] of Object.entries(entries)) {
+  const take = (entries: [string, unknown][], where: string): void => {
+    for (const [name, value] of entries) {
       if (!known.has(name)) {
         problems.push(`${where}: "${plain(name)}" is not a color that can be set. It is skipped.`);
         continue;
@@ -121,11 +121,12 @@ export function resolveColors(raw: unknown, themeId: ColorThemeId): ResolvedColo
       colors[name as ThemeColor] = hex;
     }
   };
-  const forAll: Record<string, unknown> = {};
+  // Kept as lists of pairs, not copied into an object: a key such as `__proto__` would otherwise vanish unreported.
+  const forAll: [string, unknown][] = [];
   const forThemes: [string, unknown][] = [];
   for (const [key, value] of Object.entries(raw)) {
     if (key.startsWith('[') && key.endsWith(']')) forThemes.push([key.slice(1, -1), value]);
-    else forAll[key] = value;
+    else forAll.push([key, value]);
   }
   take(forAll, 'appearance.colors');
   for (const [id, value] of forThemes) {
@@ -138,7 +139,7 @@ export function resolveColors(raw: unknown, themeId: ColorThemeId): ResolvedColo
       continue;
     }
     // Checked whichever theme is asked about, so that a wrong entry is said once and not only when its theme is drawn.
-    if (id === themeId) take(value, `appearance.colors, [${id}]`);
+    if (id === themeId) take(Object.entries(value), `appearance.colors, [${id}]`);
     else resolveInto(value, `appearance.colors, [${id}]`, known, problems);
   }
   return { colors, problems };

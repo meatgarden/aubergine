@@ -27,6 +27,7 @@ import { CanvasChanges, ChangeEvent } from './events';
 import { Id } from './ids';
 import { FieldsInput } from './fields';
 import { Settings, ThemeSetting } from './settings';
+import { CursorStyle, DarkThemeId, LightThemeId } from './themes';
 
 /**
  * The wire protocol between the browser and the daemon. Bump the version and
@@ -156,9 +157,45 @@ export const DesktopSettingsAnswer = z.object({ openNew: z.boolean().describe('N
 export type DesktopSettingsAnswer = z.infer<typeof DesktopSettingsAnswer>;
 export const ChangeDesktopSettingsRequest = z.object({ openNew: z.boolean().describe('Whether new terminals made in the page also open on the desktop.') });
 export type ChangeDesktopSettingsRequest = z.infer<typeof ChangeDesktopSettingsRequest>;
-export const AppearanceAnswer = z.object({ theme: ThemeSetting.describe('`light`, `dark`, or `system` for whichever the system is set to.') });
+/** What the settings say about how the page looks, after a change. */
+export const AppearanceAnswer = z.object({
+  theme: ThemeSetting.describe('`light`, `dark`, or `system` for whichever the system is set to.'),
+  light: LightThemeId.describe('The color theme drawn when the page is light.'),
+  dark: DarkThemeId.describe('The color theme drawn when the page is dark.'),
+  font: z
+    .object({
+      family: z.string().describe("The font-family list for a terminal's text."),
+      size: z.number().int().describe("The size of a terminal's text, in pixels."),
+    })
+    .describe("A terminal's font."),
+  cursor: CursorStyle.describe("The shape of a terminal's cursor: `block`, `bar` or `underline`."),
+  cursorBlink: z.boolean().describe("Whether a terminal's cursor blinks."),
+});
 export type AppearanceAnswer = z.infer<typeof AppearanceAnswer>;
-export const ChangeAppearanceRequest = z.object({ theme: ThemeSetting.describe('`light`, `dark`, or `system` to match the system.') });
+/**
+ * A font-family list as a request may write it: one line, trimmed, no control characters, and none of `;{}<>`,
+ * since the browser puts it into a CSS font-family.
+ */
+export const FontFamilyChoice = z
+  .string()
+  .trim()
+  .min(1)
+  .max(300)
+  // eslint-disable-next-line no-control-regex -- control characters are what is refused
+  .regex(/^[^\u0000-\u001f\u007f-\u009f\u2028\u2029;{}<>]*$/, 'A font-family list is one line, without control characters or any of ; { } < >.');
+/**
+ * A change of how the page looks. Every field may be left out, and none has a default: what is not sent stays as
+ * it was in the settings file.
+ */
+export const ChangeAppearanceRequest = z.object({
+  theme: ThemeSetting.optional().describe('`light`, `dark`, or `system` to match the system.'),
+  light: LightThemeId.optional().describe('The color theme to draw when the page is light: one whose kind is light.'),
+  dark: DarkThemeId.optional().describe('The color theme to draw when the page is dark: one whose kind is dark.'),
+  fontSize: z.number().int().min(8).max(32).optional().describe("The size of a terminal's text, in pixels, from 8 to 32."),
+  fontFamily: FontFamilyChoice.optional().describe("The font-family list for a terminal's text: one line of at most 300 characters, without control characters or any of `;{}<>`."),
+  cursor: CursorStyle.optional().describe("The shape of a terminal's cursor: `block`, `bar` or `underline`."),
+  cursorBlink: z.boolean().optional().describe("Whether a terminal's cursor blinks."),
+});
 export type ChangeAppearanceRequest = z.infer<typeof ChangeAppearanceRequest>;
 
 export const CreateSessionRequest = z.object({

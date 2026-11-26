@@ -1,6 +1,6 @@
 import { foldMap, mapFolded } from './map-fold';
 import { canvasColumnFolded, canvasView, nextCanvasView, setCanvasColumnFolded, setCanvasView } from './canvas-view';
-import { COMMAND_IDS, THEMES, THEME_WORDS, demoOf, sortedCanvases, type CommandId, type Session } from '@aubergine/shared';
+import { COLOR_THEMES, COMMAND_IDS, THEMES, THEME_WORDS, demoOf, sortedCanvases, type CommandId, type Session } from '@aubergine/shared';
 import { chooseTheme } from './theme';
 import { openOnDesktop } from './desktop';
 import { canvasHref, openInNewTab, terminalHref } from './address';
@@ -942,6 +942,24 @@ export const COMMANDS: readonly Command[] = [
     group: 'View',
     available: always,
     run: () => chooseTheme(theme),
+  })),
+  // PLACEHOLDER (server-side stage of color themes): the web UI for these is still to be written.
+  {
+    id: 'theme.choose',
+    title: 'Choose a color theme…',
+    description: 'Opens Settings, where the color theme of the light and the dark page is chosen.',
+    group: 'View',
+    available: always,
+    run: (state) => state.panel !== 'settings' && state.togglePanel('settings'),
+  },
+  ...COLOR_THEMES.map((theme): Command => ({
+    id: `theme.use.${theme.id}` as const,
+    title: `Color theme: ${theme.name}`,
+    description: `Draws the ${theme.kind} page in ${theme.name}. Kept in the settings file.`,
+    group: 'View',
+    available: always,
+    // TODO(color themes, web): write appearance.${theme.kind} through ownApi and show the theme; does nothing yet.
+    run: () => {},
   })),
   {
     id: 'help.show',

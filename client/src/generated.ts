@@ -1579,12 +1579,39 @@ export type ChangeDesktopSettingsResult = {
 
 export type ChangeAppearanceBody = {
   /** `light`, `dark`, or `system` to match the system. */
-  theme: "light" | "dark" | "system";
+  theme?: "light" | "dark" | "system";
+  /** The color theme to draw when the page is light: one whose kind is light. */
+  light?: "light" | "high-contrast-light" | "solarized-light" | "gruvbox-light";
+  /** The color theme to draw when the page is dark: one whose kind is dark. */
+  dark?: "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula";
+  /** The size of a terminal's text, in pixels, from 8 to 32. */
+  fontSize?: number;
+  /** The font-family list for a terminal's text: one line of at most 300 characters, without control characters or any of `;{}<>`. */
+  fontFamily?: string;
+  /** The shape of a terminal's cursor: `block`, `bar` or `underline`. */
+  cursor?: "block" | "bar" | "underline";
+  /** Whether a terminal's cursor blinks. */
+  cursorBlink?: boolean;
 };
 
 export type ChangeAppearanceResult = {
   /** `light`, `dark`, or `system` for whichever the system is set to. */
   theme: "light" | "dark" | "system";
+  /** The color theme drawn when the page is light. */
+  light: "light" | "high-contrast-light" | "solarized-light" | "gruvbox-light";
+  /** The color theme drawn when the page is dark. */
+  dark: "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula";
+  /** A terminal's font. */
+  font: {
+    /** The font-family list for a terminal's text. */
+    family: string;
+    /** The size of a terminal's text, in pixels. */
+    size: number;
+  };
+  /** The shape of a terminal's cursor: `block`, `bar` or `underline`. */
+  cursor: "block" | "bar" | "underline";
+  /** Whether a terminal's cursor blinks. */
+  cursorBlink: boolean;
 };
 
 export type AppendNoteBody = {
@@ -10859,7 +10886,7 @@ export interface Client {
    */
   changeDesktopSettings(args: { body: ChangeDesktopSettingsBody } & CallOptions): Promise<ChangeDesktopSettingsResult>;
   /**
-   * Choose how the page looks: light, dark, or matching the system.
+   * Choose how the page looks: light, dark or matching the system, each one's color theme, a terminal's font and cursor.
    *
    * `PUT /v1/settings/appearance`. Signed-in browser only: no API token may call this.
    */

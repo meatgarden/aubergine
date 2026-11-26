@@ -36,7 +36,7 @@ How to create a token, what the scopes mean, the limits and the activity log are
 | [`POST /v1/sessions/{sessionId}/show`](#showsession) | Bring a session up in an open browser | `sessions:write` |
 | [`POST /v1/sessions/{sessionId}/desktop`](#opensessionondesktop) | Open a session in the owner's terminal application | browser only |
 | [`PUT /v1/settings/desktop`](#changedesktopsettings) | Say whether new terminals made in the page also open on the desktop | browser only |
-| [`PUT /v1/settings/appearance`](#changeappearance) | Choose how the page looks: light, dark, or matching the system | browser only |
+| [`PUT /v1/settings/appearance`](#changeappearance) | Choose how the page looks: light, dark or matching the system, each one's color theme, a terminal's font and cursor | browser only |
 | [`POST /v1/sessions/{sessionId}/notes`](#appendnote) | Add an entry to a session's note log | session's own token, or `notes:write` |
 | [`PATCH /v1/canvases/{canvasId}/nodes/{nodeId}`](#updatenode) | Move, resize or color a node | `canvases:write` |
 | [`POST /v1/canvases/{canvasId}/frames`](#createframe) | Add a frame | `canvases:write` |
@@ -2156,9 +2156,9 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 
 ### changeAppearance
 
-`PUT /v1/settings/appearance`: Choose how the page looks: light, dark, or matching the system.
+`PUT /v1/settings/appearance`: Choose how the page looks: light, dark or matching the system, each one's color theme, a terminal's font and cursor.
 
-For the owner only: no token and no session can do this, whatever its scopes. It writes one key, `theme`, into the settings file and leaves the rest of the file as it was. Every browser has the choice from its next load.
+For the owner only: no token and no session can do this, whatever its scopes. It writes the keys that are sent, and only those: `theme`, `appearance.light`, `appearance.dark`, `appearance.cursor`, `appearance.cursorBlink`, `font.family` and `font.size`; the rest of the settings file stays as it was, and a body that sends none of them changes nothing and answers what the file says. None of them names anything that is run. `appearance.colors`, colors set over a theme, is written by hand in the file and changed by no route. Every browser has the choice from its next load.
 
 For the signed-in browser only. No API token may call this, whatever its scopes.
 
@@ -2166,7 +2166,13 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 
 | Field | Type | Required | |
 |---|---|---|---|
-| `theme` | `"light" \| "dark" \| "system"` | yes | `light`, `dark`, or `system` to match the system. |
+| `theme` | `"light" \| "dark" \| "system"` | no | `light`, `dark`, or `system` to match the system. |
+| `light` | `"light" \| "high-contrast-light" \| "solarized-light" \| "gruvbox-light"` | no | The color theme to draw when the page is light: one whose kind is light. |
+| `dark` | `"dark" \| "high-contrast-dark" \| "solarized-dark" \| "gruvbox-dark" \|…` | no | The color theme to draw when the page is dark: one whose kind is dark. |
+| `fontSize` | `number` | no | The size of a terminal's text, in pixels, from 8 to 32. |
+| `fontFamily` | `string` | no | The font-family list for a terminal's text: one line of at most 300 characters, without control characters or any of `;{}<>`. |
+| `cursor` | `"block" \| "bar" \| "underline"` | no | The shape of a terminal's cursor: `block`, `bar` or `underline`. |
+| `cursorBlink` | `boolean` | no | Whether a terminal's cursor blinks. |
 
 **Answer** `200`:
 
@@ -2174,6 +2180,21 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 {
   /** `light`, `dark`, or `system` for whichever the system is set to. */
   theme: "light" | "dark" | "system";
+  /** The color theme drawn when the page is light. */
+  light: "light" | "high-contrast-light" | "solarized-light" | "gruvbox-light";
+  /** The color theme drawn when the page is dark. */
+  dark: "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula";
+  /** A terminal's font. */
+  font: {
+    /** The font-family list for a terminal's text. */
+    family: string;
+    /** The size of a terminal's text, in pixels. */
+    size: number;
+  };
+  /** The shape of a terminal's cursor: `block`, `bar` or `underline`. */
+  cursor: "block" | "bar" | "underline";
+  /** Whether a terminal's cursor blinks. */
+  cursorBlink: boolean;
 }
 ```
 
