@@ -116,12 +116,12 @@
     "from": "21c2472673d7"
   },
   "home.meta.title": {
-    "text": "Aubergine: todos os seus terminais em um só canvas, com os agentes que você já usa",
-    "from": "620bab21c0b6"
+    "text": "Aubergine: central de controle para seus terminais e agentes de programação com IA",
+    "from": "9288ea1bcf71"
   },
   "home.meta.description": {
-    "text": "Turbine seu terminal: O Aubergine coloca todos os seus terminais lado a lado em um só canvas, no seu navegador. Rode quantos quiser, com os agentes e modelos que você já usa, e veja qual precisa de você. Grátis, local e de código aberto.",
-    "from": "10a391e12690"
+    "text": "Central de controle para seus terminais e agentes de programação com IA. Rode Claude Code, Codex e terminais comuns lado a lado em um só painel no seu navegador, e veja qual precisa de você. Grátis, local e de código aberto.",
+    "from": "eb4da549e70d"
   },
   "home.ld.category": {
     "text": "Multiplexador de terminais e espaço de trabalho para agentes",
@@ -148,20 +148,20 @@
     "from": "cd90f9395587"
   },
   "home.hero.title.a": {
-    "text": "Todos os seus terminais,",
-    "from": "8dd2aa1cda63"
+    "text": "Central de controle",
+    "from": "e38bc0efbbc7"
   },
   "home.hero.title.b": {
-    "text": "lado a lado.",
-    "from": "eb95eacfe17a"
+    "text": "para seus terminais e",
+    "from": "45121d84f19b"
   },
   "home.hero.title.c": {
-    "text": "Traga seus próprios <em>agentes</em>.",
-    "from": "4728f2abc24b"
+    "text": "<em>agentes</em> de código com IA.",
+    "from": "734e3af35ed0"
   },
   "home.hero.lead": {
-    "text": "O Aubergine coloca todos os seus terminais lado a lado em um só canvas, no seu navegador. Rode quantos quiser, com os agentes e modelos que você já usa. Ele não tem modelo próprio e nunca pede uma chave.",
-    "from": "c8c8b75e9e20"
+    "text": "Rode Claude Code, Codex e terminais comuns lado a lado em um só painel no seu navegador. O Aubergine não tem modelo próprio e nunca pede uma chave.",
+    "from": "159e09c1ca4d"
   },
   "home.hero.after": {
     "text": "Depois, <code>aubergine start --open</code>. Para macOS, com tmux 3.2 ou mais recente e Node.js 22 ou mais recente.",

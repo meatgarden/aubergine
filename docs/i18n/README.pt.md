@@ -2,7 +2,7 @@
 
 <sub>Esta é uma tradução automática da parte inicial do README. O app em si está em inglês. O README completo, em inglês: <a href="../../README.md">README.md</a>.</sub>
 
-**Todos os seus terminais, lado a lado. Traga seus próprios agentes.** O Aubergine coloca todos os seus terminais em um só canvas, no seu navegador. Rode quantos quiser, com os agentes e modelos que você já usa, e veja num relance qual está esperando por você, em que etapa cada um está e o que cada um escreveu para você.
+**Central de controle para seus terminais e agentes de programação com IA.** Rode Claude Code, Codex e terminais comuns lado a lado em um só painel no seu navegador: quantos quiser, com os agentes e modelos que você já usa. Veja num relance qual está esperando por você, em que etapa cada um está e o que cada um escreveu para você.
 
 - Roda no seu próprio computador, e em nenhum outro lugar.
 - Os terminais continuam rodando quando você fecha o navegador ou reinicia o Aubergine.

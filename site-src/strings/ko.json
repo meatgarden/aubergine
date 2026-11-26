@@ -116,12 +116,12 @@
     "from": "21c2472673d7"
   },
   "home.meta.title": {
-    "text": "Aubergine: 모든 터미널을 하나의 캔버스에, 이미 쓰는 에이전트와 함께",
-    "from": "620bab21c0b6"
+    "text": "Aubergine: 터미널과 AI 코딩 에이전트를 위한 관제 센터",
+    "from": "9288ea1bcf71"
   },
   "home.meta.description": {
-    "text": "터미널을 한층 강력하게: Aubergine은 모든 터미널을 브라우저 속 하나의 캔버스에 나란히 놓습니다. 이미 쓰고 있는 에이전트와 모델로 원하는 만큼 실행하고, 어느 것이 여러분을 기다리는지 확인하세요. 무료, 로컬, 오픈 소스.",
-    "from": "10a391e12690"
+    "text": "터미널과 AI 코딩 에이전트를 위한 관제 센터. Claude Code, Codex, 일반 터미널을 브라우저 속 하나의 대시보드에 나란히 놓고 실행하고, 어느 것이 여러분을 필요로 하는지 확인하세요. 무료, 로컬, 오픈 소스.",
+    "from": "eb4da549e70d"
   },
   "home.ld.category": {
     "text": "터미널 멀티플렉서이자 에이전트 작업 공간",
@@ -148,20 +148,20 @@
     "from": "cd90f9395587"
   },
   "home.hero.title.a": {
-    "text": "모든 터미널을",
-    "from": "8dd2aa1cda63"
+    "text": "터미널과",
+    "from": "e38bc0efbbc7"
   },
   "home.hero.title.b": {
-    "text": "나란히.",
-    "from": "eb95eacfe17a"
+    "text": "AI 코딩",
+    "from": "45121d84f19b"
   },
   "home.hero.title.c": {
-    "text": "<em>에이전트</em>는 직접 가져오세요.",
-    "from": "4728f2abc24b"
+    "text": "<em>에이전트</em>의 관제 센터.",
+    "from": "734e3af35ed0"
   },
   "home.hero.lead": {
-    "text": "Aubergine은 모든 터미널을 브라우저 속 하나의 캔버스에 나란히 놓습니다. 이미 쓰고 있는 에이전트와 모델로 원하는 만큼 실행하세요. Aubergine에는 자체 모델이 없고, 키를 요구하지도 않습니다.",
-    "from": "c8c8b75e9e20"
+    "text": "Claude Code, Codex, 일반 터미널을 브라우저 속 하나의 대시보드에 나란히 놓고 실행하세요. Aubergine에는 자체 모델이 없고, 키를 요구하지도 않습니다.",
+    "from": "159e09c1ca4d"
   },
   "home.hero.after": {
     "text": "그다음 <code>aubergine start --open</code>. macOS용이며 tmux 3.2 이상과 Node.js 22 이상이 필요합니다.",

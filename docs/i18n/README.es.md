@@ -2,7 +2,7 @@
 
 <sub>Esta es una traducción automática de la parte inicial del README. La aplicación en sí está en inglés. El README completo, en inglés: <a href="../../README.md">README.md</a>.</sub>
 
-**Todas tus terminales, una al lado de la otra. Trae tus propios agentes.** Aubergine pone todas tus terminales en un solo lienzo, en tu navegador. Ejecuta tantas como quieras, con los agentes y modelos que ya usas, y mira de un vistazo cuál te está esperando, en qué paso está cada uno y qué ha escrito cada uno para ti.
+**Un centro de control para tus terminales y agentes de programación con IA.** Ejecuta Claude Code, Codex y terminales normales una al lado de la otra en un solo panel en tu navegador: tantas como quieras, con los agentes y modelos que ya usas. Mira de un vistazo cuál te está esperando, en qué paso está cada uno y qué ha escrito cada uno para ti.
 
 - Se ejecuta en tu propio ordenador, y en ningún otro sitio.
 - Las terminales siguen en marcha cuando cierras el navegador o reinicias Aubergine.

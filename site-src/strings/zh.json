@@ -116,12 +116,12 @@
     "from": "21c2472673d7"
   },
   "home.meta.title": {
-    "text": "Aubergine：所有终端放在一张画布上，用你已有的智能体",
-    "from": "620bab21c0b6"
+    "text": "Aubergine：你的终端和 AI 编程智能体的指挥中心",
+    "from": "9288ea1bcf71"
   },
   "home.meta.description": {
-    "text": "让终端如虎添翼：Aubergine 把你所有的终端并排放在浏览器里的一张画布上。想开多少就开多少，用你已经在用的智能体和模型，并看清哪一个需要你。免费、本地、开源。",
-    "from": "10a391e12690"
+    "text": "你的终端和 AI 编程智能体的指挥中心。在浏览器里的一个仪表盘上并排运行 Claude Code、Codex 和普通终端，并看清哪一个需要你。免费、本地、开源。",
+    "from": "eb4da549e70d"
   },
   "home.ld.category": {
     "text": "终端复用器与智能体工作区",
@@ -148,20 +148,20 @@
     "from": "cd90f9395587"
   },
   "home.hero.title.a": {
-    "text": "所有终端，",
-    "from": "8dd2aa1cda63"
+    "text": "你的终端",
+    "from": "e38bc0efbbc7"
   },
   "home.hero.title.b": {
-    "text": "并排摆开。",
-    "from": "eb95eacfe17a"
+    "text": "和 AI 编程",
+    "from": "45121d84f19b"
   },
   "home.hero.title.c": {
-    "text": "自带你的<em>智能体</em>。",
-    "from": "4728f2abc24b"
+    "text": "<em>智能体</em>的指挥中心。",
+    "from": "734e3af35ed0"
   },
   "home.hero.lead": {
-    "text": "Aubergine 把你所有的终端并排放在浏览器里的一张画布上。想开多少就开多少，用你已经在用的智能体和模型。它自己没有模型，也从不向你要密钥。",
-    "from": "c8c8b75e9e20"
+    "text": "在浏览器里的一个仪表盘上并排运行 Claude Code、Codex 和普通终端。Aubergine 自己没有模型，也从不向你要密钥。",
+    "from": "159e09c1ca4d"
   },
   "home.hero.after": {
     "text": "然后运行 <code>aubergine start --open</code>。适用于 macOS，需要 tmux 3.2 或更高版本以及 Node.js 22 或更高版本。",

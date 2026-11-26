@@ -116,12 +116,12 @@
     "from": "21c2472673d7"
   },
   "home.meta.title": {
-    "text": "Aubergine: alle deine Terminals auf einem Canvas, mit den Agenten, die du schon nutzt",
-    "from": "620bab21c0b6"
+    "text": "Aubergine: die Kommandozentrale für deine Terminals und KI-Coding-Agenten",
+    "from": "9288ea1bcf71"
   },
   "home.meta.description": {
-    "text": "Mehr Power für dein Terminal: Aubergine legt alle deine Terminals nebeneinander auf ein Canvas in deinem Browser. Starte so viele, wie du willst, mit den Agenten und Modellen, die du schon nutzt, und sieh, welcher dich braucht. Kostenlos, lokal, Open Source.",
-    "from": "10a391e12690"
+    "text": "Die Kommandozentrale für deine Terminals und KI-Coding-Agenten. Starte Claude Code, Codex und normale Terminals nebeneinander in einem Dashboard in deinem Browser, und sieh, welches dich braucht. Kostenlos, lokal, Open Source.",
+    "from": "eb4da549e70d"
   },
   "home.ld.category": {
     "text": "Terminal-Multiplexer und Arbeitsplatz für Agenten",
@@ -148,20 +148,20 @@
     "from": "cd90f9395587"
   },
   "home.hero.title.a": {
-    "text": "Alle deine Terminals,",
-    "from": "8dd2aa1cda63"
+    "text": "Die Kommandozentrale",
+    "from": "e38bc0efbbc7"
   },
   "home.hero.title.b": {
-    "text": "Seite an Seite.",
-    "from": "eb95eacfe17a"
+    "text": "für deine Terminals",
+    "from": "45121d84f19b"
   },
   "home.hero.title.c": {
-    "text": "Bring deine eigenen <em>Agenten</em> mit.",
-    "from": "4728f2abc24b"
+    "text": "und KI-Coding-<em>Agenten</em>.",
+    "from": "734e3af35ed0"
   },
   "home.hero.lead": {
-    "text": "Aubergine legt alle deine Terminals nebeneinander auf ein Canvas in deinem Browser. Starte so viele, wie du willst, mit den Agenten und Modellen, die du schon nutzt. Es hat kein eigenes Modell und fragt nie nach einem Schlüssel.",
-    "from": "c8c8b75e9e20"
+    "text": "Starte Claude Code, Codex und normale Terminals nebeneinander in einem Dashboard in deinem Browser. Aubergine hat kein eigenes Modell und fragt nie nach einem Schlüssel.",
+    "from": "159e09c1ca4d"
   },
   "home.hero.after": {
     "text": "Dann <code>aubergine start --open</code>. Für macOS, mit tmux 3.2 oder neuer und Node.js 22 oder neuer.",

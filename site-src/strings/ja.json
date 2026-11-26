@@ -116,12 +116,12 @@
     "from": "21c2472673d7"
   },
   "home.meta.title": {
-    "text": "Aubergine：すべてのターミナルを1つのキャンバスに、いつものエージェントのまま",
-    "from": "620bab21c0b6"
+    "text": "Aubergine：ターミナルと AI コーディングエージェントの司令塔",
+    "from": "9288ea1bcf71"
   },
   "home.meta.description": {
-    "text": "ターミナルをパワーアップ：Aubergine は、すべてのターミナルをブラウザーの1つのキャンバスに並べます。いつも使っているエージェントとモデルのまま好きなだけ動かし、どれがあなたを必要としているかが分かります。無料、ローカル、オープンソース。",
-    "from": "10a391e12690"
+    "text": "ターミナルと AI コーディングエージェントの司令塔。Claude Code、Codex、普通のターミナルをブラウザーの1つのダッシュボードに並べて動かし、どれがあなたを必要としているかが分かります。無料、ローカル、オープンソース。",
+    "from": "eb4da549e70d"
   },
   "home.ld.category": {
     "text": "ターミナルマルチプレクサーとエージェントの作業場",
@@ -148,20 +148,20 @@
     "from": "cd90f9395587"
   },
   "home.hero.title.a": {
-    "text": "すべてのターミナルを、",
-    "from": "8dd2aa1cda63"
+    "text": "ターミナルと",
+    "from": "e38bc0efbbc7"
   },
   "home.hero.title.b": {
-    "text": "横に並べて。",
-    "from": "eb95eacfe17a"
+    "text": "AI コーディング",
+    "from": "45121d84f19b"
   },
   "home.hero.title.c": {
-    "text": "<em>エージェント</em>は持ち込みで。",
-    "from": "4728f2abc24b"
+    "text": "<em>エージェント</em>の司令塔。",
+    "from": "734e3af35ed0"
   },
   "home.hero.lead": {
-    "text": "Aubergine は、すべてのターミナルをブラウザーの1つのキャンバスに並べます。いつも使っているエージェントとモデルのまま、好きなだけ動かせます。Aubergine 自身はモデルを持たず、キーを求めることもありません。",
-    "from": "c8c8b75e9e20"
+    "text": "Claude Code、Codex、普通のターミナルを、ブラウザーの1つのダッシュボードに並べて動かせます。Aubergine 自身はモデルを持たず、キーを求めることもありません。",
+    "from": "159e09c1ca4d"
   },
   "home.hero.after": {
     "text": "続けて <code>aubergine start --open</code>。macOS 用で、tmux 3.2 以降と Node.js 22 以降が必要です。",

@@ -2,7 +2,7 @@
 
 *Maschinelle Übersetzung des Anfangs der README. Die App selbst ist auf Englisch. Die vollständige README auf Englisch: [README.md](../../README.md).*
 
-**Alle deine Terminals, Seite an Seite. Bring deine eigenen Agenten mit.** Aubergine legt alle deine Terminals auf ein Canvas in deinem Browser. Starte so viele, wie du willst, mit den Agenten und Modellen, die du schon nutzt, und sieh auf einen Blick, welcher auf dich wartet, bei welchem Schritt jeder ist und was jeder für dich geschrieben hat.
+**Die Kommandozentrale für deine Terminals und KI-Coding-Agenten.** Starte Claude Code, Codex und normale Terminals nebeneinander in einem Dashboard in deinem Browser: so viele, wie du willst, mit den Agenten und Modellen, die du schon nutzt. Sieh auf einen Blick, welches auf dich wartet, bei welchem Schritt jedes steht und was jedes für dich geschrieben hat.
 
 - Läuft auf deinem eigenen Rechner und nirgends sonst.
 - Terminals laufen weiter, wenn du den Browser schließt oder Aubergine neu startest.

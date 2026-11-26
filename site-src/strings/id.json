@@ -116,12 +116,12 @@
     "from": "21c2472673d7"
   },
   "home.meta.title": {
-    "text": "Aubergine: semua terminal Anda di satu kanvas, dengan agen yang sudah Anda pakai",
-    "from": "620bab21c0b6"
+    "text": "Aubergine: pusat kendali untuk terminal dan agen coding AI Anda",
+    "from": "9288ea1bcf71"
   },
   "home.meta.description": {
-    "text": "Perkuat terminal Anda: Aubergine menempatkan semua terminal Anda berdampingan di satu kanvas di browser. Jalankan sebanyak yang Anda mau, dengan agen dan model yang sudah Anda pakai, dan lihat mana yang membutuhkan Anda. Gratis, lokal, open source.",
-    "from": "10a391e12690"
+    "text": "Pusat kendali untuk terminal dan agen coding AI Anda. Jalankan Claude Code, Codex, dan terminal biasa berdampingan di satu dasbor di browser, dan lihat mana yang membutuhkan Anda. Gratis, lokal, open source.",
+    "from": "eb4da549e70d"
   },
   "home.ld.category": {
     "text": "Multiplexer terminal dan ruang kerja agen",
@@ -148,20 +148,20 @@
     "from": "cd90f9395587"
   },
   "home.hero.title.a": {
-    "text": "Semua terminal Anda,",
-    "from": "8dd2aa1cda63"
+    "text": "Pusat kendali",
+    "from": "e38bc0efbbc7"
   },
   "home.hero.title.b": {
-    "text": "berjajar.",
-    "from": "eb95eacfe17a"
+    "text": "untuk terminal dan",
+    "from": "45121d84f19b"
   },
   "home.hero.title.c": {
-    "text": "Bawa <em>agen</em> Anda sendiri.",
-    "from": "4728f2abc24b"
+    "text": "<em>agen</em> coding AI Anda.",
+    "from": "734e3af35ed0"
   },
   "home.hero.lead": {
-    "text": "Aubergine menempatkan semua terminal Anda berdampingan di satu kanvas di browser. Jalankan sebanyak yang Anda mau, dengan agen dan model yang sudah Anda pakai. Aubergine tidak punya model sendiri dan tidak pernah meminta kunci.",
-    "from": "c8c8b75e9e20"
+    "text": "Jalankan Claude Code, Codex, dan terminal biasa berdampingan di satu dasbor di browser. Aubergine tidak punya model sendiri dan tidak pernah meminta kunci.",
+    "from": "159e09c1ca4d"
   },
   "home.hero.after": {
     "text": "Lalu <code>aubergine start --open</code>. Untuk macOS, dengan tmux 3.2 atau lebih baru dan Node.js 22 atau lebih baru.",
