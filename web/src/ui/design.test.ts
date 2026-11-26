@@ -1,5 +1,7 @@
+import { COLOR_THEMES, THEME_COLORS } from '@aubergine/shared';
 import { describe, expect, it } from 'vitest';
 import stylesText from '../styles.css?raw';
+import themesText from '../themes.css?raw';
 import tokensText from '../tokens.css?raw';
 import uiText from './ui.css?raw';
 
@@ -145,6 +147,31 @@ describe('the stylesheets keep to the tokens', () => {
   });
 });
 
+/** A block of colour tokens: its selector, the names it defines in order, and their values. */
+interface Block {
+  selector: string;
+  id: string;
+  names: string[];
+  values: Record<string, string>;
+}
+function blocksOf(text: string): Block[] {
+  const plain = text.replace(/\/\*[\s\S]*?\*\//g, '');
+  return [...plain.matchAll(/([^{}]+)\{([^{}]*)\}/g)].map((m) => {
+    const selector = (m[1] ?? '').trim().replace(/\s+/g, ' ');
+    const pairs = [...(m[2] ?? '').matchAll(/(--[a-z0-9-]+):\s*([^;]+);/g)].map((d): [string, string] => [d[1] ?? '', (d[2] ?? '').trim()]);
+    return { selector, id: /data-color-theme='([a-z-]+)'/.exec(selector)?.[1] ?? '', names: pairs.map(([name]) => name), values: Object.fromEntries(pairs) };
+  });
+}
+const tokenBlocks = blocksOf(tokens);
+const themeBlocks = blocksOf(themesText);
+/** The block of tokens.css whose selector names that preview. */
+function tokenBlock(preview: string): Block {
+  const block = tokenBlocks.find((b) => b.selector.split(', ').includes(preview));
+  if (!block) throw new Error(`tokens.css has no block for ${preview}`);
+  return block;
+}
+const hexValues = (block: Block): Record<string, string> => Object.fromEntries(Object.entries(block.values).filter(([, value]) => /^#[0-9a-f]{6}$/.test(value)));
+
 /** Relative luminance and contrast, as the accessibility guidelines define them. */
 function luminance(hex: string): number {
   const channel = (at: number): number => {
@@ -159,10 +186,12 @@ function contrast(a: string, b: string): number {
 }
 
 describe('the colours can be read', () => {
-  const [darkText = '', lightText = ''] = tokens.split(":root[data-theme='light']");
-  const values = (text: string): Record<string, string> => Object.fromEntries([...text.matchAll(/(--[a-z0-9-]+):\s*(#[0-9a-f]{6});/g)].map((m) => [m[1], m[2]]));
-  const dark = values(darkText);
-  const themes = { dark, light: { ...dark, ...values(lightText) } };
+  // The two that come first, from tokens.css, and every named one, from themes.css: each block is complete by itself.
+  const themes: Record<string, Record<string, string>> = {
+    dark: hexValues(tokenBlock("[data-theme-preview='dark']")),
+    light: hexValues(tokenBlock("[data-theme-preview='light']")),
+    ...Object.fromEntries(themeBlocks.map((block) => [block.id, hexValues(block)])),
+  };
   const surfaces = ['--bg', '--surface', '--surface-raised', '--surface-active'];
   const text: [string, string][] = [
     ...surfaces.flatMap((surface): [string, string][] => [
@@ -200,6 +229,25 @@ describe('the colours can be read', () => {
     ['--accent', '--bg'],
     ['--accent', '--surface'],
   ];
+  // A high-contrast theme asks more: text 12 to 1 and muted text 7 to 1 on every surface, the words of meaning 7 to 1
+  // where they lie, and a strong line round a control.
+  const everySurface = [...surfaces, '--field', '--terminal-bg'];
+  const strongText: [string, string, number][] = [
+    ...everySurface.flatMap((surface): [string, string, number][] => [
+      ['--text', surface, 12],
+      ['--text-muted', surface, 7],
+    ]),
+    ...['accent', 'attention', 'working', 'ok', 'danger'].flatMap((name): [string, string, number][] => [
+      [`--${name}-text`, '--surface', 7],
+      [`--${name}-text`, `--${name}-soft`, 7],
+    ]),
+    ['--border-control', '--bg', 4.5],
+    ['--border-control', '--surface', 4.5],
+    ['--border-control', '--surface-raised', 4.5],
+  ];
+  it('reads all ten themes', () => {
+    expect(Object.keys(themes).sort()).toEqual(COLOR_THEMES.map((theme) => theme.id).sort());
+  });
   for (const [name, theme] of Object.entries(themes)) {
     it(`text is at least 4.5 to 1 on what it lies on, in the ${name} theme`, () => {
       expect(text.filter(([a, b]) => contrast(theme[a] ?? '', theme[b] ?? '') < 4.5)).toEqual([]);
@@ -207,5 +255,66 @@ describe('the colours can be read', () => {
     it(`the line round a control and the focus ring are at least 3 to 1, in the ${name} theme`, () => {
       expect(lines.filter(([a, b]) => contrast(theme[a] ?? '', theme[b] ?? '') < 3)).toEqual([]);
     });
+    if (name.startsWith('high-contrast-')) {
+      it(`text, muted text, the words of meaning and the line round a control are stronger, in the ${name} theme`, () => {
+        expect(strongText.filter(([a, b, ratio]) => contrast(theme[a] ?? '', theme[b] ?? '') < ratio)).toEqual([]);
+      });
+    }
   }
+});
+
+describe('the named color themes', () => {
+  const lightBlock = tokenBlock("[data-theme-preview='light']");
+  const darkBlock = tokenBlock("[data-theme-preview='dark']");
+  const named = COLOR_THEMES.filter((theme) => theme.id !== 'light' && theme.id !== 'dark');
+
+  it('the two that come first can be shown by a preview, and give the same colours', () => {
+    expect(lightBlock.selector).toBe(":root[data-theme='light'], [data-theme-preview='light']");
+    expect(darkBlock.selector).toBe(":root, [data-theme-preview='dark']");
+    expect([...darkBlock.names].sort()).toEqual([...lightBlock.names].sort());
+  });
+
+  it('each named theme has one block, for the page and for a preview, and no block names another', () => {
+    for (const theme of named) {
+      const blocks = themeBlocks.filter((block) => block.id === theme.id);
+      expect(blocks.map((block) => block.selector), theme.id).toEqual([`:root[data-color-theme='${theme.id}'], [data-theme-preview='${theme.id}']`]);
+    }
+    expect(themeBlocks.map((block) => block.id).sort()).toEqual(named.map((theme) => theme.id).sort());
+  });
+
+  it('themes.css holds those blocks and nothing else', () => {
+    const plain = themesText.replace(/\/\*[\s\S]*?\*\//g, '');
+    expect(plain).not.toContain('!important');
+    expect(plain).not.toContain('@');
+    const outside = plain.replace(/[^{}]+\{[^{}]*\}/g, '').trim();
+    expect(outside).toBe('');
+    expect(themeBlocks.length).toBe([...plain.matchAll(/\{/g)].length);
+  });
+
+  it('every block defines exactly the colours of the light block, and nothing that is not a colour', () => {
+    const nonColour = /^--(font|weight|leading|space|gutter|page|canvas-column|drawer|facts|kind|radius|control|chip|motion|z)/;
+    expect(lightBlock.names.filter((name) => nonColour.test(name))).toEqual([]);
+    for (const block of themeBlocks) {
+      expect(block.names.filter((name) => nonColour.test(name)), block.id).toEqual([]);
+      expect(block.names, block.id).toEqual(lightBlock.names);
+      expect(block.values['--qr-dark'], block.id).toBe('#111214');
+      expect(block.values['--qr-light'], block.id).toBe('#ffffff');
+    }
+  });
+
+  it('every colour a person may set is a token with one plain colour in every theme', () => {
+    for (const block of [darkBlock, lightBlock, ...themeBlocks]) {
+      const plainColour = THEME_COLORS.filter((name) => /^#[0-9a-f]{6}$/.test(block.values[`--${name}`] ?? ''));
+      expect(plainColour, block.selector).toEqual([...THEME_COLORS]);
+    }
+  });
+
+  it('a theme is filed under the kind it is drawn as: dark ones have a ground darker than their words, light ones the reverse', () => {
+    const blockOf = (id: string): Block => (id === 'light' ? lightBlock : id === 'dark' ? darkBlock : (themeBlocks.find((block) => block.id === id) ?? lightBlock));
+    for (const theme of COLOR_THEMES) {
+      const values = blockOf(theme.id).values;
+      const [bg, text] = [luminance(values['--bg'] ?? ''), luminance(values['--text'] ?? '')];
+      expect(theme.kind === 'dark' ? bg < text : bg > text, theme.id).toBe(true);
+    }
+  });
 });
