@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { ShortcutSettings } from './shortcuts';
+import { Appearance } from './themes';
 
 export const DEFAULT_FONT_FAMILY = 'Menlo, Monaco, "DejaVu Sans Mono", Consolas, monospace';
 
@@ -26,6 +27,8 @@ export const Settings = z.object({
     .prefault({}),
   /** Light, dark, or whichever the system is set to (and following it when that changes). A file that says dark or light keeps meaning that. */
   theme: ThemeSetting.default('system'),
+  /** Which color theme the light page and the dark page are, a terminal's cursor, and colors set by hand. */
+  appearance: Appearance.catch(() => Appearance.parse({})).prefault({}),
   /** Absolute path of the shell to start. `null` means the user's own `$SHELL`. */
   shell: z.string().startsWith('/').nullable().default(null),
   /** Folder new terminals start in (`~` is allowed). `null` means the home folder. */
