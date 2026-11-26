@@ -2,7 +2,7 @@
 
 English · [Español](docs/i18n/README.es.md) · [Português](docs/i18n/README.pt.md) · [Français](docs/i18n/README.fr.md) · [Deutsch](docs/i18n/README.de.md) · [日本語](docs/i18n/README.ja.md) · [简体中文](docs/i18n/README.zh.md) · [한국어](docs/i18n/README.ko.md) · [Bahasa Indonesia](docs/i18n/README.id.md) · [हिन्दी](docs/i18n/README.hi.md) · [বাংলা](docs/i18n/README.bn.md) · [العربية](docs/i18n/README.ar.md)
 
-**All your terminals, side by side. Bring your own agents.** Aubergine puts all your terminals on one canvas in your browser. Run as many as you like, with the agents and models you already use, and see at a glance which one is waiting for you, which step each is on, and what each has written for you.
+**Mission control for your terminals and AI coding agents.** Run Claude Code, Codex and plain terminals side by side in one browser dashboard: as many as you like, with the agents and models you already use. See at a glance which one is waiting for you, which step each is on, and what each has written for you.
 
 - Runs on your own computer, and nowhere else.
 - Terminals keep running when you close the browser or restart Aubergine.
