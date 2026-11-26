@@ -1,0 +1,125 @@
+<!--page {"updated":"2026-11-26","order":7.5,"path":"compare/","llms":{"name":"Tools for running several coding agents, compared","about":"Aubergine beside Conductor, Claude Squad, Vibe Kanban, cmux, Warp and Paradev (formerly Superset), from what each documents about itself on 26 November 2026; none of the others was run"}}-->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "{{=url}}#article",
+      "headline": {{json:compare.title}},
+      "description": {{json:compare.meta.description}},
+      "url": "{{=url}}",
+      "mainEntityOfPage": "{{=url}}",
+      "datePublished": "2026-11-26",
+      "dateModified": "{{=updated}}",
+      "inLanguage": "{{=lang}}",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": {{json:compare.crumb}}, "item": "{{=url}}" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "{{=url}}#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": {{json:compare.q.best.q}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:compare.q.best.a}} } },
+        { "@type": "Question", "name": {{json:compare.q.open.q}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:compare.q.open.a}} } },
+        { "@type": "Question", "name": {{json:compare.q.linux.q}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:compare.q.linux.a}} } },
+        { "@type": "Question", "name": {{json:compare.q.close.q}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:compare.q.close.a}} } }
+      ]
+    }
+  ]
+}
+</script>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="{{attr:site.crumbs}}"><ol><li><a href="/">Aubergine</a></li><li>{{compare.crumb}}</li></ol></nav>
+    <h1>{{compare.title}}</h1>
+    <p class="lead">{{compare.lead}}</p>
+  </div>
+</header>
+<div class="wrap page-body">
+  <div class="prose">
+    <p class="note note-strong">{{compare.how}}</p>
+
+    <h2>{{compare.table.title}}</h2>
+    <div class="table table-wide">
+      <table class="table-stack">
+        <thead><tr><th>{{compare.table.tool}}</th><th>{{compare.row.form}}</th><th>{{compare.row.runs}}</th><th>{{compare.row.price}}</th><th>{{compare.row.apart}}</th><th>{{compare.row.closed}}</th></tr></thead>
+        <tbody>
+          <tr><td>Aubergine</td><td data-label="{{attr:compare.row.form}}">{{compare.a.form}}</td><td data-label="{{attr:compare.row.runs}}">{{compare.a.runs}}</td><td data-label="{{attr:compare.row.price}}">{{compare.a.price}}</td><td data-label="{{attr:compare.row.apart}}">{{compare.a.apart}}</td><td data-label="{{attr:compare.row.closed}}">{{compare.a.closed}}</td></tr>
+          <tr><td><a href="/compare/conductor/">{{vs.conductor.name}}</a></td><td data-label="{{attr:compare.row.form}}">{{vs.conductor.c.form}}</td><td data-label="{{attr:compare.row.runs}}">{{vs.conductor.c.runs}}</td><td data-label="{{attr:compare.row.price}}">{{vs.conductor.c.price}}</td><td data-label="{{attr:compare.row.apart}}">{{vs.conductor.c.apart}}</td><td data-label="{{attr:compare.row.closed}}">{{vs.conductor.c.closed}}</td></tr>
+          <tr><td><a href="/compare/claude-squad/">{{vs.claude-squad.name}}</a></td><td data-label="{{attr:compare.row.form}}">{{vs.claude-squad.c.form}}</td><td data-label="{{attr:compare.row.runs}}">{{vs.claude-squad.c.runs}}</td><td data-label="{{attr:compare.row.price}}">{{vs.claude-squad.c.price}}</td><td data-label="{{attr:compare.row.apart}}">{{vs.claude-squad.c.apart}}</td><td data-label="{{attr:compare.row.closed}}">{{vs.claude-squad.c.closed}}</td></tr>
+          <tr><td><a href="/compare/vibe-kanban/">{{vs.vibe-kanban.name}}</a></td><td data-label="{{attr:compare.row.form}}">{{vs.vibe-kanban.c.form}}</td><td data-label="{{attr:compare.row.runs}}">{{vs.vibe-kanban.c.runs}}</td><td data-label="{{attr:compare.row.price}}">{{vs.vibe-kanban.c.price}}</td><td data-label="{{attr:compare.row.apart}}">{{vs.vibe-kanban.c.apart}}</td><td data-label="{{attr:compare.row.closed}}">{{vs.vibe-kanban.c.closed}}</td></tr>
+          <tr><td><a href="/compare/cmux/">{{vs.cmux.name}}</a></td><td data-label="{{attr:compare.row.form}}">{{vs.cmux.c.form}}</td><td data-label="{{attr:compare.row.runs}}">{{vs.cmux.c.runs}}</td><td data-label="{{attr:compare.row.price}}">{{vs.cmux.c.price}}</td><td data-label="{{attr:compare.row.apart}}">{{vs.cmux.c.apart}}</td><td data-label="{{attr:compare.row.closed}}">{{vs.cmux.c.closed}}</td></tr>
+          <tr><td><a href="/compare/warp/">{{vs.warp.name}}</a></td><td data-label="{{attr:compare.row.form}}">{{vs.warp.c.form}}</td><td data-label="{{attr:compare.row.runs}}">{{vs.warp.c.runs}}</td><td data-label="{{attr:compare.row.price}}">{{vs.warp.c.price}}</td><td data-label="{{attr:compare.row.apart}}">{{vs.warp.c.apart}}</td><td data-label="{{attr:compare.row.closed}}">{{vs.warp.c.closed}}</td></tr>
+          <tr><td><a href="/compare/paradev/">{{vs.paradev.name}}</a></td><td data-label="{{attr:compare.row.form}}">{{vs.paradev.c.form}}</td><td data-label="{{attr:compare.row.runs}}">{{vs.paradev.c.runs}}</td><td data-label="{{attr:compare.row.price}}">{{vs.paradev.c.price}}</td><td data-label="{{attr:compare.row.apart}}">{{vs.paradev.c.apart}}</td><td data-label="{{attr:compare.row.closed}}">{{vs.paradev.c.closed}}</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>{{compare.each.title}}</h2>
+    <p>{{compare.each.text}}</p>
+  </div>
+  <ul class="cards cards-between">
+    <li><h2><a href="/compare/conductor/">{{vs.conductor.title}}</a></h2><p>{{vs.conductor.pick.them}}</p></li>
+    <li><h2><a href="/compare/claude-squad/">{{vs.claude-squad.title}}</a></h2><p>{{vs.claude-squad.pick.them}}</p></li>
+    <li><h2><a href="/compare/vibe-kanban/">{{vs.vibe-kanban.title}}</a></h2><p>{{vs.vibe-kanban.pick.them}}</p></li>
+    <li><h2><a href="/compare/cmux/">{{vs.cmux.title}}</a></h2><p>{{vs.cmux.pick.them}}</p></li>
+    <li><h2><a href="/compare/warp/">{{vs.warp.title}}</a></h2><p>{{vs.warp.pick.them}}</p></li>
+    <li><h2><a href="/compare/paradev/">{{vs.paradev.title}}</a></h2><p>{{vs.paradev.pick.them}}</p></li>
+  </ul>
+  <div class="prose">
+    <h2>{{compare.around.title}}</h2>
+    <ul>
+      <li>{{compare.around.terminals}}</li>
+      <li>{{compare.around.canvas}}</li>
+      <li>{{compare.around.tmux}}</li>
+      <li>{{compare.around.local}}</li>
+      <li>{{compare.around.decide}}</li>
+    </ul>
+
+    <h2>{{compare.lacks.title}}</h2>
+    <ul>
+      <li>{{compare.lacks.app}}</li>
+      <li>{{compare.lacks.merge}}</li>
+      <li>{{compare.lacks.cloud}}</li>
+      <li>{{compare.lacks.sound}}</li>
+      <li>{{compare.lacks.platforms}}</li>
+      <li>{{compare.lacks.agents}}</li>
+    </ul>
+
+    <h2>{{compare.vs.faq}}</h2>
+    <div class="questions">
+      <details><summary>{{compare.q.best.q}}</summary><p>{{compare.q.best.a}}</p></details>
+      <details><summary>{{compare.q.open.q}}</summary><p>{{compare.q.open.a}}</p></details>
+      <details><summary>{{compare.q.linux.q}}</summary><p>{{compare.q.linux.a}}</p></details>
+      <details><summary>{{compare.q.close.q}}</summary><p>{{compare.q.close.a}}</p></details>
+    </div>
+  </div>
+</div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">{{home.install.title}}</h2>
+    <div class="close-do">
+      <p>{{home.install.intro}}</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="{{attr:site.copied}}" aria-live="polite" hidden>{{site.copy}}</button></p>
+      <p class="actions"><a class="button" href="/install/">{{home.hero.install}}</a><a class="button button-quiet" href="https://github.com/thirstyeggplant/aubergine">{{home.hero.source}}</a></p>
+    </div>
+  </div>
+</section>

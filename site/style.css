@@ -469,6 +469,8 @@ pre code { font-size: 1em; overflow-wrap: normal; }
 .cards li { min-inline-size: 0; position: relative; display: grid; align-content: start; gap: var(--s-3); padding: var(--s-5) var(--s-5) var(--s-6); background: var(--cream); border: var(--rule) solid var(--ink); border-radius: var(--radius); box-shadow: calc(var(--press) * 2 * var(--shadow-dir)) calc(var(--press) * 2) 0 var(--ink); transition: transform var(--quick) ease, box-shadow var(--quick) ease; }
 .cards li:has(a:hover) { transform: translate(calc(var(--press) * 2 * var(--shadow-dir)), calc(var(--press) * 2)); box-shadow: 0 0 0 var(--ink); }
 .cards h2 { font-size: var(--size-h3); }
+/* Cards between two runs of prose on one page. */
+.cards-between { margin-block: var(--s-7) var(--s-9); }
 .cards a { text-decoration: none; }
 .cards a::before { content: ""; position: absolute; inset: 0; border-radius: var(--radius); }
 .cards a:focus-visible { outline: none; }
@@ -647,6 +649,9 @@ h1, h2, h3 { hyphens: manual; }
   .page-body > .prose > h2:first-child, .page-body > .prose > h2:first-child + * { margin-block-start: 0; }
   .page-body > .prose > h2 + .seq > li:first-child, .page-body > .prose > h2 + ul, .page-body > .prose > h2 + .table { padding-block-start: var(--s-4); }
   .page-body > .prose > h2 + p { padding-block-start: var(--s-4); }
+  /* A table of many columns takes the whole width, under its heading. */
+  .page-body > .prose > .table-wide { grid-column: 1 / -1; }
+  .page-body > .prose > h2 + .table-wide { margin-block-start: var(--s-5); padding-block-start: 0; }
 }
 /* In a right-to-left page the language menu reads from the right, whatever each name's own direction. */
 [dir="rtl"] .languages .menu-list a[dir="ltr"] { flex-direction: row-reverse; }
