@@ -3678,5 +3678,1249 @@
   "404.faq": {
     "text": "Pertanyaan yang sering diajukan",
     "from": "e956a9404b46"
+  },
+  "site.foot.compare": {
+    "text": "Perbandingan",
+    "from": "e888155d8c7d"
+  },
+  "guides.compare.name": {
+    "text": "Aubergine dibandingkan dengan alat lain",
+    "from": "a7d4b6e16622"
+  },
+  "guides.compare.text": {
+    "text": "Conductor, Claude Squad, Vibe Kanban, cmux, Warp, dan Paradev di samping Aubergine, berdasarkan apa yang didokumentasikan masing-masing tentang dirinya sendiri.",
+    "from": "ef74044c8bc1"
+  },
+  "compare.meta.title": {
+    "text": "Alat untuk menjalankan beberapa agen coding, dibandingkan | Aubergine",
+    "from": "e45fe95912dd"
+  },
+  "compare.meta.description": {
+    "text": "Aubergine di samping Conductor, Claude Squad, Vibe Kanban, cmux, Warp, dan Paradev: apa masing-masing itu, di mana berjalan, berapa biayanya, bagaimana memisahkan agen, dan apa yang berakhir saat ditutup.",
+    "from": "f8a5c374323f"
+  },
+  "compare.crumb": {
+    "text": "Perbandingan",
+    "from": "e888155d8c7d"
+  },
+  "compare.title": {
+    "text": "Alat untuk menjalankan beberapa agen coding, dibandingkan",
+    "from": "28d801f5961d"
+  },
+  "compare.lead": {
+    "text": "Tujuh alat untuk saat yang sama: lebih dari satu agen coding bekerja, dan Anda di tengahnya. Inilah Aubergine di samping Conductor, Claude Squad, Vibe Kanban, cmux, Warp, dan Paradev, dengan satu halaman untuk masing-masing.",
+    "from": "b5fab9e77782"
+  },
+  "compare.how": {
+    "text": "<strong>Bagaimana ini ditulis.</strong> Apa yang dikatakan halaman-halaman ini tentang alat lain berasal dari situs, dokumentasi, dan repositori alat itu sendiri sebagaimana dibaca pada 26 November 2026, dan setiap halaman menautkannya. Kami belum menjalankan alat-alat lain itu. Jika dokumentasinya tidak mengatakan apa-apa, halaman ini menyebut bahwa tidak ada yang ditemukan, bukan bahwa alat itu tidak bisa melakukannya. Alat-alat ini cepat berubah: jika ada yang salah atau usang di sini, <a href=\"https://github.com/thirstyeggplant/aubergine/issues\">beri tahu kami</a> dan akan diperbaiki.",
+    "from": "b593b3d87f7a"
+  },
+  "compare.table.title": {
+    "text": "Ketujuhnya, berdampingan",
+    "from": "43d67ddccfc2"
+  },
+  "compare.table.tool": {
+    "text": "Alat",
+    "from": "2e53bdcd0740"
+  },
+  "compare.each.title": {
+    "text": "Satu halaman untuk masing-masing",
+    "from": "8121e71bc2a8"
+  },
+  "compare.each.text": {
+    "text": "Setiap halaman berisi tabel lengkap untuk keduanya, di mana keduanya berbeda, dan apa yang dimiliki alat lain itu yang tidak dimiliki Aubergine.",
+    "from": "8fa0a789da7e"
+  },
+  "compare.around.title": {
+    "text": "Dasar Aubergine dibangun",
+    "from": "86c14152ab1c"
+  },
+  "compare.around.terminals": {
+    "text": "<strong>Terminal biasa.</strong> Agen berjalan di Aubergine seperti di aplikasi terminal mana pun. Tidak ada tampilan chat di atasnya dan tidak ada apa pun di antara Anda dan apa yang dicetaknya.",
+    "from": "4b58310b25f3"
+  },
+  "compare.around.canvas": {
+    "text": "<strong>Semuanya terlihat.</strong> Terminal berdiri berdampingan di kanvas yang bisa Anda geser dan zoom, dengan satu daftar semua terminal dan statusnya dalam kata-kata. Lihat <a href=\"/too-many-terminal-tabs/\">Temukan terminal yang tepat</a>.",
+    "from": "c6c0fbc9bab4"
+  },
+  "compare.around.tmux": {
+    "text": "<strong>Menutup jendela tidak mengakhiri apa pun.</strong> Setiap terminal adalah sesi tmux, sehingga browser dan Aubergine sendiri bisa berhenti sementara agen Anda tetap berjalan. Lihat <a href=\"/keep-terminals-after-restart/\">apa yang bertahan saat dimulai ulang</a>.",
+    "from": "e512de1deb34"
+  },
+  "compare.around.local": {
+    "text": "<strong>Hanya komputer Anda.</strong> Tanpa akun, tanpa cloud, tanpa paket berbayar, dan tanpa model sendiri; server mendengarkan di <code>127.0.0.1</code>. Lihat <a href=\"/security/\">keamanan</a>.",
+    "from": "d51e1a73a1c0"
+  },
+  "compare.around.decide": {
+    "text": "<strong>Orang yang memutuskan.</strong> Apa yang diusulkan agen menunggu tinjauan Anda, persetujuan dalam workflow hanya milik Anda, dan satu daftar, For you, memuat semua yang menunggu Anda. Lihat <a href=\"/queue-and-schedules/\">antrean</a>.",
+    "from": "0c58d14e37b6"
+  },
+  "compare.lacks.title": {
+    "text": "Apa yang tidak dimiliki Aubergine",
+    "from": "791f409b25b0"
+  },
+  "compare.lacks.app": {
+    "text": "<strong>Tidak ada aplikasi desktop dan tidak ada aplikasi ponsel.</strong> Aubergine adalah halaman di browser Anda. Perangkat lain bisa dipasangkan lewat proxy yang Anda jalankan; itu dijalankan sekali di satu Mac dan belum pernah di ponsel sungguhan.",
+    "from": "8cda51e85558"
+  },
+  "compare.lacks.merge": {
+    "text": "<strong>Tidak ada pull request dan tidak ada merge.</strong> Aubergine menunjukkan apa yang berubah di salinan kerja, file demi file, dan tidak pernah melakukan commit, push, rebase, atau merge.",
+    "from": "2c7dc74cd5cf"
+  },
+  "compare.lacks.cloud": {
+    "text": "<strong>Tidak ada cloud.</strong> Agen berjalan di komputer tempat Aubergine berjalan, dan jadwal hanya berjalan selama komputer itu menyala.",
+    "from": "9b0762b5da8f"
+  },
+  "compare.lacks.sound": {
+    "text": "<strong>Tidak ada suara dan tidak ada push.</strong> Notifikasi datang dari halaman Aubergine yang terbuka di browser Anda.",
+    "from": "e63009caa14b"
+  },
+  "compare.lacks.platforms": {
+    "text": "<strong>Dibuat untuk macOS.</strong> Di Linux baru dijalankan di dalam kontainer; di Windows hanya berjalan di dalam WSL 2, dan itu belum dicoba.",
+    "from": "5f5c1927df23"
+  },
+  "compare.lacks.agents": {
+    "text": "<strong>Paling banyak untuk Claude Code.</strong> Agen command-line apa pun berjalan di terminal, tetapi hal-hal yang dilakukan Aubergine sendiri untuk agen (melihat bahwa agen menunggu, melanjutkan percakapan) dibuat untuk Claude Code; agen lain melapor lewat perintah <code>aubergine</code>.",
+    "from": "2f0ba98518bf"
+  },
+  "compare.q.best.q": {
+    "text": "Apa alat terbaik untuk menjalankan beberapa agen Claude Code sekaligus?",
+    "from": "4d699c803dcd"
+  },
+  "compare.q.best.a": {
+    "text": "Tergantung apa yang Anda inginkan di sekitar agen. Untuk aplikasi Mac dengan diff, pull request, dan merge: Conductor atau Paradev. Untuk program di dalam terminal yang sudah Anda pakai: Claude Squad. Untuk papan issue: Vibe Kanban. Untuk terminal Mac native: cmux. Untuk terminal dengan agennya sendiri dan agen cloud: Warp. Untuk terminal biasa berdampingan di halaman browser, tetap berjalan berkat tmux, tanpa akun: Aubergine.",
+    "from": "6a57f43a10dc"
+  },
+  "compare.q.open.q": {
+    "text": "Alat mana saja yang open source?",
+    "from": "23e0ea8e7990"
+  },
+  "compare.q.open.a": {
+    "text": "Sebagaimana dibaca pada 26 November 2026: Aubergine (MIT), Paradev (MIT), Vibe Kanban (Apache-2.0), Claude Squad (AGPL-3.0), aplikasi cmux (GPL-3.0-or-later), dan klien Warp (AGPL-3.0). Ketentuan Conductor menyebutnya proprietary.",
+    "from": "fcb0a543dbb1"
+  },
+  "compare.q.linux.q": {
+    "text": "Alat mana saja yang berjalan di Linux atau Windows?",
+    "from": "702775b7d90b"
+  },
+  "compare.q.linux.a": {
+    "text": "Menurut dokumentasi masing-masing: Warp di macOS, Windows, dan Linux; Vibe Kanban di ketiganya; Claude Squad di macOS dan Linux, dan di Windows dengan tmux lewat WSL; Paradev di macOS dengan build Linux eksperimental; Conductor dan cmux hanya di macOS. Aubergine dibuat untuk macOS, di Linux baru dijalankan di dalam kontainer, dan di Windows hanya berjalan di dalam WSL 2, yang belum dicoba.",
+    "from": "eb17a7194e7c"
+  },
+  "compare.q.close.q": {
+    "text": "Alat mana yang menjaga agen tetap berjalan setelah aplikasinya ditutup?",
+    "from": "4b67f3b2e66d"
+  },
+  "compare.q.close.a": {
+    "text": "Aubergine dan Claude Squad menjalankan setiap agen di sesi tmux. Paradev mendokumentasikan daemon latar belakang yang menjaga terminal saat jendelanya ditutup. cmux menjaga proses yang hidup hanya di mode tmux opsionalnya. Conductor menyebut sesi lokal berakhir bersama aplikasinya. Warp memulihkan jendela dan output terbaru, bukan program yang sedang berjalan. Conductor, cmux, Warp, dan Paradev masing-masing juga punya cloud tempat agen tetap berjalan. Tidak ada satu pun, termasuk Aubergine, yang menjaga agen lokal tetap berjalan saat komputer dimulai ulang.",
+    "from": "4bb44c21e3ea"
+  },
+  "compare.vs.table": {
+    "text": "Berdampingan",
+    "from": "a3d7b387c34d"
+  },
+  "compare.vs.thing": {
+    "text": "Apa",
+    "from": "f8cf83a76a98"
+  },
+  "compare.vs.faq": {
+    "text": "Pertanyaan",
+    "from": "9a72221a2747"
+  },
+  "compare.vs.all": {
+    "text": "Ketujuh alat dibandingkan",
+    "from": "ee4eb4f7ad29"
+  },
+  "compare.row.form": {
+    "text": "Apa itu",
+    "from": "1f36becc3aa7"
+  },
+  "compare.row.runs": {
+    "text": "Berjalan di",
+    "from": "88a550e0f44e"
+  },
+  "compare.row.price": {
+    "text": "Sumber dan harga",
+    "from": "fb616bdc6fda"
+  },
+  "compare.row.agents": {
+    "text": "Agen",
+    "from": "279b44d2ab4b"
+  },
+  "compare.row.layout": {
+    "text": "Beberapa sekaligus",
+    "from": "fa6b205bb2ee"
+  },
+  "compare.row.apart": {
+    "text": "Memisahkan agen",
+    "from": "420ecd34a352"
+  },
+  "compare.row.closed": {
+    "text": "Jika ditutup",
+    "from": "6d0beffa1276"
+  },
+  "compare.row.waits": {
+    "text": "Saat agen menunggu atau selesai",
+    "from": "ad33e1aadbff"
+  },
+  "compare.row.review": {
+    "text": "Meninjau perubahan",
+    "from": "5c07a12954c0"
+  },
+  "compare.row.device": {
+    "text": "Dari perangkat lain",
+    "from": "0176df0875c6"
+  },
+  "compare.row.programs": {
+    "text": "Untuk program",
+    "from": "ca1a25f0d017"
+  },
+  "compare.row.timed": {
+    "text": "Antrean dan jadwal",
+    "from": "7048f6d971c8"
+  },
+  "compare.a.form": {
+    "text": "Server di komputer Anda sendiri dan halaman di browser Anda",
+    "from": "f0e12c3481c6"
+  },
+  "compare.a.runs": {
+    "text": "macOS; Linux hanya di dalam kontainer; Windows di dalam WSL 2, belum dicoba. Memerlukan tmux dan Node.js",
+    "from": "ce2ec170ad45"
+  },
+  "compare.a.price": {
+    "text": "MIT, gratis; tanpa paket berbayar dan tanpa akun",
+    "from": "c6bdeec37cc3"
+  },
+  "compare.a.agents": {
+    "text": "Agen command-line apa pun; lebih banyak hal otomatis untuk Claude Code",
+    "from": "036a4153456a"
+  },
+  "compare.a.layout": {
+    "text": "Terminal berdampingan di kanvas, dan satu daftar semuanya",
+    "from": "928536cdc6c9"
+  },
+  "compare.a.apart": {
+    "text": "Worktree Git di branch sendiri untuk sebuah terminal, saat Anda memintanya",
+    "from": "2eb2221a43cc"
+  },
+  "compare.a.closed": {
+    "text": "Terminal tetap berjalan di tmux; mulai ulang komputer mengakhiri apa yang berjalan",
+    "from": "3a2d0d86f66d"
+  },
+  "compare.a.waits": {
+    "text": "Warna terminal, angka di bagian atas, tombol ke terminal berikutnya, notifikasi dari halaman yang terbuka; tanpa suara",
+    "from": "02781ee55c07"
+  },
+  "compare.a.review": {
+    "text": "Apa yang berubah, file demi file; tanpa commit, push, pull request, atau merge",
+    "from": "24a75e296224"
+  },
+  "compare.a.device": {
+    "text": "Browser yang Anda pasangkan, lewat proxy yang Anda jalankan; tanpa aplikasi; belum dicoba di ponsel sungguhan",
+    "from": "e18f70623096"
+  },
+  "compare.a.programs": {
+    "text": "API HTTP dengan token berlingkup, perintah <code>aubergine</code>, server MCP",
+    "from": "fc6fcbb83503"
+  },
+  "compare.a.timed": {
+    "text": "Antrean dengan batas, jadwal menurut jam, workflow dengan persetujuan",
+    "from": "9aa15e3097da"
+  },
+  "vs.conductor.crumb": {
+    "text": "Conductor",
+    "from": "14116bf4372e"
+  },
+  "vs.conductor.name": {
+    "text": "Conductor",
+    "from": "14116bf4372e"
+  },
+  "vs.conductor.meta.title": {
+    "text": "Aubergine vs Conductor: alternatif gratis dan open source | Aubergine",
+    "from": "e2c7866f349d"
+  },
+  "vs.conductor.meta.description": {
+    "text": "Conductor dan Aubergine sama-sama menjalankan agen coding secara paralel di worktree Git. Conductor adalah aplikasi Mac dengan cloud; Aubergine open source, berjalan di browser Anda, dan menjaga terminal tetap berjalan di tmux.",
+    "from": "d87829790de4"
+  },
+  "vs.conductor.title": {
+    "text": "Aubergine vs Conductor",
+    "from": "6dc79eddb49c"
+  },
+  "vs.conductor.lead": {
+    "text": "Keduanya menjalankan beberapa agen coding sekaligus, masing-masing di worktree Git sendiri. Conductor adalah aplikasi Mac dengan chat, penampil diff, dan cloud. Aubergine adalah server gratis dan open source di komputer Anda sendiri yang menampilkan terminal biasa berdampingan di halaman browser.",
+    "from": "9d27a087649b"
+  },
+  "vs.conductor.how": {
+    "text": "<strong>Sumber informasi ini.</strong> Apa yang dikatakan di sini tentang Conductor berasal dari <a href=\"https://docs.conductor.build/\">dokumentasinya</a> dan <a href=\"https://www.conductor.build/changelog\">changelog-nya</a> sebagaimana dibaca pada 26 November 2026. Kami belum menjalankan Conductor. Jika ada yang salah atau usang, <a href=\"https://github.com/thirstyeggplant/aubergine/issues\">beri tahu kami</a>.",
+    "from": "6bdb8eaf878d"
+  },
+  "vs.conductor.status": {
+    "text": "<strong>Posisi Conductor.</strong> Pada 4 November 2026 changelog-nya menyebut Conductor bergabung dengan Meta dan akan dihentikan bertahap; pada 13 November changelog itu menyebut Conductor tidak ditutup. Sebagian situsnya masih memuat pesan pertama saat ini ditulis. Baca changelog-nya untuk mengetahui posisinya sekarang.",
+    "from": "0ce8070b49b7"
+  },
+  "vs.conductor.is.title": {
+    "text": "Apa itu Conductor",
+    "from": "761d10f79609"
+  },
+  "vs.conductor.is.text": {
+    "text": "Menurut deskripsinya sendiri, aplikasi Mac yang menjalankan banyak agen coding secara paralel di codebase Anda. Setiap pekerjaan adalah sebuah workspace: worktree Git di satu branch, dengan tab chat, terminal, dan browser. Conductor menjalankan Claude Code, Codex, Cursor, dan OpenCode dengan login yang sudah ada di Mac Anda, dan punya penampil diff, pull request, aplikasi iOS, dan cloud berbayar tempat agen berjalan di sandbox.",
+    "from": "892b18bb52d6"
+  },
+  "vs.conductor.pick.title": {
+    "text": "Mana yang dipilih",
+    "from": "9190a8f83f35"
+  },
+  "vs.conductor.pick.them": {
+    "text": "<strong>Pilih Conductor</strong> jika Anda ingin aplikasi Mac yang membawa tugas dari prompt sampai pull request yang di-merge, dengan cloud untuk pekerjaan yang tetap berjalan saat Mac Anda mati.",
+    "from": "703a739ea90f"
+  },
+  "vs.conductor.pick.us": {
+    "text": "<strong>Pilih Aubergine</strong> jika Anda ingin agen Anda sebagai terminal biasa yang bisa Anda lihat sekaligus, tetap berjalan di tmux saat jendela ditutup, tanpa apa pun untuk login, dan dengan kode sumber terbuka.",
+    "from": "e081882f41c0"
+  },
+  "vs.conductor.differs.title": {
+    "text": "Di mana keduanya berbeda",
+    "from": "8c2314ada082"
+  },
+  "vs.conductor.d1": {
+    "text": "<strong>Terminal, bukan chat.</strong> Conductor menampilkan agen sebagai chat di workspace, dengan mode terminal di sampingnya. Aubergine menampilkan terminal agen itu sendiri, seperti saat berjalan di aplikasi terminal mana pun, dan menata banyak terminal di kanvas yang bisa Anda geser dan zoom.",
+    "from": "e8ee13648dc8"
+  },
+  "vs.conductor.d2": {
+    "text": "<strong>Apa yang berakhir saat ditutup.</strong> Dokumentasi Conductor menyebut sesi lokal berakhir saat Anda menutup aplikasinya atau mematikan Mac, dan sesi cloud tetap berjalan. Di Aubergine setiap terminal adalah sesi tmux: menutup browser atau menghentikan Aubergine tidak mengakhiri apa pun. Mulai ulang komputer mengakhirinya, di keduanya.",
+    "from": "09276a000922"
+  },
+  "vs.conductor.d3": {
+    "text": "<strong>Tidak ada apa pun di luar komputer Anda.</strong> Conductor mendokumentasikan akun, cloud, relay untuk aplikasi ponselnya, dan analitik penggunaan. Aubergine tidak punya akun dan tidak punya layanan sendiri: server mendengarkan di <code>127.0.0.1</code>, dan pemakaian dari perangkat lain lewat proxy yang Anda jalankan.",
+    "from": "717211af5743"
+  },
+  "vs.conductor.has.title": {
+    "text": "Apa yang dimiliki Conductor dan tidak dimiliki Aubergine",
+    "from": "97051a4ecf5d"
+  },
+  "vs.conductor.h1": {
+    "text": "Penampil diff tempat Anda mengomentari baris dan mengirim komentarnya kembali ke agen, lalu pull request, check, dan merge. Aubergine menunjukkan apa yang berubah di salinan kerja dan tidak pernah melakukan commit, push, atau merge.",
+    "from": "6777521cf45a"
+  },
+  "vs.conductor.h2": {
+    "text": "Cloud tempat agen tetap berjalan saat Mac Anda mati, dan rutinitas yang berjalan di sana sesuai jadwal. Jadwal Aubergine berjalan di komputer Anda, selama komputer itu menyala.",
+    "from": "ac3ae91a45fe"
+  },
+  "vs.conductor.h3": {
+    "text": "Aplikasi iOS dan suara saat selesai. Aubergine tidak punya aplikasi dan tidak memutar suara.",
+    "from": "193e1ed4e647"
+  },
+  "vs.conductor.q1.q": {
+    "text": "Apakah Aubergine alternatif untuk Conductor?",
+    "from": "cde19d1a87c2"
+  },
+  "vs.conductor.q1.a": {
+    "text": "Untuk menjalankan beberapa agen command-line di komputer Anda sendiri, ya: setiap agen punya terminal di kanvas dan, jika Anda minta, worktree Git sendiri. Ini bukan pengganti yang setara: Aubergine tidak punya tampilan chat, tidak ada pull request atau merge, tidak ada cloud, dan tidak ada aplikasi ponsel.",
+    "from": "6570e71775cf"
+  },
+  "vs.conductor.q2.q": {
+    "text": "Apakah Conductor open source?",
+    "from": "fad053540fb9"
+  },
+  "vs.conductor.q2.a": {
+    "text": "Tidak: ketentuannya menyebutnya proprietary, dan kami tidak menemukan repositori publik. Dokumentasinya menyebut aplikasi lokalnya gratis dipakai dan workspace cloud memerlukan paket berbayar. Aubergine berada di bawah lisensi MIT dan tidak punya paket berbayar.",
+    "from": "1cd0818f2d1c"
+  },
+  "vs.conductor.q3.q": {
+    "text": "Apakah Conductor berjalan di Linux atau Windows?",
+    "from": "735588d0d163"
+  },
+  "vs.conductor.q3.a": {
+    "text": "Dokumentasinya menyebut Conductor belum tersedia untuk Windows atau Linux. Aubergine dibuat untuk macOS, di Linux baru dijalankan di dalam kontainer, dan di Windows hanya berjalan di dalam WSL 2, dan itu belum dicoba.",
+    "from": "f5ade7015ea8"
+  },
+  "vs.conductor.q4.q": {
+    "text": "Bisakah saya memakai Conductor dan Aubergine bersama-sama?",
+    "from": "19c0c55db696"
+  },
+  "vs.conductor.q4.a": {
+    "text": "Tidak ada yang menghalanginya: keduanya bekerja di worktree Git dari repositori yang sama, masing-masing membuat worktree sendiri. Kami belum menjalankan keduanya berdampingan.",
+    "from": "f05d6d7dc553"
+  },
+  "vs.conductor.mark": {
+    "text": "Aubergine tidak berafiliasi dengan Conductor atau pembuatnya. Conductor adalah nama produk mereka: ketentuannya menyebut Melty Labs, Inc., dan situsnya menyebut Conductor from Meta.",
+    "from": "f1f2c16aeaff"
+  },
+  "vs.conductor.c.form": {
+    "text": "Aplikasi desktop Mac, dengan cloud yang di-hosting dan aplikasi iOS",
+    "from": "8f147196475d"
+  },
+  "vs.conductor.c.runs": {
+    "text": "Hanya macOS",
+    "from": "3f2f41cd023d"
+  },
+  "vs.conductor.c.price": {
+    "text": "Kode sumber tertutup; aplikasi lokalnya gratis, cloud-nya memerlukan paket berbayar",
+    "from": "330fb38120bd"
+  },
+  "vs.conductor.c.agents": {
+    "text": "Claude Code, Codex, Cursor, dan OpenCode; perintah apa pun di mode terminalnya",
+    "from": "605c47dc956b"
+  },
+  "vs.conductor.c.layout": {
+    "text": "Bilah samping berisi workspace, masing-masing dengan tab chat, terminal, dan browser",
+    "from": "d639b322b315"
+  },
+  "vs.conductor.c.apart": {
+    "text": "Worktree Git dan branch untuk setiap workspace; sandbox di cloud-nya",
+    "from": "ca8d1b34e4bc"
+  },
+  "vs.conductor.c.closed": {
+    "text": "Sesi lokal berakhir bersama aplikasinya; sesi cloud tetap berjalan",
+    "from": "bed2d2359373"
+  },
+  "vs.conductor.c.waits": {
+    "text": "Suara saat selesai",
+    "from": "9cc24eada060"
+  },
+  "vs.conductor.c.review": {
+    "text": "Penampil diff dengan komentar kembali ke agen, pull request, check, merge",
+    "from": "c7413ccd732c"
+  },
+  "vs.conductor.c.device": {
+    "text": "Aplikasi iOS lewat relay-nya, dengan Mac menyala dan aplikasinya terbuka",
+    "from": "ebef5d2152fd"
+  },
+  "vs.conductor.c.programs": {
+    "text": "API dan server MCP untuk workspace cloud-nya, sebuah perintah",
+    "from": "3d0a599b7e17"
+  },
+  "vs.conductor.c.timed": {
+    "text": "Antrean pesan; rutinitas terjadwal di cloud-nya",
+    "from": "9ab0918f949e"
+  },
+  "vs.claude-squad.crumb": {
+    "text": "Claude Squad",
+    "from": "3c4fa1eb24c0"
+  },
+  "vs.claude-squad.name": {
+    "text": "Claude Squad",
+    "from": "3c4fa1eb24c0"
+  },
+  "vs.claude-squad.meta.title": {
+    "text": "Aubergine vs Claude Squad: tmux dan worktree, dua cara | Aubergine",
+    "from": "e01a63e97f29"
+  },
+  "vs.claude-squad.meta.description": {
+    "text": "Claude Squad dan Aubergine sama-sama menjalankan setiap agen coding di sesi tmux dan worktree Git. Claude Squad adalah program di terminal Anda; Aubergine adalah kanvas berisi terminal di browser Anda.",
+    "from": "49ec403afb34"
+  },
+  "vs.claude-squad.title": {
+    "text": "Aubergine vs Claude Squad",
+    "from": "77af5fc2deda"
+  },
+  "vs.claude-squad.lead": {
+    "text": "Keduanya berdiri di dasar yang sama: setiap agen di sesi tmux, masing-masing di worktree Git sendiri, keduanya gratis dan open source. Claude Squad adalah program di dalam terminal Anda. Aubergine adalah halaman di browser Anda tempat terminal berdiri berdampingan.",
+    "from": "d9f4e824659b"
+  },
+  "vs.claude-squad.how": {
+    "text": "<strong>Sumber informasi ini.</strong> Apa yang dikatakan di sini tentang Claude Squad berasal dari <a href=\"https://github.com/smtg-ai/claude-squad\">repositori dan README-nya</a> sebagaimana dibaca pada 26 November 2026. Kami belum menjalankan Claude Squad. Jika ada yang salah atau usang, <a href=\"https://github.com/thirstyeggplant/aubergine/issues\">beri tahu kami</a>.",
+    "from": "c74805e04f47"
+  },
+  "vs.claude-squad.is.title": {
+    "text": "Apa itu Claude Squad",
+    "from": "27fdabce5ffe"
+  },
+  "vs.claude-squad.is.text": {
+    "text": "Menurut deskripsinya sendiri, aplikasi terminal yang mengelola beberapa agen lokal seperti Claude Code, Codex, Gemini, dan lainnya di workspace terpisah. Anda menjalankannya sebagai <code>cs</code>: daftar sesi dengan pratinjau dan tab diff, di satu jendela terminal. Setiap sesi adalah sesi tmux di worktree Git pada branch-nya sendiri. Claude Squad memerlukan tmux dan <code>gh</code>, dan berada di bawah lisensi AGPL-3.0.",
+    "from": "f5651435b271"
+  },
+  "vs.claude-squad.pick.title": {
+    "text": "Mana yang dipilih",
+    "from": "9190a8f83f35"
+  },
+  "vs.claude-squad.pick.them": {
+    "text": "<strong>Pilih Claude Squad</strong> jika Anda hidup di terminal dan ingin satu program kecil di sana yang menjalankan agen di worktree dan melakukan push branch-nya, dan tidak lebih.",
+    "from": "f1fb7dd68ee2"
+  },
+  "vs.claude-squad.pick.us": {
+    "text": "<strong>Pilih Aubergine</strong> jika Anda ingin melihat beberapa agen bekerja sekaligus, tahu mana yang menunggu Anda, dan punya antrean, jadwal, dan API di sekitarnya.",
+    "from": "4d6b3293e505"
+  },
+  "vs.claude-squad.differs.title": {
+    "text": "Di mana keduanya berbeda",
+    "from": "8c2314ada082"
+  },
+  "vs.claude-squad.d1": {
+    "text": "<strong>Satu per satu, atau semuanya sekaligus.</strong> Claude Squad menampilkan daftar dan pratinjau sesi yang Anda pilih. Aubergine menggambar setiap terminal secara langsung di kanvas, sehingga lima agen adalah lima terminal yang terlihat, dan satu daftar menyebut status masing-masing dalam kata-kata.",
+    "from": "d86f1c45b8de"
+  },
+  "vs.claude-squad.d2": {
+    "text": "<strong>Siapa yang menunggu.</strong> Kami tidak menemukan apa pun di README Claude Squad tentang pemberitahuan bahwa agen menunggu atau selesai. Aubergine menandai terminal yang menunggu dengan warna, menghitung yang menunggu di bagian atas, pindah ke yang berikutnya dengan satu tombol, dan bisa mengirim notifikasi dari halaman yang terbuka.",
+    "from": "211530499e12"
+  },
+  "vs.claude-squad.d3": {
+    "text": "<strong>Apa yang ada di sekitar agen.</strong> Aubergine punya antrean tugas dengan batas, jadwal, workflow dengan langkah yang disetujui orang, catatan dan field di setiap terminal, API HTTP, dan server MCP. Claude Squad terbatas pada sesi dan branch-nya.",
+    "from": "f50c8e772a93"
+  },
+  "vs.claude-squad.has.title": {
+    "text": "Apa yang dimiliki Claude Squad dan tidak dimiliki Aubergine",
+    "from": "98723dd6c82d"
+  },
+  "vs.claude-squad.h1": {
+    "text": "Claude Squad berjalan di dalam terminal yang sudah Anda buka, tanpa server dan tanpa browser. Ia bekerja lewat SSH seperti program terminal lain; Aubergine dari tempat lain memerlukan tunnel atau proxy.",
+    "from": "f20b31ac2b9e"
+  },
+  "vs.claude-squad.h2": {
+    "text": "Claude Squad melakukan commit dan push branch untuk Anda, dan menjeda sesi dengan melakukan commit pekerjaannya. Aubergine tidak pernah melakukan commit atau push.",
+    "from": "ca1a86c924f4"
+  },
+  "vs.claude-squad.h3": {
+    "text": "Mode eksperimental yang menerima prompt agen dengan sendirinya. Aubergine tidak pernah menjawab agen untuk Anda.",
+    "from": "0b05aa90e62a"
+  },
+  "vs.claude-squad.q1.q": {
+    "text": "Apakah Aubergine alternatif untuk Claude Squad?",
+    "from": "361c471f4cfa"
+  },
+  "vs.claude-squad.q1.a": {
+    "text": "Ya, untuk pekerjaan yang sama dengan cara lain. Keduanya menjalankan setiap agen di sesi tmux dan bisa memberi masing-masing worktree Git di branch sendiri. Claude Squad melakukannya dari program di terminal Anda; Aubergine dari halaman di browser Anda dengan semua terminal terlihat.",
+    "from": "a917cadf4b9c"
+  },
+  "vs.claude-squad.q2.q": {
+    "text": "Apakah keduanya memakai tmux?",
+    "from": "7bb088dbc786"
+  },
+  "vs.claude-squad.q2.a": {
+    "text": "Ya. Claude Squad mencantumkan tmux sebagai prasyarat dan membuat sesi tmux untuk setiap agen. Aubergine memerlukan tmux 3.2 atau lebih baru dan menjalankannya di socket sendiri dengan konfigurasinya sendiri, sehingga tmux Anda sendiri tidak terganggu.",
+    "from": "6811d9954e5a"
+  },
+  "vs.claude-squad.q3.q": {
+    "text": "Apakah Claude Squad bekerja dengan agen selain Claude Code?",
+    "from": "b8ca49d7a338"
+  },
+  "vs.claude-squad.q3.a": {
+    "text": "README-nya menyebut program bawaannya <code>claude</code> dan program lain, seperti Codex, Gemini, atau Aider, disebut dengan <code>-p</code>. Aubergine menjalankan program command-line apa pun di terminal; hal-hal yang dilakukannya sendiri untuk agen dibuat untuk Claude Code.",
+    "from": "e25dfec3422d"
+  },
+  "vs.claude-squad.q4.q": {
+    "text": "Lisensi apa yang dimiliki masing-masing?",
+    "from": "8b3801771777"
+  },
+  "vs.claude-squad.q4.a": {
+    "text": "Claude Squad berada di bawah AGPL-3.0, Aubergine di bawah lisensi MIT. Keduanya gratis.",
+    "from": "b9eaa7117d9a"
+  },
+  "vs.claude-squad.mark": {
+    "text": "Aubergine tidak berafiliasi dengan Claude Squad atau dengan Anthropic. Claude Squad adalah nama proyek smtg-ai; Claude adalah merek dagang Anthropic.",
+    "from": "ce7ff8c148b6"
+  },
+  "vs.claude-squad.c.form": {
+    "text": "Program di terminal Anda, dijalankan sebagai <code>cs</code>",
+    "from": "e739d8457685"
+  },
+  "vs.claude-squad.c.runs": {
+    "text": "macOS dan Linux; di Windows dengan tmux lewat WSL. Memerlukan tmux dan <code>gh</code>",
+    "from": "abc0235db83e"
+  },
+  "vs.claude-squad.c.price": {
+    "text": "AGPL-3.0, gratis",
+    "from": "558fbe03f51b"
+  },
+  "vs.claude-squad.c.agents": {
+    "text": "Claude Code kecuali Anda menyebut yang lain: Codex, Gemini, Aider, atau perintah apa pun",
+    "from": "1fe7348291c8"
+  },
+  "vs.claude-squad.c.layout": {
+    "text": "Daftar sesi dengan pratinjau dan tab diff, di satu jendela terminal",
+    "from": "3d5b69fb4009"
+  },
+  "vs.claude-squad.c.apart": {
+    "text": "Sesi tmux dan worktree Git di branch sendiri untuk masing-masing",
+    "from": "d8335dee55c9"
+  },
+  "vs.claude-squad.c.closed": {
+    "text": "Sesi adalah sesi tmux; README-nya tidak menyebut apa yang bertahan",
+    "from": "db4a444f7d33"
+  },
+  "vs.claude-squad.c.waits": {
+    "text": "Tidak ada yang ditemukan di README-nya",
+    "from": "8f95c49e434f"
+  },
+  "vs.claude-squad.c.review": {
+    "text": "Tab diff; ia melakukan commit dan push branch",
+    "from": "e4f8bb6419df"
+  },
+  "vs.claude-squad.c.device": {
+    "text": "Tidak ada yang ditemukan di README-nya",
+    "from": "8f95c49e434f"
+  },
+  "vs.claude-squad.c.programs": {
+    "text": "Opsi di command line-nya; tidak ditemukan API atau server MCP",
+    "from": "d88b2e8d7fe3"
+  },
+  "vs.claude-squad.c.timed": {
+    "text": "Tidak ada yang ditemukan di README-nya",
+    "from": "8f95c49e434f"
+  },
+  "vs.vibe-kanban.crumb": {
+    "text": "Vibe Kanban",
+    "from": "306161ab46c9"
+  },
+  "vs.vibe-kanban.name": {
+    "text": "Vibe Kanban",
+    "from": "306161ab46c9"
+  },
+  "vs.vibe-kanban.meta.title": {
+    "text": "Aubergine vs Vibe Kanban: papan issue atau kanvas berisi terminal | Aubergine",
+    "from": "9f0bf97bf989"
+  },
+  "vs.vibe-kanban.meta.description": {
+    "text": "Vibe Kanban dan Aubergine sama-sama lokal, open source, dan ditampilkan di browser Anda. Vibe Kanban merencanakan pekerjaan sebagai issue di papan; Aubergine menampilkan agen itu sendiri sebagai terminal yang berdampingan.",
+    "from": "3dad274de8a4"
+  },
+  "vs.vibe-kanban.title": {
+    "text": "Aubergine vs Vibe Kanban",
+    "from": "c5b1f18fa84d"
+  },
+  "vs.vibe-kanban.lead": {
+    "text": "Keduanya open source, berjalan di komputer Anda sendiri, dan dipakai di browser. Vibe Kanban berangkat dari pekerjaan: issue di papan, masing-masing diserahkan ke agen. Aubergine berangkat dari agen: terminal berdampingan, dengan antrean di sampingnya.",
+    "from": "3d84a2e91b62"
+  },
+  "vs.vibe-kanban.how": {
+    "text": "<strong>Sumber informasi ini.</strong> Apa yang dikatakan di sini tentang Vibe Kanban berasal dari <a href=\"https://www.vibekanban.com/docs\">dokumentasinya</a> dan <a href=\"https://github.com/BloopAI/vibe-kanban\">repositorinya</a> sebagaimana dibaca pada 26 November 2026. Kami belum menjalankan Vibe Kanban. Jika ada yang salah atau usang, <a href=\"https://github.com/thirstyeggplant/aubergine/issues\">beri tahu kami</a>.",
+    "from": "99375c152de4"
+  },
+  "vs.vibe-kanban.status": {
+    "text": "<strong>Posisi Vibe Kanban.</strong> Pada 10 April 2026 <a href=\"https://www.vibekanban.com/blog/shutdown\">pembuatnya menulis</a> bahwa bloop, perusahaan di baliknya, akan ditutup, bahwa proyek ini berlanjut sebagai open source yang dikelola komunitasnya, dan bahwa layanan jarak jauhnya akan dihapus sementara workspace lokal tetap berfungsi. Dokumentasi dan halaman harganya masih menjelaskan layanan itu saat ini ditulis; rilis terus berlanjut.",
+    "from": "e7d0f9efaeb3"
+  },
+  "vs.vibe-kanban.is.title": {
+    "text": "Apa itu Vibe Kanban",
+    "from": "ec9867114fba"
+  },
+  "vs.vibe-kanban.is.text": {
+    "text": "Menurut deskripsinya sendiri, papan kanban bagi developer untuk melacak tugas coding dengan agen coding. <code>npx vibe-kanban</code> menjalankan server lokal dan membuka halamannya. Sebuah issue menjadi workspace: worktree Git untuk repositori yang Anda pilih, percakapan dengan salah satu dari sepuluh agen atau lebih yang dikenalnya berdasarkan nama, perubahan di sampingnya, lalu pull request dan merge. Vibe Kanban berada di bawah lisensi Apache-2.0.",
+    "from": "6d4c2f9e57b0"
+  },
+  "vs.vibe-kanban.pick.title": {
+    "text": "Mana yang dipilih",
+    "from": "9190a8f83f35"
+  },
+  "vs.vibe-kanban.pick.them": {
+    "text": "<strong>Pilih Vibe Kanban</strong> jika Anda berpikir dalam issue: merencanakan di papan, menyerahkan setiap kartu ke agen, meninjau diff-nya dengan komentar, lalu merge.",
+    "from": "245bc2234639"
+  },
+  "vs.vibe-kanban.pick.us": {
+    "text": "<strong>Pilih Aubergine</strong> jika Anda ingin agen itu sendiri terlihat sebagai terminal yang bertahan lebih lama dari jendelanya, dan pekerjaan dibagikan dari antrean hanya saat Anda memintanya.",
+    "from": "2365113635d7"
+  },
+  "vs.vibe-kanban.differs.title": {
+    "text": "Di mana keduanya berbeda",
+    "from": "8c2314ada082"
+  },
+  "vs.vibe-kanban.d1": {
+    "text": "<strong>Percakapan atau terminal.</strong> Vibe Kanban menampilkan agen sebagai panel percakapan dengan perubahannya di samping. Aubergine menampilkan terminal agen itu sendiri, dan banyak terminal sekaligus di kanvas.",
+    "from": "0c890c4d406b"
+  },
+  "vs.vibe-kanban.d2": {
+    "text": "<strong>Program apa pun.</strong> Vibe Kanban mencantumkan agen yang didukungnya berdasarkan nama. Terminal Aubergine adalah shell: agen command-line apa pun berjalan di dalamnya, begitu juga build, test, atau server. Hal-hal yang dilakukan Aubergine sendiri untuk agen dibuat untuk Claude Code.",
+    "from": "23aec210dcbd"
+  },
+  "vs.vibe-kanban.d3": {
+    "text": "<strong>Apa yang berakhir saat ditutup.</strong> Kami tidak menemukan apa pun di dokumentasi Vibe Kanban tentang apa yang terjadi pada agen yang sedang berjalan saat servernya berhenti. Di Aubergine setiap terminal adalah sesi tmux, dan menghentikan Aubergine atau menutup browser tidak mengakhiri apa pun.",
+    "from": "2f1d6cdf5c9f"
+  },
+  "vs.vibe-kanban.has.title": {
+    "text": "Apa yang dimiliki Vibe Kanban dan tidak dimiliki Aubergine",
+    "from": "5076a47e917f"
+  },
+  "vs.vibe-kanban.h1": {
+    "text": "Papan kanban berisi issue dengan prioritas, tag, dan sub-issue. Aubergine punya antrean tugas dan papan workflow yang sedang berjalan, bukan pelacak issue.",
+    "from": "68077704a5f0"
+  },
+  "vs.vibe-kanban.h2": {
+    "text": "Diff dengan komentar inline yang dikirim kembali ke agen, lalu pull request, rebase, dan merge. Aubergine menunjukkan apa yang berubah dan tidak pernah melakukan commit atau merge.",
+    "from": "93ff80b2e186"
+  },
+  "vs.vibe-kanban.h3": {
+    "text": "Windows di antara platform yang didokumentasikannya, suara, dan daftar agen yang lebih panjang yang dikenalnya berdasarkan nama.",
+    "from": "1aadd7b5de39"
+  },
+  "vs.vibe-kanban.q1.q": {
+    "text": "Apakah Aubergine alternatif untuk Vibe Kanban?",
+    "from": "4aa8ac6e6711"
+  },
+  "vs.vibe-kanban.q1.a": {
+    "text": "Untuk menjalankan beberapa agen secara lokal di worktree Git dan melihat mana yang membutuhkan Anda, ya. Bentuknya berbeda: Aubergine punya terminal di kanvas dan antrean tugas, sementara Vibe Kanban punya papan issue dengan percakapan, dan Aubergine tidak membuka pull request dan tidak melakukan merge apa pun.",
+    "from": "98cbddf025ec"
+  },
+  "vs.vibe-kanban.q2.q": {
+    "text": "Apakah Vibe Kanban masih dikelola?",
+    "from": "6f567471ea10"
+  },
+  "vs.vibe-kanban.q2.a": {
+    "text": "Pembuatnya menulis pada 10 April 2026 bahwa perusahaan di baliknya akan ditutup dan bahwa proyek ini berlanjut sebagai open source yang dikelola komunitasnya. Repositorinya sudah punya rilis sejak itu. Baca repositorinya untuk mengetahui posisinya sekarang.",
+    "from": "a82975b3065a"
+  },
+  "vs.vibe-kanban.q3.q": {
+    "text": "Apakah keduanya berjalan secara lokal?",
+    "from": "11a0fe427c73"
+  },
+  "vs.vibe-kanban.q3.a": {
+    "text": "Ya. Masing-masing adalah server di komputer Anda sendiri dengan halaman di browser Anda. Vibe Kanban mendokumentasikan login opsional untuk fitur papan dan timnya; Aubergine sama sekali tidak punya akun.",
+    "from": "ab3cc066ee10"
+  },
+  "vs.vibe-kanban.q4.q": {
+    "text": "Agen apa saja yang didukung masing-masing?",
+    "from": "7e38a7feb8bc"
+  },
+  "vs.vibe-kanban.q4.a": {
+    "text": "Vibe Kanban menyebut lebih dari sepuluh, di antaranya Claude Code, Codex, Gemini CLI, GitHub Copilot, Amp, Cursor, dan OpenCode. Aubergine menjalankan program command-line apa pun di terminal; menjalankan agen dari menu, melihat bahwa agen menunggu, dan melanjutkan percakapannya dibuat untuk Claude Code.",
+    "from": "095b9719b5a7"
+  },
+  "vs.vibe-kanban.mark": {
+    "text": "Aubergine tidak berafiliasi dengan Vibe Kanban atau pembuatnya. Vibe Kanban adalah nama proyek yang dimulai oleh Bloop AI Limited.",
+    "from": "e0e138f9589d"
+  },
+  "vs.vibe-kanban.c.form": {
+    "text": "Server di komputer Anda sendiri dan halaman di browser Anda",
+    "from": "f0e12c3481c6"
+  },
+  "vs.vibe-kanban.c.runs": {
+    "text": "macOS, Linux, dan Windows; dijalankan dengan <code>npx</code>",
+    "from": "ddd741e66ecf"
+  },
+  "vs.vibe-kanban.c.price": {
+    "text": "Apache-2.0, gratis; login opsional",
+    "from": "9823c6d319c0"
+  },
+  "vs.vibe-kanban.c.agents": {
+    "text": "Sepuluh atau lebih yang dikenalnya berdasarkan nama, di antaranya Claude Code, Codex, dan Gemini CLI",
+    "from": "3b62e7abb0fe"
+  },
+  "vs.vibe-kanban.c.layout": {
+    "text": "Papan kanban berisi issue, dan daftar workspace yang masing-masing punya percakapan",
+    "from": "2e17f6f4a543"
+  },
+  "vs.vibe-kanban.c.apart": {
+    "text": "Worktree Git untuk setiap workspace",
+    "from": "86bf78b6f747"
+  },
+  "vs.vibe-kanban.c.closed": {
+    "text": "Tidak ada yang ditemukan di dokumentasinya",
+    "from": "f6b5e7a05b9d"
+  },
+  "vs.vibe-kanban.c.waits": {
+    "text": "Suara, notifikasi browser, tanda pada workspace yang membutuhkan Anda",
+    "from": "9f3cc4e77037"
+  },
+  "vs.vibe-kanban.c.review": {
+    "text": "Diff dengan komentar inline kembali ke agen, pull request, rebase, merge",
+    "from": "4545afb112b5"
+  },
+  "vs.vibe-kanban.c.device": {
+    "text": "Lewat layanan cloud-nya, yang menurut pembuatnya akan dihapus",
+    "from": "004526c12db4"
+  },
+  "vs.vibe-kanban.c.programs": {
+    "text": "Server MCP lokal; tidak ditemukan API HTTP",
+    "from": "7f646c855e3f"
+  },
+  "vs.vibe-kanban.c.timed": {
+    "text": "Papan issue; tidak ditemukan jadwal",
+    "from": "197f6e8847f9"
+  },
+  "vs.cmux.crumb": {
+    "text": "cmux",
+    "from": "548d4fabc56e"
+  },
+  "vs.cmux.name": {
+    "text": "cmux",
+    "from": "548d4fabc56e"
+  },
+  "vs.cmux.meta.title": {
+    "text": "Aubergine vs cmux: dua terminal yang dibuat untuk agen coding | Aubergine",
+    "from": "dd38ae503d2d"
+  },
+  "vs.cmux.meta.description": {
+    "text": "cmux dan Aubergine sama-sama menjalankan agen command-line apa pun di terminal sungguhan dan memberi tahu Anda mana yang membutuhkan Anda. cmux adalah aplikasi macOS native; Aubergine adalah kanvas di browser Anda di atas tmux.",
+    "from": "9258c63e7091"
+  },
+  "vs.cmux.title": {
+    "text": "Aubergine vs cmux",
+    "from": "9c21dcf33e1e"
+  },
+  "vs.cmux.lead": {
+    "text": "Pasangan yang paling mirip di halaman-halaman ini: keduanya terminal yang dibuat untuk agen coding, keduanya menjalankan agen apa pun yang bisa Anda jalankan dari command line, keduanya open source. cmux adalah aplikasi terminal macOS native. Aubergine adalah server di komputer Anda dan kanvas berisi terminal di browser Anda.",
+    "from": "74355a6665b7"
+  },
+  "vs.cmux.how": {
+    "text": "<strong>Sumber informasi ini.</strong> Apa yang dikatakan di sini tentang cmux berasal dari <a href=\"https://cmux.com/\">situs dan dokumentasinya</a> dan <a href=\"https://github.com/manaflow-ai/cmux\">repositorinya</a> sebagaimana dibaca pada 26 November 2026. Kami belum menjalankan cmux. Jika ada yang salah atau usang, <a href=\"https://github.com/thirstyeggplant/aubergine/issues\">beri tahu kami</a>.",
+    "from": "5c9611ff5302"
+  },
+  "vs.cmux.is.title": {
+    "text": "Apa itu cmux",
+    "from": "8a1d270df445"
+  },
+  "vs.cmux.is.text": {
+    "text": "Menurut deskripsinya sendiri, terminal macOS yang dibangun di atas libghostty dengan tab vertikal dan notifikasi untuk agen coding, ditulis dalam Swift. Bilah samping mendaftar workspace dengan branch, pull request, folder, dan notifikasi terakhirnya; sebuah workspace terbagi menjadi panel dengan tab. Setiap tindakan juga berupa perintah dan pesan di socket Unix. Aplikasinya berada di bawah lisensi GPL-3.0-or-later dan gratis; mesin cloud dan aplikasi iOS versi beta tersedia dengan akun dan paket berbayar.",
+    "from": "68de3f7cd4b5"
+  },
+  "vs.cmux.pick.title": {
+    "text": "Mana yang dipilih",
+    "from": "9190a8f83f35"
+  },
+  "vs.cmux.pick.them": {
+    "text": "<strong>Pilih cmux</strong> jika Anda ingin aplikasi terminal Mac native yang cepat dengan panel, browser di dalam aplikasi, dan notifikasi macOS, dan Anda menyusun cara kerja Anda sendiri di atasnya dengan skrip.",
+    "from": "22fea8e3daf2"
+  },
+  "vs.cmux.pick.us": {
+    "text": "<strong>Pilih Aubergine</strong> jika Anda ingin agen yang tetap berjalan saat aplikasinya ditutup tanpa harus memilih mode, worktree per agen yang dibuatkan untuk Anda, serta antrean, jadwal, dan persetujuan yang sudah tersedia.",
+    "from": "362a7c018644"
+  },
+  "vs.cmux.differs.title": {
+    "text": "Di mana keduanya berbeda",
+    "from": "8c2314ada082"
+  },
+  "vs.cmux.d1": {
+    "text": "<strong>Apa yang berakhir saat ditutup.</strong> cmux mendokumentasikan bahwa keluar dari aplikasi menyimpan tata letak dan folder, dan proses yang hidup tidak dipertahankan, kecuali Anda memilih mode tmux lokalnya. Di Aubergine tmux bukan sebuah mode: setiap terminal adalah sesi tmux sejak awal. Tidak ada yang mempertahankan proses saat komputer dimulai ulang.",
+    "from": "448c9e2ac6d6"
+  },
+  "vs.cmux.d2": {
+    "text": "<strong>Primitif, atau hal-hal di sekitarnya.</strong> cmux menyebut dirinya primitif, bukan solusi, dan memberi Anda perintah dan socket untuk membangun sendiri. Aubergine datang dengan salinan kerja di worktree Git, antrean dengan batas, jadwal, workflow dengan persetujuan, dan satu daftar dari apa yang menunggu Anda.",
+    "from": "c675408c16db"
+  },
+  "vs.cmux.d3": {
+    "text": "<strong>Aplikasi atau halaman.</strong> cmux adalah aplikasi Mac yang digambar oleh sistem. Aubergine adalah halaman di browser: lebih lambat digambar daripada terminal native, dan bisa dijangkau dari browser lain yang Anda pasangkan lewat proxy yang Anda jalankan.",
+    "from": "a320e661ca17"
+  },
+  "vs.cmux.has.title": {
+    "text": "Apa yang dimiliki cmux dan tidak dimiliki Aubergine",
+    "from": "3fc881ffd285"
+  },
+  "vs.cmux.h1": {
+    "text": "Terminal native di atas libghostty, panel terbagi, dan browser di dalam aplikasi yang bisa dikendalikan perintahnya. Aubergine menggambar terminal di halaman browser dan tidak punya panel: terminal ditempatkan di kanvas.",
+    "from": "2a8a37988a85"
+  },
+  "vs.cmux.h2": {
+    "text": "Notifikasi macOS dan perintah kustom saat sebuah panel membutuhkan Anda, dipicu oleh escape sequence yang sudah dipakai terminal, untuk program apa pun. Aubergine melihat agen menunggu lewat hook yang dibuat untuk Claude Code, dan memberi notifikasi hanya dari halaman yang terbuka.",
+    "from": "c88597f63652"
+  },
+  "vs.cmux.h3": {
+    "text": "<code>cmux ssh</code> untuk workspace di mesin jarak jauh, aplikasi iOS versi beta, dan mesin cloud di paket berbayarnya.",
+    "from": "46878f831283"
+  },
+  "vs.cmux.q1.q": {
+    "text": "Apakah Aubergine alternatif untuk cmux?",
+    "from": "d03cb98ddd13"
+  },
+  "vs.cmux.q1.a": {
+    "text": "Ya: keduanya terminal untuk menjalankan beberapa agen coding dan melihat mana yang membutuhkan Anda. cmux adalah aplikasi macOS native; Aubergine berjalan di browser di atas tmux, dan menambahkan salinan kerja, antrean, jadwal, dan workflow.",
+    "from": "0cabdb734f94"
+  },
+  "vs.cmux.q2.q": {
+    "text": "Apakah cmux memerlukan tmux?",
+    "from": "836e5e3d4677"
+  },
+  "vs.cmux.q2.a": {
+    "text": "Tidak. Dokumentasinya menyebut tmux tidak diperlukan, dan menawarkan mode tmux lokal opsional untuk mempertahankan proses yang hidup saat cmux ditutup. Aubergine memerlukan tmux 3.2 atau lebih baru dan menjalankan setiap terminal di dalamnya.",
+    "from": "a18611c76706"
+  },
+  "vs.cmux.q3.q": {
+    "text": "Apakah cmux berjalan di Linux atau Windows?",
+    "from": "09ca6d3b4a05"
+  },
+  "vs.cmux.q3.a": {
+    "text": "README-nya menyebut hanya macOS, untuk saat ini, di macOS 14 atau lebih baru. Aubergine dibuat untuk macOS, di Linux baru dijalankan di dalam kontainer, dan di Windows hanya berjalan di dalam WSL 2, dan itu belum dicoba.",
+    "from": "5ba1cbadcc1c"
+  },
+  "vs.cmux.q4.q": {
+    "text": "Apakah keduanya gratis dan open source?",
+    "from": "4d9f144a07a6"
+  },
+  "vs.cmux.q4.a": {
+    "text": "Aplikasi cmux berada di bawah lisensi GPL-3.0-or-later dan gratis, dengan paket berbayar untuk cloud-nya; perangkat lunak servernya punya lisensi yang berbeda. Aubergine berada di bawah lisensi MIT dan tidak punya paket berbayar.",
+    "from": "9e51e627b171"
+  },
+  "vs.cmux.mark": {
+    "text": "Aubergine tidak berafiliasi dengan cmux atau pembuatnya. cmux adalah nama produk dari Manaflow, Inc.",
+    "from": "750ad046fa7f"
+  },
+  "vs.cmux.c.form": {
+    "text": "Aplikasi terminal macOS native",
+    "from": "d8719e14d15d"
+  },
+  "vs.cmux.c.runs": {
+    "text": "Hanya macOS 14 atau lebih baru",
+    "from": "76dd2c62352e"
+  },
+  "vs.cmux.c.price": {
+    "text": "Aplikasi GPL-3.0-or-later, gratis, tanpa perlu akun; paket berbayar untuk cloud-nya",
+    "from": "791d945bc808"
+  },
+  "vs.cmux.c.agents": {
+    "text": "Agen apa pun yang berjalan di terminal",
+    "from": "5e7c625a3994"
+  },
+  "vs.cmux.c.layout": {
+    "text": "Bilah samping berisi workspace, masing-masing terbagi menjadi panel dengan tab",
+    "from": "be8baacc5010"
+  },
+  "vs.cmux.c.apart": {
+    "text": "Tidak ditemukan yang membuat worktree untuk agen; mesin terpisah di cloud-nya",
+    "from": "09a8946a9874"
+  },
+  "vs.cmux.c.closed": {
+    "text": "Tata letak dan folder kembali; proses yang hidup hanya di mode tmux opsionalnya",
+    "from": "93cc242a3b3d"
+  },
+  "vs.cmux.c.waits": {
+    "text": "Cincin di sekeliling panel, badge di bilah samping, notifikasi macOS",
+    "from": "9a5fda5bbd5c"
+  },
+  "vs.cmux.c.review": {
+    "text": "Status pull request yang ditautkan di bilah samping; tidak ditemukan tampilan diff",
+    "from": "1aac4ceaa460"
+  },
+  "vs.cmux.c.device": {
+    "text": "Aplikasi iOS versi beta, dengan akun dan Mac menyala; <code>cmux ssh</code>",
+    "from": "2508df0177f8"
+  },
+  "vs.cmux.c.programs": {
+    "text": "Perintah dan socket Unix untuk setiap tindakan; tidak ditemukan server MCP",
+    "from": "60d43aa42ad3"
+  },
+  "vs.cmux.c.timed": {
+    "text": "Tidak ada yang ditemukan di dokumentasinya",
+    "from": "f6b5e7a05b9d"
+  },
+  "vs.warp.crumb": {
+    "text": "Warp",
+    "from": "3db7c958dfdf"
+  },
+  "vs.warp.name": {
+    "text": "Warp",
+    "from": "3db7c958dfdf"
+  },
+  "vs.warp.meta.title": {
+    "text": "Aubergine vs Warp untuk menjalankan beberapa agen coding | Aubergine",
+    "from": "cbd600eca532"
+  },
+  "vs.warp.meta.description": {
+    "text": "Warp adalah terminal desktop dengan agennya sendiri, paket berbayar, dan agen cloud, di macOS, Windows, dan Linux. Aubergine tidak memanggil model: ia menjalankan agen yang sudah Anda pakai di terminal di kanvas, tetap berjalan berkat tmux.",
+    "from": "097dab708969"
+  },
+  "vs.warp.title": {
+    "text": "Aubergine vs Warp",
+    "from": "05210af0bb08"
+  },
+  "vs.warp.lead": {
+    "text": "Warp adalah aplikasi terminal utuh, dengan agennya sendiri, paket, dan cloud, yang juga menjalankan agen command-line lain di tab dan panel. Aubergine lebih sempit: ia tidak memanggil model dan tidak menggantikan aplikasi terminal. Ia menjalankan agen yang sudah Anda pakai berdampingan di halaman browser, dan menjaganya tetap berjalan.",
+    "from": "67b1020677f9"
+  },
+  "vs.warp.how": {
+    "text": "<strong>Sumber informasi ini.</strong> Apa yang dikatakan di sini tentang Warp berasal dari <a href=\"https://docs.warp.dev/\">dokumentasinya</a> dan <a href=\"https://www.warp.dev/pricing\">halaman harganya</a> sebagaimana dibaca pada 26 November 2026, dan hanya tentang menjalankan beberapa agen coding; Warp melakukan banyak hal lain. Kami belum menjalankan Warp untuk ini. Jika ada yang salah atau usang, <a href=\"https://github.com/thirstyeggplant/aubergine/issues\">beri tahu kami</a>.",
+    "from": "c0a09271e3dc"
+  },
+  "vs.warp.is.title": {
+    "text": "Apa itu Warp",
+    "from": "295785f2bf50"
+  },
+  "vs.warp.is.text": {
+    "text": "Menurut deskripsinya sendiri, lingkungan pengembangan agentic: terminal desktop untuk macOS, Windows, dan Linux yang kliennya open source di bawah AGPL-3.0. Warp punya Warp Agent sendiri, yang memanggil model lewat Warp atau dengan kunci Anda sendiri, dan menjalankan agen command-line lain seperti Claude Code, Codex, dan Gemini CLI di tab dan panel, dengan panel semua agen yang aktif, notifikasi, panel tinjauan kode, dan agen cloud yang berjalan sesuai jadwal.",
+    "from": "54647299b7d0"
+  },
+  "vs.warp.pick.title": {
+    "text": "Mana yang dipilih",
+    "from": "9190a8f83f35"
+  },
+  "vs.warp.pick.them": {
+    "text": "<strong>Pilih Warp</strong> jika Anda ingin satu aplikasi terminal untuk segalanya, juga di Windows dan Linux, dengan agennya sendiri di dalamnya dan agen cloud yang bisa Anda jadwalkan.",
+    "from": "b6f4c8cea075"
+  },
+  "vs.warp.pick.us": {
+    "text": "<strong>Pilih Aubergine</strong> jika Anda sudah punya terminal dan agen yang Anda sukai, dan hanya menginginkan apa yang kurang di antara keduanya: semuanya terlihat, tetap berjalan, tanpa akun dan tanpa model sendiri.",
+    "from": "24b891e15c2a"
+  },
+  "vs.warp.differs.title": {
+    "text": "Di mana keduanya berbeda",
+    "from": "8c2314ada082"
+  },
+  "vs.warp.d1": {
+    "text": "<strong>Model sendiri, atau tidak sama sekali.</strong> Warp punya agennya sendiri, dengan paket yang membayar pemakaiannya dan opsi untuk memakai kunci Anda sendiri. Aubergine tidak memanggil model dan tidak menyimpan kunci: agen di terminalnya adalah agen yang Anda instal dan Anda masuki sendiri.",
+    "from": "5fbbccefb96a"
+  },
+  "vs.warp.d2": {
+    "text": "<strong>Apa yang berakhir saat ditutup.</strong> Warp mendokumentasikan bahwa ia memulihkan jendela, tab, panel, dan output terbaru; kami tidak menemukan apa pun yang menyebut program yang sedang berjalan dipertahankan. Di Aubergine setiap terminal adalah sesi tmux, sehingga agen tetap berjalan saat browser atau Aubergine sendiri berhenti.",
+    "from": "18624a0a66fc"
+  },
+  "vs.warp.d3": {
+    "text": "<strong>Dari mana agen Anda bisa dijangkau.</strong> Warp menerbitkan sesi yang sedang berjalan ke cloud-nya sehingga Anda bisa mengendalikannya dari ponsel atau browser. Aubergine tidak punya cloud: perangkat lain adalah browser yang Anda pasangkan dengan kode, lewat proxy yang Anda jalankan di mesin Anda sendiri, dicoba sekali di satu Mac.",
+    "from": "b82fc6e2eec4"
+  },
+  "vs.warp.has.title": {
+    "text": "Apa yang dimiliki Warp dan tidak dimiliki Aubergine",
+    "from": "9e0e15fe7a1a"
+  },
+  "vs.warp.h1": {
+    "text": "Windows dan Linux sebagai platform yang didokumentasikan, sebagai aplikasi desktop. Aubergine dibuat untuk macOS.",
+    "from": "0d9c59074c72"
+  },
+  "vs.warp.h2": {
+    "text": "Agennya sendiri, dan agen cloud yang berjalan sesuai jadwal atau dari layanan lain seperti Slack, Linear, atau GitHub. Aubergine tidak menjalankan apa pun dari luar dan tidak menjangkau jaringan untuk jadwal.",
+    "from": "fa39346e5209"
+  },
+  "vs.warp.h3": {
+    "text": "Semua hal lain dari sebuah aplikasi terminal: editornya untuk perintah, blok output, dan notifikasi untuk lebih dari satu agen. Aubergine melihat agen menunggu lewat hook yang dibuat untuk Claude Code.",
+    "from": "63765a4c4189"
+  },
+  "vs.warp.q1.q": {
+    "text": "Apakah Aubergine alternatif untuk Warp?",
+    "from": "d02fa9b2f885"
+  },
+  "vs.warp.q1.a": {
+    "text": "Hanya untuk satu hal yang dilakukan Warp: menjalankan beberapa agen coding command-line dan melihat mana yang membutuhkan Anda. Aubergine bukan aplikasi terminal dan tidak punya agen sendiri. Anda bisa tetap memakai Warp, atau terminal apa pun, dan memakai Aubergine untuk agen.",
+    "from": "4d9ff5b3c2fa"
+  },
+  "vs.warp.q2.q": {
+    "text": "Apakah saya memerlukan akun atau paket berbayar?",
+    "from": "7ea716600927"
+  },
+  "vs.warp.q2.a": {
+    "text": "Dokumentasi Warp menyebut login opsional untuk terminalnya, dan halaman harganya mencantumkan paket gratis dan paket berbayar. Aubergine tidak punya akun dan tidak punya paket.",
+    "from": "0104a9ec4212"
+  },
+  "vs.warp.q3.q": {
+    "text": "Apakah Warp open source?",
+    "from": "bb814de9622d"
+  },
+  "vs.warp.q3.a": {
+    "text": "Dokumentasinya menyebut klien Warp open source di bawah AGPL-3.0. Aubergine berada di bawah lisensi MIT.",
+    "from": "a49fee890f51"
+  },
+  "vs.warp.q4.q": {
+    "text": "Bisakah saya memakai Warp dan Aubergine bersama-sama?",
+    "from": "98378a2c4d20"
+  },
+  "vs.warp.q4.a": {
+    "text": "Ya, seperti dengan aplikasi terminal apa pun. Terminal Aubergine adalah sesi tmux, dan <code>aubergine attach &lt;name&gt;</code> menampilkan salah satunya di jendela aplikasi terminal tempat Anda menjalankan perintah itu. Kami belum mencobanya di Warp.",
+    "from": "bc272b9d95cf"
+  },
+  "vs.warp.mark": {
+    "text": "Aubergine tidak berafiliasi dengan Warp. Warp adalah merek dagang Denver Technologies, Inc., yang berbisnis sebagai Warp.",
+    "from": "9cc6ff5ce341"
+  },
+  "vs.warp.c.form": {
+    "text": "Aplikasi terminal desktop dengan agennya sendiri, dan agen cloud",
+    "from": "ea1d6176e636"
+  },
+  "vs.warp.c.runs": {
+    "text": "macOS, Windows, dan Linux",
+    "from": "637825dc78ad"
+  },
+  "vs.warp.c.price": {
+    "text": "Klien open source di bawah AGPL-3.0; paket gratis dan paket berbayar; login opsional",
+    "from": "1ce40e23dc83"
+  },
+  "vs.warp.c.agents": {
+    "text": "Warp Agent miliknya sendiri, dan agen command-line seperti Claude Code, Codex, Gemini CLI",
+    "from": "fe6cfd7211da"
+  },
+  "vs.warp.c.layout": {
+    "text": "Tab dan panel, bilah samping, dan panel semua agen yang aktif",
+    "from": "9b58a6cb680e"
+  },
+  "vs.warp.c.apart": {
+    "text": "Mengenali worktree Git yang Anda buat; kontainer untuk agen cloud-nya",
+    "from": "d5692791483e"
+  },
+  "vs.warp.c.closed": {
+    "text": "Jendela, tab, dan output terbaru kembali; tidak ditemukan apa pun tentang program yang sedang berjalan",
+    "from": "3084fbca2310"
+  },
+  "vs.warp.c.waits": {
+    "text": "Notifikasi di aplikasi dan di desktop: selesai, permintaan, galat",
+    "from": "c3dc4bc6b1ec"
+  },
+  "vs.warp.c.review": {
+    "text": "Panel tinjauan kode, dengan komentar yang dikirim ke agen",
+    "from": "0662c604fdbd"
+  },
+  "vs.warp.c.device": {
+    "text": "Sesi yang diterbitkan ke cloud-nya, untuk ponsel atau browser",
+    "from": "c722dd49add9"
+  },
+  "vs.warp.c.programs": {
+    "text": "Agen command-line, dan API untuk run agen cloud-nya",
+    "from": "fa3857a7a76b"
+  },
+  "vs.warp.c.timed": {
+    "text": "Agen cloud sesuai jadwal, dan dijalankan dari layanan lain",
+    "from": "e738cdacf6b5"
+  },
+  "vs.paradev.crumb": {
+    "text": "Paradev",
+    "from": "6ff850fa1891"
+  },
+  "vs.paradev.name": {
+    "text": "Paradev",
+    "from": "6ff850fa1891"
+  },
+  "vs.paradev.meta.title": {
+    "text": "Aubergine vs Paradev (dulu Superset) | Aubergine",
+    "from": "601eebcc9205"
+  },
+  "vs.paradev.meta.description": {
+    "text": "Paradev, aplikasi yang dulu bernama Superset, dan Aubergine sama-sama berlisensi MIT dan menjalankan agen coding apa pun di worktree Git. Paradev adalah aplikasi desktop dengan paket berbayar; Aubergine adalah kanvas di browser Anda tanpa akun.",
+    "from": "24bc65c55b47"
+  },
+  "vs.paradev.title": {
+    "text": "Aubergine vs Paradev, dulu Superset",
+    "from": "2e91a4b729f8"
+  },
+  "vs.paradev.lead": {
+    "text": "Paradev adalah aplikasi desktop yang bernama Superset sampai Oktober 2026. Seperti Aubergine, Paradev berada di bawah lisensi MIT, menjalankan agen command-line apa pun, dan bekerja di worktree Git. Paradev adalah aplikasi dengan paket, aplikasi ponsel, dan cloud; Aubergine adalah server di komputer Anda sendiri dan halaman di browser Anda, tanpa semua itu.",
+    "from": "776bb8091dc6"
+  },
+  "vs.paradev.how": {
+    "text": "<strong>Sumber informasi ini.</strong> Apa yang dikatakan di sini tentang Paradev berasal dari <a href=\"https://docs.paradev.com/\">dokumentasinya</a>, <a href=\"https://paradev.com/changelog\">changelog-nya</a>, dan <a href=\"https://github.com/paradevai/paradev\">repositorinya</a> sebagaimana dibaca pada 26 November 2026. Kami belum menjalankan Paradev. Jika ada yang salah atau usang, <a href=\"https://github.com/thirstyeggplant/aubergine/issues\">beri tahu kami</a>.",
+    "from": "ba6080f1e8dc"
+  },
+  "vs.paradev.status": {
+    "text": "<strong>Namanya.</strong> Changelog-nya untuk 25 Oktober 2026 menyebut Superset kini menjadi Paradev dan bahwa akun, workspace, pengaturan, dan perintah <code>superset</code> tetap terbawa. Ini bukan Apache Superset, alat data itu.",
+    "from": "0fc4d01036e0"
+  },
+  "vs.paradev.is.title": {
+    "text": "Apa itu Paradev",
+    "from": "520654639a88"
+  },
+  "vs.paradev.is.text": {
+    "text": "Menurut deskripsinya sendiri, workspace open source untuk Claude Code, Codex, dan agen coding apa pun: aplikasi desktop, bukan aplikasi terminal, tempat agen berjalan sebagai chat atau di terminal. Setiap tugas punya worktree, branch, dan terminal sendiri; satu bilah samping menampilkan semua sesi per proyek. Paradev punya penampil diff dengan check pull request dan merge, sebuah perintah, SDK, dan server MCP, dan di paket berbayar aplikasi ponsel, akses jarak jauh, workspace cloud, dan otomatisasi.",
+    "from": "304d9c9b59a7"
+  },
+  "vs.paradev.pick.title": {
+    "text": "Mana yang dipilih",
+    "from": "9190a8f83f35"
+  },
+  "vs.paradev.pick.them": {
+    "text": "<strong>Pilih Paradev</strong> jika Anda ingin aplikasi desktop yang membuat worktree untuk setiap tugas dan membawanya melalui diff, check, dan merge, dengan aplikasi ponsel dan cloud jika Anda membayarnya.",
+    "from": "a5db2e59a2a0"
+  },
+  "vs.paradev.pick.us": {
+    "text": "<strong>Pilih Aubergine</strong> jika Anda ingin setiap bagian gratis di komputer Anda sendiri tanpa akun: terminal berdampingan, antrean, jadwal, dan pemakaian dari perangkat lain.",
+    "from": "29238cd8839e"
+  },
+  "vs.paradev.differs.title": {
+    "text": "Di mana keduanya berbeda",
+    "from": "8c2314ada082"
+  },
+  "vs.paradev.d1": {
+    "text": "<strong>Apa yang gratis.</strong> Paradev mencantumkan paket gratis untuk satu orang dengan workspace lokal, aplikasinya, dan perintahnya; otomatisasi, aplikasi ponsel, dan akses jarak jauh ada di paket berbayar. Aubergine tidak punya paket: antreannya, jadwalnya, dan pemakaian dari perangkat lain semuanya ada di satu program berlisensi MIT, tanpa akun.",
+    "from": "e88d006e6f33"
+  },
+  "vs.paradev.d2": {
+    "text": "<strong>Bilah samping atau kanvas.</strong> Paradev menampilkan sesi di bilah samping dengan tab dan panel. Aubergine menempatkan terminal di kanvas yang bisa Anda geser dan zoom, sehingga banyak terminal hidup terlihat sekaligus, dengan satu daftar semuanya di sampingnya.",
+    "from": "e0a93e71bfe5"
+  },
+  "vs.paradev.d3": {
+    "text": "<strong>Bagaimana terminal bertahan lebih lama dari jendelanya.</strong> Keduanya menjaga agen tetap berjalan saat jendela ditutup: Paradev lewat daemon latar belakangnya sendiri, yang menurut dokumentasinya mengakhiri setiap terminal saat Anda keluar dari Paradev sepenuhnya; Aubergine lewat tmux, yang tetap berjalan saat Aubergine sendiri dihentikan. Mulai ulang komputer mengakhirinya, di keduanya.",
+    "from": "5190a04f786d"
+  },
+  "vs.paradev.has.title": {
+    "text": "Apa yang dimiliki Paradev dan tidak dimiliki Aubergine",
+    "from": "e211a22944f9"
+  },
+  "vs.paradev.h1": {
+    "text": "Penampil diff tempat Anda mengomentari dan mengedit perubahan agen, memantau check pull request, dan melakukan merge. Aubergine menunjukkan apa yang berubah dan tidak pernah melakukan commit, push, atau merge.",
+    "from": "d5bd58e3ed11"
+  },
+  "vs.paradev.h2": {
+    "text": "Aplikasi desktop, aplikasi iOS dan Android, workspace cloud, serta bunyi lonceng dan badge di dock saat agen membutuhkan Anda. Aubergine adalah halaman browser dan tidak memutar suara.",
+    "from": "880ab73dfaea"
+  },
+  "vs.paradev.h3": {
+    "text": "Otomatisasi yang dipicu oleh permintaan tinjauan, pesan Slack, issue, atau webhook, dan hook yang dipasangnya agar banyak agen melaporkan statusnya. Aubergine tidak menjalankan apa pun dari luar, dan melihat agen menunggu dengan sendirinya hanya untuk Claude Code.",
+    "from": "60f6c475b3fb"
+  },
+  "vs.paradev.q1.q": {
+    "text": "Apakah Aubergine alternatif untuk Paradev (Superset)?",
+    "from": "e9c9295c1cf9"
+  },
+  "vs.paradev.q1.a": {
+    "text": "Untuk menjalankan beberapa agen command-line secara lokal, masing-masing di worktree Git sendiri, ya, dan dengan setiap fitur gratis. Ini bukan pengganti yang setara: Aubergine tidak punya aplikasi desktop atau ponsel, tidak ada komentar diff, tidak ada pull request atau merge, dan tidak ada cloud.",
+    "from": "8acabc2591e8"
+  },
+  "vs.paradev.q2.q": {
+    "text": "Apakah Superset sama dengan Paradev?",
+    "from": "17d548f38157"
+  },
+  "vs.paradev.q2.a": {
+    "text": "Ya. Changelog-nya untuk 25 Oktober 2026 menyebut Superset kini menjadi Paradev, dan README-nya menyebut perintahnya masih <code>superset</code>. Keduanya tidak terkait dengan Apache Superset.",
+    "from": "7906ac9c93cc"
+  },
+  "vs.paradev.q3.q": {
+    "text": "Apakah keduanya open source?",
+    "from": "1d2d2fda932d"
+  },
+  "vs.paradev.q3.a": {
+    "text": "Keduanya berada di bawah lisensi MIT. Paradev juga menjual paket untuk aplikasi ponselnya, akses jarak jauh, cloud, dan otomatisasi; Aubergine tidak menjual apa pun.",
+    "from": "0f0cd2638d86"
+  },
+  "vs.paradev.q4.q": {
+    "text": "Apakah Paradev berjalan di Linux atau Windows?",
+    "from": "9ccc6492d874"
+  },
+  "vs.paradev.q4.a": {
+    "text": "Dokumentasinya menyebut macOS, dengan build Linux eksperimental, dan bahwa Windows belum tersedia. Aubergine dibuat untuk macOS, di Linux baru dijalankan di dalam kontainer, dan di Windows hanya berjalan di dalam WSL 2, dan itu belum dicoba.",
+    "from": "733d3a59a51d"
+  },
+  "vs.paradev.mark": {
+    "text": "Aubergine tidak berafiliasi dengan Paradev atau pembuatnya, Superset Inc. Paradev dan Superset adalah nama mereka; baik mereka maupun Aubergine tidak terkait dengan Apache Superset.",
+    "from": "05f8d7ecd761"
+  },
+  "vs.paradev.c.form": {
+    "text": "Aplikasi desktop, dulu bernama Superset, dengan aplikasi ponsel dan cloud",
+    "from": "3054414596e2"
+  },
+  "vs.paradev.c.runs": {
+    "text": "macOS; build Linux eksperimental; tanpa Windows",
+    "from": "889cdaf4298b"
+  },
+  "vs.paradev.c.price": {
+    "text": "MIT; paket gratis untuk satu orang, dan paket berbayar",
+    "from": "a36a1e0e1592"
+  },
+  "vs.paradev.c.agents": {
+    "text": "Claude Code, Codex, OpenCode, Gemini, Cursor Agent, dan agen command-line apa pun",
+    "from": "24eb0a261425"
+  },
+  "vs.paradev.c.layout": {
+    "text": "Satu bilah samping berisi semua sesi per proyek, dengan tab dan panel",
+    "from": "a8991633cee6"
+  },
+  "vs.paradev.c.apart": {
+    "text": "Worktree, branch, dan terminal untuk setiap tugas",
+    "from": "e3443e224b3e"
+  },
+  "vs.paradev.c.closed": {
+    "text": "Terminal tetap berjalan di daemon-nya sampai Anda keluar sepenuhnya; mulai ulang komputer mengakhirinya",
+    "from": "c8f43d646883"
+  },
+  "vs.paradev.c.waits": {
+    "text": "Tanda sedang bekerja, bunyi lonceng saat satu selesai, badge di dock",
+    "from": "cd8c2ecb61d3"
+  },
+  "vs.paradev.c.review": {
+    "text": "Penampil diff dengan komentar dan edit, check pull request, merge",
+    "from": "2ba1d7abad83"
+  },
+  "vs.paradev.c.device": {
+    "text": "Aplikasi iOS dan Android dan akses jarak jauh, di paket berbayar; tanpa halaman web",
+    "from": "ff41edf13b81"
+  },
+  "vs.paradev.c.programs": {
+    "text": "Sebuah perintah, SDK, dan server MCP",
+    "from": "4f73909c306d"
+  },
+  "vs.paradev.c.timed": {
+    "text": "Otomatisasi sesuai jadwal atau peristiwa, di paket berbayar",
+    "from": "d0a82cd975d3"
   }
 }

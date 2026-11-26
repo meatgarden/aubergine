@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Tools for running several coding agents, compared | Aubergine</title>
-<meta name="description" content="Aubergine beside Conductor, Claude Squad, Vibe Kanban, cmux, Warp and Paradev: what each is, where it runs, what it costs, how it keeps agents apart and what closing it ends.">
+<title>Tools für mehrere Coding-Agenten gleichzeitig im Vergleich | Aubergine</title>
+<meta name="description" content="Aubergine neben Conductor, Claude Squad, Vibe Kanban, cmux, Warp und Paradev: was jedes ist, wo es läuft, was es kostet, wie es Agenten getrennt hält und was das Schließen beendet.">
 <link rel="canonical" href="https://thirstyeggplant.com/de/compare/">
 <link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/compare/">
 <link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/compare/">
@@ -27,8 +27,8 @@
 <link rel="stylesheet" href="../../style.css">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="Aubergine">
-<meta property="og:title" content="Tools for running several coding agents, compared | Aubergine">
-<meta property="og:description" content="Aubergine beside Conductor, Claude Squad, Vibe Kanban, cmux, Warp and Paradev: what each is, where it runs, what it costs, how it keeps agents apart and what closing it ends.">
+<meta property="og:title" content="Tools für mehrere Coding-Agenten gleichzeitig im Vergleich | Aubergine">
+<meta property="og:description" content="Aubergine neben Conductor, Claude Squad, Vibe Kanban, cmux, Warp und Paradev: was jedes ist, wo es läuft, was es kostet, wie es Agenten getrennt hält und was das Schließen beendet.">
 <meta property="og:url" content="https://thirstyeggplant.com/de/compare/">
 <meta property="og:image" content="https://thirstyeggplant.com/og.png">
 <meta property="og:image:width" content="1200">
@@ -37,8 +37,8 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
 <meta name="twitter:image:alt" content="Aubergine: ein Canvas voller Terminals, eines beschäftigt und eines, das auf dich wartet">
-<meta name="twitter:title" content="Tools for running several coding agents, compared | Aubergine">
-<meta name="twitter:description" content="Aubergine beside Conductor, Claude Squad, Vibe Kanban, cmux, Warp and Paradev: what each is, where it runs, what it costs, how it keeps agents apart and what closing it ends.">
+<meta name="twitter:title" content="Tools für mehrere Coding-Agenten gleichzeitig im Vergleich | Aubergine">
+<meta name="twitter:description" content="Aubergine neben Conductor, Claude Squad, Vibe Kanban, cmux, Warp und Paradev: was jedes ist, wo es läuft, was es kostet, wie es Agenten getrennt hält und was das Schließen beendet.">
 <link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
 </head>
 <body>
@@ -98,8 +98,8 @@
     {
       "@type": "TechArticle",
       "@id": "https://thirstyeggplant.com/de/compare/#article",
-      "headline": "Tools for running several coding agents, compared",
-      "description": "Aubergine beside Conductor, Claude Squad, Vibe Kanban, cmux, Warp and Paradev: what each is, where it runs, what it costs, how it keeps agents apart and what closing it ends.",
+      "headline": "Tools für mehrere Coding-Agenten gleichzeitig im Vergleich",
+      "description": "Aubergine neben Conductor, Claude Squad, Vibe Kanban, cmux, Warp und Paradev: was jedes ist, wo es läuft, was es kostet, wie es Agenten getrennt hält und was das Schließen beendet.",
       "url": "https://thirstyeggplant.com/de/compare/",
       "mainEntityOfPage": "https://thirstyeggplant.com/de/compare/",
       "datePublished": "2026-11-26",
@@ -114,17 +114,17 @@
       "@type": "BreadcrumbList",
       "itemListElement": [
         { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
-        { "@type": "ListItem", "position": 2, "name": "Compare", "item": "https://thirstyeggplant.com/de/compare/" }
+        { "@type": "ListItem", "position": 2, "name": "Vergleich", "item": "https://thirstyeggplant.com/de/compare/" }
       ]
     },
     {
       "@type": "FAQPage",
       "@id": "https://thirstyeggplant.com/de/compare/#faq",
       "mainEntity": [
-        { "@type": "Question", "name": "What is the best tool for running several Claude Code agents at once?", "acceptedAnswer": { "@type": "Answer", "text": "It depends on what you want around the agents. For a Mac app with diffs, pull requests and merging: Conductor or Paradev. For a program inside the terminal you already use: Claude Squad. For a board of issues: Vibe Kanban. For a native Mac terminal: cmux. For a terminal with its own agent and cloud agents: Warp. For plain terminals side by side in a browser page, kept running by tmux, with no account: Aubergine." } },
-        { "@type": "Question", "name": "Which of these tools are open source?", "acceptedAnswer": { "@type": "Answer", "text": "As read on 26 November 2026: Aubergine (MIT), Paradev (MIT), Vibe Kanban (Apache-2.0), Claude Squad (AGPL-3.0), the cmux app (GPL-3.0-or-later) and the Warp client (AGPL-3.0). Conductor's terms call it proprietary." } },
-        { "@type": "Question", "name": "Which of these tools run on Linux or Windows?", "acceptedAnswer": { "@type": "Answer", "text": "By their own documentation: Warp on macOS, Windows and Linux; Vibe Kanban on all three; Claude Squad on macOS and Linux, and on Windows with tmux through WSL; Paradev on macOS with an experimental Linux build; Conductor and cmux on macOS only. Aubergine is built for macOS, has been run on Linux in containers only, and runs on Windows only inside WSL 2, not yet tried." } },
-        { "@type": "Question", "name": "Which keep agents running after you close the app?", "acceptedAnswer": { "@type": "Answer", "text": "Aubergine and Claude Squad run each agent in a tmux session. Paradev documents a background daemon that keeps terminals when its window closes. cmux keeps live processes only in its opt-in tmux mode. Conductor says local sessions end with the app. Warp restores windows and recent output, not running programs. Each of Conductor, cmux, Warp and Paradev also has a cloud where agents go on. None, Aubergine included, keeps a local agent running through a restart of the computer." } }
+        { "@type": "Question", "name": "Was ist das beste Tool, um mehrere Claude-Code-Agenten gleichzeitig laufen zu lassen?", "acceptedAnswer": { "@type": "Answer", "text": "Das hängt davon ab, was du um die Agenten herum willst. Für eine Mac-App mit Diffs, Pull Requests und Mergen: Conductor oder Paradev. Für ein Programm in dem Terminal, das du schon nutzt: Claude Squad. Für ein Board mit Issues: Vibe Kanban. Für ein natives Mac-Terminal: cmux. Für ein Terminal mit eigenem Agenten und Cloud-Agenten: Warp. Für einfache Terminals nebeneinander auf einer Browserseite, am Laufen gehalten von tmux, ohne Konto: Aubergine." } },
+        { "@type": "Question", "name": "Welche dieser Tools sind Open Source?", "acceptedAnswer": { "@type": "Answer", "text": "Stand 26. November 2026: Aubergine (MIT), Paradev (MIT), Vibe Kanban (Apache-2.0), Claude Squad (AGPL-3.0), die cmux-App (GPL-3.0-or-later) und der Warp-Client (AGPL-3.0). Die Bedingungen von Conductor nennen es proprietär." } },
+        { "@type": "Question", "name": "Welche dieser Tools laufen unter Linux oder Windows?", "acceptedAnswer": { "@type": "Answer", "text": "Laut ihrer eigenen Dokumentation: Warp unter macOS, Windows und Linux; Vibe Kanban auf allen dreien; Claude Squad unter macOS und Linux und unter Windows mit tmux über WSL; Paradev unter macOS mit einem experimentellen Linux-Build; Conductor und cmux nur unter macOS. Aubergine ist für macOS gebaut, lief unter Linux bisher nur in Containern und läuft unter Windows nur in WSL 2, noch nicht ausprobiert." } },
+        { "@type": "Question", "name": "Welche lassen Agenten weiterlaufen, wenn du die App schließt?", "acceptedAnswer": { "@type": "Answer", "text": "Aubergine und Claude Squad lassen jeden Agenten in einer tmux-Session laufen. Paradev dokumentiert einen Daemon im Hintergrund, der Terminals behält, wenn sein Fenster geschlossen wird. cmux behält laufende Prozesse nur in seinem tmux-Modus, den man eigens einschaltet. Conductor sagt, dass lokale Sessions mit der App enden. Warp stellt Fenster und jüngste Ausgabe wieder her, keine laufenden Programme. Conductor, cmux, Warp und Paradev haben außerdem jeweils eine Cloud, in der Agenten weiterlaufen. Keines, Aubergine eingeschlossen, lässt einen lokalen Agenten über einen Neustart des Rechners hinweg laufen." } }
       ]
     }
   ]
@@ -132,68 +132,68 @@
 </script>
 <header class="page-head">
   <div class="wrap">
-    <nav class="crumbs" aria-label="Wo du bist"><ol><li><a href="../">Aubergine</a></li><li><span lang="en" dir="ltr">Compare</span></li></ol></nav>
-    <h1><span lang="en" dir="ltr">Tools for running several coding agents, compared</span></h1>
-    <p class="lead"><span lang="en" dir="ltr">Seven tools for the same moment: more than one coding agent at work, and you in the middle. Here is Aubergine beside Conductor, Claude Squad, Vibe Kanban, cmux, Warp and Paradev, with a page for each.</span></p>
+    <nav class="crumbs" aria-label="Wo du bist"><ol><li><a href="../">Aubergine</a></li><li>Vergleich</li></ol></nav>
+    <h1>Tools für mehrere Coding-Agenten gleichzeitig im Vergleich</h1>
+    <p class="lead">Sieben Tools für dieselbe Lage: mehr als ein Coding-Agent bei der Arbeit, und du mittendrin. Hier steht Aubergine neben Conductor, Claude Squad, Vibe Kanban, cmux, Warp und Paradev, mit einer Seite für jedes.</p>
   </div>
 </header>
 <div class="wrap page-body">
   <div class="prose">
-    <p class="note note-strong"><span lang="en" dir="ltr"><strong>How this was written.</strong> What these pages say about another tool is from that tool's own site, documentation and repository as read on 26 November 2026, and each page links to them. We have not run the other tools. Where their documentation says nothing, the page says that nothing was found, not that the tool cannot do it. These tools change fast: if something here is wrong or out of date, <a href="https://github.com/thirstyeggplant/aubergine/issues">tell us</a> and it will be corrected.</span></p>
+    <p class="note note-strong"><strong>Wie das geschrieben wurde.</strong> Was diese Seiten über ein anderes Tool sagen, stammt von dessen eigener Website, Dokumentation und Repository, gelesen am 26. November 2026, und jede Seite verlinkt dorthin. Wir haben die anderen Tools nicht ausgeführt. Wo ihre Dokumentation nichts sagt, sagt die Seite, dass nichts gefunden wurde, nicht, dass das Tool es nicht kann. Diese Tools ändern sich schnell: Wenn hier etwas falsch oder veraltet ist, <a href="https://github.com/thirstyeggplant/aubergine/issues">sag es uns</a>, und es wird korrigiert.</p>
 
-    <h2><span lang="en" dir="ltr">All seven, side by side</span></h2>
+    <h2>Alle sieben nebeneinander</h2>
     <div class="table table-wide">
       <table class="table-stack">
-        <thead><tr><th><span lang="en" dir="ltr">Tool</span></th><th><span lang="en" dir="ltr">What it is</span></th><th><span lang="en" dir="ltr">Runs on</span></th><th><span lang="en" dir="ltr">Source and price</span></th><th><span lang="en" dir="ltr">Keeping agents apart</span></th><th><span lang="en" dir="ltr">If you close it</span></th></tr></thead>
+        <thead><tr><th>Tool</th><th>Was es ist</th><th>Läuft unter</th><th>Quellcode und Preis</th><th>Agenten getrennt halten</th><th>Wenn du es schließt</th></tr></thead>
         <tbody>
-          <tr><td>Aubergine</td><td data-label="What it is"><span lang="en" dir="ltr">A server on your own computer and a page in your browser</span></td><td data-label="Runs on"><span lang="en" dir="ltr">macOS; Linux in containers only; Windows inside WSL 2, not tried. Needs tmux and Node.js</span></td><td data-label="Source and price"><span lang="en" dir="ltr">MIT, free; no paid plan and no account</span></td><td data-label="Keeping agents apart"><span lang="en" dir="ltr">A Git worktree on its own branch for a terminal, when you ask for one</span></td><td data-label="If you close it"><span lang="en" dir="ltr">Terminals go on in tmux; a restart of the computer ends what ran</span></td></tr>
-          <tr><td><a href="conductor/"><span lang="en" dir="ltr">Conductor</span></a></td><td data-label="What it is"><span lang="en" dir="ltr">A Mac desktop app, with a hosted cloud and an iOS app</span></td><td data-label="Runs on"><span lang="en" dir="ltr">macOS only</span></td><td data-label="Source and price"><span lang="en" dir="ltr">Closed source; the local app is free, its cloud needs a paid plan</span></td><td data-label="Keeping agents apart"><span lang="en" dir="ltr">A Git worktree and branch for each workspace; sandboxes in its cloud</span></td><td data-label="If you close it"><span lang="en" dir="ltr">Local sessions end with the app; cloud sessions go on</span></td></tr>
-          <tr><td><a href="claude-squad/"><span lang="en" dir="ltr">Claude Squad</span></a></td><td data-label="What it is"><span lang="en" dir="ltr">A program in your terminal, started as <code>cs</code></span></td><td data-label="Runs on"><span lang="en" dir="ltr">macOS and Linux; on Windows with tmux through WSL. Needs tmux and <code>gh</code></span></td><td data-label="Source and price"><span lang="en" dir="ltr">AGPL-3.0, free</span></td><td data-label="Keeping agents apart"><span lang="en" dir="ltr">A tmux session and a Git worktree on its own branch for each</span></td><td data-label="If you close it"><span lang="en" dir="ltr">Sessions are tmux sessions; its README does not say what is kept</span></td></tr>
-          <tr><td><a href="vibe-kanban/"><span lang="en" dir="ltr">Vibe Kanban</span></a></td><td data-label="What it is"><span lang="en" dir="ltr">A server on your own computer and a page in your browser</span></td><td data-label="Runs on"><span lang="en" dir="ltr">macOS, Linux and Windows; started with <code>npx</code></span></td><td data-label="Source and price"><span lang="en" dir="ltr">Apache-2.0, free; sign-in optional</span></td><td data-label="Keeping agents apart"><span lang="en" dir="ltr">Git worktrees for each workspace</span></td><td data-label="If you close it"><span lang="en" dir="ltr">Nothing found in its documentation</span></td></tr>
-          <tr><td><a href="cmux/"><span lang="en" dir="ltr">cmux</span></a></td><td data-label="What it is"><span lang="en" dir="ltr">A native macOS terminal app</span></td><td data-label="Runs on"><span lang="en" dir="ltr">macOS 14 or later only</span></td><td data-label="Source and price"><span lang="en" dir="ltr">GPL-3.0-or-later app, free, no account needed; paid plans for its cloud</span></td><td data-label="Keeping agents apart"><span lang="en" dir="ltr">Nothing found that makes a worktree for an agent; machines apart in its cloud</span></td><td data-label="If you close it"><span lang="en" dir="ltr">Layout and folders come back; live processes only in its opt-in tmux mode</span></td></tr>
-          <tr><td><a href="warp/"><span lang="en" dir="ltr">Warp</span></a></td><td data-label="What it is"><span lang="en" dir="ltr">A desktop terminal app with an agent of its own, and cloud agents</span></td><td data-label="Runs on"><span lang="en" dir="ltr">macOS, Windows and Linux</span></td><td data-label="Source and price"><span lang="en" dir="ltr">Client open source under the AGPL-3.0; a free plan and paid ones; login optional</span></td><td data-label="Keeping agents apart"><span lang="en" dir="ltr">Knows Git worktrees you make; containers for its cloud agents</span></td><td data-label="If you close it"><span lang="en" dir="ltr">Windows, tabs and recent output come back; nothing found on running programs</span></td></tr>
-          <tr><td><a href="paradev/"><span lang="en" dir="ltr">Paradev</span></a></td><td data-label="What it is"><span lang="en" dir="ltr">A desktop app, once called Superset, with phone apps and a cloud</span></td><td data-label="Runs on"><span lang="en" dir="ltr">macOS; an experimental Linux build; no Windows</span></td><td data-label="Source and price"><span lang="en" dir="ltr">MIT; a free plan for one person, and paid plans</span></td><td data-label="Keeping agents apart"><span lang="en" dir="ltr">A worktree, a branch and a terminal for every task</span></td><td data-label="If you close it"><span lang="en" dir="ltr">Terminals go on in its daemon until you quit it completely; a restart ends them</span></td></tr>
+          <tr><td>Aubergine</td><td data-label="Was es ist">Ein Server auf deinem eigenen Rechner und eine Seite in deinem Browser</td><td data-label="Läuft unter">macOS; Linux nur in Containern; Windows in WSL 2, nicht ausprobiert. Braucht tmux und Node.js</td><td data-label="Quellcode und Preis">MIT, kostenlos; kein bezahlter Plan und kein Konto</td><td data-label="Agenten getrennt halten">Ein Git-Worktree auf einem eigenen Branch für ein Terminal, wenn du danach fragst</td><td data-label="Wenn du es schließt">Terminals laufen in tmux weiter; ein Neustart des Rechners beendet, was lief</td></tr>
+          <tr><td><a href="conductor/">Conductor</a></td><td data-label="Was es ist">Eine Desktop-App für den Mac, mit einer gehosteten Cloud und einer iOS-App</td><td data-label="Läuft unter">Nur macOS</td><td data-label="Quellcode und Preis">Closed Source; die lokale App ist kostenlos, die Cloud braucht einen bezahlten Plan</td><td data-label="Agenten getrennt halten">Ein Git-Worktree und ein Branch für jeden Workspace; Sandboxes in seiner Cloud</td><td data-label="Wenn du es schließt">Lokale Sessions enden mit der App; Cloud-Sessions laufen weiter</td></tr>
+          <tr><td><a href="claude-squad/">Claude Squad</a></td><td data-label="Was es ist">Ein Programm in deinem Terminal, gestartet als <code>cs</code></td><td data-label="Läuft unter">macOS und Linux; unter Windows mit tmux über WSL. Braucht tmux und <code>gh</code></td><td data-label="Quellcode und Preis">AGPL-3.0, kostenlos</td><td data-label="Agenten getrennt halten">Eine tmux-Session und ein Git-Worktree auf einem eigenen Branch für jeden</td><td data-label="Wenn du es schließt">Sessions sind tmux-Sessions; sein README sagt nicht, was erhalten bleibt</td></tr>
+          <tr><td><a href="vibe-kanban/">Vibe Kanban</a></td><td data-label="Was es ist">Ein Server auf deinem eigenen Rechner und eine Seite in deinem Browser</td><td data-label="Läuft unter">macOS, Linux und Windows; gestartet mit <code>npx</code></td><td data-label="Quellcode und Preis">Apache-2.0, kostenlos; Anmeldung optional</td><td data-label="Agenten getrennt halten">Git-Worktrees für jeden Workspace</td><td data-label="Wenn du es schließt">Nichts in seiner Dokumentation gefunden</td></tr>
+          <tr><td><a href="cmux/">cmux</a></td><td data-label="Was es ist">Eine native Terminal-App für macOS</td><td data-label="Läuft unter">Nur macOS 14 oder neuer</td><td data-label="Quellcode und Preis">GPL-3.0-or-later-App, kostenlos, kein Konto nötig; bezahlte Pläne für seine Cloud</td><td data-label="Agenten getrennt halten">Nichts gefunden, das einen Worktree für einen Agenten anlegt; getrennte Maschinen in seiner Cloud</td><td data-label="Wenn du es schließt">Layout und Ordner kommen zurück; laufende Prozesse nur in seinem tmux-Modus zum Einschalten</td></tr>
+          <tr><td><a href="warp/">Warp</a></td><td data-label="Was es ist">Eine Desktop-Terminal-App mit eigenem Agenten und Cloud-Agenten</td><td data-label="Läuft unter">macOS, Windows und Linux</td><td data-label="Quellcode und Preis">Client Open Source unter der AGPL-3.0; ein kostenloser Plan und bezahlte; Anmeldung optional</td><td data-label="Agenten getrennt halten">Kennt Git-Worktrees, die du anlegst; Container für seine Cloud-Agenten</td><td data-label="Wenn du es schließt">Fenster, Tabs und jüngste Ausgabe kommen zurück; nichts über laufende Programme gefunden</td></tr>
+          <tr><td><a href="paradev/">Paradev</a></td><td data-label="Was es ist">Eine Desktop-App, früher Superset genannt, mit Handy-Apps und einer Cloud</td><td data-label="Läuft unter">macOS; ein experimenteller Linux-Build; kein Windows</td><td data-label="Quellcode und Preis">MIT; ein kostenloser Plan für eine Person und bezahlte Pläne</td><td data-label="Agenten getrennt halten">Ein Worktree, ein Branch und ein Terminal für jede Aufgabe</td><td data-label="Wenn du es schließt">Terminals laufen in seinem Daemon weiter, bis du es ganz beendest; ein Neustart beendet sie</td></tr>
         </tbody>
       </table>
     </div>
 
-    <h2><span lang="en" dir="ltr">One page for each</span></h2>
-    <p><span lang="en" dir="ltr">Each page has the whole table for the two, where they differ, and what the other tool has that Aubergine does not.</span></p>
+    <h2>Eine Seite für jedes</h2>
+    <p>Jede Seite hat die ganze Tabelle für die beiden, wo sie sich unterscheiden und was das andere Tool hat, das Aubergine nicht hat.</p>
   </div>
   <ul class="cards cards-between">
-    <li><h2><a href="conductor/"><span lang="en" dir="ltr">Aubergine vs Conductor</span></a></h2><p><span lang="en" dir="ltr"><strong>Pick Conductor</strong> if you want a Mac app that takes a task from a prompt to a merged pull request, with a cloud for work that goes on while your Mac is off.</span></p></li>
-    <li><h2><a href="claude-squad/"><span lang="en" dir="ltr">Aubergine vs Claude Squad</span></a></h2><p><span lang="en" dir="ltr"><strong>Pick Claude Squad</strong> if you live in a terminal and want one small program there that starts agents in worktrees and pushes their branches, and nothing more.</span></p></li>
-    <li><h2><a href="vibe-kanban/"><span lang="en" dir="ltr">Aubergine vs Vibe Kanban</span></a></h2><p><span lang="en" dir="ltr"><strong>Pick Vibe Kanban</strong> if you think in issues: plan on a board, hand each card to an agent, review its diff with comments, and merge.</span></p></li>
-    <li><h2><a href="cmux/"><span lang="en" dir="ltr">Aubergine vs cmux</span></a></h2><p><span lang="en" dir="ltr"><strong>Pick cmux</strong> if you want a fast native Mac terminal app with panes, an in-app browser and macOS notifications, and you script your own way of working on top of it.</span></p></li>
-    <li><h2><a href="warp/"><span lang="en" dir="ltr">Aubergine vs Warp</span></a></h2><p><span lang="en" dir="ltr"><strong>Pick Warp</strong> if you want one terminal app for everything, on Windows and Linux too, with its own agent built in and cloud agents you can schedule.</span></p></li>
-    <li><h2><a href="paradev/"><span lang="en" dir="ltr">Aubergine vs Paradev, formerly Superset</span></a></h2><p><span lang="en" dir="ltr"><strong>Pick Paradev</strong> if you want a desktop app that makes a worktree for every task and takes it through diff, checks and merge, with phone apps and a cloud when you pay for them.</span></p></li>
+    <li><h2><a href="conductor/">Aubergine vs. Conductor</a></h2><p><strong>Wähl Conductor</strong>, wenn du eine Mac-App willst, die eine Aufgabe vom Prompt bis zum gemergten Pull Request bringt, mit einer Cloud für Arbeit, die weiterläuft, während dein Mac aus ist.</p></li>
+    <li><h2><a href="claude-squad/">Aubergine vs. Claude Squad</a></h2><p><strong>Wähl Claude Squad</strong>, wenn du im Terminal lebst und dort ein kleines Programm willst, das Agenten in Worktrees startet und ihre Branches pusht, und nichts weiter.</p></li>
+    <li><h2><a href="vibe-kanban/">Aubergine vs. Vibe Kanban</a></h2><p><strong>Wähl Vibe Kanban</strong>, wenn du in Issues denkst: auf einem Board planen, jede Karte einem Agenten übergeben, seinen Diff mit Kommentaren prüfen und mergen.</p></li>
+    <li><h2><a href="cmux/">Aubergine vs. cmux</a></h2><p><strong>Wähl cmux</strong>, wenn du eine schnelle, native Terminal-App für den Mac willst, mit Bereichen, einem Browser in der App und macOS-Benachrichtigungen, und deine eigene Arbeitsweise darauf skriptest.</p></li>
+    <li><h2><a href="warp/">Aubergine vs. Warp</a></h2><p><strong>Wähl Warp</strong>, wenn du eine Terminal-App für alles willst, auch unter Windows und Linux, mit eingebautem eigenem Agenten und Cloud-Agenten, die du planen kannst.</p></li>
+    <li><h2><a href="paradev/">Aubergine vs. Paradev, früher Superset</a></h2><p><strong>Wähl Paradev</strong>, wenn du eine Desktop-App willst, die für jede Aufgabe einen Worktree anlegt und sie durch Diff, Checks und Merge bringt, mit Handy-Apps und einer Cloud, wenn du dafür bezahlst.</p></li>
   </ul>
   <div class="prose">
-    <h2><span lang="en" dir="ltr">What Aubergine is built around</span></h2>
+    <h2>Worum Aubergine gebaut ist</h2>
     <ul>
-      <li><span lang="en" dir="ltr"><strong>Ordinary terminals.</strong> An agent runs in Aubergine as it runs in any terminal app. There is no chat view over it and nothing between you and what it prints.</span></li>
-      <li><span lang="en" dir="ltr"><strong>All of them in sight.</strong> Terminals stand side by side on a canvas you pan and zoom, with one list of every terminal and its state in words. See <a href="../too-many-terminal-tabs/">Find the right terminal</a>.</span></li>
-      <li><span lang="en" dir="ltr"><strong>Closing the window ends nothing.</strong> Every terminal is a tmux session, so the browser and Aubergine itself can stop while your agents go on. See <a href="../keep-terminals-after-restart/">what a restart keeps</a>.</span></li>
-      <li><span lang="en" dir="ltr"><strong>Your computer only.</strong> No account, no cloud, no paid plan and no model of its own; the server listens on <code>127.0.0.1</code>. See <a href="../security/">security</a>.</span></li>
-      <li><span lang="en" dir="ltr"><strong>A person decides.</strong> What an agent proposes waits for your review, an approval in a workflow is yours alone, and one list, For you, holds everything that waits on you. See <a href="../queue-and-schedules/">the queue</a>.</span></li>
+      <li><strong>Gewöhnliche Terminals.</strong> Ein Agent läuft in Aubergine so, wie er in jeder Terminal-App läuft. Es gibt keine Chat-Ansicht darüber und nichts zwischen dir und dem, was er ausgibt.</li>
+      <li><strong>Alle im Blick.</strong> Terminals stehen nebeneinander auf einem Canvas, das du verschiebst und zoomst, mit einer Liste aller Terminals und ihrem Zustand in Worten. Siehe <a href="../too-many-terminal-tabs/">Das richtige Terminal finden</a>.</li>
+      <li><strong>Das Fenster zu schließen beendet nichts.</strong> Jedes Terminal ist eine tmux-Session, also können der Browser und Aubergine selbst anhalten, während deine Agenten weiterlaufen. Siehe <a href="../keep-terminals-after-restart/">was ein Neustart behält</a>.</li>
+      <li><strong>Nur dein Rechner.</strong> Kein Konto, keine Cloud, kein bezahlter Plan und kein eigenes Modell; der Server lauscht auf <code>127.0.0.1</code>. Siehe <a href="../security/">Sicherheit</a>.</li>
+      <li><strong>Ein Mensch entscheidet.</strong> Was ein Agent vorschlägt, wartet auf deine Prüfung, eine Freigabe in einem Workflow ist allein deine, und eine Liste, For you, enthält alles, was auf dich wartet. Siehe <a href="../queue-and-schedules/">die Warteschlange</a>.</li>
     </ul>
 
-    <h2><span lang="en" dir="ltr">What Aubergine does not have</span></h2>
+    <h2>Was Aubergine nicht hat</h2>
     <ul>
-      <li><span lang="en" dir="ltr"><strong>No desktop app and no phone app.</strong> It is a page in your browser. Another device can be paired through a proxy you run; that was run once on one Mac and never on a real phone.</span></li>
-      <li><span lang="en" dir="ltr"><strong>No pull requests and no merging.</strong> It shows what changed in a working copy, file by file, and never commits, pushes, rebases or merges.</span></li>
-      <li><span lang="en" dir="ltr"><strong>No cloud.</strong> Agents run on the computer Aubergine runs on, and schedules fire only while it is on.</span></li>
-      <li><span lang="en" dir="ltr"><strong>No sound and no push.</strong> Notifications come from an Aubergine page open in your browser.</span></li>
-      <li><span lang="en" dir="ltr"><strong>Built for macOS.</strong> On Linux it has been run in containers only; on Windows it runs only inside WSL 2, which has not been tried.</span></li>
-      <li><span lang="en" dir="ltr"><strong>Most for Claude Code.</strong> Any command-line agent runs in a terminal, but what Aubergine does by itself for an agent (seeing that it waits, resuming a conversation) is built for Claude Code; another agent reports through the <code>aubergine</code> commands.</span></li>
+      <li><strong>Keine Desktop-App und keine Handy-App.</strong> Es ist eine Seite in deinem Browser. Ein anderes Gerät lässt sich über einen Proxy koppeln, den du selbst betreibst; das wurde einmal auf einem Mac ausgeführt und nie auf einem echten Handy.</li>
+      <li><strong>Keine Pull Requests und kein Mergen.</strong> Es zeigt, was sich in einer Arbeitskopie geändert hat, Datei für Datei, und committet, pusht, rebased oder merget nie.</li>
+      <li><strong>Keine Cloud.</strong> Agenten laufen auf dem Rechner, auf dem Aubergine läuft, und Zeitpläne lösen nur aus, solange er an ist.</li>
+      <li><strong>Kein Ton und kein Push.</strong> Benachrichtigungen kommen von einer Aubergine-Seite, die in deinem Browser offen ist.</li>
+      <li><strong>Für macOS gebaut.</strong> Unter Linux lief es bisher nur in Containern; unter Windows läuft es nur in WSL 2, was noch nicht ausprobiert wurde.</li>
+      <li><strong>Am meisten für Claude Code.</strong> Jeder Kommandozeilen-Agent läuft in einem Terminal, aber was Aubergine von sich aus für einen Agenten tut (sehen, dass er wartet, eine Unterhaltung fortsetzen), ist für Claude Code gebaut; ein anderer Agent meldet sich über die <code>aubergine</code>-Befehle.</li>
     </ul>
 
-    <h2><span lang="en" dir="ltr">Questions</span></h2>
+    <h2>Fragen</h2>
     <div class="questions">
-      <details><summary><span lang="en" dir="ltr">What is the best tool for running several Claude Code agents at once?</span></summary><p><span lang="en" dir="ltr">It depends on what you want around the agents. For a Mac app with diffs, pull requests and merging: Conductor or Paradev. For a program inside the terminal you already use: Claude Squad. For a board of issues: Vibe Kanban. For a native Mac terminal: cmux. For a terminal with its own agent and cloud agents: Warp. For plain terminals side by side in a browser page, kept running by tmux, with no account: Aubergine.</span></p></details>
-      <details><summary><span lang="en" dir="ltr">Which of these tools are open source?</span></summary><p><span lang="en" dir="ltr">As read on 26 November 2026: Aubergine (MIT), Paradev (MIT), Vibe Kanban (Apache-2.0), Claude Squad (AGPL-3.0), the cmux app (GPL-3.0-or-later) and the Warp client (AGPL-3.0). Conductor's terms call it proprietary.</span></p></details>
-      <details><summary><span lang="en" dir="ltr">Which of these tools run on Linux or Windows?</span></summary><p><span lang="en" dir="ltr">By their own documentation: Warp on macOS, Windows and Linux; Vibe Kanban on all three; Claude Squad on macOS and Linux, and on Windows with tmux through WSL; Paradev on macOS with an experimental Linux build; Conductor and cmux on macOS only. Aubergine is built for macOS, has been run on Linux in containers only, and runs on Windows only inside WSL 2, not yet tried.</span></p></details>
-      <details><summary><span lang="en" dir="ltr">Which keep agents running after you close the app?</span></summary><p><span lang="en" dir="ltr">Aubergine and Claude Squad run each agent in a tmux session. Paradev documents a background daemon that keeps terminals when its window closes. cmux keeps live processes only in its opt-in tmux mode. Conductor says local sessions end with the app. Warp restores windows and recent output, not running programs. Each of Conductor, cmux, Warp and Paradev also has a cloud where agents go on. None, Aubergine included, keeps a local agent running through a restart of the computer.</span></p></details>
+      <details><summary>Was ist das beste Tool, um mehrere Claude-Code-Agenten gleichzeitig laufen zu lassen?</summary><p>Das hängt davon ab, was du um die Agenten herum willst. Für eine Mac-App mit Diffs, Pull Requests und Mergen: Conductor oder Paradev. Für ein Programm in dem Terminal, das du schon nutzt: Claude Squad. Für ein Board mit Issues: Vibe Kanban. Für ein natives Mac-Terminal: cmux. Für ein Terminal mit eigenem Agenten und Cloud-Agenten: Warp. Für einfache Terminals nebeneinander auf einer Browserseite, am Laufen gehalten von tmux, ohne Konto: Aubergine.</p></details>
+      <details><summary>Welche dieser Tools sind Open Source?</summary><p>Stand 26. November 2026: Aubergine (MIT), Paradev (MIT), Vibe Kanban (Apache-2.0), Claude Squad (AGPL-3.0), die cmux-App (GPL-3.0-or-later) und der Warp-Client (AGPL-3.0). Die Bedingungen von Conductor nennen es proprietär.</p></details>
+      <details><summary>Welche dieser Tools laufen unter Linux oder Windows?</summary><p>Laut ihrer eigenen Dokumentation: Warp unter macOS, Windows und Linux; Vibe Kanban auf allen dreien; Claude Squad unter macOS und Linux und unter Windows mit tmux über WSL; Paradev unter macOS mit einem experimentellen Linux-Build; Conductor und cmux nur unter macOS. Aubergine ist für macOS gebaut, lief unter Linux bisher nur in Containern und läuft unter Windows nur in WSL 2, noch nicht ausprobiert.</p></details>
+      <details><summary>Welche lassen Agenten weiterlaufen, wenn du die App schließt?</summary><p>Aubergine und Claude Squad lassen jeden Agenten in einer tmux-Session laufen. Paradev dokumentiert einen Daemon im Hintergrund, der Terminals behält, wenn sein Fenster geschlossen wird. cmux behält laufende Prozesse nur in seinem tmux-Modus, den man eigens einschaltet. Conductor sagt, dass lokale Sessions mit der App enden. Warp stellt Fenster und jüngste Ausgabe wieder her, keine laufenden Programme. Conductor, cmux, Warp und Paradev haben außerdem jeweils eine Cloud, in der Agenten weiterlaufen. Keines, Aubergine eingeschlossen, lässt einen lokalen Agenten über einen Neustart des Rechners hinweg laufen.</p></details>
     </div>
   </div>
 </div>
@@ -223,7 +223,7 @@
         <li><a href="../run-multiple-coding-agents/">Mehrere Agenten gleichzeitig</a></li>
         <li><a href="../working-copies/">Arbeitskopien</a></li>
         <li><a href="../queue-and-schedules/">Warteschlange und Zeitpläne</a></li>
-        <li><a href="./" aria-current="page"><span lang="en" dir="ltr">Compare</span></a></li>
+        <li><a href="./" aria-current="page">Vergleich</a></li>
         <li><a href="../security/">Sicherheit</a></li>
         <li><a href="../roadmap/">Roadmap</a></li>
         <li><a href="../faq/">FAQ</a></li>

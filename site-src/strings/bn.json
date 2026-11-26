@@ -3678,5 +3678,1249 @@
   "404.faq": {
     "text": "প্রায়ই জিজ্ঞাসিত প্রশ্ন",
     "from": "e956a9404b46"
+  },
+  "site.foot.compare": {
+    "text": "তুলনা",
+    "from": "e888155d8c7d"
+  },
+  "guides.compare.name": {
+    "text": "অন্য টুলের সঙ্গে Aubergine-এর তুলনা",
+    "from": "a7d4b6e16622"
+  },
+  "guides.compare.text": {
+    "text": "Aubergine-এর পাশে Conductor, Claude Squad, Vibe Kanban, cmux, Warp আর Paradev, প্রতিটি নিজের সম্পর্কে যা লিখে রেখেছে তা থেকে।",
+    "from": "ef74044c8bc1"
+  },
+  "compare.meta.title": {
+    "text": "একাধিক কোডিং এজেন্ট চালানোর টুল, তুলনায় | Aubergine",
+    "from": "e45fe95912dd"
+  },
+  "compare.meta.description": {
+    "text": "Conductor, Claude Squad, Vibe Kanban, cmux, Warp আর Paradev-এর পাশে Aubergine: প্রতিটি কী, কোথায় চলে, খরচ কত, এজেন্টদের কীভাবে আলাদা রাখে আর বন্ধ করলে কী শেষ হয়।",
+    "from": "f8a5c374323f"
+  },
+  "compare.crumb": {
+    "text": "তুলনা",
+    "from": "e888155d8c7d"
+  },
+  "compare.title": {
+    "text": "একাধিক কোডিং এজেন্ট চালানোর টুল, তুলনায়",
+    "from": "28d801f5961d"
+  },
+  "compare.lead": {
+    "text": "একই মুহূর্তের জন্য সাতটি টুল: একাধিক কোডিং এজেন্ট কাজে, আর আপনি মাঝখানে। এখানে Conductor, Claude Squad, Vibe Kanban, cmux, Warp আর Paradev-এর পাশে Aubergine, প্রতিটির জন্য একটি করে পেজ সহ।",
+    "from": "b5fab9e77782"
+  },
+  "compare.how": {
+    "text": "<strong>এটি কীভাবে লেখা হয়েছে।</strong> এই পেজগুলো অন্য কোনো টুল সম্পর্কে যা বলে, তা সেই টুলের নিজের সাইট, ডকুমেন্টেশন আর রিপোজিটরি থেকে, ২৬ নভেম্বর ২০২৬-এ যেমন পড়া হয়েছে, আর প্রতিটি পেজে সেগুলোর লিংক আছে। আমরা অন্য টুলগুলো চালিয়ে দেখিনি। যেখানে তাদের ডকুমেন্টেশন কিছু বলে না, সেখানে পেজ বলে যে কিছু পাওয়া যায়নি, টুলটি তা পারে না এমন নয়। এই টুলগুলো দ্রুত বদলায়: এখানে কিছু ভুল বা পুরোনো হলে <a href=\"https://github.com/thirstyeggplant/aubergine/issues\">আমাদের জানান</a>, তা ঠিক করা হবে।",
+    "from": "b593b3d87f7a"
+  },
+  "compare.table.title": {
+    "text": "সাতটিই, পাশাপাশি",
+    "from": "43d67ddccfc2"
+  },
+  "compare.table.tool": {
+    "text": "টুল",
+    "from": "2e53bdcd0740"
+  },
+  "compare.each.title": {
+    "text": "প্রতিটির জন্য একটি পেজ",
+    "from": "8121e71bc2a8"
+  },
+  "compare.each.text": {
+    "text": "প্রতিটি পেজে দুটির পুরো টেবিল আছে, কোথায় তারা আলাদা, আর অন্য টুলটির কী আছে যা Aubergine-এর নেই।",
+    "from": "8fa0a789da7e"
+  },
+  "compare.around.title": {
+    "text": "Aubergine যা ঘিরে তৈরি",
+    "from": "86c14152ab1c"
+  },
+  "compare.around.terminals": {
+    "text": "<strong>সাধারণ টার্মিনাল।</strong> একটি এজেন্ট Aubergine-এ ঠিক সেভাবেই চলে যেভাবে যেকোনো টার্মিনাল অ্যাপে চলে। এর ওপর কোনো চ্যাট ভিউ নেই, আর আপনার ও এর প্রিন্ট করা লেখার মাঝে কিছু নেই।",
+    "from": "4b58310b25f3"
+  },
+  "compare.around.canvas": {
+    "text": "<strong>সবগুলো চোখের সামনে।</strong> টার্মিনালগুলো একটি ক্যানভাসে পাশাপাশি থাকে, যা আপনি সরান আর জুম করেন, সঙ্গে প্রতিটি টার্মিনাল আর তার অবস্থা কথায় লেখা একটি তালিকা। দেখুন <a href=\"/too-many-terminal-tabs/\">ঠিক টার্মিনালটি খুঁজে নিন</a>।",
+    "from": "c6c0fbc9bab4"
+  },
+  "compare.around.tmux": {
+    "text": "<strong>উইন্ডো বন্ধ করলে কিছুই শেষ হয় না।</strong> প্রতিটি টার্মিনাল একটি tmux সেশন, তাই ব্রাউজার আর Aubergine নিজেও থেমে যেতে পারে, আর আপনার এজেন্টরা চলতে থাকে। দেখুন <a href=\"/keep-terminals-after-restart/\">রিস্টার্টে কী থাকে</a>।",
+    "from": "e512de1deb34"
+  },
+  "compare.around.local": {
+    "text": "<strong>শুধু আপনার কম্পিউটার।</strong> কোনো অ্যাকাউন্ট নেই, ক্লাউড নেই, পেইড প্ল্যান নেই, নিজের কোনো মডেলও নেই; সার্ভার শোনে <code>127.0.0.1</code>-এ। দেখুন <a href=\"/security/\">নিরাপত্তা</a>।",
+    "from": "d51e1a73a1c0"
+  },
+  "compare.around.decide": {
+    "text": "<strong>সিদ্ধান্ত নেন একজন মানুষ।</strong> একটি এজেন্ট যা প্রস্তাব করে তা আপনার পর্যালোচনার অপেক্ষায় থাকে, ওয়ার্কফ্লোর অনুমোদন শুধু আপনার, আর একটি তালিকা, For you, আপনার অপেক্ষায় থাকা সবকিছু রাখে। দেখুন <a href=\"/queue-and-schedules/\">কিউ</a>।",
+    "from": "0c58d14e37b6"
+  },
+  "compare.lacks.title": {
+    "text": "Aubergine-এর যা নেই",
+    "from": "791f409b25b0"
+  },
+  "compare.lacks.app": {
+    "text": "<strong>কোনো ডেস্কটপ অ্যাপ নেই, ফোন অ্যাপও নেই।</strong> এটি আপনার ব্রাউজারে একটি পেজ। আপনার চালানো একটি প্রক্সির মাধ্যমে অন্য ডিভাইস যুক্ত করা যায়; তা একটি Mac-এ একবার চালানো হয়েছে, আসল ফোনে কখনো নয়।",
+    "from": "8cda51e85558"
+  },
+  "compare.lacks.merge": {
+    "text": "<strong>কোনো পুল রিকোয়েস্ট নেই, merge-ও নেই।</strong> এটি একটি ওয়ার্কিং কপিতে কী বদলেছে তা ফাইল ধরে ধরে দেখায়, আর কখনো commit, push, rebase বা merge করে না।",
+    "from": "2c7dc74cd5cf"
+  },
+  "compare.lacks.cloud": {
+    "text": "<strong>কোনো ক্লাউড নেই।</strong> এজেন্টরা সেই কম্পিউটারেই চলে যেখানে Aubergine চলে, আর শিডিউল চলে শুধু সেটি চালু থাকলে।",
+    "from": "9b0762b5da8f"
+  },
+  "compare.lacks.sound": {
+    "text": "<strong>কোনো শব্দ নেই, পুশও নেই।</strong> নোটিফিকেশন আসে আপনার ব্রাউজারে খোলা একটি Aubergine পেজ থেকে।",
+    "from": "e63009caa14b"
+  },
+  "compare.lacks.platforms": {
+    "text": "<strong>macOS-এর জন্য তৈরি।</strong> Linux-এ এটি শুধু কন্টেইনারে চালানো হয়েছে; Windows-এ এটি শুধু WSL 2-এর ভেতরে চলে, যা চেষ্টা করা হয়নি।",
+    "from": "5f5c1927df23"
+  },
+  "compare.lacks.agents": {
+    "text": "<strong>সবচেয়ে বেশি Claude Code-এর জন্য।</strong> যেকোনো কমান্ড-লাইন এজেন্ট টার্মিনালে চলে, কিন্তু Aubergine নিজে থেকে কোনো এজেন্টের জন্য যা করে (এটি যে অপেক্ষা করছে তা দেখা, কথোপকথন আবার শুরু করা) তা Claude Code-এর জন্য তৈরি; অন্য এজেন্ট <code>aubergine</code> কমান্ড দিয়ে জানায়।",
+    "from": "2f0ba98518bf"
+  },
+  "compare.q.best.q": {
+    "text": "একসঙ্গে কয়েকটি Claude Code এজেন্ট চালানোর সবচেয়ে ভালো টুল কোনটি?",
+    "from": "4d699c803dcd"
+  },
+  "compare.q.best.a": {
+    "text": "তা নির্ভর করে এজেন্টদের চারপাশে আপনি কী চান তার ওপর। ডিফ, পুল রিকোয়েস্ট আর merge সহ একটি Mac অ্যাপের জন্য: Conductor বা Paradev। আপনি আগে থেকে যে টার্মিনাল ব্যবহার করেন তার ভেতরে একটি প্রোগ্রামের জন্য: Claude Squad। ইস্যুর একটি বোর্ডের জন্য: Vibe Kanban। একটি নেটিভ Mac টার্মিনালের জন্য: cmux। নিজের এজেন্ট আর ক্লাউড এজেন্ট সহ একটি টার্মিনালের জন্য: Warp। ব্রাউজারের একটি পেজে পাশাপাশি সাধারণ টার্মিনাল, tmux দিয়ে চালু রাখা, কোনো অ্যাকাউন্ট ছাড়া: Aubergine।",
+    "from": "6a57f43a10dc"
+  },
+  "compare.q.open.q": {
+    "text": "এই টুলগুলোর মধ্যে কোনগুলো ওপেন সোর্স?",
+    "from": "23e0ea8e7990"
+  },
+  "compare.q.open.a": {
+    "text": "২৬ নভেম্বর ২০২৬-এ যেমন পড়া হয়েছে: Aubergine (MIT), Paradev (MIT), Vibe Kanban (Apache-2.0), Claude Squad (AGPL-3.0), cmux অ্যাপ (GPL-3.0-or-later) আর Warp ক্লায়েন্ট (AGPL-3.0)। Conductor-এর শর্তাবলি একে proprietary বলে।",
+    "from": "fcb0a543dbb1"
+  },
+  "compare.q.linux.q": {
+    "text": "এই টুলগুলোর মধ্যে কোনগুলো Linux বা Windows-এ চলে?",
+    "from": "702775b7d90b"
+  },
+  "compare.q.linux.a": {
+    "text": "তাদের নিজেদের ডকুমেন্টেশন অনুযায়ী: Warp চলে macOS, Windows আর Linux-এ; Vibe Kanban তিনটিতেই; Claude Squad macOS আর Linux-এ, আর Windows-এ WSL-এর মাধ্যমে tmux দিয়ে; Paradev macOS-এ, সঙ্গে একটি পরীক্ষামূলক Linux বিল্ড; Conductor আর cmux শুধু macOS-এ। Aubergine macOS-এর জন্য তৈরি, Linux-এ শুধু কন্টেইনারে চালানো হয়েছে, আর Windows-এ শুধু WSL 2-এর ভেতরে চলে, যা এখনো চেষ্টা করা হয়নি।",
+    "from": "eb17a7194e7c"
+  },
+  "compare.q.close.q": {
+    "text": "অ্যাপ বন্ধ করার পরেও কোনগুলো এজেন্টদের চালু রাখে?",
+    "from": "4b67f3b2e66d"
+  },
+  "compare.q.close.a": {
+    "text": "Aubergine আর Claude Squad প্রতিটি এজেন্টকে একটি tmux সেশনে চালায়। Paradev একটি ব্যাকগ্রাউন্ড ডেমনের কথা লিখেছে, যা উইন্ডো বন্ধ হলে টার্মিনাল রেখে দেয়। cmux চালু প্রসেস রাখে শুধু তার ঐচ্ছিক tmux মোডে। Conductor বলে লোকাল সেশন অ্যাপের সঙ্গেই শেষ হয়। Warp উইন্ডো আর সাম্প্রতিক আউটপুট ফিরিয়ে আনে, চলমান প্রোগ্রাম নয়। Conductor, cmux, Warp আর Paradev প্রত্যেকেরই একটি ক্লাউডও আছে, যেখানে এজেন্টরা চলতে থাকে। কোনোটিই, Aubergine সহ, কম্পিউটার রিস্টার্টের মধ্য দিয়ে একটি লোকাল এজেন্টকে চালু রাখে না।",
+    "from": "4bb44c21e3ea"
+  },
+  "compare.vs.table": {
+    "text": "পাশাপাশি",
+    "from": "a3d7b387c34d"
+  },
+  "compare.vs.thing": {
+    "text": "কী",
+    "from": "f8cf83a76a98"
+  },
+  "compare.vs.faq": {
+    "text": "প্রশ্ন",
+    "from": "9a72221a2747"
+  },
+  "compare.vs.all": {
+    "text": "সাতটি টুলের তুলনা",
+    "from": "ee4eb4f7ad29"
+  },
+  "compare.row.form": {
+    "text": "এটি কী",
+    "from": "1f36becc3aa7"
+  },
+  "compare.row.runs": {
+    "text": "কোথায় চলে",
+    "from": "88a550e0f44e"
+  },
+  "compare.row.price": {
+    "text": "সোর্স আর দাম",
+    "from": "fb616bdc6fda"
+  },
+  "compare.row.agents": {
+    "text": "এজেন্ট",
+    "from": "279b44d2ab4b"
+  },
+  "compare.row.layout": {
+    "text": "একসঙ্গে কয়েকটি",
+    "from": "fa6b205bb2ee"
+  },
+  "compare.row.apart": {
+    "text": "এজেন্টদের আলাদা রাখা",
+    "from": "420ecd34a352"
+  },
+  "compare.row.closed": {
+    "text": "বন্ধ করলে",
+    "from": "6d0beffa1276"
+  },
+  "compare.row.waits": {
+    "text": "এজেন্ট অপেক্ষা করলে বা শেষ করলে",
+    "from": "ad33e1aadbff"
+  },
+  "compare.row.review": {
+    "text": "পরিবর্তন পর্যালোচনা",
+    "from": "5c07a12954c0"
+  },
+  "compare.row.device": {
+    "text": "অন্য ডিভাইস থেকে",
+    "from": "0176df0875c6"
+  },
+  "compare.row.programs": {
+    "text": "প্রোগ্রামের জন্য",
+    "from": "ca1a25f0d017"
+  },
+  "compare.row.timed": {
+    "text": "কিউ আর শিডিউল",
+    "from": "7048f6d971c8"
+  },
+  "compare.a.form": {
+    "text": "আপনার নিজের কম্পিউটারে একটি সার্ভার আর আপনার ব্রাউজারে একটি পেজ",
+    "from": "f0e12c3481c6"
+  },
+  "compare.a.runs": {
+    "text": "macOS; Linux শুধু কন্টেইনারে; Windows WSL 2-এর ভেতরে, চেষ্টা করা হয়নি। tmux আর Node.js লাগে",
+    "from": "ce2ec170ad45"
+  },
+  "compare.a.price": {
+    "text": "MIT, বিনামূল্যে; কোনো পেইড প্ল্যান নেই, অ্যাকাউন্টও নেই",
+    "from": "c6bdeec37cc3"
+  },
+  "compare.a.agents": {
+    "text": "যেকোনো কমান্ড-লাইন এজেন্ট; Claude Code-এর জন্য নিজে থেকে আরও বেশি",
+    "from": "036a4153456a"
+  },
+  "compare.a.layout": {
+    "text": "একটি ক্যানভাসে পাশাপাশি টার্মিনাল, আর সবগুলোর একটি তালিকা",
+    "from": "928536cdc6c9"
+  },
+  "compare.a.apart": {
+    "text": "আপনি চাইলে একটি টার্মিনালের জন্য নিজস্ব ব্রাঞ্চে একটি Git worktree",
+    "from": "2eb2221a43cc"
+  },
+  "compare.a.closed": {
+    "text": "টার্মিনাল tmux-এ চলতে থাকে; কম্পিউটার রিস্টার্ট করলে যা চলছিল তা শেষ হয়",
+    "from": "3a2d0d86f66d"
+  },
+  "compare.a.waits": {
+    "text": "টার্মিনালের রং, উপরে একটি সংখ্যা, পরেরটিতে যাওয়ার একটি key, খোলা পেজ থেকে নোটিফিকেশন; কোনো শব্দ নেই",
+    "from": "02781ee55c07"
+  },
+  "compare.a.review": {
+    "text": "কী বদলেছে, ফাইল ধরে ধরে; কোনো commit, push, পুল রিকোয়েস্ট বা merge নেই",
+    "from": "24a75e296224"
+  },
+  "compare.a.device": {
+    "text": "আপনার যুক্ত করা একটি ব্রাউজার, আপনার চালানো একটি প্রক্সির মাধ্যমে; কোনো অ্যাপ নেই; আসল ফোনে চেষ্টা করা হয়নি",
+    "from": "e18f70623096"
+  },
+  "compare.a.programs": {
+    "text": "স্কোপ-যুক্ত টোকেন সহ একটি HTTP API, <code>aubergine</code> কমান্ড, একটি MCP সার্ভার",
+    "from": "fc6fcbb83503"
+  },
+  "compare.a.timed": {
+    "text": "সীমা সহ একটি কিউ, দিনের সময় ধরে শিডিউল, অনুমোদন সহ ওয়ার্কফ্লো",
+    "from": "9aa15e3097da"
+  },
+  "vs.conductor.crumb": {
+    "text": "Conductor",
+    "from": "14116bf4372e"
+  },
+  "vs.conductor.name": {
+    "text": "Conductor",
+    "from": "14116bf4372e"
+  },
+  "vs.conductor.meta.title": {
+    "text": "Aubergine vs Conductor: একটি বিনামূল্যের, ওপেন সোর্স বিকল্প | Aubergine",
+    "from": "e2c7866f349d"
+  },
+  "vs.conductor.meta.description": {
+    "text": "Conductor আর Aubergine দুটিই Git worktree-তে সমান্তরালে কোডিং এজেন্ট চালায়। Conductor ক্লাউড সহ একটি Mac অ্যাপ; Aubergine ওপেন সোর্স, আপনার ব্রাউজারে চলে, আর tmux-এ টার্মিনাল চালু রাখে।",
+    "from": "d87829790de4"
+  },
+  "vs.conductor.title": {
+    "text": "Aubergine vs Conductor",
+    "from": "6dc79eddb49c"
+  },
+  "vs.conductor.lead": {
+    "text": "দুটিই একসঙ্গে কয়েকটি কোডিং এজেন্ট চালায়, প্রতিটি নিজস্ব Git worktree-তে। Conductor চ্যাট, একটি ডিফ ভিউয়ার আর একটি ক্লাউড সহ একটি Mac অ্যাপ। Aubergine আপনার নিজের কম্পিউটারে একটি বিনামূল্যের, ওপেন সোর্স সার্ভার, যা ব্রাউজারের একটি পেজে সাধারণ টার্মিনাল পাশাপাশি দেখায়।",
+    "from": "9d27a087649b"
+  },
+  "vs.conductor.how": {
+    "text": "<strong>এটি কোথা থেকে।</strong> এখানে Conductor সম্পর্কে যা বলা হয়েছে তা <a href=\"https://docs.conductor.build/\">এর ডকুমেন্টেশন</a> আর <a href=\"https://www.conductor.build/changelog\">এর চেঞ্জলগ</a> থেকে, ২৬ নভেম্বর ২০২৬-এ যেমন পড়া হয়েছে। আমরা Conductor চালিয়ে দেখিনি। কিছু ভুল বা পুরোনো হলে <a href=\"https://github.com/thirstyeggplant/aubergine/issues\">আমাদের জানান</a>।",
+    "from": "6bdb8eaf878d"
+  },
+  "vs.conductor.status": {
+    "text": "<strong>Conductor এখন কোথায়।</strong> ৪ নভেম্বর ২০২৬-এ এর চেঞ্জলগ বলেছিল Conductor Meta-তে যোগ দিচ্ছে আর ধীরে ধীরে বন্ধ হবে; ১৩ নভেম্বর বলেছে Conductor বন্ধ হচ্ছে না। এটি লেখার সময় এর সাইটের কিছু অংশে তখনো প্রথম বার্তাটি ছিল। এটি এখন কোথায় তা জানতে এর চেঞ্জলগ পড়ুন।",
+    "from": "0ce8070b49b7"
+  },
+  "vs.conductor.is.title": {
+    "text": "Conductor কী",
+    "from": "761d10f79609"
+  },
+  "vs.conductor.is.text": {
+    "text": "এর নিজের বর্ণনা অনুযায়ী, একটি Mac অ্যাপ যা আপনার কোডবেসে সমান্তরালে অনেক কোডিং এজেন্ট চালায়। প্রতিটি কাজ একটি ওয়ার্কস্পেস: একটি ব্রাঞ্চে একটি Git worktree, চ্যাট, টার্মিনাল আর ব্রাউজার ট্যাব সহ। এটি আপনার Mac-এ আগে থেকে থাকা সাইন-ইন দিয়ে Claude Code, Codex, Cursor আর OpenCode চালায়, আর এতে আছে একটি ডিফ ভিউয়ার, পুল রিকোয়েস্ট, একটি iOS অ্যাপ আর একটি পেইড ক্লাউড, যেখানে এজেন্টরা স্যান্ডবক্সে চলে।",
+    "from": "892b18bb52d6"
+  },
+  "vs.conductor.pick.title": {
+    "text": "কোনটি বেছে নেবেন",
+    "from": "9190a8f83f35"
+  },
+  "vs.conductor.pick.them": {
+    "text": "<strong>Conductor বেছে নিন</strong> যদি এমন একটি Mac অ্যাপ চান যা একটি কাজকে প্রম্পট থেকে merge করা পুল রিকোয়েস্ট পর্যন্ত নিয়ে যায়, আর আপনার Mac বন্ধ থাকার সময়েও চলতে থাকা কাজের জন্য একটি ক্লাউড থাকে।",
+    "from": "703a739ea90f"
+  },
+  "vs.conductor.pick.us": {
+    "text": "<strong>Aubergine বেছে নিন</strong> যদি আপনার এজেন্টদের সাধারণ টার্মিনাল হিসেবে চান, যা সবগুলো একসঙ্গে দেখা যায়, উইন্ডো বন্ধ হলে tmux-এ চলতে থাকে, কোথাও সাইন ইন করতে হয় না, আর সোর্স খোলা।",
+    "from": "e081882f41c0"
+  },
+  "vs.conductor.differs.title": {
+    "text": "কোথায় তারা আলাদা",
+    "from": "8c2314ada082"
+  },
+  "vs.conductor.d1": {
+    "text": "<strong>টার্মিনাল, চ্যাট নয়।</strong> Conductor একটি এজেন্টকে ওয়ার্কস্পেসে একটি চ্যাট হিসেবে দেখায়, পাশে একটি টার্মিনাল মোড। Aubergine এজেন্টের নিজের টার্মিনাল দেখায়, যেভাবে তা যেকোনো টার্মিনাল অ্যাপে চলে, আর এমন অনেকগুলো একটি ক্যানভাসে সাজায় যা আপনি সরান আর জুম করেন।",
+    "from": "e8ee13648dc8"
+  },
+  "vs.conductor.d2": {
+    "text": "<strong>বন্ধ করলে কী শেষ হয়।</strong> Conductor-এর ডকুমেন্টেশন বলে অ্যাপ বন্ধ করলে বা Mac শাট ডাউন করলে লোকাল সেশন শেষ হয়, আর ক্লাউড সেশন চলতে থাকে। Aubergine-এ প্রতিটি টার্মিনাল একটি tmux সেশন: ব্রাউজার বন্ধ করলে বা Aubergine থামালে কিছুই শেষ হয় না। কম্পিউটার রিস্টার্ট করলে হয়, দুটিতেই।",
+    "from": "09276a000922"
+  },
+  "vs.conductor.d3": {
+    "text": "<strong>আপনার কম্পিউটারের বাইরে কিছু নেই।</strong> Conductor একটি অ্যাকাউন্ট, একটি ক্লাউড, তার ফোন অ্যাপের জন্য একটি রিলে আর ব্যবহারের অ্যানালিটিক্সের কথা লিখেছে। Aubergine-এর কোনো অ্যাকাউন্ট নেই, নিজের কোনো সার্ভিসও নেই: সার্ভার শোনে <code>127.0.0.1</code>-এ, আর অন্য ডিভাইস থেকে ব্যবহার হয় আপনার চালানো একটি প্রক্সির মাধ্যমে।",
+    "from": "717211af5743"
+  },
+  "vs.conductor.has.title": {
+    "text": "Conductor-এর যা আছে আর Aubergine-এর নেই",
+    "from": "97051a4ecf5d"
+  },
+  "vs.conductor.h1": {
+    "text": "একটি ডিফ ভিউয়ার, যেখানে আপনি লাইনে মন্তব্য করে সেগুলো এজেন্টকে ফেরত পাঠান, তারপর পুল রিকোয়েস্ট, চেক আর merge। Aubergine একটি ওয়ার্কিং কপিতে কী বদলেছে তা দেখায় আর কখনো commit, push বা merge করে না।",
+    "from": "6777521cf45a"
+  },
+  "vs.conductor.h2": {
+    "text": "একটি ক্লাউড, যেখানে আপনার Mac বন্ধ থাকলেও এজেন্টরা চলতে থাকে, আর সেখানে শিডিউলে চলা রুটিন। Aubergine-এর শিডিউল চলে আপনার কম্পিউটারে, সেটি চালু থাকার সময়।",
+    "from": "ac3ae91a45fe"
+  },
+  "vs.conductor.h3": {
+    "text": "একটি iOS অ্যাপ আর কাজ শেষের শব্দ। Aubergine-এর কোনো অ্যাপ নেই আর এটি কোনো শব্দ বাজায় না।",
+    "from": "193e1ed4e647"
+  },
+  "vs.conductor.q1.q": {
+    "text": "Aubergine কি Conductor-এর বিকল্প?",
+    "from": "cde19d1a87c2"
+  },
+  "vs.conductor.q1.a": {
+    "text": "আপনার নিজের কম্পিউটারে কয়েকটি কমান্ড-লাইন এজেন্ট চালানোর জন্য, হ্যাঁ: প্রতিটি এজেন্টের একটি ক্যানভাসে একটি টার্মিনাল থাকে, আর আপনি চাইলে নিজস্ব Git worktree। এটি হুবহু বদলি নয়: Aubergine-এর কোনো চ্যাট ভিউ নেই, পুল রিকোয়েস্ট বা merge নেই, ক্লাউড নেই, ফোন অ্যাপও নেই।",
+    "from": "6570e71775cf"
+  },
+  "vs.conductor.q2.q": {
+    "text": "Conductor কি ওপেন সোর্স?",
+    "from": "fad053540fb9"
+  },
+  "vs.conductor.q2.a": {
+    "text": "না: এর শর্তাবলি একে proprietary বলে, আর আমরা কোনো পাবলিক রিপোজিটরি খুঁজে পাইনি। এর ডকুমেন্টেশন বলে লোকাল অ্যাপ বিনামূল্যে ব্যবহার করা যায় আর ক্লাউড ওয়ার্কস্পেসের জন্য পেইড প্ল্যান লাগে। Aubergine MIT লাইসেন্সে, আর এর কোনো পেইড প্ল্যান নেই।",
+    "from": "1cd0818f2d1c"
+  },
+  "vs.conductor.q3.q": {
+    "text": "Conductor কি Linux বা Windows-এ চলে?",
+    "from": "735588d0d163"
+  },
+  "vs.conductor.q3.a": {
+    "text": "এর ডকুমেন্টেশন বলে এটি এখনো Windows বা Linux-এর জন্য পাওয়া যায় না। Aubergine macOS-এর জন্য তৈরি, Linux-এ শুধু কন্টেইনারে চালানো হয়েছে, আর Windows-এ শুধু WSL 2-এর ভেতরে চলে, যা চেষ্টা করা হয়নি।",
+    "from": "f5ade7015ea8"
+  },
+  "vs.conductor.q4.q": {
+    "text": "Conductor আর Aubergine কি একসঙ্গে ব্যবহার করা যায়?",
+    "from": "19c0c55db696"
+  },
+  "vs.conductor.q4.a": {
+    "text": "কিছুই তা আটকায় না: দুটিই একই রিপোজিটরির Git worktree-তে কাজ করে, প্রত্যেকে নিজেরটা বানিয়ে। আমরা দুটি পাশাপাশি চালিয়ে দেখিনি।",
+    "from": "f05d6d7dc553"
+  },
+  "vs.conductor.mark": {
+    "text": "Conductor বা এর নির্মাতাদের সঙ্গে Aubergine-এর কোনো সম্পর্ক নেই। Conductor তাদের পণ্যের নাম: এর শর্তাবলিতে Melty Labs, Inc.-এর নাম আছে, আর এর সাইট বলে Conductor from Meta।",
+    "from": "f1f2c16aeaff"
+  },
+  "vs.conductor.c.form": {
+    "text": "একটি Mac ডেস্কটপ অ্যাপ, হোস্ট করা ক্লাউড আর একটি iOS অ্যাপ সহ",
+    "from": "8f147196475d"
+  },
+  "vs.conductor.c.runs": {
+    "text": "শুধু macOS",
+    "from": "3f2f41cd023d"
+  },
+  "vs.conductor.c.price": {
+    "text": "ক্লোজড সোর্স; লোকাল অ্যাপ বিনামূল্যে, এর ক্লাউডের জন্য পেইড প্ল্যান লাগে",
+    "from": "330fb38120bd"
+  },
+  "vs.conductor.c.agents": {
+    "text": "Claude Code, Codex, Cursor আর OpenCode; এর টার্মিনাল মোডে যেকোনো কমান্ড",
+    "from": "605c47dc956b"
+  },
+  "vs.conductor.c.layout": {
+    "text": "ওয়ার্কস্পেসের একটি সাইডবার, প্রতিটিতে চ্যাট, টার্মিনাল আর ব্রাউজার ট্যাব",
+    "from": "d639b322b315"
+  },
+  "vs.conductor.c.apart": {
+    "text": "প্রতিটি ওয়ার্কস্পেসের জন্য একটি Git worktree আর ব্রাঞ্চ; এর ক্লাউডে স্যান্ডবক্স",
+    "from": "ca8d1b34e4bc"
+  },
+  "vs.conductor.c.closed": {
+    "text": "লোকাল সেশন অ্যাপের সঙ্গে শেষ হয়; ক্লাউড সেশন চলতে থাকে",
+    "from": "bed2d2359373"
+  },
+  "vs.conductor.c.waits": {
+    "text": "কাজ শেষের শব্দ",
+    "from": "9cc24eada060"
+  },
+  "vs.conductor.c.review": {
+    "text": "এজেন্টকে মন্তব্য ফেরত পাঠানো যায় এমন একটি ডিফ ভিউয়ার, পুল রিকোয়েস্ট, চেক, merge",
+    "from": "c7413ccd732c"
+  },
+  "vs.conductor.c.device": {
+    "text": "এর রিলের মাধ্যমে একটি iOS অ্যাপ, Mac জেগে থাকা আর অ্যাপ খোলা থাকা অবস্থায়",
+    "from": "ebef5d2152fd"
+  },
+  "vs.conductor.c.programs": {
+    "text": "এর ক্লাউড ওয়ার্কস্পেসের জন্য একটি API আর একটি MCP সার্ভার, একটি কমান্ড",
+    "from": "3d0a599b7e17"
+  },
+  "vs.conductor.c.timed": {
+    "text": "বার্তার একটি কিউ; এর ক্লাউডে শিডিউল করা রুটিন",
+    "from": "9ab0918f949e"
+  },
+  "vs.claude-squad.crumb": {
+    "text": "Claude Squad",
+    "from": "3c4fa1eb24c0"
+  },
+  "vs.claude-squad.name": {
+    "text": "Claude Squad",
+    "from": "3c4fa1eb24c0"
+  },
+  "vs.claude-squad.meta.title": {
+    "text": "Aubergine vs Claude Squad: tmux আর worktree, দুই রকমভাবে | Aubergine",
+    "from": "e01a63e97f29"
+  },
+  "vs.claude-squad.meta.description": {
+    "text": "Claude Squad আর Aubergine দুটিই প্রতিটি কোডিং এজেন্টকে একটি tmux সেশন আর একটি Git worktree-তে চালায়। Claude Squad আপনার টার্মিনালের ভেতরে একটি প্রোগ্রাম; Aubergine আপনার ব্রাউজারে টার্মিনালের একটি ক্যানভাস।",
+    "from": "49ec403afb34"
+  },
+  "vs.claude-squad.title": {
+    "text": "Aubergine vs Claude Squad",
+    "from": "77af5fc2deda"
+  },
+  "vs.claude-squad.lead": {
+    "text": "দুটি একই ভিতের ওপর দাঁড়িয়ে: প্রতিটি এজেন্ট একটি tmux সেশনে, প্রতিটি নিজস্ব Git worktree-তে, দুটিই বিনামূল্যে আর ওপেন সোর্স। Claude Squad আপনার টার্মিনালের ভেতরে একটি প্রোগ্রাম। Aubergine আপনার ব্রাউজারে একটি পেজ, যেখানে টার্মিনালগুলো পাশাপাশি থাকে।",
+    "from": "d9f4e824659b"
+  },
+  "vs.claude-squad.how": {
+    "text": "<strong>এটি কোথা থেকে।</strong> এখানে Claude Squad সম্পর্কে যা বলা হয়েছে তা <a href=\"https://github.com/smtg-ai/claude-squad\">এর রিপোজিটরি আর README</a> থেকে, ২৬ নভেম্বর ২০২৬-এ যেমন পড়া হয়েছে। আমরা Claude Squad চালিয়ে দেখিনি। কিছু ভুল বা পুরোনো হলে <a href=\"https://github.com/thirstyeggplant/aubergine/issues\">আমাদের জানান</a>।",
+    "from": "c74805e04f47"
+  },
+  "vs.claude-squad.is.title": {
+    "text": "Claude Squad কী",
+    "from": "27fdabce5ffe"
+  },
+  "vs.claude-squad.is.text": {
+    "text": "এর নিজের বর্ণনা অনুযায়ী, একটি টার্মিনাল অ্যাপ যা আলাদা আলাদা ওয়ার্কস্পেসে কয়েকটি Claude Code, Codex, Gemini আর অন্য লোকাল এজেন্ট সামলায়। আপনি একে চালু করেন <code>cs</code> হিসেবে: একটি টার্মিনাল উইন্ডোতে সেশনের একটি তালিকা, একটি প্রিভিউ আর একটি ডিফ ট্যাব সহ। প্রতিটি সেশন নিজস্ব ব্রাঞ্চে একটি Git worktree-তে একটি tmux সেশন। এর জন্য tmux আর <code>gh</code> লাগে, আর এটি AGPL-3.0 লাইসেন্সে।",
+    "from": "f5651435b271"
+  },
+  "vs.claude-squad.pick.title": {
+    "text": "কোনটি বেছে নেবেন",
+    "from": "9190a8f83f35"
+  },
+  "vs.claude-squad.pick.them": {
+    "text": "<strong>Claude Squad বেছে নিন</strong> যদি আপনি টার্মিনালেই থাকেন আর সেখানে একটি ছোট প্রোগ্রাম চান যা worktree-তে এজেন্ট চালু করে আর তাদের ব্রাঞ্চ push করে, তার বেশি কিছু নয়।",
+    "from": "f1fb7dd68ee2"
+  },
+  "vs.claude-squad.pick.us": {
+    "text": "<strong>Aubergine বেছে নিন</strong> যদি একসঙ্গে কয়েকটি এজেন্টকে কাজ করতে দেখতে চান, জানতে চান কোনটি আপনার অপেক্ষায়, আর তাদের চারপাশে একটি কিউ, শিডিউল আর একটি API চান।",
+    "from": "4d6b3293e505"
+  },
+  "vs.claude-squad.differs.title": {
+    "text": "কোথায় তারা আলাদা",
+    "from": "8c2314ada082"
+  },
+  "vs.claude-squad.d1": {
+    "text": "<strong>একবারে একটি, নাকি সবগুলো একসঙ্গে।</strong> Claude Squad একটি তালিকা আর আপনার বেছে নেওয়া সেশনের প্রিভিউ দেখায়। Aubergine প্রতিটি টার্মিনাল একটি ক্যানভাসে লাইভ আঁকে, তাই পাঁচটি এজেন্ট মানে চোখের সামনে পাঁচটি টার্মিনাল, আর একটি তালিকা প্রতিটির অবস্থা কথায় বলে।",
+    "from": "d86f1c45b8de"
+  },
+  "vs.claude-squad.d2": {
+    "text": "<strong>কে অপেক্ষা করছে।</strong> কোনো এজেন্ট অপেক্ষা করছে বা শেষ করেছে তা জানানো নিয়ে আমরা Claude Squad-এর README-তে কিছু পাইনি। Aubergine অপেক্ষমাণ টার্মিনাল রঙে চিহ্নিত করে, উপরে অপেক্ষায় থাকা সবকিছু গোনে, একটি key দিয়ে পরেরটিতে যায়, আর খোলা পেজ থেকে নোটিফিকেশন পাঠাতে পারে।",
+    "from": "211530499e12"
+  },
+  "vs.claude-squad.d3": {
+    "text": "<strong>এজেন্টদের চারপাশে কী আছে।</strong> Aubergine-এ আছে সীমা সহ টাস্কের একটি কিউ, শিডিউল, এমন ধাপ সহ ওয়ার্কফ্লো যা একজন মানুষ অনুমোদন করেন, প্রতিটি টার্মিনালে নোট আর ফিল্ড, একটি HTTP API আর একটি MCP সার্ভার। Claude Squad সেশন আর তাদের ব্রাঞ্চেই সীমাবদ্ধ থাকে।",
+    "from": "f50c8e772a93"
+  },
+  "vs.claude-squad.has.title": {
+    "text": "Claude Squad-এর যা আছে আর Aubergine-এর নেই",
+    "from": "98723dd6c82d"
+  },
+  "vs.claude-squad.h1": {
+    "text": "এটি আপনার আগে থেকে খোলা টার্মিনালের ভেতরেই চলে, কোনো সার্ভার বা ব্রাউজার ছাড়া। যেকোনো টার্মিনাল প্রোগ্রামের মতো এটি SSH-এর ওপর কাজ করে; অন্য জায়গা থেকে Aubergine ব্যবহারে একটি টানেল বা প্রক্সি লাগে।",
+    "from": "f20b31ac2b9e"
+  },
+  "vs.claude-squad.h2": {
+    "text": "এটি আপনার হয়ে একটি ব্রাঞ্চ commit আর push করে, আর কাজ commit করে একটি সেশন থামিয়ে রাখে। Aubergine কখনো commit বা push করে না।",
+    "from": "ca1a86c924f4"
+  },
+  "vs.claude-squad.h3": {
+    "text": "একটি পরীক্ষামূলক মোড, যা নিজে থেকেই এজেন্টের প্রম্পট মেনে নেয়। Aubergine কখনো আপনার হয়ে এজেন্টকে উত্তর দেয় না।",
+    "from": "0b05aa90e62a"
+  },
+  "vs.claude-squad.q1.q": {
+    "text": "Aubergine কি Claude Squad-এর বিকল্প?",
+    "from": "361c471f4cfa"
+  },
+  "vs.claude-squad.q1.a": {
+    "text": "হ্যাঁ, একই কাজ অন্যভাবে করার জন্য। দুটিই প্রতিটি এজেন্টকে একটি tmux সেশনে চালায় আর প্রতিটিকে নিজস্ব ব্রাঞ্চে একটি Git worktree দিতে পারে। Claude Squad তা করে আপনার টার্মিনালের একটি প্রোগ্রাম থেকে; Aubergine আপনার ব্রাউজারের একটি পেজ থেকে, প্রতিটি টার্মিনাল চোখের সামনে রেখে।",
+    "from": "a917cadf4b9c"
+  },
+  "vs.claude-squad.q2.q": {
+    "text": "দুটিই কি tmux ব্যবহার করে?",
+    "from": "7bb088dbc786"
+  },
+  "vs.claude-squad.q2.a": {
+    "text": "হ্যাঁ। Claude Squad tmux-কে পূর্বশর্ত হিসেবে উল্লেখ করে আর প্রতিটি এজেন্টের জন্য একটি tmux সেশন বানায়। Aubergine-এর tmux 3.2 বা নতুনতর লাগে আর এটি tmux চালায় নিজের একটি সকেটে, নিজের কনফিগারেশন দিয়ে, তাই আপনার নিজের tmux-এ হাত দেওয়া হয় না।",
+    "from": "6811d9954e5a"
+  },
+  "vs.claude-squad.q3.q": {
+    "text": "Claude Squad কি Claude Code ছাড়া অন্য এজেন্টের সঙ্গে কাজ করে?",
+    "from": "b8ca49d7a338"
+  },
+  "vs.claude-squad.q3.a": {
+    "text": "এর README বলে ডিফল্ট প্রোগ্রাম <code>claude</code>, আর অন্য কোনোটি, যেমন Codex, Gemini বা Aider, <code>-p</code> দিয়ে নাম দিয়ে বলা হয়। Aubergine টার্মিনালে যেকোনো কমান্ড-লাইন প্রোগ্রাম চালায়; নিজে থেকে কোনো এজেন্টের জন্য যা করে তা Claude Code-এর জন্য তৈরি।",
+    "from": "e25dfec3422d"
+  },
+  "vs.claude-squad.q4.q": {
+    "text": "কোনটির কোন লাইসেন্স?",
+    "from": "8b3801771777"
+  },
+  "vs.claude-squad.q4.a": {
+    "text": "Claude Squad AGPL-3.0-এ, Aubergine MIT লাইসেন্সে। দুটিই বিনামূল্যে।",
+    "from": "b9eaa7117d9a"
+  },
+  "vs.claude-squad.mark": {
+    "text": "Claude Squad বা Anthropic-এর সঙ্গে Aubergine-এর কোনো সম্পর্ক নেই। Claude Squad হলো smtg-ai প্রজেক্টের নাম; Claude হলো Anthropic-এর ট্রেডমার্ক।",
+    "from": "ce7ff8c148b6"
+  },
+  "vs.claude-squad.c.form": {
+    "text": "আপনার টার্মিনালে একটি প্রোগ্রাম, চালু হয় <code>cs</code> হিসেবে",
+    "from": "e739d8457685"
+  },
+  "vs.claude-squad.c.runs": {
+    "text": "macOS আর Linux; Windows-এ WSL-এর মাধ্যমে tmux দিয়ে। tmux আর <code>gh</code> লাগে",
+    "from": "abc0235db83e"
+  },
+  "vs.claude-squad.c.price": {
+    "text": "AGPL-3.0, বিনামূল্যে",
+    "from": "558fbe03f51b"
+  },
+  "vs.claude-squad.c.agents": {
+    "text": "অন্য কোনোটির নাম না দিলে Claude Code: Codex, Gemini, Aider বা যেকোনো কমান্ড",
+    "from": "1fe7348291c8"
+  },
+  "vs.claude-squad.c.layout": {
+    "text": "একটি টার্মিনাল উইন্ডোতে সেশনের একটি তালিকা, একটি প্রিভিউ আর একটি ডিফ ট্যাব সহ",
+    "from": "3d5b69fb4009"
+  },
+  "vs.claude-squad.c.apart": {
+    "text": "প্রতিটির জন্য একটি tmux সেশন আর নিজস্ব ব্রাঞ্চে একটি Git worktree",
+    "from": "d8335dee55c9"
+  },
+  "vs.claude-squad.c.closed": {
+    "text": "সেশনগুলো tmux সেশন; কী রাখা হয় তা এর README বলে না",
+    "from": "db4a444f7d33"
+  },
+  "vs.claude-squad.c.waits": {
+    "text": "এর README-তে কিছু পাওয়া যায়নি",
+    "from": "8f95c49e434f"
+  },
+  "vs.claude-squad.c.review": {
+    "text": "একটি ডিফ ট্যাব; এটি ব্রাঞ্চ commit আর push করে",
+    "from": "e4f8bb6419df"
+  },
+  "vs.claude-squad.c.device": {
+    "text": "এর README-তে কিছু পাওয়া যায়নি",
+    "from": "8f95c49e434f"
+  },
+  "vs.claude-squad.c.programs": {
+    "text": "এর কমান্ড লাইনে অপশন; কোনো API বা MCP সার্ভার পাওয়া যায়নি",
+    "from": "d88b2e8d7fe3"
+  },
+  "vs.claude-squad.c.timed": {
+    "text": "এর README-তে কিছু পাওয়া যায়নি",
+    "from": "8f95c49e434f"
+  },
+  "vs.vibe-kanban.crumb": {
+    "text": "Vibe Kanban",
+    "from": "306161ab46c9"
+  },
+  "vs.vibe-kanban.name": {
+    "text": "Vibe Kanban",
+    "from": "306161ab46c9"
+  },
+  "vs.vibe-kanban.meta.title": {
+    "text": "Aubergine vs Vibe Kanban: ইস্যুর বোর্ড নাকি টার্মিনালের ক্যানভাস | Aubergine",
+    "from": "9f0bf97bf989"
+  },
+  "vs.vibe-kanban.meta.description": {
+    "text": "Vibe Kanban আর Aubergine দুটিই লোকাল, ওপেন সোর্স আর আপনার ব্রাউজারে দেখা যায়। Vibe Kanban কাজের পরিকল্পনা করে একটি বোর্ডে ইস্যু হিসেবে; Aubergine এজেন্টদের নিজেদেরই পাশাপাশি টার্মিনাল হিসেবে দেখায়।",
+    "from": "3dad274de8a4"
+  },
+  "vs.vibe-kanban.title": {
+    "text": "Aubergine vs Vibe Kanban",
+    "from": "c5b1f18fa84d"
+  },
+  "vs.vibe-kanban.lead": {
+    "text": "দুটিই ওপেন সোর্স, আপনার নিজের কম্পিউটারে চলে আর ব্রাউজারে ব্যবহার করা হয়। Vibe Kanban শুরু করে কাজ থেকে: একটি বোর্ডে ইস্যু, প্রতিটি একটি এজেন্টের হাতে দেওয়া। Aubergine শুরু করে এজেন্টদের থেকে: পাশাপাশি টার্মিনাল, পাশে একটি কিউ।",
+    "from": "3d84a2e91b62"
+  },
+  "vs.vibe-kanban.how": {
+    "text": "<strong>এটি কোথা থেকে।</strong> এখানে Vibe Kanban সম্পর্কে যা বলা হয়েছে তা <a href=\"https://www.vibekanban.com/docs\">এর ডকুমেন্টেশন</a> আর <a href=\"https://github.com/BloopAI/vibe-kanban\">এর রিপোজিটরি</a> থেকে, ২৬ নভেম্বর ২০২৬-এ যেমন পড়া হয়েছে। আমরা Vibe Kanban চালিয়ে দেখিনি। কিছু ভুল বা পুরোনো হলে <a href=\"https://github.com/thirstyeggplant/aubergine/issues\">আমাদের জানান</a>।",
+    "from": "99375c152de4"
+  },
+  "vs.vibe-kanban.status": {
+    "text": "<strong>Vibe Kanban এখন কোথায়।</strong> ১০ এপ্রিল ২০২৬-এ <a href=\"https://www.vibekanban.com/blog/shutdown\">এর নির্মাতারা লিখেছিলেন</a> যে bloop, এর পেছনের কোম্পানি, বন্ধ হয়ে যাচ্ছে, প্রজেক্টটি কমিউনিটির রক্ষণাবেক্ষণে ওপেন সোর্স হিসেবে চলবে, আর এর রিমোট সার্ভিসগুলো সরিয়ে নেওয়া হবে কিন্তু লোকাল ওয়ার্কস্পেস কাজ করতে থাকবে। এটি লেখার সময় এর ডকুমেন্টেশন আর দামের পেজে তখনো সেই সার্ভিসগুলোর বর্ণনা ছিল; রিলিজ চলতে থেকেছে।",
+    "from": "e7d0f9efaeb3"
+  },
+  "vs.vibe-kanban.is.title": {
+    "text": "Vibe Kanban কী",
+    "from": "ec9867114fba"
+  },
+  "vs.vibe-kanban.is.text": {
+    "text": "এর নিজের বর্ণনা অনুযায়ী, ডেভেলপারদের জন্য একটি কানবান বোর্ড, কোডিং এজেন্ট দিয়ে কোডিং টাস্কের হিসাব রাখতে। <code>npx vibe-kanban</code> একটি লোকাল সার্ভার চালু করে আর এর পেজ খোলে। একটি ইস্যু হয়ে যায় একটি ওয়ার্কস্পেস: আপনার বেছে নেওয়া রিপোজিটরিগুলোর জন্য Git worktree, যে দশ বা তার বেশি এজেন্টকে এটি নামে চেনে তাদের একটির সঙ্গে একটি কথোপকথন, পাশে পরিবর্তনগুলো, তারপর একটি পুল রিকোয়েস্ট আর একটি merge। এটি Apache-2.0 লাইসেন্সে।",
+    "from": "6d4c2f9e57b0"
+  },
+  "vs.vibe-kanban.pick.title": {
+    "text": "কোনটি বেছে নেবেন",
+    "from": "9190a8f83f35"
+  },
+  "vs.vibe-kanban.pick.them": {
+    "text": "<strong>Vibe Kanban বেছে নিন</strong> যদি আপনি ইস্যু ধরে ভাবেন: বোর্ডে পরিকল্পনা করুন, প্রতিটি কার্ড একটি এজেন্টের হাতে দিন, মন্তব্য সহ তার ডিফ পর্যালোচনা করুন, আর merge করুন।",
+    "from": "245bc2234639"
+  },
+  "vs.vibe-kanban.pick.us": {
+    "text": "<strong>Aubergine বেছে নিন</strong> যদি এজেন্টদের নিজেদেরই চোখের সামনে চান, এমন টার্মিনাল হিসেবে যা উইন্ডোর পরেও চলে, আর কিউ থেকে কাজ ভাগ হয় শুধু আপনি বললে।",
+    "from": "2365113635d7"
+  },
+  "vs.vibe-kanban.differs.title": {
+    "text": "কোথায় তারা আলাদা",
+    "from": "8c2314ada082"
+  },
+  "vs.vibe-kanban.d1": {
+    "text": "<strong>একটি কথোপকথন নাকি একটি টার্মিনাল।</strong> Vibe Kanban একটি এজেন্টকে কথোপকথনের প্যানেল হিসেবে দেখায়, পাশে তার পরিবর্তন। Aubergine এজেন্টের নিজের টার্মিনাল দেখায়, আর একটি ক্যানভাসে একসঙ্গে এমন অনেকগুলো।",
+    "from": "0c890c4d406b"
+  },
+  "vs.vibe-kanban.d2": {
+    "text": "<strong>যেকোনো প্রোগ্রাম।</strong> Vibe Kanban যে এজেন্টগুলো সমর্থন করে সেগুলোর নাম তালিকা করে। Aubergine-এর একটি টার্মিনাল একটি শেল: যেকোনো কমান্ড-লাইন এজেন্ট এতে চলে, তেমনি একটি বিল্ড, একটি টেস্ট রান বা একটি সার্ভারও। Aubergine নিজে থেকে কোনো এজেন্টের জন্য যা করে তা Claude Code-এর জন্য তৈরি।",
+    "from": "23aec210dcbd"
+  },
+  "vs.vibe-kanban.d3": {
+    "text": "<strong>বন্ধ করলে কী শেষ হয়।</strong> সার্ভার থেমে গেলে চলমান এজেন্টের কী হয়, তা নিয়ে আমরা Vibe Kanban-এর ডকুমেন্টেশনে কিছু পাইনি। Aubergine-এ প্রতিটি টার্মিনাল একটি tmux সেশন, আর Aubergine থামালে বা ব্রাউজার বন্ধ করলে কিছুই শেষ হয় না।",
+    "from": "2f1d6cdf5c9f"
+  },
+  "vs.vibe-kanban.has.title": {
+    "text": "Vibe Kanban-এর যা আছে আর Aubergine-এর নেই",
+    "from": "5076a47e917f"
+  },
+  "vs.vibe-kanban.h1": {
+    "text": "অগ্রাধিকার, ট্যাগ আর সাব-ইস্যু সহ ইস্যুর একটি কানবান বোর্ড। Aubergine-এ আছে টাস্কের একটি কিউ আর চলমান ওয়ার্কফ্লোর একটি বোর্ড, ইস্যু ট্র্যাকার নয়।",
+    "from": "68077704a5f0"
+  },
+  "vs.vibe-kanban.h2": {
+    "text": "ইনলাইন মন্তব্য সহ ডিফ, যা এজেন্টকে ফেরত পাঠানো হয়, তারপর পুল রিকোয়েস্ট, rebase আর merge। Aubergine কী বদলেছে তা দেখায় আর কখনো commit বা merge করে না।",
+    "from": "93ff80b2e186"
+  },
+  "vs.vibe-kanban.h3": {
+    "text": "এর লিখে রাখা প্ল্যাটফর্মের মধ্যে Windows, শব্দ, আর নামে চেনা এজেন্টের আরও লম্বা তালিকা।",
+    "from": "1aadd7b5de39"
+  },
+  "vs.vibe-kanban.q1.q": {
+    "text": "Aubergine কি Vibe Kanban-এর বিকল্প?",
+    "from": "4aa8ac6e6711"
+  },
+  "vs.vibe-kanban.q1.a": {
+    "text": "Git worktree-তে লোকালি কয়েকটি এজেন্ট চালানো আর কোনটির আপনাকে দরকার তা দেখার জন্য, হ্যাঁ। এর গড়ন আলাদা: যেখানে Vibe Kanban-এ কথোপকথন সহ ইস্যুর একটি বোর্ড, সেখানে Aubergine-এ একটি ক্যানভাসে টার্মিনাল আর টাস্কের একটি কিউ, আর Aubergine কোনো পুল রিকোয়েস্ট খোলে না, কিছু merge-ও করে না।",
+    "from": "98cbddf025ec"
+  },
+  "vs.vibe-kanban.q2.q": {
+    "text": "Vibe Kanban কি এখনো রক্ষণাবেক্ষণ করা হয়?",
+    "from": "6f567471ea10"
+  },
+  "vs.vibe-kanban.q2.a": {
+    "text": "এর নির্মাতারা ১০ এপ্রিল ২০২৬-এ লিখেছিলেন যে এর পেছনের কোম্পানি বন্ধ হয়ে যাচ্ছে আর প্রজেক্টটি কমিউনিটির রক্ষণাবেক্ষণে ওপেন সোর্স হিসেবে চলবে। তারপর থেকে এর রিপোজিটরিতে রিলিজ হয়েছে। এটি এখন কোথায় তা জানতে এর রিপোজিটরি পড়ুন।",
+    "from": "a82975b3065a"
+  },
+  "vs.vibe-kanban.q3.q": {
+    "text": "দুটিই কি লোকালি চলে?",
+    "from": "11a0fe427c73"
+  },
+  "vs.vibe-kanban.q3.a": {
+    "text": "হ্যাঁ। প্রতিটি আপনার নিজের কম্পিউটারে একটি সার্ভার, আপনার ব্রাউজারে একটি পেজ সহ। Vibe Kanban তার বোর্ড আর টিমের ফিচারের জন্য একটি ঐচ্ছিক সাইন-ইনের কথা লিখেছে; Aubergine-এর কোনো অ্যাকাউন্টই নেই।",
+    "from": "ab3cc066ee10"
+  },
+  "vs.vibe-kanban.q4.q": {
+    "text": "কোনটি কোন এজেন্ট সমর্থন করে?",
+    "from": "7e38a7feb8bc"
+  },
+  "vs.vibe-kanban.q4.a": {
+    "text": "Vibe Kanban দশটির বেশি নাম বলে, তাদের মধ্যে Claude Code, Codex, Gemini CLI, GitHub Copilot, Amp, Cursor আর OpenCode। Aubergine টার্মিনালে যেকোনো কমান্ড-লাইন প্রোগ্রাম চালায়; মেনু থেকে এজেন্ট চালু করা, এটি যে অপেক্ষা করছে তা দেখা আর এর কথোপকথন আবার শুরু করা Claude Code-এর জন্য তৈরি।",
+    "from": "095b9719b5a7"
+  },
+  "vs.vibe-kanban.mark": {
+    "text": "Vibe Kanban বা এর নির্মাতাদের সঙ্গে Aubergine-এর কোনো সম্পর্ক নেই। Vibe Kanban হলো Bloop AI Limited-এর শুরু করা প্রজেক্টের নাম।",
+    "from": "e0e138f9589d"
+  },
+  "vs.vibe-kanban.c.form": {
+    "text": "আপনার নিজের কম্পিউটারে একটি সার্ভার আর আপনার ব্রাউজারে একটি পেজ",
+    "from": "f0e12c3481c6"
+  },
+  "vs.vibe-kanban.c.runs": {
+    "text": "macOS, Linux আর Windows; চালু হয় <code>npx</code> দিয়ে",
+    "from": "ddd741e66ecf"
+  },
+  "vs.vibe-kanban.c.price": {
+    "text": "Apache-2.0, বিনামূল্যে; সাইন-ইন ঐচ্ছিক",
+    "from": "9823c6d319c0"
+  },
+  "vs.vibe-kanban.c.agents": {
+    "text": "নামে চেনা দশ বা তার বেশি, তাদের মধ্যে Claude Code, Codex আর Gemini CLI",
+    "from": "3b62e7abb0fe"
+  },
+  "vs.vibe-kanban.c.layout": {
+    "text": "ইস্যুর একটি কানবান বোর্ড, আর ওয়ার্কস্পেসের একটি তালিকা, প্রতিটিতে একটি কথোপকথন",
+    "from": "2e17f6f4a543"
+  },
+  "vs.vibe-kanban.c.apart": {
+    "text": "প্রতিটি ওয়ার্কস্পেসের জন্য Git worktree",
+    "from": "86bf78b6f747"
+  },
+  "vs.vibe-kanban.c.closed": {
+    "text": "এর ডকুমেন্টেশনে কিছু পাওয়া যায়নি",
+    "from": "f6b5e7a05b9d"
+  },
+  "vs.vibe-kanban.c.waits": {
+    "text": "শব্দ, ব্রাউজার নোটিফিকেশন, যে ওয়ার্কস্পেসের আপনাকে দরকার তাতে একটি চিহ্ন",
+    "from": "9f3cc4e77037"
+  },
+  "vs.vibe-kanban.c.review": {
+    "text": "এজেন্টকে ইনলাইন মন্তব্য ফেরত পাঠানো যায় এমন ডিফ, পুল রিকোয়েস্ট, rebase, merge",
+    "from": "4545afb112b5"
+  },
+  "vs.vibe-kanban.c.device": {
+    "text": "এর ক্লাউড সার্ভিসের মাধ্যমে, যা এর নির্মাতারা সরিয়ে নেওয়া হবে বলেছিলেন",
+    "from": "004526c12db4"
+  },
+  "vs.vibe-kanban.c.programs": {
+    "text": "একটি লোকাল MCP সার্ভার; কোনো HTTP API পাওয়া যায়নি",
+    "from": "7f646c855e3f"
+  },
+  "vs.vibe-kanban.c.timed": {
+    "text": "ইস্যুর বোর্ড; কোনো শিডিউল পাওয়া যায়নি",
+    "from": "197f6e8847f9"
+  },
+  "vs.cmux.crumb": {
+    "text": "cmux",
+    "from": "548d4fabc56e"
+  },
+  "vs.cmux.name": {
+    "text": "cmux",
+    "from": "548d4fabc56e"
+  },
+  "vs.cmux.meta.title": {
+    "text": "Aubergine vs cmux: কোডিং এজেন্টের জন্য তৈরি দুটি টার্মিনাল | Aubergine",
+    "from": "dd38ae503d2d"
+  },
+  "vs.cmux.meta.description": {
+    "text": "cmux আর Aubergine দুটিই যেকোনো কমান্ড-লাইন এজেন্টকে একটি আসল টার্মিনালে চালায় আর জানায় কোনটির আপনাকে দরকার। cmux একটি নেটিভ macOS অ্যাপ; Aubergine আপনার ব্রাউজারে tmux-এর ওপর একটি ক্যানভাস।",
+    "from": "9258c63e7091"
+  },
+  "vs.cmux.title": {
+    "text": "Aubergine vs cmux",
+    "from": "9c21dcf33e1e"
+  },
+  "vs.cmux.lead": {
+    "text": "এই পেজগুলোর সবচেয়ে কাছাকাছি জোড়া: দুটিই কোডিং এজেন্টের জন্য তৈরি টার্মিনাল, দুটিই কমান্ড লাইন থেকে চালু করা যায় এমন যেকোনো এজেন্ট চালায়, দুটিই ওপেন সোর্স। cmux একটি নেটিভ macOS টার্মিনাল অ্যাপ। Aubergine আপনার কম্পিউটারে একটি সার্ভার আর আপনার ব্রাউজারে টার্মিনালের একটি ক্যানভাস।",
+    "from": "74355a6665b7"
+  },
+  "vs.cmux.how": {
+    "text": "<strong>এটি কোথা থেকে।</strong> এখানে cmux সম্পর্কে যা বলা হয়েছে তা <a href=\"https://cmux.com/\">এর সাইট আর ডকুমেন্টেশন</a> আর <a href=\"https://github.com/manaflow-ai/cmux\">এর রিপোজিটরি</a> থেকে, ২৬ নভেম্বর ২০২৬-এ যেমন পড়া হয়েছে। আমরা cmux চালিয়ে দেখিনি। কিছু ভুল বা পুরোনো হলে <a href=\"https://github.com/thirstyeggplant/aubergine/issues\">আমাদের জানান</a>।",
+    "from": "5c9611ff5302"
+  },
+  "vs.cmux.is.title": {
+    "text": "cmux কী",
+    "from": "8a1d270df445"
+  },
+  "vs.cmux.is.text": {
+    "text": "এর নিজের বর্ণনা অনুযায়ী, libghostty-র ওপর তৈরি একটি macOS টার্মিনাল, কোডিং এজেন্টের জন্য উল্লম্ব ট্যাব আর নোটিফিকেশন সহ, Swift-এ লেখা। একটি সাইডবার ওয়ার্কস্পেসগুলোর তালিকা দেখায়, সঙ্গে তাদের ব্রাঞ্চ, পুল রিকোয়েস্ট, ফোল্ডার আর সর্বশেষ নোটিফিকেশন; একটি ওয়ার্কস্পেস ট্যাব সহ কয়েকটি প্যানে ভাগ হয়। প্রতিটি কাজ একটি কমান্ড আর একটি Unix সকেটে একটি বার্তাও। অ্যাপটি GPL-3.0-or-later লাইসেন্সে আর বিনামূল্যে; ক্লাউড মেশিন আর বেটায় থাকা একটি iOS অ্যাপ আসে একটি অ্যাকাউন্ট আর পেইড প্ল্যানের সঙ্গে।",
+    "from": "68de3f7cd4b5"
+  },
+  "vs.cmux.pick.title": {
+    "text": "কোনটি বেছে নেবেন",
+    "from": "9190a8f83f35"
+  },
+  "vs.cmux.pick.them": {
+    "text": "<strong>cmux বেছে নিন</strong> যদি প্যান, অ্যাপের ভেতরে একটি ব্রাউজার আর macOS নোটিফিকেশন সহ একটি দ্রুত নেটিভ Mac টার্মিনাল অ্যাপ চান, আর এর ওপর নিজের কাজের ধরন নিজেই স্ক্রিপ্ট করে নেন।",
+    "from": "22fea8e3daf2"
+  },
+  "vs.cmux.pick.us": {
+    "text": "<strong>Aubergine বেছে নিন</strong> যদি এমন এজেন্ট চান যা কোনো মোড বাছাই ছাড়াই অ্যাপ বন্ধ হলে চলতে থাকে, প্রতিটি এজেন্টের জন্য আপনার হয়ে বানানো একটি worktree, আর আগে থেকেই তৈরি একটি কিউ, শিডিউল আর অনুমোদন।",
+    "from": "362a7c018644"
+  },
+  "vs.cmux.differs.title": {
+    "text": "কোথায় তারা আলাদা",
+    "from": "8c2314ada082"
+  },
+  "vs.cmux.d1": {
+    "text": "<strong>বন্ধ করলে কী শেষ হয়।</strong> cmux লিখেছে যে বন্ধ করলে লেআউট আর ফোল্ডার সেভ হয় আর চালু প্রসেস রাখা হয় না, যদি না আপনি এর লোকাল tmux মোড বেছে নেন। Aubergine-এ tmux কোনো মোড নয়: শুরু থেকেই প্রতিটি টার্মিনাল একটি tmux সেশন। কোনোটিই কম্পিউটার রিস্টার্টের মধ্য দিয়ে কোনো প্রসেস রাখে না।",
+    "from": "448c9e2ac6d6"
+  },
+  "vs.cmux.d2": {
+    "text": "<strong>একটি primitive, নাকি তার চারপাশের জিনিসগুলো।</strong> cmux নিজেকে বলে একটি primitive, সমাধান নয়, আর বানানোর জন্য আপনাকে একটি কমান্ড আর একটি সকেট দেয়। Aubergine আসে Git worktree-তে ওয়ার্কিং কপি, সীমা সহ একটি কিউ, শিডিউল, অনুমোদন সহ ওয়ার্কফ্লো আর আপনার অপেক্ষায় থাকা সবকিছুর একটি তালিকা নিয়ে।",
+    "from": "c675408c16db"
+  },
+  "vs.cmux.d3": {
+    "text": "<strong>একটি অ্যাপ নাকি একটি পেজ।</strong> cmux একটি Mac অ্যাপ, যা সিস্টেম আঁকে। Aubergine একটি ব্রাউজারে একটি পেজ: নেটিভ টার্মিনালের চেয়ে আঁকতে ধীর, আর আপনার চালানো একটি প্রক্সির মাধ্যমে যুক্ত করা অন্য একটি ব্রাউজার থেকে পৌঁছানো যায়।",
+    "from": "a320e661ca17"
+  },
+  "vs.cmux.has.title": {
+    "text": "cmux-এর যা আছে আর Aubergine-এর নেই",
+    "from": "3fc881ffd285"
+  },
+  "vs.cmux.h1": {
+    "text": "libghostty-র ওপর একটি নেটিভ টার্মিনাল, স্প্লিট প্যান, আর অ্যাপের ভেতরে একটি ব্রাউজার যা এর কমান্ড চালাতে পারে। Aubergine টার্মিনাল আঁকে একটি ব্রাউজার পেজে আর এর কোনো প্যান নেই: টার্মিনালগুলো একটি ক্যানভাসে রাখা হয়।",
+    "from": "2a8a37988a85"
+  },
+  "vs.cmux.h2": {
+    "text": "কোনো প্যানের আপনাকে দরকার হলে macOS নোটিফিকেশন আর একটি নিজের পছন্দের কমান্ড, যা চালু হয় টার্মিনালগুলো আগে থেকেই যে escape sequence ব্যবহার করে তা দিয়ে, যেকোনো প্রোগ্রামের জন্য। Aubergine Claude Code-এর জন্য তৈরি হুক দিয়ে দেখে যে একটি এজেন্ট অপেক্ষা করছে, আর নোটিফিকেশন দেয় শুধু খোলা পেজ থেকে।",
+    "from": "c88597f63652"
+  },
+  "vs.cmux.h3": {
+    "text": "রিমোট মেশিনে একটি ওয়ার্কস্পেসের জন্য <code>cmux ssh</code>, বেটায় থাকা একটি iOS অ্যাপ, আর এর পেইড প্ল্যানে ক্লাউড মেশিন।",
+    "from": "46878f831283"
+  },
+  "vs.cmux.q1.q": {
+    "text": "Aubergine কি cmux-এর বিকল্প?",
+    "from": "d03cb98ddd13"
+  },
+  "vs.cmux.q1.a": {
+    "text": "হ্যাঁ: দুটিই কয়েকটি কোডিং এজেন্ট চালানো আর কোনটির আপনাকে দরকার তা দেখার জন্য টার্মিনাল। cmux একটি নেটিভ macOS অ্যাপ; Aubergine একটি ব্রাউজারে tmux-এর ওপর চলে, আর যোগ করে ওয়ার্কিং কপি, একটি কিউ, শিডিউল আর ওয়ার্কফ্লো।",
+    "from": "0cabdb734f94"
+  },
+  "vs.cmux.q2.q": {
+    "text": "cmux-এর কি tmux লাগে?",
+    "from": "836e5e3d4677"
+  },
+  "vs.cmux.q2.a": {
+    "text": "না। এর ডকুমেন্টেশন বলে tmux লাগে না, আর cmux বন্ধ হলে চালু প্রসেস রাখার জন্য একটি ঐচ্ছিক লোকাল tmux মোড দেয়। Aubergine-এর tmux 3.2 বা নতুনতর লাগে আর এটি প্রতিটি টার্মিনাল এতেই চালায়।",
+    "from": "a18611c76706"
+  },
+  "vs.cmux.q3.q": {
+    "text": "cmux কি Linux বা Windows-এ চলে?",
+    "from": "09ca6d3b4a05"
+  },
+  "vs.cmux.q3.a": {
+    "text": "এর README বলে আপাতত শুধু macOS, macOS 14 বা পরের সংস্করণে। Aubergine macOS-এর জন্য তৈরি, Linux-এ শুধু কন্টেইনারে চালানো হয়েছে, আর Windows-এ শুধু WSL 2-এর ভেতরে চলে, যা চেষ্টা করা হয়নি।",
+    "from": "5ba1cbadcc1c"
+  },
+  "vs.cmux.q4.q": {
+    "text": "দুটিই কি বিনামূল্যে আর ওপেন সোর্স?",
+    "from": "4d9f144a07a6"
+  },
+  "vs.cmux.q4.a": {
+    "text": "cmux অ্যাপ GPL-3.0-or-later লাইসেন্সে আর বিনামূল্যে, এর ক্লাউডের জন্য পেইড প্ল্যান আছে; এর সার্ভার সফটওয়্যারের লাইসেন্স আলাদা। Aubergine MIT লাইসেন্সে, আর এর কোনো পেইড প্ল্যান নেই।",
+    "from": "9e51e627b171"
+  },
+  "vs.cmux.mark": {
+    "text": "cmux বা এর নির্মাতাদের সঙ্গে Aubergine-এর কোনো সম্পর্ক নেই। cmux হলো Manaflow, Inc.-এর একটি পণ্যের নাম।",
+    "from": "750ad046fa7f"
+  },
+  "vs.cmux.c.form": {
+    "text": "একটি নেটিভ macOS টার্মিনাল অ্যাপ",
+    "from": "d8719e14d15d"
+  },
+  "vs.cmux.c.runs": {
+    "text": "শুধু macOS 14 বা পরের সংস্করণ",
+    "from": "76dd2c62352e"
+  },
+  "vs.cmux.c.price": {
+    "text": "GPL-3.0-or-later অ্যাপ, বিনামূল্যে, অ্যাকাউন্ট লাগে না; এর ক্লাউডের জন্য পেইড প্ল্যান",
+    "from": "791d945bc808"
+  },
+  "vs.cmux.c.agents": {
+    "text": "টার্মিনালে চলে এমন যেকোনো এজেন্ট",
+    "from": "5e7c625a3994"
+  },
+  "vs.cmux.c.layout": {
+    "text": "ওয়ার্কস্পেসের একটি সাইডবার, প্রতিটি ট্যাব সহ কয়েকটি প্যানে ভাগ করা",
+    "from": "be8baacc5010"
+  },
+  "vs.cmux.c.apart": {
+    "text": "কোনো এজেন্টের জন্য worktree বানায় এমন কিছু পাওয়া যায়নি; এর ক্লাউডে আলাদা মেশিন",
+    "from": "09a8946a9874"
+  },
+  "vs.cmux.c.closed": {
+    "text": "লেআউট আর ফোল্ডার ফিরে আসে; চালু প্রসেস শুধু এর ঐচ্ছিক tmux মোডে",
+    "from": "93cc242a3b3d"
+  },
+  "vs.cmux.c.waits": {
+    "text": "প্যানের চারপাশে একটি রিং, সাইডবারে একটি ব্যাজ, একটি macOS নোটিফিকেশন",
+    "from": "9a5fda5bbd5c"
+  },
+  "vs.cmux.c.review": {
+    "text": "সাইডবারে লিংক করা পুল রিকোয়েস্টের অবস্থা; কোনো ডিফ ভিউ পাওয়া যায়নি",
+    "from": "1aac4ceaa460"
+  },
+  "vs.cmux.c.device": {
+    "text": "বেটায় থাকা একটি iOS অ্যাপ, একটি অ্যাকাউন্ট আর Mac জেগে থাকা অবস্থায়; <code>cmux ssh</code>",
+    "from": "2508df0177f8"
+  },
+  "vs.cmux.c.programs": {
+    "text": "প্রতিটি কাজের জন্য একটি কমান্ড আর একটি Unix সকেট; কোনো MCP সার্ভার পাওয়া যায়নি",
+    "from": "60d43aa42ad3"
+  },
+  "vs.cmux.c.timed": {
+    "text": "এর ডকুমেন্টেশনে কিছু পাওয়া যায়নি",
+    "from": "f6b5e7a05b9d"
+  },
+  "vs.warp.crumb": {
+    "text": "Warp",
+    "from": "3db7c958dfdf"
+  },
+  "vs.warp.name": {
+    "text": "Warp",
+    "from": "3db7c958dfdf"
+  },
+  "vs.warp.meta.title": {
+    "text": "কয়েকটি কোডিং এজেন্ট চালাতে Aubergine vs Warp | Aubergine",
+    "from": "cbd600eca532"
+  },
+  "vs.warp.meta.description": {
+    "text": "Warp একটি ডেস্কটপ টার্মিনাল, নিজের এজেন্ট, পেইড প্ল্যান আর ক্লাউড এজেন্ট সহ, macOS, Windows আর Linux-এ। Aubergine কোনো মডেল কল করে না: আপনি আগে থেকে যে এজেন্টগুলো ব্যবহার করেন সেগুলো একটি ক্যানভাসের টার্মিনালে চালায়, tmux দিয়ে চালু রেখে।",
+    "from": "097dab708969"
+  },
+  "vs.warp.title": {
+    "text": "Aubergine vs Warp",
+    "from": "05210af0bb08"
+  },
+  "vs.warp.lead": {
+    "text": "Warp একটি পূর্ণাঙ্গ টার্মিনাল অ্যাপ, নিজের একটি এজেন্ট, প্ল্যান আর একটি ক্লাউড সহ, যা ট্যাব আর প্যানে অন্য কমান্ড-লাইন এজেন্টও চালায়। Aubergine-এর পরিসর ছোট: এটি কোনো মডেল কল করে না আর কোনো টার্মিনাল অ্যাপের জায়গা নেয় না। আপনি আগে থেকে যে এজেন্টগুলো ব্যবহার করেন সেগুলো এটি ব্রাউজারের একটি পেজে পাশাপাশি চালায়, আর চালু রাখে।",
+    "from": "67b1020677f9"
+  },
+  "vs.warp.how": {
+    "text": "<strong>এটি কোথা থেকে।</strong> এখানে Warp সম্পর্কে যা বলা হয়েছে তা <a href=\"https://docs.warp.dev/\">এর ডকুমেন্টেশন</a> আর <a href=\"https://www.warp.dev/pricing\">এর দামের পেজ</a> থেকে, ২৬ নভেম্বর ২০২৬-এ যেমন পড়া হয়েছে, আর শুধু কয়েকটি কোডিং এজেন্ট চালানো নিয়ে; Warp আরও অনেক কিছু করে। আমরা এর জন্য Warp চালিয়ে দেখিনি। কিছু ভুল বা পুরোনো হলে <a href=\"https://github.com/thirstyeggplant/aubergine/issues\">আমাদের জানান</a>।",
+    "from": "c0a09271e3dc"
+  },
+  "vs.warp.is.title": {
+    "text": "Warp কী",
+    "from": "295785f2bf50"
+  },
+  "vs.warp.is.text": {
+    "text": "এর নিজের বর্ণনা অনুযায়ী, একটি agentic development environment: macOS, Windows আর Linux-এর জন্য একটি ডেস্কটপ টার্মিনাল, যার ক্লায়েন্ট AGPL-3.0-এ ওপেন সোর্স। এর নিজের Warp Agent আছে, যা Warp-এর মাধ্যমে বা আপনার নিজের key দিয়ে মডেল কল করে, আর এটি ট্যাব আর প্যানে Claude Code, Codex আর Gemini CLI-এর মতো অন্য কমান্ড-লাইন এজেন্ট চালায়, সঙ্গে সব সক্রিয় এজেন্টের একটি প্যানেল, নোটিফিকেশন, একটি কোড রিভিউ প্যানেল, আর শিডিউলে চলা ক্লাউড এজেন্ট।",
+    "from": "54647299b7d0"
+  },
+  "vs.warp.pick.title": {
+    "text": "কোনটি বেছে নেবেন",
+    "from": "9190a8f83f35"
+  },
+  "vs.warp.pick.them": {
+    "text": "<strong>Warp বেছে নিন</strong> যদি সবকিছুর জন্য একটি টার্মিনাল অ্যাপ চান, Windows আর Linux-এও, নিজের এজেন্ট ভেতরে তৈরি আর শিডিউল করা যায় এমন ক্লাউড এজেন্ট সহ।",
+    "from": "b6f4c8cea075"
+  },
+  "vs.warp.pick.us": {
+    "text": "<strong>Aubergine বেছে নিন</strong> যদি আপনার আগে থেকেই পছন্দের একটি টার্মিনাল আর এজেন্ট থাকে, আর শুধু তাদের মাঝে যা নেই সেটুকু চান: সবগুলো চোখের সামনে, চালু রাখা, কোনো অ্যাকাউন্ট ছাড়া আর নিজের কোনো মডেল ছাড়া।",
+    "from": "24b891e15c2a"
+  },
+  "vs.warp.differs.title": {
+    "text": "কোথায় তারা আলাদা",
+    "from": "8c2314ada082"
+  },
+  "vs.warp.d1": {
+    "text": "<strong>নিজের একটি মডেল, নাকি কোনোটিই নয়।</strong> Warp-এর নিজের এজেন্ট আছে, এর ব্যবহারের দাম দেওয়ার প্ল্যান আর নিজের key আনার একটি অপশন সহ। Aubergine কোনো মডেল কল করে না আর কোনো key রাখে না: এর টার্মিনালের এজেন্টগুলো সেগুলোই যা আপনি নিজে ইনস্টল করেছেন আর সাইন ইন করেছেন।",
+    "from": "5fbbccefb96a"
+  },
+  "vs.warp.d2": {
+    "text": "<strong>বন্ধ করলে কী শেষ হয়।</strong> Warp লিখেছে যে এটি উইন্ডো, ট্যাব, প্যান আর সাম্প্রতিক আউটপুট ফিরিয়ে আনে; চলমান প্রোগ্রাম রাখা হয় এমন কিছু আমরা পাইনি। Aubergine-এ প্রতিটি টার্মিনাল একটি tmux সেশন, তাই ব্রাউজার বা Aubergine নিজে থামলেও একটি এজেন্ট চলতে থাকে।",
+    "from": "18624a0a66fc"
+  },
+  "vs.warp.d3": {
+    "text": "<strong>আপনার এজেন্টদের কোথা থেকে পৌঁছানো যায়।</strong> Warp একটি চলমান সেশন তার ক্লাউডে প্রকাশ করে, যাতে আপনি ফোন বা ব্রাউজার থেকে তা চালাতে পারেন। Aubergine-এর কোনো ক্লাউড নেই: অন্য ডিভাইস মানে একটি ব্রাউজার যা আপনি একটি কোড দিয়ে যুক্ত করেন, আপনার নিজের মেশিনে চালানো একটি প্রক্সির মাধ্যমে, একটি Mac-এ একবার চেষ্টা করা।",
+    "from": "b82fc6e2eec4"
+  },
+  "vs.warp.has.title": {
+    "text": "Warp-এর যা আছে আর Aubergine-এর নেই",
+    "from": "9e0e15fe7a1a"
+  },
+  "vs.warp.h1": {
+    "text": "লিখে রাখা প্ল্যাটফর্ম হিসেবে Windows আর Linux, ডেস্কটপ অ্যাপ হিসেবে। Aubergine macOS-এর জন্য তৈরি।",
+    "from": "0d9c59074c72"
+  },
+  "vs.warp.h2": {
+    "text": "নিজের একটি এজেন্ট, আর এমন ক্লাউড এজেন্ট যা শিডিউলে বা Slack, Linear বা GitHub-এর মতো অন্য সার্ভিস থেকে চালু হয়। Aubergine বাইরে থেকে কিছু চালু করে না আর শিডিউলের জন্য কোনো নেটওয়ার্কে যায় না।",
+    "from": "fa39346e5209"
+  },
+  "vs.warp.h3": {
+    "text": "একটি টার্মিনাল অ্যাপ আর যা কিছু: কমান্ডের জন্য এর এডিটর, আউটপুটের ব্লক, আর একাধিক এজেন্টের জন্য নোটিফিকেশন। Aubergine Claude Code-এর জন্য তৈরি হুক দিয়ে দেখে যে একটি এজেন্ট অপেক্ষা করছে।",
+    "from": "63765a4c4189"
+  },
+  "vs.warp.q1.q": {
+    "text": "Aubergine কি Warp-এর বিকল্প?",
+    "from": "d02fa9b2f885"
+  },
+  "vs.warp.q1.a": {
+    "text": "শুধু Warp-এর একটি কাজের জন্য: কয়েকটি কমান্ড-লাইন কোডিং এজেন্ট চালানো আর কোনটির আপনাকে দরকার তা দেখা। Aubergine কোনো টার্মিনাল অ্যাপ নয় আর এর নিজের কোনো এজেন্ট নেই। আপনি Warp, বা যেকোনো টার্মিনাল, রেখে দিতে পারেন আর এজেন্টদের জন্য Aubergine ব্যবহার করতে পারেন।",
+    "from": "4d9ff5b3c2fa"
+  },
+  "vs.warp.q2.q": {
+    "text": "আমার কি অ্যাকাউন্ট বা পেইড প্ল্যান লাগবে?",
+    "from": "7ea716600927"
+  },
+  "vs.warp.q2.a": {
+    "text": "Warp-এর ডকুমেন্টেশন বলে টার্মিনালের জন্য লগ ইন ঐচ্ছিক, আর এর দামের পেজে একটি ফ্রি প্ল্যান আর কয়েকটি পেইড প্ল্যান আছে। Aubergine-এর কোনো অ্যাকাউন্ট নেই, কোনো প্ল্যানও নেই।",
+    "from": "0104a9ec4212"
+  },
+  "vs.warp.q3.q": {
+    "text": "Warp কি ওপেন সোর্স?",
+    "from": "bb814de9622d"
+  },
+  "vs.warp.q3.a": {
+    "text": "এর ডকুমেন্টেশন বলে Warp-এর ক্লায়েন্ট AGPL-3.0-এ ওপেন সোর্স। Aubergine MIT লাইসেন্সে।",
+    "from": "a49fee890f51"
+  },
+  "vs.warp.q4.q": {
+    "text": "Warp আর Aubergine কি একসঙ্গে ব্যবহার করা যায়?",
+    "from": "98378a2c4d20"
+  },
+  "vs.warp.q4.a": {
+    "text": "হ্যাঁ, যেকোনো টার্মিনাল অ্যাপের মতোই। Aubergine-এর টার্মিনালগুলো tmux সেশন, আর <code>aubergine attach &lt;name&gt;</code> যে টার্মিনাল অ্যাপ থেকে আপনি এটি চালান তার একটি উইন্ডোতে একটিকে দেখায়। আমরা Warp-এ তা চেষ্টা করে দেখিনি।",
+    "from": "bc272b9d95cf"
+  },
+  "vs.warp.mark": {
+    "text": "Warp-এর সঙ্গে Aubergine-এর কোনো সম্পর্ক নেই। Warp হলো Denver Technologies, Inc.-এর ট্রেডমার্ক, যা Warp নামে ব্যবসা করে।",
+    "from": "9cc6ff5ce341"
+  },
+  "vs.warp.c.form": {
+    "text": "নিজের একটি এজেন্ট সহ একটি ডেস্কটপ টার্মিনাল অ্যাপ, আর ক্লাউড এজেন্ট",
+    "from": "ea1d6176e636"
+  },
+  "vs.warp.c.runs": {
+    "text": "macOS, Windows আর Linux",
+    "from": "637825dc78ad"
+  },
+  "vs.warp.c.price": {
+    "text": "ক্লায়েন্ট AGPL-3.0-এ ওপেন সোর্স; একটি ফ্রি প্ল্যান আর কয়েকটি পেইড প্ল্যান; লগ ইন ঐচ্ছিক",
+    "from": "1ce40e23dc83"
+  },
+  "vs.warp.c.agents": {
+    "text": "এর নিজের Warp Agent, আর Claude Code, Codex, Gemini CLI-এর মতো কমান্ড-লাইন এজেন্ট",
+    "from": "fe6cfd7211da"
+  },
+  "vs.warp.c.layout": {
+    "text": "ট্যাব আর প্যান, একটি সাইডবার, আর সব সক্রিয় এজেন্টের একটি প্যানেল",
+    "from": "9b58a6cb680e"
+  },
+  "vs.warp.c.apart": {
+    "text": "আপনার বানানো Git worktree চেনে; এর ক্লাউড এজেন্টের জন্য কন্টেইনার",
+    "from": "d5692791483e"
+  },
+  "vs.warp.c.closed": {
+    "text": "উইন্ডো, ট্যাব আর সাম্প্রতিক আউটপুট ফিরে আসে; চলমান প্রোগ্রাম নিয়ে কিছু পাওয়া যায়নি",
+    "from": "3084fbca2310"
+  },
+  "vs.warp.c.waits": {
+    "text": "অ্যাপে আর ডেস্কটপে নোটিফিকেশন: শেষ, একটি অনুরোধ, একটি ত্রুটি",
+    "from": "c3dc4bc6b1ec"
+  },
+  "vs.warp.c.review": {
+    "text": "একটি কোড রিভিউ প্যানেল, এজেন্টকে পাঠানো মন্তব্য সহ",
+    "from": "0662c604fdbd"
+  },
+  "vs.warp.c.device": {
+    "text": "এর ক্লাউডে প্রকাশ করা একটি সেশন, ফোন বা ব্রাউজারের জন্য",
+    "from": "c722dd49add9"
+  },
+  "vs.warp.c.programs": {
+    "text": "একটি কমান্ড-লাইন এজেন্ট, আর এর ক্লাউড এজেন্টের রানের জন্য একটি API",
+    "from": "fa3857a7a76b"
+  },
+  "vs.warp.c.timed": {
+    "text": "শিডিউলে চলা ক্লাউড এজেন্ট, আর অন্য সার্ভিস থেকে চালু হওয়া",
+    "from": "e738cdacf6b5"
+  },
+  "vs.paradev.crumb": {
+    "text": "Paradev",
+    "from": "6ff850fa1891"
+  },
+  "vs.paradev.name": {
+    "text": "Paradev",
+    "from": "6ff850fa1891"
+  },
+  "vs.paradev.meta.title": {
+    "text": "Aubergine vs Paradev (আগে Superset) | Aubergine",
+    "from": "601eebcc9205"
+  },
+  "vs.paradev.meta.description": {
+    "text": "Paradev, যে অ্যাপের নাম একসময় ছিল Superset, আর Aubergine দুটিই MIT লাইসেন্সে আর Git worktree-তে যেকোনো কোডিং এজেন্ট চালায়। Paradev পেইড প্ল্যান সহ একটি ডেস্কটপ অ্যাপ; Aubergine আপনার ব্রাউজারে একটি ক্যানভাস, কোনো অ্যাকাউন্ট ছাড়া।",
+    "from": "24bc65c55b47"
+  },
+  "vs.paradev.title": {
+    "text": "Aubergine vs Paradev, আগে Superset",
+    "from": "2e91a4b729f8"
+  },
+  "vs.paradev.lead": {
+    "text": "Paradev সেই ডেস্কটপ অ্যাপ, অক্টোবর ২০২৬ পর্যন্ত যার নাম ছিল Superset। Aubergine-এর মতো এটিও MIT লাইসেন্সে, যেকোনো কমান্ড-লাইন এজেন্ট চালায় আর Git worktree-তে কাজ করে। এটি প্ল্যান, ফোন অ্যাপ আর একটি ক্লাউড সহ একটি অ্যাপ; Aubergine আপনার নিজের কম্পিউটারে একটি সার্ভার আর আপনার ব্রাউজারে একটি পেজ, এগুলোর কোনোটি ছাড়া।",
+    "from": "776bb8091dc6"
+  },
+  "vs.paradev.how": {
+    "text": "<strong>এটি কোথা থেকে।</strong> এখানে Paradev সম্পর্কে যা বলা হয়েছে তা <a href=\"https://docs.paradev.com/\">এর ডকুমেন্টেশন</a>, <a href=\"https://paradev.com/changelog\">এর চেঞ্জলগ</a> আর <a href=\"https://github.com/paradevai/paradev\">এর রিপোজিটরি</a> থেকে, ২৬ নভেম্বর ২০২৬-এ যেমন পড়া হয়েছে। আমরা Paradev চালিয়ে দেখিনি। কিছু ভুল বা পুরোনো হলে <a href=\"https://github.com/thirstyeggplant/aubergine/issues\">আমাদের জানান</a>।",
+    "from": "ba6080f1e8dc"
+  },
+  "vs.paradev.status": {
+    "text": "<strong>নামটি।</strong> ২৫ অক্টোবর ২০২৬-এর চেঞ্জলগে এটি বলে Superset এখন Paradev, আর অ্যাকাউন্ট, ওয়ার্কস্পেস, সেটিংস আর <code>superset</code> কমান্ড সঙ্গে থেকে যায়। এটি Apache Superset নয়, যা একটি ডেটা টুল।",
+    "from": "0fc4d01036e0"
+  },
+  "vs.paradev.is.title": {
+    "text": "Paradev কী",
+    "from": "520654639a88"
+  },
+  "vs.paradev.is.text": {
+    "text": "এর নিজের বর্ণনা অনুযায়ী, Claude Code, Codex আর যেকোনো কোডিং এজেন্টের জন্য ওপেন সোর্স ওয়ার্কস্পেস: একটি ডেস্কটপ অ্যাপ, টার্মিনাল অ্যাপ নয়, যেখানে এজেন্টরা চ্যাট হিসেবে বা টার্মিনালে চলে। প্রতিটি টাস্কের নিজস্ব worktree, ব্রাঞ্চ আর টার্মিনাল আছে; একটি সাইডবার প্রজেক্ট ধরে প্রতিটি সেশন দেখায়। এতে পুল রিকোয়েস্টের চেক আর merge সহ একটি ডিফ ভিউয়ার, একটি কমান্ড, একটি SDK আর একটি MCP সার্ভার আছে, আর পেইড প্ল্যানে ফোন অ্যাপ, রিমোট অ্যাক্সেস, ক্লাউড ওয়ার্কস্পেস আর অটোমেশন।",
+    "from": "304d9c9b59a7"
+  },
+  "vs.paradev.pick.title": {
+    "text": "কোনটি বেছে নেবেন",
+    "from": "9190a8f83f35"
+  },
+  "vs.paradev.pick.them": {
+    "text": "<strong>Paradev বেছে নিন</strong> যদি এমন একটি ডেস্কটপ অ্যাপ চান যা প্রতিটি টাস্কের জন্য একটি worktree বানায় আর তাকে ডিফ, চেক আর merge পর্যন্ত নিয়ে যায়, আর টাকা দিলে ফোন অ্যাপ আর একটি ক্লাউড।",
+    "from": "a5db2e59a2a0"
+  },
+  "vs.paradev.pick.us": {
+    "text": "<strong>Aubergine বেছে নিন</strong> যদি আপনার নিজের কম্পিউটারে প্রতিটি অংশ বিনামূল্যে চান, কোনো অ্যাকাউন্ট ছাড়া: পাশাপাশি টার্মিনাল, একটি কিউ, শিডিউল আর অন্য ডিভাইস থেকে ব্যবহার।",
+    "from": "29238cd8839e"
+  },
+  "vs.paradev.differs.title": {
+    "text": "কোথায় তারা আলাদা",
+    "from": "8c2314ada082"
+  },
+  "vs.paradev.d1": {
+    "text": "<strong>কী বিনামূল্যে।</strong> Paradev এক জনের জন্য একটি ফ্রি প্ল্যানের কথা বলে, লোকাল ওয়ার্কস্পেস, অ্যাপ আর কমান্ড সহ; অটোমেশন, ফোন অ্যাপ আর রিমোট অ্যাক্সেস পেইড প্ল্যানে। Aubergine-এর কোনো প্ল্যান নেই: এর কিউ, এর শিডিউল আর অন্য ডিভাইস থেকে ব্যবহার সবই একটি MIT লাইসেন্সের প্রোগ্রামে, কোনো অ্যাকাউন্ট ছাড়া।",
+    "from": "e88d006e6f33"
+  },
+  "vs.paradev.d2": {
+    "text": "<strong>একটি সাইডবার নাকি একটি ক্যানভাস।</strong> Paradev সেশনগুলো দেখায় ট্যাব আর প্যান সহ একটি সাইডবারে। Aubergine টার্মিনালগুলো রাখে এমন একটি ক্যানভাসে যা আপনি সরান আর জুম করেন, তাই একসঙ্গে অনেকগুলো লাইভ চোখের সামনে থাকে, পাশে সবগুলোর একটি তালিকা।",
+    "from": "e0a93e71bfe5"
+  },
+  "vs.paradev.d3": {
+    "text": "<strong>টার্মিনাল কীভাবে উইন্ডোর পরেও থাকে।</strong> উইন্ডো বন্ধ হলে দুটিই এজেন্টদের চালু রাখে: Paradev তার নিজের ব্যাকগ্রাউন্ড ডেমনের মাধ্যমে, যা এর ডকুমেন্টেশন অনুযায়ী Paradev পুরোপুরি বন্ধ করলে প্রতিটি টার্মিনাল শেষ করে দেয়; Aubergine tmux-এর মাধ্যমে, যা Aubergine নিজে থামলেও চলতে থাকে। কম্পিউটার রিস্টার্ট করলে দুটিতেই সেগুলো শেষ হয়।",
+    "from": "5190a04f786d"
+  },
+  "vs.paradev.has.title": {
+    "text": "Paradev-এর যা আছে আর Aubergine-এর নেই",
+    "from": "e211a22944f9"
+  },
+  "vs.paradev.h1": {
+    "text": "একটি ডিফ ভিউয়ার, যেখানে আপনি এজেন্টের পরিবর্তনে মন্তব্য করেন আর তা এডিট করেন, একটি পুল রিকোয়েস্টের চেক দেখেন আর merge করেন। Aubergine কী বদলেছে তা দেখায় আর কখনো commit, push বা merge করে না।",
+    "from": "d5bd58e3ed11"
+  },
+  "vs.paradev.h2": {
+    "text": "একটি ডেস্কটপ অ্যাপ, iOS আর Android অ্যাপ, ক্লাউড ওয়ার্কস্পেস, আর কোনো এজেন্টের আপনাকে দরকার হলে একটি চাইম আর ডকে একটি ব্যাজ। Aubergine একটি ব্রাউজার পেজ আর কোনো শব্দ বাজায় না।",
+    "from": "880ab73dfaea"
+  },
+  "vs.paradev.h3": {
+    "text": "রিভিউর অনুরোধ, একটি Slack বার্তা, একটি ইস্যু বা একটি webhook দিয়ে চালু হওয়া অটোমেশন, আর এমন হুক যা এটি ইনস্টল করে যাতে অনেক এজেন্ট তাদের অবস্থা জানায়। Aubergine বাইরে থেকে কিছু চালু করে না, আর নিজে থেকে এজেন্টের অপেক্ষা দেখে শুধু Claude Code-এর জন্য।",
+    "from": "60f6c475b3fb"
+  },
+  "vs.paradev.q1.q": {
+    "text": "Aubergine কি Paradev (Superset)-এর বিকল্প?",
+    "from": "e9c9295c1cf9"
+  },
+  "vs.paradev.q1.a": {
+    "text": "লোকালি কয়েকটি কমান্ড-লাইন এজেন্ট চালানোর জন্য, প্রতিটি নিজস্ব Git worktree-তে, হ্যাঁ, আর প্রতিটি ফিচার বিনামূল্যে। এটি হুবহু বদলি নয়: Aubergine-এর কোনো ডেস্কটপ বা ফোন অ্যাপ নেই, ডিফে মন্তব্য নেই, পুল রিকোয়েস্ট বা merge নেই, ক্লাউডও নেই।",
+    "from": "8acabc2591e8"
+  },
+  "vs.paradev.q2.q": {
+    "text": "Superset আর Paradev কি একই?",
+    "from": "17d548f38157"
+  },
+  "vs.paradev.q2.a": {
+    "text": "হ্যাঁ। ২৫ অক্টোবর ২০২৬-এর চেঞ্জলগ বলে Superset এখন Paradev, আর এর README বলে কমান্ড এখনো <code>superset</code>। কোনোটিরই Apache Superset-এর সঙ্গে সম্পর্ক নেই।",
+    "from": "7906ac9c93cc"
+  },
+  "vs.paradev.q3.q": {
+    "text": "দুটিই কি ওপেন সোর্স?",
+    "from": "1d2d2fda932d"
+  },
+  "vs.paradev.q3.a": {
+    "text": "দুটিই MIT লাইসেন্সে। Paradev এর ফোন অ্যাপ, রিমোট অ্যাক্সেস, ক্লাউড আর অটোমেশনের জন্য প্ল্যানও বিক্রি করে; Aubergine কিছুই বিক্রি করে না।",
+    "from": "0f0cd2638d86"
+  },
+  "vs.paradev.q4.q": {
+    "text": "Paradev কি Linux বা Windows-এ চলে?",
+    "from": "9ccc6492d874"
+  },
+  "vs.paradev.q4.a": {
+    "text": "এর ডকুমেন্টেশন বলে macOS, সঙ্গে একটি পরীক্ষামূলক Linux বিল্ড, আর Windows এখনো পাওয়া যায় না। Aubergine macOS-এর জন্য তৈরি, Linux-এ শুধু কন্টেইনারে চালানো হয়েছে, আর Windows-এ শুধু WSL 2-এর ভেতরে চলে, যা চেষ্টা করা হয়নি।",
+    "from": "733d3a59a51d"
+  },
+  "vs.paradev.mark": {
+    "text": "Paradev বা এর নির্মাতা Superset Inc.-এর সঙ্গে Aubergine-এর কোনো সম্পর্ক নেই। Paradev আর Superset তাদের নাম; তাদের বা Aubergine-এর কোনোটিরই Apache Superset-এর সঙ্গে সম্পর্ক নেই।",
+    "from": "05f8d7ecd761"
+  },
+  "vs.paradev.c.form": {
+    "text": "একটি ডেস্কটপ অ্যাপ, একসময় নাম ছিল Superset, ফোন অ্যাপ আর একটি ক্লাউড সহ",
+    "from": "3054414596e2"
+  },
+  "vs.paradev.c.runs": {
+    "text": "macOS; একটি পরীক্ষামূলক Linux বিল্ড; Windows নেই",
+    "from": "889cdaf4298b"
+  },
+  "vs.paradev.c.price": {
+    "text": "MIT; এক জনের জন্য একটি ফ্রি প্ল্যান, আর পেইড প্ল্যান",
+    "from": "a36a1e0e1592"
+  },
+  "vs.paradev.c.agents": {
+    "text": "Claude Code, Codex, OpenCode, Gemini, Cursor Agent আর যেকোনো কমান্ড-লাইন এজেন্ট",
+    "from": "24eb0a261425"
+  },
+  "vs.paradev.c.layout": {
+    "text": "প্রজেক্ট ধরে প্রতিটি সেশনের একটি সাইডবার, ট্যাব আর প্যান সহ",
+    "from": "a8991633cee6"
+  },
+  "vs.paradev.c.apart": {
+    "text": "প্রতিটি টাস্কের জন্য একটি worktree, একটি ব্রাঞ্চ আর একটি টার্মিনাল",
+    "from": "e3443e224b3e"
+  },
+  "vs.paradev.c.closed": {
+    "text": "পুরোপুরি বন্ধ না করা পর্যন্ত টার্মিনাল এর ডেমনে চলতে থাকে; রিস্টার্ট করলে শেষ হয়",
+    "from": "c8f43d646883"
+  },
+  "vs.paradev.c.waits": {
+    "text": "কাজ চলার চিহ্ন, একটি শেষ হলে একটি চাইম, ডকে একটি ব্যাজ",
+    "from": "cd8c2ecb61d3"
+  },
+  "vs.paradev.c.review": {
+    "text": "মন্তব্য আর এডিট সহ একটি ডিফ ভিউয়ার, পুল রিকোয়েস্টের চেক, merge",
+    "from": "2ba1d7abad83"
+  },
+  "vs.paradev.c.device": {
+    "text": "iOS আর Android অ্যাপ আর রিমোট অ্যাক্সেস, পেইড প্ল্যানে; কোনো ওয়েব পেজ নেই",
+    "from": "ff41edf13b81"
+  },
+  "vs.paradev.c.programs": {
+    "text": "একটি কমান্ড, একটি SDK আর একটি MCP সার্ভার",
+    "from": "4f73909c306d"
+  },
+  "vs.paradev.c.timed": {
+    "text": "শিডিউলে বা কোনো ঘটনায় চলা অটোমেশন, পেইড প্ল্যানে",
+    "from": "d0a82cd975d3"
   }
 }
