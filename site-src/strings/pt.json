@@ -120,20 +120,20 @@
     "from": "9288ea1bcf71"
   },
   "home.meta.description": {
-    "text": "Central de controle para seus terminais e agentes de programação com IA. Rode Claude Code, Codex e terminais comuns lado a lado em um só painel no seu navegador, e veja qual precisa de você. Grátis, local e de código aberto.",
-    "from": "eb4da549e70d"
+    "text": "Central de controle para seus terminais e agentes de programação com IA: um só painel no seu navegador para gerenciar Claude Code, Codex e terminais comuns lado a lado. Veja qual precisa de você e recupere sua produtividade. Grátis, local e de código aberto.",
+    "from": "549f660755c7"
   },
   "home.ld.category": {
-    "text": "Multiplexador de terminais e espaço de trabalho para agentes",
-    "from": "d32b7b10eecd"
+    "text": "Painel de gerenciamento de terminais e agentes de programação",
+    "from": "ec2b095cd97a"
   },
   "home.ld.requires": {
     "text": "tmux 3.2 ou mais recente, Node.js 22 ou mais recente",
     "from": "6fadbd03c20d"
   },
   "home.hero.tag.lead": {
-    "text": "Turbine seu terminal",
-    "from": "eb13de4649f0"
+    "text": "Repense seu terminal",
+    "from": "9c559cd8311b"
   },
   "home.hero.tag.free": {
     "text": "Grátis",
@@ -184,8 +184,8 @@
     "from": "2288db7c750f"
   },
   "home.powers.title": {
-    "text": "Dê superpoderes aos seus terminais",
-    "from": "588a8ab51054"
+    "text": "Gerenciamento de terminais, repensado",
+    "from": "9b3c23b70200"
   },
   "home.powers.lead": {
     "text": "Os terminais que você já usa, com o que faltava a eles: um lugar para ficarem lado a lado, uma memória e um jeito de avisar quando precisam de você.",

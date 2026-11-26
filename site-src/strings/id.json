@@ -120,20 +120,20 @@
     "from": "9288ea1bcf71"
   },
   "home.meta.description": {
-    "text": "Pusat kendali untuk terminal dan agen coding AI Anda. Jalankan Claude Code, Codex, dan terminal biasa berdampingan di satu dasbor di browser, dan lihat mana yang membutuhkan Anda. Gratis, lokal, open source.",
-    "from": "eb4da549e70d"
+    "text": "Pusat kendali untuk terminal dan agen coding AI Anda: satu dasbor di browser untuk mengelola Claude Code, Codex, dan terminal biasa berdampingan. Lihat mana yang membutuhkan Anda dan dapatkan kembali produktivitas Anda. Gratis, lokal, open source.",
+    "from": "549f660755c7"
   },
   "home.ld.category": {
-    "text": "Multiplexer terminal dan ruang kerja agen",
-    "from": "d32b7b10eecd"
+    "text": "Dasbor manajemen terminal dan agen coding",
+    "from": "ec2b095cd97a"
   },
   "home.ld.requires": {
     "text": "tmux 3.2 atau lebih baru, Node.js 22 atau lebih baru",
     "from": "6fadbd03c20d"
   },
   "home.hero.tag.lead": {
-    "text": "Perkuat terminal Anda",
-    "from": "eb13de4649f0"
+    "text": "Pikirkan ulang terminal",
+    "from": "9c559cd8311b"
   },
   "home.hero.tag.free": {
     "text": "Gratis",
@@ -184,8 +184,8 @@
     "from": "2288db7c750f"
   },
   "home.powers.title": {
-    "text": "Beri terminal Anda kekuatan super",
-    "from": "588a8ab51054"
+    "text": "Manajemen terminal, dipikirkan ulang",
+    "from": "9b3c23b70200"
   },
   "home.powers.lead": {
     "text": "Terminal yang sudah Anda pakai, dengan yang selama ini kurang: tempat untuk berdampingan, ingatan, dan cara memberi tahu Anda saat mereka membutuhkan Anda.",

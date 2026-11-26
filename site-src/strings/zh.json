@@ -120,20 +120,20 @@
     "from": "9288ea1bcf71"
   },
   "home.meta.description": {
-    "text": "你的终端和 AI 编程智能体的指挥中心。在浏览器里的一个仪表盘上并排运行 Claude Code、Codex 和普通终端，并看清哪一个需要你。免费、本地、开源。",
-    "from": "eb4da549e70d"
+    "text": "你的终端和 AI 编程智能体的指挥中心：在浏览器里用一个仪表盘并排管理 Claude Code、Codex 和普通终端。看清哪一个需要你，找回你的生产力。免费、本地、开源。",
+    "from": "549f660755c7"
   },
   "home.ld.category": {
-    "text": "终端复用器与智能体工作区",
-    "from": "d32b7b10eecd"
+    "text": "终端与编程智能体管理仪表盘",
+    "from": "ec2b095cd97a"
   },
   "home.ld.requires": {
     "text": "tmux 3.2 或更高版本，Node.js 22 或更高版本",
     "from": "6fadbd03c20d"
   },
   "home.hero.tag.lead": {
-    "text": "让终端如虎添翼",
-    "from": "eb13de4649f0"
+    "text": "重新思考终端",
+    "from": "9c559cd8311b"
   },
   "home.hero.tag.free": {
     "text": "免费",
@@ -184,8 +184,8 @@
     "from": "2288db7c750f"
   },
   "home.powers.title": {
-    "text": "给你的终端装上超能力",
-    "from": "588a8ab51054"
+    "text": "重新思考终端管理",
+    "from": "9b3c23b70200"
   },
   "home.powers.lead": {
     "text": "还是你已经在用的终端，补上它们一直缺的东西：一个可以并排摆开的地方、一份记忆，以及在需要你时通知你的办法。",

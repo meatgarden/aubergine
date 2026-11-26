@@ -120,20 +120,20 @@
     "from": "9288ea1bcf71"
   },
   "home.meta.description": {
-    "text": "Un centro de control para tus terminales y agentes de programación con IA. Ejecuta Claude Code, Codex y terminales normales una al lado de la otra en un solo panel en tu navegador, y mira cuál te necesita. Gratis, local y de código abierto.",
-    "from": "eb4da549e70d"
+    "text": "Un centro de control para tus terminales y agentes de programación con IA: un solo panel en tu navegador para gestionar Claude Code, Codex y terminales normales una al lado de la otra. Mira cuál te necesita y recupera tu productividad. Gratis, local y de código abierto.",
+    "from": "549f660755c7"
   },
   "home.ld.category": {
-    "text": "Multiplexor de terminales y espacio de trabajo para agentes",
-    "from": "d32b7b10eecd"
+    "text": "Panel de gestión de terminales y agentes de programación",
+    "from": "ec2b095cd97a"
   },
   "home.ld.requires": {
     "text": "tmux 3.2 o posterior, Node.js 22 o posterior",
     "from": "6fadbd03c20d"
   },
   "home.hero.tag.lead": {
-    "text": "Potencia tu terminal",
-    "from": "eb13de4649f0"
+    "text": "Repiensa tu terminal",
+    "from": "9c559cd8311b"
   },
   "home.hero.tag.free": {
     "text": "Gratis",
@@ -184,8 +184,8 @@
     "from": "2288db7c750f"
   },
   "home.powers.title": {
-    "text": "Dale superpoderes a tus terminales",
-    "from": "588a8ab51054"
+    "text": "La gestión de terminales, repensada",
+    "from": "9b3c23b70200"
   },
   "home.powers.lead": {
     "text": "Las terminales que ya usas, con lo que les faltaba: un sitio donde estar una al lado de la otra, una memoria y una forma de avisarte cuando te necesitan.",
