@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="hi" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aubergine vs cmux: कोडिंग एजेंटों के लिए बने दो टर्मिनल</title>
+<meta name="description" content="दोनों किसी भी कमांड-लाइन एजेंट को असली टर्मिनल में चलाते हैं और बताते हैं किसे आपकी ज़रूरत है। cmux नेटिव macOS ऐप है; Aubergine ब्राउज़र में एक कैनवस है।">
+<link rel="canonical" href="https://thirstyeggplant.com/hi/compare/cmux/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/compare/cmux/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/compare/cmux/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/compare/cmux/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/compare/cmux/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/compare/cmux/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/compare/cmux/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/compare/cmux/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/compare/cmux/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/compare/cmux/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/compare/cmux/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/compare/cmux/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/compare/cmux/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/compare/cmux/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F7F0E4">
+<link rel="icon" href="../../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="Aubergine vs cmux: कोडिंग एजेंटों के लिए बने दो टर्मिनल">
+<meta property="og:description" content="दोनों किसी भी कमांड-लाइन एजेंट को असली टर्मिनल में चलाते हैं और बताते हैं किसे आपकी ज़रूरत है। cmux नेटिव macOS ऐप है; Aubergine ब्राउज़र में एक कैनवस है।">
+<meta property="og:url" content="https://thirstyeggplant.com/hi/compare/cmux/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine: टर्मिनलों का एक कैनवस, एक काम में लगा हुआ और एक आपका इंतज़ार करता हुआ">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine: टर्मिनलों का एक कैनवस, एक काम में लगा हुआ और एक आपका इंतज़ार करता हुआ">
+<meta name="twitter:title" content="Aubergine vs cmux: कोडिंग एजेंटों के लिए बने दो टर्मिनल">
+<meta name="twitter:description" content="दोनों किसी भी कमांड-लाइन एजेंट को असली टर्मिनल में चलाते हैं और बताते हैं किसे आपकी ज़रूरत है। cmux नेटिव macOS ऐप है; Aubergine ब्राउज़र में एक कैनवस है।">
+<link rel="alternate" type="text/plain" href="../../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">पेज पर जाएँ</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../../"><img src="../../../icon.svg" alt="" width="32" height="32"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="पेज">
+      <ul>
+        <li><a href="../../claude/">Claude Code</a></li>
+        <li><a href="../../chatgpt/">Codex</a></li>
+        <li><a href="../../install/">इंस्टॉल</a></li>
+        <li><a href="../../guides/">गाइड</a></li>
+        <li><a href="../../security/">सुरक्षा</a></li>
+        <li><a href="../../faq/">सवाल-जवाब</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="भाषा: हिन्दी"><span class="lang-long" aria-hidden="true">हिन्दी</span><span class="lang-short" aria-hidden="true">HI</span></summary>
+      <ul class="menu-list"><li><a href="../../../compare/cmux/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="../../../es/compare/cmux/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="../../../pt/compare/cmux/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="../../../fr/compare/cmux/" hreflang="fr" lang="fr" dir="ltr">Français</a></li><li><a href="../../../de/compare/cmux/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="../../../ja/compare/cmux/" hreflang="ja" lang="ja" dir="ltr">日本語</a></li><li><a href="../../../zh/compare/cmux/" hreflang="zh-Hans" lang="zh-Hans" dir="ltr">简体中文</a></li><li><a href="../../../ko/compare/cmux/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="../../../id/compare/cmux/" hreflang="id" lang="id" dir="ltr">Bahasa Indonesia</a></li><li><a href="./" hreflang="hi" lang="hi" dir="ltr" aria-current="true">हिन्दी</a></li><li><a href="../../../bn/compare/cmux/" hreflang="bn" lang="bn" dir="ltr">বাংলা</a></li><li><a href="../../../ar/compare/cmux/" hreflang="ar" lang="ar" dir="rtl">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>मेन्यू</summary>
+      <ul class="menu-list">
+        <li><a href="../../claude/">Claude Code</a></li>
+        <li><a href="../../chatgpt/">Codex</a></li>
+        <li><a href="../../install/">इंस्टॉल</a></li>
+        <li><a href="../../guides/">गाइड</a></li>
+        <li><a href="../../security/">सुरक्षा</a></li>
+        <li><a href="../../faq/">सवाल-जवाब</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="translated">
+  <div class="wrap translated-in">
+    <p>Aubergine खुद अंग्रेज़ी में है: उसके बटन, मेन्यू और तस्वीरें अंग्रेज़ी वाली ही हैं।</p>
+    <p>इस पेज का अंग्रेज़ी से अनुवाद मशीन ने किया है। <a href="https://github.com/thirstyeggplant/aubergine/issues">सुधार भेजें</a>।</p>
+  </div>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://thirstyeggplant.com/hi/compare/cmux/#article",
+      "headline": "Aubergine vs cmux",
+      "description": "दोनों किसी भी कमांड-लाइन एजेंट को असली टर्मिनल में चलाते हैं और बताते हैं किसे आपकी ज़रूरत है। cmux नेटिव macOS ऐप है; Aubergine ब्राउज़र में एक कैनवस है।",
+      "url": "https://thirstyeggplant.com/hi/compare/cmux/",
+      "mainEntityOfPage": "https://thirstyeggplant.com/hi/compare/cmux/",
+      "datePublished": "2026-11-26",
+      "dateModified": "2026-11-26",
+      "inLanguage": "hi",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "तुलना", "item": "https://thirstyeggplant.com/compare/" },
+        { "@type": "ListItem", "position": 3, "name": "cmux", "item": "https://thirstyeggplant.com/hi/compare/cmux/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://thirstyeggplant.com/hi/compare/cmux/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "क्या Aubergine, cmux का विकल्प है?", "acceptedAnswer": { "@type": "Answer", "text": "हाँ: दोनों कई कोडिंग एजेंट चलाने और यह देखने के लिए टर्मिनल हैं कि किसे आपकी ज़रूरत है। cmux एक नेटिव macOS ऐप है; Aubergine, tmux के ऊपर ब्राउज़र में चलता है, और वर्किंग कॉपी, एक क्यू, शेड्यूल और वर्कफ़्लो जोड़ता है।" } },
+        { "@type": "Question", "name": "क्या cmux को tmux चाहिए?", "acceptedAnswer": { "@type": "Answer", "text": "नहीं। उसका डॉक्यूमेंटेशन कहता है कि tmux ज़रूरी नहीं है, और cmux बंद होने पर चलते प्रोसेस रखने के लिए एक वैकल्पिक लोकल tmux मोड देता है। Aubergine को tmux 3.2 या नया चाहिए और वह हर टर्मिनल उसी में चलाता है।" } },
+        { "@type": "Question", "name": "क्या cmux, Linux या Windows पर चलता है?", "acceptedAnswer": { "@type": "Answer", "text": "उसका README कहता है, अभी के लिए सिर्फ़ macOS, macOS 14 या नए पर। Aubergine macOS के लिए बना है, Linux पर सिर्फ़ कंटेनरों में चलाया गया है, और Windows पर सिर्फ़ WSL 2 के अंदर चलता है, जिसे आज़माया नहीं गया है।" } },
+        { "@type": "Question", "name": "क्या दोनों मुफ़्त और ओपन सोर्स हैं?", "acceptedAnswer": { "@type": "Answer", "text": "cmux ऐप GPL-3.0-or-later लाइसेंस के तहत और मुफ़्त है, उसके क्लाउड के लिए पेड प्लान के साथ; उसके सर्वर सॉफ़्टवेयर का लाइसेंस अलग है। Aubergine, MIT लाइसेंस के तहत है और इसका कोई पेड प्लान नहीं है।" } }
+      ]
+    }
+  ]
+}
+</script>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="आप कहाँ हैं"><ol><li><a href="../../">Aubergine</a></li><li><a href="../">तुलना</a></li><li>cmux</li></ol></nav>
+    <h1>Aubergine vs cmux</h1>
+    <p class="lead">इन पेजों पर सबसे करीबी जोड़ी: दोनों कोडिंग एजेंटों के लिए बने टर्मिनल हैं, दोनों कोई भी एजेंट चलाते हैं जिसे आप कमांड लाइन से शुरू कर सकें, दोनों ओपन सोर्स हैं। cmux एक नेटिव macOS टर्मिनल ऐप है। Aubergine आपके कंप्यूटर पर एक सर्वर और आपके ब्राउज़र में टर्मिनलों का एक कैनवस है।</p>
+  </div>
+</header>
+<div class="wrap page-body">
+  <div class="prose">
+    <p class="note note-strong"><strong>यह कहाँ से है।</strong> यहाँ cmux के बारे में जो कहा गया है, वह <a href="https://cmux.com/">उसकी साइट और डॉक्यूमेंटेशन</a> और <a href="https://github.com/manaflow-ai/cmux">उसकी रिपॉज़िटरी</a> से है, जैसे 26 नवंबर 2026 को पढ़ा गया। हमने cmux नहीं चलाया है। अगर कुछ गलत या पुराना है, तो <a href="https://github.com/thirstyeggplant/aubergine/issues">हमें बताएँ</a>।</p>
+
+    <h2>कौन-सा चुनें</h2>
+    <p><strong>cmux चुनें</strong> अगर आप पेन, ऐप के अंदर एक ब्राउज़र और macOS नोटिफ़िकेशन वाला एक तेज़ नेटिव Mac टर्मिनल ऐप चाहते हैं, और उसके ऊपर काम करने का अपना तरीका खुद स्क्रिप्ट करते हैं।</p>
+    <p><strong>Aubergine चुनें</strong> अगर आप ऐसे एजेंट चाहते हैं जो बिना कोई मोड चुने ऐप बंद होने पर भी चलते रहें, हर एजेंट के लिए आपके लिए बना एक worktree, और पहले से बने क्यू, शेड्यूल और मंज़ूरी।</p>
+
+    <h2>cmux क्या है</h2>
+    <p>उसके अपने वर्णन के अनुसार, libghostty पर बना एक macOS टर्मिनल, कोडिंग एजेंटों के लिए वर्टिकल टैब और नोटिफ़िकेशन के साथ, Swift में लिखा हुआ। एक साइडबार वर्कस्पेस को उनकी ब्रांच, pull request, फ़ोल्डर और आख़िरी नोटिफ़िकेशन के साथ दिखाता है; एक वर्कस्पेस टैब वाले पेन में बँटता है। हर ऐक्शन एक कमांड और एक Unix सॉकेट पर एक संदेश भी है। ऐप GPL-3.0-or-later लाइसेंस के तहत और मुफ़्त है; क्लाउड मशीनें और बीटा में एक iOS ऐप अकाउंट और पेड प्लान के साथ आते हैं।</p>
+
+    <h2>साथ-साथ</h2>
+    <div class="table">
+      <table class="table-stack">
+        <thead><tr><th>क्या</th><th>cmux</th><th>Aubergine</th></tr></thead>
+        <tbody>
+          <tr><td>यह क्या है</td><td data-label="cmux">एक नेटिव macOS टर्मिनल ऐप</td><td data-label="Aubergine">आपके अपने कंप्यूटर पर एक सर्वर और आपके ब्राउज़र में एक पेज</td></tr>
+          <tr><td>कहाँ चलता है</td><td data-label="cmux">सिर्फ़ macOS 14 या नया</td><td data-label="Aubergine">macOS; Linux सिर्फ़ कंटेनरों में; Windows, WSL 2 के अंदर, आज़माया नहीं गया। tmux और Node.js चाहिए</td></tr>
+          <tr><td>सोर्स और कीमत</td><td data-label="cmux">GPL-3.0-or-later ऐप, मुफ़्त, अकाउंट ज़रूरी नहीं; उसके क्लाउड के लिए पेड प्लान</td><td data-label="Aubergine">MIT, मुफ़्त; न पेड प्लान, न अकाउंट</td></tr>
+          <tr><td>एजेंट</td><td data-label="cmux">कोई भी एजेंट जो टर्मिनल में चलता है</td><td data-label="Aubergine">कोई भी कमांड-लाइन एजेंट; Claude Code के लिए खुद से और भी</td></tr>
+          <tr><td>एक साथ कई</td><td data-label="cmux">वर्कस्पेस का एक साइडबार, हर एक टैब वाले पेन में बँटा</td><td data-label="Aubergine">एक कैनवस पर साथ-साथ टर्मिनल, और उन सबकी एक सूची</td></tr>
+          <tr><td>एजेंटों को अलग रखना</td><td data-label="cmux">ऐसा कुछ नहीं मिला जो एजेंट के लिए worktree बनाए; उसके क्लाउड में अलग मशीनें</td><td data-label="Aubergine">किसी टर्मिनल के लिए उसकी अपनी ब्रांच पर एक Git worktree, जब आप माँगें</td></tr>
+          <tr><td>अगर आप इसे बंद करें</td><td data-label="cmux">लेआउट और फ़ोल्डर वापस आते हैं; चलते प्रोसेस सिर्फ़ उसके वैकल्पिक tmux मोड में</td><td data-label="Aubergine">टर्मिनल tmux में चलते रहते हैं; कंप्यूटर का रीस्टार्ट जो चल रहा था उसे खत्म कर देता है</td></tr>
+          <tr><td>जब कोई एजेंट इंतज़ार करे या पूरा हो</td><td data-label="cmux">पेन के चारों ओर एक घेरा, साइडबार में एक बैज, एक macOS नोटिफ़िकेशन</td><td data-label="Aubergine">टर्मिनल का रंग, ऊपर एक गिनती, अगले पर जाने की एक key, खुले पेज से नोटिफ़िकेशन; कोई आवाज़ नहीं</td></tr>
+          <tr><td>बदलावों की समीक्षा</td><td data-label="cmux">साइडबार में जुड़े pull request की स्थिति; कोई diff व्यू नहीं मिला</td><td data-label="Aubergine">फ़ाइल दर फ़ाइल क्या बदला; न कमिट, न push, न pull request, न merge</td></tr>
+          <tr><td>दूसरे डिवाइस से</td><td data-label="cmux">बीटा में एक iOS ऐप, अकाउंट और जागे हुए Mac के साथ; <code>cmux ssh</code></td><td data-label="Aubergine">एक ब्राउज़र जिसे आप जोड़ते हैं, आपके चलाए प्रॉक्सी के ज़रिए; कोई ऐप नहीं; असली फ़ोन पर आज़माया नहीं गया</td></tr>
+          <tr><td>प्रोग्रामों के लिए</td><td data-label="cmux">हर ऐक्शन के लिए एक कमांड और एक Unix सॉकेट; कोई MCP सर्वर नहीं मिला</td><td data-label="Aubergine">स्कोप वाले टोकन के साथ एक HTTP API, <code>aubergine</code> कमांड, एक MCP सर्वर</td></tr>
+          <tr><td>क्यू और शेड्यूल</td><td data-label="cmux">उसके डॉक्यूमेंटेशन में कुछ नहीं मिला</td><td data-label="Aubergine">सीमा वाली एक क्यू, दिन के समय के हिसाब से शेड्यूल, मंज़ूरी वाले वर्कफ़्लो</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>वे कहाँ अलग हैं</h2>
+    <p><strong>इसे बंद करने से क्या खत्म होता है।</strong> cmux डॉक्यूमेंट करता है कि बंद करने पर लेआउट और फ़ोल्डर सेव होते हैं और चलते प्रोसेस नहीं रखे जाते, जब तक आप उसका लोकल tmux मोड न चुनें। Aubergine में tmux कोई मोड नहीं है: हर टर्मिनल शुरू से ही एक tmux सेशन है। कोई भी कंप्यूटर के रीस्टार्ट के दौरान प्रोसेस नहीं रखता।</p>
+    <p><strong>एक बुनियादी पुर्ज़ा, या उसके आसपास की चीज़ें।</strong> cmux खुद को primitive कहता है, solution नहीं, और बनाने के लिए आपको एक कमांड और एक सॉकेट देता है। Aubergine के साथ Git worktree में वर्किंग कॉपी, सीमा वाली एक क्यू, शेड्यूल, मंज़ूरी वाले वर्कफ़्लो और जो आपका इंतज़ार कर रहा है उसकी एक सूची आती है।</p>
+    <p><strong>ऐप या पेज।</strong> cmux सिस्टम का बनाया एक Mac ऐप है। Aubergine ब्राउज़र में एक पेज है: नेटिव टर्मिनल से दिखाने में धीमा, और ऐसे दूसरे ब्राउज़र से पहुँचने लायक जिसे आप अपने चलाए प्रॉक्सी के ज़रिए जोड़ते हैं।</p>
+
+    <h2>cmux में क्या है जो Aubergine में नहीं है</h2>
+    <ul>
+      <li>libghostty पर एक नेटिव टर्मिनल, बँटे हुए पेन, और ऐप के अंदर एक ब्राउज़र जिसे उसकी कमांड चला सकती है। Aubergine टर्मिनलों को ब्राउज़र पेज में दिखाता है और उसमें पेन नहीं हैं: टर्मिनल कैनवस पर रखे जाते हैं।</li>
+      <li>macOS नोटिफ़िकेशन और एक अपनी कमांड जब किसी पेन को आपकी ज़रूरत हो, उन escape sequences से चालू जो टर्मिनल पहले से इस्तेमाल करते हैं, किसी भी प्रोग्राम के लिए। Aubergine Claude Code के लिए बने हुक से देखता है कि एजेंट इंतज़ार कर रहा है, और सिर्फ़ खुले पेज से नोटिफ़िकेशन देता है।</li>
+      <li>रिमोट मशीन पर वर्कस्पेस के लिए <code>cmux ssh</code>, बीटा में एक iOS ऐप, और उसके पेड प्लान पर क्लाउड मशीनें।</li>
+    </ul>
+
+    <h2>सवाल</h2>
+    <div class="questions">
+      <details><summary>क्या Aubergine, cmux का विकल्प है?</summary><p>हाँ: दोनों कई कोडिंग एजेंट चलाने और यह देखने के लिए टर्मिनल हैं कि किसे आपकी ज़रूरत है। cmux एक नेटिव macOS ऐप है; Aubergine, tmux के ऊपर ब्राउज़र में चलता है, और वर्किंग कॉपी, एक क्यू, शेड्यूल और वर्कफ़्लो जोड़ता है।</p></details>
+      <details><summary>क्या cmux को tmux चाहिए?</summary><p>नहीं। उसका डॉक्यूमेंटेशन कहता है कि tmux ज़रूरी नहीं है, और cmux बंद होने पर चलते प्रोसेस रखने के लिए एक वैकल्पिक लोकल tmux मोड देता है। Aubergine को tmux 3.2 या नया चाहिए और वह हर टर्मिनल उसी में चलाता है।</p></details>
+      <details><summary>क्या cmux, Linux या Windows पर चलता है?</summary><p>उसका README कहता है, अभी के लिए सिर्फ़ macOS, macOS 14 या नए पर। Aubergine macOS के लिए बना है, Linux पर सिर्फ़ कंटेनरों में चलाया गया है, और Windows पर सिर्फ़ WSL 2 के अंदर चलता है, जिसे आज़माया नहीं गया है।</p></details>
+      <details><summary>क्या दोनों मुफ़्त और ओपन सोर्स हैं?</summary><p>cmux ऐप GPL-3.0-or-later लाइसेंस के तहत और मुफ़्त है, उसके क्लाउड के लिए पेड प्लान के साथ; उसके सर्वर सॉफ़्टवेयर का लाइसेंस अलग है। Aubergine, MIT लाइसेंस के तहत है और इसका कोई पेड प्लान नहीं है।</p></details>
+    </div>
+    <p>Aubergine का cmux या उसके बनाने वालों से कोई संबंध नहीं है। cmux, Manaflow, Inc. के एक प्रोडक्ट का नाम है।</p>
+  </div>
+</div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">पाँच मिनट में तैयार</h2>
+    <div class="close-do">
+      <p>आपको macOS चाहिए, tmux 3.2 या नए और Node.js 22 या नए के साथ। <code>brew install tmux node</code> दोनों ले आता है।</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="कॉपी हो गया" aria-live="polite" hidden>कॉपी करें</button></p>
+      <p class="actions"><a class="button" href="../../install/">इंस्टॉल करें</a><a class="button button-quiet" href="../">सातों टूल की तुलना</a></p>
+    </div>
+  </div>
+</section>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <a class="mark" href="../../"><img src="../../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav aria-label="सभी पेज">
+      <ul class="foot-links">
+        <li><a href="../../">होम</a></li>
+        <li><a href="../../claude/">Claude Code</a></li>
+        <li><a href="../../chatgpt/">Codex और ChatGPT</a></li>
+        <li><a href="../../install/">इंस्टॉल</a></li>
+        <li><a href="../../guides/">गाइड</a></li>
+        <li><a href="../../run-multiple-coding-agents/">कई एजेंट चलाएँ</a></li>
+        <li><a href="../../working-copies/">वर्किंग कॉपी</a></li>
+        <li><a href="../../queue-and-schedules/">क्यू और शेड्यूल</a></li>
+        <li><a href="../">तुलना</a></li>
+        <li><a href="../../security/">सुरक्षा</a></li>
+        <li><a href="../../roadmap/">रोडमैप</a></li>
+        <li><a href="../../faq/">सवाल-जवाब</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">Aubergine मुफ़्त और ओपन सोर्स है, <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">MIT लाइसेंस</a> के तहत, और आपके अपने कंप्यूटर पर चलता है।</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    if (!navigator.clipboard) return;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+document.querySelectorAll('details.menu').forEach(function (menu) {
+  menu.addEventListener('toggle', function () {
+    if (!menu.open) return;
+    document.querySelectorAll('details.menu[open]').forEach(function (other) { if (other !== menu) other.open = false; });
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="zh-Hans" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aubergine vs Warp：运行多个编程智能体</title>
+<meta name="description" content="Warp 是桌面终端，有自己的智能体、付费套餐和云服务。Aubergine 不调用模型：它并排运行你已经在用的智能体。">
+<link rel="canonical" href="https://thirstyeggplant.com/zh/compare/warp/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/compare/warp/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/compare/warp/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/compare/warp/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/compare/warp/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/compare/warp/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/compare/warp/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/compare/warp/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/compare/warp/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/compare/warp/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/compare/warp/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/compare/warp/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/compare/warp/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/compare/warp/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F7F0E4">
+<link rel="icon" href="../../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="Aubergine vs Warp：运行多个编程智能体">
+<meta property="og:description" content="Warp 是桌面终端，有自己的智能体、付费套餐和云服务。Aubergine 不调用模型：它并排运行你已经在用的智能体。">
+<meta property="og:url" content="https://thirstyeggplant.com/zh/compare/warp/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine：一张摆满终端的画布，一个正在忙，一个在等你">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine：一张摆满终端的画布，一个正在忙，一个在等你">
+<meta name="twitter:title" content="Aubergine vs Warp：运行多个编程智能体">
+<meta name="twitter:description" content="Warp 是桌面终端，有自己的智能体、付费套餐和云服务。Aubergine 不调用模型：它并排运行你已经在用的智能体。">
+<link rel="alternate" type="text/plain" href="../../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">跳到正文</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../../"><img src="../../../icon.svg" alt="" width="32" height="32"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="页面">
+      <ul>
+        <li><a href="../../claude/">Claude Code</a></li>
+        <li><a href="../../chatgpt/">Codex</a></li>
+        <li><a href="../../install/">安装</a></li>
+        <li><a href="../../guides/">指南</a></li>
+        <li><a href="../../security/">安全</a></li>
+        <li><a href="../../faq/">常见问题</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="语言: 简体中文"><span class="lang-long" aria-hidden="true">简体中文</span><span class="lang-short" aria-hidden="true">ZH</span></summary>
+      <ul class="menu-list"><li><a href="../../../compare/warp/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="../../../es/compare/warp/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="../../../pt/compare/warp/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="../../../fr/compare/warp/" hreflang="fr" lang="fr" dir="ltr">Français</a></li><li><a href="../../../de/compare/warp/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="../../../ja/compare/warp/" hreflang="ja" lang="ja" dir="ltr">日本語</a></li><li><a href="./" hreflang="zh-Hans" lang="zh-Hans" dir="ltr" aria-current="true">简体中文</a></li><li><a href="../../../ko/compare/warp/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="../../../id/compare/warp/" hreflang="id" lang="id" dir="ltr">Bahasa Indonesia</a></li><li><a href="../../../hi/compare/warp/" hreflang="hi" lang="hi" dir="ltr">हिन्दी</a></li><li><a href="../../../bn/compare/warp/" hreflang="bn" lang="bn" dir="ltr">বাংলা</a></li><li><a href="../../../ar/compare/warp/" hreflang="ar" lang="ar" dir="rtl">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>菜单</summary>
+      <ul class="menu-list">
+        <li><a href="../../claude/">Claude Code</a></li>
+        <li><a href="../../chatgpt/">Codex</a></li>
+        <li><a href="../../install/">安装</a></li>
+        <li><a href="../../guides/">指南</a></li>
+        <li><a href="../../security/">安全</a></li>
+        <li><a href="../../faq/">常见问题</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="translated">
+  <div class="wrap translated-in">
+    <p>Aubergine 本身是英文的：它的按钮、菜单和截图都是英文版。</p>
+    <p>本页由机器从英文翻译而来。<a href="https://github.com/thirstyeggplant/aubergine/issues">提交修正</a>。</p>
+  </div>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://thirstyeggplant.com/zh/compare/warp/#article",
+      "headline": "Aubergine vs Warp",
+      "description": "Warp 是桌面终端，有自己的智能体、付费套餐和云服务。Aubergine 不调用模型：它并排运行你已经在用的智能体。",
+      "url": "https://thirstyeggplant.com/zh/compare/warp/",
+      "mainEntityOfPage": "https://thirstyeggplant.com/zh/compare/warp/",
+      "datePublished": "2026-11-26",
+      "dateModified": "2026-11-26",
+      "inLanguage": "zh-Hans",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "对比", "item": "https://thirstyeggplant.com/compare/" },
+        { "@type": "ListItem", "position": 3, "name": "Warp", "item": "https://thirstyeggplant.com/zh/compare/warp/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://thirstyeggplant.com/zh/compare/warp/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "Aubergine 是 Warp 的替代品吗？", "acceptedAnswer": { "@type": "Answer", "text": "只针对 Warp 所做的一件事：运行多个命令行编程智能体并看清哪一个需要你。Aubergine 不是终端应用，也没有自己的智能体。你可以继续用 Warp 或任何终端，并用 Aubergine 来管理智能体。" } },
+        { "@type": "Question", "name": "我需要账号或付费套餐吗？", "acceptedAnswer": { "@type": "Answer", "text": "Warp 的文档说使用终端时登录是可选的，它的定价页面列出了一个免费套餐和若干付费套餐。Aubergine 没有账号，也没有套餐。" } },
+        { "@type": "Question", "name": "Warp 是开源的吗？", "acceptedAnswer": { "@type": "Answer", "text": "它的文档说 Warp 的客户端在 AGPL-3.0 下开源。Aubergine 采用 MIT 许可证。" } },
+        { "@type": "Question", "name": "可以同时使用 Warp 和 Aubergine 吗？", "acceptedAnswer": { "@type": "Answer", "text": "可以，和任何终端应用一样。Aubergine 的终端是 tmux 会话，aubergine attach \u003cname\u003e 会在你运行它的那个终端应用窗口中显示其中一个。我们没有在 Warp 中试过。" } }
+      ]
+    }
+  ]
+}
+</script>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="当前位置"><ol><li><a href="../../">Aubergine</a></li><li><a href="../">对比</a></li><li>Warp</li></ol></nav>
+    <h1>Aubergine vs Warp</h1>
+    <p class="lead">Warp 是一个完整的终端应用，有自己的智能体、套餐和云，也能在标签页和窗格中运行其他命令行智能体。Aubergine 的范围更窄：它不调用模型，也不取代任何终端应用。它在浏览器页面里把你已经在用的智能体并排运行，并让它们保持运行。</p>
+  </div>
+</header>
+<div class="wrap page-body">
+  <div class="prose">
+    <p class="note note-strong"><strong>信息来源。</strong>这里关于 Warp 的内容来自<a href="https://docs.warp.dev/">它的文档</a>和<a href="https://www.warp.dev/pricing">它的定价页面</a>，阅读时间为 2026 年 11 月 26 日，并且只涉及运行多个编程智能体这一点；Warp 还能做很多别的事。我们没有为此运行过 Warp。如果有错误或已过时，请<a href="https://github.com/thirstyeggplant/aubergine/issues">告诉我们</a>。</p>
+
+    <h2>选哪个</h2>
+    <p><strong>选 Warp</strong>：如果你想要一个包揽一切的终端应用，在 Windows 和 Linux 上也能用，内置自己的智能体，还有可以安排计划的云端智能体。</p>
+    <p><strong>选 Aubergine</strong>：如果你已经有喜欢的终端和智能体，只想补上它们之间缺的东西：全部尽收眼底，保持运行，没有账号，自己也没有模型。</p>
+
+    <h2>Warp 是什么</h2>
+    <p>按它自己的描述，是一个智能体式开发环境：一个支持 macOS、Windows 和 Linux 的桌面终端，客户端在 AGPL-3.0 下开源。它有自己的 Warp Agent，通过 Warp 或用你自己的密钥调用模型；它还能在标签页和窗格中运行其他命令行智能体，例如 Claude Code、Codex 和 Gemini CLI，并有一个列出所有活动智能体的面板、通知、一个代码审阅面板，以及按计划运行的云端智能体。</p>
+
+    <h2>并列对比</h2>
+    <div class="table">
+      <table class="table-stack">
+        <thead><tr><th>项目</th><th>Warp</th><th>Aubergine</th></tr></thead>
+        <tbody>
+          <tr><td>它是什么</td><td data-label="Warp">一个自带智能体的桌面终端应用，还有云端智能体</td><td data-label="Aubergine">你自己电脑上的一个服务器，加上你浏览器里的一个页面</td></tr>
+          <tr><td>运行平台</td><td data-label="Warp">macOS、Windows 和 Linux</td><td data-label="Aubergine">macOS；Linux 只在容器里运行过；Windows 在 WSL 2 里，未试过。需要 tmux 和 Node.js</td></tr>
+          <tr><td>源码与价格</td><td data-label="Warp">客户端在 AGPL-3.0 下开源；一个免费套餐和若干付费套餐；登录可选</td><td data-label="Aubergine">MIT，免费；没有付费套餐，也没有账号</td></tr>
+          <tr><td>智能体</td><td data-label="Warp">它自己的 Warp Agent，以及 Claude Code、Codex、Gemini CLI 等命令行智能体</td><td data-label="Aubergine">任何命令行智能体；为 Claude Code 自己做得更多</td></tr>
+          <tr><td>同时多个</td><td data-label="Warp">标签页和窗格、一个侧边栏，以及一个列出所有活动智能体的面板</td><td data-label="Aubergine">终端并排摆在画布上，还有一份列出全部终端的列表</td></tr>
+          <tr><td>把智能体分开</td><td data-label="Warp">能识别你创建的 Git worktree；为它的云端智能体使用容器</td><td data-label="Aubergine">在你需要时，为终端提供一个位于独立分支上的 Git worktree</td></tr>
+          <tr><td>关掉之后</td><td data-label="Warp">窗口、标签页和最近的输出会恢复；没有找到关于运行中程序的内容</td><td data-label="Aubergine">终端在 tmux 里继续运行；电脑重启会结束运行中的东西</td></tr>
+          <tr><td>智能体在等待或完成时</td><td data-label="Warp">应用内和桌面上的通知：已完成、一个请求、一个错误</td><td data-label="Aubergine">终端的颜色、顶部的计数、跳到下一个的按键、打开的页面发出的通知；没有声音</td></tr>
+          <tr><td>审阅改动</td><td data-label="Warp">一个代码审阅面板，评论会发送给智能体</td><td data-label="Aubergine">逐个文件显示改了什么；不提交、不推送、没有拉取请求、不合并</td></tr>
+          <tr><td>从另一台设备</td><td data-label="Warp">把会话发布到它的云，供手机或浏览器使用</td><td data-label="Aubergine">通过你自己运行的代理配对一个浏览器；没有应用；没有在真正的手机上试过</td></tr>
+          <tr><td>供程序使用</td><td data-label="Warp">一个命令行智能体，以及一个用于运行其云端智能体的 API</td><td data-label="Aubergine">带有限定权限令牌的 HTTP API、<code>aubergine</code> 命令、一个 MCP 服务器</td></tr>
+          <tr><td>队列与定时计划</td><td data-label="Warp">按计划运行、也可由其他服务启动的云端智能体</td><td data-label="Aubergine">带上限的队列、按每天时间运行的定时计划、带审批的工作流</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>不同之处</h2>
+    <p><strong>自带模型，还是没有模型。</strong>Warp 有自己的智能体，用套餐为其使用付费，也可以选择用你自己的密钥。Aubergine 不调用模型，也不持有密钥：它终端里的智能体就是你自己安装并登录的那些。</p>
+    <p><strong>关掉它会结束什么。</strong>Warp 的文档说它会恢复窗口、标签页、窗格和最近的输出；我们没有找到说明正在运行的程序会被保留的内容。在 Aubergine 中，每个终端都是一个 tmux 会话，所以浏览器或 Aubergine 本身停下时，智能体仍会继续。</p>
+    <p><strong>从哪里能访问你的智能体。</strong>Warp 会把正在运行的会话发布到它的云，让你可以从手机或浏览器操控它。Aubergine 没有云：另一台设备是一个用代码配对的浏览器，经过你在自己机器上运行的代理，只在一台 Mac 上试过一次。</p>
+
+    <h2>Warp 有而 Aubergine 没有的</h2>
+    <ul>
+      <li>文档列出的平台包括 Windows 和 Linux，且是桌面应用。Aubergine 为 macOS 构建。</li>
+      <li>一个自己的智能体，以及按计划或由其他服务（例如 Slack、Linear 或 GitHub）启动的云端智能体。Aubergine 不从外部启动任何东西，也不会为定时计划访问网络。</li>
+      <li>终端应用所具备的其他一切：它的命令编辑器、输出块，以及面向不止一种智能体的通知。Aubergine 通过为 Claude Code 构建的钩子看出智能体在等待。</li>
+    </ul>
+
+    <h2>常见问题</h2>
+    <div class="questions">
+      <details><summary>Aubergine 是 Warp 的替代品吗？</summary><p>只针对 Warp 所做的一件事：运行多个命令行编程智能体并看清哪一个需要你。Aubergine 不是终端应用，也没有自己的智能体。你可以继续用 Warp 或任何终端，并用 Aubergine 来管理智能体。</p></details>
+      <details><summary>我需要账号或付费套餐吗？</summary><p>Warp 的文档说使用终端时登录是可选的，它的定价页面列出了一个免费套餐和若干付费套餐。Aubergine 没有账号，也没有套餐。</p></details>
+      <details><summary>Warp 是开源的吗？</summary><p>它的文档说 Warp 的客户端在 AGPL-3.0 下开源。Aubergine 采用 MIT 许可证。</p></details>
+      <details><summary>可以同时使用 Warp 和 Aubergine 吗？</summary><p>可以，和任何终端应用一样。Aubergine 的终端是 tmux 会话，<code>aubergine attach &lt;name&gt;</code> 会在你运行它的那个终端应用窗口中显示其中一个。我们没有在 Warp 中试过。</p></details>
+    </div>
+    <p>Aubergine 与 Warp 没有任何关联。Warp 是 Denver Technologies, Inc. 的商标，该公司以 Warp 的名义经营。</p>
+  </div>
+</div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">五分钟上手</h2>
+    <div class="close-do">
+      <p>你需要 macOS，以及 tmux 3.2 或更高版本和 Node.js 22 或更高版本。<code>brew install tmux node</code> 可以一次装好两者。</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="已复制" aria-live="polite" hidden>复制</button></p>
+      <p class="actions"><a class="button" href="../../install/">安装</a><a class="button button-quiet" href="../">七个工具全部对比</a></p>
+    </div>
+  </div>
+</section>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <a class="mark" href="../../"><img src="../../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav aria-label="所有页面">
+      <ul class="foot-links">
+        <li><a href="../../">首页</a></li>
+        <li><a href="../../claude/">Claude Code</a></li>
+        <li><a href="../../chatgpt/">Codex 与 ChatGPT</a></li>
+        <li><a href="../../install/">安装</a></li>
+        <li><a href="../../guides/">指南</a></li>
+        <li><a href="../../run-multiple-coding-agents/">运行多个智能体</a></li>
+        <li><a href="../../working-copies/">工作副本</a></li>
+        <li><a href="../../queue-and-schedules/">队列与定时计划</a></li>
+        <li><a href="../">对比</a></li>
+        <li><a href="../../security/">安全</a></li>
+        <li><a href="../../roadmap/">路线图</a></li>
+        <li><a href="../../faq/">常见问题</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">Aubergine 免费开源，采用 <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">MIT 许可证</a>，运行在你自己的电脑上。</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    if (!navigator.clipboard) return;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+document.querySelectorAll('details.menu').forEach(function (menu) {
+  menu.addEventListener('toggle', function () {
+    if (!menu.open) return;
+    document.querySelectorAll('details.menu[open]').forEach(function (other) { if (other !== menu) other.open = false; });
+  });
+});
+</script>
+</body>
+</html>

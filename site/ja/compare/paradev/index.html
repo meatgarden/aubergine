@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="ja" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aubergine と Paradev（旧 Superset）の比較：代替ツール</title>
+<meta name="description" content="旧名 Superset の Paradev と Aubergine は、どちらも MIT ライセンスで Git の worktree で動きます。Paradev は有料プランのあるデスクトップアプリ、Aubergine は無料。">
+<link rel="canonical" href="https://thirstyeggplant.com/ja/compare/paradev/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/compare/paradev/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/compare/paradev/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/compare/paradev/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/compare/paradev/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/compare/paradev/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/compare/paradev/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/compare/paradev/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/compare/paradev/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/compare/paradev/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/compare/paradev/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/compare/paradev/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/compare/paradev/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/compare/paradev/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F7F0E4">
+<link rel="icon" href="../../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="Aubergine と Paradev（旧 Superset）の比較：代替ツール">
+<meta property="og:description" content="旧名 Superset の Paradev と Aubergine は、どちらも MIT ライセンスで Git の worktree で動きます。Paradev は有料プランのあるデスクトップアプリ、Aubergine は無料。">
+<meta property="og:url" content="https://thirstyeggplant.com/ja/compare/paradev/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine：ターミナルが並ぶキャンバス。1つは処理中、1つはあなたを待っています">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine：ターミナルが並ぶキャンバス。1つは処理中、1つはあなたを待っています">
+<meta name="twitter:title" content="Aubergine と Paradev（旧 Superset）の比較：代替ツール">
+<meta name="twitter:description" content="旧名 Superset の Paradev と Aubergine は、どちらも MIT ライセンスで Git の worktree で動きます。Paradev は有料プランのあるデスクトップアプリ、Aubergine は無料。">
+<link rel="alternate" type="text/plain" href="../../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">本文へ移動</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../../"><img src="../../../icon.svg" alt="" width="32" height="32"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="ページ">
+      <ul>
+        <li><a href="../../claude/">Claude Code</a></li>
+        <li><a href="../../chatgpt/">Codex</a></li>
+        <li><a href="../../install/">インストール</a></li>
+        <li><a href="../../guides/">ガイド</a></li>
+        <li><a href="../../security/">セキュリティ</a></li>
+        <li><a href="../../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="言語: 日本語"><span class="lang-long" aria-hidden="true">日本語</span><span class="lang-short" aria-hidden="true">JA</span></summary>
+      <ul class="menu-list"><li><a href="../../../compare/paradev/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="../../../es/compare/paradev/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="../../../pt/compare/paradev/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="../../../fr/compare/paradev/" hreflang="fr" lang="fr" dir="ltr">Français</a></li><li><a href="../../../de/compare/paradev/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="./" hreflang="ja" lang="ja" dir="ltr" aria-current="true">日本語</a></li><li><a href="../../../zh/compare/paradev/" hreflang="zh-Hans" lang="zh-Hans" dir="ltr">简体中文</a></li><li><a href="../../../ko/compare/paradev/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="../../../id/compare/paradev/" hreflang="id" lang="id" dir="ltr">Bahasa Indonesia</a></li><li><a href="../../../hi/compare/paradev/" hreflang="hi" lang="hi" dir="ltr">हिन्दी</a></li><li><a href="../../../bn/compare/paradev/" hreflang="bn" lang="bn" dir="ltr">বাংলা</a></li><li><a href="../../../ar/compare/paradev/" hreflang="ar" lang="ar" dir="rtl">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>メニュー</summary>
+      <ul class="menu-list">
+        <li><a href="../../claude/">Claude Code</a></li>
+        <li><a href="../../chatgpt/">Codex</a></li>
+        <li><a href="../../install/">インストール</a></li>
+        <li><a href="../../guides/">ガイド</a></li>
+        <li><a href="../../security/">セキュリティ</a></li>
+        <li><a href="../../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="translated">
+  <div class="wrap translated-in">
+    <p>Aubergine 本体は英語です。ボタン、メニュー、画像はすべて英語版のものです。</p>
+    <p>このページは英語版から機械翻訳されています。<a href="https://github.com/thirstyeggplant/aubergine/issues">修正を送る</a>。</p>
+  </div>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://thirstyeggplant.com/ja/compare/paradev/#article",
+      "headline": "Aubergine と Paradev（旧 Superset）",
+      "description": "旧名 Superset の Paradev と Aubergine は、どちらも MIT ライセンスで Git の worktree で動きます。Paradev は有料プランのあるデスクトップアプリ、Aubergine は無料。",
+      "url": "https://thirstyeggplant.com/ja/compare/paradev/",
+      "mainEntityOfPage": "https://thirstyeggplant.com/ja/compare/paradev/",
+      "datePublished": "2026-11-26",
+      "dateModified": "2026-11-26",
+      "inLanguage": "ja",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "比較", "item": "https://thirstyeggplant.com/compare/" },
+        { "@type": "ListItem", "position": 3, "name": "Paradev", "item": "https://thirstyeggplant.com/ja/compare/paradev/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://thirstyeggplant.com/ja/compare/paradev/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "Aubergine は Paradev（Superset）の代わりになりますか？", "acceptedAnswer": { "@type": "Answer", "text": "複数のコマンドラインエージェントを、それぞれ専用の Git の worktree でローカルに動かすことについては、なります。しかもすべての機能が無料です。ただし同じものの置き換えではありません。Aubergine には、デスクトップアプリもスマートフォンアプリも、差分へのコメントも、プルリクエストやマージも、クラウドもありません。" } },
+        { "@type": "Question", "name": "Superset と Paradev は同じものですか？", "acceptedAnswer": { "@type": "Answer", "text": "はい。2026年10月25日の変更履歴には Superset は Paradev になったとあり、README にはコマンドは今も superset だとあります。どちらも Apache Superset とは関係ありません。" } },
+        { "@type": "Question", "name": "どちらもオープンソースですか？", "acceptedAnswer": { "@type": "Answer", "text": "どちらも MIT ライセンスです。Paradev は、スマートフォンアプリ、リモートアクセス、クラウド、自動化のためのプランも販売しています。Aubergine は何も販売していません。" } },
+        { "@type": "Question", "name": "Paradev は Linux や Windows で動きますか？", "acceptedAnswer": { "@type": "Answer", "text": "ドキュメントには、macOS と実験的な Linux 版があり、Windows はまだ使えないとあります。Aubergine は macOS 向けに作られ、Linux ではコンテナの中でだけ動かしました。Windows では WSL 2 の中でだけ動き、それはまだ試していません。" } }
+      ]
+    }
+  ]
+}
+</script>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="現在の位置"><ol><li><a href="../../">Aubergine</a></li><li><a href="../">比較</a></li><li>Paradev</li></ol></nav>
+    <h1>Aubergine と Paradev（旧 Superset）</h1>
+    <p class="lead">Paradev は、2026年10月まで Superset と呼ばれていたデスクトップアプリです。Aubergine と同じく MIT ライセンスで、どのコマンドラインエージェントも動かし、Git の worktree で作業します。プラン、スマートフォンアプリ、クラウドのあるアプリです。Aubergine はあなた自身のコンピューター上のサーバーとブラウザーのページで、そのどれもありません。</p>
+  </div>
+</header>
+<div class="wrap page-body">
+  <div class="prose">
+    <p class="note note-strong"><strong>情報の出どころ。</strong>ここでの Paradev についての記述は、2026年11月26日に読んだ<a href="https://docs.paradev.com/">そのドキュメント</a>、<a href="https://paradev.com/changelog">変更履歴</a>、<a href="https://github.com/paradevai/paradev">リポジトリ</a>にもとづきます。Paradev は動かしていません。間違いや古い情報があれば<a href="https://github.com/thirstyeggplant/aubergine/issues">教えてください</a>。</p>
+    <p class="note"><strong>名前について。</strong>2026年10月25日の変更履歴には、Superset は Paradev になり、アカウント、ワークスペース、設定、<code>superset</code> コマンドは引き継がれるとあります。データツールの Apache Superset ではありません。</p>
+
+    <h2>どちらを選ぶか</h2>
+    <p><strong>Paradev を選ぶ</strong>のは、タスクごとに worktree を作り、差分、チェック、マージまで運ぶデスクトップアプリがほしく、払えばスマートフォンアプリとクラウドも使いたい場合です。</p>
+    <p><strong>Aubergine を選ぶ</strong>のは、あなた自身のコンピューターで、アカウントなしに、すべての部分を無料で使いたい場合です。並んだターミナル、キュー、スケジュール、ほかのデバイスからの利用。</p>
+
+    <h2>Paradev とは</h2>
+    <p>自身の説明によれば、Claude Code、Codex、そしてどのコーディングエージェントにも使えるオープンソースのワークスペースです。ターミナルアプリではなくデスクトップアプリで、エージェントはチャットとして、またはターミナルの中で動きます。どのタスクにも専用の worktree、ブランチ、ターミナルがあり、1つのサイドバーにすべてのセッションがプロジェクトごとに表示されます。プルリクエストのチェックとマージのある差分ビューアー、コマンド、SDK、MCP サーバーがあり、有料プランではスマートフォンアプリ、リモートアクセス、クラウドのワークスペース、自動化が使えます。</p>
+
+    <h2>並べて比べる</h2>
+    <div class="table">
+      <table class="table-stack">
+        <thead><tr><th>項目</th><th>Paradev</th><th>Aubergine</th></tr></thead>
+        <tbody>
+          <tr><td>どんなものか</td><td data-label="Paradev">以前 Superset と呼ばれていたデスクトップアプリ。スマートフォンアプリとクラウド付き</td><td data-label="Aubergine">あなた自身のコンピューター上のサーバーと、ブラウザーのページ</td></tr>
+          <tr><td>動く環境</td><td data-label="Paradev">macOS。実験的な Linux 版。Windows はなし</td><td data-label="Aubergine">macOS。Linux はコンテナの中だけ。Windows は WSL 2 の中で、未検証。tmux と Node.js が必要</td></tr>
+          <tr><td>ソースと価格</td><td data-label="Paradev">MIT。1人用の無料プランと有料プラン</td><td data-label="Aubergine">MIT、無料。有料プランもアカウントもなし</td></tr>
+          <tr><td>エージェント</td><td data-label="Paradev">Claude Code、Codex、OpenCode、Gemini、Cursor Agent、そしてどのコマンドラインエージェントでも</td><td data-label="Aubergine">どのコマンドラインエージェントでも。Claude Code には自ら行うことがより多い</td></tr>
+          <tr><td>複数を同時に</td><td data-label="Paradev">すべてのセッションをプロジェクトごとに示す1つのサイドバー。タブとペイン付き</td><td data-label="Aubergine">キャンバスに並ぶターミナルと、そのすべての一覧</td></tr>
+          <tr><td>エージェントを分けておく</td><td data-label="Paradev">タスクごとに worktree、ブランチ、ターミナル</td><td data-label="Aubergine">求めたときに、ターミナルごとに専用ブランチ上の Git の worktree</td></tr>
+          <tr><td>閉じたとき</td><td data-label="Paradev">完全に終了するまで、ターミナルはデーモンで動き続ける。再起動で終わる</td><td data-label="Aubergine">ターミナルは tmux で動き続ける。コンピューターを再起動すると動いていたものは終わる</td></tr>
+          <tr><td>エージェントが待つとき、終わったとき</td><td data-label="Paradev">作業中の印、終わったときのチャイム、Dock のバッジ</td><td data-label="Aubergine">ターミナルの色、上部の数、次のものへ移るキー、開いているページからの通知。音はなし</td></tr>
+          <tr><td>変更のレビュー</td><td data-label="Paradev">コメントと編集のできる差分ビューアー、プルリクエストのチェック、マージ</td><td data-label="Aubergine">何が変わったかをファイルごとに。コミット、プッシュ、プルリクエスト、マージはなし</td></tr>
+          <tr><td>ほかのデバイスから</td><td data-label="Paradev">有料プランで iOS と Android のアプリとリモートアクセス。ウェブページはなし</td><td data-label="Aubergine">あなたが動かすプロキシを通じてペアリングしたブラウザー。アプリはなし。実際のスマートフォンでは未検証</td></tr>
+          <tr><td>プログラム向け</td><td data-label="Paradev">コマンド、SDK、MCP サーバー</td><td data-label="Aubergine">スコープ付きトークンの HTTP API、<code>aubergine</code> コマンド、MCP サーバー</td></tr>
+          <tr><td>キューとスケジュール</td><td data-label="Paradev">スケジュールやイベントで動く自動化。有料プラン</td><td data-label="Aubergine">上限付きのキュー、時刻によるスケジュール、承認付きのワークフロー</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>違うところ</h2>
+    <p><strong>何が無料か。</strong>Paradev は、ローカルのワークスペース、アプリ、コマンドを含む1人用の無料プランを挙げています。自動化、スマートフォンアプリ、リモートアクセスは有料プランです。Aubergine にはプランがありません。キューも、スケジュールも、ほかのデバイスからの利用も、MIT ライセンスの1つのプログラムにすべて入っていて、アカウントも要りません。</p>
+    <p><strong>サイドバーか、キャンバスか。</strong>Paradev はセッションを、タブとペインのあるサイドバーで見せます。Aubergine はターミナルを、パンとズームのできるキャンバスに置くので、たくさんのターミナルが同時にライブで目に入り、その横にすべての一覧があります。</p>
+    <p><strong>ターミナルがウィンドウより長生きする仕組み。</strong>どちらもウィンドウを閉じてもエージェントを動かし続けます。Paradev は独自のバックグラウンドのデーモンで。そのドキュメントによれば、Paradev を完全に終了するとすべてのターミナルが終わります。Aubergine は tmux で。Aubergine 自体を止めても動き続けます。コンピューターの再起動では、どちらも終わります。</p>
+
+    <h2>Paradev にあって Aubergine にないもの</h2>
+    <ul>
+      <li>エージェントの変更にコメントしたり編集したりでき、プルリクエストのチェックを見てマージできる差分ビューアー。Aubergine は何が変わったかを示し、コミット、プッシュ、マージは決してしません。</li>
+      <li>デスクトップアプリ、iOS と Android のアプリ、クラウドのワークスペース、そしてエージェントがあなたを必要とするときのチャイムと Dock のバッジ。Aubergine はブラウザーのページで、音は鳴らしません。</li>
+      <li>レビューの依頼、Slack のメッセージ、イシュー、Webhook をきっかけに動く自動化と、多くのエージェントが状態を報告するようにインストールするフック。Aubergine は外から何も起動せず、エージェントが待っていることに自ら気づくのは Claude Code についてだけです。</li>
+    </ul>
+
+    <h2>よくある質問</h2>
+    <div class="questions">
+      <details><summary>Aubergine は Paradev（Superset）の代わりになりますか？</summary><p>複数のコマンドラインエージェントを、それぞれ専用の Git の worktree でローカルに動かすことについては、なります。しかもすべての機能が無料です。ただし同じものの置き換えではありません。Aubergine には、デスクトップアプリもスマートフォンアプリも、差分へのコメントも、プルリクエストやマージも、クラウドもありません。</p></details>
+      <details><summary>Superset と Paradev は同じものですか？</summary><p>はい。2026年10月25日の変更履歴には Superset は Paradev になったとあり、README にはコマンドは今も <code>superset</code> だとあります。どちらも Apache Superset とは関係ありません。</p></details>
+      <details><summary>どちらもオープンソースですか？</summary><p>どちらも MIT ライセンスです。Paradev は、スマートフォンアプリ、リモートアクセス、クラウド、自動化のためのプランも販売しています。Aubergine は何も販売していません。</p></details>
+      <details><summary>Paradev は Linux や Windows で動きますか？</summary><p>ドキュメントには、macOS と実験的な Linux 版があり、Windows はまだ使えないとあります。Aubergine は macOS 向けに作られ、Linux ではコンテナの中でだけ動かしました。Windows では WSL 2 の中でだけ動き、それはまだ試していません。</p></details>
+    </div>
+    <p>Aubergine は Paradev およびその開発元の Superset Inc. とは関係ありません。Paradev と Superset は彼らの名前です。彼らも Aubergine も Apache Superset とは関係ありません。</p>
+  </div>
+</div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">5分で動かす</h2>
+    <div class="close-do">
+      <p>tmux 3.2 以降と Node.js 22 以降の入った macOS が必要です。<code>brew install tmux node</code> で両方が入ります。</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="コピーしました" aria-live="polite" hidden>コピー</button></p>
+      <p class="actions"><a class="button" href="../../install/">インストール</a><a class="button button-quiet" href="../">7つのツールすべての比較</a></p>
+    </div>
+  </div>
+</section>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <a class="mark" href="../../"><img src="../../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav aria-label="すべてのページ">
+      <ul class="foot-links">
+        <li><a href="../../">ホーム</a></li>
+        <li><a href="../../claude/">Claude Code</a></li>
+        <li><a href="../../chatgpt/">Codex と ChatGPT</a></li>
+        <li><a href="../../install/">インストール</a></li>
+        <li><a href="../../guides/">ガイド</a></li>
+        <li><a href="../../run-multiple-coding-agents/">複数のエージェントを動かす</a></li>
+        <li><a href="../../working-copies/">作業コピー</a></li>
+        <li><a href="../../queue-and-schedules/">キューとスケジュール</a></li>
+        <li><a href="../">比較</a></li>
+        <li><a href="../../security/">セキュリティ</a></li>
+        <li><a href="../../roadmap/">ロードマップ</a></li>
+        <li><a href="../../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">Aubergine は <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">MIT ライセンス</a>のもとで公開された無料のオープンソースで、あなた自身のコンピューターで動きます。</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    if (!navigator.clipboard) return;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+document.querySelectorAll('details.menu').forEach(function (menu) {
+  menu.addEventListener('toggle', function () {
+    if (!menu.open) return;
+    document.querySelectorAll('details.menu[open]').forEach(function (other) { if (other !== menu) other.open = false; });
+  });
+});
+</script>
+</body>
+</html>

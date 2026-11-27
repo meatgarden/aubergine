@@ -116,24 +116,24 @@
     "from": "21c2472673d7"
   },
   "home.meta.title": {
-    "text": "Aubergine: كل طرفياتك على لوحة واحدة، مع الوكلاء الذين تستخدمهم أصلًا",
-    "from": "620bab21c0b6"
+    "text": "Aubergine: مركز التحكم بالطرفيات ووكلاء البرمجة",
+    "from": "cd63b652eab2"
   },
   "home.meta.description": {
-    "text": "ارتقِ بطرفيتك: يضع Aubergine كل طرفياتك جنبًا إلى جنب على لوحة واحدة في متصفحك. شغّل منها ما شئت، بالوكلاء والنماذج التي تستخدمها أصلًا، واعرف أيها يحتاج إليك. مجاني ومحلي ومفتوح المصدر.",
-    "from": "10a391e12690"
+    "text": "لوحة تحكم واحدة في المتصفح لتشغيل Claude Code وCodex والطرفيات العادية وإدارتها جنبًا إلى جنب. اعرف أي وكيل يحتاج إليك. مجاني ومحلي ومفتوح المصدر.",
+    "from": "ff38fa74a3da"
   },
   "home.ld.category": {
-    "text": "مُضاعِف طرفيات ومساحة عمل للوكلاء",
-    "from": "d32b7b10eecd"
+    "text": "لوحة تحكم لإدارة الطرفيات ووكلاء البرمجة",
+    "from": "ec2b095cd97a"
   },
   "home.ld.requires": {
     "text": "tmux 3.2 أو أحدث، Node.js 22 أو أحدث",
     "from": "6fadbd03c20d"
   },
   "home.hero.tag.lead": {
-    "text": "ارتقِ بطرفيتك",
-    "from": "eb13de4649f0"
+    "text": "أعد التفكير في طرفيتك",
+    "from": "9c559cd8311b"
   },
   "home.hero.tag.free": {
     "text": "مجاني",
@@ -148,20 +148,20 @@
     "from": "cd90f9395587"
   },
   "home.hero.title.a": {
-    "text": "كل طرفياتك،",
-    "from": "8dd2aa1cda63"
+    "text": "مركز التحكم",
+    "from": "e38bc0efbbc7"
   },
   "home.hero.title.b": {
-    "text": "جنبًا إلى جنب.",
-    "from": "eb95eacfe17a"
+    "text": "بطرفياتك",
+    "from": "45121d84f19b"
   },
   "home.hero.title.c": {
-    "text": "أحضِر <em>وكلاءك</em> الخاصين.",
-    "from": "4728f2abc24b"
+    "text": "و<em>وكلاء</em> البرمجة الذكية.",
+    "from": "734e3af35ed0"
   },
   "home.hero.lead": {
-    "text": "يضع Aubergine كل طرفياتك جنبًا إلى جنب على لوحة واحدة في متصفحك. شغّل منها ما شئت، بالوكلاء والنماذج التي تستخدمها أصلًا. ليس له نموذج خاص به، ولا يطلب منك مفتاحًا أبدًا.",
-    "from": "c8c8b75e9e20"
+    "text": "شغّل Claude Code وCodex والطرفيات العادية جنبًا إلى جنب في لوحة تحكم واحدة في متصفحك. ليس لـ Aubergine نموذج خاص به، ولا يطلب منك مفتاحًا أبدًا.",
+    "from": "159e09c1ca4d"
   },
   "home.hero.after": {
     "text": "ثم <code>aubergine start --open</code>. لنظام macOS، مع tmux 3.2 أو أحدث، ومعه Node.js 22 أو أحدث.",
@@ -184,8 +184,8 @@
     "from": "2288db7c750f"
   },
   "home.powers.title": {
-    "text": "امنح طرفياتك قوى خارقة",
-    "from": "588a8ab51054"
+    "text": "إعادة التفكير في إدارة الطرفيات",
+    "from": "9b3c23b70200"
   },
   "home.powers.lead": {
     "text": "الطرفيات التي تستخدمها أصلًا، مع ما كان ينقصها: مكان تقف فيه جنبًا إلى جنب، وذاكرة، وطريقة تخبرك بها متى تحتاج إليك.",
@@ -584,12 +584,12 @@
     "from": "5c6d1db70932"
   },
   "claude.meta.title": {
-    "text": "Claude Code في Aubergine | Aubergine",
-    "from": "964ec2c2f3df"
+    "text": "شغّل جلسات Claude Code جنبًا إلى جنب | Aubergine",
+    "from": "3c61aa83b994"
   },
   "claude.meta.description": {
-    "text": "ما يفعله Aubergine من تلقاء نفسه لـ Claude Code: تشغيله من القائمة، ومعرفة متى ينتظر، واستئناف محادثة، والمحادثات السابقة، وطريقة إعداده، والأدوات.",
-    "from": "53c5a33c5a7d"
+    "text": "شغّل عدة جلسات Claude Code جنبًا إلى جنب. يبدؤها Aubergine، ويُظهر أيها ينتظرك، ويستأنف المحادثات، ويسرد المحادثات السابقة.",
+    "from": "6b7dc6fd962d"
   },
   "claude.title": {
     "text": "ما يفعله Aubergine لـ Claude Code",
@@ -760,12 +760,12 @@
     "from": "cdae060f0648"
   },
   "chatgpt.meta.title": {
-    "text": "Codex و ChatGPT في Aubergine | Aubergine",
-    "from": "8dcd1dde8945"
+    "text": "شغّل وكلاء Codex جنبًا إلى جنب في طرفيات | Aubergine",
+    "from": "c19dbd4b8744"
   },
   "chatgpt.meta.description": {
-    "text": "Codex، وكيل البرمجة لسطر الأوامر من OpenAI، يعمل في طرفية Aubergine مثل أي برنامج. ما يعمل اليوم، وما يستطيع التبليغ عنه عبر أوامر aubergine، وما هو مبني لـ Claude Code وحده.",
-    "from": "6f8c78d52c06"
+    "text": "Codex، وكيل البرمجة لسطر الأوامر من OpenAI، يعمل في طرفية Aubergine مثل أي برنامج. ما يعمل اليوم، وما هو مبني لـ Claude Code وحده.",
+    "from": "ce1a16eaf055"
   },
   "chatgpt.crumb": {
     "text": "Codex و ChatGPT",
@@ -1168,8 +1168,8 @@
     "from": "82c0a75bef8c"
   },
   "windows.meta.description": {
-    "text": "لا يعمل Aubergine على Windows نفسه، لكنه يمكن أن يعمل داخل WSL 2 ويُستخدم من متصفح على Windows. الخطوات، وما جُرّب وما لم يُجرَّب، والحلول.",
-    "from": "eef730b3d958"
+    "text": "لا يعمل Aubergine على Windows نفسه. بل يعمل داخل WSL 2 ويُستخدم من متصفح على Windows: الخطوات، وما جُرّب، والحلول.",
+    "from": "ec5595885249"
   },
   "windows.crumb": {
     "text": "Windows مع WSL",
@@ -1316,8 +1316,8 @@
     "from": "6ee5544f775e"
   },
   "guides.meta.title": {
-    "text": "أدلة Aubergine | Aubergine",
-    "from": "0d501fb6af2e"
+    "text": "أدلة تشغيل وكلاء البرمجة في الطرفيات | Aubergine",
+    "from": "f891421fd993"
   },
   "guides.meta.description": {
     "text": "أدلة لتشغيل عدة وكلاء برمجة مع Aubergine: النظرة العامة، وClaude Code وCodex، ونسخ العمل، والطابور والجداول الزمنية.",
@@ -1576,12 +1576,12 @@
     "from": "60142c410708"
   },
   "copies.meta.title": {
-    "text": "شغّل وكيلَي برمجة على مستودع واحد بنسخ العمل | Aubergine",
-    "from": "22fa024200af"
+    "text": "شغّل وكيلَي برمجة على مستودع واحد | Aubergine",
+    "from": "bdb9a97d9a45"
   },
   "copies.meta.description": {
-    "text": "نسخة العمل تعطي كل وكيل نسخته المسحوبة وفرعه الخاصين من المستودع، فلا يعدّل وكيلان الملفات نفسها أبدًا وتقرأ عمل كل منهما على حدة.",
-    "from": "a293deb1c990"
+    "text": "نسخة العمل تعطي كل وكيل شجرة عمل Git وفرعًا خاصين به، فلا يعدّل وكيلان الملفات نفسها أبدًا وتقرأ عمل كل منهما على حدة.",
+    "from": "0f5b56278a4e"
   },
   "copies.crumb": {
     "text": "نسخ العمل",
@@ -1764,12 +1764,12 @@
     "from": "515aa3442054"
   },
   "keep.meta.title": {
-    "text": "احتفظ بطرفياتك بعد تعطل أو إعادة تشغيل أو تحديث | Aubergine",
-    "from": "d0521ba83d02"
+    "text": "احتفظ بطرفياتك بعد إعادة التشغيل أو التعطل | Aubergine",
+    "from": "632ab04b6eba"
   },
   "keep.meta.description": {
-    "text": "ما يحدث لطرفياتك ووكلاء البرمجة عندما يُغلق المتصفح، وعندما يُعاد تشغيل Aubergine، وعندما يتعطل الحاسوب أو يُعاد تشغيله أو يُحدَّث ليلًا، وكيف تستأنف من حيث توقفت.",
-    "from": "4f824d2bcf4e"
+    "text": "ما يفعله إغلاق المتصفح، وإعادة تشغيل Aubergine، وإعادة تشغيل الحاسوب بطرفياتك ووكلائك، وكيف تستأنف من حيث توقفت.",
+    "from": "27a4a64aebc5"
   },
   "keep.crumb": {
     "text": "بعد إعادة التشغيل",
@@ -2009,11 +2009,11 @@
   },
   "alive.meta.title": {
     "text": "أبقِ عملية تعمل بعد إغلاق الطرفية | Aubergine",
-    "from": "b6893102f4dc"
+    "from": "1cb4c894cd65"
   },
   "alive.meta.description": {
-    "text": "إغلاق نافذة الطرفية يُنهي ما يعمل فيها. الحلول المعتادة هي nohup وdisown وscreen وtmux؛ ويشغّل Aubergine كل طرفية في tmux نيابةً عنك، فلا يُنهي إغلاق المتصفح شيئًا.",
-    "from": "91fc698775ac"
+    "text": "إغلاق الطرفية يُنهي ما يعمل فيها. الحلول المعتادة هي nohup وdisown وscreen وtmux. ويشغّل Aubergine كل طرفية في tmux نيابةً عنك.",
+    "from": "697912690f11"
   },
   "alive.crumb": {
     "text": "أبقِها تعمل",
@@ -2168,8 +2168,8 @@
     "from": "6298f70cc7f8"
   },
   "notify.meta.description": {
-    "text": "اعرف بنظرة أيّ طرفية Claude Code تعمل، وأيّها بانتظارك، وأيّها انتهت: خطافات يولّدها Aubergine، وعدد For you، ومفتاح إلى الطرفية التالية التي تنتظر، وإشعارات من الصفحة المفتوحة.",
-    "from": "ec167ae38aa3"
+    "text": "اعرف أيّ طرفية Claude Code تعمل، وأيّها بانتظارك، وأيّها انتهت: عدد ما ينتظر، ومفتاح إلى التالية، وإشعارات المتصفح.",
+    "from": "538211348bf4"
   },
   "notify.crumb": {
     "text": "انتهى أو ينتظر",
@@ -2308,12 +2308,12 @@
     "from": "60204a04f28a"
   },
   "resume.meta.title": {
-    "text": "استأنف محادثة Claude Code بعد إعادة التشغيل | Aubergine",
-    "from": "25d7c94055ab"
+    "text": "استأنف جلسة Claude Code بعد إعادة التشغيل | Aubergine",
+    "from": "03470fcd8946"
   },
   "resume.meta.description": {
-    "text": "يعيد claude --continue وclaude --resume المحادثة إن كنت في المجلد الصحيح. ويتذكر Aubergine المحادثة التي كانت فيها كل طرفية، ويعرض Resume agent، ويسرد المحادثات السابقة حسب المجلد.",
-    "from": "9c3fb52f17de"
+    "text": "يحتاج claude --continue و--resume إلى المجلد الصحيح. ويتذكر Aubergine محادثة كل طرفية، ويعرض Resume agent، ويسرد المحادثات السابقة.",
+    "from": "f60b9e354755"
   },
   "resume.crumb": {
     "text": "استئناف محادثة",
@@ -2448,12 +2448,12 @@
     "from": "82d3fe458522"
   },
   "many.meta.title": {
-    "text": "اعثر على الطرفية الصحيحة حين تكثر تبويباتك | Aubergine",
-    "from": "710b13634a0f"
+    "text": "تبويبات طرفية كثيرة؟ اعثر على الصحيحة | Aubergine",
+    "from": "e727b8c72939"
   },
   "many.meta.description": {
-    "text": "تبويبات طرفية كثيرة جدًا، كلها باسم zsh؟ يضع Aubergine كل طرفية على لوحة وفي قائمة واحدة مع حالتها بالكلمات، ومرشّحات، ووسوم، وبحث في مخرجات الطرفيات، وطرفية وحدها في علامة تبويب في المتصفح.",
-    "from": "0d77fee497f4"
+    "text": "تبويبات طرفية كثيرة جدًا، كلها باسم zsh؟ يضع Aubergine كل طرفية على لوحة وفي قائمة واحدة، مع حالتها ومرشّحات ووسوم وبحث في المخرجات.",
+    "from": "0d52d247f772"
   },
   "many.crumb": {
     "text": "طرفيات كثيرة جدًا",
@@ -2580,8 +2580,8 @@
     "from": "a731849612b9"
   },
   "tmux.meta.description": {
-    "text": "أصداف تبقى بعد إغلاق النافذة، بلا مفتاح بادئة ولا ملف ‎.tmux.conf. يتولّى Aubergine تشغيل tmux نيابةً عنك على مقبسه الخاص، مع عجلة الفأرة والنسخ واللصق وتغيير الحجم كما في أي طرفية.",
-    "from": "d876f30b4bcb"
+    "text": "أصداف تبقى بعد إغلاق النافذة، بلا مفتاح بادئة ولا ملف ‎.tmux.conf. يشغّل Aubergine ‏tmux نيابةً عنك؛ وتعمل عجلة الفأرة والنسخ واللصق كالمعتاد.",
+    "from": "de322a70f2bb"
   },
   "tmux.crumb": {
     "text": "tmux دون tmux",
@@ -2816,8 +2816,8 @@
     "from": "5e05181dcbf3"
   },
   "phone.meta.description": {
-    "text": "الوصول إلى Aubergine من متصفح الهاتف: HTTPS على الحاسوب نفسه، وعنوان في الإعدادات، وكل جهاز يُقرَن برمز لمرة واحدة أو برمز QR، ويُلغى متى شئت. شُغّل مرة واحدة على جهاز Mac واحد؛ ولم يُجرَّب على هاتف.",
-    "from": "4f87f330c4d4"
+    "text": "الوصول إلى Aubergine من متصفح الهاتف: HTTPS على حاسوبك نفسه، وكل جهاز يُقرَن برمز لمرة واحدة. شُغّل مرة واحدة على جهاز Mac واحد؛ ولم يُجرَّب على هاتف.",
+    "from": "b82b5a179985"
   },
   "phone.crumb": {
     "text": "من هاتفك",
@@ -2944,8 +2944,8 @@
     "from": "2c9ecf2e9214"
   },
   "queue.meta.title": {
-    "text": "الطابور وقائمة For you والجداول الزمنية | Aubergine",
-    "from": "aaf91b58a021"
+    "text": "طابور مهام وجداول زمنية لوكلاء البرمجة | Aubergine",
+    "from": "3fb36f54544d"
   },
   "queue.meta.description": {
     "text": "اكتب مهمة مرة واحدة ودع وكيلًا متفرغًا يأخذها، واعرف كل ما ينتظرك في قائمة واحدة، وشغّل المهام في أوقات محددة بالجداول الزمنية.",
@@ -3564,8 +3564,8 @@
     "from": "25c43f0bde14"
   },
   "faq.meta.title": {
-    "text": "الأسئلة الشائعة | Aubergine",
-    "from": "0956334109a5"
+    "text": "الأسئلة الشائعة عن Aubergine: الوكلاء والخصوصية والمتطلبات",
+    "from": "c026a239ae64"
   },
   "faq.meta.description": {
     "text": "إجابات عن Aubergine: ما هو، وما يحتاجه، وهل هو خاص، وكيف يعمل مع وكلاء البرمجة، وما المخطط له.",
@@ -3742,5 +3742,1253 @@
   "404.faq": {
     "text": "الأسئلة الشائعة",
     "from": "e956a9404b46"
+  },
+  "site.foot.compare": {
+    "text": "مقارنة",
+    "from": "e888155d8c7d"
+  },
+  "guides.compare.name": {
+    "text": "Aubergine مقارنةً بأدوات أخرى",
+    "from": "a7d4b6e16622"
+  },
+  "guides.compare.text": {
+    "text": "Conductor وClaude Squad وVibe Kanban وcmux وWarp وParadev بجانب Aubergine، بحسب ما توثّقه كل أداة عن نفسها.",
+    "from": "ef74044c8bc1"
+  },
+  "compare.meta.title": {
+    "text": "7 أدوات لتشغيل وكلاء البرمجة، مقارنةً | Aubergine",
+    "from": "c99d6cc298c1"
+  },
+  "compare.meta.description": {
+    "text": "Aubergine بجانب Conductor وClaude Squad وVibe Kanban وcmux وWarp وParadev: ما كلٌّ منها، وأين يعمل، وكم يكلّف، وما الذي يُنهيه إغلاقه.",
+    "from": "ab73688e9085"
+  },
+  "compare.crumb": {
+    "text": "مقارنة",
+    "from": "e888155d8c7d"
+  },
+  "compare.title": {
+    "text": "أدوات لتشغيل عدة وكلاء برمجة، مقارنةً",
+    "from": "28d801f5961d"
+  },
+  "compare.lead": {
+    "text": "سبع أدوات للحظة نفسها: أكثر من وكيل برمجة واحد يعمل، وأنت في الوسط. هنا Aubergine بجانب Conductor وClaude Squad وVibe Kanban وcmux وWarp وParadev، مع صفحة لكل منها.",
+    "from": "b5fab9e77782"
+  },
+  "compare.how": {
+    "text": "<strong>كيف كُتب هذا.</strong> ما تقوله هذه الصفحات عن أداة أخرى مأخوذ من موقع تلك الأداة وتوثيقها ومستودعها كما قُرئت في 26 نوفمبر 2026، وكل صفحة تضع روابط إليها. لم نشغّل الأدوات الأخرى. وحيث لا يقول توثيقها شيئًا، تقول الصفحة إنه لم يُعثر على شيء، لا إن الأداة لا تستطيع ذلك. تتغير هذه الأدوات بسرعة: إن كان شيء هنا خاطئًا أو قديمًا، <a href=\"https://github.com/thirstyeggplant/aubergine/issues\">أخبرنا</a> وسيُصحَّح.",
+    "from": "b593b3d87f7a"
+  },
+  "compare.table.title": {
+    "text": "الأدوات السبع جنبًا إلى جنب",
+    "from": "43d67ddccfc2"
+  },
+  "compare.table.tool": {
+    "text": "الأداة",
+    "from": "2e53bdcd0740"
+  },
+  "compare.each.title": {
+    "text": "صفحة لكل أداة",
+    "from": "8121e71bc2a8"
+  },
+  "compare.each.text": {
+    "text": "في كل صفحة الجدول كاملًا للأداتين، وأين تختلفان، وما لدى الأداة الأخرى مما ليس لدى Aubergine.",
+    "from": "8fa0a789da7e"
+  },
+  "compare.around.title": {
+    "text": "ما بُني Aubergine حوله",
+    "from": "86c14152ab1c"
+  },
+  "compare.around.terminals": {
+    "text": "<strong>طرفيات عادية.</strong> يعمل الوكيل في Aubergine كما يعمل في أي تطبيق طرفية. لا واجهة دردشة فوقه، ولا شيء بينك وبين ما يطبعه.",
+    "from": "4b58310b25f3"
+  },
+  "compare.around.canvas": {
+    "text": "<strong>كلها أمام عينيك.</strong> تقف الطرفيات جنبًا إلى جنب على لوحة تحرّكها وتكبّرها، مع قائمة واحدة بكل طرفية وحالتها بالكلمات. راجع <a href=\"/too-many-terminal-tabs/\">اعثر على الطرفية الصحيحة</a>.",
+    "from": "c6c0fbc9bab4"
+  },
+  "compare.around.tmux": {
+    "text": "<strong>إغلاق النافذة لا يُنهي شيئًا.</strong> كل طرفية جلسة tmux، فيمكن أن يتوقف المتصفح وAubergine نفسه بينما يواصل وكلاؤك العمل. راجع <a href=\"/keep-terminals-after-restart/\">ما تُبقيه إعادة التشغيل</a>.",
+    "from": "e512de1deb34"
+  },
+  "compare.around.local": {
+    "text": "<strong>حاسوبك فقط.</strong> لا حساب، ولا سحابة، ولا خطة مدفوعة، ولا نموذج خاص به؛ يستمع الخادم على <code>127.0.0.1</code>. راجع <a href=\"/security/\">الأمان</a>.",
+    "from": "d51e1a73a1c0"
+  },
+  "compare.around.decide": {
+    "text": "<strong>الإنسان يقرّر.</strong> ما يقترحه الوكيل ينتظر مراجعتك، والموافقة في سير العمل لك وحدك، وقائمة واحدة، For you، تجمع كل ما ينتظرك. راجع <a href=\"/queue-and-schedules/\">الطابور</a>.",
+    "from": "0c58d14e37b6"
+  },
+  "compare.lacks.title": {
+    "text": "ما ليس في Aubergine",
+    "from": "791f409b25b0"
+  },
+  "compare.lacks.app": {
+    "text": "<strong>لا تطبيق لسطح المكتب ولا تطبيق للهاتف.</strong> إنه صفحة في متصفحك. يمكن قرن جهاز آخر عبر خادم وسيط تشغّله أنت؛ وقد شُغّل ذلك مرة واحدة على جهاز Mac واحد ولم يُشغَّل قط على هاتف حقيقي.",
+    "from": "8cda51e85558"
+  },
+  "compare.lacks.merge": {
+    "text": "<strong>لا طلبات سحب ولا دمج.</strong> يُظهر ما تغيّر في نسخة العمل، ملفًا ملفًا، ولا يودِع ولا يدفع ولا يعيد الأساس ولا يدمج أبدًا.",
+    "from": "2c7dc74cd5cf"
+  },
+  "compare.lacks.cloud": {
+    "text": "<strong>لا سحابة.</strong> يعمل الوكلاء على الحاسوب الذي يعمل عليه Aubergine، ولا تنطلق الجداول الزمنية إلا ما دام يعمل.",
+    "from": "9b0762b5da8f"
+  },
+  "compare.lacks.sound": {
+    "text": "<strong>لا صوت ولا إشعارات دفع.</strong> تأتي الإشعارات من صفحة Aubergine مفتوحة في متصفحك.",
+    "from": "e63009caa14b"
+  },
+  "compare.lacks.platforms": {
+    "text": "<strong>مبني لـ macOS.</strong> على Linux شُغّل داخل حاويات فقط؛ وعلى Windows يعمل داخل WSL 2 فقط، ولم يُجرَّب ذلك.",
+    "from": "5f5c1927df23"
+  },
+  "compare.lacks.agents": {
+    "text": "<strong>أكثره لـ Claude Code.</strong> أي وكيل لسطر الأوامر يعمل في طرفية، لكن ما يفعله Aubergine من تلقاء نفسه لوكيل (أن يرى أنه ينتظر، وأن يستأنف محادثة) مبني لـ Claude Code؛ والوكيل الآخر يبلّغ عبر أوامر <code>aubergine</code>.",
+    "from": "2f0ba98518bf"
+  },
+  "compare.q.best.q": {
+    "text": "ما أفضل أداة لتشغيل عدة وكلاء Claude Code في آن واحد؟",
+    "from": "4d699c803dcd"
+  },
+  "compare.q.best.a": {
+    "text": "يتوقف ذلك على ما تريده حول الوكلاء. لتطبيق Mac فيه عرض الفروق وطلبات السحب والدمج: Conductor أو Paradev. لبرنامج داخل الطرفية التي تستخدمها أصلًا: Claude Squad. للوحة مسائل: Vibe Kanban. لطرفية Mac أصلية: cmux. لطرفية لها وكيلها الخاص ووكلاء في السحابة: Warp. لطرفيات عادية جنبًا إلى جنب في صفحة متصفح، يُبقيها tmux تعمل، بلا حساب: Aubergine.",
+    "from": "6a57f43a10dc"
+  },
+  "compare.q.open.q": {
+    "text": "أيٌّ من هذه الأدوات مفتوح المصدر؟",
+    "from": "23e0ea8e7990"
+  },
+  "compare.q.open.a": {
+    "text": "كما قُرئ في 26 نوفمبر 2026: Aubergine ‏(MIT)، وParadev ‏(MIT)، وVibe Kanban ‏(Apache-2.0)، وClaude Squad ‏(AGPL-3.0)، وتطبيق cmux ‏(GPL-3.0-or-later)، وعميل Warp ‏(AGPL-3.0). أما شروط Conductor فتصفه بأنه احتكاري.",
+    "from": "fcb0a543dbb1"
+  },
+  "compare.q.linux.q": {
+    "text": "أيٌّ من هذه الأدوات يعمل على Linux أو Windows؟",
+    "from": "702775b7d90b"
+  },
+  "compare.q.linux.a": {
+    "text": "بحسب توثيقها: Warp على macOS وWindows وLinux؛ وVibe Kanban على الثلاثة؛ وClaude Squad على macOS وLinux، وعلى Windows مع tmux عبر WSL؛ وParadev على macOS مع إصدار تجريبي لـ Linux؛ وConductor وcmux على macOS فقط. أما Aubergine فمبني لـ macOS، وشُغّل على Linux داخل حاويات فقط، ويعمل على Windows داخل WSL 2 فقط، ولم يُجرَّب بعد.",
+    "from": "eb17a7194e7c"
+  },
+  "compare.q.close.q": {
+    "text": "أيها يُبقي الوكلاء يعملون بعد إغلاق التطبيق؟",
+    "from": "4b67f3b2e66d"
+  },
+  "compare.q.close.a": {
+    "text": "Aubergine وClaude Squad يشغّلان كل وكيل في جلسة tmux. ويوثّق Paradev خدمة خلفية تُبقي الطرفيات حين تُغلق نافذته. ولا يُبقي cmux العمليات الحية إلا في نمط tmux الاختياري. ويقول Conductor إن الجلسات المحلية تنتهي مع التطبيق. ويستعيد Warp النوافذ والمخرجات الأخيرة، لا البرامج الجارية. ولكلٍّ من Conductor وcmux وWarp وParadev أيضًا سحابة يواصل فيها الوكلاء العمل. ولا يُبقي أيٌّ منها، ومنها Aubergine، وكيلًا محليًا يعمل بعد إعادة تشغيل الحاسوب.",
+    "from": "4bb44c21e3ea"
+  },
+  "compare.vs.table": {
+    "text": "جنبًا إلى جنب",
+    "from": "a3d7b387c34d"
+  },
+  "compare.vs.thing": {
+    "text": "ماذا",
+    "from": "f8cf83a76a98"
+  },
+  "compare.vs.faq": {
+    "text": "أسئلة",
+    "from": "9a72221a2747"
+  },
+  "compare.vs.all": {
+    "text": "مقارنة الأدوات السبع كلها",
+    "from": "ee4eb4f7ad29"
+  },
+  "compare.row.form": {
+    "text": "ما هو",
+    "from": "1f36becc3aa7"
+  },
+  "compare.row.runs": {
+    "text": "يعمل على",
+    "from": "88a550e0f44e"
+  },
+  "compare.row.price": {
+    "text": "المصدر والسعر",
+    "from": "fb616bdc6fda"
+  },
+  "compare.row.agents": {
+    "text": "الوكلاء",
+    "from": "279b44d2ab4b"
+  },
+  "compare.row.layout": {
+    "text": "عدة في آن واحد",
+    "from": "fa6b205bb2ee"
+  },
+  "compare.row.apart": {
+    "text": "إبقاء الوكلاء منفصلين",
+    "from": "420ecd34a352"
+  },
+  "compare.row.closed": {
+    "text": "إن أغلقته",
+    "from": "6d0beffa1276"
+  },
+  "compare.row.waits": {
+    "text": "حين ينتظر وكيل أو ينتهي",
+    "from": "ad33e1aadbff"
+  },
+  "compare.row.review": {
+    "text": "مراجعة التغييرات",
+    "from": "5c07a12954c0"
+  },
+  "compare.row.device": {
+    "text": "من جهاز آخر",
+    "from": "0176df0875c6"
+  },
+  "compare.row.programs": {
+    "text": "للبرامج",
+    "from": "ca1a25f0d017"
+  },
+  "compare.row.timed": {
+    "text": "الطوابير والجداول الزمنية",
+    "from": "7048f6d971c8"
+  },
+  "compare.a.form": {
+    "text": "خادم على حاسوبك أنت وصفحة في متصفحك",
+    "from": "f0e12c3481c6"
+  },
+  "compare.a.runs": {
+    "text": "macOS؛ وLinux داخل حاويات فقط؛ وWindows داخل WSL 2، لم يُجرَّب. يحتاج إلى tmux وNode.js",
+    "from": "ce2ec170ad45"
+  },
+  "compare.a.price": {
+    "text": "MIT، مجاني؛ لا خطة مدفوعة ولا حساب",
+    "from": "c6bdeec37cc3"
+  },
+  "compare.a.agents": {
+    "text": "أي وكيل لسطر الأوامر؛ ويفعل من تلقاء نفسه أكثر لـ Claude Code",
+    "from": "036a4153456a"
+  },
+  "compare.a.layout": {
+    "text": "طرفيات جنبًا إلى جنب على لوحة، وقائمة واحدة بها كلها",
+    "from": "928536cdc6c9"
+  },
+  "compare.a.apart": {
+    "text": "شجرة عمل Git على فرعها الخاص لطرفية، حين تطلبها",
+    "from": "2eb2221a43cc"
+  },
+  "compare.a.closed": {
+    "text": "تواصل الطرفيات العمل في tmux؛ وإعادة تشغيل الحاسوب تُنهي ما كان يعمل",
+    "from": "3a2d0d86f66d"
+  },
+  "compare.a.waits": {
+    "text": "لون الطرفية، وعدد في الأعلى، ومفتاح للتالية، وإشعارات من الصفحة المفتوحة؛ بلا صوت",
+    "from": "02781ee55c07"
+  },
+  "compare.a.review": {
+    "text": "ما تغيّر، ملفًا ملفًا؛ بلا إيداع ولا دفع ولا طلب سحب ولا دمج",
+    "from": "24a75e296224"
+  },
+  "compare.a.device": {
+    "text": "متصفح تقرنه، عبر خادم وسيط تشغّله أنت؛ بلا تطبيق؛ لم يُجرَّب على هاتف حقيقي",
+    "from": "e18f70623096"
+  },
+  "compare.a.programs": {
+    "text": "واجهة HTTP API برموز محدودة النطاق، والأمر <code>aubergine</code>، وخادم MCP",
+    "from": "fc6fcbb83503"
+  },
+  "compare.a.timed": {
+    "text": "طابور بحدّ، وجداول زمنية بساعة من اليوم، وسير عمل فيه موافقات",
+    "from": "9aa15e3097da"
+  },
+  "vs.conductor.crumb": {
+    "text": "Conductor",
+    "from": "14116bf4372e"
+  },
+  "vs.conductor.name": {
+    "text": "Conductor",
+    "from": "14116bf4372e"
+  },
+  "vs.conductor.meta.title": {
+    "text": "Aubergine مقابل Conductor: بديل مجاني ومفتوح المصدر",
+    "from": "35ece35e60d8"
+  },
+  "vs.conductor.meta.description": {
+    "text": "كلاهما يشغّل وكلاء البرمجة بالتوازي في أشجار عمل Git. Conductor تطبيق Mac له سحابة؛ وAubergine مفتوح المصدر ويُبقي الطرفيات تعمل في tmux.",
+    "from": "baeaaa943291"
+  },
+  "vs.conductor.title": {
+    "text": "Aubergine مقابل Conductor",
+    "from": "6dc79eddb49c"
+  },
+  "vs.conductor.lead": {
+    "text": "كلاهما يشغّل عدة وكلاء برمجة في آن واحد، كلٌّ في شجرة عمل Git خاصة به. Conductor تطبيق Mac فيه دردشات وعارض فروق وسحابة. وAubergine خادم مجاني ومفتوح المصدر على حاسوبك أنت، يعرض طرفيات عادية جنبًا إلى جنب في صفحة متصفح.",
+    "from": "9d27a087649b"
+  },
+  "vs.conductor.how": {
+    "text": "<strong>من أين جاء هذا.</strong> ما يُقال هنا عن Conductor مأخوذ من <a href=\"https://docs.conductor.build/\">توثيقه</a> و<a href=\"https://www.conductor.build/changelog\">سجل تغييراته</a> كما قُرئا في 26 نوفمبر 2026. لم نشغّل Conductor. إن كان شيء خاطئًا أو قديمًا، <a href=\"https://github.com/thirstyeggplant/aubergine/issues\">أخبرنا</a>.",
+    "from": "6bdb8eaf878d"
+  },
+  "vs.conductor.status": {
+    "text": "<strong>أين يقف Conductor.</strong> في 4 نوفمبر 2026 قال سجل تغييراته إن Conductor سينضم إلى Meta وسيتوقف تدريجيًا؛ وفي 13 نوفمبر قال إن Conductor لن يُغلق. وكانت أجزاء من موقعه لا تزال تحمل الرسالة الأولى حين كُتب هذا. اقرأ سجل تغييراته لتعرف أين يقف الآن.",
+    "from": "0ce8070b49b7"
+  },
+  "vs.conductor.is.title": {
+    "text": "ما هو Conductor",
+    "from": "761d10f79609"
+  },
+  "vs.conductor.is.text": {
+    "text": "بحسب وصفه لنفسه، تطبيق Mac يشغّل وكلاء برمجة كثيرين بالتوازي على شيفرتك. كل عمل مساحة عمل: شجرة عمل Git على فرع واحد، فيها علامات تبويب للدردشة والطرفية والمتصفح. يشغّل Claude Code وCodex وCursor وOpenCode بتسجيلات الدخول الموجودة أصلًا على جهاز Mac لديك، وفيه عارض فروق، وطلبات سحب، وتطبيق iOS، وسحابة مدفوعة يعمل فيها الوكلاء داخل صناديق عزل.",
+    "from": "892b18bb52d6"
+  },
+  "vs.conductor.pick.title": {
+    "text": "أيهما تختار",
+    "from": "9190a8f83f35"
+  },
+  "vs.conductor.pick.them": {
+    "text": "<strong>اختر Conductor</strong> إن أردت تطبيق Mac يأخذ المهمة من موجّه إلى طلب سحب مدموج، مع سحابة لعمل يستمر وجهاز Mac لديك مطفأ.",
+    "from": "703a739ea90f"
+  },
+  "vs.conductor.pick.us": {
+    "text": "<strong>اختر Aubergine</strong> إن أردت وكلاءك طرفيات عادية تراها كلها معًا، وتواصل العمل في tmux حين تُغلق النافذة، بلا شيء تسجّل الدخول إليه، ومصدرها مفتوح.",
+    "from": "e081882f41c0"
+  },
+  "vs.conductor.differs.title": {
+    "text": "أين يختلفان",
+    "from": "8c2314ada082"
+  },
+  "vs.conductor.d1": {
+    "text": "<strong>طرفيات، لا دردشات.</strong> يعرض Conductor الوكيل دردشةً في مساحة عمل، مع نمط طرفية بجانبها. ويعرض Aubergine طرفية الوكيل نفسها، كما تعمل في أي تطبيق طرفية، ويرتّب كثيرًا منها على لوحة تحرّكها وتكبّرها.",
+    "from": "e8ee13648dc8"
+  },
+  "vs.conductor.d2": {
+    "text": "<strong>ما الذي يُنهيه إغلاقه.</strong> يقول توثيق Conductor إن الجلسات المحلية تنتهي حين تغلق التطبيق أو تطفئ جهاز Mac، وإن الجلسات السحابية تستمر. وفي Aubergine كل طرفية جلسة tmux: إغلاق المتصفح أو إيقاف Aubergine لا يُنهي شيئًا. أما إعادة تشغيل الحاسوب فتُنهيها، في الاثنين.",
+    "from": "09276a000922"
+  },
+  "vs.conductor.d3": {
+    "text": "<strong>لا شيء خارج حاسوبك.</strong> يوثّق Conductor حسابًا، وسحابة، ومرحِّلًا لتطبيق الهاتف، وتحليلات للاستخدام. وليس لـ Aubergine حساب ولا خدمة خاصة به: يستمع الخادم على <code>127.0.0.1</code>، والاستخدام من جهاز آخر يمرّ عبر خادم وسيط تشغّله أنت.",
+    "from": "717211af5743"
+  },
+  "vs.conductor.has.title": {
+    "text": "ما لدى Conductor مما ليس لدى Aubergine",
+    "from": "97051a4ecf5d"
+  },
+  "vs.conductor.h1": {
+    "text": "عارض فروق تعلّق فيه على الأسطر وترسل التعليقات إلى الوكيل، ثم طلبات السحب والفحوص والدمج. ويُظهر Aubergine ما تغيّر في نسخة العمل، ولا يودِع ولا يدفع ولا يدمج أبدًا.",
+    "from": "6777521cf45a"
+  },
+  "vs.conductor.h2": {
+    "text": "سحابة يواصل فيها الوكلاء العمل وجهاز Mac لديك مطفأ، ومهام روتينية تعمل هناك وفق جدول. أما جداول Aubergine الزمنية فتنطلق على حاسوبك، ما دام يعمل.",
+    "from": "ac3ae91a45fe"
+  },
+  "vs.conductor.h3": {
+    "text": "تطبيق iOS وأصوات عند الانتهاء. وليس لـ Aubergine تطبيق، ولا يُصدر أي صوت.",
+    "from": "193e1ed4e647"
+  },
+  "vs.conductor.q1.q": {
+    "text": "هل Aubergine بديل لـ Conductor؟",
+    "from": "cde19d1a87c2"
+  },
+  "vs.conductor.q1.a": {
+    "text": "لتشغيل عدة وكلاء لسطر الأوامر على حاسوبك أنت، نعم: لكل وكيل طرفية على لوحة، وحين تطلب، شجرة عمل Git خاصة به. لكنه ليس بديلًا مطابقًا: ليس في Aubergine واجهة دردشة، ولا طلبات سحب ولا دمج، ولا سحابة، ولا تطبيق للهاتف.",
+    "from": "6570e71775cf"
+  },
+  "vs.conductor.q2.q": {
+    "text": "هل Conductor مفتوح المصدر؟",
+    "from": "fad053540fb9"
+  },
+  "vs.conductor.q2.a": {
+    "text": "لا: شروطه تصفه بأنه احتكاري، ولم نجد له مستودعًا عامًا. ويقول توثيقه إن التطبيق المحلي مجاني الاستخدام وإن مساحات العمل السحابية تحتاج إلى خطة مدفوعة. أما Aubergine فبموجب رخصة MIT وليس له خطة مدفوعة.",
+    "from": "1cd0818f2d1c"
+  },
+  "vs.conductor.q3.q": {
+    "text": "هل يعمل Conductor على Linux أو Windows؟",
+    "from": "735588d0d163"
+  },
+  "vs.conductor.q3.a": {
+    "text": "يقول توثيقه إنه غير متاح لـ Windows أو Linux بعد. أما Aubergine فمبني لـ macOS، وشُغّل على Linux داخل حاويات فقط، وعلى Windows يعمل داخل WSL 2 فقط، ولم يُجرَّب ذلك.",
+    "from": "f5ade7015ea8"
+  },
+  "vs.conductor.q4.q": {
+    "text": "هل أستطيع استخدام Conductor وAubergine معًا؟",
+    "from": "19c0c55db696"
+  },
+  "vs.conductor.q4.a": {
+    "text": "لا شيء يمنع ذلك: كلاهما يعمل في أشجار عمل Git للمستودع نفسه، وكلٌّ يصنع أشجاره الخاصة. لم نشغّل الاثنين جنبًا إلى جنب.",
+    "from": "f05d6d7dc553"
+  },
+  "vs.conductor.mark": {
+    "text": "Aubergine غير تابع لـ Conductor ولا لصانعيه. Conductor اسم منتجهم: تذكر شروطه Melty Labs, Inc.، ويقول موقعه Conductor from Meta.",
+    "from": "f1f2c16aeaff"
+  },
+  "vs.conductor.c.form": {
+    "text": "تطبيق Mac لسطح المكتب، مع سحابة مستضافة وتطبيق iOS",
+    "from": "8f147196475d"
+  },
+  "vs.conductor.c.runs": {
+    "text": "macOS فقط",
+    "from": "3f2f41cd023d"
+  },
+  "vs.conductor.c.price": {
+    "text": "مغلق المصدر؛ التطبيق المحلي مجاني، وسحابته تحتاج إلى خطة مدفوعة",
+    "from": "330fb38120bd"
+  },
+  "vs.conductor.c.agents": {
+    "text": "Claude Code وCodex وCursor وOpenCode؛ وأي أمر في نمط الطرفية",
+    "from": "605c47dc956b"
+  },
+  "vs.conductor.c.layout": {
+    "text": "شريط جانبي لمساحات العمل، لكلٍّ منها علامات تبويب للدردشة والطرفية والمتصفح",
+    "from": "d639b322b315"
+  },
+  "vs.conductor.c.apart": {
+    "text": "شجرة عمل Git وفرع لكل مساحة عمل؛ وصناديق عزل في سحابته",
+    "from": "ca8d1b34e4bc"
+  },
+  "vs.conductor.c.closed": {
+    "text": "الجلسات المحلية تنتهي مع التطبيق؛ والجلسات السحابية تستمر",
+    "from": "bed2d2359373"
+  },
+  "vs.conductor.c.waits": {
+    "text": "أصوات عند الانتهاء",
+    "from": "9cc24eada060"
+  },
+  "vs.conductor.c.review": {
+    "text": "عارض فروق مع تعليقات تعود إلى الوكيل، وطلبات سحب، وفحوص، ودمج",
+    "from": "c7413ccd732c"
+  },
+  "vs.conductor.c.device": {
+    "text": "تطبيق iOS عبر مرحِّله، وجهاز Mac مستيقظ والتطبيق مفتوح",
+    "from": "ebef5d2152fd"
+  },
+  "vs.conductor.c.programs": {
+    "text": "واجهة API وخادم MCP لمساحات عمله السحابية، وأمر",
+    "from": "3d0a599b7e17"
+  },
+  "vs.conductor.c.timed": {
+    "text": "طابور رسائل؛ ومهام روتينية مجدولة في سحابته",
+    "from": "9ab0918f949e"
+  },
+  "vs.claude-squad.crumb": {
+    "text": "Claude Squad",
+    "from": "3c4fa1eb24c0"
+  },
+  "vs.claude-squad.name": {
+    "text": "Claude Squad",
+    "from": "3c4fa1eb24c0"
+  },
+  "vs.claude-squad.meta.title": {
+    "text": "Aubergine مقابل Claude Squad: ‏tmux وأشجار العمل، بطريقتين",
+    "from": "4166fb6975ea"
+  },
+  "vs.claude-squad.meta.description": {
+    "text": "كلاهما يشغّل كل وكيل برمجة في جلسة tmux وشجرة عمل Git. Claude Squad برنامج في طرفيتك؛ وAubergine لوحة في متصفحك.",
+    "from": "9c993cb105df"
+  },
+  "vs.claude-squad.title": {
+    "text": "Aubergine مقابل Claude Squad",
+    "from": "77af5fc2deda"
+  },
+  "vs.claude-squad.lead": {
+    "text": "يقف الاثنان على الأرض نفسها: كل وكيل في جلسة tmux، وكلٌّ في شجرة عمل Git خاصة به، وكلاهما مجاني ومفتوح المصدر. Claude Squad برنامج داخل طرفيتك. وAubergine صفحة في متصفحك تقف فيها الطرفيات جنبًا إلى جنب.",
+    "from": "d9f4e824659b"
+  },
+  "vs.claude-squad.how": {
+    "text": "<strong>من أين جاء هذا.</strong> ما يُقال هنا عن Claude Squad مأخوذ من <a href=\"https://github.com/smtg-ai/claude-squad\">مستودعه وملف README فيه</a> كما قُرئا في 26 نوفمبر 2026. لم نشغّل Claude Squad. إن كان شيء خاطئًا أو قديمًا، <a href=\"https://github.com/thirstyeggplant/aubergine/issues\">أخبرنا</a>.",
+    "from": "c74805e04f47"
+  },
+  "vs.claude-squad.is.title": {
+    "text": "ما هو Claude Squad",
+    "from": "27fdabce5ffe"
+  },
+  "vs.claude-squad.is.text": {
+    "text": "بحسب وصفه لنفسه، تطبيق طرفية يدير عدة وكلاء محليين من Claude Code وCodex وGemini وغيرها في مساحات عمل منفصلة. تشغّله بالأمر <code>cs</code>: قائمة جلسات مع معاينة وعلامة تبويب للفروق، في نافذة طرفية واحدة. كل جلسة جلسة tmux في شجرة عمل Git على فرعها الخاص. يحتاج إلى tmux و<code>gh</code>، وهو بموجب رخصة AGPL-3.0.",
+    "from": "f5651435b271"
+  },
+  "vs.claude-squad.pick.title": {
+    "text": "أيهما تختار",
+    "from": "9190a8f83f35"
+  },
+  "vs.claude-squad.pick.them": {
+    "text": "<strong>اختر Claude Squad</strong> إن كنت تعيش في طرفية وتريد فيها برنامجًا صغيرًا واحدًا يشغّل الوكلاء في أشجار عمل ويدفع فروعهم، ولا شيء أكثر.",
+    "from": "f1fb7dd68ee2"
+  },
+  "vs.claude-squad.pick.us": {
+    "text": "<strong>اختر Aubergine</strong> إن أردت أن ترى عدة وكلاء يعملون في آن واحد، وتعرف أيهم ينتظرك، ويكون حولهم طابور وجداول زمنية وواجهة API.",
+    "from": "4d6b3293e505"
+  },
+  "vs.claude-squad.differs.title": {
+    "text": "أين يختلفان",
+    "from": "8c2314ada082"
+  },
+  "vs.claude-squad.d1": {
+    "text": "<strong>واحدة تلو الأخرى، أو كلها معًا.</strong> يعرض Claude Squad قائمة ومعاينة للجلسة التي اخترتها. ويرسم Aubergine كل طرفية حيّةً على لوحة، فخمسة وكلاء هم خمس طرفيات أمام عينيك، وقائمة واحدة تقول حالة كلٍّ منها بالكلمات.",
+    "from": "d86f1c45b8de"
+  },
+  "vs.claude-squad.d2": {
+    "text": "<strong>من ينتظر.</strong> لم نجد شيئًا في ملف README الخاص بـ Claude Squad عن إخبارك بأن وكيلًا ينتظر أو انتهى. أما Aubergine فيعلّم الطرفية المنتظرة باللون، ويعدّ ما ينتظر في الأعلى، وينتقل إلى التالية بمفتاح، ويستطيع إرسال إشعار من الصفحة المفتوحة.",
+    "from": "211530499e12"
+  },
+  "vs.claude-squad.d3": {
+    "text": "<strong>ما حول الوكلاء.</strong> في Aubergine طابور مهام بحدّ، وجداول زمنية، وسير عمل بخطوات يوافق عليها إنسان، وملاحظات وحقول على كل طرفية، وواجهة HTTP API، وخادم MCP. ويقتصر Claude Squad على الجلسات وفروعها.",
+    "from": "f50c8e772a93"
+  },
+  "vs.claude-squad.has.title": {
+    "text": "ما لدى Claude Squad مما ليس لدى Aubergine",
+    "from": "98723dd6c82d"
+  },
+  "vs.claude-squad.h1": {
+    "text": "يعمل داخل الطرفية المفتوحة لديك أصلًا، بلا خادم ولا متصفح. ويعمل عبر SSH مثل أي برنامج طرفية؛ أما Aubergine من مكان آخر فيحتاج إلى نفق أو خادم وسيط.",
+    "from": "f20b31ac2b9e"
+  },
+  "vs.claude-squad.h2": {
+    "text": "يودِع فرعًا ويدفعه نيابة عنك، ويوقف جلسة مؤقتًا بإيداع عملها. ولا يودِع Aubergine ولا يدفع أبدًا.",
+    "from": "ca1a86c924f4"
+  },
+  "vs.claude-squad.h3": {
+    "text": "نمط تجريبي يقبل مطالبات الوكيل من تلقاء نفسه. ولا يجيب Aubergine وكيلًا نيابة عنك أبدًا.",
+    "from": "0b05aa90e62a"
+  },
+  "vs.claude-squad.q1.q": {
+    "text": "هل Aubergine بديل لـ Claude Squad؟",
+    "from": "361c471f4cfa"
+  },
+  "vs.claude-squad.q1.a": {
+    "text": "نعم، للعمل نفسه بطريقة أخرى. كلاهما يشغّل كل وكيل في جلسة tmux ويستطيع أن يعطي كلًّا منهم شجرة عمل Git على فرعه الخاص. يفعل Claude Squad ذلك من برنامج في طرفيتك؛ ويفعله Aubergine من صفحة في متصفحك وكل طرفية أمام عينيك.",
+    "from": "a917cadf4b9c"
+  },
+  "vs.claude-squad.q2.q": {
+    "text": "هل يستخدم كلاهما tmux؟",
+    "from": "7bb088dbc786"
+  },
+  "vs.claude-squad.q2.a": {
+    "text": "نعم. يذكر Claude Squad أن tmux متطلَّب مسبق، ويصنع جلسة tmux لكل وكيل. ويحتاج Aubergine إلى tmux 3.2 أو أحدث، ويشغّله على مقبس خاص به بإعداداته الخاصة، فلا يُمس tmux الخاص بك.",
+    "from": "6811d9954e5a"
+  },
+  "vs.claude-squad.q3.q": {
+    "text": "هل يعمل Claude Squad مع وكلاء غير Claude Code؟",
+    "from": "b8ca49d7a338"
+  },
+  "vs.claude-squad.q3.a": {
+    "text": "يقول ملف README الخاص به إن البرنامج الافتراضي هو <code>claude</code>، وإن غيره، مثل Codex أو Gemini أو Aider، يُسمّى بالخيار <code>-p</code>. ويشغّل Aubergine أي برنامج لسطر الأوامر في طرفية؛ وما يفعله من تلقاء نفسه لوكيل مبني لـ Claude Code.",
+    "from": "e25dfec3422d"
+  },
+  "vs.claude-squad.q4.q": {
+    "text": "ما رخصة كلٍّ منهما؟",
+    "from": "8b3801771777"
+  },
+  "vs.claude-squad.q4.a": {
+    "text": "Claude Squad بموجب AGPL-3.0، وAubergine بموجب رخصة MIT. وكلاهما مجاني.",
+    "from": "b9eaa7117d9a"
+  },
+  "vs.claude-squad.mark": {
+    "text": "Aubergine غير تابع لـ Claude Squad ولا لـ Anthropic. Claude Squad اسم مشروع smtg-ai؛ وClaude علامة تجارية لـ Anthropic.",
+    "from": "ce7ff8c148b6"
+  },
+  "vs.claude-squad.c.form": {
+    "text": "برنامج في طرفيتك، يُشغَّل بالأمر <code>cs</code>",
+    "from": "e739d8457685"
+  },
+  "vs.claude-squad.c.runs": {
+    "text": "macOS وLinux؛ وعلى Windows مع tmux عبر WSL. يحتاج إلى tmux و<code>gh</code>",
+    "from": "abc0235db83e"
+  },
+  "vs.claude-squad.c.price": {
+    "text": "AGPL-3.0، مجاني",
+    "from": "558fbe03f51b"
+  },
+  "vs.claude-squad.c.agents": {
+    "text": "Claude Code ما لم تسمِّ غيره: Codex أو Gemini أو Aider أو أي أمر",
+    "from": "1fe7348291c8"
+  },
+  "vs.claude-squad.c.layout": {
+    "text": "قائمة جلسات مع معاينة وعلامة تبويب للفروق، في نافذة طرفية واحدة",
+    "from": "3d5b69fb4009"
+  },
+  "vs.claude-squad.c.apart": {
+    "text": "جلسة tmux وشجرة عمل Git على فرعها الخاص لكلٍّ منها",
+    "from": "d8335dee55c9"
+  },
+  "vs.claude-squad.c.closed": {
+    "text": "الجلسات جلسات tmux؛ ولا يقول ملف README ما الذي يُحفظ",
+    "from": "db4a444f7d33"
+  },
+  "vs.claude-squad.c.waits": {
+    "text": "لم يُعثر على شيء في ملف README",
+    "from": "8f95c49e434f"
+  },
+  "vs.claude-squad.c.review": {
+    "text": "علامة تبويب للفروق؛ ويودِع الفرع ويدفعه",
+    "from": "e4f8bb6419df"
+  },
+  "vs.claude-squad.c.device": {
+    "text": "لم يُعثر على شيء في ملف README",
+    "from": "8f95c49e434f"
+  },
+  "vs.claude-squad.c.programs": {
+    "text": "خيارات في سطر أوامره؛ ولم يُعثر على واجهة API ولا خادم MCP",
+    "from": "d88b2e8d7fe3"
+  },
+  "vs.claude-squad.c.timed": {
+    "text": "لم يُعثر على شيء في ملف README",
+    "from": "8f95c49e434f"
+  },
+  "vs.vibe-kanban.crumb": {
+    "text": "Vibe Kanban",
+    "from": "306161ab46c9"
+  },
+  "vs.vibe-kanban.name": {
+    "text": "Vibe Kanban",
+    "from": "306161ab46c9"
+  },
+  "vs.vibe-kanban.meta.title": {
+    "text": "Aubergine مقابل Vibe Kanban: بديل مفتوح المصدر",
+    "from": "670b010ba18d"
+  },
+  "vs.vibe-kanban.meta.description": {
+    "text": "كلاهما محلي ومفتوح المصدر ويُعرض في متصفحك. يخطّط Vibe Kanban العمل مسائلَ على لوحة؛ ويعرض Aubergine الوكلاء طرفياتٍ جنبًا إلى جنب.",
+    "from": "bb53f7f86aa3"
+  },
+  "vs.vibe-kanban.title": {
+    "text": "Aubergine مقابل Vibe Kanban",
+    "from": "c5b1f18fa84d"
+  },
+  "vs.vibe-kanban.lead": {
+    "text": "كلاهما مفتوح المصدر، ويعمل على حاسوبك أنت، ويُستخدم في متصفح. يبدأ Vibe Kanban من العمل: مسائل على لوحة، كلٌّ منها يُسلَّم إلى وكيل. ويبدأ Aubergine من الوكلاء: طرفيات جنبًا إلى جنب، وبجانبها طابور.",
+    "from": "3d84a2e91b62"
+  },
+  "vs.vibe-kanban.how": {
+    "text": "<strong>من أين جاء هذا.</strong> ما يُقال هنا عن Vibe Kanban مأخوذ من <a href=\"https://www.vibekanban.com/docs\">توثيقه</a> و<a href=\"https://github.com/BloopAI/vibe-kanban\">مستودعه</a> كما قُرئا في 26 نوفمبر 2026. لم نشغّل Vibe Kanban. إن كان شيء خاطئًا أو قديمًا، <a href=\"https://github.com/thirstyeggplant/aubergine/issues\">أخبرنا</a>.",
+    "from": "99375c152de4"
+  },
+  "vs.vibe-kanban.status": {
+    "text": "<strong>أين يقف Vibe Kanban.</strong> في 10 أبريل 2026 <a href=\"https://www.vibekanban.com/blog/shutdown\">كتب صانعوه</a> أن bloop، الشركة التي وراءه، ستُغلق، وأن المشروع يستمر مفتوح المصدر يصونه مجتمعه، وأن خدماته البعيدة ستُزال بينما تبقى مساحات العمل المحلية تعمل. وكان توثيقه وصفحة أسعاره لا يزالان يصفان تلك الخدمات حين كُتب هذا؛ واستمرت الإصدارات.",
+    "from": "e7d0f9efaeb3"
+  },
+  "vs.vibe-kanban.is.title": {
+    "text": "ما هو Vibe Kanban",
+    "from": "ec9867114fba"
+  },
+  "vs.vibe-kanban.is.text": {
+    "text": "بحسب وصفه لنفسه، لوحة كانبان للمطوّرين لتتبع مهام البرمجة مع وكلاء البرمجة. يشغّل <code>npx vibe-kanban</code> خادمًا محليًا ويفتح صفحته. تصير المسألة مساحة عمل: أشجار عمل Git للمستودعات التي اخترتها، ومحادثة مع واحد من عشرة وكلاء أو أكثر يعرفهم بالاسم، والتغييرات بجانبها، ثم طلب سحب ودمج. وهو بموجب رخصة Apache-2.0.",
+    "from": "6d4c2f9e57b0"
+  },
+  "vs.vibe-kanban.pick.title": {
+    "text": "أيهما تختار",
+    "from": "9190a8f83f35"
+  },
+  "vs.vibe-kanban.pick.them": {
+    "text": "<strong>اختر Vibe Kanban</strong> إن كنت تفكر بالمسائل: تخطّط على لوحة، وتسلّم كل بطاقة إلى وكيل، وتراجع فروقه بتعليقات، ثم تدمج.",
+    "from": "245bc2234639"
+  },
+  "vs.vibe-kanban.pick.us": {
+    "text": "<strong>اختر Aubergine</strong> إن أردت الوكلاء أنفسهم أمام عينيك طرفياتٍ تبقى بعد النافذة، والعمل يُوزَّع من طابور حين تقول ذلك فقط.",
+    "from": "2365113635d7"
+  },
+  "vs.vibe-kanban.differs.title": {
+    "text": "أين يختلفان",
+    "from": "8c2314ada082"
+  },
+  "vs.vibe-kanban.d1": {
+    "text": "<strong>محادثة أم طرفية.</strong> يعرض Vibe Kanban الوكيل لوحةَ محادثة وتغييراته بجانبها. ويعرض Aubergine طرفية الوكيل نفسها، وكثيرًا منها معًا على لوحة.",
+    "from": "0c890c4d406b"
+  },
+  "vs.vibe-kanban.d2": {
+    "text": "<strong>أي برنامج.</strong> يسرد Vibe Kanban الوكلاء الذين يدعمهم بالاسم. وطرفية Aubergine صدفة: يعمل فيها أي وكيل لسطر الأوامر، وكذلك البناء أو تشغيل الاختبارات أو الخادم. وما يفعله Aubergine من تلقاء نفسه لوكيل مبني لـ Claude Code.",
+    "from": "23aec210dcbd"
+  },
+  "vs.vibe-kanban.d3": {
+    "text": "<strong>ما الذي يُنهيه إغلاقه.</strong> لم نجد شيئًا في توثيق Vibe Kanban عمّا يحدث لوكيل يعمل حين يتوقف خادمه. وفي Aubergine كل طرفية جلسة tmux، وإيقاف Aubergine أو إغلاق المتصفح لا يُنهي شيئًا.",
+    "from": "2f1d6cdf5c9f"
+  },
+  "vs.vibe-kanban.has.title": {
+    "text": "ما لدى Vibe Kanban مما ليس لدى Aubergine",
+    "from": "5076a47e917f"
+  },
+  "vs.vibe-kanban.h1": {
+    "text": "لوحة كانبان للمسائل بأولويات ووسوم ومسائل فرعية. وفي Aubergine طابور مهام ولوحة لسير العمل الجاري، لا متتبّع مسائل.",
+    "from": "68077704a5f0"
+  },
+  "vs.vibe-kanban.h2": {
+    "text": "فروق بتعليقات مضمَّنة تُرسل إلى الوكيل، ثم طلبات سحب وإعادة أساس ودمج. ويُظهر Aubergine ما تغيّر، ولا يودِع ولا يدمج أبدًا.",
+    "from": "93ff80b2e186"
+  },
+  "vs.vibe-kanban.h3": {
+    "text": "Windows بين منصاته الموثَّقة، وأصوات، وقائمة أطول من الوكلاء الذين يعرفهم بالاسم.",
+    "from": "1aadd7b5de39"
+  },
+  "vs.vibe-kanban.q1.q": {
+    "text": "هل Aubergine بديل لـ Vibe Kanban؟",
+    "from": "4aa8ac6e6711"
+  },
+  "vs.vibe-kanban.q1.a": {
+    "text": "لتشغيل عدة وكلاء محليًا في أشجار عمل Git ومعرفة أيهم يحتاج إليك، نعم. لكن شكله مختلف: في Aubergine طرفيات على لوحة وطابور مهام حيث في Vibe Kanban لوحة مسائل مع محادثات، ولا يفتح Aubergine طلب سحب ولا يدمج شيئًا.",
+    "from": "98cbddf025ec"
+  },
+  "vs.vibe-kanban.q2.q": {
+    "text": "هل لا يزال Vibe Kanban قيد الصيانة؟",
+    "from": "6f567471ea10"
+  },
+  "vs.vibe-kanban.q2.a": {
+    "text": "كتب صانعوه في 10 أبريل 2026 أن الشركة التي وراءه ستُغلق وأن المشروع يستمر مفتوح المصدر يصونه مجتمعه. وصدرت لمستودعه إصدارات منذ ذلك الحين. اقرأ مستودعه لتعرف أين يقف الآن.",
+    "from": "a82975b3065a"
+  },
+  "vs.vibe-kanban.q3.q": {
+    "text": "هل يعمل كلاهما محليًا؟",
+    "from": "11a0fe427c73"
+  },
+  "vs.vibe-kanban.q3.a": {
+    "text": "نعم. كلٌّ منهما خادم على حاسوبك أنت مع صفحة في متصفحك. يوثّق Vibe Kanban تسجيل دخول اختياريًا لميزات اللوحة والفريق؛ وليس لـ Aubergine أي حساب على الإطلاق.",
+    "from": "ab3cc066ee10"
+  },
+  "vs.vibe-kanban.q4.q": {
+    "text": "أي الوكلاء يدعم كلٌّ منهما؟",
+    "from": "7e38a7feb8bc"
+  },
+  "vs.vibe-kanban.q4.a": {
+    "text": "يسمّي Vibe Kanban أكثر من عشرة، منهم Claude Code وCodex وGemini CLI وGitHub Copilot وAmp وCursor وOpenCode. ويشغّل Aubergine أي برنامج لسطر الأوامر في طرفية؛ وتشغيل وكيل من القائمة، ورؤية أنه ينتظر، واستئناف محادثته، مبنية لـ Claude Code.",
+    "from": "095b9719b5a7"
+  },
+  "vs.vibe-kanban.mark": {
+    "text": "Aubergine غير تابع لـ Vibe Kanban ولا لصانعيه. Vibe Kanban اسم المشروع الذي بدأته Bloop AI Limited.",
+    "from": "e0e138f9589d"
+  },
+  "vs.vibe-kanban.c.form": {
+    "text": "خادم على حاسوبك أنت وصفحة في متصفحك",
+    "from": "f0e12c3481c6"
+  },
+  "vs.vibe-kanban.c.runs": {
+    "text": "macOS وLinux وWindows؛ يُشغَّل بـ <code>npx</code>",
+    "from": "ddd741e66ecf"
+  },
+  "vs.vibe-kanban.c.price": {
+    "text": "Apache-2.0، مجاني؛ تسجيل الدخول اختياري",
+    "from": "9823c6d319c0"
+  },
+  "vs.vibe-kanban.c.agents": {
+    "text": "عشرة أو أكثر يعرفهم بالاسم، منهم Claude Code وCodex وGemini CLI",
+    "from": "3b62e7abb0fe"
+  },
+  "vs.vibe-kanban.c.layout": {
+    "text": "لوحة كانبان للمسائل، وقائمة مساحات عمل لكلٍّ منها محادثة",
+    "from": "2e17f6f4a543"
+  },
+  "vs.vibe-kanban.c.apart": {
+    "text": "أشجار عمل Git لكل مساحة عمل",
+    "from": "86bf78b6f747"
+  },
+  "vs.vibe-kanban.c.closed": {
+    "text": "لم يُعثر على شيء في توثيقه",
+    "from": "f6b5e7a05b9d"
+  },
+  "vs.vibe-kanban.c.waits": {
+    "text": "أصوات، وإشعارات المتصفح، وعلامة على مساحة العمل التي تحتاج إليك",
+    "from": "9f3cc4e77037"
+  },
+  "vs.vibe-kanban.c.review": {
+    "text": "فروق بتعليقات مضمَّنة تعود إلى الوكيل، وطلبات سحب، وإعادة أساس، ودمج",
+    "from": "4545afb112b5"
+  },
+  "vs.vibe-kanban.c.device": {
+    "text": "عبر خدمته السحابية، التي قال صانعوه إنها ستُزال",
+    "from": "004526c12db4"
+  },
+  "vs.vibe-kanban.c.programs": {
+    "text": "خادم MCP محلي؛ ولم يُعثر على واجهة HTTP API",
+    "from": "7f646c855e3f"
+  },
+  "vs.vibe-kanban.c.timed": {
+    "text": "لوحة المسائل؛ ولم يُعثر على جداول زمنية",
+    "from": "197f6e8847f9"
+  },
+  "vs.cmux.crumb": {
+    "text": "cmux",
+    "from": "548d4fabc56e"
+  },
+  "vs.cmux.name": {
+    "text": "cmux",
+    "from": "548d4fabc56e"
+  },
+  "vs.cmux.meta.title": {
+    "text": "Aubergine مقابل cmux: طرفيتان مبنيتان لوكلاء البرمجة",
+    "from": "c625444e117b"
+  },
+  "vs.cmux.meta.description": {
+    "text": "كلاهما يشغّل أي وكيل لسطر الأوامر في طرفية حقيقية ويُظهر أيها يحتاج إليك. cmux تطبيق macOS أصلي؛ وAubergine لوحة في متصفحك.",
+    "from": "1018139b92b2"
+  },
+  "vs.cmux.title": {
+    "text": "Aubergine مقابل cmux",
+    "from": "9c21dcf33e1e"
+  },
+  "vs.cmux.lead": {
+    "text": "أقرب زوج في هذه الصفحات: كلاهما طرفية صُنعت لوكلاء البرمجة، وكلاهما يشغّل أي وكيل تستطيع تشغيله من سطر الأوامر، وكلاهما مفتوح المصدر. cmux تطبيق طرفية أصلي لـ macOS. وAubergine خادم على حاسوبك ولوحة من الطرفيات في متصفحك.",
+    "from": "74355a6665b7"
+  },
+  "vs.cmux.how": {
+    "text": "<strong>من أين جاء هذا.</strong> ما يُقال هنا عن cmux مأخوذ من <a href=\"https://cmux.com/\">موقعه وتوثيقه</a> و<a href=\"https://github.com/manaflow-ai/cmux\">مستودعه</a> كما قُرئت في 26 نوفمبر 2026. لم نشغّل cmux. إن كان شيء خاطئًا أو قديمًا، <a href=\"https://github.com/thirstyeggplant/aubergine/issues\">أخبرنا</a>.",
+    "from": "5c9611ff5302"
+  },
+  "vs.cmux.is.title": {
+    "text": "ما هو cmux",
+    "from": "8a1d270df445"
+  },
+  "vs.cmux.is.text": {
+    "text": "بحسب وصفه لنفسه، طرفية لـ macOS مبنية على libghostty بعلامات تبويب عمودية وإشعارات لوكلاء البرمجة، مكتوبة بـ Swift. يسرد شريط جانبي مساحات العمل مع فرعها وطلب السحب ومجلدها وآخر إشعار فيها؛ وتنقسم مساحة العمل إلى أجزاء فيها علامات تبويب. وكل إجراء هو أيضًا أمر ورسالة على مقبس Unix. التطبيق بموجب رخصة GPL-3.0-or-later ومجاني؛ أما الأجهزة السحابية وتطبيق iOS التجريبي فتأتي مع حساب وخطط مدفوعة.",
+    "from": "68de3f7cd4b5"
+  },
+  "vs.cmux.pick.title": {
+    "text": "أيهما تختار",
+    "from": "9190a8f83f35"
+  },
+  "vs.cmux.pick.them": {
+    "text": "<strong>اختر cmux</strong> إن أردت تطبيق طرفية سريعًا وأصليًا لـ Mac فيه أجزاء، ومتصفح داخل التطبيق، وإشعارات macOS، وتكتب بنفسك طريقة عملك فوقه.",
+    "from": "22fea8e3daf2"
+  },
+  "vs.cmux.pick.us": {
+    "text": "<strong>اختر Aubergine</strong> إن أردت وكلاء يواصلون العمل حين يُغلق التطبيق دون أن تختار نمطًا، وشجرة عمل لكل وكيل تُصنع لك، وطابورًا وجداول زمنية وموافقات مبنية أصلًا.",
+    "from": "362a7c018644"
+  },
+  "vs.cmux.differs.title": {
+    "text": "أين يختلفان",
+    "from": "8c2314ada082"
+  },
+  "vs.cmux.d1": {
+    "text": "<strong>ما الذي يُنهيه إغلاقه.</strong> يوثّق cmux أن الخروج منه يحفظ التخطيط والمجلدات وأن العمليات الحية لا تُحفظ، ما لم تختر نمط tmux المحلي فيه. وفي Aubergine ليس tmux نمطًا: كل طرفية جلسة tmux من البداية. ولا يُبقي أيٌّ منهما عملية بعد إعادة تشغيل الحاسوب.",
+    "from": "448c9e2ac6d6"
+  },
+  "vs.cmux.d2": {
+    "text": "<strong>لبنة أساسية، أم ما حولها.</strong> يصف cmux نفسه بأنه لبنة أساسية لا حل، ويعطيك أمرًا ومقبسًا لتبني بهما. ويأتي Aubergine بنسخ عمل في أشجار عمل Git، وطابور بحدّ، وجداول زمنية، وسير عمل فيه موافقات، وقائمة واحدة بما ينتظرك.",
+    "from": "c675408c16db"
+  },
+  "vs.cmux.d3": {
+    "text": "<strong>تطبيق أم صفحة.</strong> cmux تطبيق Mac يرسمه النظام. وAubergine صفحة في متصفح: أبطأ في الرسم من طرفية أصلية، ويمكن الوصول إليه من متصفح آخر تقرنه عبر خادم وسيط تشغّله أنت.",
+    "from": "a320e661ca17"
+  },
+  "vs.cmux.has.title": {
+    "text": "ما لدى cmux مما ليس لدى Aubergine",
+    "from": "3fc881ffd285"
+  },
+  "vs.cmux.h1": {
+    "text": "طرفية أصلية على libghostty، وأجزاء مقسَّمة، ومتصفح داخل التطبيق يستطيع أمره أن يقوده. ويرسم Aubergine الطرفيات في صفحة متصفح وليس فيه أجزاء: الطرفيات توضع على لوحة.",
+    "from": "2a8a37988a85"
+  },
+  "vs.cmux.h2": {
+    "text": "إشعارات macOS وأمر مخصص حين يحتاج إليك جزء، تُطلقها تسلسلات الهروب التي تستخدمها الطرفيات أصلًا، لأي برنامج. ويرى Aubergine أن وكيلًا ينتظر عبر خطافات مبنية لـ Claude Code، ولا يُشعر إلا من الصفحة المفتوحة.",
+    "from": "c88597f63652"
+  },
+  "vs.cmux.h3": {
+    "text": "<code>cmux ssh</code> لمساحة عمل على جهاز بعيد، وتطبيق iOS تجريبي، وأجهزة سحابية في خططه المدفوعة.",
+    "from": "46878f831283"
+  },
+  "vs.cmux.q1.q": {
+    "text": "هل Aubergine بديل لـ cmux؟",
+    "from": "d03cb98ddd13"
+  },
+  "vs.cmux.q1.a": {
+    "text": "نعم: كلاهما طرفية لتشغيل عدة وكلاء برمجة ومعرفة أيهم يحتاج إليك. cmux تطبيق macOS أصلي؛ وAubergine يعمل في متصفح فوق tmux، ويضيف نسخ العمل والطابور والجداول الزمنية وسير العمل.",
+    "from": "0cabdb734f94"
+  },
+  "vs.cmux.q2.q": {
+    "text": "هل يحتاج cmux إلى tmux؟",
+    "from": "836e5e3d4677"
+  },
+  "vs.cmux.q2.a": {
+    "text": "لا. يقول توثيقه إن tmux غير مطلوب، ويعرض نمط tmux محليًا اختياريًا لإبقاء العمليات الحية حين يُغلق cmux. ويحتاج Aubergine إلى tmux 3.2 أو أحدث ويشغّل فيه كل طرفية.",
+    "from": "a18611c76706"
+  },
+  "vs.cmux.q3.q": {
+    "text": "هل يعمل cmux على Linux أو Windows؟",
+    "from": "09ca6d3b4a05"
+  },
+  "vs.cmux.q3.a": {
+    "text": "يقول ملف README الخاص به macOS فقط، حاليًا، على macOS 14 أو أحدث. أما Aubergine فمبني لـ macOS، وشُغّل على Linux داخل حاويات فقط، وعلى Windows يعمل داخل WSL 2 فقط، ولم يُجرَّب ذلك.",
+    "from": "5ba1cbadcc1c"
+  },
+  "vs.cmux.q4.q": {
+    "text": "هل كلاهما مجاني ومفتوح المصدر؟",
+    "from": "4d9f144a07a6"
+  },
+  "vs.cmux.q4.a": {
+    "text": "تطبيق cmux بموجب رخصة GPL-3.0-or-later ومجاني، مع خطط مدفوعة لسحابته؛ ولبرمجيات خادمه رخصة مختلفة. أما Aubergine فبموجب رخصة MIT وليس له خطة مدفوعة.",
+    "from": "9e51e627b171"
+  },
+  "vs.cmux.mark": {
+    "text": "Aubergine غير تابع لـ cmux ولا لصانعيه. cmux اسم منتج لـ Manaflow, Inc.",
+    "from": "750ad046fa7f"
+  },
+  "vs.cmux.c.form": {
+    "text": "تطبيق طرفية أصلي لـ macOS",
+    "from": "d8719e14d15d"
+  },
+  "vs.cmux.c.runs": {
+    "text": "macOS 14 أو أحدث فقط",
+    "from": "76dd2c62352e"
+  },
+  "vs.cmux.c.price": {
+    "text": "تطبيق بموجب GPL-3.0-or-later، مجاني، بلا حاجة إلى حساب؛ وخطط مدفوعة لسحابته",
+    "from": "791d945bc808"
+  },
+  "vs.cmux.c.agents": {
+    "text": "أي وكيل يعمل في طرفية",
+    "from": "5e7c625a3994"
+  },
+  "vs.cmux.c.layout": {
+    "text": "شريط جانبي لمساحات العمل، كلٌّ منها مقسَّم إلى أجزاء فيها علامات تبويب",
+    "from": "be8baacc5010"
+  },
+  "vs.cmux.c.apart": {
+    "text": "لم يُعثر على ما يصنع شجرة عمل لوكيل؛ وأجهزة منفصلة في سحابته",
+    "from": "09a8946a9874"
+  },
+  "vs.cmux.c.closed": {
+    "text": "يعود التخطيط والمجلدات؛ والعمليات الحية في نمط tmux الاختياري فقط",
+    "from": "93cc242a3b3d"
+  },
+  "vs.cmux.c.waits": {
+    "text": "حلقة حول الجزء، وشارة في الشريط الجانبي، وإشعار macOS",
+    "from": "9a5fda5bbd5c"
+  },
+  "vs.cmux.c.review": {
+    "text": "حالة طلب السحب المرتبط في الشريط الجانبي؛ ولم يُعثر على عرض للفروق",
+    "from": "1aac4ceaa460"
+  },
+  "vs.cmux.c.device": {
+    "text": "تطبيق iOS تجريبي، مع حساب وجهاز Mac مستيقظ؛ و<code>cmux ssh</code>",
+    "from": "2508df0177f8"
+  },
+  "vs.cmux.c.programs": {
+    "text": "أمر ومقبس Unix لكل إجراء؛ ولم يُعثر على خادم MCP",
+    "from": "60d43aa42ad3"
+  },
+  "vs.cmux.c.timed": {
+    "text": "لم يُعثر على شيء في توثيقه",
+    "from": "f6b5e7a05b9d"
+  },
+  "vs.warp.crumb": {
+    "text": "Warp",
+    "from": "3db7c958dfdf"
+  },
+  "vs.warp.name": {
+    "text": "Warp",
+    "from": "3db7c958dfdf"
+  },
+  "vs.warp.meta.title": {
+    "text": "Aubergine مقابل Warp لتشغيل عدة وكلاء برمجة",
+    "from": "b434edbfa3d3"
+  },
+  "vs.warp.meta.description": {
+    "text": "Warp طرفية لسطح المكتب لها وكيلها الخاص وخطط مدفوعة وسحابة. ولا يستدعي Aubergine أي نموذج: يشغّل الوكلاء الذين تستخدمهم أصلًا جنبًا إلى جنب.",
+    "from": "d9572d15388b"
+  },
+  "vs.warp.title": {
+    "text": "Aubergine مقابل Warp",
+    "from": "05210af0bb08"
+  },
+  "vs.warp.lead": {
+    "text": "Warp تطبيق طرفية كامل، له وكيل خاص به وخطط وسحابة، ويشغّل أيضًا وكلاء آخرين لسطر الأوامر في علامات تبويب وأجزاء. وAubergine أضيق: لا يستدعي أي نموذج ولا يحل محل أي تطبيق طرفية. يشغّل الوكلاء الذين تستخدمهم أصلًا جنبًا إلى جنب في صفحة متصفح، ويُبقيهم يعملون.",
+    "from": "67b1020677f9"
+  },
+  "vs.warp.how": {
+    "text": "<strong>من أين جاء هذا.</strong> ما يُقال هنا عن Warp مأخوذ من <a href=\"https://docs.warp.dev/\">توثيقه</a> و<a href=\"https://www.warp.dev/pricing\">صفحة أسعاره</a> كما قُرئا في 26 نوفمبر 2026، وهو عن تشغيل عدة وكلاء برمجة فقط؛ فـ Warp يفعل أشياء كثيرة غير ذلك. لم نشغّل Warp لهذا الغرض. إن كان شيء خاطئًا أو قديمًا، <a href=\"https://github.com/thirstyeggplant/aubergine/issues\">أخبرنا</a>.",
+    "from": "c0a09271e3dc"
+  },
+  "vs.warp.is.title": {
+    "text": "ما هو Warp",
+    "from": "295785f2bf50"
+  },
+  "vs.warp.is.text": {
+    "text": "بحسب وصفه لنفسه، بيئة تطوير وكيلية: طرفية لسطح المكتب على macOS وWindows وLinux، عميلها مفتوح المصدر بموجب AGPL-3.0. له وكيله الخاص Warp Agent، الذي يستدعي النماذج عبر Warp أو بمفاتيحك الخاصة، ويشغّل وكلاء آخرين لسطر الأوامر مثل Claude Code وCodex وGemini CLI في علامات تبويب وأجزاء، مع لوحة لكل الوكلاء النشطين، وإشعارات، ولوحة لمراجعة الشيفرة، ووكلاء في السحابة يعملون وفق جدول.",
+    "from": "54647299b7d0"
+  },
+  "vs.warp.pick.title": {
+    "text": "أيهما تختار",
+    "from": "9190a8f83f35"
+  },
+  "vs.warp.pick.them": {
+    "text": "<strong>اختر Warp</strong> إن أردت تطبيق طرفية واحدًا لكل شيء، على Windows وLinux أيضًا، فيه وكيله الخاص مدمجًا ووكلاء في السحابة تستطيع جدولتهم.",
+    "from": "b6f4c8cea075"
+  },
+  "vs.warp.pick.us": {
+    "text": "<strong>اختر Aubergine</strong> إن كانت لديك أصلًا طرفية ووكلاء تحبهم، ولا تريد إلا ما ينقص بينهم: كلهم أمام عينيك، يعملون باستمرار، بلا حساب ولا نموذج خاص به.",
+    "from": "24b891e15c2a"
+  },
+  "vs.warp.differs.title": {
+    "text": "أين يختلفان",
+    "from": "8c2314ada082"
+  },
+  "vs.warp.d1": {
+    "text": "<strong>نموذج خاص به، أم لا شيء.</strong> لـ Warp وكيله الخاص، مع خطط تدفع ثمن استخدامه وخيار لإحضار مفاتيحك الخاصة. ولا يستدعي Aubergine أي نموذج ولا يحتفظ بأي مفتاح: الوكلاء في طرفياته هم الذين ثبّتّهم وسجّلت الدخول إليهم بنفسك.",
+    "from": "5fbbccefb96a"
+  },
+  "vs.warp.d2": {
+    "text": "<strong>ما الذي يُنهيه إغلاقه.</strong> يوثّق Warp أنه يستعيد النوافذ وعلامات التبويب والأجزاء والمخرجات الأخيرة؛ ولم نجد شيئًا يقول إن برنامجًا جاريًا يُحفظ. وفي Aubergine كل طرفية جلسة tmux، فيواصل الوكيل العمل حين يتوقف المتصفح أو Aubergine نفسه.",
+    "from": "18624a0a66fc"
+  },
+  "vs.warp.d3": {
+    "text": "<strong>من أين يمكن الوصول إلى وكلائك.</strong> ينشر Warp الجلسة الجارية إلى سحابته لتوجّهها من هاتف أو متصفح. وليس لـ Aubergine سحابة: الجهاز الآخر متصفح تقرنه برمز، عبر خادم وسيط تشغّله على جهازك أنت، وقد جُرّب ذلك مرة واحدة على جهاز Mac واحد.",
+    "from": "b82fc6e2eec4"
+  },
+  "vs.warp.has.title": {
+    "text": "ما لدى Warp مما ليس لدى Aubergine",
+    "from": "9e0e15fe7a1a"
+  },
+  "vs.warp.h1": {
+    "text": "Windows وLinux منصتان موثَّقتان، تطبيقًا لسطح المكتب. أما Aubergine فمبني لـ macOS.",
+    "from": "0d9c59074c72"
+  },
+  "vs.warp.h2": {
+    "text": "وكيل خاص به، ووكلاء في السحابة يبدؤون وفق جدول أو من خدمة أخرى مثل Slack أو Linear أو GitHub. ولا يبدأ Aubergine شيئًا من الخارج، ولا يصل إلى أي شبكة من أجل جدول زمني.",
+    "from": "fa39346e5209"
+  },
+  "vs.warp.h3": {
+    "text": "كل ما يكونه تطبيق الطرفية عدا ذلك: محرره للأوامر، وكتل المخرجات، وإشعارات لأكثر من وكيل واحد. ويرى Aubergine أن وكيلًا ينتظر عبر خطافات مبنية لـ Claude Code.",
+    "from": "63765a4c4189"
+  },
+  "vs.warp.q1.q": {
+    "text": "هل Aubergine بديل لـ Warp؟",
+    "from": "d02fa9b2f885"
+  },
+  "vs.warp.q1.a": {
+    "text": "لشيء واحد فقط مما يفعله Warp: تشغيل عدة وكلاء برمجة لسطر الأوامر ومعرفة أيهم يحتاج إليك. ليس Aubergine تطبيق طرفية وليس له وكيل خاص به. يمكنك الإبقاء على Warp، أو أي طرفية، واستخدام Aubergine للوكلاء.",
+    "from": "4d9ff5b3c2fa"
+  },
+  "vs.warp.q2.q": {
+    "text": "هل أحتاج إلى حساب أو خطة مدفوعة؟",
+    "from": "7ea716600927"
+  },
+  "vs.warp.q2.a": {
+    "text": "يقول توثيق Warp إن تسجيل الدخول اختياري للطرفية، وتسرد صفحة أسعاره خطة مجانية وخططًا مدفوعة. وليس لـ Aubergine حساب ولا خطط.",
+    "from": "0104a9ec4212"
+  },
+  "vs.warp.q3.q": {
+    "text": "هل Warp مفتوح المصدر؟",
+    "from": "bb814de9622d"
+  },
+  "vs.warp.q3.a": {
+    "text": "يقول توثيقه إن عميل Warp مفتوح المصدر بموجب AGPL-3.0. أما Aubergine فبموجب رخصة MIT.",
+    "from": "a49fee890f51"
+  },
+  "vs.warp.q4.q": {
+    "text": "هل أستطيع استخدام Warp وAubergine معًا؟",
+    "from": "98378a2c4d20"
+  },
+  "vs.warp.q4.a": {
+    "text": "نعم، كما مع أي تطبيق طرفية. طرفيات Aubergine جلسات tmux، والأمر <code>aubergine attach &lt;name&gt;</code> يعرض واحدة منها في نافذة تطبيق الطرفية الذي تشغّله منه. لم نجرّب ذلك في Warp.",
+    "from": "bc272b9d95cf"
+  },
+  "vs.warp.mark": {
+    "text": "Aubergine غير تابع لـ Warp. Warp علامة تجارية لـ Denver Technologies, Inc.، التي تعمل تجاريًا باسم Warp.",
+    "from": "9cc6ff5ce341"
+  },
+  "vs.warp.c.form": {
+    "text": "تطبيق طرفية لسطح المكتب له وكيل خاص به، ووكلاء في السحابة",
+    "from": "ea1d6176e636"
+  },
+  "vs.warp.c.runs": {
+    "text": "macOS وWindows وLinux",
+    "from": "637825dc78ad"
+  },
+  "vs.warp.c.price": {
+    "text": "العميل مفتوح المصدر بموجب AGPL-3.0؛ خطة مجانية وخطط مدفوعة؛ تسجيل الدخول اختياري",
+    "from": "1ce40e23dc83"
+  },
+  "vs.warp.c.agents": {
+    "text": "وكيله الخاص Warp Agent، ووكلاء لسطر الأوامر مثل Claude Code وCodex وGemini CLI",
+    "from": "fe6cfd7211da"
+  },
+  "vs.warp.c.layout": {
+    "text": "علامات تبويب وأجزاء، وشريط جانبي، ولوحة لكل الوكلاء النشطين",
+    "from": "9b58a6cb680e"
+  },
+  "vs.warp.c.apart": {
+    "text": "يعرف أشجار عمل Git التي تصنعها؛ وحاويات لوكلائه في السحابة",
+    "from": "d5692791483e"
+  },
+  "vs.warp.c.closed": {
+    "text": "تعود النوافذ وعلامات التبويب والمخرجات الأخيرة؛ ولم يُعثر على شيء عن البرامج الجارية",
+    "from": "3084fbca2310"
+  },
+  "vs.warp.c.waits": {
+    "text": "إشعارات في التطبيق وعلى سطح المكتب: انتهى، أو طلب، أو خطأ",
+    "from": "c3dc4bc6b1ec"
+  },
+  "vs.warp.c.review": {
+    "text": "لوحة لمراجعة الشيفرة، مع تعليقات تُرسل إلى وكيل",
+    "from": "0662c604fdbd"
+  },
+  "vs.warp.c.device": {
+    "text": "جلسة تُنشر إلى سحابته، لهاتف أو متصفح",
+    "from": "c722dd49add9"
+  },
+  "vs.warp.c.programs": {
+    "text": "وكيل لسطر الأوامر، وواجهة API لتشغيلات وكلائه في السحابة",
+    "from": "fa3857a7a76b"
+  },
+  "vs.warp.c.timed": {
+    "text": "وكلاء في السحابة وفق جدول، ويُبدَؤون من خدمات أخرى",
+    "from": "e738cdacf6b5"
+  },
+  "vs.paradev.crumb": {
+    "text": "Paradev",
+    "from": "6ff850fa1891"
+  },
+  "vs.paradev.name": {
+    "text": "Paradev",
+    "from": "6ff850fa1891"
+  },
+  "vs.paradev.meta.title": {
+    "text": "Aubergine مقابل Paradev (‏Superset سابقًا): بديل",
+    "from": "07bdc273e5cb"
+  },
+  "vs.paradev.meta.description": {
+    "text": "Paradev، الذي كان اسمه Superset، وAubergine كلاهما برخصة MIT ويعملان في أشجار عمل Git. Paradev تطبيق لسطح المكتب بخطط مدفوعة؛ وAubergine مجاني.",
+    "from": "9fd6946e998b"
+  },
+  "vs.paradev.title": {
+    "text": "Aubergine مقابل Paradev، ‏Superset سابقًا",
+    "from": "2e91a4b729f8"
+  },
+  "vs.paradev.lead": {
+    "text": "Paradev تطبيق سطح المكتب الذي كان اسمه Superset حتى أكتوبر 2026. ومثل Aubergine هو بموجب رخصة MIT، ويشغّل أي وكيل لسطر الأوامر، ويعمل في أشجار عمل Git. وهو تطبيق له خطط وتطبيقات للهاتف وسحابة؛ أما Aubergine فخادم على حاسوبك أنت وصفحة في متصفحك، بلا شيء من ذلك.",
+    "from": "776bb8091dc6"
+  },
+  "vs.paradev.how": {
+    "text": "<strong>من أين جاء هذا.</strong> ما يُقال هنا عن Paradev مأخوذ من <a href=\"https://docs.paradev.com/\">توثيقه</a> و<a href=\"https://paradev.com/changelog\">سجل تغييراته</a> و<a href=\"https://github.com/paradevai/paradev\">مستودعه</a> كما قُرئت في 26 نوفمبر 2026. لم نشغّل Paradev. إن كان شيء خاطئًا أو قديمًا، <a href=\"https://github.com/thirstyeggplant/aubergine/issues\">أخبرنا</a>.",
+    "from": "ba6080f1e8dc"
+  },
+  "vs.paradev.status": {
+    "text": "<strong>الاسم.</strong> يقول سجل تغييراته بتاريخ 25 أكتوبر 2026 إن Superset صار Paradev، وإن الحسابات ومساحات العمل والإعدادات والأمر <code>superset</code> تنتقل معه. وهو ليس Apache Superset، أداة البيانات.",
+    "from": "0fc4d01036e0"
+  },
+  "vs.paradev.is.title": {
+    "text": "ما هو Paradev",
+    "from": "520654639a88"
+  },
+  "vs.paradev.is.text": {
+    "text": "بحسب وصفه لنفسه، مساحة العمل مفتوحة المصدر لـ Claude Code وCodex وأي وكيل برمجة: تطبيق لسطح المكتب، لا تطبيق طرفية، يعمل فيه الوكلاء دردشةً أو في طرفية. لكل مهمة شجرة عملها وفرعها وطرفيتها؛ وشريط جانبي واحد يعرض كل جلسة بحسب المشروع. وفيه عارض فروق مع فحوص طلبات السحب والدمج، وأمر، وSDK، وخادم MCP، وفي الخطط المدفوعة تطبيقات للهاتف، ووصول عن بُعد، ومساحات عمل سحابية، وأتمتة.",
+    "from": "304d9c9b59a7"
+  },
+  "vs.paradev.pick.title": {
+    "text": "أيهما تختار",
+    "from": "9190a8f83f35"
+  },
+  "vs.paradev.pick.them": {
+    "text": "<strong>اختر Paradev</strong> إن أردت تطبيقًا لسطح المكتب يصنع شجرة عمل لكل مهمة ويأخذها عبر الفروق والفحوص والدمج، مع تطبيقات للهاتف وسحابة حين تدفع ثمنها.",
+    "from": "a5db2e59a2a0"
+  },
+  "vs.paradev.pick.us": {
+    "text": "<strong>اختر Aubergine</strong> إن أردت كل جزء مجانيًا على حاسوبك أنت بلا حساب: طرفيات جنبًا إلى جنب، وطابور، وجداول زمنية، واستخدام من جهاز آخر.",
+    "from": "29238cd8839e"
+  },
+  "vs.paradev.differs.title": {
+    "text": "أين يختلفان",
+    "from": "8c2314ada082"
+  },
+  "vs.paradev.d1": {
+    "text": "<strong>ما المجاني.</strong> يسرد Paradev خطة مجانية لشخص واحد فيها مساحات العمل المحلية والتطبيق والأمر؛ أما الأتمتة وتطبيقات الهاتف والوصول عن بُعد ففي الخطط المدفوعة. وليس لـ Aubergine خطط: طابوره وجداوله الزمنية والاستخدام من جهاز آخر كلها في البرنامج الواحد المرخَّص بـ MIT، بلا حساب.",
+    "from": "e88d006e6f33"
+  },
+  "vs.paradev.d2": {
+    "text": "<strong>شريط جانبي أم لوحة.</strong> يعرض Paradev الجلسات في شريط جانبي مع علامات تبويب وأجزاء. ويضع Aubergine الطرفيات على لوحة تحرّكها وتكبّرها، فيكون كثير منها حيًّا أمام عينيك معًا، مع قائمة واحدة بها كلها بجانبها.",
+    "from": "e0a93e71bfe5"
+  },
+  "vs.paradev.d3": {
+    "text": "<strong>كيف تبقى الطرفيات بعد النافذة.</strong> كلاهما يُبقي الوكلاء يعملون حين تُغلق النافذة: Paradev عبر خدمته الخلفية الخاصة، التي يقول توثيقه إنها تُنهي كل طرفية حين تخرج من Paradev كليًا؛ وAubergine عبر tmux، الذي يستمر حين يتوقف Aubergine نفسه. وإعادة تشغيل الحاسوب تُنهيها في الاثنين.",
+    "from": "5190a04f786d"
+  },
+  "vs.paradev.has.title": {
+    "text": "ما لدى Paradev مما ليس لدى Aubergine",
+    "from": "e211a22944f9"
+  },
+  "vs.paradev.h1": {
+    "text": "عارض فروق تعلّق فيه على تغييرات الوكيل وتعدّلها، وتتابع فحوص طلب السحب وتدمج. ويُظهر Aubergine ما تغيّر، ولا يودِع ولا يدفع ولا يدمج أبدًا.",
+    "from": "d5bd58e3ed11"
+  },
+  "vs.paradev.h2": {
+    "text": "تطبيق لسطح المكتب، وتطبيقات iOS وAndroid، ومساحات عمل سحابية، ورنين وشارة في شريط Dock حين يحتاج إليك وكيل. وAubergine صفحة متصفح ولا يُصدر أي صوت.",
+    "from": "880ab73dfaea"
+  },
+  "vs.paradev.h3": {
+    "text": "أتمتة يُطلقها طلب مراجعة، أو رسالة Slack، أو مسألة، أو webhook، وخطافات يثبّتها لكي يبلّغ وكلاء كثيرون عن حالتهم. ولا يبدأ Aubergine شيئًا من الخارج، ولا يرى من تلقاء نفسه أن وكيلًا ينتظر إلا لـ Claude Code.",
+    "from": "60f6c475b3fb"
+  },
+  "vs.paradev.q1.q": {
+    "text": "هل Aubergine بديل لـ Paradev ‏(Superset)؟",
+    "from": "e9c9295c1cf9"
+  },
+  "vs.paradev.q1.a": {
+    "text": "لتشغيل عدة وكلاء لسطر الأوامر محليًا، كلٌّ في شجرة عمل Git خاصة به، نعم، وكل ميزة مجانية. لكنه ليس بديلًا مطابقًا: ليس في Aubergine تطبيق لسطح المكتب ولا للهاتف، ولا تعليقات على الفروق، ولا طلبات سحب ولا دمج، ولا سحابة.",
+    "from": "8acabc2591e8"
+  },
+  "vs.paradev.q2.q": {
+    "text": "هل Superset هو نفسه Paradev؟",
+    "from": "17d548f38157"
+  },
+  "vs.paradev.q2.a": {
+    "text": "نعم. يقول سجل تغييراته بتاريخ 25 أكتوبر 2026 إن Superset صار Paradev، ويقول ملف README الخاص به إن الأمر لا يزال <code>superset</code>. ولا علاقة لأيٍّ منهما بـ Apache Superset.",
+    "from": "7906ac9c93cc"
+  },
+  "vs.paradev.q3.q": {
+    "text": "هل كلاهما مفتوح المصدر؟",
+    "from": "1d2d2fda932d"
+  },
+  "vs.paradev.q3.a": {
+    "text": "كلاهما بموجب رخصة MIT. ويبيع Paradev أيضًا خططًا لتطبيقات الهاتف والوصول عن بُعد والسحابة والأتمتة؛ ولا يبيع Aubergine شيئًا.",
+    "from": "0f0cd2638d86"
+  },
+  "vs.paradev.q4.q": {
+    "text": "هل يعمل Paradev على Linux أو Windows؟",
+    "from": "9ccc6492d874"
+  },
+  "vs.paradev.q4.a": {
+    "text": "يقول توثيقه macOS، مع إصدار تجريبي لـ Linux، وإن Windows غير متاح بعد. أما Aubergine فمبني لـ macOS، وشُغّل على Linux داخل حاويات فقط، وعلى Windows يعمل داخل WSL 2 فقط، ولم يُجرَّب ذلك.",
+    "from": "733d3a59a51d"
+  },
+  "vs.paradev.mark": {
+    "text": "Aubergine غير تابع لـ Paradev ولا لصانعيه، Superset Inc. ‏Paradev وSuperset اسماهم؛ ولا علاقة لهما ولا لـ Aubergine بـ Apache Superset.",
+    "from": "05f8d7ecd761"
+  },
+  "vs.paradev.c.form": {
+    "text": "تطبيق لسطح المكتب، كان اسمه Superset، مع تطبيقات للهاتف وسحابة",
+    "from": "3054414596e2"
+  },
+  "vs.paradev.c.runs": {
+    "text": "macOS؛ وإصدار تجريبي لـ Linux؛ ولا Windows",
+    "from": "889cdaf4298b"
+  },
+  "vs.paradev.c.price": {
+    "text": "MIT؛ خطة مجانية لشخص واحد، وخطط مدفوعة",
+    "from": "a36a1e0e1592"
+  },
+  "vs.paradev.c.agents": {
+    "text": "Claude Code وCodex وOpenCode وGemini وCursor Agent وأي وكيل لسطر الأوامر",
+    "from": "24eb0a261425"
+  },
+  "vs.paradev.c.layout": {
+    "text": "شريط جانبي واحد لكل جلسة بحسب المشروع، مع علامات تبويب وأجزاء",
+    "from": "a8991633cee6"
+  },
+  "vs.paradev.c.apart": {
+    "text": "شجرة عمل وفرع وطرفية لكل مهمة",
+    "from": "e3443e224b3e"
+  },
+  "vs.paradev.c.closed": {
+    "text": "تواصل الطرفيات العمل في خدمته الخلفية حتى تخرج منه كليًا؛ وإعادة التشغيل تُنهيها",
+    "from": "c8f43d646883"
+  },
+  "vs.paradev.c.waits": {
+    "text": "علامات العمل، ورنين حين ينتهي أحدها، وشارة على شريط Dock",
+    "from": "cd8c2ecb61d3"
+  },
+  "vs.paradev.c.review": {
+    "text": "عارض فروق مع تعليقات وتعديلات، وفحوص طلبات السحب، ودمج",
+    "from": "2ba1d7abad83"
+  },
+  "vs.paradev.c.device": {
+    "text": "تطبيقات iOS وAndroid ووصول عن بُعد، في خطة مدفوعة؛ ولا صفحة ويب",
+    "from": "ff41edf13b81"
+  },
+  "vs.paradev.c.programs": {
+    "text": "أمر، وSDK، وخادم MCP",
+    "from": "4f73909c306d"
+  },
+  "vs.paradev.c.timed": {
+    "text": "أتمتة وفق جدول أو حدث، في خطة مدفوعة",
+    "from": "d0a82cd975d3"
+  },
+  "home.compare.more": {
+    "text": "مقارنة مع Conductor وClaude Squad وcmux وWarp وغيرها",
+    "from": "60e16e373973"
   }
 }

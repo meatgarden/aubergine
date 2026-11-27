@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="hi" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aubergine vs Conductor: मुफ़्त, ओपन सोर्स विकल्प</title>
+<meta name="description" content="दोनों कोडिंग एजेंटों को Git worktree में साथ-साथ चलाते हैं। Conductor क्लाउड वाला Mac ऐप है; Aubergine ओपन सोर्स है और टर्मिनलों को tmux में चलाए रखता है।">
+<link rel="canonical" href="https://thirstyeggplant.com/hi/compare/conductor/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/compare/conductor/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/compare/conductor/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/compare/conductor/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/compare/conductor/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/compare/conductor/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/compare/conductor/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/compare/conductor/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/compare/conductor/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/compare/conductor/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/compare/conductor/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/compare/conductor/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/compare/conductor/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/compare/conductor/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F7F0E4">
+<link rel="icon" href="../../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="Aubergine vs Conductor: मुफ़्त, ओपन सोर्स विकल्प">
+<meta property="og:description" content="दोनों कोडिंग एजेंटों को Git worktree में साथ-साथ चलाते हैं। Conductor क्लाउड वाला Mac ऐप है; Aubergine ओपन सोर्स है और टर्मिनलों को tmux में चलाए रखता है।">
+<meta property="og:url" content="https://thirstyeggplant.com/hi/compare/conductor/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine: टर्मिनलों का एक कैनवस, एक काम में लगा हुआ और एक आपका इंतज़ार करता हुआ">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine: टर्मिनलों का एक कैनवस, एक काम में लगा हुआ और एक आपका इंतज़ार करता हुआ">
+<meta name="twitter:title" content="Aubergine vs Conductor: मुफ़्त, ओपन सोर्स विकल्प">
+<meta name="twitter:description" content="दोनों कोडिंग एजेंटों को Git worktree में साथ-साथ चलाते हैं। Conductor क्लाउड वाला Mac ऐप है; Aubergine ओपन सोर्स है और टर्मिनलों को tmux में चलाए रखता है।">
+<link rel="alternate" type="text/plain" href="../../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">पेज पर जाएँ</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../../"><img src="../../../icon.svg" alt="" width="32" height="32"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="पेज">
+      <ul>
+        <li><a href="../../claude/">Claude Code</a></li>
+        <li><a href="../../chatgpt/">Codex</a></li>
+        <li><a href="../../install/">इंस्टॉल</a></li>
+        <li><a href="../../guides/">गाइड</a></li>
+        <li><a href="../../security/">सुरक्षा</a></li>
+        <li><a href="../../faq/">सवाल-जवाब</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="भाषा: हिन्दी"><span class="lang-long" aria-hidden="true">हिन्दी</span><span class="lang-short" aria-hidden="true">HI</span></summary>
+      <ul class="menu-list"><li><a href="../../../compare/conductor/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="../../../es/compare/conductor/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="../../../pt/compare/conductor/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="../../../fr/compare/conductor/" hreflang="fr" lang="fr" dir="ltr">Français</a></li><li><a href="../../../de/compare/conductor/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="../../../ja/compare/conductor/" hreflang="ja" lang="ja" dir="ltr">日本語</a></li><li><a href="../../../zh/compare/conductor/" hreflang="zh-Hans" lang="zh-Hans" dir="ltr">简体中文</a></li><li><a href="../../../ko/compare/conductor/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="../../../id/compare/conductor/" hreflang="id" lang="id" dir="ltr">Bahasa Indonesia</a></li><li><a href="./" hreflang="hi" lang="hi" dir="ltr" aria-current="true">हिन्दी</a></li><li><a href="../../../bn/compare/conductor/" hreflang="bn" lang="bn" dir="ltr">বাংলা</a></li><li><a href="../../../ar/compare/conductor/" hreflang="ar" lang="ar" dir="rtl">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>मेन्यू</summary>
+      <ul class="menu-list">
+        <li><a href="../../claude/">Claude Code</a></li>
+        <li><a href="../../chatgpt/">Codex</a></li>
+        <li><a href="../../install/">इंस्टॉल</a></li>
+        <li><a href="../../guides/">गाइड</a></li>
+        <li><a href="../../security/">सुरक्षा</a></li>
+        <li><a href="../../faq/">सवाल-जवाब</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="translated">
+  <div class="wrap translated-in">
+    <p>Aubergine खुद अंग्रेज़ी में है: उसके बटन, मेन्यू और तस्वीरें अंग्रेज़ी वाली ही हैं।</p>
+    <p>इस पेज का अंग्रेज़ी से अनुवाद मशीन ने किया है। <a href="https://github.com/thirstyeggplant/aubergine/issues">सुधार भेजें</a>।</p>
+  </div>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://thirstyeggplant.com/hi/compare/conductor/#article",
+      "headline": "Aubergine vs Conductor",
+      "description": "दोनों कोडिंग एजेंटों को Git worktree में साथ-साथ चलाते हैं। Conductor क्लाउड वाला Mac ऐप है; Aubergine ओपन सोर्स है और टर्मिनलों को tmux में चलाए रखता है।",
+      "url": "https://thirstyeggplant.com/hi/compare/conductor/",
+      "mainEntityOfPage": "https://thirstyeggplant.com/hi/compare/conductor/",
+      "datePublished": "2026-11-26",
+      "dateModified": "2026-11-26",
+      "inLanguage": "hi",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "तुलना", "item": "https://thirstyeggplant.com/compare/" },
+        { "@type": "ListItem", "position": 3, "name": "Conductor", "item": "https://thirstyeggplant.com/hi/compare/conductor/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://thirstyeggplant.com/hi/compare/conductor/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "क्या Aubergine, Conductor का विकल्प है?", "acceptedAnswer": { "@type": "Answer", "text": "अपने कंप्यूटर पर कई कमांड-लाइन एजेंट चलाने के लिए, हाँ: हर एजेंट का कैनवस पर एक टर्मिनल होता है और, जब आप माँगें, उसका अपना Git worktree। यह हूबहू बदला नहीं है: Aubergine में न चैट व्यू है, न pull request या merge, न क्लाउड और न फ़ोन ऐप।" } },
+        { "@type": "Question", "name": "क्या Conductor ओपन सोर्स है?", "acceptedAnswer": { "@type": "Answer", "text": "नहीं: उसकी शर्तें उसे प्रोप्राइटरी कहती हैं, और हमें कोई सार्वजनिक रिपॉज़िटरी नहीं मिली। उसका डॉक्यूमेंटेशन कहता है कि लोकल ऐप इस्तेमाल के लिए मुफ़्त है और क्लाउड वर्कस्पेस के लिए पेड प्लान चाहिए। Aubergine, MIT लाइसेंस के तहत है और इसका कोई पेड प्लान नहीं है।" } },
+        { "@type": "Question", "name": "क्या Conductor, Linux या Windows पर चलता है?", "acceptedAnswer": { "@type": "Answer", "text": "उसका डॉक्यूमेंटेशन कहता है कि यह अभी Windows या Linux के लिए उपलब्ध नहीं है। Aubergine macOS के लिए बना है, Linux पर सिर्फ़ कंटेनरों में चलाया गया है, और Windows पर सिर्फ़ WSL 2 के अंदर चलता है, जिसे आज़माया नहीं गया है।" } },
+        { "@type": "Question", "name": "क्या मैं Conductor और Aubergine साथ में इस्तेमाल कर सकता हूँ?", "acceptedAnswer": { "@type": "Answer", "text": "कुछ नहीं रोकता: दोनों एक ही रिपॉज़िटरी के Git worktree में काम करते हैं, हर एक अपने बनाता है। हमने दोनों को साथ-साथ नहीं चलाया है।" } }
+      ]
+    }
+  ]
+}
+</script>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="आप कहाँ हैं"><ol><li><a href="../../">Aubergine</a></li><li><a href="../">तुलना</a></li><li>Conductor</li></ol></nav>
+    <h1>Aubergine vs Conductor</h1>
+    <p class="lead">दोनों एक साथ कई कोडिंग एजेंट चलाते हैं, हर एक अपने Git worktree में। Conductor चैट, एक diff व्यूअर और क्लाउड वाला एक Mac ऐप है। Aubergine आपके अपने कंप्यूटर पर एक मुफ़्त, ओपन सोर्स सर्वर है जो ब्राउज़र पेज में साधारण टर्मिनलों को साथ-साथ दिखाता है।</p>
+  </div>
+</header>
+<div class="wrap page-body">
+  <div class="prose">
+    <p class="note note-strong"><strong>यह कहाँ से है।</strong> यहाँ Conductor के बारे में जो कहा गया है, वह <a href="https://docs.conductor.build/">उसके डॉक्यूमेंटेशन</a> और <a href="https://www.conductor.build/changelog">उसके चेंजलॉग</a> से है, जैसे 26 नवंबर 2026 को पढ़ा गया। हमने Conductor नहीं चलाया है। अगर कुछ गलत या पुराना है, तो <a href="https://github.com/thirstyeggplant/aubergine/issues">हमें बताएँ</a>।</p>
+    <p class="note"><strong>Conductor कहाँ खड़ा है।</strong> 4 नवंबर 2026 को उसके चेंजलॉग ने कहा कि Conductor, Meta से जुड़ रहा है और धीरे-धीरे बंद होगा; 13 नवंबर को उसने कहा कि Conductor बंद नहीं हो रहा। जब यह लिखा गया, तब उसकी साइट के कुछ हिस्सों पर अभी भी पहला संदेश था। वह अब कहाँ खड़ा है, इसके लिए उसका चेंजलॉग पढ़ें।</p>
+
+    <h2>कौन-सा चुनें</h2>
+    <p><strong>Conductor चुनें</strong> अगर आप ऐसा Mac ऐप चाहते हैं जो किसी टास्क को प्रॉम्प्ट से merge हुए pull request तक ले जाए, ऐसे काम के लिए क्लाउड के साथ जो आपका Mac बंद होने पर भी चलता रहे।</p>
+    <p><strong>Aubergine चुनें</strong> अगर आप अपने एजेंटों को सादे टर्मिनलों के रूप में चाहते हैं जिन्हें आप एक साथ देख सकें, जो विंडो बंद होने पर tmux में चलते रहें, बिना किसी साइन-इन के और खुले सोर्स के साथ।</p>
+
+    <h2>Conductor क्या है</h2>
+    <p>उसके अपने वर्णन के अनुसार, एक Mac ऐप जो आपके कोडबेस पर कई कोडिंग एजेंट साथ-साथ चलाता है। काम का हर हिस्सा एक वर्कस्पेस है: एक ब्रांच पर एक Git worktree, चैट, टर्मिनल और ब्राउज़र टैब के साथ। यह Claude Code, Codex, Cursor और OpenCode को उन साइन-इन के साथ चलाता है जो आपके Mac पर पहले से हैं, और इसमें एक diff व्यूअर, pull request, एक iOS ऐप और एक पेड क्लाउड है जहाँ एजेंट सैंडबॉक्स में चलते हैं।</p>
+
+    <h2>साथ-साथ</h2>
+    <div class="table">
+      <table class="table-stack">
+        <thead><tr><th>क्या</th><th>Conductor</th><th>Aubergine</th></tr></thead>
+        <tbody>
+          <tr><td>यह क्या है</td><td data-label="Conductor">एक Mac डेस्कटॉप ऐप, होस्ट किए गए क्लाउड और एक iOS ऐप के साथ</td><td data-label="Aubergine">आपके अपने कंप्यूटर पर एक सर्वर और आपके ब्राउज़र में एक पेज</td></tr>
+          <tr><td>कहाँ चलता है</td><td data-label="Conductor">सिर्फ़ macOS</td><td data-label="Aubergine">macOS; Linux सिर्फ़ कंटेनरों में; Windows, WSL 2 के अंदर, आज़माया नहीं गया। tmux और Node.js चाहिए</td></tr>
+          <tr><td>सोर्स और कीमत</td><td data-label="Conductor">बंद सोर्स; लोकल ऐप मुफ़्त है, उसके क्लाउड के लिए पेड प्लान चाहिए</td><td data-label="Aubergine">MIT, मुफ़्त; न पेड प्लान, न अकाउंट</td></tr>
+          <tr><td>एजेंट</td><td data-label="Conductor">Claude Code, Codex, Cursor और OpenCode; उसके टर्मिनल मोड में कोई भी कमांड</td><td data-label="Aubergine">कोई भी कमांड-लाइन एजेंट; Claude Code के लिए खुद से और भी</td></tr>
+          <tr><td>एक साथ कई</td><td data-label="Conductor">वर्कस्पेस का एक साइडबार, हर एक में चैट, टर्मिनल और ब्राउज़र टैब</td><td data-label="Aubergine">एक कैनवस पर साथ-साथ टर्मिनल, और उन सबकी एक सूची</td></tr>
+          <tr><td>एजेंटों को अलग रखना</td><td data-label="Conductor">हर वर्कस्पेस के लिए एक Git worktree और ब्रांच; उसके क्लाउड में सैंडबॉक्स</td><td data-label="Aubergine">किसी टर्मिनल के लिए उसकी अपनी ब्रांच पर एक Git worktree, जब आप माँगें</td></tr>
+          <tr><td>अगर आप इसे बंद करें</td><td data-label="Conductor">लोकल सेशन ऐप के साथ खत्म होते हैं; क्लाउड सेशन चलते रहते हैं</td><td data-label="Aubergine">टर्मिनल tmux में चलते रहते हैं; कंप्यूटर का रीस्टार्ट जो चल रहा था उसे खत्म कर देता है</td></tr>
+          <tr><td>जब कोई एजेंट इंतज़ार करे या पूरा हो</td><td data-label="Conductor">पूरा होने की आवाज़ें</td><td data-label="Aubergine">टर्मिनल का रंग, ऊपर एक गिनती, अगले पर जाने की एक key, खुले पेज से नोटिफ़िकेशन; कोई आवाज़ नहीं</td></tr>
+          <tr><td>बदलावों की समीक्षा</td><td data-label="Conductor">एजेंट को वापस टिप्पणियों वाला diff व्यूअर, pull request, चेक, merge</td><td data-label="Aubergine">फ़ाइल दर फ़ाइल क्या बदला; न कमिट, न push, न pull request, न merge</td></tr>
+          <tr><td>दूसरे डिवाइस से</td><td data-label="Conductor">उसके रिले से एक iOS ऐप, Mac जागा हुआ और ऐप खुला होने पर</td><td data-label="Aubergine">एक ब्राउज़र जिसे आप जोड़ते हैं, आपके चलाए प्रॉक्सी के ज़रिए; कोई ऐप नहीं; असली फ़ोन पर आज़माया नहीं गया</td></tr>
+          <tr><td>प्रोग्रामों के लिए</td><td data-label="Conductor">उसके क्लाउड वर्कस्पेस के लिए एक API और एक MCP सर्वर, एक कमांड</td><td data-label="Aubergine">स्कोप वाले टोकन के साथ एक HTTP API, <code>aubergine</code> कमांड, एक MCP सर्वर</td></tr>
+          <tr><td>क्यू और शेड्यूल</td><td data-label="Conductor">संदेशों की एक क्यू; उसके क्लाउड में शेड्यूल किए गए रूटीन</td><td data-label="Aubergine">सीमा वाली एक क्यू, दिन के समय के हिसाब से शेड्यूल, मंज़ूरी वाले वर्कफ़्लो</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>वे कहाँ अलग हैं</h2>
+    <p><strong>टर्मिनल, चैट नहीं।</strong> Conductor एजेंट को वर्कस्पेस में एक चैट के रूप में दिखाता है, बगल में एक टर्मिनल मोड के साथ। Aubergine एजेंट का अपना टर्मिनल दिखाता है, जैसे वह किसी भी टर्मिनल ऐप में चलता है, और उनमें से कई को एक कैनवस पर सजाता है जिसे आप खिसकाते और ज़ूम करते हैं।</p>
+    <p><strong>इसे बंद करने से क्या खत्म होता है।</strong> Conductor का डॉक्यूमेंटेशन कहता है कि ऐप बंद करने या Mac शट डाउन करने पर लोकल सेशन खत्म हो जाते हैं, और क्लाउड सेशन चलते रहते हैं। Aubergine में हर टर्मिनल एक tmux सेशन है: ब्राउज़र बंद करने या Aubergine रोकने से कुछ खत्म नहीं होता। कंप्यूटर का रीस्टार्ट दोनों में खत्म कर देता है।</p>
+    <p><strong>आपके कंप्यूटर के बाहर कुछ नहीं।</strong> Conductor एक अकाउंट, एक क्लाउड, अपने फ़ोन ऐप के लिए एक रिले और इस्तेमाल के एनालिटिक्स डॉक्यूमेंट करता है। Aubergine में न कोई अकाउंट है, न इसकी अपनी कोई सर्विस: सर्वर <code>127.0.0.1</code> पर सुनता है, और दूसरे डिवाइस से इस्तेमाल आपके चलाए प्रॉक्सी से होकर जाता है।</p>
+
+    <h2>Conductor में क्या है जो Aubergine में नहीं है</h2>
+    <ul>
+      <li>एक diff व्यूअर जिसमें आप लाइनों पर टिप्पणी करते हैं और टिप्पणियाँ एजेंट को वापस भेजते हैं, फिर pull request, चेक और merge। Aubergine वर्किंग कॉपी में दिखाता है कि क्या बदला और कभी कमिट, push या merge नहीं करता।</li>
+      <li>एक क्लाउड जहाँ आपका Mac बंद होने पर भी एजेंट चलते रहते हैं, और वहाँ शेड्यूल पर चलने वाले रूटीन। Aubergine के शेड्यूल आपके कंप्यूटर पर चलते हैं, जब वह चालू हो।</li>
+      <li>एक iOS ऐप और पूरा होने की आवाज़ें। Aubergine में कोई ऐप नहीं है और यह कोई आवाज़ नहीं बजाता।</li>
+    </ul>
+
+    <h2>सवाल</h2>
+    <div class="questions">
+      <details><summary>क्या Aubergine, Conductor का विकल्प है?</summary><p>अपने कंप्यूटर पर कई कमांड-लाइन एजेंट चलाने के लिए, हाँ: हर एजेंट का कैनवस पर एक टर्मिनल होता है और, जब आप माँगें, उसका अपना Git worktree। यह हूबहू बदला नहीं है: Aubergine में न चैट व्यू है, न pull request या merge, न क्लाउड और न फ़ोन ऐप।</p></details>
+      <details><summary>क्या Conductor ओपन सोर्स है?</summary><p>नहीं: उसकी शर्तें उसे प्रोप्राइटरी कहती हैं, और हमें कोई सार्वजनिक रिपॉज़िटरी नहीं मिली। उसका डॉक्यूमेंटेशन कहता है कि लोकल ऐप इस्तेमाल के लिए मुफ़्त है और क्लाउड वर्कस्पेस के लिए पेड प्लान चाहिए। Aubergine, MIT लाइसेंस के तहत है और इसका कोई पेड प्लान नहीं है।</p></details>
+      <details><summary>क्या Conductor, Linux या Windows पर चलता है?</summary><p>उसका डॉक्यूमेंटेशन कहता है कि यह अभी Windows या Linux के लिए उपलब्ध नहीं है। Aubergine macOS के लिए बना है, Linux पर सिर्फ़ कंटेनरों में चलाया गया है, और Windows पर सिर्फ़ WSL 2 के अंदर चलता है, जिसे आज़माया नहीं गया है।</p></details>
+      <details><summary>क्या मैं Conductor और Aubergine साथ में इस्तेमाल कर सकता हूँ?</summary><p>कुछ नहीं रोकता: दोनों एक ही रिपॉज़िटरी के Git worktree में काम करते हैं, हर एक अपने बनाता है। हमने दोनों को साथ-साथ नहीं चलाया है।</p></details>
+    </div>
+    <p>Aubergine का Conductor या उसके बनाने वालों से कोई संबंध नहीं है। Conductor उनके प्रोडक्ट का नाम है: उसकी शर्तों में Melty Labs, Inc. का नाम है, और उसकी साइट Conductor from Meta कहती है।</p>
+  </div>
+</div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">पाँच मिनट में तैयार</h2>
+    <div class="close-do">
+      <p>आपको macOS चाहिए, tmux 3.2 या नए और Node.js 22 या नए के साथ। <code>brew install tmux node</code> दोनों ले आता है।</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="कॉपी हो गया" aria-live="polite" hidden>कॉपी करें</button></p>
+      <p class="actions"><a class="button" href="../../install/">इंस्टॉल करें</a><a class="button button-quiet" href="../">सातों टूल की तुलना</a></p>
+    </div>
+  </div>
+</section>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <a class="mark" href="../../"><img src="../../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav aria-label="सभी पेज">
+      <ul class="foot-links">
+        <li><a href="../../">होम</a></li>
+        <li><a href="../../claude/">Claude Code</a></li>
+        <li><a href="../../chatgpt/">Codex और ChatGPT</a></li>
+        <li><a href="../../install/">इंस्टॉल</a></li>
+        <li><a href="../../guides/">गाइड</a></li>
+        <li><a href="../../run-multiple-coding-agents/">कई एजेंट चलाएँ</a></li>
+        <li><a href="../../working-copies/">वर्किंग कॉपी</a></li>
+        <li><a href="../../queue-and-schedules/">क्यू और शेड्यूल</a></li>
+        <li><a href="../">तुलना</a></li>
+        <li><a href="../../security/">सुरक्षा</a></li>
+        <li><a href="../../roadmap/">रोडमैप</a></li>
+        <li><a href="../../faq/">सवाल-जवाब</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">Aubergine मुफ़्त और ओपन सोर्स है, <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">MIT लाइसेंस</a> के तहत, और आपके अपने कंप्यूटर पर चलता है।</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    if (!navigator.clipboard) return;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+document.querySelectorAll('details.menu').forEach(function (menu) {
+  menu.addEventListener('toggle', function () {
+    if (!menu.open) return;
+    document.querySelectorAll('details.menu[open]').forEach(function (other) { if (other !== menu) other.open = false; });
+  });
+});
+</script>
+</body>
+</html>

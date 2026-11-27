@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Aubergine : tous vos terminaux sur un seul canevas, avec les agents que vous utilisez déjà</title>
-<meta name="description" content="Boostez votre terminal : Aubergine place tous vos terminaux côte à côte sur un seul canevas, dans votre navigateur. Lancez-en autant que vous voulez, avec les agents et les modèles que vous utilisez déjà, et voyez lequel a besoin de vous. Gratuite, locale, open source.">
+<title>Aubergine : centre de contrôle des terminaux et agents IA</title>
+<meta name="description" content="Un tableau de bord web pour lancer et gérer Claude Code, Codex et des terminaux côte à côte. Voyez quel agent vous attend. Gratuit, local, open source.">
 <link rel="canonical" href="https://thirstyeggplant.com/fr/">
 <link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/">
 <link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/">
@@ -27,8 +27,8 @@
 <link rel="stylesheet" href="../style.css">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Aubergine">
-<meta property="og:title" content="Aubergine : tous vos terminaux sur un seul canevas, avec les agents que vous utilisez déjà">
-<meta property="og:description" content="Boostez votre terminal : Aubergine place tous vos terminaux côte à côte sur un seul canevas, dans votre navigateur. Lancez-en autant que vous voulez, avec les agents et les modèles que vous utilisez déjà, et voyez lequel a besoin de vous. Gratuite, locale, open source.">
+<meta property="og:title" content="Aubergine : centre de contrôle des terminaux et agents IA">
+<meta property="og:description" content="Un tableau de bord web pour lancer et gérer Claude Code, Codex et des terminaux côte à côte. Voyez quel agent vous attend. Gratuit, local, open source.">
 <meta property="og:url" content="https://thirstyeggplant.com/fr/">
 <meta property="og:image" content="https://thirstyeggplant.com/og.png">
 <meta property="og:image:width" content="1200">
@@ -37,8 +37,8 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
 <meta name="twitter:image:alt" content="Aubergine : un canevas de terminaux, l’un occupé et l’autre qui vous attend">
-<meta name="twitter:title" content="Aubergine : tous vos terminaux sur un seul canevas, avec les agents que vous utilisez déjà">
-<meta name="twitter:description" content="Boostez votre terminal : Aubergine place tous vos terminaux côte à côte sur un seul canevas, dans votre navigateur. Lancez-en autant que vous voulez, avec les agents et les modèles que vous utilisez déjà, et voyez lequel a besoin de vous. Gratuite, locale, open source.">
+<meta name="twitter:title" content="Aubergine : centre de contrôle des terminaux et agents IA">
+<meta name="twitter:description" content="Un tableau de bord web pour lancer et gérer Claude Code, Codex et des terminaux côte à côte. Voyez quel agent vous attend. Gratuit, local, open source.">
 <link rel="alternate" type="text/plain" href="../llms.txt" title="llms.txt">
 </head>
 <body>
@@ -108,8 +108,8 @@
       "@type": "WebPage",
       "@id": "https://thirstyeggplant.com/fr/#webpage",
       "url": "https://thirstyeggplant.com/fr/",
-      "name": "Aubergine : tous vos terminaux sur un seul canevas, avec les agents que vous utilisez déjà",
-      "description": "Boostez votre terminal : Aubergine place tous vos terminaux côte à côte sur un seul canevas, dans votre navigateur. Lancez-en autant que vous voulez, avec les agents et les modèles que vous utilisez déjà, et voyez lequel a besoin de vous. Gratuite, locale, open source.",
+      "name": "Aubergine : centre de contrôle des terminaux et agents IA",
+      "description": "Un tableau de bord web pour lancer et gérer Claude Code, Codex et des terminaux côte à côte. Voyez quel agent vous attend. Gratuit, local, open source.",
       "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
       "about": { "@id": "https://thirstyeggplant.com/#software" },
       "primaryImageOfPage": "https://thirstyeggplant.com/og.png",
@@ -119,9 +119,9 @@
       "@type": "SoftwareApplication",
       "@id": "https://thirstyeggplant.com/#software",
       "name": "Aubergine",
-      "description": "Aubergine place tous vos terminaux côte à côte sur un seul canevas, dans votre navigateur. Lancez-en autant que vous voulez, avec les agents et les modèles que vous utilisez déjà. Elle n’a pas de modèle à elle et ne vous demande jamais de clé.",
+      "description": "Lancez Claude Code, Codex et des terminaux ordinaires côte à côte dans un seul tableau de bord, dans votre navigateur. Aubergine n’a pas de modèle à elle et ne vous demande jamais de clé.",
       "applicationCategory": "DeveloperApplication",
-      "applicationSubCategory": "Multiplexeur de terminaux et espace de travail pour agents",
+      "applicationSubCategory": "Tableau de bord de gestion des terminaux et des agents de code",
       "operatingSystem": "macOS",
       "softwareRequirements": "tmux 3.2 ou plus récent, Node.js 22 ou plus récent",
       "url": "https://thirstyeggplant.com/",
@@ -180,14 +180,14 @@
 <section class="hero" aria-labelledby="hero-h">
   <div class="wrap">
     <ul class="kicker">
-      <li>Boostez votre terminal</li>
+      <li>Repensez votre terminal</li>
       <li>Gratuite</li>
       <li>Open source</li>
       <li>Tourne sur votre ordinateur</li>
     </ul>
-    <h1 id="hero-h"><span class="line">Tous vos terminaux,</span> <span class="line">côte à côte.</span> <span class="line">Apportez vos propres <em>agents</em>.</span></h1>
+    <h1 id="hero-h"><span class="line">Le centre de contrôle</span> <span class="line">de vos terminaux</span> <span class="line">et <em>agents</em> de code IA.</span></h1>
     <div class="hero-under">
-      <p class="lead">Aubergine place tous vos terminaux côte à côte sur un seul canevas, dans votre navigateur. Lancez-en autant que vous voulez, avec les agents et les modèles que vous utilisez déjà. Elle n’a pas de modèle à elle et ne vous demande jamais de clé.</p>
+      <p class="lead">Lancez Claude Code, Codex et des terminaux ordinaires côte à côte dans un seul tableau de bord, dans votre navigateur. Aubergine n’a pas de modèle à elle et ne vous demande jamais de clé.</p>
       <div class="hero-do">
         <p class="cmd"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="Copié" aria-live="polite" hidden>Copier</button></p>
         <p class="actions"><a class="button" href="install/">Installer</a><a class="button button-quiet" href="https://github.com/thirstyeggplant/aubergine">Lire le code source</a></p>
@@ -210,7 +210,7 @@
 <section class="band band-cream" id="powers" aria-labelledby="powers-h">
   <div class="wrap">
     <div class="section-head">
-      <h2 id="powers-h">Donnez des super-pouvoirs à vos terminaux</h2>
+      <h2 id="powers-h">La gestion des terminaux, repensée</h2>
       <p class="intro">Les terminaux que vous utilisez déjà, avec ce qui leur manquait : une place pour se tenir côte à côte, une mémoire, et un moyen de vous prévenir quand ils ont besoin de vous.</p>
     </div>
     <ol class="powers">
@@ -326,6 +326,7 @@
     <div class="section-head">
       <h2 id="faq-h">Questions</h2>
       <p class="intro"><a class="onward" href="faq/">Toutes les questions</a></p>
+      <p class="intro"><a class="onward" href="compare/">Comparée à Conductor, Claude Squad, cmux, Warp et d’autres</a></p>
     </div>
     <div class="questions">
       <details><summary>Qu’est-ce qu’Aubergine ?</summary><p>Un canevas local de sessions de terminal, dans le navigateur. Chaque terminal est un nœud que vous pouvez disposer et utiliser, pour faire tourner plusieurs agents de code à la fois et voir lequel vous attend.</p></details>
@@ -373,6 +374,7 @@
         <li><a href="run-multiple-coding-agents/">Plusieurs agents à la fois</a></li>
         <li><a href="working-copies/">Copies de travail</a></li>
         <li><a href="queue-and-schedules/">File d’attente et planifications</a></li>
+        <li><a href="compare/">Comparer</a></li>
         <li><a href="security/">Sécurité</a></li>
         <li><a href="roadmap/">Feuille de route</a></li>
         <li><a href="faq/">FAQ</a></li>

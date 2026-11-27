@@ -116,24 +116,24 @@
     "from": "21c2472673d7"
   },
   "home.meta.title": {
-    "text": "Aubergine: todos os seus terminais em um só canvas, com os agentes que você já usa",
-    "from": "620bab21c0b6"
+    "text": "Aubergine: central de controle de terminais e agentes de IA",
+    "from": "cd63b652eab2"
   },
   "home.meta.description": {
-    "text": "Turbine seu terminal: O Aubergine coloca todos os seus terminais lado a lado em um só canvas, no seu navegador. Rode quantos quiser, com os agentes e modelos que você já usa, e veja qual precisa de você. Grátis, local e de código aberto.",
-    "from": "10a391e12690"
+    "text": "Um painel no navegador para rodar e gerenciar Claude Code, Codex e terminais lado a lado. Veja qual agente precisa de você. Grátis, local e de código aberto.",
+    "from": "ff38fa74a3da"
   },
   "home.ld.category": {
-    "text": "Multiplexador de terminais e espaço de trabalho para agentes",
-    "from": "d32b7b10eecd"
+    "text": "Painel de gerenciamento de terminais e agentes de programação",
+    "from": "ec2b095cd97a"
   },
   "home.ld.requires": {
     "text": "tmux 3.2 ou mais recente, Node.js 22 ou mais recente",
     "from": "6fadbd03c20d"
   },
   "home.hero.tag.lead": {
-    "text": "Turbine seu terminal",
-    "from": "eb13de4649f0"
+    "text": "Repense seu terminal",
+    "from": "9c559cd8311b"
   },
   "home.hero.tag.free": {
     "text": "Grátis",
@@ -148,20 +148,20 @@
     "from": "cd90f9395587"
   },
   "home.hero.title.a": {
-    "text": "Todos os seus terminais,",
-    "from": "8dd2aa1cda63"
+    "text": "Central de controle",
+    "from": "e38bc0efbbc7"
   },
   "home.hero.title.b": {
-    "text": "lado a lado.",
-    "from": "eb95eacfe17a"
+    "text": "para seus terminais e",
+    "from": "45121d84f19b"
   },
   "home.hero.title.c": {
-    "text": "Traga seus próprios <em>agentes</em>.",
-    "from": "4728f2abc24b"
+    "text": "<em>agentes</em> de código com IA.",
+    "from": "734e3af35ed0"
   },
   "home.hero.lead": {
-    "text": "O Aubergine coloca todos os seus terminais lado a lado em um só canvas, no seu navegador. Rode quantos quiser, com os agentes e modelos que você já usa. Ele não tem modelo próprio e nunca pede uma chave.",
-    "from": "c8c8b75e9e20"
+    "text": "Rode Claude Code, Codex e terminais comuns lado a lado em um só painel no seu navegador. O Aubergine não tem modelo próprio e nunca pede uma chave.",
+    "from": "159e09c1ca4d"
   },
   "home.hero.after": {
     "text": "Depois, <code>aubergine start --open</code>. Para macOS, com tmux 3.2 ou mais recente e Node.js 22 ou mais recente.",
@@ -184,8 +184,8 @@
     "from": "2288db7c750f"
   },
   "home.powers.title": {
-    "text": "Dê superpoderes aos seus terminais",
-    "from": "588a8ab51054"
+    "text": "Gerenciamento de terminais, repensado",
+    "from": "9b3c23b70200"
   },
   "home.powers.lead": {
     "text": "Os terminais que você já usa, com o que faltava a eles: um lugar para ficarem lado a lado, uma memória e um jeito de avisar quando precisam de você.",
@@ -584,12 +584,12 @@
     "from": "5c6d1db70932"
   },
   "claude.meta.title": {
-    "text": "Claude Code no Aubergine | Aubergine",
-    "from": "964ec2c2f3df"
+    "text": "Rode sessões do Claude Code lado a lado | Aubergine",
+    "from": "3c61aa83b994"
   },
   "claude.meta.description": {
-    "text": "O que o Aubergine faz sozinho pelo Claude Code: iniciá-lo pelo menu, ver quando ele espera, retomar uma conversa, conversas anteriores, como ele está configurado e ferramentas.",
-    "from": "53c5a33c5a7d"
+    "text": "Rode várias sessões do Claude Code lado a lado. O Aubergine as inicia, mostra qual espera por você, retoma conversas e lista as anteriores.",
+    "from": "6b7dc6fd962d"
   },
   "claude.title": {
     "text": "O que o Aubergine faz pelo Claude Code",
@@ -760,12 +760,12 @@
     "from": "cdae060f0648"
   },
   "chatgpt.meta.title": {
-    "text": "Codex e ChatGPT no Aubergine | Aubergine",
-    "from": "8dcd1dde8945"
+    "text": "Agentes do Codex lado a lado em terminais | Aubergine",
+    "from": "c19dbd4b8744"
   },
   "chatgpt.meta.description": {
-    "text": "O Codex, o agente de programação de linha de comando da OpenAI, roda em um terminal do Aubergine como qualquer programa. O que funciona hoje, o que ele pode informar pelos comandos aubergine e o que é feito só para o Claude Code.",
-    "from": "6f8c78d52c06"
+    "text": "O Codex, agente de programação da OpenAI para a linha de comando, roda em um terminal do Aubergine. O que funciona hoje e o que é feito só para o Claude Code.",
+    "from": "ce1a16eaf055"
   },
   "chatgpt.crumb": {
     "text": "Codex e ChatGPT",
@@ -1168,8 +1168,8 @@
     "from": "82c0a75bef8c"
   },
   "windows.meta.description": {
-    "text": "O Aubergine não roda no próprio Windows, mas pode rodar dentro do WSL 2 e ser usado por um navegador do Windows. Os passos, o que foi testado e o que não foi, e soluções.",
-    "from": "eef730b3d958"
+    "text": "O Aubergine não roda no próprio Windows. Ele roda dentro do WSL 2 e é usado por um navegador do Windows: os passos, o que foi testado e soluções.",
+    "from": "ec5595885249"
   },
   "windows.crumb": {
     "text": "Windows com WSL",
@@ -1316,8 +1316,8 @@
     "from": "6ee5544f775e"
   },
   "guides.meta.title": {
-    "text": "Guias do Aubergine | Aubergine",
-    "from": "0d501fb6af2e"
+    "text": "Guias de agentes de programação em terminais | Aubergine",
+    "from": "f891421fd993"
   },
   "guides.meta.description": {
     "text": "Guias para rodar vários agentes de programação com o Aubergine: a visão geral, Claude Code e Codex, cópias de trabalho, e a fila e os agendamentos.",
@@ -1576,12 +1576,12 @@
     "from": "60142c410708"
   },
   "copies.meta.title": {
-    "text": "Dois agentes de programação em um repositório com cópias de trabalho | Aubergine",
-    "from": "22fa024200af"
+    "text": "Dois agentes de programação em um repositório | Aubergine",
+    "from": "bdb9a97d9a45"
   },
   "copies.meta.description": {
-    "text": "Uma cópia de trabalho dá a cada agente seu próprio checkout e branch de um repositório, para que dois agentes nunca editem os mesmos arquivos e você possa ler o trabalho de cada um separadamente.",
-    "from": "a293deb1c990"
+    "text": "Uma cópia de trabalho dá a cada agente sua worktree e branch do Git: dois agentes nunca editam os mesmos arquivos e você lê o trabalho de cada um à parte.",
+    "from": "0f5b56278a4e"
   },
   "copies.crumb": {
     "text": "Cópias de trabalho",
@@ -1764,12 +1764,12 @@
     "from": "515aa3442054"
   },
   "keep.meta.title": {
-    "text": "Mantenha seus terminais após uma falha, uma reinicialização ou uma atualização | Aubergine",
-    "from": "d0521ba83d02"
+    "text": "Mantenha seus terminais após reiniciar ou travar | Aubergine",
+    "from": "632ab04b6eba"
   },
   "keep.meta.description": {
-    "text": "O que acontece com seus terminais e agentes de código quando o navegador fecha, quando o Aubergine reinicia e quando o computador trava, reinicia ou se atualiza durante a noite, e como retomar de onde você parou.",
-    "from": "4f824d2bcf4e"
+    "text": "O que fechar o navegador, reiniciar o Aubergine e reiniciar o computador fazem com seus terminais e agentes, e como retomar de onde você parou.",
+    "from": "27a4a64aebc5"
   },
   "keep.crumb": {
     "text": "Depois de reiniciar",
@@ -2008,12 +2008,12 @@
     "from": "730944daab4e"
   },
   "alive.meta.title": {
-    "text": "Mantenha um processo rodando depois de fechar o terminal | Aubergine",
-    "from": "b6893102f4dc"
+    "text": "Manter um processo vivo após fechar o terminal | Aubergine",
+    "from": "1cb4c894cd65"
   },
   "alive.meta.description": {
-    "text": "Fechar uma janela de terminal encerra o que roda nela. As respostas de sempre são nohup, disown, screen e tmux; o Aubergine roda cada terminal no tmux para você, então fechar o navegador não encerra nada.",
-    "from": "91fc698775ac"
+    "text": "Fechar um terminal encerra o que roda nele. As respostas de sempre são nohup, disown, screen e tmux. O Aubergine roda cada terminal no tmux para você.",
+    "from": "697912690f11"
   },
   "alive.crumb": {
     "text": "Mantenha rodando",
@@ -2168,8 +2168,8 @@
     "from": "6298f70cc7f8"
   },
   "notify.meta.description": {
-    "text": "Veja de relance qual terminal do Claude Code está trabalhando, esperando por você ou terminou: hooks que o Aubergine gera, o contador de For you, uma tecla para o próximo terminal que espera e notificações da página aberta.",
-    "from": "ec167ae38aa3"
+    "text": "Veja qual terminal do Claude Code trabalha, espera por você ou terminou: um contador do que espera, uma tecla para ir ao próximo e notificações do navegador.",
+    "from": "538211348bf4"
   },
   "notify.crumb": {
     "text": "Terminou ou esperando",
@@ -2308,12 +2308,12 @@
     "from": "60204a04f28a"
   },
   "resume.meta.title": {
-    "text": "Retome uma conversa do Claude Code depois de reiniciar | Aubergine",
-    "from": "25d7c94055ab"
+    "text": "Retomar uma sessão do Claude Code após reiniciar | Aubergine",
+    "from": "03470fcd8946"
   },
   "resume.meta.description": {
-    "text": "claude --continue e --resume trazem uma conversa de volta se você estiver na pasta certa. O Aubergine lembra em qual conversa cada terminal estava, oferece Resume agent e lista as conversas anteriores por pasta.",
-    "from": "9c3fb52f17de"
+    "text": "claude --continue e --resume precisam da pasta certa. O Aubergine lembra a conversa de cada terminal, oferece Resume agent e lista as anteriores.",
+    "from": "f60b9e354755"
   },
   "resume.crumb": {
     "text": "Retomar uma conversa",
@@ -2448,12 +2448,12 @@
     "from": "82d3fe458522"
   },
   "many.meta.title": {
-    "text": "Ache o terminal certo quando você tem abas demais | Aubergine",
-    "from": "710b13634a0f"
+    "text": "Abas de terminal demais? Ache a certa | Aubergine",
+    "from": "e727b8c72939"
   },
   "many.meta.description": {
-    "text": "Abas de terminal demais, todas chamadas zsh? O Aubergine põe cada terminal em um canvas e em uma única lista com o estado em palavras, filtros, tags, busca na saída dos terminais e um terminal sozinho em uma aba do navegador.",
-    "from": "0d77fee497f4"
+    "text": "Abas de terminal demais, todas chamadas zsh? O Aubergine põe cada terminal em um canvas e em uma lista, com estado, filtros, tags e busca na saída.",
+    "from": "0d52d247f772"
   },
   "many.crumb": {
     "text": "Terminais demais",
@@ -2580,8 +2580,8 @@
     "from": "a731849612b9"
   },
   "tmux.meta.description": {
-    "text": "Shells que sobrevivem à janela, sem tecla de prefixo nem .tmux.conf. O Aubergine roda o tmux para você no próprio socket, com a roda do mouse, copiar e colar e o redimensionamento funcionando como em qualquer terminal.",
-    "from": "d876f30b4bcb"
+    "text": "Shells que sobrevivem à janela, sem tecla de prefixo nem .tmux.conf. O Aubergine roda o tmux para você; a roda do mouse, copiar e colar funcionam como sempre.",
+    "from": "de322a70f2bb"
   },
   "tmux.crumb": {
     "text": "tmux sem tmux",
@@ -2816,8 +2816,8 @@
     "from": "5e05181dcbf3"
   },
   "phone.meta.description": {
-    "text": "Acessar o Aubergine pelo navegador de um celular: HTTPS no mesmo computador, um endereço nas configurações, cada dispositivo pareado com um código de uso único ou um QR code, e revogado quando você quiser. Executado uma vez em um Mac; não testado em um celular.",
-    "from": "4f87f330c4d4"
+    "text": "O Aubergine no navegador do celular: HTTPS no seu computador, cada dispositivo pareado com um código de uso único. Rodado uma vez em um Mac; não no celular.",
+    "from": "b82b5a179985"
   },
   "phone.crumb": {
     "text": "Pelo celular",
@@ -2944,8 +2944,8 @@
     "from": "2c9ecf2e9214"
   },
   "queue.meta.title": {
-    "text": "A fila, a lista For you e os agendamentos | Aubergine",
-    "from": "aaf91b58a021"
+    "text": "Fila de tarefas e agendamentos para agentes | Aubergine",
+    "from": "3fb36f54544d"
   },
   "queue.meta.description": {
     "text": "Escreva uma tarefa uma vez e deixe um agente livre pegá-la, veja em uma só lista tudo o que espera por você e rode tarefas em horários definidos com agendamentos.",
@@ -3564,8 +3564,8 @@
     "from": "25c43f0bde14"
   },
   "faq.meta.title": {
-    "text": "Perguntas frequentes | Aubergine",
-    "from": "0956334109a5"
+    "text": "FAQ do Aubergine: agentes, privacidade e requisitos",
+    "from": "c026a239ae64"
   },
   "faq.meta.description": {
     "text": "Respostas sobre o Aubergine: o que é, do que precisa, se é privado, como funciona com agentes de programação e o que está planejado.",
@@ -3742,5 +3742,1253 @@
   "404.faq": {
     "text": "Perguntas frequentes",
     "from": "e956a9404b46"
+  },
+  "site.foot.compare": {
+    "text": "Comparar",
+    "from": "e888155d8c7d"
+  },
+  "guides.compare.name": {
+    "text": "O Aubergine comparado com outras ferramentas",
+    "from": "a7d4b6e16622"
+  },
+  "guides.compare.text": {
+    "text": "Conductor, Claude Squad, Vibe Kanban, cmux, Warp e Paradev ao lado do Aubergine, a partir do que cada um documenta sobre si mesmo.",
+    "from": "ef74044c8bc1"
+  },
+  "compare.meta.title": {
+    "text": "7 ferramentas para agentes de código comparadas | Aubergine",
+    "from": "c99d6cc298c1"
+  },
+  "compare.meta.description": {
+    "text": "O Aubergine ao lado de Conductor, Claude Squad, Vibe Kanban, cmux, Warp e Paradev: o que cada um é, onde roda, quanto custa e o que fechá-lo encerra.",
+    "from": "ab73688e9085"
+  },
+  "compare.crumb": {
+    "text": "Comparar",
+    "from": "e888155d8c7d"
+  },
+  "compare.title": {
+    "text": "Ferramentas para rodar vários agentes de programação, comparadas",
+    "from": "28d801f5961d"
+  },
+  "compare.lead": {
+    "text": "Sete ferramentas para o mesmo momento: mais de um agente de programação trabalhando, e você no meio. Aqui está o Aubergine ao lado de Conductor, Claude Squad, Vibe Kanban, cmux, Warp e Paradev, com uma página para cada um.",
+    "from": "b5fab9e77782"
+  },
+  "compare.how": {
+    "text": "<strong>Como isto foi escrito.</strong> O que estas páginas dizem sobre outra ferramenta vem do site, da documentação e do repositório dela, lidos em 26 de novembro de 2026, e cada página tem os links para eles. Nós não rodamos as outras ferramentas. Onde a documentação delas não diz nada, a página diz que nada foi encontrado, não que a ferramenta não consegue fazer aquilo. Essas ferramentas mudam rápido: se algo aqui estiver errado ou desatualizado, <a href=\"https://github.com/thirstyeggplant/aubergine/issues\">nos avise</a> e será corrigido.",
+    "from": "b593b3d87f7a"
+  },
+  "compare.table.title": {
+    "text": "As sete, lado a lado",
+    "from": "43d67ddccfc2"
+  },
+  "compare.table.tool": {
+    "text": "Ferramenta",
+    "from": "2e53bdcd0740"
+  },
+  "compare.each.title": {
+    "text": "Uma página para cada uma",
+    "from": "8121e71bc2a8"
+  },
+  "compare.each.text": {
+    "text": "Cada página tem a tabela completa das duas, onde elas diferem e o que a outra ferramenta tem que o Aubergine não tem.",
+    "from": "8fa0a789da7e"
+  },
+  "compare.around.title": {
+    "text": "Em torno do que o Aubergine é construído",
+    "from": "86c14152ab1c"
+  },
+  "compare.around.terminals": {
+    "text": "<strong>Terminais comuns.</strong> Um agente roda no Aubergine como roda em qualquer app de terminal. Não há uma tela de chat por cima dele e nada entre você e o que ele imprime.",
+    "from": "4b58310b25f3"
+  },
+  "compare.around.canvas": {
+    "text": "<strong>Todos à vista.</strong> Os terminais ficam lado a lado em um canvas que você move e amplia, com uma única lista de todos os terminais e o estado de cada um em palavras. Veja <a href=\"/too-many-terminal-tabs/\">Ache o terminal certo</a>.",
+    "from": "c6c0fbc9bab4"
+  },
+  "compare.around.tmux": {
+    "text": "<strong>Fechar a janela não encerra nada.</strong> Cada terminal é uma sessão do tmux, então o navegador e o próprio Aubergine podem parar enquanto seus agentes continuam. Veja <a href=\"/keep-terminals-after-restart/\">o que uma reinicialização mantém</a>.",
+    "from": "e512de1deb34"
+  },
+  "compare.around.local": {
+    "text": "<strong>Só o seu computador.</strong> Sem conta, sem nuvem, sem plano pago e sem modelo próprio; o servidor escuta em <code>127.0.0.1</code>. Veja <a href=\"/security/\">segurança</a>.",
+    "from": "d51e1a73a1c0"
+  },
+  "compare.around.decide": {
+    "text": "<strong>Uma pessoa decide.</strong> O que um agente propõe espera a sua revisão, uma aprovação em um fluxo de trabalho é só sua, e uma única lista, For you, reúne tudo o que espera por você. Veja <a href=\"/queue-and-schedules/\">a fila</a>.",
+    "from": "0c58d14e37b6"
+  },
+  "compare.lacks.title": {
+    "text": "O que o Aubergine não tem",
+    "from": "791f409b25b0"
+  },
+  "compare.lacks.app": {
+    "text": "<strong>Nenhum app de desktop e nenhum app de celular.</strong> Ele é uma página no seu navegador. Outro dispositivo pode ser pareado por um proxy que você roda; isso foi executado uma vez em um Mac e nunca em um celular de verdade.",
+    "from": "8cda51e85558"
+  },
+  "compare.lacks.merge": {
+    "text": "<strong>Nenhum pull request e nenhum merge.</strong> Ele mostra o que mudou em uma cópia de trabalho, arquivo por arquivo, e nunca faz commit, push, rebase ou merge.",
+    "from": "2c7dc74cd5cf"
+  },
+  "compare.lacks.cloud": {
+    "text": "<strong>Nenhuma nuvem.</strong> Os agentes rodam no computador em que o Aubergine roda, e os agendamentos só disparam enquanto ele está ligado.",
+    "from": "9b0762b5da8f"
+  },
+  "compare.lacks.sound": {
+    "text": "<strong>Nenhum som e nenhum push.</strong> As notificações vêm de uma página do Aubergine aberta no seu navegador.",
+    "from": "e63009caa14b"
+  },
+  "compare.lacks.platforms": {
+    "text": "<strong>Feito para macOS.</strong> No Linux, ele só foi executado em contêineres; no Windows, ele só roda dentro do WSL 2, o que ainda não foi testado.",
+    "from": "5f5c1927df23"
+  },
+  "compare.lacks.agents": {
+    "text": "<strong>Mais para o Claude Code.</strong> Qualquer agente de linha de comando roda em um terminal, mas o que o Aubergine faz sozinho por um agente (ver que ele espera, retomar uma conversa) é feito para o Claude Code; outro agente informa pelos comandos <code>aubergine</code>.",
+    "from": "2f0ba98518bf"
+  },
+  "compare.q.best.q": {
+    "text": "Qual é a melhor ferramenta para rodar vários agentes do Claude Code ao mesmo tempo?",
+    "from": "4d699c803dcd"
+  },
+  "compare.q.best.a": {
+    "text": "Depende do que você quer em volta dos agentes. Para um app de Mac com diffs, pull requests e merge: Conductor ou Paradev. Para um programa dentro do terminal que você já usa: Claude Squad. Para um quadro de issues: Vibe Kanban. Para um terminal nativo de Mac: cmux. Para um terminal com agente próprio e agentes na nuvem: Warp. Para terminais comuns lado a lado em uma página do navegador, mantidos rodando pelo tmux, sem conta: Aubergine.",
+    "from": "6a57f43a10dc"
+  },
+  "compare.q.open.q": {
+    "text": "Quais dessas ferramentas são de código aberto?",
+    "from": "23e0ea8e7990"
+  },
+  "compare.q.open.a": {
+    "text": "Conforme lido em 26 de novembro de 2026: Aubergine (MIT), Paradev (MIT), Vibe Kanban (Apache-2.0), Claude Squad (AGPL-3.0), o app cmux (GPL-3.0-or-later) e o cliente do Warp (AGPL-3.0). Os termos do Conductor o chamam de proprietário.",
+    "from": "fcb0a543dbb1"
+  },
+  "compare.q.linux.q": {
+    "text": "Quais dessas ferramentas rodam no Linux ou no Windows?",
+    "from": "702775b7d90b"
+  },
+  "compare.q.linux.a": {
+    "text": "Segundo a própria documentação: Warp no macOS, no Windows e no Linux; Vibe Kanban nos três; Claude Squad no macOS e no Linux, e no Windows com tmux pelo WSL; Paradev no macOS, com uma versão experimental para Linux; Conductor e cmux só no macOS. O Aubergine é feito para macOS, só foi executado no Linux em contêineres e, no Windows, só roda dentro do WSL 2, ainda não testado.",
+    "from": "eb17a7194e7c"
+  },
+  "compare.q.close.q": {
+    "text": "Quais mantêm os agentes rodando depois que você fecha o app?",
+    "from": "4b67f3b2e66d"
+  },
+  "compare.q.close.a": {
+    "text": "O Aubergine e o Claude Squad rodam cada agente em uma sessão do tmux. O Paradev documenta um daemon em segundo plano que mantém os terminais quando a janela dele fecha. O cmux mantém processos vivos só no modo tmux opcional dele. O Conductor diz que as sessões locais terminam com o app. O Warp restaura janelas e a saída recente, não os programas em execução. Conductor, cmux, Warp e Paradev também têm, cada um, uma nuvem onde os agentes continuam. Nenhum, Aubergine incluído, mantém um agente local rodando depois de reiniciar o computador.",
+    "from": "4bb44c21e3ea"
+  },
+  "compare.vs.table": {
+    "text": "Lado a lado",
+    "from": "a3d7b387c34d"
+  },
+  "compare.vs.thing": {
+    "text": "O quê",
+    "from": "f8cf83a76a98"
+  },
+  "compare.vs.faq": {
+    "text": "Perguntas",
+    "from": "9a72221a2747"
+  },
+  "compare.vs.all": {
+    "text": "As sete ferramentas comparadas",
+    "from": "ee4eb4f7ad29"
+  },
+  "compare.row.form": {
+    "text": "O que é",
+    "from": "1f36becc3aa7"
+  },
+  "compare.row.runs": {
+    "text": "Roda em",
+    "from": "88a550e0f44e"
+  },
+  "compare.row.price": {
+    "text": "Código e preço",
+    "from": "fb616bdc6fda"
+  },
+  "compare.row.agents": {
+    "text": "Agentes",
+    "from": "279b44d2ab4b"
+  },
+  "compare.row.layout": {
+    "text": "Vários ao mesmo tempo",
+    "from": "fa6b205bb2ee"
+  },
+  "compare.row.apart": {
+    "text": "Manter os agentes separados",
+    "from": "420ecd34a352"
+  },
+  "compare.row.closed": {
+    "text": "Se você fechar",
+    "from": "6d0beffa1276"
+  },
+  "compare.row.waits": {
+    "text": "Quando um agente espera ou termina",
+    "from": "ad33e1aadbff"
+  },
+  "compare.row.review": {
+    "text": "Revisar mudanças",
+    "from": "5c07a12954c0"
+  },
+  "compare.row.device": {
+    "text": "De outro dispositivo",
+    "from": "0176df0875c6"
+  },
+  "compare.row.programs": {
+    "text": "Para programas",
+    "from": "ca1a25f0d017"
+  },
+  "compare.row.timed": {
+    "text": "Filas e agendamentos",
+    "from": "7048f6d971c8"
+  },
+  "compare.a.form": {
+    "text": "Um servidor no seu próprio computador e uma página no seu navegador",
+    "from": "f0e12c3481c6"
+  },
+  "compare.a.runs": {
+    "text": "macOS; Linux só em contêineres; Windows dentro do WSL 2, não testado. Precisa de tmux e Node.js",
+    "from": "ce2ec170ad45"
+  },
+  "compare.a.price": {
+    "text": "MIT, grátis; sem plano pago e sem conta",
+    "from": "c6bdeec37cc3"
+  },
+  "compare.a.agents": {
+    "text": "Qualquer agente de linha de comando; mais, sozinho, para o Claude Code",
+    "from": "036a4153456a"
+  },
+  "compare.a.layout": {
+    "text": "Terminais lado a lado em um canvas, e uma única lista de todos eles",
+    "from": "928536cdc6c9"
+  },
+  "compare.a.apart": {
+    "text": "Uma worktree do Git em um branch próprio para um terminal, quando você pede",
+    "from": "2eb2221a43cc"
+  },
+  "compare.a.closed": {
+    "text": "Os terminais continuam no tmux; reiniciar o computador encerra o que rodava",
+    "from": "3a2d0d86f66d"
+  },
+  "compare.a.waits": {
+    "text": "A cor do terminal, um contador no topo, uma tecla para o próximo, notificações da página aberta; sem som",
+    "from": "02781ee55c07"
+  },
+  "compare.a.review": {
+    "text": "O que mudou, arquivo por arquivo; sem commit, push, pull request ou merge",
+    "from": "24a75e296224"
+  },
+  "compare.a.device": {
+    "text": "Um navegador que você pareia, por um proxy que você roda; sem app; não testado em um celular de verdade",
+    "from": "e18f70623096"
+  },
+  "compare.a.programs": {
+    "text": "Uma API HTTP com tokens de escopo limitado, o comando <code>aubergine</code>, um servidor MCP",
+    "from": "fc6fcbb83503"
+  },
+  "compare.a.timed": {
+    "text": "Uma fila com limite, agendamentos por horário do dia, fluxos de trabalho com aprovações",
+    "from": "9aa15e3097da"
+  },
+  "vs.conductor.crumb": {
+    "text": "Conductor",
+    "from": "14116bf4372e"
+  },
+  "vs.conductor.name": {
+    "text": "Conductor",
+    "from": "14116bf4372e"
+  },
+  "vs.conductor.meta.title": {
+    "text": "Aubergine vs Conductor: alternativa grátis de código aberto",
+    "from": "35ece35e60d8"
+  },
+  "vs.conductor.meta.description": {
+    "text": "Ambos rodam agentes de programação em paralelo em worktrees do Git. O Conductor é um app de Mac com nuvem; o Aubergine é de código aberto e usa o tmux.",
+    "from": "baeaaa943291"
+  },
+  "vs.conductor.title": {
+    "text": "Aubergine vs Conductor",
+    "from": "6dc79eddb49c"
+  },
+  "vs.conductor.lead": {
+    "text": "Os dois rodam vários agentes de programação ao mesmo tempo, cada um na própria worktree do Git. O Conductor é um app de Mac com chats, um visualizador de diffs e uma nuvem. O Aubergine é um servidor grátis e de código aberto no seu próprio computador que mostra terminais comuns lado a lado em uma página do navegador.",
+    "from": "9d27a087649b"
+  },
+  "vs.conductor.how": {
+    "text": "<strong>De onde isto vem.</strong> O que se diz aqui sobre o Conductor vem da <a href=\"https://docs.conductor.build/\">documentação dele</a> e do <a href=\"https://www.conductor.build/changelog\">changelog dele</a>, lidos em 26 de novembro de 2026. Nós não rodamos o Conductor. Se algo estiver errado ou desatualizado, <a href=\"https://github.com/thirstyeggplant/aubergine/issues\">nos avise</a>.",
+    "from": "6bdb8eaf878d"
+  },
+  "vs.conductor.status": {
+    "text": "<strong>Situação do Conductor.</strong> Em 4 de novembro de 2026, o changelog dele dizia que o Conductor ia se juntar à Meta e seria encerrado aos poucos; em 13 de novembro, dizia que o Conductor não vai ser encerrado. Partes do site dele ainda traziam a primeira mensagem quando isto foi escrito. Leia o changelog dele para saber a situação atual.",
+    "from": "0ce8070b49b7"
+  },
+  "vs.conductor.is.title": {
+    "text": "O que é o Conductor",
+    "from": "761d10f79609"
+  },
+  "vs.conductor.is.text": {
+    "text": "Pela própria descrição, um app de Mac que roda muitos agentes de programação em paralelo no seu código. Cada trabalho é um workspace: uma worktree do Git em um branch, com abas de chat, terminal e navegador. Ele roda Claude Code, Codex, Cursor e OpenCode com os logins que já estão no seu Mac, e tem um visualizador de diffs, pull requests, um app para iOS e uma nuvem paga onde os agentes rodam em sandboxes.",
+    "from": "892b18bb52d6"
+  },
+  "vs.conductor.pick.title": {
+    "text": "Qual escolher",
+    "from": "9190a8f83f35"
+  },
+  "vs.conductor.pick.them": {
+    "text": "<strong>Escolha o Conductor</strong> se você quer um app de Mac que leve uma tarefa de um prompt até um pull request com merge feito, com uma nuvem para o trabalho que continua enquanto o seu Mac está desligado.",
+    "from": "703a739ea90f"
+  },
+  "vs.conductor.pick.us": {
+    "text": "<strong>Escolha o Aubergine</strong> se você quer seus agentes como terminais comuns que você vê todos de uma vez, que continuam no tmux quando a janela fecha, sem nada em que fazer login e com o código aberto.",
+    "from": "e081882f41c0"
+  },
+  "vs.conductor.differs.title": {
+    "text": "Onde eles diferem",
+    "from": "8c2314ada082"
+  },
+  "vs.conductor.d1": {
+    "text": "<strong>Terminais, não chats.</strong> O Conductor mostra um agente como um chat em um workspace, com um modo terminal ao lado. O Aubergine mostra o próprio terminal do agente, como ele roda em qualquer app de terminal, e dispõe muitos deles em um canvas que você move e amplia.",
+    "from": "e8ee13648dc8"
+  },
+  "vs.conductor.d2": {
+    "text": "<strong>O que fechá-lo encerra.</strong> A documentação do Conductor diz que as sessões locais terminam quando você fecha o app ou desliga o Mac, e que as sessões na nuvem continuam. No Aubergine, cada terminal é uma sessão do tmux: fechar o navegador ou parar o Aubergine não encerra nada. Reiniciar o computador encerra, nos dois.",
+    "from": "09276a000922"
+  },
+  "vs.conductor.d3": {
+    "text": "<strong>Nada fora do seu computador.</strong> O Conductor documenta uma conta, uma nuvem, um relay para o app de celular e análise de uso. O Aubergine não tem conta nem serviço próprio: o servidor escuta em <code>127.0.0.1</code>, e o uso a partir de outro dispositivo passa por um proxy que você roda.",
+    "from": "717211af5743"
+  },
+  "vs.conductor.has.title": {
+    "text": "O que o Conductor tem e o Aubergine não",
+    "from": "97051a4ecf5d"
+  },
+  "vs.conductor.h1": {
+    "text": "Um visualizador de diffs em que você comenta linhas e manda os comentários de volta ao agente, e depois pull requests, checks e merge. O Aubergine mostra o que mudou em uma cópia de trabalho e nunca faz commit, push ou merge.",
+    "from": "6777521cf45a"
+  },
+  "vs.conductor.h2": {
+    "text": "Uma nuvem onde os agentes continuam com o seu Mac desligado, e rotinas que rodam lá em um agendamento. Os agendamentos do Aubergine disparam no seu computador, enquanto ele está ligado.",
+    "from": "ac3ae91a45fe"
+  },
+  "vs.conductor.h3": {
+    "text": "Um app para iOS e sons de conclusão. O Aubergine não tem app e não toca nenhum som.",
+    "from": "193e1ed4e647"
+  },
+  "vs.conductor.q1.q": {
+    "text": "O Aubergine é uma alternativa ao Conductor?",
+    "from": "cde19d1a87c2"
+  },
+  "vs.conductor.q1.a": {
+    "text": "Para rodar vários agentes de linha de comando no seu próprio computador, sim: cada agente tem um terminal em um canvas e, quando você pede, a própria worktree do Git. Não é um substituto equivalente: o Aubergine não tem tela de chat, nem pull requests ou merge, nem nuvem, nem app de celular.",
+    "from": "6570e71775cf"
+  },
+  "vs.conductor.q2.q": {
+    "text": "O Conductor é de código aberto?",
+    "from": "fad053540fb9"
+  },
+  "vs.conductor.q2.a": {
+    "text": "Não: os termos dele o chamam de proprietário, e não encontramos nenhum repositório público. A documentação dele diz que o app local é grátis e que os workspaces na nuvem precisam de um plano pago. O Aubergine está sob a licença MIT e não tem plano pago.",
+    "from": "1cd0818f2d1c"
+  },
+  "vs.conductor.q3.q": {
+    "text": "O Conductor roda no Linux ou no Windows?",
+    "from": "735588d0d163"
+  },
+  "vs.conductor.q3.a": {
+    "text": "A documentação dele diz que ainda não está disponível para Windows nem Linux. O Aubergine é feito para macOS, só foi executado no Linux em contêineres e, no Windows, só roda dentro do WSL 2, o que ainda não foi testado.",
+    "from": "f5ade7015ea8"
+  },
+  "vs.conductor.q4.q": {
+    "text": "Posso usar o Conductor e o Aubergine juntos?",
+    "from": "19c0c55db696"
+  },
+  "vs.conductor.q4.a": {
+    "text": "Nada impede: os dois trabalham em worktrees do Git do mesmo repositório, cada um criando as suas. Nós não rodamos os dois lado a lado.",
+    "from": "f05d6d7dc553"
+  },
+  "vs.conductor.mark": {
+    "text": "O Aubergine não é afiliado ao Conductor nem aos seus criadores. Conductor é o nome do produto deles: os termos dele citam Melty Labs, Inc., e o site dele diz Conductor from Meta.",
+    "from": "f1f2c16aeaff"
+  },
+  "vs.conductor.c.form": {
+    "text": "Um app de desktop para Mac, com uma nuvem hospedada e um app para iOS",
+    "from": "8f147196475d"
+  },
+  "vs.conductor.c.runs": {
+    "text": "Só macOS",
+    "from": "3f2f41cd023d"
+  },
+  "vs.conductor.c.price": {
+    "text": "Código fechado; o app local é grátis, a nuvem dele precisa de um plano pago",
+    "from": "330fb38120bd"
+  },
+  "vs.conductor.c.agents": {
+    "text": "Claude Code, Codex, Cursor e OpenCode; qualquer comando no modo terminal dele",
+    "from": "605c47dc956b"
+  },
+  "vs.conductor.c.layout": {
+    "text": "Uma barra lateral de workspaces, cada um com abas de chat, terminal e navegador",
+    "from": "d639b322b315"
+  },
+  "vs.conductor.c.apart": {
+    "text": "Uma worktree do Git e um branch para cada workspace; sandboxes na nuvem dele",
+    "from": "ca8d1b34e4bc"
+  },
+  "vs.conductor.c.closed": {
+    "text": "As sessões locais terminam com o app; as sessões na nuvem continuam",
+    "from": "bed2d2359373"
+  },
+  "vs.conductor.c.waits": {
+    "text": "Sons de conclusão",
+    "from": "9cc24eada060"
+  },
+  "vs.conductor.c.review": {
+    "text": "Um visualizador de diffs com comentários de volta ao agente, pull requests, checks, merge",
+    "from": "c7413ccd732c"
+  },
+  "vs.conductor.c.device": {
+    "text": "Um app para iOS pelo relay dele, com o Mac acordado e o app aberto",
+    "from": "ebef5d2152fd"
+  },
+  "vs.conductor.c.programs": {
+    "text": "Uma API e um servidor MCP para os workspaces na nuvem dele, um comando",
+    "from": "3d0a599b7e17"
+  },
+  "vs.conductor.c.timed": {
+    "text": "Uma fila de mensagens; rotinas agendadas na nuvem dele",
+    "from": "9ab0918f949e"
+  },
+  "vs.claude-squad.crumb": {
+    "text": "Claude Squad",
+    "from": "3c4fa1eb24c0"
+  },
+  "vs.claude-squad.name": {
+    "text": "Claude Squad",
+    "from": "3c4fa1eb24c0"
+  },
+  "vs.claude-squad.meta.title": {
+    "text": "Aubergine vs Claude Squad: tmux e worktrees, de dois jeitos",
+    "from": "4166fb6975ea"
+  },
+  "vs.claude-squad.meta.description": {
+    "text": "Ambos rodam cada agente em uma sessão do tmux e uma worktree do Git. O Claude Squad é um programa no seu terminal; o Aubergine, um canvas no seu navegador.",
+    "from": "9c993cb105df"
+  },
+  "vs.claude-squad.title": {
+    "text": "Aubergine vs Claude Squad",
+    "from": "77af5fc2deda"
+  },
+  "vs.claude-squad.lead": {
+    "text": "Os dois partem da mesma base: cada agente em uma sessão do tmux, cada um na própria worktree do Git, os dois grátis e de código aberto. O Claude Squad é um programa dentro do seu terminal. O Aubergine é uma página no seu navegador onde os terminais ficam lado a lado.",
+    "from": "d9f4e824659b"
+  },
+  "vs.claude-squad.how": {
+    "text": "<strong>De onde isto vem.</strong> O que se diz aqui sobre o Claude Squad vem do <a href=\"https://github.com/smtg-ai/claude-squad\">repositório e do README dele</a>, lidos em 26 de novembro de 2026. Nós não rodamos o Claude Squad. Se algo estiver errado ou desatualizado, <a href=\"https://github.com/thirstyeggplant/aubergine/issues\">nos avise</a>.",
+    "from": "c74805e04f47"
+  },
+  "vs.claude-squad.is.title": {
+    "text": "O que é o Claude Squad",
+    "from": "27fdabce5ffe"
+  },
+  "vs.claude-squad.is.text": {
+    "text": "Pela própria descrição, um app de terminal que gerencia vários agentes locais, como Claude Code, Codex, Gemini e outros, em workspaces separados. Você o inicia como <code>cs</code>: uma lista de sessões com uma prévia e uma aba de diff, em uma janela de terminal. Cada sessão é uma sessão do tmux em uma worktree do Git, em um branch próprio. Ele precisa de tmux e de <code>gh</code>, e está sob a licença AGPL-3.0.",
+    "from": "f5651435b271"
+  },
+  "vs.claude-squad.pick.title": {
+    "text": "Qual escolher",
+    "from": "9190a8f83f35"
+  },
+  "vs.claude-squad.pick.them": {
+    "text": "<strong>Escolha o Claude Squad</strong> se você vive no terminal e quer ali um programa pequeno que inicia agentes em worktrees e faz push dos branches deles, e nada mais.",
+    "from": "f1fb7dd68ee2"
+  },
+  "vs.claude-squad.pick.us": {
+    "text": "<strong>Escolha o Aubergine</strong> se você quer ver vários agentes trabalhando ao mesmo tempo, saber qual espera por você e ter uma fila, agendamentos e uma API em volta deles.",
+    "from": "4d6b3293e505"
+  },
+  "vs.claude-squad.differs.title": {
+    "text": "Onde eles diferem",
+    "from": "8c2314ada082"
+  },
+  "vs.claude-squad.d1": {
+    "text": "<strong>Um de cada vez, ou todos de uma vez.</strong> O Claude Squad mostra uma lista e uma prévia da sessão que você escolheu. O Aubergine desenha cada terminal ao vivo em um canvas, então cinco agentes são cinco terminais à vista, e uma única lista diz o estado de cada um em palavras.",
+    "from": "d86f1c45b8de"
+  },
+  "vs.claude-squad.d2": {
+    "text": "<strong>Quem espera.</strong> Não encontramos nada no README do Claude Squad sobre ser avisado de que um agente espera ou terminou. O Aubergine marca em cor um terminal que espera, conta no topo o que espera, vai para o próximo com uma tecla e pode enviar uma notificação a partir da página aberta.",
+    "from": "211530499e12"
+  },
+  "vs.claude-squad.d3": {
+    "text": "<strong>O que há em volta dos agentes.</strong> O Aubergine tem uma fila de tarefas com limite, agendamentos, fluxos de trabalho com etapas que uma pessoa aprova, notas e campos em cada terminal, uma API HTTP e um servidor MCP. O Claude Squad fica nas sessões e nos branches delas.",
+    "from": "f50c8e772a93"
+  },
+  "vs.claude-squad.has.title": {
+    "text": "O que o Claude Squad tem e o Aubergine não",
+    "from": "98723dd6c82d"
+  },
+  "vs.claude-squad.h1": {
+    "text": "Ele roda dentro do terminal que você já tem aberto, sem servidor e sem navegador. Funciona por SSH como qualquer programa de terminal; o Aubergine, de outro lugar, precisa de um túnel ou de um proxy.",
+    "from": "f20b31ac2b9e"
+  },
+  "vs.claude-squad.h2": {
+    "text": "Ele faz commit e push de um branch por você, e pausa uma sessão fazendo commit do trabalho dela. O Aubergine nunca faz commit nem push.",
+    "from": "ca1a86c924f4"
+  },
+  "vs.claude-squad.h3": {
+    "text": "Um modo experimental que aceita sozinho os prompts de um agente. O Aubergine nunca responde a um agente por você.",
+    "from": "0b05aa90e62a"
+  },
+  "vs.claude-squad.q1.q": {
+    "text": "O Aubergine é uma alternativa ao Claude Squad?",
+    "from": "361c471f4cfa"
+  },
+  "vs.claude-squad.q1.a": {
+    "text": "Sim, para o mesmo trabalho feito de outro jeito. Os dois rodam cada agente em uma sessão do tmux e podem dar a cada um uma worktree do Git em um branch próprio. O Claude Squad faz isso a partir de um programa no seu terminal; o Aubergine, a partir de uma página no seu navegador, com todos os terminais à vista.",
+    "from": "a917cadf4b9c"
+  },
+  "vs.claude-squad.q2.q": {
+    "text": "Os dois usam tmux?",
+    "from": "7bb088dbc786"
+  },
+  "vs.claude-squad.q2.a": {
+    "text": "Sim. O Claude Squad lista o tmux como pré-requisito e cria uma sessão do tmux para cada agente. O Aubergine precisa do tmux 3.2 ou mais novo e o roda em um socket próprio, com configuração própria, então o seu próprio tmux fica intocado.",
+    "from": "6811d9954e5a"
+  },
+  "vs.claude-squad.q3.q": {
+    "text": "O Claude Squad funciona com outros agentes além do Claude Code?",
+    "from": "b8ca49d7a338"
+  },
+  "vs.claude-squad.q3.a": {
+    "text": "O README dele diz que o programa padrão é <code>claude</code> e que outro, como Codex, Gemini ou Aider, é indicado com <code>-p</code>. O Aubergine roda qualquer programa de linha de comando em um terminal; o que ele faz sozinho por um agente é feito para o Claude Code.",
+    "from": "e25dfec3422d"
+  },
+  "vs.claude-squad.q4.q": {
+    "text": "Qual é a licença de cada um?",
+    "from": "8b3801771777"
+  },
+  "vs.claude-squad.q4.a": {
+    "text": "O Claude Squad está sob a AGPL-3.0, o Aubergine sob a licença MIT. Os dois são grátis.",
+    "from": "b9eaa7117d9a"
+  },
+  "vs.claude-squad.mark": {
+    "text": "O Aubergine não é afiliado ao Claude Squad nem à Anthropic. Claude Squad é o nome do projeto smtg-ai; Claude é uma marca registrada da Anthropic.",
+    "from": "ce7ff8c148b6"
+  },
+  "vs.claude-squad.c.form": {
+    "text": "Um programa no seu terminal, iniciado como <code>cs</code>",
+    "from": "e739d8457685"
+  },
+  "vs.claude-squad.c.runs": {
+    "text": "macOS e Linux; no Windows com tmux pelo WSL. Precisa de tmux e de <code>gh</code>",
+    "from": "abc0235db83e"
+  },
+  "vs.claude-squad.c.price": {
+    "text": "AGPL-3.0, grátis",
+    "from": "558fbe03f51b"
+  },
+  "vs.claude-squad.c.agents": {
+    "text": "Claude Code, a menos que você indique outro: Codex, Gemini, Aider ou qualquer comando",
+    "from": "1fe7348291c8"
+  },
+  "vs.claude-squad.c.layout": {
+    "text": "Uma lista de sessões com uma prévia e uma aba de diff, em uma janela de terminal",
+    "from": "3d5b69fb4009"
+  },
+  "vs.claude-squad.c.apart": {
+    "text": "Uma sessão do tmux e uma worktree do Git em um branch próprio para cada um",
+    "from": "d8335dee55c9"
+  },
+  "vs.claude-squad.c.closed": {
+    "text": "As sessões são sessões do tmux; o README dele não diz o que é mantido",
+    "from": "db4a444f7d33"
+  },
+  "vs.claude-squad.c.waits": {
+    "text": "Nada encontrado no README dele",
+    "from": "8f95c49e434f"
+  },
+  "vs.claude-squad.c.review": {
+    "text": "Uma aba de diff; ele faz commit e push do branch",
+    "from": "e4f8bb6419df"
+  },
+  "vs.claude-squad.c.device": {
+    "text": "Nada encontrado no README dele",
+    "from": "8f95c49e434f"
+  },
+  "vs.claude-squad.c.programs": {
+    "text": "Opções na linha de comando dele; nenhuma API nem servidor MCP encontrado",
+    "from": "d88b2e8d7fe3"
+  },
+  "vs.claude-squad.c.timed": {
+    "text": "Nada encontrado no README dele",
+    "from": "8f95c49e434f"
+  },
+  "vs.vibe-kanban.crumb": {
+    "text": "Vibe Kanban",
+    "from": "306161ab46c9"
+  },
+  "vs.vibe-kanban.name": {
+    "text": "Vibe Kanban",
+    "from": "306161ab46c9"
+  },
+  "vs.vibe-kanban.meta.title": {
+    "text": "Aubergine vs Vibe Kanban: alternativa de código aberto",
+    "from": "670b010ba18d"
+  },
+  "vs.vibe-kanban.meta.description": {
+    "text": "Ambos são locais, de código aberto e web. O Vibe Kanban planeja o trabalho como issues num quadro; o Aubergine mostra os agentes em terminais lado a lado.",
+    "from": "bb53f7f86aa3"
+  },
+  "vs.vibe-kanban.title": {
+    "text": "Aubergine vs Vibe Kanban",
+    "from": "c5b1f18fa84d"
+  },
+  "vs.vibe-kanban.lead": {
+    "text": "Os dois são de código aberto, rodam no seu próprio computador e são usados em um navegador. O Vibe Kanban parte do trabalho: issues em um quadro, cada uma entregue a um agente. O Aubergine parte dos agentes: terminais lado a lado, com uma fila ao lado deles.",
+    "from": "3d84a2e91b62"
+  },
+  "vs.vibe-kanban.how": {
+    "text": "<strong>De onde isto vem.</strong> O que se diz aqui sobre o Vibe Kanban vem da <a href=\"https://www.vibekanban.com/docs\">documentação dele</a> e do <a href=\"https://github.com/BloopAI/vibe-kanban\">repositório dele</a>, lidos em 26 de novembro de 2026. Nós não rodamos o Vibe Kanban. Se algo estiver errado ou desatualizado, <a href=\"https://github.com/thirstyeggplant/aubergine/issues\">nos avise</a>.",
+    "from": "99375c152de4"
+  },
+  "vs.vibe-kanban.status": {
+    "text": "<strong>Situação do Vibe Kanban.</strong> Em 10 de abril de 2026, <a href=\"https://www.vibekanban.com/blog/shutdown\">os criadores dele escreveram</a> que a bloop, a empresa por trás dele, estava encerrando as atividades, que o projeto continua como código aberto mantido pela comunidade e que os serviços remotos dele seriam removidos, enquanto os workspaces locais continuam funcionando. A documentação e a página de preços dele ainda descreviam esses serviços quando isto foi escrito; os lançamentos continuaram.",
+    "from": "e7d0f9efaeb3"
+  },
+  "vs.vibe-kanban.is.title": {
+    "text": "O que é o Vibe Kanban",
+    "from": "ec9867114fba"
+  },
+  "vs.vibe-kanban.is.text": {
+    "text": "Pela própria descrição, um quadro kanban para desenvolvedores acompanharem tarefas de programação com agentes de programação. <code>npx vibe-kanban</code> inicia um servidor local e abre a página dele. Uma issue vira um workspace: worktrees do Git para os repositórios que você escolheu, uma conversa com um dos dez ou mais agentes que ele conhece pelo nome, as mudanças ao lado, e depois um pull request e um merge. Ele está sob a licença Apache-2.0.",
+    "from": "6d4c2f9e57b0"
+  },
+  "vs.vibe-kanban.pick.title": {
+    "text": "Qual escolher",
+    "from": "9190a8f83f35"
+  },
+  "vs.vibe-kanban.pick.them": {
+    "text": "<strong>Escolha o Vibe Kanban</strong> se você pensa em issues: planejar em um quadro, entregar cada cartão a um agente, revisar o diff dele com comentários e fazer o merge.",
+    "from": "245bc2234639"
+  },
+  "vs.vibe-kanban.pick.us": {
+    "text": "<strong>Escolha o Aubergine</strong> se você quer os próprios agentes à vista, como terminais que sobrevivem à janela, e o trabalho distribuído a partir de uma fila só quando você manda.",
+    "from": "2365113635d7"
+  },
+  "vs.vibe-kanban.differs.title": {
+    "text": "Onde eles diferem",
+    "from": "8c2314ada082"
+  },
+  "vs.vibe-kanban.d1": {
+    "text": "<strong>Uma conversa ou um terminal.</strong> O Vibe Kanban mostra um agente como um painel de conversa com as mudanças dele ao lado. O Aubergine mostra o próprio terminal do agente, e muitos deles de uma vez em um canvas.",
+    "from": "0c890c4d406b"
+  },
+  "vs.vibe-kanban.d2": {
+    "text": "<strong>Qualquer programa.</strong> O Vibe Kanban lista pelo nome os agentes que suporta. Um terminal do Aubergine é um shell: qualquer agente de linha de comando roda nele, e também um build, uma execução de testes ou um servidor. O que o Aubergine faz sozinho por um agente é feito para o Claude Code.",
+    "from": "23aec210dcbd"
+  },
+  "vs.vibe-kanban.d3": {
+    "text": "<strong>O que fechá-lo encerra.</strong> Não encontramos nada na documentação do Vibe Kanban sobre o que acontece com um agente em execução quando o servidor dele para. No Aubergine, cada terminal é uma sessão do tmux, e parar o Aubergine ou fechar o navegador não encerra nada.",
+    "from": "2f1d6cdf5c9f"
+  },
+  "vs.vibe-kanban.has.title": {
+    "text": "O que o Vibe Kanban tem e o Aubergine não",
+    "from": "5076a47e917f"
+  },
+  "vs.vibe-kanban.h1": {
+    "text": "Um quadro kanban de issues com prioridades, tags e sub-issues. O Aubergine tem uma fila de tarefas e um quadro de fluxos de trabalho em execução, não um rastreador de issues.",
+    "from": "68077704a5f0"
+  },
+  "vs.vibe-kanban.h2": {
+    "text": "Diffs com comentários nas linhas enviados de volta ao agente, e depois pull requests, rebase e merge. O Aubergine mostra o que mudou e nunca faz commit nem merge.",
+    "from": "93ff80b2e186"
+  },
+  "vs.vibe-kanban.h3": {
+    "text": "Windows entre as plataformas documentadas, sons e uma lista maior de agentes que ele conhece pelo nome.",
+    "from": "1aadd7b5de39"
+  },
+  "vs.vibe-kanban.q1.q": {
+    "text": "O Aubergine é uma alternativa ao Vibe Kanban?",
+    "from": "4aa8ac6e6711"
+  },
+  "vs.vibe-kanban.q1.a": {
+    "text": "Para rodar vários agentes localmente em worktrees do Git e ver qual precisa de você, sim. O formato é outro: o Aubergine tem terminais em um canvas e uma fila de tarefas onde o Vibe Kanban tem um quadro de issues com conversas, e o Aubergine não abre nenhum pull request e não faz merge de nada.",
+    "from": "98cbddf025ec"
+  },
+  "vs.vibe-kanban.q2.q": {
+    "text": "O Vibe Kanban ainda é mantido?",
+    "from": "6f567471ea10"
+  },
+  "vs.vibe-kanban.q2.a": {
+    "text": "Os criadores dele escreveram em 10 de abril de 2026 que a empresa por trás dele estava encerrando as atividades e que o projeto continua como código aberto mantido pela comunidade. O repositório dele teve lançamentos desde então. Leia o repositório dele para saber a situação atual.",
+    "from": "a82975b3065a"
+  },
+  "vs.vibe-kanban.q3.q": {
+    "text": "Os dois rodam localmente?",
+    "from": "11a0fe427c73"
+  },
+  "vs.vibe-kanban.q3.a": {
+    "text": "Sim. Cada um é um servidor no seu próprio computador com uma página no seu navegador. O Vibe Kanban documenta um login opcional para os recursos de quadro e de equipe; o Aubergine não tem conta nenhuma.",
+    "from": "ab3cc066ee10"
+  },
+  "vs.vibe-kanban.q4.q": {
+    "text": "Quais agentes cada um suporta?",
+    "from": "7e38a7feb8bc"
+  },
+  "vs.vibe-kanban.q4.a": {
+    "text": "O Vibe Kanban cita mais de dez, entre eles Claude Code, Codex, Gemini CLI, GitHub Copilot, Amp, Cursor e OpenCode. O Aubergine roda qualquer programa de linha de comando em um terminal; iniciar um agente pelo menu, ver que ele espera e retomar a conversa dele são feitos para o Claude Code.",
+    "from": "095b9719b5a7"
+  },
+  "vs.vibe-kanban.mark": {
+    "text": "O Aubergine não é afiliado ao Vibe Kanban nem aos seus criadores. Vibe Kanban é o nome do projeto iniciado pela Bloop AI Limited.",
+    "from": "e0e138f9589d"
+  },
+  "vs.vibe-kanban.c.form": {
+    "text": "Um servidor no seu próprio computador e uma página no seu navegador",
+    "from": "f0e12c3481c6"
+  },
+  "vs.vibe-kanban.c.runs": {
+    "text": "macOS, Linux e Windows; iniciado com <code>npx</code>",
+    "from": "ddd741e66ecf"
+  },
+  "vs.vibe-kanban.c.price": {
+    "text": "Apache-2.0, grátis; login opcional",
+    "from": "9823c6d319c0"
+  },
+  "vs.vibe-kanban.c.agents": {
+    "text": "Dez ou mais que ele conhece pelo nome, entre eles Claude Code, Codex e Gemini CLI",
+    "from": "3b62e7abb0fe"
+  },
+  "vs.vibe-kanban.c.layout": {
+    "text": "Um quadro kanban de issues, e uma lista de workspaces, cada um com uma conversa",
+    "from": "2e17f6f4a543"
+  },
+  "vs.vibe-kanban.c.apart": {
+    "text": "Worktrees do Git para cada workspace",
+    "from": "86bf78b6f747"
+  },
+  "vs.vibe-kanban.c.closed": {
+    "text": "Nada encontrado na documentação dele",
+    "from": "f6b5e7a05b9d"
+  },
+  "vs.vibe-kanban.c.waits": {
+    "text": "Sons, notificações do navegador, uma marca no workspace que precisa de você",
+    "from": "9f3cc4e77037"
+  },
+  "vs.vibe-kanban.c.review": {
+    "text": "Diffs com comentários nas linhas de volta ao agente, pull requests, rebase, merge",
+    "from": "4545afb112b5"
+  },
+  "vs.vibe-kanban.c.device": {
+    "text": "Pelo serviço na nuvem dele, que os criadores disseram que seria removido",
+    "from": "004526c12db4"
+  },
+  "vs.vibe-kanban.c.programs": {
+    "text": "Um servidor MCP local; nenhuma API HTTP encontrada",
+    "from": "7f646c855e3f"
+  },
+  "vs.vibe-kanban.c.timed": {
+    "text": "O quadro de issues; nenhum agendamento encontrado",
+    "from": "197f6e8847f9"
+  },
+  "vs.cmux.crumb": {
+    "text": "cmux",
+    "from": "548d4fabc56e"
+  },
+  "vs.cmux.name": {
+    "text": "cmux",
+    "from": "548d4fabc56e"
+  },
+  "vs.cmux.meta.title": {
+    "text": "Aubergine vs cmux: dois terminais para agentes de IA",
+    "from": "c625444e117b"
+  },
+  "vs.cmux.meta.description": {
+    "text": "Ambos rodam qualquer agente de CLI em um terminal real e dizem qual precisa de você. O cmux é um app nativo de macOS; o Aubergine, um canvas no navegador.",
+    "from": "1018139b92b2"
+  },
+  "vs.cmux.title": {
+    "text": "Aubergine vs cmux",
+    "from": "9c21dcf33e1e"
+  },
+  "vs.cmux.lead": {
+    "text": "O par mais próximo destas páginas: os dois são terminais feitos para agentes de programação, os dois rodam qualquer agente que você consiga iniciar pela linha de comando, os dois são de código aberto. O cmux é um app de terminal nativo para macOS. O Aubergine é um servidor no seu computador e um canvas de terminais no seu navegador.",
+    "from": "74355a6665b7"
+  },
+  "vs.cmux.how": {
+    "text": "<strong>De onde isto vem.</strong> O que se diz aqui sobre o cmux vem do <a href=\"https://cmux.com/\">site e da documentação dele</a> e do <a href=\"https://github.com/manaflow-ai/cmux\">repositório dele</a>, lidos em 26 de novembro de 2026. Nós não rodamos o cmux. Se algo estiver errado ou desatualizado, <a href=\"https://github.com/thirstyeggplant/aubergine/issues\">nos avise</a>.",
+    "from": "5c9611ff5302"
+  },
+  "vs.cmux.is.title": {
+    "text": "O que é o cmux",
+    "from": "8a1d270df445"
+  },
+  "vs.cmux.is.text": {
+    "text": "Pela própria descrição, um terminal para macOS construído sobre a libghostty, com abas verticais e notificações para agentes de programação, escrito em Swift. Uma barra lateral lista os workspaces com o branch, o pull request, a pasta e a notificação mais recente de cada um; um workspace se divide em painéis com abas. Cada ação também é um comando e uma mensagem em um socket Unix. O app está sob a licença GPL-3.0-or-later e é grátis; máquinas na nuvem e um app para iOS em beta vêm com uma conta e planos pagos.",
+    "from": "68de3f7cd4b5"
+  },
+  "vs.cmux.pick.title": {
+    "text": "Qual escolher",
+    "from": "9190a8f83f35"
+  },
+  "vs.cmux.pick.them": {
+    "text": "<strong>Escolha o cmux</strong> se você quer um app de terminal nativo e rápido para Mac, com painéis, um navegador dentro do app e notificações do macOS, e monta por script o seu próprio jeito de trabalhar em cima dele.",
+    "from": "22fea8e3daf2"
+  },
+  "vs.cmux.pick.us": {
+    "text": "<strong>Escolha o Aubergine</strong> se você quer agentes que continuam quando o app é fechado sem escolher um modo, uma worktree por agente criada para você, e uma fila, agendamentos e aprovações já prontos.",
+    "from": "362a7c018644"
+  },
+  "vs.cmux.differs.title": {
+    "text": "Onde eles diferem",
+    "from": "8c2314ada082"
+  },
+  "vs.cmux.d1": {
+    "text": "<strong>O que fechá-lo encerra.</strong> O cmux documenta que, ao sair, ele salva o layout e as pastas e que os processos vivos não são mantidos, a menos que você ative o modo tmux local dele. No Aubergine, o tmux não é um modo: cada terminal é uma sessão do tmux desde o início. Nenhum dos dois mantém um processo depois de reiniciar o computador.",
+    "from": "448c9e2ac6d6"
+  },
+  "vs.cmux.d2": {
+    "text": "<strong>Uma primitiva, ou o que há em volta dela.</strong> O cmux se chama de primitiva, não de solução, e dá a você um comando e um socket para construir em cima. O Aubergine vem com cópias de trabalho em worktrees do Git, uma fila com limite, agendamentos, fluxos de trabalho com aprovações e uma única lista do que espera por você.",
+    "from": "c675408c16db"
+  },
+  "vs.cmux.d3": {
+    "text": "<strong>Um app ou uma página.</strong> O cmux é um app de Mac desenhado pelo sistema. O Aubergine é uma página em um navegador: mais lento para desenhar do que um terminal nativo, e acessível de outro navegador que você pareia por um proxy que você roda.",
+    "from": "a320e661ca17"
+  },
+  "vs.cmux.has.title": {
+    "text": "O que o cmux tem e o Aubergine não",
+    "from": "3fc881ffd285"
+  },
+  "vs.cmux.h1": {
+    "text": "Um terminal nativo sobre a libghostty, painéis divididos e um navegador dentro do app que o comando dele pode controlar. O Aubergine desenha terminais em uma página do navegador e não tem painéis: os terminais são colocados em um canvas.",
+    "from": "2a8a37988a85"
+  },
+  "vs.cmux.h2": {
+    "text": "Notificações do macOS e um comando personalizado quando um painel precisa de você, disparados pelas sequências de escape que os terminais já usam, para qualquer programa. O Aubergine vê que um agente espera por meio de hooks feitos para o Claude Code, e notifica só a partir da página aberta.",
+    "from": "c88597f63652"
+  },
+  "vs.cmux.h3": {
+    "text": "<code>cmux ssh</code> para um workspace em uma máquina remota, um app para iOS em beta e máquinas na nuvem nos planos pagos dele.",
+    "from": "46878f831283"
+  },
+  "vs.cmux.q1.q": {
+    "text": "O Aubergine é uma alternativa ao cmux?",
+    "from": "d03cb98ddd13"
+  },
+  "vs.cmux.q1.a": {
+    "text": "Sim: os dois são terminais para rodar vários agentes de programação e ver qual precisa de você. O cmux é um app nativo para macOS; o Aubergine roda em um navegador sobre o tmux e acrescenta cópias de trabalho, uma fila, agendamentos e fluxos de trabalho.",
+    "from": "0cabdb734f94"
+  },
+  "vs.cmux.q2.q": {
+    "text": "O cmux precisa de tmux?",
+    "from": "836e5e3d4677"
+  },
+  "vs.cmux.q2.a": {
+    "text": "Não. A documentação dele diz que o tmux não é necessário e oferece um modo tmux local opcional para manter os processos vivos quando o cmux sai. O Aubergine precisa do tmux 3.2 ou mais novo e roda cada terminal nele.",
+    "from": "a18611c76706"
+  },
+  "vs.cmux.q3.q": {
+    "text": "O cmux roda no Linux ou no Windows?",
+    "from": "09ca6d3b4a05"
+  },
+  "vs.cmux.q3.a": {
+    "text": "O README dele diz só macOS, por enquanto, no macOS 14 ou mais recente. O Aubergine é feito para macOS, só foi executado no Linux em contêineres e, no Windows, só roda dentro do WSL 2, o que ainda não foi testado.",
+    "from": "5ba1cbadcc1c"
+  },
+  "vs.cmux.q4.q": {
+    "text": "Os dois são grátis e de código aberto?",
+    "from": "4d9f144a07a6"
+  },
+  "vs.cmux.q4.a": {
+    "text": "O app cmux está sob a licença GPL-3.0-or-later e é grátis, com planos pagos para a nuvem dele; o software de servidor dele tem outra licença. O Aubergine está sob a licença MIT e não tem plano pago.",
+    "from": "9e51e627b171"
+  },
+  "vs.cmux.mark": {
+    "text": "O Aubergine não é afiliado ao cmux nem aos seus criadores. cmux é o nome de um produto da Manaflow, Inc.",
+    "from": "750ad046fa7f"
+  },
+  "vs.cmux.c.form": {
+    "text": "Um app de terminal nativo para macOS",
+    "from": "d8719e14d15d"
+  },
+  "vs.cmux.c.runs": {
+    "text": "Só macOS 14 ou mais recente",
+    "from": "76dd2c62352e"
+  },
+  "vs.cmux.c.price": {
+    "text": "App GPL-3.0-or-later, grátis, sem precisar de conta; planos pagos para a nuvem dele",
+    "from": "791d945bc808"
+  },
+  "vs.cmux.c.agents": {
+    "text": "Qualquer agente que rode em um terminal",
+    "from": "5e7c625a3994"
+  },
+  "vs.cmux.c.layout": {
+    "text": "Uma barra lateral de workspaces, cada um dividido em painéis com abas",
+    "from": "be8baacc5010"
+  },
+  "vs.cmux.c.apart": {
+    "text": "Nada encontrado que crie uma worktree para um agente; máquinas separadas na nuvem dele",
+    "from": "09a8946a9874"
+  },
+  "vs.cmux.c.closed": {
+    "text": "O layout e as pastas voltam; processos vivos só no modo tmux opcional dele",
+    "from": "93cc242a3b3d"
+  },
+  "vs.cmux.c.waits": {
+    "text": "Um anel em volta do painel, um badge na barra lateral, uma notificação do macOS",
+    "from": "9a5fda5bbd5c"
+  },
+  "vs.cmux.c.review": {
+    "text": "O estado do pull request vinculado na barra lateral; nenhuma tela de diff encontrada",
+    "from": "1aac4ceaa460"
+  },
+  "vs.cmux.c.device": {
+    "text": "Um app para iOS em beta, com uma conta e o Mac acordado; <code>cmux ssh</code>",
+    "from": "2508df0177f8"
+  },
+  "vs.cmux.c.programs": {
+    "text": "Um comando e um socket Unix para cada ação; nenhum servidor MCP encontrado",
+    "from": "60d43aa42ad3"
+  },
+  "vs.cmux.c.timed": {
+    "text": "Nada encontrado na documentação dele",
+    "from": "f6b5e7a05b9d"
+  },
+  "vs.warp.crumb": {
+    "text": "Warp",
+    "from": "3db7c958dfdf"
+  },
+  "vs.warp.name": {
+    "text": "Warp",
+    "from": "3db7c958dfdf"
+  },
+  "vs.warp.meta.title": {
+    "text": "Aubergine vs Warp para rodar vários agentes de programação",
+    "from": "b434edbfa3d3"
+  },
+  "vs.warp.meta.description": {
+    "text": "O Warp é um terminal de desktop com agente próprio, planos pagos e nuvem. O Aubergine não chama nenhum modelo: roda lado a lado os agentes que você já usa.",
+    "from": "d9572d15388b"
+  },
+  "vs.warp.title": {
+    "text": "Aubergine vs Warp",
+    "from": "05210af0bb08"
+  },
+  "vs.warp.lead": {
+    "text": "O Warp é um app de terminal completo, com agente próprio, planos e uma nuvem, que também roda outros agentes de linha de comando em abas e painéis. O Aubergine é mais restrito: não chama nenhum modelo e não substitui nenhum app de terminal. Ele roda os agentes que você já usa lado a lado em uma página do navegador, e os mantém rodando.",
+    "from": "67b1020677f9"
+  },
+  "vs.warp.how": {
+    "text": "<strong>De onde isto vem.</strong> O que se diz aqui sobre o Warp vem da <a href=\"https://docs.warp.dev/\">documentação dele</a> e da <a href=\"https://www.warp.dev/pricing\">página de preços dele</a>, lidas em 26 de novembro de 2026, e só sobre rodar vários agentes de programação; o Warp faz muito mais. Nós não rodamos o Warp para isto. Se algo estiver errado ou desatualizado, <a href=\"https://github.com/thirstyeggplant/aubergine/issues\">nos avise</a>.",
+    "from": "c0a09271e3dc"
+  },
+  "vs.warp.is.title": {
+    "text": "O que é o Warp",
+    "from": "295785f2bf50"
+  },
+  "vs.warp.is.text": {
+    "text": "Pela própria descrição, um ambiente de desenvolvimento agêntico: um terminal de desktop para macOS, Windows e Linux cujo cliente é de código aberto sob a AGPL-3.0. Ele tem o próprio Warp Agent, que chama modelos pelo Warp ou com as suas próprias chaves, e roda outros agentes de linha de comando, como Claude Code, Codex e Gemini CLI, em abas e painéis, com um painel de todos os agentes ativos, notificações, um painel de revisão de código e agentes na nuvem que rodam em um agendamento.",
+    "from": "54647299b7d0"
+  },
+  "vs.warp.pick.title": {
+    "text": "Qual escolher",
+    "from": "9190a8f83f35"
+  },
+  "vs.warp.pick.them": {
+    "text": "<strong>Escolha o Warp</strong> se você quer um app de terminal para tudo, também no Windows e no Linux, com agente próprio embutido e agentes na nuvem que você pode agendar.",
+    "from": "b6f4c8cea075"
+  },
+  "vs.warp.pick.us": {
+    "text": "<strong>Escolha o Aubergine</strong> se você já tem um terminal e agentes de que gosta, e quer só o que falta entre eles: todos à vista, mantidos rodando, sem conta e sem modelo próprio.",
+    "from": "24b891e15c2a"
+  },
+  "vs.warp.differs.title": {
+    "text": "Onde eles diferem",
+    "from": "8c2314ada082"
+  },
+  "vs.warp.d1": {
+    "text": "<strong>Um modelo próprio, ou nenhum.</strong> O Warp tem agente próprio, com planos que pagam pelo uso dele e a opção de usar as suas próprias chaves. O Aubergine não chama nenhum modelo e não guarda nenhuma chave: os agentes nos terminais dele são os que você mesmo instalou e em que fez login.",
+    "from": "5fbbccefb96a"
+  },
+  "vs.warp.d2": {
+    "text": "<strong>O que fechá-lo encerra.</strong> O Warp documenta que restaura janelas, abas, painéis e a saída recente; não encontramos nada dizendo que um programa em execução é mantido. No Aubergine, cada terminal é uma sessão do tmux, então um agente continua quando o navegador ou o próprio Aubergine para.",
+    "from": "18624a0a66fc"
+  },
+  "vs.warp.d3": {
+    "text": "<strong>De onde seus agentes podem ser acessados.</strong> O Warp publica uma sessão em execução na nuvem dele para que você a conduza de um celular ou de um navegador. O Aubergine não tem nuvem: outro dispositivo é um navegador que você pareia com um código, por um proxy que você roda na sua própria máquina, testado uma vez em um Mac.",
+    "from": "b82fc6e2eec4"
+  },
+  "vs.warp.has.title": {
+    "text": "O que o Warp tem e o Aubergine não",
+    "from": "9e0e15fe7a1a"
+  },
+  "vs.warp.h1": {
+    "text": "Windows e Linux como plataformas documentadas, como app de desktop. O Aubergine é feito para macOS.",
+    "from": "0d9c59074c72"
+  },
+  "vs.warp.h2": {
+    "text": "Um agente próprio, e agentes na nuvem que começam em um agendamento ou a partir de outro serviço, como Slack, Linear ou GitHub. O Aubergine não inicia nada de fora e não acessa nenhuma rede para um agendamento.",
+    "from": "fa39346e5209"
+  },
+  "vs.warp.h3": {
+    "text": "Tudo o mais que um app de terminal é: o editor de comandos dele, blocos de saída e notificações para mais de um agente. O Aubergine vê que um agente espera por meio de hooks feitos para o Claude Code.",
+    "from": "63765a4c4189"
+  },
+  "vs.warp.q1.q": {
+    "text": "O Aubergine é uma alternativa ao Warp?",
+    "from": "d02fa9b2f885"
+  },
+  "vs.warp.q1.a": {
+    "text": "Só para uma das coisas que o Warp faz: rodar vários agentes de programação de linha de comando e ver qual precisa de você. O Aubergine não é um app de terminal e não tem agente próprio. Você pode manter o Warp, ou qualquer terminal, e usar o Aubergine para os agentes.",
+    "from": "4d9ff5b3c2fa"
+  },
+  "vs.warp.q2.q": {
+    "text": "Preciso de uma conta ou de um plano pago?",
+    "from": "7ea716600927"
+  },
+  "vs.warp.q2.a": {
+    "text": "A documentação do Warp diz que fazer login é opcional para o terminal, e a página de preços dele lista um plano grátis e planos pagos. O Aubergine não tem conta nem planos.",
+    "from": "0104a9ec4212"
+  },
+  "vs.warp.q3.q": {
+    "text": "O Warp é de código aberto?",
+    "from": "bb814de9622d"
+  },
+  "vs.warp.q3.a": {
+    "text": "A documentação dele diz que o cliente do Warp é de código aberto sob a AGPL-3.0. O Aubergine está sob a licença MIT.",
+    "from": "a49fee890f51"
+  },
+  "vs.warp.q4.q": {
+    "text": "Posso usar o Warp e o Aubergine juntos?",
+    "from": "98378a2c4d20"
+  },
+  "vs.warp.q4.a": {
+    "text": "Sim, como com qualquer app de terminal. Os terminais do Aubergine são sessões do tmux, e <code>aubergine attach &lt;name&gt;</code> mostra um deles em uma janela do app de terminal de onde você o roda. Nós não testamos isso no Warp.",
+    "from": "bc272b9d95cf"
+  },
+  "vs.warp.mark": {
+    "text": "O Aubergine não é afiliado ao Warp. Warp é uma marca registrada da Denver Technologies, Inc., que opera como Warp.",
+    "from": "9cc6ff5ce341"
+  },
+  "vs.warp.c.form": {
+    "text": "Um app de terminal de desktop com agente próprio, e agentes na nuvem",
+    "from": "ea1d6176e636"
+  },
+  "vs.warp.c.runs": {
+    "text": "macOS, Windows e Linux",
+    "from": "637825dc78ad"
+  },
+  "vs.warp.c.price": {
+    "text": "Cliente de código aberto sob a AGPL-3.0; um plano grátis e planos pagos; login opcional",
+    "from": "1ce40e23dc83"
+  },
+  "vs.warp.c.agents": {
+    "text": "O próprio Warp Agent, e agentes de linha de comando como Claude Code, Codex, Gemini CLI",
+    "from": "fe6cfd7211da"
+  },
+  "vs.warp.c.layout": {
+    "text": "Abas e painéis, uma barra lateral e um painel de todos os agentes ativos",
+    "from": "9b58a6cb680e"
+  },
+  "vs.warp.c.apart": {
+    "text": "Reconhece worktrees do Git que você cria; contêineres para os agentes na nuvem dele",
+    "from": "d5692791483e"
+  },
+  "vs.warp.c.closed": {
+    "text": "Janelas, abas e a saída recente voltam; nada encontrado sobre programas em execução",
+    "from": "3084fbca2310"
+  },
+  "vs.warp.c.waits": {
+    "text": "Notificações no app e na área de trabalho: terminou, um pedido, um erro",
+    "from": "c3dc4bc6b1ec"
+  },
+  "vs.warp.c.review": {
+    "text": "Um painel de revisão de código, com comentários enviados a um agente",
+    "from": "0662c604fdbd"
+  },
+  "vs.warp.c.device": {
+    "text": "Uma sessão publicada na nuvem dele, para um celular ou um navegador",
+    "from": "c722dd49add9"
+  },
+  "vs.warp.c.programs": {
+    "text": "Um agente de linha de comando, e uma API para execuções dos agentes na nuvem dele",
+    "from": "fa3857a7a76b"
+  },
+  "vs.warp.c.timed": {
+    "text": "Agentes na nuvem em um agendamento, e iniciados a partir de outros serviços",
+    "from": "e738cdacf6b5"
+  },
+  "vs.paradev.crumb": {
+    "text": "Paradev",
+    "from": "6ff850fa1891"
+  },
+  "vs.paradev.name": {
+    "text": "Paradev",
+    "from": "6ff850fa1891"
+  },
+  "vs.paradev.meta.title": {
+    "text": "Aubergine vs Paradev (antigo Superset): uma alternativa",
+    "from": "07bdc273e5cb"
+  },
+  "vs.paradev.meta.description": {
+    "text": "O Paradev, antigo Superset, e o Aubergine têm licença MIT e usam worktrees do Git. O Paradev é um app de desktop com planos pagos; o Aubergine é grátis.",
+    "from": "9fd6946e998b"
+  },
+  "vs.paradev.title": {
+    "text": "Aubergine vs Paradev, antigo Superset",
+    "from": "2e91a4b729f8"
+  },
+  "vs.paradev.lead": {
+    "text": "O Paradev é o app de desktop que se chamava Superset até outubro de 2026. Como o Aubergine, ele está sob a licença MIT, roda qualquer agente de linha de comando e trabalha em worktrees do Git. Ele é um app com planos, apps de celular e uma nuvem; o Aubergine é um servidor no seu próprio computador e uma página no seu navegador, sem nada disso.",
+    "from": "776bb8091dc6"
+  },
+  "vs.paradev.how": {
+    "text": "<strong>De onde isto vem.</strong> O que se diz aqui sobre o Paradev vem da <a href=\"https://docs.paradev.com/\">documentação dele</a>, do <a href=\"https://paradev.com/changelog\">changelog dele</a> e do <a href=\"https://github.com/paradevai/paradev\">repositório dele</a>, lidos em 26 de novembro de 2026. Nós não rodamos o Paradev. Se algo estiver errado ou desatualizado, <a href=\"https://github.com/thirstyeggplant/aubergine/issues\">nos avise</a>.",
+    "from": "ba6080f1e8dc"
+  },
+  "vs.paradev.status": {
+    "text": "<strong>O nome.</strong> O changelog dele de 25 de outubro de 2026 diz que o Superset agora é o Paradev e que contas, workspaces, configurações e o comando <code>superset</code> continuam valendo. Ele não é o Apache Superset, a ferramenta de dados.",
+    "from": "0fc4d01036e0"
+  },
+  "vs.paradev.is.title": {
+    "text": "O que é o Paradev",
+    "from": "520654639a88"
+  },
+  "vs.paradev.is.text": {
+    "text": "Pela própria descrição, o workspace de código aberto para Claude Code, Codex e qualquer agente de programação: um app de desktop, não um app de terminal, em que os agentes rodam como um chat ou em um terminal. Cada tarefa tem a própria worktree, o próprio branch e o próprio terminal; uma barra lateral mostra todas as sessões por projeto. Ele tem um visualizador de diffs com checks de pull request e merge, um comando, um SDK e um servidor MCP e, nos planos pagos, apps de celular, acesso remoto, workspaces na nuvem e automações.",
+    "from": "304d9c9b59a7"
+  },
+  "vs.paradev.pick.title": {
+    "text": "Qual escolher",
+    "from": "9190a8f83f35"
+  },
+  "vs.paradev.pick.them": {
+    "text": "<strong>Escolha o Paradev</strong> se você quer um app de desktop que crie uma worktree para cada tarefa e a leve pelo diff, pelos checks e pelo merge, com apps de celular e uma nuvem quando você paga por eles.",
+    "from": "a5db2e59a2a0"
+  },
+  "vs.paradev.pick.us": {
+    "text": "<strong>Escolha o Aubergine</strong> se você quer todas as partes grátis no seu próprio computador, sem conta: terminais lado a lado, uma fila, agendamentos e uso a partir de outro dispositivo.",
+    "from": "29238cd8839e"
+  },
+  "vs.paradev.differs.title": {
+    "text": "Onde eles diferem",
+    "from": "8c2314ada082"
+  },
+  "vs.paradev.d1": {
+    "text": "<strong>O que é grátis.</strong> O Paradev lista um plano grátis para uma pessoa com workspaces locais, o app e o comando; automações, apps de celular e acesso remoto estão nos planos pagos. O Aubergine não tem planos: a fila, os agendamentos e o uso a partir de outro dispositivo estão todos no mesmo programa sob a licença MIT, sem conta.",
+    "from": "e88d006e6f33"
+  },
+  "vs.paradev.d2": {
+    "text": "<strong>Uma barra lateral ou um canvas.</strong> O Paradev mostra as sessões em uma barra lateral com abas e painéis. O Aubergine coloca os terminais em um canvas que você move e amplia, então muitos ficam ao vivo à vista ao mesmo tempo, com uma única lista de todos eles ao lado.",
+    "from": "e0a93e71bfe5"
+  },
+  "vs.paradev.d3": {
+    "text": "<strong>Como os terminais sobrevivem à janela.</strong> Os dois mantêm os agentes rodando quando a janela fecha: o Paradev por meio do próprio daemon em segundo plano, que, segundo a documentação dele, encerra todos os terminais quando você sai do Paradev por completo; o Aubergine por meio do tmux, que continua quando o próprio Aubergine é parado. Reiniciar o computador os encerra, nos dois.",
+    "from": "5190a04f786d"
+  },
+  "vs.paradev.has.title": {
+    "text": "O que o Paradev tem e o Aubergine não",
+    "from": "e211a22944f9"
+  },
+  "vs.paradev.h1": {
+    "text": "Um visualizador de diffs em que você comenta e edita as mudanças de um agente, acompanha os checks de um pull request e faz o merge. O Aubergine mostra o que mudou e nunca faz commit, push ou merge.",
+    "from": "d5bd58e3ed11"
+  },
+  "vs.paradev.h2": {
+    "text": "Um app de desktop, apps para iOS e Android, workspaces na nuvem, e um aviso sonoro e um badge no dock quando um agente precisa de você. O Aubergine é uma página do navegador e não toca nenhum som.",
+    "from": "880ab73dfaea"
+  },
+  "vs.paradev.h3": {
+    "text": "Automações disparadas por um pedido de revisão, uma mensagem no Slack, uma issue ou um webhook, e hooks que ele instala para que muitos agentes informem o estado deles. O Aubergine não inicia nada de fora, e só vê sozinho que um agente espera no caso do Claude Code.",
+    "from": "60f6c475b3fb"
+  },
+  "vs.paradev.q1.q": {
+    "text": "O Aubergine é uma alternativa ao Paradev (Superset)?",
+    "from": "e9c9295c1cf9"
+  },
+  "vs.paradev.q1.a": {
+    "text": "Para rodar vários agentes de linha de comando localmente, cada um na própria worktree do Git, sim, e com todos os recursos grátis. Não é um substituto equivalente: o Aubergine não tem app de desktop nem de celular, nem comentários em diffs, nem pull requests ou merge, nem nuvem.",
+    "from": "8acabc2591e8"
+  },
+  "vs.paradev.q2.q": {
+    "text": "O Superset é o mesmo que o Paradev?",
+    "from": "17d548f38157"
+  },
+  "vs.paradev.q2.a": {
+    "text": "Sim. O changelog dele de 25 de outubro de 2026 diz que o Superset agora é o Paradev, e o README dele diz que o comando ainda é <code>superset</code>. Nenhum dos dois tem relação com o Apache Superset.",
+    "from": "7906ac9c93cc"
+  },
+  "vs.paradev.q3.q": {
+    "text": "Os dois são de código aberto?",
+    "from": "1d2d2fda932d"
+  },
+  "vs.paradev.q3.a": {
+    "text": "Os dois estão sob a licença MIT. O Paradev também vende planos para os apps de celular, o acesso remoto, a nuvem e as automações dele; o Aubergine não vende nada.",
+    "from": "0f0cd2638d86"
+  },
+  "vs.paradev.q4.q": {
+    "text": "O Paradev roda no Linux ou no Windows?",
+    "from": "9ccc6492d874"
+  },
+  "vs.paradev.q4.a": {
+    "text": "A documentação dele diz macOS, com uma versão experimental para Linux, e que o Windows ainda não está disponível. O Aubergine é feito para macOS, só foi executado no Linux em contêineres e, no Windows, só roda dentro do WSL 2, o que ainda não foi testado.",
+    "from": "733d3a59a51d"
+  },
+  "vs.paradev.mark": {
+    "text": "O Aubergine não é afiliado ao Paradev nem aos seus criadores, a Superset Inc. Paradev e Superset são os nomes deles; nem eles nem o Aubergine têm relação com o Apache Superset.",
+    "from": "05f8d7ecd761"
+  },
+  "vs.paradev.c.form": {
+    "text": "Um app de desktop, antes chamado Superset, com apps de celular e uma nuvem",
+    "from": "3054414596e2"
+  },
+  "vs.paradev.c.runs": {
+    "text": "macOS; uma versão experimental para Linux; sem Windows",
+    "from": "889cdaf4298b"
+  },
+  "vs.paradev.c.price": {
+    "text": "MIT; um plano grátis para uma pessoa, e planos pagos",
+    "from": "a36a1e0e1592"
+  },
+  "vs.paradev.c.agents": {
+    "text": "Claude Code, Codex, OpenCode, Gemini, Cursor Agent e qualquer agente de linha de comando",
+    "from": "24eb0a261425"
+  },
+  "vs.paradev.c.layout": {
+    "text": "Uma barra lateral com todas as sessões por projeto, com abas e painéis",
+    "from": "a8991633cee6"
+  },
+  "vs.paradev.c.apart": {
+    "text": "Uma worktree, um branch e um terminal para cada tarefa",
+    "from": "e3443e224b3e"
+  },
+  "vs.paradev.c.closed": {
+    "text": "Os terminais continuam no daemon dele até você sair dele por completo; reiniciar os encerra",
+    "from": "c8f43d646883"
+  },
+  "vs.paradev.c.waits": {
+    "text": "Marcas de trabalho, um aviso sonoro quando um termina, um badge no dock",
+    "from": "cd8c2ecb61d3"
+  },
+  "vs.paradev.c.review": {
+    "text": "Um visualizador de diffs com comentários e edições, checks de pull request, merge",
+    "from": "2ba1d7abad83"
+  },
+  "vs.paradev.c.device": {
+    "text": "Apps para iOS e Android e acesso remoto, em um plano pago; nenhuma página web",
+    "from": "ff41edf13b81"
+  },
+  "vs.paradev.c.programs": {
+    "text": "Um comando, um SDK e um servidor MCP",
+    "from": "4f73909c306d"
+  },
+  "vs.paradev.c.timed": {
+    "text": "Automações em um agendamento ou em um evento, em um plano pago",
+    "from": "d0a82cd975d3"
+  },
+  "home.compare.more": {
+    "text": "Comparado com Conductor, Claude Squad, cmux, Warp e outros",
+    "from": "60e16e373973"
   }
 }

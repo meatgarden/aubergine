@@ -116,24 +116,24 @@
     "from": "21c2472673d7"
   },
   "home.meta.title": {
-    "text": "Aubergine：所有终端放在一张画布上，用你已有的智能体",
-    "from": "620bab21c0b6"
+    "text": "Aubergine：终端和编程智能体的指挥中心",
+    "from": "cd63b652eab2"
   },
   "home.meta.description": {
-    "text": "让终端如虎添翼：Aubergine 把你所有的终端并排放在浏览器里的一张画布上。想开多少就开多少，用你已经在用的智能体和模型，并看清哪一个需要你。免费、本地、开源。",
-    "from": "10a391e12690"
+    "text": "在浏览器里用一个仪表盘并排运行和管理 Claude Code、Codex 和普通终端。看清哪个智能体需要你。免费、本地、开源。",
+    "from": "ff38fa74a3da"
   },
   "home.ld.category": {
-    "text": "终端复用器与智能体工作区",
-    "from": "d32b7b10eecd"
+    "text": "终端与编程智能体管理仪表盘",
+    "from": "ec2b095cd97a"
   },
   "home.ld.requires": {
     "text": "tmux 3.2 或更高版本，Node.js 22 或更高版本",
     "from": "6fadbd03c20d"
   },
   "home.hero.tag.lead": {
-    "text": "让终端如虎添翼",
-    "from": "eb13de4649f0"
+    "text": "重新思考终端",
+    "from": "9c559cd8311b"
   },
   "home.hero.tag.free": {
     "text": "免费",
@@ -148,20 +148,20 @@
     "from": "cd90f9395587"
   },
   "home.hero.title.a": {
-    "text": "所有终端，",
-    "from": "8dd2aa1cda63"
+    "text": "你的终端",
+    "from": "e38bc0efbbc7"
   },
   "home.hero.title.b": {
-    "text": "并排摆开。",
-    "from": "eb95eacfe17a"
+    "text": "和 AI 编程",
+    "from": "45121d84f19b"
   },
   "home.hero.title.c": {
-    "text": "自带你的<em>智能体</em>。",
-    "from": "4728f2abc24b"
+    "text": "<em>智能体</em>的指挥中心。",
+    "from": "734e3af35ed0"
   },
   "home.hero.lead": {
-    "text": "Aubergine 把你所有的终端并排放在浏览器里的一张画布上。想开多少就开多少，用你已经在用的智能体和模型。它自己没有模型，也从不向你要密钥。",
-    "from": "c8c8b75e9e20"
+    "text": "在浏览器里的一个仪表盘上并排运行 Claude Code、Codex 和普通终端。Aubergine 自己没有模型，也从不向你要密钥。",
+    "from": "159e09c1ca4d"
   },
   "home.hero.after": {
     "text": "然后运行 <code>aubergine start --open</code>。适用于 macOS，需要 tmux 3.2 或更高版本以及 Node.js 22 或更高版本。",
@@ -184,8 +184,8 @@
     "from": "2288db7c750f"
   },
   "home.powers.title": {
-    "text": "给你的终端装上超能力",
-    "from": "588a8ab51054"
+    "text": "重新思考终端管理",
+    "from": "9b3c23b70200"
   },
   "home.powers.lead": {
     "text": "还是你已经在用的终端，补上它们一直缺的东西：一个可以并排摆开的地方、一份记忆，以及在需要你时通知你的办法。",
@@ -584,12 +584,12 @@
     "from": "5c6d1db70932"
   },
   "claude.meta.title": {
-    "text": "Aubergine 中的 Claude Code | Aubergine",
-    "from": "964ec2c2f3df"
+    "text": "并排运行多个 Claude Code 会话 | Aubergine",
+    "from": "3c61aa83b994"
   },
   "claude.meta.description": {
-    "text": "Aubergine 为 Claude Code 自动做的事：从菜单启动它、看到它在等待、恢复对话、过去的对话、它是如何配置的，以及工具。",
-    "from": "53c5a33c5a7d"
+    "text": "并排运行多个 Claude Code 会话。Aubergine 启动它们，显示哪一个在等你，恢复对话并列出过去的对话。",
+    "from": "6b7dc6fd962d"
   },
   "claude.title": {
     "text": "Aubergine 为 Claude Code 做了什么",
@@ -760,12 +760,12 @@
     "from": "cdae060f0648"
   },
   "chatgpt.meta.title": {
-    "text": "Aubergine 中的 Codex 与 ChatGPT | Aubergine",
-    "from": "8dcd1dde8945"
+    "text": "在终端中并排运行 Codex 智能体 | Aubergine",
+    "from": "c19dbd4b8744"
   },
   "chatgpt.meta.description": {
-    "text": "Codex 是 OpenAI 的命令行编程智能体，像任何程序一样在 Aubergine 终端中运行。今天能用什么，它能通过 aubergine 命令报告什么，以及哪些只为 Claude Code 构建。",
-    "from": "6f8c78d52c06"
+    "text": "Codex 是 OpenAI 的命令行编程智能体，像任何程序一样在 Aubergine 终端中运行。今天能用什么，以及哪些只为 Claude Code 构建。",
+    "from": "ce1a16eaf055"
   },
   "chatgpt.crumb": {
     "text": "Codex 与 ChatGPT",
@@ -1168,8 +1168,8 @@
     "from": "82c0a75bef8c"
   },
   "windows.meta.description": {
-    "text": "Aubergine 不能在 Windows 本身上运行，但可以在 WSL 2 里运行，并在 Windows 的浏览器中使用。步骤、试过什么和没试过什么，以及问题的解决办法。",
-    "from": "eef730b3d958"
+    "text": "Aubergine 不能在 Windows 本身上运行。它在 WSL 2 里运行，从 Windows 的浏览器中使用：步骤、试过什么，以及解决办法。",
+    "from": "ec5595885249"
   },
   "windows.crumb": {
     "text": "Windows 与 WSL",
@@ -1316,8 +1316,8 @@
     "from": "6ee5544f775e"
   },
   "guides.meta.title": {
-    "text": "Aubergine 指南 | Aubergine",
-    "from": "0d501fb6af2e"
+    "text": "在终端中运行编程智能体的指南 | Aubergine",
+    "from": "f891421fd993"
   },
   "guides.meta.description": {
     "text": "用 Aubergine 运行多个编程智能体的指南：概览、Claude Code 与 Codex、工作副本，以及队列与定时计划。",
@@ -1576,12 +1576,12 @@
     "from": "60142c410708"
   },
   "copies.meta.title": {
-    "text": "用工作副本让两个编程智能体在同一个仓库上工作 | Aubergine",
-    "from": "22fa024200af"
+    "text": "让两个编程智能体在同一个仓库上工作 | Aubergine",
+    "from": "bdb9a97d9a45"
   },
   "copies.meta.description": {
-    "text": "工作副本给每个智能体一份仓库的独立检出和分支，两个智能体永远不会编辑同一批文件，你也能分开阅读各自的工作。",
-    "from": "a293deb1c990"
+    "text": "工作副本给每个智能体独立的 Git worktree 和分支，两个智能体永远不会编辑同一批文件，你也能分开阅读各自的工作。",
+    "from": "0f5b56278a4e"
   },
   "copies.crumb": {
     "text": "工作副本",
@@ -1764,12 +1764,12 @@
     "from": "515aa3442054"
   },
   "keep.meta.title": {
-    "text": "崩溃、重启或更新之后保留你的终端 | Aubergine",
-    "from": "d0521ba83d02"
+    "text": "重启或崩溃之后保留你的终端 | Aubergine",
+    "from": "632ab04b6eba"
   },
   "keep.meta.description": {
-    "text": "浏览器关闭、Aubergine 重启，以及电脑崩溃、重启或在夜里自动更新时，你的终端和编程智能体会怎样，以及如何从上次停下的地方继续。",
-    "from": "4f824d2bcf4e"
+    "text": "关闭浏览器、重启 Aubergine、重启电脑，分别会对你的终端和智能体造成什么影响，以及如何从上次停下的地方继续。",
+    "from": "27a4a64aebc5"
   },
   "keep.crumb": {
     "text": "重启之后",
@@ -2009,11 +2009,11 @@
   },
   "alive.meta.title": {
     "text": "关闭终端后让进程继续运行 | Aubergine",
-    "from": "b6893102f4dc"
+    "from": "1cb4c894cd65"
   },
   "alive.meta.description": {
-    "text": "关闭终端窗口会结束其中运行的东西。常见的办法是 nohup、disown、screen 和 tmux；Aubergine 替你把每个终端都放在 tmux 里运行，所以关掉浏览器不会结束任何东西。",
-    "from": "91fc698775ac"
+    "text": "关闭终端会结束其中运行的东西。常见的办法是 nohup、disown、screen 和 tmux。Aubergine 替你把每个终端都放在 tmux 里运行。",
+    "from": "697912690f11"
   },
   "alive.crumb": {
     "text": "保持运行",
@@ -2168,8 +2168,8 @@
     "from": "6298f70cc7f8"
   },
   "notify.meta.description": {
-    "text": "一眼看出哪个 Claude Code 终端在工作、在等你或已完成：Aubergine 生成的钩子、For you 计数、跳到下一个等待终端的按键，以及打开的页面发出的通知。",
-    "from": "ec167ae38aa3"
+    "text": "看出哪个 Claude Code 终端在工作、在等你或已完成：等待中的计数、跳到下一个的按键，以及浏览器通知。",
+    "from": "538211348bf4"
   },
   "notify.crumb": {
     "text": "完成还是在等待",
@@ -2308,12 +2308,12 @@
     "from": "60204a04f28a"
   },
   "resume.meta.title": {
-    "text": "重启后恢复 Claude Code 对话 | Aubergine",
-    "from": "25d7c94055ab"
+    "text": "重启后恢复 Claude Code 会话 | Aubergine",
+    "from": "03470fcd8946"
   },
   "resume.meta.description": {
-    "text": "只要你在正确的文件夹里，claude --continue 和 --resume 就能找回对话。Aubergine 记得每个终端处于哪个对话，提供 Resume agent，并按文件夹列出过去的对话。",
-    "from": "9c3fb52f17de"
+    "text": "claude --continue 和 --resume 需要在正确的文件夹里。Aubergine 记得每个终端的对话，提供 Resume agent，并列出过去的对话。",
+    "from": "f60b9e354755"
   },
   "resume.crumb": {
     "text": "恢复对话",
@@ -2448,12 +2448,12 @@
     "from": "82d3fe458522"
   },
   "many.meta.title": {
-    "text": "标签页太多时找到要找的终端 | Aubergine",
-    "from": "710b13634a0f"
+    "text": "终端标签页太多？找到要找的那个 | Aubergine",
+    "from": "e727b8c72939"
   },
   "many.meta.description": {
-    "text": "终端标签页太多，个个都叫 zsh？Aubergine 把每个终端放到画布上和同一个列表里，用文字写出状态，提供筛选、标签、终端输出搜索，还能在浏览器标签页中单独打开一个终端。",
-    "from": "0d77fee497f4"
+    "text": "终端标签页太多，个个都叫 zsh？Aubergine 把每个终端放到画布上和同一个列表里，带状态、筛选、标签和输出搜索。",
+    "from": "0d52d247f772"
   },
   "many.crumb": {
     "text": "终端太多",
@@ -2580,8 +2580,8 @@
     "from": "a731849612b9"
   },
   "tmux.meta.description": {
-    "text": "关掉窗口后依然存在的 shell，不需要前缀键，也不需要 .tmux.conf。Aubergine 在自己的套接字上替你运行 tmux，滚轮、复制粘贴和调整大小都和任何终端一样。",
-    "from": "d876f30b4bcb"
+    "text": "关掉窗口后依然存在的 shell，不需要前缀键，也不需要 .tmux.conf。Aubergine 替你运行 tmux；滚轮、复制和粘贴照常可用。",
+    "from": "de322a70f2bb"
   },
   "tmux.crumb": {
     "text": "不用 tmux 的 tmux",
@@ -2816,8 +2816,8 @@
     "from": "5e05181dcbf3"
   },
   "phone.meta.description": {
-    "text": "用手机浏览器访问 Aubergine：同一台电脑上的 HTTPS、写在设置里的地址、用一次性代码或二维码配对每台设备，并可随时吊销。只在一台 Mac 上运行过一次；没有在手机上试过。",
-    "from": "4f87f330c4d4"
+    "text": "用手机浏览器访问 Aubergine：你自己电脑上的 HTTPS，每台设备用一次性代码配对。只在一台 Mac 上运行过一次；没有在手机上试过。",
+    "from": "b82b5a179985"
   },
   "phone.crumb": {
     "text": "用手机",
@@ -2944,8 +2944,8 @@
     "from": "2c9ecf2e9214"
   },
   "queue.meta.title": {
-    "text": "队列、For you 列表与定时计划 | Aubergine",
-    "from": "aaf91b58a021"
+    "text": "编程智能体的任务队列与定时计划 | Aubergine",
+    "from": "3fb36f54544d"
   },
   "queue.meta.description": {
     "text": "任务写一次，让空闲的智能体去接；在一个列表中看到所有在等你的事；用定时计划在设定的时间运行任务。",
@@ -3564,8 +3564,8 @@
     "from": "25c43f0bde14"
   },
   "faq.meta.title": {
-    "text": "常见问题 | Aubergine",
-    "from": "0956334109a5"
+    "text": "Aubergine 常见问题：智能体、隐私与系统要求",
+    "from": "c026a239ae64"
   },
   "faq.meta.description": {
     "text": "关于 Aubergine 的解答：它是什么、需要什么、是否私密、如何与编程智能体配合，以及有哪些计划。",
@@ -3742,5 +3742,1253 @@
   "404.faq": {
     "text": "常见问题",
     "from": "e956a9404b46"
+  },
+  "site.foot.compare": {
+    "text": "对比",
+    "from": "e888155d8c7d"
+  },
+  "guides.compare.name": {
+    "text": "Aubergine 与其他工具对比",
+    "from": "a7d4b6e16622"
+  },
+  "guides.compare.text": {
+    "text": "Conductor、Claude Squad、Vibe Kanban、cmux、Warp 和 Paradev 与 Aubergine 并列对比，依据的是各自对自己的文档说明。",
+    "from": "ef74044c8bc1"
+  },
+  "compare.meta.title": {
+    "text": "7 款运行编程智能体的工具对比 | Aubergine",
+    "from": "c99d6cc298c1"
+  },
+  "compare.meta.description": {
+    "text": "Aubergine 与 Conductor、Claude Squad、Vibe Kanban、cmux、Warp 和 Paradev 对比：各自是什么、在哪里运行、价格如何，以及关掉它会结束什么。",
+    "from": "ab73688e9085"
+  },
+  "compare.crumb": {
+    "text": "对比",
+    "from": "e888155d8c7d"
+  },
+  "compare.title": {
+    "text": "运行多个编程智能体的工具对比",
+    "from": "28d801f5961d"
+  },
+  "compare.lead": {
+    "text": "七个工具，面对同一个场景：不止一个编程智能体在工作，而你在中间。这里把 Aubergine 与 Conductor、Claude Squad、Vibe Kanban、cmux、Warp 和 Paradev 并列对比，每个工具各有一页。",
+    "from": "b5fab9e77782"
+  },
+  "compare.how": {
+    "text": "<strong>这些页面是怎么写的。</strong>这些页面对其他工具的描述，来自该工具自己的网站、文档和仓库，阅读时间为 2026 年 11 月 26 日，每一页都附有链接。我们没有运行过其他工具。它们的文档没有提到的地方，页面只说没有找到相关内容，而不是说该工具做不到。这些工具变化很快：如果这里有错误或已过时，请<a href=\"https://github.com/thirstyeggplant/aubergine/issues\">告诉我们</a>，我们会更正。",
+    "from": "b593b3d87f7a"
+  },
+  "compare.table.title": {
+    "text": "七个工具并列一览",
+    "from": "43d67ddccfc2"
+  },
+  "compare.table.tool": {
+    "text": "工具",
+    "from": "2e53bdcd0740"
+  },
+  "compare.each.title": {
+    "text": "每个工具一页",
+    "from": "8121e71bc2a8"
+  },
+  "compare.each.text": {
+    "text": "每一页都有两者的完整对比表、它们的不同之处，以及对方有而 Aubergine 没有的东西。",
+    "from": "8fa0a789da7e"
+  },
+  "compare.around.title": {
+    "text": "Aubergine 围绕什么构建",
+    "from": "86c14152ab1c"
+  },
+  "compare.around.terminals": {
+    "text": "<strong>普通的终端。</strong>智能体在 Aubergine 里的运行方式，和在任何终端应用里一样。上面没有聊天视图，你和它打印的内容之间没有任何隔层。",
+    "from": "4b58310b25f3"
+  },
+  "compare.around.canvas": {
+    "text": "<strong>全部尽收眼底。</strong>终端并排摆在一张可以平移和缩放的画布上，还有一份列表，列出所有终端并用文字写出各自的状态。见<a href=\"/too-many-terminal-tabs/\">找到正确的终端</a>。",
+    "from": "c6c0fbc9bab4"
+  },
+  "compare.around.tmux": {
+    "text": "<strong>关掉窗口不会结束任何东西。</strong>每个终端都是一个 tmux 会话，所以浏览器和 Aubergine 本身都可以停下，而你的智能体继续运行。见<a href=\"/keep-terminals-after-restart/\">重启会保留什么</a>。",
+    "from": "e512de1deb34"
+  },
+  "compare.around.local": {
+    "text": "<strong>只在你的电脑上。</strong>没有账号，没有云，没有付费套餐，自己也没有模型；服务器监听 <code>127.0.0.1</code>。见<a href=\"/security/\">安全</a>。",
+    "from": "d51e1a73a1c0"
+  },
+  "compare.around.decide": {
+    "text": "<strong>由人来决定。</strong>智能体提出的东西等你审阅，工作流中的审批只能由你来做，而一份列表 For you 汇集了所有在等你的事。见<a href=\"/queue-and-schedules/\">队列</a>。",
+    "from": "0c58d14e37b6"
+  },
+  "compare.lacks.title": {
+    "text": "Aubergine 没有的东西",
+    "from": "791f409b25b0"
+  },
+  "compare.lacks.app": {
+    "text": "<strong>没有桌面应用，也没有手机应用。</strong>它是你浏览器里的一个页面。另一台设备可以通过你自己运行的代理来配对；这只在一台 Mac 上运行过一次，从未在真正的手机上试过。",
+    "from": "8cda51e85558"
+  },
+  "compare.lacks.merge": {
+    "text": "<strong>没有拉取请求，也不做合并。</strong>它会逐个文件显示工作副本中改了什么，但从不提交、推送、变基或合并。",
+    "from": "2c7dc74cd5cf"
+  },
+  "compare.lacks.cloud": {
+    "text": "<strong>没有云。</strong>智能体运行在 Aubergine 所在的电脑上，定时计划只在电脑开着时触发。",
+    "from": "9b0762b5da8f"
+  },
+  "compare.lacks.sound": {
+    "text": "<strong>没有声音，也没有推送。</strong>通知来自你浏览器里打开的 Aubergine 页面。",
+    "from": "e63009caa14b"
+  },
+  "compare.lacks.platforms": {
+    "text": "<strong>为 macOS 构建。</strong>在 Linux 上只在容器里运行过；在 Windows 上只能在 WSL 2 里运行，而这还没有试过。",
+    "from": "5f5c1927df23"
+  },
+  "compare.lacks.agents": {
+    "text": "<strong>主要为 Claude Code。</strong>任何命令行智能体都能在终端里运行，但 Aubergine 自己为智能体做的事（看出它在等待、恢复对话）是为 Claude Code 构建的；其他智能体通过 <code>aubergine</code> 命令来报告。",
+    "from": "2f0ba98518bf"
+  },
+  "compare.q.best.q": {
+    "text": "同时运行多个 Claude Code 智能体，最好的工具是什么？",
+    "from": "4d699c803dcd"
+  },
+  "compare.q.best.a": {
+    "text": "取决于你想在智能体周围有什么。想要一个带差异、拉取请求和合并的 Mac 应用：Conductor 或 Paradev。想要在你已经在用的终端里运行的程序：Claude Squad。想要一块 issue 看板：Vibe Kanban。想要原生 Mac 终端：cmux。想要一个自带智能体和云端智能体的终端：Warp。想要在浏览器页面里并排摆放普通终端、由 tmux 保持运行、不需要账号：Aubergine。",
+    "from": "6a57f43a10dc"
+  },
+  "compare.q.open.q": {
+    "text": "这些工具中哪些是开源的？",
+    "from": "23e0ea8e7990"
+  },
+  "compare.q.open.a": {
+    "text": "截至 2026 年 11 月 26 日的阅读：Aubergine（MIT）、Paradev（MIT）、Vibe Kanban（Apache-2.0）、Claude Squad（AGPL-3.0）、cmux 应用（GPL-3.0-or-later）和 Warp 客户端（AGPL-3.0）。Conductor 的条款称它为专有软件。",
+    "from": "fcb0a543dbb1"
+  },
+  "compare.q.linux.q": {
+    "text": "这些工具中哪些能在 Linux 或 Windows 上运行？",
+    "from": "702775b7d90b"
+  },
+  "compare.q.linux.a": {
+    "text": "按它们自己的文档：Warp 支持 macOS、Windows 和 Linux；Vibe Kanban 三者都支持；Claude Squad 支持 macOS 和 Linux，在 Windows 上通过 WSL 使用 tmux；Paradev 支持 macOS，另有一个实验性的 Linux 版本；Conductor 和 cmux 只支持 macOS。Aubergine 为 macOS 构建，在 Linux 上只在容器里运行过，在 Windows 上只能在 WSL 2 里运行，尚未试过。",
+    "from": "eb17a7194e7c"
+  },
+  "compare.q.close.q": {
+    "text": "关掉应用后，哪些工具能让智能体继续运行？",
+    "from": "4b67f3b2e66d"
+  },
+  "compare.q.close.a": {
+    "text": "Aubergine 和 Claude Squad 都把每个智能体放在一个 tmux 会话里运行。Paradev 的文档说明有一个后台守护进程，在窗口关闭时保留终端。cmux 只在需要手动开启的 tmux 模式下保留运行中的进程。Conductor 说本地会话随应用一起结束。Warp 恢复的是窗口和最近的输出，而不是正在运行的程序。Conductor、cmux、Warp 和 Paradev 还各自有一个云，智能体可以在那里继续运行。没有一个工具（包括 Aubergine）能让本地智能体在电脑重启后继续运行。",
+    "from": "4bb44c21e3ea"
+  },
+  "compare.vs.table": {
+    "text": "并列对比",
+    "from": "a3d7b387c34d"
+  },
+  "compare.vs.thing": {
+    "text": "项目",
+    "from": "f8cf83a76a98"
+  },
+  "compare.vs.faq": {
+    "text": "常见问题",
+    "from": "9a72221a2747"
+  },
+  "compare.vs.all": {
+    "text": "七个工具全部对比",
+    "from": "ee4eb4f7ad29"
+  },
+  "compare.row.form": {
+    "text": "它是什么",
+    "from": "1f36becc3aa7"
+  },
+  "compare.row.runs": {
+    "text": "运行平台",
+    "from": "88a550e0f44e"
+  },
+  "compare.row.price": {
+    "text": "源码与价格",
+    "from": "fb616bdc6fda"
+  },
+  "compare.row.agents": {
+    "text": "智能体",
+    "from": "279b44d2ab4b"
+  },
+  "compare.row.layout": {
+    "text": "同时多个",
+    "from": "fa6b205bb2ee"
+  },
+  "compare.row.apart": {
+    "text": "把智能体分开",
+    "from": "420ecd34a352"
+  },
+  "compare.row.closed": {
+    "text": "关掉之后",
+    "from": "6d0beffa1276"
+  },
+  "compare.row.waits": {
+    "text": "智能体在等待或完成时",
+    "from": "ad33e1aadbff"
+  },
+  "compare.row.review": {
+    "text": "审阅改动",
+    "from": "5c07a12954c0"
+  },
+  "compare.row.device": {
+    "text": "从另一台设备",
+    "from": "0176df0875c6"
+  },
+  "compare.row.programs": {
+    "text": "供程序使用",
+    "from": "ca1a25f0d017"
+  },
+  "compare.row.timed": {
+    "text": "队列与定时计划",
+    "from": "7048f6d971c8"
+  },
+  "compare.a.form": {
+    "text": "你自己电脑上的一个服务器，加上你浏览器里的一个页面",
+    "from": "f0e12c3481c6"
+  },
+  "compare.a.runs": {
+    "text": "macOS；Linux 只在容器里运行过；Windows 在 WSL 2 里，未试过。需要 tmux 和 Node.js",
+    "from": "ce2ec170ad45"
+  },
+  "compare.a.price": {
+    "text": "MIT，免费；没有付费套餐，也没有账号",
+    "from": "c6bdeec37cc3"
+  },
+  "compare.a.agents": {
+    "text": "任何命令行智能体；为 Claude Code 自己做得更多",
+    "from": "036a4153456a"
+  },
+  "compare.a.layout": {
+    "text": "终端并排摆在画布上，还有一份列出全部终端的列表",
+    "from": "928536cdc6c9"
+  },
+  "compare.a.apart": {
+    "text": "在你需要时，为终端提供一个位于独立分支上的 Git worktree",
+    "from": "2eb2221a43cc"
+  },
+  "compare.a.closed": {
+    "text": "终端在 tmux 里继续运行；电脑重启会结束运行中的东西",
+    "from": "3a2d0d86f66d"
+  },
+  "compare.a.waits": {
+    "text": "终端的颜色、顶部的计数、跳到下一个的按键、打开的页面发出的通知；没有声音",
+    "from": "02781ee55c07"
+  },
+  "compare.a.review": {
+    "text": "逐个文件显示改了什么；不提交、不推送、没有拉取请求、不合并",
+    "from": "24a75e296224"
+  },
+  "compare.a.device": {
+    "text": "通过你自己运行的代理配对一个浏览器；没有应用；没有在真正的手机上试过",
+    "from": "e18f70623096"
+  },
+  "compare.a.programs": {
+    "text": "带有限定权限令牌的 HTTP API、<code>aubergine</code> 命令、一个 MCP 服务器",
+    "from": "fc6fcbb83503"
+  },
+  "compare.a.timed": {
+    "text": "带上限的队列、按每天时间运行的定时计划、带审批的工作流",
+    "from": "9aa15e3097da"
+  },
+  "vs.conductor.crumb": {
+    "text": "Conductor",
+    "from": "14116bf4372e"
+  },
+  "vs.conductor.name": {
+    "text": "Conductor",
+    "from": "14116bf4372e"
+  },
+  "vs.conductor.meta.title": {
+    "text": "Aubergine vs Conductor：免费开源的替代方案",
+    "from": "35ece35e60d8"
+  },
+  "vs.conductor.meta.description": {
+    "text": "两者都在 Git worktree 中并行运行编程智能体。Conductor 是带云服务的 Mac 应用；Aubergine 开源，并让终端在 tmux 中持续运行。",
+    "from": "baeaaa943291"
+  },
+  "vs.conductor.title": {
+    "text": "Aubergine vs Conductor",
+    "from": "6dc79eddb49c"
+  },
+  "vs.conductor.lead": {
+    "text": "两者都能同时运行多个编程智能体，每个都在自己的 Git worktree 里。Conductor 是一个 Mac 应用，有聊天、差异查看器和云。Aubergine 是你自己电脑上一个免费开源的服务器，在浏览器页面里把普通终端并排显示。",
+    "from": "9d27a087649b"
+  },
+  "vs.conductor.how": {
+    "text": "<strong>信息来源。</strong>这里关于 Conductor 的内容来自<a href=\"https://docs.conductor.build/\">它的文档</a>和<a href=\"https://www.conductor.build/changelog\">它的更新日志</a>，阅读时间为 2026 年 11 月 26 日。我们没有运行过 Conductor。如果有错误或已过时，请<a href=\"https://github.com/thirstyeggplant/aubergine/issues\">告诉我们</a>。",
+    "from": "6bdb8eaf878d"
+  },
+  "vs.conductor.status": {
+    "text": "<strong>Conductor 的现状。</strong>2026 年 11 月 4 日，它的更新日志说 Conductor 将加入 Meta 并逐步停止运营；11 月 13 日又说 Conductor 不会关闭。撰写本文时，它网站的部分页面仍显示第一条消息。它现在的情况请看它的更新日志。",
+    "from": "0ce8070b49b7"
+  },
+  "vs.conductor.is.title": {
+    "text": "Conductor 是什么",
+    "from": "761d10f79609"
+  },
+  "vs.conductor.is.text": {
+    "text": "按它自己的描述，是一个在你的代码库上并行运行多个编程智能体的 Mac 应用。每项工作是一个工作区：一个位于某个分支上的 Git worktree，带有聊天、终端和浏览器标签页。它用你 Mac 上已有的登录来运行 Claude Code、Codex、Cursor 和 OpenCode，并有差异查看器、拉取请求、一个 iOS 应用，以及一个付费的云，智能体在那里的沙箱中运行。",
+    "from": "892b18bb52d6"
+  },
+  "vs.conductor.pick.title": {
+    "text": "选哪个",
+    "from": "9190a8f83f35"
+  },
+  "vs.conductor.pick.them": {
+    "text": "<strong>选 Conductor</strong>：如果你想要一个 Mac 应用，把任务从一条提示词一直带到已合并的拉取请求，并有一个云，让工作在你的 Mac 关机时继续。",
+    "from": "703a739ea90f"
+  },
+  "vs.conductor.pick.us": {
+    "text": "<strong>选 Aubergine</strong>：如果你想把智能体当作普通终端，一眼看到全部，窗口关掉后仍在 tmux 里继续运行，不用登录任何东西，而且源码开放。",
+    "from": "e081882f41c0"
+  },
+  "vs.conductor.differs.title": {
+    "text": "不同之处",
+    "from": "8c2314ada082"
+  },
+  "vs.conductor.d1": {
+    "text": "<strong>终端，而不是聊天。</strong>Conductor 把智能体显示为工作区里的一个聊天，旁边有终端模式。Aubergine 显示智能体自己的终端，和它在任何终端应用里运行时一样，并把许多终端摆在一张可以平移和缩放的画布上。",
+    "from": "e8ee13648dc8"
+  },
+  "vs.conductor.d2": {
+    "text": "<strong>关掉它会结束什么。</strong>Conductor 的文档说，关掉应用或关闭 Mac 时本地会话会结束，而云端会话会继续。在 Aubergine 中，每个终端都是一个 tmux 会话：关掉浏览器或停止 Aubergine 不会结束任何东西。两者在电脑重启时都会结束。",
+    "from": "09276a000922"
+  },
+  "vs.conductor.d3": {
+    "text": "<strong>不依赖你电脑之外的任何东西。</strong>Conductor 的文档提到账号、云、供其手机应用使用的中继，以及使用情况分析。Aubergine 没有账号，也没有自己的服务：服务器监听 <code>127.0.0.1</code>，从另一台设备使用需要经过你自己运行的代理。",
+    "from": "717211af5743"
+  },
+  "vs.conductor.has.title": {
+    "text": "Conductor 有而 Aubergine 没有的",
+    "from": "97051a4ecf5d"
+  },
+  "vs.conductor.h1": {
+    "text": "一个差异查看器，你可以在里面对某些行发表评论并把评论发回给智能体，然后是拉取请求、检查和合并。Aubergine 显示工作副本中改了什么，但从不提交、推送或合并。",
+    "from": "6777521cf45a"
+  },
+  "vs.conductor.h2": {
+    "text": "一个云，智能体在你的 Mac 关机时也能在那里继续运行，还有在那里按计划运行的例行任务。Aubergine 的定时计划在你的电脑上触发，并且只在它开着时。",
+    "from": "ac3ae91a45fe"
+  },
+  "vs.conductor.h3": {
+    "text": "一个 iOS 应用和完成提示音。Aubergine 没有应用，也不播放声音。",
+    "from": "193e1ed4e647"
+  },
+  "vs.conductor.q1.q": {
+    "text": "Aubergine 是 Conductor 的替代品吗？",
+    "from": "cde19d1a87c2"
+  },
+  "vs.conductor.q1.a": {
+    "text": "如果是在你自己的电脑上运行多个命令行智能体，是的：每个智能体在画布上有一个终端，在你需要时还有自己的 Git worktree。但它不是一对一的替代：Aubergine 没有聊天视图，没有拉取请求或合并，没有云，也没有手机应用。",
+    "from": "6570e71775cf"
+  },
+  "vs.conductor.q2.q": {
+    "text": "Conductor 是开源的吗？",
+    "from": "fad053540fb9"
+  },
+  "vs.conductor.q2.a": {
+    "text": "不是：它的条款称它为专有软件，我们也没有找到公开的仓库。它的文档说本地应用可以免费使用，云端工作区需要付费套餐。Aubergine 采用 MIT 许可证，没有付费套餐。",
+    "from": "1cd0818f2d1c"
+  },
+  "vs.conductor.q3.q": {
+    "text": "Conductor 能在 Linux 或 Windows 上运行吗？",
+    "from": "735588d0d163"
+  },
+  "vs.conductor.q3.a": {
+    "text": "它的文档说目前还不支持 Windows 和 Linux。Aubergine 为 macOS 构建，在 Linux 上只在容器里运行过，在 Windows 上只能在 WSL 2 里运行，而这还没有试过。",
+    "from": "f5ade7015ea8"
+  },
+  "vs.conductor.q4.q": {
+    "text": "可以同时使用 Conductor 和 Aubergine 吗？",
+    "from": "19c0c55db696"
+  },
+  "vs.conductor.q4.a": {
+    "text": "没有什么阻止你这样做：两者都在同一个仓库的 Git worktree 中工作，各自创建自己的。我们没有把两者放在一起运行过。",
+    "from": "f05d6d7dc553"
+  },
+  "vs.conductor.mark": {
+    "text": "Aubergine 与 Conductor 及其开发者没有任何关联。Conductor 是他们产品的名称：它的条款写的是 Melty Labs, Inc.，它的网站写的是 Conductor from Meta。",
+    "from": "f1f2c16aeaff"
+  },
+  "vs.conductor.c.form": {
+    "text": "一个 Mac 桌面应用，带托管的云和一个 iOS 应用",
+    "from": "8f147196475d"
+  },
+  "vs.conductor.c.runs": {
+    "text": "仅 macOS",
+    "from": "3f2f41cd023d"
+  },
+  "vs.conductor.c.price": {
+    "text": "闭源；本地应用免费，云需要付费套餐",
+    "from": "330fb38120bd"
+  },
+  "vs.conductor.c.agents": {
+    "text": "Claude Code、Codex、Cursor 和 OpenCode；在终端模式下可运行任何命令",
+    "from": "605c47dc956b"
+  },
+  "vs.conductor.c.layout": {
+    "text": "一个工作区侧边栏，每个工作区带聊天、终端和浏览器标签页",
+    "from": "d639b322b315"
+  },
+  "vs.conductor.c.apart": {
+    "text": "每个工作区一个 Git worktree 和分支；在它的云中使用沙箱",
+    "from": "ca8d1b34e4bc"
+  },
+  "vs.conductor.c.closed": {
+    "text": "本地会话随应用结束；云端会话继续",
+    "from": "bed2d2359373"
+  },
+  "vs.conductor.c.waits": {
+    "text": "完成提示音",
+    "from": "9cc24eada060"
+  },
+  "vs.conductor.c.review": {
+    "text": "带评论回传给智能体的差异查看器、拉取请求、检查、合并",
+    "from": "c7413ccd732c"
+  },
+  "vs.conductor.c.device": {
+    "text": "通过它的中继使用 iOS 应用，需要 Mac 处于唤醒状态且应用打开",
+    "from": "ebef5d2152fd"
+  },
+  "vs.conductor.c.programs": {
+    "text": "供其云端工作区使用的 API 和 MCP 服务器，一个命令",
+    "from": "3d0a599b7e17"
+  },
+  "vs.conductor.c.timed": {
+    "text": "消息队列；在它的云中按计划运行的例行任务",
+    "from": "9ab0918f949e"
+  },
+  "vs.claude-squad.crumb": {
+    "text": "Claude Squad",
+    "from": "3c4fa1eb24c0"
+  },
+  "vs.claude-squad.name": {
+    "text": "Claude Squad",
+    "from": "3c4fa1eb24c0"
+  },
+  "vs.claude-squad.meta.title": {
+    "text": "Aubergine vs Claude Squad：tmux 与 worktree 的两种用法",
+    "from": "4166fb6975ea"
+  },
+  "vs.claude-squad.meta.description": {
+    "text": "两者都把每个编程智能体放在 tmux 会话和 Git worktree 中运行。Claude Squad 是你终端里的程序；Aubergine 是你浏览器里的画布。",
+    "from": "9c993cb105df"
+  },
+  "vs.claude-squad.title": {
+    "text": "Aubergine vs Claude Squad",
+    "from": "77af5fc2deda"
+  },
+  "vs.claude-squad.lead": {
+    "text": "两者的基础相同：每个智能体在一个 tmux 会话里，每个都有自己的 Git worktree，都免费开源。Claude Squad 是你终端里的一个程序。Aubergine 是你浏览器里的一个页面，终端在那里并排摆开。",
+    "from": "d9f4e824659b"
+  },
+  "vs.claude-squad.how": {
+    "text": "<strong>信息来源。</strong>这里关于 Claude Squad 的内容来自<a href=\"https://github.com/smtg-ai/claude-squad\">它的仓库和 README</a>，阅读时间为 2026 年 11 月 26 日。我们没有运行过 Claude Squad。如果有错误或已过时，请<a href=\"https://github.com/thirstyeggplant/aubergine/issues\">告诉我们</a>。",
+    "from": "c74805e04f47"
+  },
+  "vs.claude-squad.is.title": {
+    "text": "Claude Squad 是什么",
+    "from": "27fdabce5ffe"
+  },
+  "vs.claude-squad.is.text": {
+    "text": "按它自己的描述，是一个终端应用，在彼此分开的工作区中管理多个 Claude Code、Codex、Gemini 及其他本地智能体。你用 <code>cs</code> 启动它：在一个终端窗口里有一份会话列表，带预览和一个差异标签页。每个会话是一个 tmux 会话，位于独立分支上的 Git worktree 中。它需要 tmux 和 <code>gh</code>，采用 AGPL-3.0 许可证。",
+    "from": "f5651435b271"
+  },
+  "vs.claude-squad.pick.title": {
+    "text": "选哪个",
+    "from": "9190a8f83f35"
+  },
+  "vs.claude-squad.pick.them": {
+    "text": "<strong>选 Claude Squad</strong>：如果你整天待在终端里，想在那里有一个小程序，在 worktree 中启动智能体并推送它们的分支，别的都不需要。",
+    "from": "f1fb7dd68ee2"
+  },
+  "vs.claude-squad.pick.us": {
+    "text": "<strong>选 Aubergine</strong>：如果你想同时看到多个智能体在工作，知道哪一个在等你，并在它们周围有队列、定时计划和 API。",
+    "from": "4d6b3293e505"
+  },
+  "vs.claude-squad.differs.title": {
+    "text": "不同之处",
+    "from": "8c2314ada082"
+  },
+  "vs.claude-squad.d1": {
+    "text": "<strong>一次一个，还是全部一起。</strong>Claude Squad 显示一份列表和你选中会话的预览。Aubergine 在画布上实时绘制每个终端，所以五个智能体就是眼前的五个终端，一份列表用文字写出每个的状态。",
+    "from": "d86f1c45b8de"
+  },
+  "vs.claude-squad.d2": {
+    "text": "<strong>谁在等。</strong>我们在 Claude Squad 的 README 中没有找到关于提示智能体在等待或已完成的内容。Aubergine 用颜色标出在等待的终端，在顶部统计等待的数量，按一个键就能跳到下一个，并能从打开的页面发出通知。",
+    "from": "211530499e12"
+  },
+  "vs.claude-squad.d3": {
+    "text": "<strong>智能体周围有什么。</strong>Aubergine 有带上限的任务队列、定时计划、带有由人审批步骤的工作流、每个终端上的笔记和字段、HTTP API 和 MCP 服务器。Claude Squad 只管会话和它们的分支。",
+    "from": "f50c8e772a93"
+  },
+  "vs.claude-squad.has.title": {
+    "text": "Claude Squad 有而 Aubergine 没有的",
+    "from": "98723dd6c82d"
+  },
+  "vs.claude-squad.h1": {
+    "text": "它在你已经打开的终端里运行，不需要服务器，也不需要浏览器。它像任何终端程序一样能通过 SSH 使用；从别处使用 Aubergine 则需要隧道或代理。",
+    "from": "f20b31ac2b9e"
+  },
+  "vs.claude-squad.h2": {
+    "text": "它会替你提交并推送分支，并通过提交会话的工作来暂停会话。Aubergine 从不提交或推送。",
+    "from": "ca1a86c924f4"
+  },
+  "vs.claude-squad.h3": {
+    "text": "一个实验性模式，会自动接受智能体的提示。Aubergine 从不替你回答智能体。",
+    "from": "0b05aa90e62a"
+  },
+  "vs.claude-squad.q1.q": {
+    "text": "Aubergine 是 Claude Squad 的替代品吗？",
+    "from": "361c471f4cfa"
+  },
+  "vs.claude-squad.q1.a": {
+    "text": "是的，用另一种方式做同一件事。两者都把每个智能体放在一个 tmux 会话里运行，并能为每个提供一个位于独立分支上的 Git worktree。Claude Squad 通过你终端里的一个程序来做；Aubergine 通过你浏览器里的一个页面来做，所有终端尽收眼底。",
+    "from": "a917cadf4b9c"
+  },
+  "vs.claude-squad.q2.q": {
+    "text": "两者都用 tmux 吗？",
+    "from": "7bb088dbc786"
+  },
+  "vs.claude-squad.q2.a": {
+    "text": "是的。Claude Squad 把 tmux 列为前提条件，并为每个智能体创建一个 tmux 会话。Aubergine 需要 tmux 3.2 或更高版本，并在它自己的套接字上用它自己的配置运行 tmux，所以你自己的 tmux 不受影响。",
+    "from": "6811d9954e5a"
+  },
+  "vs.claude-squad.q3.q": {
+    "text": "Claude Squad 能和 Claude Code 以外的智能体一起用吗？",
+    "from": "b8ca49d7a338"
+  },
+  "vs.claude-squad.q3.a": {
+    "text": "它的 README 说默认程序是 <code>claude</code>，其他程序（例如 Codex、Gemini 或 Aider）用 <code>-p</code> 指定。Aubergine 能在终端里运行任何命令行程序；它自己为智能体做的事是为 Claude Code 构建的。",
+    "from": "e25dfec3422d"
+  },
+  "vs.claude-squad.q4.q": {
+    "text": "两者各采用什么许可证？",
+    "from": "8b3801771777"
+  },
+  "vs.claude-squad.q4.a": {
+    "text": "Claude Squad 采用 AGPL-3.0，Aubergine 采用 MIT 许可证。两者都免费。",
+    "from": "b9eaa7117d9a"
+  },
+  "vs.claude-squad.mark": {
+    "text": "Aubergine 与 Claude Squad 及 Anthropic 没有任何关联。Claude Squad 是 smtg-ai 项目的名称；Claude 是 Anthropic 的商标。",
+    "from": "ce7ff8c148b6"
+  },
+  "vs.claude-squad.c.form": {
+    "text": "你终端里的一个程序，用 <code>cs</code> 启动",
+    "from": "e739d8457685"
+  },
+  "vs.claude-squad.c.runs": {
+    "text": "macOS 和 Linux；在 Windows 上通过 WSL 使用 tmux。需要 tmux 和 <code>gh</code>",
+    "from": "abc0235db83e"
+  },
+  "vs.claude-squad.c.price": {
+    "text": "AGPL-3.0，免费",
+    "from": "558fbe03f51b"
+  },
+  "vs.claude-squad.c.agents": {
+    "text": "默认是 Claude Code，也可指定其他：Codex、Gemini、Aider 或任何命令",
+    "from": "1fe7348291c8"
+  },
+  "vs.claude-squad.c.layout": {
+    "text": "在一个终端窗口里的会话列表，带预览和差异标签页",
+    "from": "3d5b69fb4009"
+  },
+  "vs.claude-squad.c.apart": {
+    "text": "每个一个 tmux 会话和一个位于独立分支上的 Git worktree",
+    "from": "d8335dee55c9"
+  },
+  "vs.claude-squad.c.closed": {
+    "text": "会话是 tmux 会话；它的 README 没有说明会保留什么",
+    "from": "db4a444f7d33"
+  },
+  "vs.claude-squad.c.waits": {
+    "text": "在它的 README 中没有找到相关内容",
+    "from": "8f95c49e434f"
+  },
+  "vs.claude-squad.c.review": {
+    "text": "一个差异标签页；它会提交并推送分支",
+    "from": "e4f8bb6419df"
+  },
+  "vs.claude-squad.c.device": {
+    "text": "在它的 README 中没有找到相关内容",
+    "from": "8f95c49e434f"
+  },
+  "vs.claude-squad.c.programs": {
+    "text": "命令行选项；没有找到 API 或 MCP 服务器",
+    "from": "d88b2e8d7fe3"
+  },
+  "vs.claude-squad.c.timed": {
+    "text": "在它的 README 中没有找到相关内容",
+    "from": "8f95c49e434f"
+  },
+  "vs.vibe-kanban.crumb": {
+    "text": "Vibe Kanban",
+    "from": "306161ab46c9"
+  },
+  "vs.vibe-kanban.name": {
+    "text": "Vibe Kanban",
+    "from": "306161ab46c9"
+  },
+  "vs.vibe-kanban.meta.title": {
+    "text": "Aubergine vs Vibe Kanban：开源替代方案",
+    "from": "670b010ba18d"
+  },
+  "vs.vibe-kanban.meta.description": {
+    "text": "两者都在本地运行、开源，并在浏览器中显示。Vibe Kanban 把工作规划为看板上的 issue；Aubergine 把智能体显示为并排的终端。",
+    "from": "bb53f7f86aa3"
+  },
+  "vs.vibe-kanban.title": {
+    "text": "Aubergine vs Vibe Kanban",
+    "from": "c5b1f18fa84d"
+  },
+  "vs.vibe-kanban.lead": {
+    "text": "两者都开源，都运行在你自己的电脑上，都在浏览器里使用。Vibe Kanban 从工作出发：看板上的 issue，每个交给一个智能体。Aubergine 从智能体出发：并排的终端，旁边有一个队列。",
+    "from": "3d84a2e91b62"
+  },
+  "vs.vibe-kanban.how": {
+    "text": "<strong>信息来源。</strong>这里关于 Vibe Kanban 的内容来自<a href=\"https://www.vibekanban.com/docs\">它的文档</a>和<a href=\"https://github.com/BloopAI/vibe-kanban\">它的仓库</a>，阅读时间为 2026 年 11 月 26 日。我们没有运行过 Vibe Kanban。如果有错误或已过时，请<a href=\"https://github.com/thirstyeggplant/aubergine/issues\">告诉我们</a>。",
+    "from": "99375c152de4"
+  },
+  "vs.vibe-kanban.status": {
+    "text": "<strong>Vibe Kanban 的现状。</strong>2026 年 4 月 10 日，<a href=\"https://www.vibekanban.com/blog/shutdown\">它的开发者写道</a>，背后的公司 bloop 将关闭，项目会作为由社区维护的开源项目继续，其远程服务将被移除，而本地工作区仍可使用。撰写本文时，它的文档和定价页面仍在描述这些服务；新版本仍在持续发布。",
+    "from": "e7d0f9efaeb3"
+  },
+  "vs.vibe-kanban.is.title": {
+    "text": "Vibe Kanban 是什么",
+    "from": "ec9867114fba"
+  },
+  "vs.vibe-kanban.is.text": {
+    "text": "按它自己的描述，是一块供开发者用编程智能体跟踪编程任务的看板。<code>npx vibe-kanban</code> 会启动一个本地服务器并打开它的页面。一个 issue 会变成一个工作区：为你选择的仓库创建 Git worktree，与它点名支持的十多个智能体之一进行对话，旁边是改动，然后是拉取请求和合并。它采用 Apache-2.0 许可证。",
+    "from": "6d4c2f9e57b0"
+  },
+  "vs.vibe-kanban.pick.title": {
+    "text": "选哪个",
+    "from": "9190a8f83f35"
+  },
+  "vs.vibe-kanban.pick.them": {
+    "text": "<strong>选 Vibe Kanban</strong>：如果你习惯用 issue 思考：在看板上规划，把每张卡片交给一个智能体，带评论审阅它的差异，然后合并。",
+    "from": "245bc2234639"
+  },
+  "vs.vibe-kanban.pick.us": {
+    "text": "<strong>选 Aubergine</strong>：如果你想让智能体本身以终端的形式摆在眼前，比窗口活得更久，并且只在你说了算的时候才从队列中分派工作。",
+    "from": "2365113635d7"
+  },
+  "vs.vibe-kanban.differs.title": {
+    "text": "不同之处",
+    "from": "8c2314ada082"
+  },
+  "vs.vibe-kanban.d1": {
+    "text": "<strong>对话还是终端。</strong>Vibe Kanban 把智能体显示为一个对话面板，旁边是它的改动。Aubergine 显示智能体自己的终端，并在一张画布上同时显示许多个。",
+    "from": "0c890c4d406b"
+  },
+  "vs.vibe-kanban.d2": {
+    "text": "<strong>任何程序。</strong>Vibe Kanban 按名称列出它支持的智能体。Aubergine 的终端就是一个 shell：任何命令行智能体都能在里面运行，构建、测试或服务器也一样。Aubergine 自己为智能体做的事是为 Claude Code 构建的。",
+    "from": "23aec210dcbd"
+  },
+  "vs.vibe-kanban.d3": {
+    "text": "<strong>关掉它会结束什么。</strong>我们在 Vibe Kanban 的文档中没有找到关于其服务器停止时正在运行的智能体会怎样的内容。在 Aubergine 中，每个终端都是一个 tmux 会话，停止 Aubergine 或关掉浏览器不会结束任何东西。",
+    "from": "2f1d6cdf5c9f"
+  },
+  "vs.vibe-kanban.has.title": {
+    "text": "Vibe Kanban 有而 Aubergine 没有的",
+    "from": "5076a47e917f"
+  },
+  "vs.vibe-kanban.h1": {
+    "text": "一块 issue 看板，带优先级、标签和子 issue。Aubergine 有任务队列和运行中工作流的看板，但不是 issue 跟踪器。",
+    "from": "68077704a5f0"
+  },
+  "vs.vibe-kanban.h2": {
+    "text": "带行内评论并回传给智能体的差异，然后是拉取请求、变基和合并。Aubergine 显示改了什么，但从不提交或合并。",
+    "from": "93ff80b2e186"
+  },
+  "vs.vibe-kanban.h3": {
+    "text": "文档列出的平台中包括 Windows，有声音提示，还有一份更长的按名称支持的智能体列表。",
+    "from": "1aadd7b5de39"
+  },
+  "vs.vibe-kanban.q1.q": {
+    "text": "Aubergine 是 Vibe Kanban 的替代品吗？",
+    "from": "4aa8ac6e6711"
+  },
+  "vs.vibe-kanban.q1.a": {
+    "text": "如果是在本地的 Git worktree 中运行多个智能体，并看清哪一个需要你，是的。但形态不同：Vibe Kanban 有一块带对话的 issue 看板，Aubergine 则是画布上的终端和一个任务队列；而且 Aubergine 不会打开拉取请求，也不合并任何东西。",
+    "from": "98cbddf025ec"
+  },
+  "vs.vibe-kanban.q2.q": {
+    "text": "Vibe Kanban 还在维护吗？",
+    "from": "6f567471ea10"
+  },
+  "vs.vibe-kanban.q2.a": {
+    "text": "它的开发者在 2026 年 4 月 10 日写道，背后的公司将关闭，项目作为由社区维护的开源项目继续。此后它的仓库仍有新版本发布。它现在的情况请看它的仓库。",
+    "from": "a82975b3065a"
+  },
+  "vs.vibe-kanban.q3.q": {
+    "text": "两者都在本地运行吗？",
+    "from": "11a0fe427c73"
+  },
+  "vs.vibe-kanban.q3.a": {
+    "text": "是的。两者都是你自己电脑上的一个服务器，加上你浏览器里的一个页面。Vibe Kanban 的文档提到可选的登录，用于看板和团队功能；Aubergine 完全没有账号。",
+    "from": "ab3cc066ee10"
+  },
+  "vs.vibe-kanban.q4.q": {
+    "text": "两者各支持哪些智能体？",
+    "from": "7e38a7feb8bc"
+  },
+  "vs.vibe-kanban.q4.a": {
+    "text": "Vibe Kanban 点名支持十多个，其中有 Claude Code、Codex、Gemini CLI、GitHub Copilot、Amp、Cursor 和 OpenCode。Aubergine 能在终端里运行任何命令行程序；从菜单启动智能体、看出它在等待以及恢复它的对话，这些是为 Claude Code 构建的。",
+    "from": "095b9719b5a7"
+  },
+  "vs.vibe-kanban.mark": {
+    "text": "Aubergine 与 Vibe Kanban 及其开发者没有任何关联。Vibe Kanban 是由 Bloop AI Limited 发起的项目的名称。",
+    "from": "e0e138f9589d"
+  },
+  "vs.vibe-kanban.c.form": {
+    "text": "你自己电脑上的一个服务器，加上你浏览器里的一个页面",
+    "from": "f0e12c3481c6"
+  },
+  "vs.vibe-kanban.c.runs": {
+    "text": "macOS、Linux 和 Windows；用 <code>npx</code> 启动",
+    "from": "ddd741e66ecf"
+  },
+  "vs.vibe-kanban.c.price": {
+    "text": "Apache-2.0，免费；登录可选",
+    "from": "9823c6d319c0"
+  },
+  "vs.vibe-kanban.c.agents": {
+    "text": "点名支持十多个，其中有 Claude Code、Codex 和 Gemini CLI",
+    "from": "3b62e7abb0fe"
+  },
+  "vs.vibe-kanban.c.layout": {
+    "text": "一块 issue 看板，以及一份工作区列表，每个工作区一个对话",
+    "from": "2e17f6f4a543"
+  },
+  "vs.vibe-kanban.c.apart": {
+    "text": "每个工作区使用 Git worktree",
+    "from": "86bf78b6f747"
+  },
+  "vs.vibe-kanban.c.closed": {
+    "text": "在它的文档中没有找到相关内容",
+    "from": "f6b5e7a05b9d"
+  },
+  "vs.vibe-kanban.c.waits": {
+    "text": "声音、浏览器通知、在需要你的工作区上做标记",
+    "from": "9f3cc4e77037"
+  },
+  "vs.vibe-kanban.c.review": {
+    "text": "带行内评论回传给智能体的差异、拉取请求、变基、合并",
+    "from": "4545afb112b5"
+  },
+  "vs.vibe-kanban.c.device": {
+    "text": "通过它的云服务，而它的开发者说该服务将被移除",
+    "from": "004526c12db4"
+  },
+  "vs.vibe-kanban.c.programs": {
+    "text": "一个本地 MCP 服务器；没有找到 HTTP API",
+    "from": "7f646c855e3f"
+  },
+  "vs.vibe-kanban.c.timed": {
+    "text": "issue 看板；没有找到定时计划",
+    "from": "197f6e8847f9"
+  },
+  "vs.cmux.crumb": {
+    "text": "cmux",
+    "from": "548d4fabc56e"
+  },
+  "vs.cmux.name": {
+    "text": "cmux",
+    "from": "548d4fabc56e"
+  },
+  "vs.cmux.meta.title": {
+    "text": "Aubergine vs cmux：两款为编程智能体打造的终端",
+    "from": "c625444e117b"
+  },
+  "vs.cmux.meta.description": {
+    "text": "两者都在真正的终端里运行任何命令行智能体，并显示哪一个需要你。cmux 是原生 macOS 应用；Aubergine 是你浏览器里的画布。",
+    "from": "1018139b92b2"
+  },
+  "vs.cmux.title": {
+    "text": "Aubergine vs cmux",
+    "from": "9c21dcf33e1e"
+  },
+  "vs.cmux.lead": {
+    "text": "这些页面中最接近的一对：两者都是为编程智能体打造的终端，都能运行任何可以从命令行启动的智能体，都开源。cmux 是一个原生 macOS 终端应用。Aubergine 是你电脑上的一个服务器，加上你浏览器里的一张终端画布。",
+    "from": "74355a6665b7"
+  },
+  "vs.cmux.how": {
+    "text": "<strong>信息来源。</strong>这里关于 cmux 的内容来自<a href=\"https://cmux.com/\">它的网站和文档</a>以及<a href=\"https://github.com/manaflow-ai/cmux\">它的仓库</a>，阅读时间为 2026 年 11 月 26 日。我们没有运行过 cmux。如果有错误或已过时，请<a href=\"https://github.com/thirstyeggplant/aubergine/issues\">告诉我们</a>。",
+    "from": "5c9611ff5302"
+  },
+  "vs.cmux.is.title": {
+    "text": "cmux 是什么",
+    "from": "8a1d270df445"
+  },
+  "vs.cmux.is.text": {
+    "text": "按它自己的描述，是一个基于 libghostty 构建、用 Swift 编写的 macOS 终端，带垂直标签页和面向编程智能体的通知。侧边栏列出各个工作区及其分支、拉取请求、文件夹和最新通知；一个工作区可以拆分成带标签页的窗格。每个操作同时也是一条命令和 Unix 套接字上的一条消息。应用采用 GPL-3.0-or-later 许可证，免费；云端机器和测试版的 iOS 应用需要账号和付费套餐。",
+    "from": "68de3f7cd4b5"
+  },
+  "vs.cmux.pick.title": {
+    "text": "选哪个",
+    "from": "9190a8f83f35"
+  },
+  "vs.cmux.pick.them": {
+    "text": "<strong>选 cmux</strong>：如果你想要一个快速的原生 Mac 终端应用，带窗格、应用内浏览器和 macOS 通知，并在它之上用脚本搭建你自己的工作方式。",
+    "from": "22fea8e3daf2"
+  },
+  "vs.cmux.pick.us": {
+    "text": "<strong>选 Aubergine</strong>：如果你想让智能体在应用关闭后继续运行而不必选择某种模式，想自动为每个智能体创建 worktree，并想要已经内置的队列、定时计划和审批。",
+    "from": "362a7c018644"
+  },
+  "vs.cmux.differs.title": {
+    "text": "不同之处",
+    "from": "8c2314ada082"
+  },
+  "vs.cmux.d1": {
+    "text": "<strong>关掉它会结束什么。</strong>cmux 的文档说，退出时会保存布局和文件夹，但不会保留运行中的进程，除非你手动开启它的本地 tmux 模式。在 Aubergine 中，tmux 不是一种模式：每个终端从一开始就是一个 tmux 会话。两者都无法让进程在电脑重启后保留。",
+    "from": "448c9e2ac6d6"
+  },
+  "vs.cmux.d2": {
+    "text": "<strong>一个基础构件，还是它周围的东西。</strong>cmux 称自己是基础构件而非解决方案，给你一条命令和一个套接字去自己搭建。Aubergine 自带位于 Git worktree 中的工作副本、带上限的队列、定时计划、带审批的工作流，以及一份汇集所有在等你的事的列表。",
+    "from": "c675408c16db"
+  },
+  "vs.cmux.d3": {
+    "text": "<strong>应用还是页面。</strong>cmux 是由系统绘制的 Mac 应用。Aubergine 是浏览器里的一个页面：绘制速度比原生终端慢，但可以从你通过自己运行的代理配对的另一个浏览器访问。",
+    "from": "a320e661ca17"
+  },
+  "vs.cmux.has.title": {
+    "text": "cmux 有而 Aubergine 没有的",
+    "from": "3fc881ffd285"
+  },
+  "vs.cmux.h1": {
+    "text": "基于 libghostty 的原生终端、拆分窗格，以及一个可由它的命令驱动的应用内浏览器。Aubergine 在浏览器页面里绘制终端，没有窗格：终端摆放在画布上。",
+    "from": "2a8a37988a85"
+  },
+  "vs.cmux.h2": {
+    "text": "当某个窗格需要你时发出 macOS 通知并运行自定义命令，由终端已经在用的转义序列触发，对任何程序都适用。Aubergine 通过为 Claude Code 构建的钩子看出智能体在等待，并且只从打开的页面发出通知。",
+    "from": "c88597f63652"
+  },
+  "vs.cmux.h3": {
+    "text": "用于远程机器上工作区的 <code>cmux ssh</code>、一个测试版的 iOS 应用，以及其付费套餐中的云端机器。",
+    "from": "46878f831283"
+  },
+  "vs.cmux.q1.q": {
+    "text": "Aubergine 是 cmux 的替代品吗？",
+    "from": "d03cb98ddd13"
+  },
+  "vs.cmux.q1.a": {
+    "text": "是的：两者都是用来运行多个编程智能体并看清哪一个需要你的终端。cmux 是一个原生 macOS 应用；Aubergine 在浏览器里运行，建立在 tmux 之上，并且多了工作副本、队列、定时计划和工作流。",
+    "from": "0cabdb734f94"
+  },
+  "vs.cmux.q2.q": {
+    "text": "cmux 需要 tmux 吗？",
+    "from": "836e5e3d4677"
+  },
+  "vs.cmux.q2.a": {
+    "text": "不需要。它的文档说不需要 tmux，并提供一个需要手动开启的本地 tmux 模式，用于在 cmux 退出时保留运行中的进程。Aubergine 需要 tmux 3.2 或更高版本，并让每个终端都在其中运行。",
+    "from": "a18611c76706"
+  },
+  "vs.cmux.q3.q": {
+    "text": "cmux 能在 Linux 或 Windows 上运行吗？",
+    "from": "09ca6d3b4a05"
+  },
+  "vs.cmux.q3.a": {
+    "text": "它的 README 说目前只支持 macOS，需要 macOS 14 或更高版本。Aubergine 为 macOS 构建，在 Linux 上只在容器里运行过，在 Windows 上只能在 WSL 2 里运行，而这还没有试过。",
+    "from": "5ba1cbadcc1c"
+  },
+  "vs.cmux.q4.q": {
+    "text": "两者都免费开源吗？",
+    "from": "4d9f144a07a6"
+  },
+  "vs.cmux.q4.a": {
+    "text": "cmux 应用采用 GPL-3.0-or-later 许可证，免费，它的云有付费套餐；它的服务器软件采用另一种许可证。Aubergine 采用 MIT 许可证，没有付费套餐。",
+    "from": "9e51e627b171"
+  },
+  "vs.cmux.mark": {
+    "text": "Aubergine 与 cmux 及其开发者没有任何关联。cmux 是 Manaflow, Inc. 一款产品的名称。",
+    "from": "750ad046fa7f"
+  },
+  "vs.cmux.c.form": {
+    "text": "一个原生 macOS 终端应用",
+    "from": "d8719e14d15d"
+  },
+  "vs.cmux.c.runs": {
+    "text": "仅 macOS 14 或更高版本",
+    "from": "76dd2c62352e"
+  },
+  "vs.cmux.c.price": {
+    "text": "GPL-3.0-or-later 应用，免费，不需要账号；它的云有付费套餐",
+    "from": "791d945bc808"
+  },
+  "vs.cmux.c.agents": {
+    "text": "任何在终端里运行的智能体",
+    "from": "5e7c625a3994"
+  },
+  "vs.cmux.c.layout": {
+    "text": "一个工作区侧边栏，每个工作区拆分成带标签页的窗格",
+    "from": "be8baacc5010"
+  },
+  "vs.cmux.c.apart": {
+    "text": "没有找到为智能体创建 worktree 的功能；在它的云中使用彼此分开的机器",
+    "from": "09a8946a9874"
+  },
+  "vs.cmux.c.closed": {
+    "text": "布局和文件夹会恢复；运行中的进程只在需要手动开启的 tmux 模式下保留",
+    "from": "93cc242a3b3d"
+  },
+  "vs.cmux.c.waits": {
+    "text": "窗格周围的光圈、侧边栏中的徽标、macOS 通知",
+    "from": "9a5fda5bbd5c"
+  },
+  "vs.cmux.c.review": {
+    "text": "侧边栏中显示关联拉取请求的状态；没有找到差异视图",
+    "from": "1aac4ceaa460"
+  },
+  "vs.cmux.c.device": {
+    "text": "测试版的 iOS 应用，需要账号且 Mac 处于唤醒状态；<code>cmux ssh</code>",
+    "from": "2508df0177f8"
+  },
+  "vs.cmux.c.programs": {
+    "text": "每个操作都有一条命令和一个 Unix 套接字；没有找到 MCP 服务器",
+    "from": "60d43aa42ad3"
+  },
+  "vs.cmux.c.timed": {
+    "text": "在它的文档中没有找到相关内容",
+    "from": "f6b5e7a05b9d"
+  },
+  "vs.warp.crumb": {
+    "text": "Warp",
+    "from": "3db7c958dfdf"
+  },
+  "vs.warp.name": {
+    "text": "Warp",
+    "from": "3db7c958dfdf"
+  },
+  "vs.warp.meta.title": {
+    "text": "Aubergine vs Warp：运行多个编程智能体",
+    "from": "b434edbfa3d3"
+  },
+  "vs.warp.meta.description": {
+    "text": "Warp 是桌面终端，有自己的智能体、付费套餐和云服务。Aubergine 不调用模型：它并排运行你已经在用的智能体。",
+    "from": "d9572d15388b"
+  },
+  "vs.warp.title": {
+    "text": "Aubergine vs Warp",
+    "from": "05210af0bb08"
+  },
+  "vs.warp.lead": {
+    "text": "Warp 是一个完整的终端应用，有自己的智能体、套餐和云，也能在标签页和窗格中运行其他命令行智能体。Aubergine 的范围更窄：它不调用模型，也不取代任何终端应用。它在浏览器页面里把你已经在用的智能体并排运行，并让它们保持运行。",
+    "from": "67b1020677f9"
+  },
+  "vs.warp.how": {
+    "text": "<strong>信息来源。</strong>这里关于 Warp 的内容来自<a href=\"https://docs.warp.dev/\">它的文档</a>和<a href=\"https://www.warp.dev/pricing\">它的定价页面</a>，阅读时间为 2026 年 11 月 26 日，并且只涉及运行多个编程智能体这一点；Warp 还能做很多别的事。我们没有为此运行过 Warp。如果有错误或已过时，请<a href=\"https://github.com/thirstyeggplant/aubergine/issues\">告诉我们</a>。",
+    "from": "c0a09271e3dc"
+  },
+  "vs.warp.is.title": {
+    "text": "Warp 是什么",
+    "from": "295785f2bf50"
+  },
+  "vs.warp.is.text": {
+    "text": "按它自己的描述，是一个智能体式开发环境：一个支持 macOS、Windows 和 Linux 的桌面终端，客户端在 AGPL-3.0 下开源。它有自己的 Warp Agent，通过 Warp 或用你自己的密钥调用模型；它还能在标签页和窗格中运行其他命令行智能体，例如 Claude Code、Codex 和 Gemini CLI，并有一个列出所有活动智能体的面板、通知、一个代码审阅面板，以及按计划运行的云端智能体。",
+    "from": "54647299b7d0"
+  },
+  "vs.warp.pick.title": {
+    "text": "选哪个",
+    "from": "9190a8f83f35"
+  },
+  "vs.warp.pick.them": {
+    "text": "<strong>选 Warp</strong>：如果你想要一个包揽一切的终端应用，在 Windows 和 Linux 上也能用，内置自己的智能体，还有可以安排计划的云端智能体。",
+    "from": "b6f4c8cea075"
+  },
+  "vs.warp.pick.us": {
+    "text": "<strong>选 Aubergine</strong>：如果你已经有喜欢的终端和智能体，只想补上它们之间缺的东西：全部尽收眼底，保持运行，没有账号，自己也没有模型。",
+    "from": "24b891e15c2a"
+  },
+  "vs.warp.differs.title": {
+    "text": "不同之处",
+    "from": "8c2314ada082"
+  },
+  "vs.warp.d1": {
+    "text": "<strong>自带模型，还是没有模型。</strong>Warp 有自己的智能体，用套餐为其使用付费，也可以选择用你自己的密钥。Aubergine 不调用模型，也不持有密钥：它终端里的智能体就是你自己安装并登录的那些。",
+    "from": "5fbbccefb96a"
+  },
+  "vs.warp.d2": {
+    "text": "<strong>关掉它会结束什么。</strong>Warp 的文档说它会恢复窗口、标签页、窗格和最近的输出；我们没有找到说明正在运行的程序会被保留的内容。在 Aubergine 中，每个终端都是一个 tmux 会话，所以浏览器或 Aubergine 本身停下时，智能体仍会继续。",
+    "from": "18624a0a66fc"
+  },
+  "vs.warp.d3": {
+    "text": "<strong>从哪里能访问你的智能体。</strong>Warp 会把正在运行的会话发布到它的云，让你可以从手机或浏览器操控它。Aubergine 没有云：另一台设备是一个用代码配对的浏览器，经过你在自己机器上运行的代理，只在一台 Mac 上试过一次。",
+    "from": "b82fc6e2eec4"
+  },
+  "vs.warp.has.title": {
+    "text": "Warp 有而 Aubergine 没有的",
+    "from": "9e0e15fe7a1a"
+  },
+  "vs.warp.h1": {
+    "text": "文档列出的平台包括 Windows 和 Linux，且是桌面应用。Aubergine 为 macOS 构建。",
+    "from": "0d9c59074c72"
+  },
+  "vs.warp.h2": {
+    "text": "一个自己的智能体，以及按计划或由其他服务（例如 Slack、Linear 或 GitHub）启动的云端智能体。Aubergine 不从外部启动任何东西，也不会为定时计划访问网络。",
+    "from": "fa39346e5209"
+  },
+  "vs.warp.h3": {
+    "text": "终端应用所具备的其他一切：它的命令编辑器、输出块，以及面向不止一种智能体的通知。Aubergine 通过为 Claude Code 构建的钩子看出智能体在等待。",
+    "from": "63765a4c4189"
+  },
+  "vs.warp.q1.q": {
+    "text": "Aubergine 是 Warp 的替代品吗？",
+    "from": "d02fa9b2f885"
+  },
+  "vs.warp.q1.a": {
+    "text": "只针对 Warp 所做的一件事：运行多个命令行编程智能体并看清哪一个需要你。Aubergine 不是终端应用，也没有自己的智能体。你可以继续用 Warp 或任何终端，并用 Aubergine 来管理智能体。",
+    "from": "4d9ff5b3c2fa"
+  },
+  "vs.warp.q2.q": {
+    "text": "我需要账号或付费套餐吗？",
+    "from": "7ea716600927"
+  },
+  "vs.warp.q2.a": {
+    "text": "Warp 的文档说使用终端时登录是可选的，它的定价页面列出了一个免费套餐和若干付费套餐。Aubergine 没有账号，也没有套餐。",
+    "from": "0104a9ec4212"
+  },
+  "vs.warp.q3.q": {
+    "text": "Warp 是开源的吗？",
+    "from": "bb814de9622d"
+  },
+  "vs.warp.q3.a": {
+    "text": "它的文档说 Warp 的客户端在 AGPL-3.0 下开源。Aubergine 采用 MIT 许可证。",
+    "from": "a49fee890f51"
+  },
+  "vs.warp.q4.q": {
+    "text": "可以同时使用 Warp 和 Aubergine 吗？",
+    "from": "98378a2c4d20"
+  },
+  "vs.warp.q4.a": {
+    "text": "可以，和任何终端应用一样。Aubergine 的终端是 tmux 会话，<code>aubergine attach &lt;name&gt;</code> 会在你运行它的那个终端应用窗口中显示其中一个。我们没有在 Warp 中试过。",
+    "from": "bc272b9d95cf"
+  },
+  "vs.warp.mark": {
+    "text": "Aubergine 与 Warp 没有任何关联。Warp 是 Denver Technologies, Inc. 的商标，该公司以 Warp 的名义经营。",
+    "from": "9cc6ff5ce341"
+  },
+  "vs.warp.c.form": {
+    "text": "一个自带智能体的桌面终端应用，还有云端智能体",
+    "from": "ea1d6176e636"
+  },
+  "vs.warp.c.runs": {
+    "text": "macOS、Windows 和 Linux",
+    "from": "637825dc78ad"
+  },
+  "vs.warp.c.price": {
+    "text": "客户端在 AGPL-3.0 下开源；一个免费套餐和若干付费套餐；登录可选",
+    "from": "1ce40e23dc83"
+  },
+  "vs.warp.c.agents": {
+    "text": "它自己的 Warp Agent，以及 Claude Code、Codex、Gemini CLI 等命令行智能体",
+    "from": "fe6cfd7211da"
+  },
+  "vs.warp.c.layout": {
+    "text": "标签页和窗格、一个侧边栏，以及一个列出所有活动智能体的面板",
+    "from": "9b58a6cb680e"
+  },
+  "vs.warp.c.apart": {
+    "text": "能识别你创建的 Git worktree；为它的云端智能体使用容器",
+    "from": "d5692791483e"
+  },
+  "vs.warp.c.closed": {
+    "text": "窗口、标签页和最近的输出会恢复；没有找到关于运行中程序的内容",
+    "from": "3084fbca2310"
+  },
+  "vs.warp.c.waits": {
+    "text": "应用内和桌面上的通知：已完成、一个请求、一个错误",
+    "from": "c3dc4bc6b1ec"
+  },
+  "vs.warp.c.review": {
+    "text": "一个代码审阅面板，评论会发送给智能体",
+    "from": "0662c604fdbd"
+  },
+  "vs.warp.c.device": {
+    "text": "把会话发布到它的云，供手机或浏览器使用",
+    "from": "c722dd49add9"
+  },
+  "vs.warp.c.programs": {
+    "text": "一个命令行智能体，以及一个用于运行其云端智能体的 API",
+    "from": "fa3857a7a76b"
+  },
+  "vs.warp.c.timed": {
+    "text": "按计划运行、也可由其他服务启动的云端智能体",
+    "from": "e738cdacf6b5"
+  },
+  "vs.paradev.crumb": {
+    "text": "Paradev",
+    "from": "6ff850fa1891"
+  },
+  "vs.paradev.name": {
+    "text": "Paradev",
+    "from": "6ff850fa1891"
+  },
+  "vs.paradev.meta.title": {
+    "text": "Aubergine vs Paradev（原名 Superset）：替代方案",
+    "from": "07bdc273e5cb"
+  },
+  "vs.paradev.meta.description": {
+    "text": "Paradev（曾叫 Superset）和 Aubergine 都采用 MIT 许可证，都在 Git worktree 中工作。Paradev 是带付费套餐的桌面应用；Aubergine 免费。",
+    "from": "9fd6946e998b"
+  },
+  "vs.paradev.title": {
+    "text": "Aubergine vs Paradev（原名 Superset）",
+    "from": "2e91a4b729f8"
+  },
+  "vs.paradev.lead": {
+    "text": "Paradev 是一款桌面应用，2026 年 10 月之前叫 Superset。和 Aubergine 一样，它采用 MIT 许可证，能运行任何命令行智能体，并在 Git worktree 中工作。它是一个带套餐、手机应用和云的应用；Aubergine 是你自己电脑上的一个服务器加上你浏览器里的一个页面，这些都没有。",
+    "from": "776bb8091dc6"
+  },
+  "vs.paradev.how": {
+    "text": "<strong>信息来源。</strong>这里关于 Paradev 的内容来自<a href=\"https://docs.paradev.com/\">它的文档</a>、<a href=\"https://paradev.com/changelog\">它的更新日志</a>和<a href=\"https://github.com/paradevai/paradev\">它的仓库</a>，阅读时间为 2026 年 11 月 26 日。我们没有运行过 Paradev。如果有错误或已过时，请<a href=\"https://github.com/thirstyeggplant/aubergine/issues\">告诉我们</a>。",
+    "from": "ba6080f1e8dc"
+  },
+  "vs.paradev.status": {
+    "text": "<strong>关于名称。</strong>它 2026 年 10 月 25 日的更新日志说 Superset 现在改名为 Paradev，账号、工作区、设置和 <code>superset</code> 命令都会沿用。它不是数据工具 Apache Superset。",
+    "from": "0fc4d01036e0"
+  },
+  "vs.paradev.is.title": {
+    "text": "Paradev 是什么",
+    "from": "520654639a88"
+  },
+  "vs.paradev.is.text": {
+    "text": "按它自己的描述，是面向 Claude Code、Codex 及任何编程智能体的开源工作区：一个桌面应用，而不是终端应用，智能体在其中以聊天形式或在终端里运行。每个任务都有自己的 worktree、分支和终端；一个侧边栏按项目显示所有会话。它有一个带拉取请求检查和合并功能的差异查看器、一个命令、一个 SDK 和一个 MCP 服务器，付费套餐中还有手机应用、远程访问、云端工作区和自动化。",
+    "from": "304d9c9b59a7"
+  },
+  "vs.paradev.pick.title": {
+    "text": "选哪个",
+    "from": "9190a8f83f35"
+  },
+  "vs.paradev.pick.them": {
+    "text": "<strong>选 Paradev</strong>：如果你想要一个桌面应用，为每个任务创建 worktree，并带它走完差异、检查和合并，付费后还有手机应用和云。",
+    "from": "a5db2e59a2a0"
+  },
+  "vs.paradev.pick.us": {
+    "text": "<strong>选 Aubergine</strong>：如果你想让所有部分都在你自己的电脑上免费可用、不需要账号：并排的终端、队列、定时计划，以及从另一台设备使用。",
+    "from": "29238cd8839e"
+  },
+  "vs.paradev.differs.title": {
+    "text": "不同之处",
+    "from": "8c2314ada082"
+  },
+  "vs.paradev.d1": {
+    "text": "<strong>什么是免费的。</strong>Paradev 列出一个面向个人的免费套餐，包括本地工作区、应用和命令；自动化、手机应用和远程访问在付费套餐中。Aubergine 没有套餐：它的队列、定时计划和从另一台设备使用，全都在这一个采用 MIT 许可证的程序里，不需要账号。",
+    "from": "e88d006e6f33"
+  },
+  "vs.paradev.d2": {
+    "text": "<strong>侧边栏还是画布。</strong>Paradev 在带标签页和窗格的侧边栏中显示会话。Aubergine 把终端摆在一张可以平移和缩放的画布上，所以许多终端同时实时可见，旁边还有一份列出全部终端的列表。",
+    "from": "e0a93e71bfe5"
+  },
+  "vs.paradev.d3": {
+    "text": "<strong>终端怎样比窗口活得更久。</strong>两者在窗口关闭时都能让智能体继续运行：Paradev 靠它自己的后台守护进程，它的文档说当你完全退出 Paradev 时，所有终端都会结束；Aubergine 靠 tmux，即使 Aubergine 本身停止，tmux 也会继续。两者在电脑重启时都会结束它们。",
+    "from": "5190a04f786d"
+  },
+  "vs.paradev.has.title": {
+    "text": "Paradev 有而 Aubergine 没有的",
+    "from": "e211a22944f9"
+  },
+  "vs.paradev.h1": {
+    "text": "一个差异查看器，你可以在其中评论和编辑智能体的改动、查看拉取请求的检查并合并。Aubergine 显示改了什么，但从不提交、推送或合并。",
+    "from": "d5bd58e3ed11"
+  },
+  "vs.paradev.h2": {
+    "text": "一个桌面应用、iOS 和 Android 应用、云端工作区，以及在智能体需要你时的提示音和程序坞徽标。Aubergine 是一个浏览器页面，不播放声音。",
+    "from": "880ab73dfaea"
+  },
+  "vs.paradev.h3": {
+    "text": "由审阅请求、Slack 消息、issue 或 webhook 触发的自动化，以及它安装的钩子，让许多智能体能报告自己的状态。Aubergine 不从外部启动任何东西，并且只对 Claude Code 才能自己看出智能体在等待。",
+    "from": "60f6c475b3fb"
+  },
+  "vs.paradev.q1.q": {
+    "text": "Aubergine 是 Paradev（Superset）的替代品吗？",
+    "from": "e9c9295c1cf9"
+  },
+  "vs.paradev.q1.a": {
+    "text": "如果是在本地运行多个命令行智能体、每个都在自己的 Git worktree 中，是的，而且所有功能都免费。但它不是一对一的替代：Aubergine 没有桌面或手机应用，没有差异评论，没有拉取请求或合并，也没有云。",
+    "from": "8acabc2591e8"
+  },
+  "vs.paradev.q2.q": {
+    "text": "Superset 和 Paradev 是同一个东西吗？",
+    "from": "17d548f38157"
+  },
+  "vs.paradev.q2.a": {
+    "text": "是的。它 2026 年 10 月 25 日的更新日志说 Superset 现在改名为 Paradev，它的 README 说命令仍然是 <code>superset</code>。两者都与 Apache Superset 无关。",
+    "from": "7906ac9c93cc"
+  },
+  "vs.paradev.q3.q": {
+    "text": "两者都开源吗？",
+    "from": "1d2d2fda932d"
+  },
+  "vs.paradev.q3.a": {
+    "text": "两者都采用 MIT 许可证。Paradev 还为其手机应用、远程访问、云和自动化出售套餐；Aubergine 什么都不卖。",
+    "from": "0f0cd2638d86"
+  },
+  "vs.paradev.q4.q": {
+    "text": "Paradev 能在 Linux 或 Windows 上运行吗？",
+    "from": "9ccc6492d874"
+  },
+  "vs.paradev.q4.a": {
+    "text": "它的文档说支持 macOS，另有一个实验性的 Linux 版本，Windows 版本尚未推出。Aubergine 为 macOS 构建，在 Linux 上只在容器里运行过，在 Windows 上只能在 WSL 2 里运行，而这还没有试过。",
+    "from": "733d3a59a51d"
+  },
+  "vs.paradev.mark": {
+    "text": "Aubergine 与 Paradev 及其开发者 Superset Inc. 没有任何关联。Paradev 和 Superset 是他们的名称；他们和 Aubergine 都与 Apache Superset 无关。",
+    "from": "05f8d7ecd761"
+  },
+  "vs.paradev.c.form": {
+    "text": "一个桌面应用，曾叫 Superset，带手机应用和云",
+    "from": "3054414596e2"
+  },
+  "vs.paradev.c.runs": {
+    "text": "macOS；一个实验性的 Linux 版本；不支持 Windows",
+    "from": "889cdaf4298b"
+  },
+  "vs.paradev.c.price": {
+    "text": "MIT；一个面向个人的免费套餐，以及付费套餐",
+    "from": "a36a1e0e1592"
+  },
+  "vs.paradev.c.agents": {
+    "text": "Claude Code、Codex、OpenCode、Gemini、Cursor Agent 以及任何命令行智能体",
+    "from": "24eb0a261425"
+  },
+  "vs.paradev.c.layout": {
+    "text": "一个按项目列出所有会话的侧边栏，带标签页和窗格",
+    "from": "a8991633cee6"
+  },
+  "vs.paradev.c.apart": {
+    "text": "每个任务一个 worktree、一个分支和一个终端",
+    "from": "e3443e224b3e"
+  },
+  "vs.paradev.c.closed": {
+    "text": "终端在它的守护进程中继续运行，直到你完全退出它；重启会结束它们",
+    "from": "c8f43d646883"
+  },
+  "vs.paradev.c.waits": {
+    "text": "工作中标记、某个完成时的提示音、程序坞上的徽标",
+    "from": "cd8c2ecb61d3"
+  },
+  "vs.paradev.c.review": {
+    "text": "一个可评论和编辑的差异查看器、拉取请求检查、合并",
+    "from": "2ba1d7abad83"
+  },
+  "vs.paradev.c.device": {
+    "text": "iOS 和 Android 应用以及远程访问，需付费套餐；没有网页版",
+    "from": "ff41edf13b81"
+  },
+  "vs.paradev.c.programs": {
+    "text": "一个命令、一个 SDK 和一个 MCP 服务器",
+    "from": "4f73909c306d"
+  },
+  "vs.paradev.c.timed": {
+    "text": "按计划或由事件触发的自动化，需付费套餐",
+    "from": "d0a82cd975d3"
+  },
+  "home.compare.more": {
+    "text": "与 Conductor、Claude Squad、cmux、Warp 等工具的对比",
+    "from": "60e16e373973"
   }
 }

@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>রিস্টার্টের পরে Claude Code-এর কথোপকথন আবার শুরু করুন | Aubergine</title>
-<meta name="description" content="claude --continue আর --resume কথোপকথন ফিরিয়ে আনে, যদি আপনি ঠিক ফোল্ডারে থাকেন। Aubergine মনে রাখে প্রতিটি টার্মিনাল কোন কথোপকথনে ছিল, Resume agent দেখায়, আর ফোল্ডার অনুযায়ী পুরোনো কথোপকথনের তালিকা দেয়।">
+<title>রিস্টার্টের পরে Claude Code সেশন আবার শুরু করুন | Aubergine</title>
+<meta name="description" content="claude --continue আর --resume-এর জন্য ঠিক ফোল্ডার দরকার। Aubergine প্রতিটি টার্মিনালের কথোপকথন মনে রাখে, Resume agent দেখায় আর পুরোনোগুলোর তালিকা দেয়।">
 <link rel="canonical" href="https://thirstyeggplant.com/bn/resume-claude-code-session/">
 <link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/resume-claude-code-session/">
 <link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/resume-claude-code-session/">
@@ -27,8 +27,8 @@
 <link rel="stylesheet" href="../../style.css">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="Aubergine">
-<meta property="og:title" content="রিস্টার্টের পরে Claude Code-এর কথোপকথন আবার শুরু করুন | Aubergine">
-<meta property="og:description" content="claude --continue আর --resume কথোপকথন ফিরিয়ে আনে, যদি আপনি ঠিক ফোল্ডারে থাকেন। Aubergine মনে রাখে প্রতিটি টার্মিনাল কোন কথোপকথনে ছিল, Resume agent দেখায়, আর ফোল্ডার অনুযায়ী পুরোনো কথোপকথনের তালিকা দেয়।">
+<meta property="og:title" content="রিস্টার্টের পরে Claude Code সেশন আবার শুরু করুন | Aubergine">
+<meta property="og:description" content="claude --continue আর --resume-এর জন্য ঠিক ফোল্ডার দরকার। Aubergine প্রতিটি টার্মিনালের কথোপকথন মনে রাখে, Resume agent দেখায় আর পুরোনোগুলোর তালিকা দেয়।">
 <meta property="og:url" content="https://thirstyeggplant.com/bn/resume-claude-code-session/">
 <meta property="og:image" content="https://thirstyeggplant.com/og.png">
 <meta property="og:image:width" content="1200">
@@ -37,8 +37,8 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
 <meta name="twitter:image:alt" content="Aubergine: টার্মিনালের একটি ক্যানভাস, একটি কাজে ব্যস্ত আর একটি আপনার অপেক্ষায়">
-<meta name="twitter:title" content="রিস্টার্টের পরে Claude Code-এর কথোপকথন আবার শুরু করুন | Aubergine">
-<meta name="twitter:description" content="claude --continue আর --resume কথোপকথন ফিরিয়ে আনে, যদি আপনি ঠিক ফোল্ডারে থাকেন। Aubergine মনে রাখে প্রতিটি টার্মিনাল কোন কথোপকথনে ছিল, Resume agent দেখায়, আর ফোল্ডার অনুযায়ী পুরোনো কথোপকথনের তালিকা দেয়।">
+<meta name="twitter:title" content="রিস্টার্টের পরে Claude Code সেশন আবার শুরু করুন | Aubergine">
+<meta name="twitter:description" content="claude --continue আর --resume-এর জন্য ঠিক ফোল্ডার দরকার। Aubergine প্রতিটি টার্মিনালের কথোপকথন মনে রাখে, Resume agent দেখায় আর পুরোনোগুলোর তালিকা দেয়।">
 <link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
 </head>
 <body>
@@ -99,7 +99,7 @@
       "@type": "TechArticle",
       "@id": "https://thirstyeggplant.com/bn/resume-claude-code-session/#article",
       "headline": "রিস্টার্টের পরে Claude Code-এর কথোপকথন আবার শুরু করুন",
-      "description": "claude --continue আর --resume কথোপকথন ফিরিয়ে আনে, যদি আপনি ঠিক ফোল্ডারে থাকেন। Aubergine মনে রাখে প্রতিটি টার্মিনাল কোন কথোপকথনে ছিল, Resume agent দেখায়, আর ফোল্ডার অনুযায়ী পুরোনো কথোপকথনের তালিকা দেয়।",
+      "description": "claude --continue আর --resume-এর জন্য ঠিক ফোল্ডার দরকার। Aubergine প্রতিটি টার্মিনালের কথোপকথন মনে রাখে, Resume agent দেখায় আর পুরোনোগুলোর তালিকা দেয়।",
       "url": "https://thirstyeggplant.com/bn/resume-claude-code-session/",
       "mainEntityOfPage": "https://thirstyeggplant.com/bn/resume-claude-code-session/",
       "datePublished": "2026-11-25",
@@ -204,6 +204,7 @@
         <li><a href="../run-multiple-coding-agents/">একাধিক এজেন্ট চালান</a></li>
         <li><a href="../working-copies/">ওয়ার্কিং কপি</a></li>
         <li><a href="../queue-and-schedules/">কিউ আর শিডিউল</a></li>
+        <li><a href="../compare/">তুলনা</a></li>
         <li><a href="../security/">নিরাপত্তা</a></li>
         <li><a href="../roadmap/">রোডম্যাপ</a></li>
         <li><a href="../faq/">প্রশ্নোত্তর</a></li>

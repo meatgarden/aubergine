@@ -116,24 +116,24 @@
     "from": "21c2472673d7"
   },
   "home.meta.title": {
-    "text": "Aubergine：すべてのターミナルを1つのキャンバスに、いつものエージェントのまま",
-    "from": "620bab21c0b6"
+    "text": "Aubergine：ターミナルとコーディングエージェントの司令塔",
+    "from": "cd63b652eab2"
   },
   "home.meta.description": {
-    "text": "ターミナルをパワーアップ：Aubergine は、すべてのターミナルをブラウザーの1つのキャンバスに並べます。いつも使っているエージェントとモデルのまま好きなだけ動かし、どれがあなたを必要としているかが分かります。無料、ローカル、オープンソース。",
-    "from": "10a391e12690"
+    "text": "Claude Code、Codex、普通のターミナルを並べて動かし管理できるブラウザーのダッシュボード。どのエージェントがあなた待ちか分かります。無料、ローカル、オープンソース。",
+    "from": "ff38fa74a3da"
   },
   "home.ld.category": {
-    "text": "ターミナルマルチプレクサーとエージェントの作業場",
-    "from": "d32b7b10eecd"
+    "text": "ターミナルとコーディングエージェントの管理ダッシュボード",
+    "from": "ec2b095cd97a"
   },
   "home.ld.requires": {
     "text": "tmux 3.2 以降、Node.js 22 以降",
     "from": "6fadbd03c20d"
   },
   "home.hero.tag.lead": {
-    "text": "ターミナルをパワーアップ",
-    "from": "eb13de4649f0"
+    "text": "ターミナルを見直そう",
+    "from": "9c559cd8311b"
   },
   "home.hero.tag.free": {
     "text": "無料",
@@ -148,20 +148,20 @@
     "from": "cd90f9395587"
   },
   "home.hero.title.a": {
-    "text": "すべてのターミナルを、",
-    "from": "8dd2aa1cda63"
+    "text": "ターミナルと",
+    "from": "e38bc0efbbc7"
   },
   "home.hero.title.b": {
-    "text": "横に並べて。",
-    "from": "eb95eacfe17a"
+    "text": "AI コーディング",
+    "from": "45121d84f19b"
   },
   "home.hero.title.c": {
-    "text": "<em>エージェント</em>は持ち込みで。",
-    "from": "4728f2abc24b"
+    "text": "<em>エージェント</em>の司令塔。",
+    "from": "734e3af35ed0"
   },
   "home.hero.lead": {
-    "text": "Aubergine は、すべてのターミナルをブラウザーの1つのキャンバスに並べます。いつも使っているエージェントとモデルのまま、好きなだけ動かせます。Aubergine 自身はモデルを持たず、キーを求めることもありません。",
-    "from": "c8c8b75e9e20"
+    "text": "Claude Code、Codex、普通のターミナルを、ブラウザーの1つのダッシュボードに並べて動かせます。Aubergine 自身はモデルを持たず、キーを求めることもありません。",
+    "from": "159e09c1ca4d"
   },
   "home.hero.after": {
     "text": "続けて <code>aubergine start --open</code>。macOS 用で、tmux 3.2 以降と Node.js 22 以降が必要です。",
@@ -184,8 +184,8 @@
     "from": "2288db7c750f"
   },
   "home.powers.title": {
-    "text": "ターミナルにスーパーパワーを",
-    "from": "588a8ab51054"
+    "text": "ターミナル管理を見直す",
+    "from": "9b3c23b70200"
   },
   "home.powers.lead": {
     "text": "いつも使っているターミナルに、足りなかったものを。横に並べて置ける場所、記憶、そしてあなたが必要なときに知らせる仕組みです。",
@@ -584,12 +584,12 @@
     "from": "5c6d1db70932"
   },
   "claude.meta.title": {
-    "text": "Aubergine の Claude Code | Aubergine",
-    "from": "964ec2c2f3df"
+    "text": "Claude Code のセッションを並べて動かす | Aubergine",
+    "from": "3c61aa83b994"
   },
   "claude.meta.description": {
-    "text": "Aubergine が Claude Code のために自ら行うこと：メニューからの起動、待っていることの把握、会話の再開、過去の会話、設定の確認、ツール。",
-    "from": "53c5a33c5a7d"
+    "text": "複数の Claude Code セッションを並べて実行。Aubergine が起動し、どれがあなた待ちかを示し、会話を再開し、過去の会話を一覧します。",
+    "from": "6b7dc6fd962d"
   },
   "claude.title": {
     "text": "Aubergine が Claude Code のためにすること",
@@ -760,12 +760,12 @@
     "from": "cdae060f0648"
   },
   "chatgpt.meta.title": {
-    "text": "Aubergine の Codex と ChatGPT | Aubergine",
-    "from": "8dcd1dde8945"
+    "text": "Codex エージェントをターミナルで並べて動かす | Aubergine",
+    "from": "c19dbd4b8744"
   },
   "chatgpt.meta.description": {
-    "text": "OpenAI のコマンドラインのコーディングエージェント Codex は、ほかのプログラムと同じように Aubergine のターミナルで動きます。今日できること、aubergine コマンドで報告できること、Claude Code 向けにだけ作られているもの。",
-    "from": "6f8c78d52c06"
+    "text": "OpenAI のコマンドラインのコーディングエージェント Codex は、Aubergine のターミナルで普通のプログラムとして動きます。今日できることと Claude Code 専用のもの。",
+    "from": "ce1a16eaf055"
   },
   "chatgpt.crumb": {
     "text": "Codex と ChatGPT",
@@ -1168,8 +1168,8 @@
     "from": "82c0a75bef8c"
   },
   "windows.meta.description": {
-    "text": "Aubergine は Windows そのものでは動きませんが、WSL 2 の中で動かして Windows のブラウザーから使えます。手順、試したことと試していないこと、困ったときの対処。",
-    "from": "eef730b3d958"
+    "text": "Aubergine は Windows そのものでは動きません。WSL 2 の中で動かし、Windows のブラウザーから使います。手順、試したこと、対処法。",
+    "from": "ec5595885249"
   },
   "windows.crumb": {
     "text": "WSL で Windows",
@@ -1316,8 +1316,8 @@
     "from": "6ee5544f775e"
   },
   "guides.meta.title": {
-    "text": "Aubergine のガイド | Aubergine",
-    "from": "0d501fb6af2e"
+    "text": "ターミナルでコーディングエージェントを使うガイド | Aubergine",
+    "from": "f891421fd993"
   },
   "guides.meta.description": {
     "text": "Aubergine で複数のコーディングエージェントを動かすためのガイド：概要、Claude Code と Codex、作業コピー、キューとスケジュール。",
@@ -1576,12 +1576,12 @@
     "from": "60142c410708"
   },
   "copies.meta.title": {
-    "text": "作業コピーで2つのコーディングエージェントを1つのリポジトリで動かす | Aubergine",
-    "from": "22fa024200af"
+    "text": "1リポジトリで2つのコーディングエージェントを動かす | Aubergine",
+    "from": "bdb9a97d9a45"
   },
   "copies.meta.description": {
-    "text": "作業コピーは各エージェントにリポジトリの専用チェックアウトとブランチを渡します。2つのエージェントが同じファイルを編集することはなく、それぞれの作業を分けて読めます。",
-    "from": "a293deb1c990"
+    "text": "作業コピーは各エージェントに専用の Git worktree とブランチを渡すので、2つのエージェントが同じファイルを編集することはなく、それぞれの作業を分けて読めます。",
+    "from": "0f5b56278a4e"
   },
   "copies.crumb": {
     "text": "作業コピー",
@@ -1764,12 +1764,12 @@
     "from": "515aa3442054"
   },
   "keep.meta.title": {
-    "text": "クラッシュ、再起動、アップデートのあともターミナルを残す | Aubergine",
-    "from": "d0521ba83d02"
+    "text": "再起動やクラッシュのあともターミナルを残す | Aubergine",
+    "from": "632ab04b6eba"
   },
   "keep.meta.description": {
-    "text": "ブラウザーが閉じたとき、Aubergine が再起動したとき、コンピューターがクラッシュ・再起動・夜間アップデートしたときに、ターミナルとコーディングエージェントがどうなるか。そして続きから再開する方法。",
-    "from": "4f824d2bcf4e"
+    "text": "ブラウザーを閉じたとき、Aubergine や コンピューターを再起動したときに、ターミナルとエージェントがそれぞれどうなるか。そして続きから再開する方法。",
+    "from": "27a4a64aebc5"
   },
   "keep.crumb": {
     "text": "再起動のあと",
@@ -2009,11 +2009,11 @@
   },
   "alive.meta.title": {
     "text": "ターミナルを閉じてもプロセスを動かし続ける | Aubergine",
-    "from": "b6893102f4dc"
+    "from": "1cb4c894cd65"
   },
   "alive.meta.description": {
-    "text": "ターミナルのウィンドウを閉じると、その中で動いているものは終わります。よくある答えは nohup、disown、screen、tmux です。Aubergine はすべてのターミナルを tmux で動かすので、ブラウザーを閉じても何も終わりません。",
-    "from": "91fc698775ac"
+    "text": "ターミナルを閉じると、その中で動いているものは終わります。よくある答えは nohup、disown、screen、tmux。Aubergine はすべてのターミナルを tmux で動かします。",
+    "from": "697912690f11"
   },
   "alive.crumb": {
     "text": "動かし続ける",
@@ -2168,8 +2168,8 @@
     "from": "6298f70cc7f8"
   },
   "notify.meta.description": {
-    "text": "どの Claude Code のターミナルが作業中か、あなた待ちか、完了したかがひと目で分かります。Aubergine が生成するフック、For you の数、次に待っているターミナルへ移るキー、開いているページからの通知。",
-    "from": "ec167ae38aa3"
+    "text": "どの Claude Code のターミナルが作業中か、あなた待ちか、完了したかが分かります。待っているものの数、次へ移るキー、ブラウザーの通知。",
+    "from": "538211348bf4"
   },
   "notify.crumb": {
     "text": "完了か待機か",
@@ -2308,12 +2308,12 @@
     "from": "60204a04f28a"
   },
   "resume.meta.title": {
-    "text": "再起動のあとに Claude Code の会話を再開する | Aubergine",
-    "from": "25d7c94055ab"
+    "text": "再起動後に Claude Code のセッションを再開 | Aubergine",
+    "from": "03470fcd8946"
   },
   "resume.meta.description": {
-    "text": "claude --continue と --resume は、正しいフォルダーにいれば会話を戻せます。Aubergine は各ターミナルがどの会話にいたかを覚えていて、Resume agent を出し、過去の会話をフォルダーごとに一覧します。",
-    "from": "9c3fb52f17de"
+    "text": "claude --continue と --resume には正しいフォルダーが必要です。Aubergine は各ターミナルの会話を覚え、Resume agent を出し、過去の会話を一覧します。",
+    "from": "f60b9e354755"
   },
   "resume.crumb": {
     "text": "会話を再開する",
@@ -2448,12 +2448,12 @@
     "from": "82d3fe458522"
   },
   "many.meta.title": {
-    "text": "タブが多すぎるときに目当てのターミナルを見つける | Aubergine",
-    "from": "710b13634a0f"
+    "text": "ターミナルのタブが多すぎる？目当てのものを探す | Aubergine",
+    "from": "e727b8c72939"
   },
   "many.meta.description": {
-    "text": "ターミナルのタブが多すぎて、どれも zsh という名前？ Aubergine はすべてのターミナルをキャンバスと1つの一覧に置き、状態を言葉で示し、フィルター、タグ、ターミナルの出力の検索、ブラウザーのタブで単独で開くターミナルを用意します。",
-    "from": "0d77fee497f4"
+    "text": "ターミナルのタブが多すぎて、どれも zsh？ Aubergine はすべてのターミナルをキャンバスと1つの一覧に置き、状態、フィルター、タグ、出力の検索を備えます。",
+    "from": "0d52d247f772"
   },
   "many.crumb": {
     "text": "ターミナルが多すぎる",
@@ -2580,8 +2580,8 @@
     "from": "a731849612b9"
   },
   "tmux.meta.description": {
-    "text": "ウィンドウを閉じても残るシェルを、プレフィックスキーも .tmux.conf もなしに。Aubergine は専用のソケットで tmux を動かし、ホイール、コピーとペースト、サイズ変更はどのターミナルとも同じように使えます。",
-    "from": "d876f30b4bcb"
+    "text": "ウィンドウを閉じても残るシェルを、プレフィックスキーも .tmux.conf もなしに。Aubergine が tmux を動かし、ホイール、コピー、ペーストはいつもどおり使えます。",
+    "from": "de322a70f2bb"
   },
   "tmux.crumb": {
     "text": "tmux なしの tmux",
@@ -2816,8 +2816,8 @@
     "from": "5e05181dcbf3"
   },
   "phone.meta.description": {
-    "text": "スマートフォンのブラウザーから Aubergine を使います。同じコンピューター上の HTTPS、設定に書くアドレス、使い捨てのコードか QR コードでデバイスごとにペアリングし、いつでも失効できます。1台の Mac で一度実行しただけで、スマートフォンでは試していません。",
-    "from": "4f87f330c4d4"
+    "text": "スマホのブラウザーから Aubergine へ：自分のコンピューター上の HTTPS、使い捨てコードでデバイスごとにペアリング。1台の Mac で一度実行、スマホでは未検証。",
+    "from": "b82b5a179985"
   },
   "phone.crumb": {
     "text": "スマートフォンから",
@@ -2944,8 +2944,8 @@
     "from": "2c9ecf2e9214"
   },
   "queue.meta.title": {
-    "text": "キュー、For you の一覧、スケジュール | Aubergine",
-    "from": "aaf91b58a021"
+    "text": "コーディングエージェントのタスクキューとスケジュール | Aubergine",
+    "from": "3fb36f54544d"
   },
   "queue.meta.description": {
     "text": "タスクを一度書けば空いているエージェントが引き受けます。あなたを待っているものを1つの一覧で確認し、スケジュールで決まった時刻にタスクを実行します。",
@@ -3564,8 +3564,8 @@
     "from": "25c43f0bde14"
   },
   "faq.meta.title": {
-    "text": "よくある質問 | Aubergine",
-    "from": "0956334109a5"
+    "text": "Aubergine のよくある質問：エージェント、プライバシー、要件",
+    "from": "c026a239ae64"
   },
   "faq.meta.description": {
     "text": "Aubergine についての答え：何なのか、何が必要か、プライベートか、コーディングエージェントとどう連携するか、何を予定しているか。",
@@ -3742,5 +3742,1253 @@
   "404.faq": {
     "text": "よくある質問",
     "from": "e956a9404b46"
+  },
+  "site.foot.compare": {
+    "text": "比較",
+    "from": "e888155d8c7d"
+  },
+  "guides.compare.name": {
+    "text": "Aubergine とほかのツールの比較",
+    "from": "a7d4b6e16622"
+  },
+  "guides.compare.text": {
+    "text": "Conductor、Claude Squad、Vibe Kanban、cmux、Warp、Paradev を Aubergine と並べて比べます。各ツールが自分について文書にしていることにもとづきます。",
+    "from": "ef74044c8bc1"
+  },
+  "compare.meta.title": {
+    "text": "コーディングエージェントを動かすツール7選を比較 | Aubergine",
+    "from": "c99d6cc298c1"
+  },
+  "compare.meta.description": {
+    "text": "Aubergine と Conductor、Claude Squad、Vibe Kanban、cmux、Warp、Paradev の比較：それぞれ何か、どこで動くか、費用、閉じると何が終わるか。",
+    "from": "ab73688e9085"
+  },
+  "compare.crumb": {
+    "text": "比較",
+    "from": "e888155d8c7d"
+  },
+  "compare.title": {
+    "text": "複数のコーディングエージェントを動かすツールの比較",
+    "from": "28d801f5961d"
+  },
+  "compare.lead": {
+    "text": "同じ場面のための7つのツールです。複数のコーディングエージェントが働き、あなたがその真ん中にいる場面。Aubergine を Conductor、Claude Squad、Vibe Kanban、cmux、Warp、Paradev と並べ、それぞれに1ページずつ用意しました。",
+    "from": "b5fab9e77782"
+  },
+  "compare.how": {
+    "text": "<strong>このページの書き方。</strong>ほかのツールについての記述は、2026年11月26日に読んだそのツール自身のサイト、ドキュメント、リポジトリにもとづき、各ページからリンクしています。ほかのツールは動かしていません。ドキュメントに何も書かれていない点は、そのツールにできないとは書かず、何も見つからなかったと書いています。これらのツールは変化が速いです。間違いや古い情報があれば<a href=\"https://github.com/thirstyeggplant/aubergine/issues\">教えてください</a>。修正します。",
+    "from": "b593b3d87f7a"
+  },
+  "compare.table.title": {
+    "text": "7つすべてを並べて",
+    "from": "43d67ddccfc2"
+  },
+  "compare.table.tool": {
+    "text": "ツール",
+    "from": "2e53bdcd0740"
+  },
+  "compare.each.title": {
+    "text": "それぞれのページ",
+    "from": "8121e71bc2a8"
+  },
+  "compare.each.text": {
+    "text": "各ページには、2つを並べた表の全体、違うところ、そして相手のツールにあって Aubergine にないものがあります。",
+    "from": "8fa0a789da7e"
+  },
+  "compare.around.title": {
+    "text": "Aubergine の軸にあるもの",
+    "from": "86c14152ab1c"
+  },
+  "compare.around.terminals": {
+    "text": "<strong>普通のターミナル。</strong>エージェントは、どのターミナルアプリでも動くのと同じように Aubergine で動きます。上にチャット画面はなく、エージェントが出力するものとあなたの間には何もありません。",
+    "from": "4b58310b25f3"
+  },
+  "compare.around.canvas": {
+    "text": "<strong>すべてが見える。</strong>パンとズームができるキャンバスにターミナルが並び、すべてのターミナルとその状態を言葉で示す1つの一覧があります。<a href=\"/too-many-terminal-tabs/\">目当てのターミナルを見つける</a>を参照してください。",
+    "from": "c6c0fbc9bab4"
+  },
+  "compare.around.tmux": {
+    "text": "<strong>ウィンドウを閉じても何も終わらない。</strong>どのターミナルも tmux セッションなので、ブラウザーも Aubergine 自体も止まって構わず、エージェントは動き続けます。<a href=\"/keep-terminals-after-restart/\">再起動で何が残るか</a>を参照してください。",
+    "from": "e512de1deb34"
+  },
+  "compare.around.local": {
+    "text": "<strong>あなたのコンピューターだけ。</strong>アカウントも、クラウドも、有料プランも、自分のモデルもありません。サーバーは <code>127.0.0.1</code> で待ち受けます。<a href=\"/security/\">セキュリティ</a>を参照してください。",
+    "from": "d51e1a73a1c0"
+  },
+  "compare.around.decide": {
+    "text": "<strong>決めるのは人。</strong>エージェントが提案したものはあなたのレビューを待ち、ワークフローの承認はあなただけのもので、For you という1つの一覧に、あなたを待つものがすべて集まります。<a href=\"/queue-and-schedules/\">キュー</a>を参照してください。",
+    "from": "0c58d14e37b6"
+  },
+  "compare.lacks.title": {
+    "text": "Aubergine にないもの",
+    "from": "791f409b25b0"
+  },
+  "compare.lacks.app": {
+    "text": "<strong>デスクトップアプリもスマートフォンアプリもありません。</strong>ブラウザーの中のページです。ほかのデバイスは、あなたが動かすプロキシを通じてペアリングできます。それは1台の Mac で一度実行しただけで、実際のスマートフォンでは一度も試していません。",
+    "from": "8cda51e85558"
+  },
+  "compare.lacks.merge": {
+    "text": "<strong>プルリクエストもマージもありません。</strong>作業コピーで何が変わったかをファイルごとに示し、コミット、プッシュ、リベース、マージは決してしません。",
+    "from": "2c7dc74cd5cf"
+  },
+  "compare.lacks.cloud": {
+    "text": "<strong>クラウドはありません。</strong>エージェントは Aubergine が動くコンピューター上で動き、スケジュールはそのコンピューターが動いている間にだけ実行されます。",
+    "from": "9b0762b5da8f"
+  },
+  "compare.lacks.sound": {
+    "text": "<strong>音もプッシュもありません。</strong>通知は、ブラウザーで開いている Aubergine のページから届きます。",
+    "from": "e63009caa14b"
+  },
+  "compare.lacks.platforms": {
+    "text": "<strong>macOS 向けに作られています。</strong>Linux ではコンテナの中でだけ動かしました。Windows では WSL 2 の中でだけ動き、それはまだ試していません。",
+    "from": "5f5c1927df23"
+  },
+  "compare.lacks.agents": {
+    "text": "<strong>主に Claude Code 向け。</strong>どのコマンドラインエージェントもターミナルで動きますが、Aubergine がエージェントのために自ら行うこと（待っていることに気づく、会話を再開する）は Claude Code 向けに作られています。ほかのエージェントは <code>aubergine</code> コマンドを通じて報告します。",
+    "from": "2f0ba98518bf"
+  },
+  "compare.q.best.q": {
+    "text": "複数の Claude Code エージェントを同時に動かすのに最適なツールは何ですか？",
+    "from": "4d699c803dcd"
+  },
+  "compare.q.best.a": {
+    "text": "エージェントの周りに何を求めるかによります。差分、プルリクエスト、マージのある Mac アプリなら Conductor か Paradev。いつも使っているターミナルの中のプログラムなら Claude Squad。イシューのボードなら Vibe Kanban。ネイティブの Mac ターミナルなら cmux。自分のエージェントとクラウドのエージェントを持つターミナルなら Warp。ブラウザーのページに普通のターミナルを並べ、tmux で動かし続け、アカウントが要らないものなら Aubergine です。",
+    "from": "6a57f43a10dc"
+  },
+  "compare.q.open.q": {
+    "text": "これらのツールのうち、オープンソースはどれですか？",
+    "from": "23e0ea8e7990"
+  },
+  "compare.q.open.a": {
+    "text": "2026年11月26日に読んだ時点では、Aubergine（MIT）、Paradev（MIT）、Vibe Kanban（Apache-2.0）、Claude Squad（AGPL-3.0）、cmux のアプリ（GPL-3.0-or-later）、Warp のクライアント（AGPL-3.0）です。Conductor は利用規約でプロプライエタリとされています。",
+    "from": "fcb0a543dbb1"
+  },
+  "compare.q.linux.q": {
+    "text": "これらのツールのうち、Linux や Windows で動くのはどれですか？",
+    "from": "702775b7d90b"
+  },
+  "compare.q.linux.a": {
+    "text": "それぞれのドキュメントによれば、Warp は macOS、Windows、Linux。Vibe Kanban も3つすべて。Claude Squad は macOS と Linux、Windows では WSL 経由の tmux で。Paradev は macOS と、実験的な Linux 版。Conductor と cmux は macOS だけです。Aubergine は macOS 向けに作られ、Linux ではコンテナの中でだけ動かしました。Windows では WSL 2 の中でだけ動き、まだ試していません。",
+    "from": "eb17a7194e7c"
+  },
+  "compare.q.close.q": {
+    "text": "アプリを閉じた後もエージェントが動き続けるのはどれですか？",
+    "from": "4b67f3b2e66d"
+  },
+  "compare.q.close.a": {
+    "text": "Aubergine と Claude Squad は、各エージェントを tmux セッションで動かします。Paradev は、ウィンドウを閉じてもターミナルを保つバックグラウンドのデーモンを文書にしています。cmux が動いているプロセスを保つのは、オプトインの tmux モードのときだけです。Conductor は、ローカルのセッションはアプリとともに終わるとしています。Warp が復元するのはウィンドウと最近の出力で、動いているプログラムではありません。Conductor、cmux、Warp、Paradev にはそれぞれ、エージェントが動き続けるクラウドもあります。Aubergine も含め、どれもコンピューターの再起動を越えてローカルのエージェントを動かし続けることはできません。",
+    "from": "4bb44c21e3ea"
+  },
+  "compare.vs.table": {
+    "text": "並べて比べる",
+    "from": "a3d7b387c34d"
+  },
+  "compare.vs.thing": {
+    "text": "項目",
+    "from": "f8cf83a76a98"
+  },
+  "compare.vs.faq": {
+    "text": "よくある質問",
+    "from": "9a72221a2747"
+  },
+  "compare.vs.all": {
+    "text": "7つのツールすべての比較",
+    "from": "ee4eb4f7ad29"
+  },
+  "compare.row.form": {
+    "text": "どんなものか",
+    "from": "1f36becc3aa7"
+  },
+  "compare.row.runs": {
+    "text": "動く環境",
+    "from": "88a550e0f44e"
+  },
+  "compare.row.price": {
+    "text": "ソースと価格",
+    "from": "fb616bdc6fda"
+  },
+  "compare.row.agents": {
+    "text": "エージェント",
+    "from": "279b44d2ab4b"
+  },
+  "compare.row.layout": {
+    "text": "複数を同時に",
+    "from": "fa6b205bb2ee"
+  },
+  "compare.row.apart": {
+    "text": "エージェントを分けておく",
+    "from": "420ecd34a352"
+  },
+  "compare.row.closed": {
+    "text": "閉じたとき",
+    "from": "6d0beffa1276"
+  },
+  "compare.row.waits": {
+    "text": "エージェントが待つとき、終わったとき",
+    "from": "ad33e1aadbff"
+  },
+  "compare.row.review": {
+    "text": "変更のレビュー",
+    "from": "5c07a12954c0"
+  },
+  "compare.row.device": {
+    "text": "ほかのデバイスから",
+    "from": "0176df0875c6"
+  },
+  "compare.row.programs": {
+    "text": "プログラム向け",
+    "from": "ca1a25f0d017"
+  },
+  "compare.row.timed": {
+    "text": "キューとスケジュール",
+    "from": "7048f6d971c8"
+  },
+  "compare.a.form": {
+    "text": "あなた自身のコンピューター上のサーバーと、ブラウザーのページ",
+    "from": "f0e12c3481c6"
+  },
+  "compare.a.runs": {
+    "text": "macOS。Linux はコンテナの中だけ。Windows は WSL 2 の中で、未検証。tmux と Node.js が必要",
+    "from": "ce2ec170ad45"
+  },
+  "compare.a.price": {
+    "text": "MIT、無料。有料プランもアカウントもなし",
+    "from": "c6bdeec37cc3"
+  },
+  "compare.a.agents": {
+    "text": "どのコマンドラインエージェントでも。Claude Code には自ら行うことがより多い",
+    "from": "036a4153456a"
+  },
+  "compare.a.layout": {
+    "text": "キャンバスに並ぶターミナルと、そのすべての一覧",
+    "from": "928536cdc6c9"
+  },
+  "compare.a.apart": {
+    "text": "求めたときに、ターミナルごとに専用ブランチ上の Git の worktree",
+    "from": "2eb2221a43cc"
+  },
+  "compare.a.closed": {
+    "text": "ターミナルは tmux で動き続ける。コンピューターを再起動すると動いていたものは終わる",
+    "from": "3a2d0d86f66d"
+  },
+  "compare.a.waits": {
+    "text": "ターミナルの色、上部の数、次のものへ移るキー、開いているページからの通知。音はなし",
+    "from": "02781ee55c07"
+  },
+  "compare.a.review": {
+    "text": "何が変わったかをファイルごとに。コミット、プッシュ、プルリクエスト、マージはなし",
+    "from": "24a75e296224"
+  },
+  "compare.a.device": {
+    "text": "あなたが動かすプロキシを通じてペアリングしたブラウザー。アプリはなし。実際のスマートフォンでは未検証",
+    "from": "e18f70623096"
+  },
+  "compare.a.programs": {
+    "text": "スコープ付きトークンの HTTP API、<code>aubergine</code> コマンド、MCP サーバー",
+    "from": "fc6fcbb83503"
+  },
+  "compare.a.timed": {
+    "text": "上限付きのキュー、時刻によるスケジュール、承認付きのワークフロー",
+    "from": "9aa15e3097da"
+  },
+  "vs.conductor.crumb": {
+    "text": "Conductor",
+    "from": "14116bf4372e"
+  },
+  "vs.conductor.name": {
+    "text": "Conductor",
+    "from": "14116bf4372e"
+  },
+  "vs.conductor.meta.title": {
+    "text": "Aubergine と Conductor の比較：無料のオープンソースの代替",
+    "from": "35ece35e60d8"
+  },
+  "vs.conductor.meta.description": {
+    "text": "どちらもコーディングエージェントを Git の worktree で並行実行。Conductor はクラウド付きの Mac アプリ、Aubergine はオープンソースでターミナルを tmux で動かし続けます。",
+    "from": "baeaaa943291"
+  },
+  "vs.conductor.title": {
+    "text": "Aubergine と Conductor",
+    "from": "6dc79eddb49c"
+  },
+  "vs.conductor.lead": {
+    "text": "どちらも複数のコーディングエージェントを同時に、それぞれ専用の Git の worktree で動かします。Conductor は、チャット、差分ビューアー、クラウドのある Mac アプリです。Aubergine は、あなた自身のコンピューター上で動く無料のオープンソースのサーバーで、普通のターミナルをブラウザーのページに並べて見せます。",
+    "from": "9d27a087649b"
+  },
+  "vs.conductor.how": {
+    "text": "<strong>情報の出どころ。</strong>ここでの Conductor についての記述は、2026年11月26日に読んだ<a href=\"https://docs.conductor.build/\">そのドキュメント</a>と<a href=\"https://www.conductor.build/changelog\">変更履歴</a>にもとづきます。Conductor は動かしていません。間違いや古い情報があれば<a href=\"https://github.com/thirstyeggplant/aubergine/issues\">教えてください</a>。",
+    "from": "6bdb8eaf878d"
+  },
+  "vs.conductor.status": {
+    "text": "<strong>Conductor の現状。</strong>2026年11月4日、その変更履歴は Conductor が Meta に加わり、終了に向かうと伝えました。11月13日には、Conductor は終了しないと伝えました。このページを書いた時点では、サイトの一部にまだ最初の知らせが残っていました。今の状況は変更履歴で確認してください。",
+    "from": "0ce8070b49b7"
+  },
+  "vs.conductor.is.title": {
+    "text": "Conductor とは",
+    "from": "761d10f79609"
+  },
+  "vs.conductor.is.text": {
+    "text": "自身の説明によれば、コードベースで多くのコーディングエージェントを並行して動かす Mac アプリです。作業の1つひとつがワークスペースで、1つのブランチ上の Git の worktree に、チャット、ターミナル、ブラウザーのタブが付きます。Mac にすでにあるサインインのまま Claude Code、Codex、Cursor、OpenCode を動かし、差分ビューアー、プルリクエスト、iOS アプリ、そしてエージェントがサンドボックスで動く有料のクラウドがあります。",
+    "from": "892b18bb52d6"
+  },
+  "vs.conductor.pick.title": {
+    "text": "どちらを選ぶか",
+    "from": "9190a8f83f35"
+  },
+  "vs.conductor.pick.them": {
+    "text": "<strong>Conductor を選ぶ</strong>のは、タスクをプロンプトからマージ済みのプルリクエストまで運ぶ Mac アプリと、Mac の電源が切れている間も作業が進むクラウドがほしい場合です。",
+    "from": "703a739ea90f"
+  },
+  "vs.conductor.pick.us": {
+    "text": "<strong>Aubergine を選ぶ</strong>のは、エージェントを一度に全部見える普通のターミナルとして扱い、ウィンドウを閉じても tmux で動き続け、サインインするものがなく、ソースが公開されているものがほしい場合です。",
+    "from": "e081882f41c0"
+  },
+  "vs.conductor.differs.title": {
+    "text": "違うところ",
+    "from": "8c2314ada082"
+  },
+  "vs.conductor.d1": {
+    "text": "<strong>チャットではなくターミナル。</strong>Conductor はエージェントをワークスペースの中のチャットとして見せ、その横にターミナルモードがあります。Aubergine はエージェント自身のターミナルを、どのターミナルアプリでも動くのと同じように見せ、それをパンとズームのできるキャンバスにたくさん並べます。",
+    "from": "e8ee13648dc8"
+  },
+  "vs.conductor.d2": {
+    "text": "<strong>閉じると何が終わるか。</strong>Conductor のドキュメントによれば、ローカルのセッションはアプリを閉じるか Mac をシャットダウンすると終わり、クラウドのセッションは続きます。Aubergine ではどのターミナルも tmux セッションなので、ブラウザーを閉じても Aubergine を止めても何も終わりません。コンピューターの再起動では、どちらも終わります。",
+    "from": "09276a000922"
+  },
+  "vs.conductor.d3": {
+    "text": "<strong>あなたのコンピューターの外には何もない。</strong>Conductor は、アカウント、クラウド、スマートフォンアプリのための中継、利用状況の分析を文書にしています。Aubergine にはアカウントも自前のサービスもありません。サーバーは <code>127.0.0.1</code> で待ち受け、ほかのデバイスからの利用はあなたが動かすプロキシを通ります。",
+    "from": "717211af5743"
+  },
+  "vs.conductor.has.title": {
+    "text": "Conductor にあって Aubergine にないもの",
+    "from": "97051a4ecf5d"
+  },
+  "vs.conductor.h1": {
+    "text": "行にコメントしてそのコメントをエージェントに送り返せる差分ビューアーと、その先のプルリクエスト、チェック、マージ。Aubergine は作業コピーで何が変わったかを示し、コミット、プッシュ、マージは決してしません。",
+    "from": "6777521cf45a"
+  },
+  "vs.conductor.h2": {
+    "text": "Mac の電源が切れていてもエージェントが動き続けるクラウドと、そこでスケジュールどおりに動くルーティン。Aubergine のスケジュールは、あなたのコンピューターが動いている間に、そのコンピューターで実行されます。",
+    "from": "ac3ae91a45fe"
+  },
+  "vs.conductor.h3": {
+    "text": "iOS アプリと完了の音。Aubergine にはアプリがなく、音も鳴らしません。",
+    "from": "193e1ed4e647"
+  },
+  "vs.conductor.q1.q": {
+    "text": "Aubergine は Conductor の代わりになりますか？",
+    "from": "cde19d1a87c2"
+  },
+  "vs.conductor.q1.a": {
+    "text": "自分のコンピューターで複数のコマンドラインエージェントを動かすことについては、なります。各エージェントはキャンバス上にターミナルを持ち、求めれば専用の Git の worktree も持ちます。ただし同じものの置き換えではありません。Aubergine にはチャット画面も、プルリクエストやマージも、クラウドも、スマートフォンアプリもありません。",
+    "from": "6570e71775cf"
+  },
+  "vs.conductor.q2.q": {
+    "text": "Conductor はオープンソースですか？",
+    "from": "fad053540fb9"
+  },
+  "vs.conductor.q2.a": {
+    "text": "いいえ。利用規約ではプロプライエタリとされ、公開リポジトリは見つかりませんでした。ドキュメントによれば、ローカルのアプリは無料で使え、クラウドのワークスペースには有料プランが必要です。Aubergine は MIT ライセンスで、有料プランはありません。",
+    "from": "1cd0818f2d1c"
+  },
+  "vs.conductor.q3.q": {
+    "text": "Conductor は Linux や Windows で動きますか？",
+    "from": "735588d0d163"
+  },
+  "vs.conductor.q3.a": {
+    "text": "ドキュメントには、Windows と Linux ではまだ使えないとあります。Aubergine は macOS 向けに作られ、Linux ではコンテナの中でだけ動かしました。Windows では WSL 2 の中でだけ動き、それはまだ試していません。",
+    "from": "f5ade7015ea8"
+  },
+  "vs.conductor.q4.q": {
+    "text": "Conductor と Aubergine を一緒に使えますか？",
+    "from": "19c0c55db696"
+  },
+  "vs.conductor.q4.a": {
+    "text": "妨げるものはありません。どちらも同じリポジトリの Git の worktree で作業し、それぞれが自分の worktree を作ります。2つを並べて動かしたことはありません。",
+    "from": "f05d6d7dc553"
+  },
+  "vs.conductor.mark": {
+    "text": "Aubergine は Conductor およびその開発元とは関係ありません。Conductor は彼らの製品の名前です。利用規約には Melty Labs, Inc. の名があり、サイトには Conductor from Meta とあります。",
+    "from": "f1f2c16aeaff"
+  },
+  "vs.conductor.c.form": {
+    "text": "Mac のデスクトップアプリ。ホストされたクラウドと iOS アプリ付き",
+    "from": "8f147196475d"
+  },
+  "vs.conductor.c.runs": {
+    "text": "macOS のみ",
+    "from": "3f2f41cd023d"
+  },
+  "vs.conductor.c.price": {
+    "text": "クローズドソース。ローカルのアプリは無料、クラウドには有料プランが必要",
+    "from": "330fb38120bd"
+  },
+  "vs.conductor.c.agents": {
+    "text": "Claude Code、Codex、Cursor、OpenCode。ターミナルモードでは任意のコマンド",
+    "from": "605c47dc956b"
+  },
+  "vs.conductor.c.layout": {
+    "text": "ワークスペースのサイドバー。それぞれにチャット、ターミナル、ブラウザーのタブ",
+    "from": "d639b322b315"
+  },
+  "vs.conductor.c.apart": {
+    "text": "ワークスペースごとに Git の worktree とブランチ。クラウドではサンドボックス",
+    "from": "ca8d1b34e4bc"
+  },
+  "vs.conductor.c.closed": {
+    "text": "ローカルのセッションはアプリとともに終わる。クラウドのセッションは続く",
+    "from": "bed2d2359373"
+  },
+  "vs.conductor.c.waits": {
+    "text": "完了の音",
+    "from": "9cc24eada060"
+  },
+  "vs.conductor.c.review": {
+    "text": "エージェントへコメントを返せる差分ビューアー、プルリクエスト、チェック、マージ",
+    "from": "c7413ccd732c"
+  },
+  "vs.conductor.c.device": {
+    "text": "中継を通じた iOS アプリ。Mac が起きていて、アプリが開いていること",
+    "from": "ebef5d2152fd"
+  },
+  "vs.conductor.c.programs": {
+    "text": "クラウドのワークスペース向けの API と MCP サーバー、コマンド",
+    "from": "3d0a599b7e17"
+  },
+  "vs.conductor.c.timed": {
+    "text": "メッセージのキュー。クラウドでのスケジュールされたルーティン",
+    "from": "9ab0918f949e"
+  },
+  "vs.claude-squad.crumb": {
+    "text": "Claude Squad",
+    "from": "3c4fa1eb24c0"
+  },
+  "vs.claude-squad.name": {
+    "text": "Claude Squad",
+    "from": "3c4fa1eb24c0"
+  },
+  "vs.claude-squad.meta.title": {
+    "text": "Aubergine と Claude Squad 比較：tmux と worktree の2つの方法",
+    "from": "4166fb6975ea"
+  },
+  "vs.claude-squad.meta.description": {
+    "text": "どちらも各コーディングエージェントを tmux セッションと Git の worktree で動かします。Claude Squad はターミナル内のプログラム、Aubergine はブラウザー内のキャンバス。",
+    "from": "9c993cb105df"
+  },
+  "vs.claude-squad.title": {
+    "text": "Aubergine と Claude Squad",
+    "from": "77af5fc2deda"
+  },
+  "vs.claude-squad.lead": {
+    "text": "2つは同じ土台に立っています。各エージェントは tmux セッションで、それぞれ専用の Git の worktree にあり、どちらも無料のオープンソースです。Claude Squad はターミナルの中のプログラムです。Aubergine はブラウザーのページで、そこにターミナルが並びます。",
+    "from": "d9f4e824659b"
+  },
+  "vs.claude-squad.how": {
+    "text": "<strong>情報の出どころ。</strong>ここでの Claude Squad についての記述は、2026年11月26日に読んだ<a href=\"https://github.com/smtg-ai/claude-squad\">そのリポジトリと README</a> にもとづきます。Claude Squad は動かしていません。間違いや古い情報があれば<a href=\"https://github.com/thirstyeggplant/aubergine/issues\">教えてください</a>。",
+    "from": "c74805e04f47"
+  },
+  "vs.claude-squad.is.title": {
+    "text": "Claude Squad とは",
+    "from": "27fdabce5ffe"
+  },
+  "vs.claude-squad.is.text": {
+    "text": "自身の説明によれば、Claude Code、Codex、Gemini などのローカルのエージェントを、別々のワークスペースで複数管理するターミナルアプリです。<code>cs</code> で起動すると、1つのターミナルウィンドウに、プレビューと差分タブの付いたセッションの一覧が出ます。各セッションは、専用ブランチ上の Git の worktree にある tmux セッションです。tmux と <code>gh</code> が必要で、AGPL-3.0 ライセンスです。",
+    "from": "f5651435b271"
+  },
+  "vs.claude-squad.pick.title": {
+    "text": "どちらを選ぶか",
+    "from": "9190a8f83f35"
+  },
+  "vs.claude-squad.pick.them": {
+    "text": "<strong>Claude Squad を選ぶ</strong>のは、ターミナルの中で暮らしていて、エージェントを worktree で起動しそのブランチをプッシュする小さなプログラムがそこに1つあればよく、それ以上は要らない場合です。",
+    "from": "f1fb7dd68ee2"
+  },
+  "vs.claude-squad.pick.us": {
+    "text": "<strong>Aubergine を選ぶ</strong>のは、複数のエージェントが働く様子を一度に見て、どれがあなたを待っているかを知り、その周りにキュー、スケジュール、API がほしい場合です。",
+    "from": "4d6b3293e505"
+  },
+  "vs.claude-squad.differs.title": {
+    "text": "違うところ",
+    "from": "8c2314ada082"
+  },
+  "vs.claude-squad.d1": {
+    "text": "<strong>1つずつか、全部一度にか。</strong>Claude Squad は一覧と、選んだセッションのプレビューを見せます。Aubergine はすべてのターミナルをキャンバスにライブで描くので、5つのエージェントは目に見える5つのターミナルで、1つの一覧がそれぞれの状態を言葉で伝えます。",
+    "from": "d86f1c45b8de"
+  },
+  "vs.claude-squad.d2": {
+    "text": "<strong>誰が待っているか。</strong>Claude Squad の README には、エージェントが待っている、または終わったと知らせることについて何も見つかりませんでした。Aubergine は待っているターミナルに色で印を付け、待っているものの数を上部に示し、キーで次のものへ移り、開いているページから通知を送れます。",
+    "from": "211530499e12"
+  },
+  "vs.claude-squad.d3": {
+    "text": "<strong>エージェントの周りにあるもの。</strong>Aubergine には、上限付きのタスクのキュー、スケジュール、人が承認するステップのあるワークフロー、各ターミナルのノートとフィールド、HTTP API、MCP サーバーがあります。Claude Squad はセッションとそのブランチに絞っています。",
+    "from": "f50c8e772a93"
+  },
+  "vs.claude-squad.has.title": {
+    "text": "Claude Squad にあって Aubergine にないもの",
+    "from": "98723dd6c82d"
+  },
+  "vs.claude-squad.h1": {
+    "text": "すでに開いているターミナルの中で、サーバーもブラウザーもなしに動きます。ほかのターミナルプログラムと同じように SSH 越しに使えます。Aubergine をほかの場所から使うには、トンネルかプロキシが必要です。",
+    "from": "f20b31ac2b9e"
+  },
+  "vs.claude-squad.h2": {
+    "text": "ブランチをコミットしてプッシュしてくれ、作業をコミットしてセッションを一時停止します。Aubergine はコミットもプッシュも決してしません。",
+    "from": "ca1a86c924f4"
+  },
+  "vs.claude-squad.h3": {
+    "text": "エージェントのプロンプトを自動で受け入れる実験的なモード。Aubergine があなたの代わりにエージェントに答えることは決してありません。",
+    "from": "0b05aa90e62a"
+  },
+  "vs.claude-squad.q1.q": {
+    "text": "Aubergine は Claude Squad の代わりになりますか？",
+    "from": "361c471f4cfa"
+  },
+  "vs.claude-squad.q1.a": {
+    "text": "はい。同じ仕事を別のやり方でします。どちらも各エージェントを tmux セッションで動かし、それぞれに専用ブランチ上の Git の worktree を与えられます。Claude Squad はターミナルの中のプログラムから、Aubergine はすべてのターミナルが見えるブラウザーのページからそれを行います。",
+    "from": "a917cadf4b9c"
+  },
+  "vs.claude-squad.q2.q": {
+    "text": "どちらも tmux を使いますか？",
+    "from": "7bb088dbc786"
+  },
+  "vs.claude-squad.q2.a": {
+    "text": "はい。Claude Squad は tmux を前提条件に挙げ、エージェントごとに tmux セッションを作ります。Aubergine は tmux 3.2 以降が必要で、専用のソケットと専用の設定で動かすので、あなた自身の tmux には触れません。",
+    "from": "6811d9954e5a"
+  },
+  "vs.claude-squad.q3.q": {
+    "text": "Claude Squad は Claude Code 以外のエージェントでも使えますか？",
+    "from": "b8ca49d7a338"
+  },
+  "vs.claude-squad.q3.a": {
+    "text": "README によれば、既定のプログラムは <code>claude</code> で、Codex、Gemini、Aider などほかのものは <code>-p</code> で指定します。Aubergine はどのコマンドラインのプログラムでもターミナルで動かします。エージェントのために自ら行うことは Claude Code 向けに作られています。",
+    "from": "e25dfec3422d"
+  },
+  "vs.claude-squad.q4.q": {
+    "text": "それぞれのライセンスは何ですか？",
+    "from": "8b3801771777"
+  },
+  "vs.claude-squad.q4.a": {
+    "text": "Claude Squad は AGPL-3.0、Aubergine は MIT ライセンスです。どちらも無料です。",
+    "from": "b9eaa7117d9a"
+  },
+  "vs.claude-squad.mark": {
+    "text": "Aubergine は Claude Squad とも Anthropic とも関係ありません。Claude Squad は smtg-ai のプロジェクトの名前で、Claude は Anthropic の商標です。",
+    "from": "ce7ff8c148b6"
+  },
+  "vs.claude-squad.c.form": {
+    "text": "ターミナルの中のプログラム。<code>cs</code> で起動",
+    "from": "e739d8457685"
+  },
+  "vs.claude-squad.c.runs": {
+    "text": "macOS と Linux。Windows では WSL 経由の tmux で。tmux と <code>gh</code> が必要",
+    "from": "abc0235db83e"
+  },
+  "vs.claude-squad.c.price": {
+    "text": "AGPL-3.0、無料",
+    "from": "558fbe03f51b"
+  },
+  "vs.claude-squad.c.agents": {
+    "text": "ほかを指定しなければ Claude Code。Codex、Gemini、Aider、任意のコマンド",
+    "from": "1fe7348291c8"
+  },
+  "vs.claude-squad.c.layout": {
+    "text": "1つのターミナルウィンドウに、プレビューと差分タブの付いたセッションの一覧",
+    "from": "3d5b69fb4009"
+  },
+  "vs.claude-squad.c.apart": {
+    "text": "それぞれに tmux セッションと、専用ブランチ上の Git の worktree",
+    "from": "d8335dee55c9"
+  },
+  "vs.claude-squad.c.closed": {
+    "text": "セッションは tmux セッション。何が保たれるかは README に書かれていない",
+    "from": "db4a444f7d33"
+  },
+  "vs.claude-squad.c.waits": {
+    "text": "README には何も見つからない",
+    "from": "8f95c49e434f"
+  },
+  "vs.claude-squad.c.review": {
+    "text": "差分タブ。ブランチをコミットしてプッシュする",
+    "from": "e4f8bb6419df"
+  },
+  "vs.claude-squad.c.device": {
+    "text": "README には何も見つからない",
+    "from": "8f95c49e434f"
+  },
+  "vs.claude-squad.c.programs": {
+    "text": "コマンドラインのオプション。API や MCP サーバーは見つからない",
+    "from": "d88b2e8d7fe3"
+  },
+  "vs.claude-squad.c.timed": {
+    "text": "README には何も見つからない",
+    "from": "8f95c49e434f"
+  },
+  "vs.vibe-kanban.crumb": {
+    "text": "Vibe Kanban",
+    "from": "306161ab46c9"
+  },
+  "vs.vibe-kanban.name": {
+    "text": "Vibe Kanban",
+    "from": "306161ab46c9"
+  },
+  "vs.vibe-kanban.meta.title": {
+    "text": "Aubergine と Vibe Kanban の比較：オープンソースの代替",
+    "from": "670b010ba18d"
+  },
+  "vs.vibe-kanban.meta.description": {
+    "text": "どちらもローカルで動くオープンソースで、ブラウザーに表示。Vibe Kanban は作業をボードのイシューとして計画し、Aubergine はエージェントをターミナルとして並べます。",
+    "from": "bb53f7f86aa3"
+  },
+  "vs.vibe-kanban.title": {
+    "text": "Aubergine と Vibe Kanban",
+    "from": "c5b1f18fa84d"
+  },
+  "vs.vibe-kanban.lead": {
+    "text": "どちらもオープンソースで、あなた自身のコンピューターで動き、ブラウザーで使います。Vibe Kanban は作業から始めます。ボード上のイシューを、1つずつエージェントに渡します。Aubergine はエージェントから始めます。ターミナルが並び、その横にキューがあります。",
+    "from": "3d84a2e91b62"
+  },
+  "vs.vibe-kanban.how": {
+    "text": "<strong>情報の出どころ。</strong>ここでの Vibe Kanban についての記述は、2026年11月26日に読んだ<a href=\"https://www.vibekanban.com/docs\">そのドキュメント</a>と<a href=\"https://github.com/BloopAI/vibe-kanban\">リポジトリ</a>にもとづきます。Vibe Kanban は動かしていません。間違いや古い情報があれば<a href=\"https://github.com/thirstyeggplant/aubergine/issues\">教えてください</a>。",
+    "from": "99375c152de4"
+  },
+  "vs.vibe-kanban.status": {
+    "text": "<strong>Vibe Kanban の現状。</strong>2026年4月10日、<a href=\"https://www.vibekanban.com/blog/shutdown\">開発元は次のように書きました</a>。開発元の会社 bloop は事業を終えること、プロジェクトはコミュニティが保守するオープンソースとして続くこと、リモートのサービスは取り除かれるがローカルのワークスペースは動き続けること。このページを書いた時点では、ドキュメントと料金ページはまだそのサービスを説明していました。リリースは続いています。",
+    "from": "e7d0f9efaeb3"
+  },
+  "vs.vibe-kanban.is.title": {
+    "text": "Vibe Kanban とは",
+    "from": "ec9867114fba"
+  },
+  "vs.vibe-kanban.is.text": {
+    "text": "自身の説明によれば、開発者がコーディングエージェントとともにコーディングのタスクを追うためのカンバンボードです。<code>npx vibe-kanban</code> でローカルのサーバーが起動し、そのページが開きます。イシューはワークスペースになります。選んだリポジトリの Git の worktree、名前で知っている10以上のエージェントのうち1つとの会話、その横の変更、そしてプルリクエストとマージ。Apache-2.0 ライセンスです。",
+    "from": "6d4c2f9e57b0"
+  },
+  "vs.vibe-kanban.pick.title": {
+    "text": "どちらを選ぶか",
+    "from": "9190a8f83f35"
+  },
+  "vs.vibe-kanban.pick.them": {
+    "text": "<strong>Vibe Kanban を選ぶ</strong>のは、イシュー単位で考える場合です。ボードで計画し、各カードをエージェントに渡し、その差分をコメント付きでレビューし、マージします。",
+    "from": "245bc2234639"
+  },
+  "vs.vibe-kanban.pick.us": {
+    "text": "<strong>Aubergine を選ぶ</strong>のは、エージェントそのものを、ウィンドウより長生きするターミナルとして目に入れておき、作業はあなたが指示したときにだけキューから渡したい場合です。",
+    "from": "2365113635d7"
+  },
+  "vs.vibe-kanban.differs.title": {
+    "text": "違うところ",
+    "from": "8c2314ada082"
+  },
+  "vs.vibe-kanban.d1": {
+    "text": "<strong>会話か、ターミナルか。</strong>Vibe Kanban はエージェントを、変更を横に添えた会話のパネルとして見せます。Aubergine はエージェント自身のターミナルを見せ、それをキャンバスにたくさん同時に並べます。",
+    "from": "0c890c4d406b"
+  },
+  "vs.vibe-kanban.d2": {
+    "text": "<strong>どのプログラムでも。</strong>Vibe Kanban は対応するエージェントを名前で挙げています。Aubergine のターミナルはシェルです。どのコマンドラインエージェントもそこで動き、ビルドも、テストの実行も、サーバーも動きます。Aubergine がエージェントのために自ら行うことは Claude Code 向けに作られています。",
+    "from": "23aec210dcbd"
+  },
+  "vs.vibe-kanban.d3": {
+    "text": "<strong>閉じると何が終わるか。</strong>Vibe Kanban のドキュメントには、サーバーが止まったときに動いているエージェントがどうなるかについて何も見つかりませんでした。Aubergine ではどのターミナルも tmux セッションで、Aubergine を止めてもブラウザーを閉じても何も終わりません。",
+    "from": "2f1d6cdf5c9f"
+  },
+  "vs.vibe-kanban.has.title": {
+    "text": "Vibe Kanban にあって Aubergine にないもの",
+    "from": "5076a47e917f"
+  },
+  "vs.vibe-kanban.h1": {
+    "text": "優先度、タグ、サブイシューのあるイシューのカンバンボード。Aubergine にあるのはタスクのキューと動いているワークフローのボードで、イシュートラッカーではありません。",
+    "from": "68077704a5f0"
+  },
+  "vs.vibe-kanban.h2": {
+    "text": "エージェントに送り返せるインラインコメント付きの差分と、その先のプルリクエスト、リベース、マージ。Aubergine は何が変わったかを示し、コミットもマージも決してしません。",
+    "from": "93ff80b2e186"
+  },
+  "vs.vibe-kanban.h3": {
+    "text": "文書に記載された対応環境に Windows があること、音、そして名前で知っているエージェントのより長い一覧。",
+    "from": "1aadd7b5de39"
+  },
+  "vs.vibe-kanban.q1.q": {
+    "text": "Aubergine は Vibe Kanban の代わりになりますか？",
+    "from": "4aa8ac6e6711"
+  },
+  "vs.vibe-kanban.q1.a": {
+    "text": "複数のエージェントをローカルの Git の worktree で動かし、どれがあなたを必要としているかを見ることについては、なります。形は違います。Vibe Kanban に会話付きのイシューのボードがあるところに、Aubergine にはキャンバス上のターミナルとタスクのキューがあり、Aubergine はプルリクエストを開かず、何もマージしません。",
+    "from": "98cbddf025ec"
+  },
+  "vs.vibe-kanban.q2.q": {
+    "text": "Vibe Kanban はまだ保守されていますか？",
+    "from": "6f567471ea10"
+  },
+  "vs.vibe-kanban.q2.a": {
+    "text": "開発元は2026年4月10日に、開発元の会社は事業を終え、プロジェクトはコミュニティが保守するオープンソースとして続くと書きました。その後もリポジトリにはリリースがあります。今の状況はリポジトリで確認してください。",
+    "from": "a82975b3065a"
+  },
+  "vs.vibe-kanban.q3.q": {
+    "text": "どちらもローカルで動きますか？",
+    "from": "11a0fe427c73"
+  },
+  "vs.vibe-kanban.q3.a": {
+    "text": "はい。どちらも、あなた自身のコンピューター上のサーバーと、ブラウザーのページです。Vibe Kanban は、ボードとチームの機能のための任意のサインインを文書にしています。Aubergine にはアカウントがまったくありません。",
+    "from": "ab3cc066ee10"
+  },
+  "vs.vibe-kanban.q4.q": {
+    "text": "それぞれどのエージェントに対応していますか？",
+    "from": "7e38a7feb8bc"
+  },
+  "vs.vibe-kanban.q4.a": {
+    "text": "Vibe Kanban は10以上を名前で挙げており、その中に Claude Code、Codex、Gemini CLI、GitHub Copilot、Amp、Cursor、OpenCode があります。Aubergine はどのコマンドラインのプログラムでもターミナルで動かします。メニューからエージェントを起動すること、待っていることに気づくこと、会話を再開することは Claude Code 向けに作られています。",
+    "from": "095b9719b5a7"
+  },
+  "vs.vibe-kanban.mark": {
+    "text": "Aubergine は Vibe Kanban およびその開発元とは関係ありません。Vibe Kanban は Bloop AI Limited が始めたプロジェクトの名前です。",
+    "from": "e0e138f9589d"
+  },
+  "vs.vibe-kanban.c.form": {
+    "text": "あなた自身のコンピューター上のサーバーと、ブラウザーのページ",
+    "from": "f0e12c3481c6"
+  },
+  "vs.vibe-kanban.c.runs": {
+    "text": "macOS、Linux、Windows。<code>npx</code> で起動",
+    "from": "ddd741e66ecf"
+  },
+  "vs.vibe-kanban.c.price": {
+    "text": "Apache-2.0、無料。サインインは任意",
+    "from": "9823c6d319c0"
+  },
+  "vs.vibe-kanban.c.agents": {
+    "text": "名前で知っている10以上。その中に Claude Code、Codex、Gemini CLI",
+    "from": "3b62e7abb0fe"
+  },
+  "vs.vibe-kanban.c.layout": {
+    "text": "イシューのカンバンボードと、それぞれに会話のあるワークスペースの一覧",
+    "from": "2e17f6f4a543"
+  },
+  "vs.vibe-kanban.c.apart": {
+    "text": "ワークスペースごとに Git の worktree",
+    "from": "86bf78b6f747"
+  },
+  "vs.vibe-kanban.c.closed": {
+    "text": "ドキュメントには何も見つからない",
+    "from": "f6b5e7a05b9d"
+  },
+  "vs.vibe-kanban.c.waits": {
+    "text": "音、ブラウザーの通知、あなたを必要とするワークスペースへの印",
+    "from": "9f3cc4e77037"
+  },
+  "vs.vibe-kanban.c.review": {
+    "text": "エージェントへ返せるインラインコメント付きの差分、プルリクエスト、リベース、マージ",
+    "from": "4545afb112b5"
+  },
+  "vs.vibe-kanban.c.device": {
+    "text": "クラウドのサービス経由。開発元はそれを取り除くと述べた",
+    "from": "004526c12db4"
+  },
+  "vs.vibe-kanban.c.programs": {
+    "text": "ローカルの MCP サーバー。HTTP API は見つからない",
+    "from": "7f646c855e3f"
+  },
+  "vs.vibe-kanban.c.timed": {
+    "text": "イシューのボード。スケジュールは見つからない",
+    "from": "197f6e8847f9"
+  },
+  "vs.cmux.crumb": {
+    "text": "cmux",
+    "from": "548d4fabc56e"
+  },
+  "vs.cmux.name": {
+    "text": "cmux",
+    "from": "548d4fabc56e"
+  },
+  "vs.cmux.meta.title": {
+    "text": "Aubergine と cmux 比較：コーディングエージェント用ターミナル2つ",
+    "from": "c625444e117b"
+  },
+  "vs.cmux.meta.description": {
+    "text": "どちらも任意のコマンドラインエージェントを本物のターミナルで動かし、あなた待ちのものを示します。cmux はネイティブ macOS アプリ、Aubergine はブラウザー内のキャンバス。",
+    "from": "1018139b92b2"
+  },
+  "vs.cmux.title": {
+    "text": "Aubergine と cmux",
+    "from": "9c21dcf33e1e"
+  },
+  "vs.cmux.lead": {
+    "text": "これらのページの中で最も近い組み合わせです。どちらもコーディングエージェントのために作られたターミナルで、どちらもコマンドラインから起動できるエージェントなら何でも動かし、どちらもオープンソースです。cmux はネイティブの macOS のターミナルアプリです。Aubergine はあなたのコンピューター上のサーバーと、ブラウザーの中のターミナルのキャンバスです。",
+    "from": "74355a6665b7"
+  },
+  "vs.cmux.how": {
+    "text": "<strong>情報の出どころ。</strong>ここでの cmux についての記述は、2026年11月26日に読んだ<a href=\"https://cmux.com/\">そのサイトとドキュメント</a>と<a href=\"https://github.com/manaflow-ai/cmux\">リポジトリ</a>にもとづきます。cmux は動かしていません。間違いや古い情報があれば<a href=\"https://github.com/thirstyeggplant/aubergine/issues\">教えてください</a>。",
+    "from": "5c9611ff5302"
+  },
+  "vs.cmux.is.title": {
+    "text": "cmux とは",
+    "from": "8a1d270df445"
+  },
+  "vs.cmux.is.text": {
+    "text": "自身の説明によれば、libghostty の上に作られ、縦のタブとコーディングエージェント向けの通知を持つ macOS のターミナルで、Swift で書かれています。サイドバーにワークスペースが並び、それぞれのブランチ、プルリクエスト、フォルダー、最新の通知が表示されます。ワークスペースはタブ付きのペインに分割できます。どの操作もコマンドであり、Unix ソケット上のメッセージでもあります。アプリは GPL-3.0-or-later ライセンスで無料です。クラウドのマシンとベータ版の iOS アプリは、アカウントと有料プランで使えます。",
+    "from": "68de3f7cd4b5"
+  },
+  "vs.cmux.pick.title": {
+    "text": "どちらを選ぶか",
+    "from": "9190a8f83f35"
+  },
+  "vs.cmux.pick.them": {
+    "text": "<strong>cmux を選ぶ</strong>のは、ペイン、アプリ内ブラウザー、macOS の通知を持つ速いネイティブの Mac ターミナルアプリがほしく、その上に自分なりの働き方をスクリプトで組む場合です。",
+    "from": "22fea8e3daf2"
+  },
+  "vs.cmux.pick.us": {
+    "text": "<strong>Aubergine を選ぶ</strong>のは、モードを選ばなくてもアプリを閉じたまま動き続けるエージェント、エージェントごとに作られる worktree、そしてすでに組み込まれたキュー、スケジュール、承認がほしい場合です。",
+    "from": "362a7c018644"
+  },
+  "vs.cmux.differs.title": {
+    "text": "違うところ",
+    "from": "8c2314ada082"
+  },
+  "vs.cmux.d1": {
+    "text": "<strong>閉じると何が終わるか。</strong>cmux のドキュメントによれば、終了するとレイアウトとフォルダーは保存されますが、動いているプロセスは保たれません。ローカルの tmux モードにオプトインした場合は別です。Aubergine では tmux はモードではなく、どのターミナルも最初から tmux セッションです。どちらも、コンピューターの再起動を越えてプロセスを保つことはありません。",
+    "from": "448c9e2ac6d6"
+  },
+  "vs.cmux.d2": {
+    "text": "<strong>部品か、その周りのものか。</strong>cmux は自らをソリューションではなく部品と呼び、組み立てるためのコマンドとソケットを渡します。Aubergine には、Git の worktree による作業コピー、上限付きのキュー、スケジュール、承認付きのワークフロー、あなたを待つものの1つの一覧が付いてきます。",
+    "from": "c675408c16db"
+  },
+  "vs.cmux.d3": {
+    "text": "<strong>アプリか、ページか。</strong>cmux はシステムが描く Mac アプリです。Aubergine はブラウザーの中のページです。ネイティブのターミナルより描画は遅く、あなたが動かすプロキシを通じてペアリングしたほかのブラウザーから使えます。",
+    "from": "a320e661ca17"
+  },
+  "vs.cmux.has.title": {
+    "text": "cmux にあって Aubergine にないもの",
+    "from": "3fc881ffd285"
+  },
+  "vs.cmux.h1": {
+    "text": "libghostty によるネイティブのターミナル、分割ペイン、そしてコマンドで操作できるアプリ内ブラウザー。Aubergine はターミナルをブラウザーのページに描き、ペインはありません。ターミナルはキャンバスに置かれます。",
+    "from": "2a8a37988a85"
+  },
+  "vs.cmux.h2": {
+    "text": "ペインがあなたを必要とするときの macOS の通知とカスタムコマンド。ターミナルがすでに使っているエスケープシーケンスによって、どのプログラムでも働きます。Aubergine は Claude Code 向けに作られたフックでエージェントが待っていることに気づき、通知は開いているページからだけです。",
+    "from": "c88597f63652"
+  },
+  "vs.cmux.h3": {
+    "text": "リモートのマシン上のワークスペースのための <code>cmux ssh</code>、ベータ版の iOS アプリ、有料プランのクラウドのマシン。",
+    "from": "46878f831283"
+  },
+  "vs.cmux.q1.q": {
+    "text": "Aubergine は cmux の代わりになりますか？",
+    "from": "d03cb98ddd13"
+  },
+  "vs.cmux.q1.a": {
+    "text": "はい。どちらも、複数のコーディングエージェントを動かし、どれがあなたを必要としているかを見るためのターミナルです。cmux はネイティブの macOS アプリで、Aubergine は tmux の上でブラウザーの中で動き、作業コピー、キュー、スケジュール、ワークフローを加えます。",
+    "from": "0cabdb734f94"
+  },
+  "vs.cmux.q2.q": {
+    "text": "cmux には tmux が必要ですか？",
+    "from": "836e5e3d4677"
+  },
+  "vs.cmux.q2.a": {
+    "text": "いいえ。ドキュメントには tmux は必須ではないとあり、cmux の終了時に動いているプロセスを保つための、オプトインのローカル tmux モードがあります。Aubergine は tmux 3.2 以降が必要で、すべてのターミナルをその中で動かします。",
+    "from": "a18611c76706"
+  },
+  "vs.cmux.q3.q": {
+    "text": "cmux は Linux や Windows で動きますか？",
+    "from": "09ca6d3b4a05"
+  },
+  "vs.cmux.q3.a": {
+    "text": "README には、今のところ macOS のみ、macOS 14 以降とあります。Aubergine は macOS 向けに作られ、Linux ではコンテナの中でだけ動かしました。Windows では WSL 2 の中でだけ動き、それはまだ試していません。",
+    "from": "5ba1cbadcc1c"
+  },
+  "vs.cmux.q4.q": {
+    "text": "どちらも無料のオープンソースですか？",
+    "from": "4d9f144a07a6"
+  },
+  "vs.cmux.q4.a": {
+    "text": "cmux のアプリは GPL-3.0-or-later ライセンスで無料で、クラウドには有料プランがあります。サーバーのソフトウェアは別のライセンスです。Aubergine は MIT ライセンスで、有料プランはありません。",
+    "from": "9e51e627b171"
+  },
+  "vs.cmux.mark": {
+    "text": "Aubergine は cmux およびその開発元とは関係ありません。cmux は Manaflow, Inc. の製品の名前です。",
+    "from": "750ad046fa7f"
+  },
+  "vs.cmux.c.form": {
+    "text": "ネイティブの macOS のターミナルアプリ",
+    "from": "d8719e14d15d"
+  },
+  "vs.cmux.c.runs": {
+    "text": "macOS 14 以降のみ",
+    "from": "76dd2c62352e"
+  },
+  "vs.cmux.c.price": {
+    "text": "GPL-3.0-or-later のアプリ、無料、アカウント不要。クラウドには有料プラン",
+    "from": "791d945bc808"
+  },
+  "vs.cmux.c.agents": {
+    "text": "ターミナルで動くどのエージェントでも",
+    "from": "5e7c625a3994"
+  },
+  "vs.cmux.c.layout": {
+    "text": "ワークスペースのサイドバー。それぞれがタブ付きのペインに分割",
+    "from": "be8baacc5010"
+  },
+  "vs.cmux.c.apart": {
+    "text": "エージェント用に worktree を作るものは見つからない。クラウドでは別々のマシン",
+    "from": "09a8946a9874"
+  },
+  "vs.cmux.c.closed": {
+    "text": "レイアウトとフォルダーは戻る。動いているプロセスはオプトインの tmux モードでのみ",
+    "from": "93cc242a3b3d"
+  },
+  "vs.cmux.c.waits": {
+    "text": "ペインを囲むリング、サイドバーのバッジ、macOS の通知",
+    "from": "9a5fda5bbd5c"
+  },
+  "vs.cmux.c.review": {
+    "text": "サイドバーにリンクしたプルリクエストの状態。差分の表示は見つからない",
+    "from": "1aac4ceaa460"
+  },
+  "vs.cmux.c.device": {
+    "text": "ベータ版の iOS アプリ。アカウントが必要で、Mac が起きていること。<code>cmux ssh</code>",
+    "from": "2508df0177f8"
+  },
+  "vs.cmux.c.programs": {
+    "text": "すべての操作のためのコマンドと Unix ソケット。MCP サーバーは見つからない",
+    "from": "60d43aa42ad3"
+  },
+  "vs.cmux.c.timed": {
+    "text": "ドキュメントには何も見つからない",
+    "from": "f6b5e7a05b9d"
+  },
+  "vs.warp.crumb": {
+    "text": "Warp",
+    "from": "3db7c958dfdf"
+  },
+  "vs.warp.name": {
+    "text": "Warp",
+    "from": "3db7c958dfdf"
+  },
+  "vs.warp.meta.title": {
+    "text": "Aubergine と Warp 比較：複数のコーディングエージェントを動かす",
+    "from": "b434edbfa3d3"
+  },
+  "vs.warp.meta.description": {
+    "text": "Warp は自分のエージェント、有料プラン、クラウドを持つデスクトップのターミナル。Aubergine はモデルを呼ばず、すでに使っているエージェントを並べて動かします。",
+    "from": "d9572d15388b"
+  },
+  "vs.warp.title": {
+    "text": "Aubergine と Warp",
+    "from": "05210af0bb08"
+  },
+  "vs.warp.lead": {
+    "text": "Warp は、自分のエージェント、プラン、クラウドを持つ丸ごとのターミナルアプリで、ほかのコマンドラインエージェントもタブとペインで動かします。Aubergine はもっと狭いものです。モデルを呼ばず、ターミナルアプリの代わりにもなりません。すでに使っているエージェントをブラウザーのページに並べて動かし、動かし続けます。",
+    "from": "67b1020677f9"
+  },
+  "vs.warp.how": {
+    "text": "<strong>情報の出どころ。</strong>ここでの Warp についての記述は、2026年11月26日に読んだ<a href=\"https://docs.warp.dev/\">そのドキュメント</a>と<a href=\"https://www.warp.dev/pricing\">料金ページ</a>にもとづき、複数のコーディングエージェントを動かすことだけを扱っています。Warp はほかにも多くのことをします。このために Warp は動かしていません。間違いや古い情報があれば<a href=\"https://github.com/thirstyeggplant/aubergine/issues\">教えてください</a>。",
+    "from": "c0a09271e3dc"
+  },
+  "vs.warp.is.title": {
+    "text": "Warp とは",
+    "from": "295785f2bf50"
+  },
+  "vs.warp.is.text": {
+    "text": "自身の説明によれば、エージェント型の開発環境です。macOS、Windows、Linux 向けのデスクトップのターミナルで、クライアントは AGPL-3.0 のオープンソースです。独自の Warp Agent を持ち、それは Warp 経由かあなた自身のキーでモデルを呼びます。Claude Code、Codex、Gemini CLI などほかのコマンドラインエージェントもタブとペインで動かし、動いているすべてのエージェントのパネル、通知、コードレビューのパネル、スケジュールで動くクラウドのエージェントがあります。",
+    "from": "54647299b7d0"
+  },
+  "vs.warp.pick.title": {
+    "text": "どちらを選ぶか",
+    "from": "9190a8f83f35"
+  },
+  "vs.warp.pick.them": {
+    "text": "<strong>Warp を選ぶ</strong>のは、Windows や Linux でも、何でもこなす1つのターミナルアプリがほしく、自分のエージェントが組み込まれ、スケジュールできるクラウドのエージェントがほしい場合です。",
+    "from": "b6f4c8cea075"
+  },
+  "vs.warp.pick.us": {
+    "text": "<strong>Aubergine を選ぶ</strong>のは、気に入ったターミナルとエージェントがすでにあり、その間に欠けているものだけがほしい場合です。すべてが見えて、動き続け、アカウントも自分のモデルもないもの。",
+    "from": "24b891e15c2a"
+  },
+  "vs.warp.differs.title": {
+    "text": "違うところ",
+    "from": "8c2314ada082"
+  },
+  "vs.warp.d1": {
+    "text": "<strong>自分のモデルがあるか、ないか。</strong>Warp には自分のエージェントがあり、その利用料を払うプランと、自分のキーを持ち込む選択肢があります。Aubergine はモデルを呼ばず、キーも持ちません。そのターミナルにいるエージェントは、あなたが自分でインストールしサインインしたものです。",
+    "from": "5fbbccefb96a"
+  },
+  "vs.warp.d2": {
+    "text": "<strong>閉じると何が終わるか。</strong>Warp は、ウィンドウ、タブ、ペイン、最近の出力を復元すると文書にしています。動いているプログラムが保たれるという記述は見つかりませんでした。Aubergine ではどのターミナルも tmux セッションなので、ブラウザーや Aubergine 自体が止まってもエージェントは動き続けます。",
+    "from": "18624a0a66fc"
+  },
+  "vs.warp.d3": {
+    "text": "<strong>エージェントにどこから届くか。</strong>Warp は動いているセッションをクラウドに公開し、スマートフォンやブラウザーから操作できるようにします。Aubergine にはクラウドがありません。ほかのデバイスとは、あなた自身のマシンで動かすプロキシを通じ、コードでペアリングするブラウザーのことで、1台の Mac で一度試しただけです。",
+    "from": "b82fc6e2eec4"
+  },
+  "vs.warp.has.title": {
+    "text": "Warp にあって Aubergine にないもの",
+    "from": "9e0e15fe7a1a"
+  },
+  "vs.warp.h1": {
+    "text": "文書に記載された対応環境としての Windows と Linux、デスクトップアプリとして。Aubergine は macOS 向けに作られています。",
+    "from": "0d9c59074c72"
+  },
+  "vs.warp.h2": {
+    "text": "自分のエージェントと、スケジュールで、または Slack、Linear、GitHub のようなほかのサービスから起動するクラウドのエージェント。Aubergine は外から何も起動せず、スケジュールのためにネットワークにつながることもありません。",
+    "from": "fa39346e5209"
+  },
+  "vs.warp.h3": {
+    "text": "ターミナルアプリであることのほかのすべて。コマンドのためのエディター、出力のブロック、複数のエージェントに対する通知。Aubergine は Claude Code 向けに作られたフックでエージェントが待っていることに気づきます。",
+    "from": "63765a4c4189"
+  },
+  "vs.warp.q1.q": {
+    "text": "Aubergine は Warp の代わりになりますか？",
+    "from": "d02fa9b2f885"
+  },
+  "vs.warp.q1.a": {
+    "text": "Warp がすることのうち1つについてだけです。複数のコマンドラインのコーディングエージェントを動かし、どれがあなたを必要としているかを見ること。Aubergine はターミナルアプリではなく、自分のエージェントもありません。Warp でもほかのターミナルでも使い続けたまま、エージェントには Aubergine を使えます。",
+    "from": "4d9ff5b3c2fa"
+  },
+  "vs.warp.q2.q": {
+    "text": "アカウントや有料プランは必要ですか？",
+    "from": "7ea716600927"
+  },
+  "vs.warp.q2.a": {
+    "text": "Warp のドキュメントには、ターミナルではログインは任意とあり、料金ページには無料プランと有料プランが並んでいます。Aubergine にはアカウントもプランもありません。",
+    "from": "0104a9ec4212"
+  },
+  "vs.warp.q3.q": {
+    "text": "Warp はオープンソースですか？",
+    "from": "bb814de9622d"
+  },
+  "vs.warp.q3.a": {
+    "text": "ドキュメントによれば、Warp のクライアントは AGPL-3.0 のオープンソースです。Aubergine は MIT ライセンスです。",
+    "from": "a49fee890f51"
+  },
+  "vs.warp.q4.q": {
+    "text": "Warp と Aubergine を一緒に使えますか？",
+    "from": "98378a2c4d20"
+  },
+  "vs.warp.q4.a": {
+    "text": "はい、ほかのターミナルアプリと同じように。Aubergine のターミナルは tmux セッションで、<code>aubergine attach &lt;name&gt;</code> を実行すると、それを実行したターミナルアプリのウィンドウにその1つが表示されます。Warp でそれを試したことはありません。",
+    "from": "bc272b9d95cf"
+  },
+  "vs.warp.mark": {
+    "text": "Aubergine は Warp とは関係ありません。Warp は Denver Technologies, Inc.（Warp として事業を行っています）の商標です。",
+    "from": "9cc6ff5ce341"
+  },
+  "vs.warp.c.form": {
+    "text": "自分のエージェントを持つデスクトップのターミナルアプリと、クラウドのエージェント",
+    "from": "ea1d6176e636"
+  },
+  "vs.warp.c.runs": {
+    "text": "macOS、Windows、Linux",
+    "from": "637825dc78ad"
+  },
+  "vs.warp.c.price": {
+    "text": "クライアントは AGPL-3.0 のオープンソース。無料プランと有料プラン。ログインは任意",
+    "from": "1ce40e23dc83"
+  },
+  "vs.warp.c.agents": {
+    "text": "独自の Warp Agent と、Claude Code、Codex、Gemini CLI などのコマンドラインエージェント",
+    "from": "fe6cfd7211da"
+  },
+  "vs.warp.c.layout": {
+    "text": "タブとペイン、サイドバー、動いているすべてのエージェントのパネル",
+    "from": "9b58a6cb680e"
+  },
+  "vs.warp.c.apart": {
+    "text": "あなたが作った Git の worktree を認識する。クラウドのエージェントにはコンテナ",
+    "from": "d5692791483e"
+  },
+  "vs.warp.c.closed": {
+    "text": "ウィンドウ、タブ、最近の出力は戻る。動いているプログラムについては何も見つからない",
+    "from": "3084fbca2310"
+  },
+  "vs.warp.c.waits": {
+    "text": "アプリ内とデスクトップの通知：完了、要求、エラー",
+    "from": "c3dc4bc6b1ec"
+  },
+  "vs.warp.c.review": {
+    "text": "コードレビューのパネル。コメントをエージェントに送れる",
+    "from": "0662c604fdbd"
+  },
+  "vs.warp.c.device": {
+    "text": "クラウドに公開したセッションを、スマートフォンやブラウザーから",
+    "from": "c722dd49add9"
+  },
+  "vs.warp.c.programs": {
+    "text": "コマンドラインのエージェントと、クラウドのエージェントの実行のための API",
+    "from": "fa3857a7a76b"
+  },
+  "vs.warp.c.timed": {
+    "text": "スケジュールで動くクラウドのエージェント、ほかのサービスからの起動",
+    "from": "e738cdacf6b5"
+  },
+  "vs.paradev.crumb": {
+    "text": "Paradev",
+    "from": "6ff850fa1891"
+  },
+  "vs.paradev.name": {
+    "text": "Paradev",
+    "from": "6ff850fa1891"
+  },
+  "vs.paradev.meta.title": {
+    "text": "Aubergine と Paradev（旧 Superset）の比較：代替ツール",
+    "from": "07bdc273e5cb"
+  },
+  "vs.paradev.meta.description": {
+    "text": "旧名 Superset の Paradev と Aubergine は、どちらも MIT ライセンスで Git の worktree で動きます。Paradev は有料プランのあるデスクトップアプリ、Aubergine は無料。",
+    "from": "9fd6946e998b"
+  },
+  "vs.paradev.title": {
+    "text": "Aubergine と Paradev（旧 Superset）",
+    "from": "2e91a4b729f8"
+  },
+  "vs.paradev.lead": {
+    "text": "Paradev は、2026年10月まで Superset と呼ばれていたデスクトップアプリです。Aubergine と同じく MIT ライセンスで、どのコマンドラインエージェントも動かし、Git の worktree で作業します。プラン、スマートフォンアプリ、クラウドのあるアプリです。Aubergine はあなた自身のコンピューター上のサーバーとブラウザーのページで、そのどれもありません。",
+    "from": "776bb8091dc6"
+  },
+  "vs.paradev.how": {
+    "text": "<strong>情報の出どころ。</strong>ここでの Paradev についての記述は、2026年11月26日に読んだ<a href=\"https://docs.paradev.com/\">そのドキュメント</a>、<a href=\"https://paradev.com/changelog\">変更履歴</a>、<a href=\"https://github.com/paradevai/paradev\">リポジトリ</a>にもとづきます。Paradev は動かしていません。間違いや古い情報があれば<a href=\"https://github.com/thirstyeggplant/aubergine/issues\">教えてください</a>。",
+    "from": "ba6080f1e8dc"
+  },
+  "vs.paradev.status": {
+    "text": "<strong>名前について。</strong>2026年10月25日の変更履歴には、Superset は Paradev になり、アカウント、ワークスペース、設定、<code>superset</code> コマンドは引き継がれるとあります。データツールの Apache Superset ではありません。",
+    "from": "0fc4d01036e0"
+  },
+  "vs.paradev.is.title": {
+    "text": "Paradev とは",
+    "from": "520654639a88"
+  },
+  "vs.paradev.is.text": {
+    "text": "自身の説明によれば、Claude Code、Codex、そしてどのコーディングエージェントにも使えるオープンソースのワークスペースです。ターミナルアプリではなくデスクトップアプリで、エージェントはチャットとして、またはターミナルの中で動きます。どのタスクにも専用の worktree、ブランチ、ターミナルがあり、1つのサイドバーにすべてのセッションがプロジェクトごとに表示されます。プルリクエストのチェックとマージのある差分ビューアー、コマンド、SDK、MCP サーバーがあり、有料プランではスマートフォンアプリ、リモートアクセス、クラウドのワークスペース、自動化が使えます。",
+    "from": "304d9c9b59a7"
+  },
+  "vs.paradev.pick.title": {
+    "text": "どちらを選ぶか",
+    "from": "9190a8f83f35"
+  },
+  "vs.paradev.pick.them": {
+    "text": "<strong>Paradev を選ぶ</strong>のは、タスクごとに worktree を作り、差分、チェック、マージまで運ぶデスクトップアプリがほしく、払えばスマートフォンアプリとクラウドも使いたい場合です。",
+    "from": "a5db2e59a2a0"
+  },
+  "vs.paradev.pick.us": {
+    "text": "<strong>Aubergine を選ぶ</strong>のは、あなた自身のコンピューターで、アカウントなしに、すべての部分を無料で使いたい場合です。並んだターミナル、キュー、スケジュール、ほかのデバイスからの利用。",
+    "from": "29238cd8839e"
+  },
+  "vs.paradev.differs.title": {
+    "text": "違うところ",
+    "from": "8c2314ada082"
+  },
+  "vs.paradev.d1": {
+    "text": "<strong>何が無料か。</strong>Paradev は、ローカルのワークスペース、アプリ、コマンドを含む1人用の無料プランを挙げています。自動化、スマートフォンアプリ、リモートアクセスは有料プランです。Aubergine にはプランがありません。キューも、スケジュールも、ほかのデバイスからの利用も、MIT ライセンスの1つのプログラムにすべて入っていて、アカウントも要りません。",
+    "from": "e88d006e6f33"
+  },
+  "vs.paradev.d2": {
+    "text": "<strong>サイドバーか、キャンバスか。</strong>Paradev はセッションを、タブとペインのあるサイドバーで見せます。Aubergine はターミナルを、パンとズームのできるキャンバスに置くので、たくさんのターミナルが同時にライブで目に入り、その横にすべての一覧があります。",
+    "from": "e0a93e71bfe5"
+  },
+  "vs.paradev.d3": {
+    "text": "<strong>ターミナルがウィンドウより長生きする仕組み。</strong>どちらもウィンドウを閉じてもエージェントを動かし続けます。Paradev は独自のバックグラウンドのデーモンで。そのドキュメントによれば、Paradev を完全に終了するとすべてのターミナルが終わります。Aubergine は tmux で。Aubergine 自体を止めても動き続けます。コンピューターの再起動では、どちらも終わります。",
+    "from": "5190a04f786d"
+  },
+  "vs.paradev.has.title": {
+    "text": "Paradev にあって Aubergine にないもの",
+    "from": "e211a22944f9"
+  },
+  "vs.paradev.h1": {
+    "text": "エージェントの変更にコメントしたり編集したりでき、プルリクエストのチェックを見てマージできる差分ビューアー。Aubergine は何が変わったかを示し、コミット、プッシュ、マージは決してしません。",
+    "from": "d5bd58e3ed11"
+  },
+  "vs.paradev.h2": {
+    "text": "デスクトップアプリ、iOS と Android のアプリ、クラウドのワークスペース、そしてエージェントがあなたを必要とするときのチャイムと Dock のバッジ。Aubergine はブラウザーのページで、音は鳴らしません。",
+    "from": "880ab73dfaea"
+  },
+  "vs.paradev.h3": {
+    "text": "レビューの依頼、Slack のメッセージ、イシュー、Webhook をきっかけに動く自動化と、多くのエージェントが状態を報告するようにインストールするフック。Aubergine は外から何も起動せず、エージェントが待っていることに自ら気づくのは Claude Code についてだけです。",
+    "from": "60f6c475b3fb"
+  },
+  "vs.paradev.q1.q": {
+    "text": "Aubergine は Paradev（Superset）の代わりになりますか？",
+    "from": "e9c9295c1cf9"
+  },
+  "vs.paradev.q1.a": {
+    "text": "複数のコマンドラインエージェントを、それぞれ専用の Git の worktree でローカルに動かすことについては、なります。しかもすべての機能が無料です。ただし同じものの置き換えではありません。Aubergine には、デスクトップアプリもスマートフォンアプリも、差分へのコメントも、プルリクエストやマージも、クラウドもありません。",
+    "from": "8acabc2591e8"
+  },
+  "vs.paradev.q2.q": {
+    "text": "Superset と Paradev は同じものですか？",
+    "from": "17d548f38157"
+  },
+  "vs.paradev.q2.a": {
+    "text": "はい。2026年10月25日の変更履歴には Superset は Paradev になったとあり、README にはコマンドは今も <code>superset</code> だとあります。どちらも Apache Superset とは関係ありません。",
+    "from": "7906ac9c93cc"
+  },
+  "vs.paradev.q3.q": {
+    "text": "どちらもオープンソースですか？",
+    "from": "1d2d2fda932d"
+  },
+  "vs.paradev.q3.a": {
+    "text": "どちらも MIT ライセンスです。Paradev は、スマートフォンアプリ、リモートアクセス、クラウド、自動化のためのプランも販売しています。Aubergine は何も販売していません。",
+    "from": "0f0cd2638d86"
+  },
+  "vs.paradev.q4.q": {
+    "text": "Paradev は Linux や Windows で動きますか？",
+    "from": "9ccc6492d874"
+  },
+  "vs.paradev.q4.a": {
+    "text": "ドキュメントには、macOS と実験的な Linux 版があり、Windows はまだ使えないとあります。Aubergine は macOS 向けに作られ、Linux ではコンテナの中でだけ動かしました。Windows では WSL 2 の中でだけ動き、それはまだ試していません。",
+    "from": "733d3a59a51d"
+  },
+  "vs.paradev.mark": {
+    "text": "Aubergine は Paradev およびその開発元の Superset Inc. とは関係ありません。Paradev と Superset は彼らの名前です。彼らも Aubergine も Apache Superset とは関係ありません。",
+    "from": "05f8d7ecd761"
+  },
+  "vs.paradev.c.form": {
+    "text": "以前 Superset と呼ばれていたデスクトップアプリ。スマートフォンアプリとクラウド付き",
+    "from": "3054414596e2"
+  },
+  "vs.paradev.c.runs": {
+    "text": "macOS。実験的な Linux 版。Windows はなし",
+    "from": "889cdaf4298b"
+  },
+  "vs.paradev.c.price": {
+    "text": "MIT。1人用の無料プランと有料プラン",
+    "from": "a36a1e0e1592"
+  },
+  "vs.paradev.c.agents": {
+    "text": "Claude Code、Codex、OpenCode、Gemini、Cursor Agent、そしてどのコマンドラインエージェントでも",
+    "from": "24eb0a261425"
+  },
+  "vs.paradev.c.layout": {
+    "text": "すべてのセッションをプロジェクトごとに示す1つのサイドバー。タブとペイン付き",
+    "from": "a8991633cee6"
+  },
+  "vs.paradev.c.apart": {
+    "text": "タスクごとに worktree、ブランチ、ターミナル",
+    "from": "e3443e224b3e"
+  },
+  "vs.paradev.c.closed": {
+    "text": "完全に終了するまで、ターミナルはデーモンで動き続ける。再起動で終わる",
+    "from": "c8f43d646883"
+  },
+  "vs.paradev.c.waits": {
+    "text": "作業中の印、終わったときのチャイム、Dock のバッジ",
+    "from": "cd8c2ecb61d3"
+  },
+  "vs.paradev.c.review": {
+    "text": "コメントと編集のできる差分ビューアー、プルリクエストのチェック、マージ",
+    "from": "2ba1d7abad83"
+  },
+  "vs.paradev.c.device": {
+    "text": "有料プランで iOS と Android のアプリとリモートアクセス。ウェブページはなし",
+    "from": "ff41edf13b81"
+  },
+  "vs.paradev.c.programs": {
+    "text": "コマンド、SDK、MCP サーバー",
+    "from": "4f73909c306d"
+  },
+  "vs.paradev.c.timed": {
+    "text": "スケジュールやイベントで動く自動化。有料プラン",
+    "from": "d0a82cd975d3"
+  },
+  "home.compare.more": {
+    "text": "Conductor、Claude Squad、cmux、Warp などとの比較",
+    "from": "60e16e373973"
   }
 }

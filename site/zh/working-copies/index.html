@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>用工作副本让两个编程智能体在同一个仓库上工作 | Aubergine</title>
-<meta name="description" content="工作副本给每个智能体一份仓库的独立检出和分支，两个智能体永远不会编辑同一批文件，你也能分开阅读各自的工作。">
+<title>让两个编程智能体在同一个仓库上工作 | Aubergine</title>
+<meta name="description" content="工作副本给每个智能体独立的 Git worktree 和分支，两个智能体永远不会编辑同一批文件，你也能分开阅读各自的工作。">
 <link rel="canonical" href="https://thirstyeggplant.com/zh/working-copies/">
 <link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/working-copies/">
 <link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/working-copies/">
@@ -27,8 +27,8 @@
 <link rel="stylesheet" href="../../style.css">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="Aubergine">
-<meta property="og:title" content="用工作副本让两个编程智能体在同一个仓库上工作 | Aubergine">
-<meta property="og:description" content="工作副本给每个智能体一份仓库的独立检出和分支，两个智能体永远不会编辑同一批文件，你也能分开阅读各自的工作。">
+<meta property="og:title" content="让两个编程智能体在同一个仓库上工作 | Aubergine">
+<meta property="og:description" content="工作副本给每个智能体独立的 Git worktree 和分支，两个智能体永远不会编辑同一批文件，你也能分开阅读各自的工作。">
 <meta property="og:url" content="https://thirstyeggplant.com/zh/working-copies/">
 <meta property="og:image" content="https://thirstyeggplant.com/og.png">
 <meta property="og:image:width" content="1200">
@@ -37,8 +37,8 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
 <meta name="twitter:image:alt" content="Aubergine：一张摆满终端的画布，一个正在忙，一个在等你">
-<meta name="twitter:title" content="用工作副本让两个编程智能体在同一个仓库上工作 | Aubergine">
-<meta name="twitter:description" content="工作副本给每个智能体一份仓库的独立检出和分支，两个智能体永远不会编辑同一批文件，你也能分开阅读各自的工作。">
+<meta name="twitter:title" content="让两个编程智能体在同一个仓库上工作 | Aubergine">
+<meta name="twitter:description" content="工作副本给每个智能体独立的 Git worktree 和分支，两个智能体永远不会编辑同一批文件，你也能分开阅读各自的工作。">
 <link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
 </head>
 <body>
@@ -99,7 +99,7 @@
       "@type": "TechArticle",
       "@id": "https://thirstyeggplant.com/zh/working-copies/#article",
       "headline": "两个智能体，一个仓库：工作副本",
-      "description": "工作副本给每个智能体一份仓库的独立检出和分支，两个智能体永远不会编辑同一批文件，你也能分开阅读各自的工作。",
+      "description": "工作副本给每个智能体独立的 Git worktree 和分支，两个智能体永远不会编辑同一批文件，你也能分开阅读各自的工作。",
       "url": "https://thirstyeggplant.com/zh/working-copies/",
       "mainEntityOfPage": "https://thirstyeggplant.com/zh/working-copies/",
       "datePublished": "2026-11-18",
@@ -211,6 +211,7 @@ aubergine copies discard api</code></pre>
         <li><a href="../run-multiple-coding-agents/">运行多个智能体</a></li>
         <li><a href="./" aria-current="page">工作副本</a></li>
         <li><a href="../queue-and-schedules/">队列与定时计划</a></li>
+        <li><a href="../compare/">对比</a></li>
         <li><a href="../security/">安全</a></li>
         <li><a href="../roadmap/">路线图</a></li>
         <li><a href="../faq/">常见问题</a></li>

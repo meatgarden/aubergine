@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="pt-BR" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aubergine vs Claude Squad: tmux e worktrees, de dois jeitos</title>
+<meta name="description" content="Ambos rodam cada agente em uma sessão do tmux e uma worktree do Git. O Claude Squad é um programa no seu terminal; o Aubergine, um canvas no seu navegador.">
+<link rel="canonical" href="https://thirstyeggplant.com/pt/compare/claude-squad/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/compare/claude-squad/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/compare/claude-squad/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/compare/claude-squad/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/compare/claude-squad/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/compare/claude-squad/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/compare/claude-squad/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/compare/claude-squad/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/compare/claude-squad/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/compare/claude-squad/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/compare/claude-squad/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/compare/claude-squad/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/compare/claude-squad/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/compare/claude-squad/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F7F0E4">
+<link rel="icon" href="../../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="Aubergine vs Claude Squad: tmux e worktrees, de dois jeitos">
+<meta property="og:description" content="Ambos rodam cada agente em uma sessão do tmux e uma worktree do Git. O Claude Squad é um programa no seu terminal; o Aubergine, um canvas no seu navegador.">
+<meta property="og:url" content="https://thirstyeggplant.com/pt/compare/claude-squad/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine: um canvas de terminais, um ocupado e outro esperando por você">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine: um canvas de terminais, um ocupado e outro esperando por você">
+<meta name="twitter:title" content="Aubergine vs Claude Squad: tmux e worktrees, de dois jeitos">
+<meta name="twitter:description" content="Ambos rodam cada agente em uma sessão do tmux e uma worktree do Git. O Claude Squad é um programa no seu terminal; o Aubergine, um canvas no seu navegador.">
+<link rel="alternate" type="text/plain" href="../../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">Pular para a página</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../../"><img src="../../../icon.svg" alt="" width="32" height="32"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="Páginas">
+      <ul>
+        <li><a href="../../claude/">Claude Code</a></li>
+        <li><a href="../../chatgpt/">Codex</a></li>
+        <li><a href="../../install/">Instalar</a></li>
+        <li><a href="../../guides/">Guias</a></li>
+        <li><a href="../../security/">Segurança</a></li>
+        <li><a href="../../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="Idioma: Português"><span class="lang-long" aria-hidden="true">Português</span><span class="lang-short" aria-hidden="true">PT</span></summary>
+      <ul class="menu-list"><li><a href="../../../compare/claude-squad/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="../../../es/compare/claude-squad/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="./" hreflang="pt-BR" lang="pt-BR" dir="ltr" aria-current="true">Português</a></li><li><a href="../../../fr/compare/claude-squad/" hreflang="fr" lang="fr" dir="ltr">Français</a></li><li><a href="../../../de/compare/claude-squad/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="../../../ja/compare/claude-squad/" hreflang="ja" lang="ja" dir="ltr">日本語</a></li><li><a href="../../../zh/compare/claude-squad/" hreflang="zh-Hans" lang="zh-Hans" dir="ltr">简体中文</a></li><li><a href="../../../ko/compare/claude-squad/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="../../../id/compare/claude-squad/" hreflang="id" lang="id" dir="ltr">Bahasa Indonesia</a></li><li><a href="../../../hi/compare/claude-squad/" hreflang="hi" lang="hi" dir="ltr">हिन्दी</a></li><li><a href="../../../bn/compare/claude-squad/" hreflang="bn" lang="bn" dir="ltr">বাংলা</a></li><li><a href="../../../ar/compare/claude-squad/" hreflang="ar" lang="ar" dir="rtl">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>Menu</summary>
+      <ul class="menu-list">
+        <li><a href="../../claude/">Claude Code</a></li>
+        <li><a href="../../chatgpt/">Codex</a></li>
+        <li><a href="../../install/">Instalar</a></li>
+        <li><a href="../../guides/">Guias</a></li>
+        <li><a href="../../security/">Segurança</a></li>
+        <li><a href="../../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="translated">
+  <div class="wrap translated-in">
+    <p>O Aubergine em si está em inglês: seus botões, menus e imagens são os da versão em inglês.</p>
+    <p>Esta página foi traduzida do inglês por uma máquina. <a href="https://github.com/thirstyeggplant/aubergine/issues">Envie uma correção</a>.</p>
+  </div>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://thirstyeggplant.com/pt/compare/claude-squad/#article",
+      "headline": "Aubergine vs Claude Squad",
+      "description": "Ambos rodam cada agente em uma sessão do tmux e uma worktree do Git. O Claude Squad é um programa no seu terminal; o Aubergine, um canvas no seu navegador.",
+      "url": "https://thirstyeggplant.com/pt/compare/claude-squad/",
+      "mainEntityOfPage": "https://thirstyeggplant.com/pt/compare/claude-squad/",
+      "datePublished": "2026-11-26",
+      "dateModified": "2026-11-26",
+      "inLanguage": "pt-BR",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Comparar", "item": "https://thirstyeggplant.com/compare/" },
+        { "@type": "ListItem", "position": 3, "name": "Claude Squad", "item": "https://thirstyeggplant.com/pt/compare/claude-squad/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://thirstyeggplant.com/pt/compare/claude-squad/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "O Aubergine é uma alternativa ao Claude Squad?", "acceptedAnswer": { "@type": "Answer", "text": "Sim, para o mesmo trabalho feito de outro jeito. Os dois rodam cada agente em uma sessão do tmux e podem dar a cada um uma worktree do Git em um branch próprio. O Claude Squad faz isso a partir de um programa no seu terminal; o Aubergine, a partir de uma página no seu navegador, com todos os terminais à vista." } },
+        { "@type": "Question", "name": "Os dois usam tmux?", "acceptedAnswer": { "@type": "Answer", "text": "Sim. O Claude Squad lista o tmux como pré-requisito e cria uma sessão do tmux para cada agente. O Aubergine precisa do tmux 3.2 ou mais novo e o roda em um socket próprio, com configuração própria, então o seu próprio tmux fica intocado." } },
+        { "@type": "Question", "name": "O Claude Squad funciona com outros agentes além do Claude Code?", "acceptedAnswer": { "@type": "Answer", "text": "O README dele diz que o programa padrão é claude e que outro, como Codex, Gemini ou Aider, é indicado com -p. O Aubergine roda qualquer programa de linha de comando em um terminal; o que ele faz sozinho por um agente é feito para o Claude Code." } },
+        { "@type": "Question", "name": "Qual é a licença de cada um?", "acceptedAnswer": { "@type": "Answer", "text": "O Claude Squad está sob a AGPL-3.0, o Aubergine sob a licença MIT. Os dois são grátis." } }
+      ]
+    }
+  ]
+}
+</script>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Onde você está"><ol><li><a href="../../">Aubergine</a></li><li><a href="../">Comparar</a></li><li>Claude Squad</li></ol></nav>
+    <h1>Aubergine vs Claude Squad</h1>
+    <p class="lead">Os dois partem da mesma base: cada agente em uma sessão do tmux, cada um na própria worktree do Git, os dois grátis e de código aberto. O Claude Squad é um programa dentro do seu terminal. O Aubergine é uma página no seu navegador onde os terminais ficam lado a lado.</p>
+  </div>
+</header>
+<div class="wrap page-body">
+  <div class="prose">
+    <p class="note note-strong"><strong>De onde isto vem.</strong> O que se diz aqui sobre o Claude Squad vem do <a href="https://github.com/smtg-ai/claude-squad">repositório e do README dele</a>, lidos em 26 de novembro de 2026. Nós não rodamos o Claude Squad. Se algo estiver errado ou desatualizado, <a href="https://github.com/thirstyeggplant/aubergine/issues">nos avise</a>.</p>
+
+    <h2>Qual escolher</h2>
+    <p><strong>Escolha o Claude Squad</strong> se você vive no terminal e quer ali um programa pequeno que inicia agentes em worktrees e faz push dos branches deles, e nada mais.</p>
+    <p><strong>Escolha o Aubergine</strong> se você quer ver vários agentes trabalhando ao mesmo tempo, saber qual espera por você e ter uma fila, agendamentos e uma API em volta deles.</p>
+
+    <h2>O que é o Claude Squad</h2>
+    <p>Pela própria descrição, um app de terminal que gerencia vários agentes locais, como Claude Code, Codex, Gemini e outros, em workspaces separados. Você o inicia como <code>cs</code>: uma lista de sessões com uma prévia e uma aba de diff, em uma janela de terminal. Cada sessão é uma sessão do tmux em uma worktree do Git, em um branch próprio. Ele precisa de tmux e de <code>gh</code>, e está sob a licença AGPL-3.0.</p>
+
+    <h2>Lado a lado</h2>
+    <div class="table">
+      <table class="table-stack">
+        <thead><tr><th>O quê</th><th>Claude Squad</th><th>Aubergine</th></tr></thead>
+        <tbody>
+          <tr><td>O que é</td><td data-label="Claude Squad">Um programa no seu terminal, iniciado como <code>cs</code></td><td data-label="Aubergine">Um servidor no seu próprio computador e uma página no seu navegador</td></tr>
+          <tr><td>Roda em</td><td data-label="Claude Squad">macOS e Linux; no Windows com tmux pelo WSL. Precisa de tmux e de <code>gh</code></td><td data-label="Aubergine">macOS; Linux só em contêineres; Windows dentro do WSL 2, não testado. Precisa de tmux e Node.js</td></tr>
+          <tr><td>Código e preço</td><td data-label="Claude Squad">AGPL-3.0, grátis</td><td data-label="Aubergine">MIT, grátis; sem plano pago e sem conta</td></tr>
+          <tr><td>Agentes</td><td data-label="Claude Squad">Claude Code, a menos que você indique outro: Codex, Gemini, Aider ou qualquer comando</td><td data-label="Aubergine">Qualquer agente de linha de comando; mais, sozinho, para o Claude Code</td></tr>
+          <tr><td>Vários ao mesmo tempo</td><td data-label="Claude Squad">Uma lista de sessões com uma prévia e uma aba de diff, em uma janela de terminal</td><td data-label="Aubergine">Terminais lado a lado em um canvas, e uma única lista de todos eles</td></tr>
+          <tr><td>Manter os agentes separados</td><td data-label="Claude Squad">Uma sessão do tmux e uma worktree do Git em um branch próprio para cada um</td><td data-label="Aubergine">Uma worktree do Git em um branch próprio para um terminal, quando você pede</td></tr>
+          <tr><td>Se você fechar</td><td data-label="Claude Squad">As sessões são sessões do tmux; o README dele não diz o que é mantido</td><td data-label="Aubergine">Os terminais continuam no tmux; reiniciar o computador encerra o que rodava</td></tr>
+          <tr><td>Quando um agente espera ou termina</td><td data-label="Claude Squad">Nada encontrado no README dele</td><td data-label="Aubergine">A cor do terminal, um contador no topo, uma tecla para o próximo, notificações da página aberta; sem som</td></tr>
+          <tr><td>Revisar mudanças</td><td data-label="Claude Squad">Uma aba de diff; ele faz commit e push do branch</td><td data-label="Aubergine">O que mudou, arquivo por arquivo; sem commit, push, pull request ou merge</td></tr>
+          <tr><td>De outro dispositivo</td><td data-label="Claude Squad">Nada encontrado no README dele</td><td data-label="Aubergine">Um navegador que você pareia, por um proxy que você roda; sem app; não testado em um celular de verdade</td></tr>
+          <tr><td>Para programas</td><td data-label="Claude Squad">Opções na linha de comando dele; nenhuma API nem servidor MCP encontrado</td><td data-label="Aubergine">Uma API HTTP com tokens de escopo limitado, o comando <code>aubergine</code>, um servidor MCP</td></tr>
+          <tr><td>Filas e agendamentos</td><td data-label="Claude Squad">Nada encontrado no README dele</td><td data-label="Aubergine">Uma fila com limite, agendamentos por horário do dia, fluxos de trabalho com aprovações</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>Onde eles diferem</h2>
+    <p><strong>Um de cada vez, ou todos de uma vez.</strong> O Claude Squad mostra uma lista e uma prévia da sessão que você escolheu. O Aubergine desenha cada terminal ao vivo em um canvas, então cinco agentes são cinco terminais à vista, e uma única lista diz o estado de cada um em palavras.</p>
+    <p><strong>Quem espera.</strong> Não encontramos nada no README do Claude Squad sobre ser avisado de que um agente espera ou terminou. O Aubergine marca em cor um terminal que espera, conta no topo o que espera, vai para o próximo com uma tecla e pode enviar uma notificação a partir da página aberta.</p>
+    <p><strong>O que há em volta dos agentes.</strong> O Aubergine tem uma fila de tarefas com limite, agendamentos, fluxos de trabalho com etapas que uma pessoa aprova, notas e campos em cada terminal, uma API HTTP e um servidor MCP. O Claude Squad fica nas sessões e nos branches delas.</p>
+
+    <h2>O que o Claude Squad tem e o Aubergine não</h2>
+    <ul>
+      <li>Ele roda dentro do terminal que você já tem aberto, sem servidor e sem navegador. Funciona por SSH como qualquer programa de terminal; o Aubergine, de outro lugar, precisa de um túnel ou de um proxy.</li>
+      <li>Ele faz commit e push de um branch por você, e pausa uma sessão fazendo commit do trabalho dela. O Aubergine nunca faz commit nem push.</li>
+      <li>Um modo experimental que aceita sozinho os prompts de um agente. O Aubergine nunca responde a um agente por você.</li>
+    </ul>
+
+    <h2>Perguntas</h2>
+    <div class="questions">
+      <details><summary>O Aubergine é uma alternativa ao Claude Squad?</summary><p>Sim, para o mesmo trabalho feito de outro jeito. Os dois rodam cada agente em uma sessão do tmux e podem dar a cada um uma worktree do Git em um branch próprio. O Claude Squad faz isso a partir de um programa no seu terminal; o Aubergine, a partir de uma página no seu navegador, com todos os terminais à vista.</p></details>
+      <details><summary>Os dois usam tmux?</summary><p>Sim. O Claude Squad lista o tmux como pré-requisito e cria uma sessão do tmux para cada agente. O Aubergine precisa do tmux 3.2 ou mais novo e o roda em um socket próprio, com configuração própria, então o seu próprio tmux fica intocado.</p></details>
+      <details><summary>O Claude Squad funciona com outros agentes além do Claude Code?</summary><p>O README dele diz que o programa padrão é <code>claude</code> e que outro, como Codex, Gemini ou Aider, é indicado com <code>-p</code>. O Aubergine roda qualquer programa de linha de comando em um terminal; o que ele faz sozinho por um agente é feito para o Claude Code.</p></details>
+      <details><summary>Qual é a licença de cada um?</summary><p>O Claude Squad está sob a AGPL-3.0, o Aubergine sob a licença MIT. Os dois são grátis.</p></details>
+    </div>
+    <p>O Aubergine não é afiliado ao Claude Squad nem à Anthropic. Claude Squad é o nome do projeto smtg-ai; Claude é uma marca registrada da Anthropic.</p>
+  </div>
+</div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">Funcionando em cinco minutos</h2>
+    <div class="close-do">
+      <p>Você precisa de macOS com tmux 3.2 ou mais recente e Node.js 22 ou mais recente. <code>brew install tmux node</code> instala os dois.</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="Copiado" aria-live="polite" hidden>Copiar</button></p>
+      <p class="actions"><a class="button" href="../../install/">Instalar</a><a class="button button-quiet" href="../">As sete ferramentas comparadas</a></p>
+    </div>
+  </div>
+</section>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <a class="mark" href="../../"><img src="../../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav aria-label="Todas as páginas">
+      <ul class="foot-links">
+        <li><a href="../../">Início</a></li>
+        <li><a href="../../claude/">Claude Code</a></li>
+        <li><a href="../../chatgpt/">Codex e ChatGPT</a></li>
+        <li><a href="../../install/">Instalar</a></li>
+        <li><a href="../../guides/">Guias</a></li>
+        <li><a href="../../run-multiple-coding-agents/">Vários agentes ao mesmo tempo</a></li>
+        <li><a href="../../working-copies/">Cópias de trabalho</a></li>
+        <li><a href="../../queue-and-schedules/">Fila e agendamentos</a></li>
+        <li><a href="../">Comparar</a></li>
+        <li><a href="../../security/">Segurança</a></li>
+        <li><a href="../../roadmap/">Roadmap</a></li>
+        <li><a href="../../faq/">Perguntas frequentes</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">O Aubergine é livre e de código aberto sob a <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">licença MIT</a>, e roda no seu próprio computador.</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    if (!navigator.clipboard) return;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+document.querySelectorAll('details.menu').forEach(function (menu) {
+  menu.addEventListener('toggle', function () {
+    if (!menu.open) return;
+    document.querySelectorAll('details.menu[open]').forEach(function (other) { if (other !== menu) other.open = false; });
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="zh-Hans" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>7 款运行编程智能体的工具对比 | Aubergine</title>
+<meta name="description" content="Aubergine 与 Conductor、Claude Squad、Vibe Kanban、cmux、Warp 和 Paradev 对比：各自是什么、在哪里运行、价格如何，以及关掉它会结束什么。">
+<link rel="canonical" href="https://thirstyeggplant.com/zh/compare/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/compare/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/compare/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/compare/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/compare/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/compare/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/compare/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/compare/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/compare/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/compare/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/compare/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/compare/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/compare/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/compare/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F7F0E4">
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="7 款运行编程智能体的工具对比 | Aubergine">
+<meta property="og:description" content="Aubergine 与 Conductor、Claude Squad、Vibe Kanban、cmux、Warp 和 Paradev 对比：各自是什么、在哪里运行、价格如何，以及关掉它会结束什么。">
+<meta property="og:url" content="https://thirstyeggplant.com/zh/compare/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine：一张摆满终端的画布，一个正在忙，一个在等你">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine：一张摆满终端的画布，一个正在忙，一个在等你">
+<meta name="twitter:title" content="7 款运行编程智能体的工具对比 | Aubergine">
+<meta name="twitter:description" content="Aubergine 与 Conductor、Claude Squad、Vibe Kanban、cmux、Warp 和 Paradev 对比：各自是什么、在哪里运行、价格如何，以及关掉它会结束什么。">
+<link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">跳到正文</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="32" height="32"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="页面">
+      <ul>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">安装</a></li>
+        <li><a href="../guides/">指南</a></li>
+        <li><a href="../security/">安全</a></li>
+        <li><a href="../faq/">常见问题</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="语言: 简体中文"><span class="lang-long" aria-hidden="true">简体中文</span><span class="lang-short" aria-hidden="true">ZH</span></summary>
+      <ul class="menu-list"><li><a href="../../compare/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="../../es/compare/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="../../pt/compare/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="../../fr/compare/" hreflang="fr" lang="fr" dir="ltr">Français</a></li><li><a href="../../de/compare/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="../../ja/compare/" hreflang="ja" lang="ja" dir="ltr">日本語</a></li><li><a href="./" hreflang="zh-Hans" lang="zh-Hans" dir="ltr" aria-current="true">简体中文</a></li><li><a href="../../ko/compare/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="../../id/compare/" hreflang="id" lang="id" dir="ltr">Bahasa Indonesia</a></li><li><a href="../../hi/compare/" hreflang="hi" lang="hi" dir="ltr">हिन्दी</a></li><li><a href="../../bn/compare/" hreflang="bn" lang="bn" dir="ltr">বাংলা</a></li><li><a href="../../ar/compare/" hreflang="ar" lang="ar" dir="rtl">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>菜单</summary>
+      <ul class="menu-list">
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">安装</a></li>
+        <li><a href="../guides/">指南</a></li>
+        <li><a href="../security/">安全</a></li>
+        <li><a href="../faq/">常见问题</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="translated">
+  <div class="wrap translated-in">
+    <p>Aubergine 本身是英文的：它的按钮、菜单和截图都是英文版。</p>
+    <p>本页由机器从英文翻译而来。<a href="https://github.com/thirstyeggplant/aubergine/issues">提交修正</a>。</p>
+  </div>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://thirstyeggplant.com/zh/compare/#article",
+      "headline": "运行多个编程智能体的工具对比",
+      "description": "Aubergine 与 Conductor、Claude Squad、Vibe Kanban、cmux、Warp 和 Paradev 对比：各自是什么、在哪里运行、价格如何，以及关掉它会结束什么。",
+      "url": "https://thirstyeggplant.com/zh/compare/",
+      "mainEntityOfPage": "https://thirstyeggplant.com/zh/compare/",
+      "datePublished": "2026-11-26",
+      "dateModified": "2026-11-26",
+      "inLanguage": "zh-Hans",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "对比", "item": "https://thirstyeggplant.com/zh/compare/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://thirstyeggplant.com/zh/compare/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "同时运行多个 Claude Code 智能体，最好的工具是什么？", "acceptedAnswer": { "@type": "Answer", "text": "取决于你想在智能体周围有什么。想要一个带差异、拉取请求和合并的 Mac 应用：Conductor 或 Paradev。想要在你已经在用的终端里运行的程序：Claude Squad。想要一块 issue 看板：Vibe Kanban。想要原生 Mac 终端：cmux。想要一个自带智能体和云端智能体的终端：Warp。想要在浏览器页面里并排摆放普通终端、由 tmux 保持运行、不需要账号：Aubergine。" } },
+        { "@type": "Question", "name": "这些工具中哪些是开源的？", "acceptedAnswer": { "@type": "Answer", "text": "截至 2026 年 11 月 26 日的阅读：Aubergine（MIT）、Paradev（MIT）、Vibe Kanban（Apache-2.0）、Claude Squad（AGPL-3.0）、cmux 应用（GPL-3.0-or-later）和 Warp 客户端（AGPL-3.0）。Conductor 的条款称它为专有软件。" } },
+        { "@type": "Question", "name": "这些工具中哪些能在 Linux 或 Windows 上运行？", "acceptedAnswer": { "@type": "Answer", "text": "按它们自己的文档：Warp 支持 macOS、Windows 和 Linux；Vibe Kanban 三者都支持；Claude Squad 支持 macOS 和 Linux，在 Windows 上通过 WSL 使用 tmux；Paradev 支持 macOS，另有一个实验性的 Linux 版本；Conductor 和 cmux 只支持 macOS。Aubergine 为 macOS 构建，在 Linux 上只在容器里运行过，在 Windows 上只能在 WSL 2 里运行，尚未试过。" } },
+        { "@type": "Question", "name": "关掉应用后，哪些工具能让智能体继续运行？", "acceptedAnswer": { "@type": "Answer", "text": "Aubergine 和 Claude Squad 都把每个智能体放在一个 tmux 会话里运行。Paradev 的文档说明有一个后台守护进程，在窗口关闭时保留终端。cmux 只在需要手动开启的 tmux 模式下保留运行中的进程。Conductor 说本地会话随应用一起结束。Warp 恢复的是窗口和最近的输出，而不是正在运行的程序。Conductor、cmux、Warp 和 Paradev 还各自有一个云，智能体可以在那里继续运行。没有一个工具（包括 Aubergine）能让本地智能体在电脑重启后继续运行。" } }
+      ]
+    }
+  ]
+}
+</script>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="当前位置"><ol><li><a href="../">Aubergine</a></li><li>对比</li></ol></nav>
+    <h1>运行多个编程智能体的工具对比</h1>
+    <p class="lead">七个工具，面对同一个场景：不止一个编程智能体在工作，而你在中间。这里把 Aubergine 与 Conductor、Claude Squad、Vibe Kanban、cmux、Warp 和 Paradev 并列对比，每个工具各有一页。</p>
+  </div>
+</header>
+<div class="wrap page-body">
+  <div class="prose">
+    <p class="note note-strong"><strong>这些页面是怎么写的。</strong>这些页面对其他工具的描述，来自该工具自己的网站、文档和仓库，阅读时间为 2026 年 11 月 26 日，每一页都附有链接。我们没有运行过其他工具。它们的文档没有提到的地方，页面只说没有找到相关内容，而不是说该工具做不到。这些工具变化很快：如果这里有错误或已过时，请<a href="https://github.com/thirstyeggplant/aubergine/issues">告诉我们</a>，我们会更正。</p>
+
+    <h2>七个工具并列一览</h2>
+    <div class="table table-wide">
+      <table class="table-stack">
+        <thead><tr><th>工具</th><th>它是什么</th><th>运行平台</th><th>源码与价格</th><th>把智能体分开</th><th>关掉之后</th></tr></thead>
+        <tbody>
+          <tr><td>Aubergine</td><td data-label="它是什么">你自己电脑上的一个服务器，加上你浏览器里的一个页面</td><td data-label="运行平台">macOS；Linux 只在容器里运行过；Windows 在 WSL 2 里，未试过。需要 tmux 和 Node.js</td><td data-label="源码与价格">MIT，免费；没有付费套餐，也没有账号</td><td data-label="把智能体分开">在你需要时，为终端提供一个位于独立分支上的 Git worktree</td><td data-label="关掉之后">终端在 tmux 里继续运行；电脑重启会结束运行中的东西</td></tr>
+          <tr><td><a href="conductor/">Conductor</a></td><td data-label="它是什么">一个 Mac 桌面应用，带托管的云和一个 iOS 应用</td><td data-label="运行平台">仅 macOS</td><td data-label="源码与价格">闭源；本地应用免费，云需要付费套餐</td><td data-label="把智能体分开">每个工作区一个 Git worktree 和分支；在它的云中使用沙箱</td><td data-label="关掉之后">本地会话随应用结束；云端会话继续</td></tr>
+          <tr><td><a href="claude-squad/">Claude Squad</a></td><td data-label="它是什么">你终端里的一个程序，用 <code>cs</code> 启动</td><td data-label="运行平台">macOS 和 Linux；在 Windows 上通过 WSL 使用 tmux。需要 tmux 和 <code>gh</code></td><td data-label="源码与价格">AGPL-3.0，免费</td><td data-label="把智能体分开">每个一个 tmux 会话和一个位于独立分支上的 Git worktree</td><td data-label="关掉之后">会话是 tmux 会话；它的 README 没有说明会保留什么</td></tr>
+          <tr><td><a href="vibe-kanban/">Vibe Kanban</a></td><td data-label="它是什么">你自己电脑上的一个服务器，加上你浏览器里的一个页面</td><td data-label="运行平台">macOS、Linux 和 Windows；用 <code>npx</code> 启动</td><td data-label="源码与价格">Apache-2.0，免费；登录可选</td><td data-label="把智能体分开">每个工作区使用 Git worktree</td><td data-label="关掉之后">在它的文档中没有找到相关内容</td></tr>
+          <tr><td><a href="cmux/">cmux</a></td><td data-label="它是什么">一个原生 macOS 终端应用</td><td data-label="运行平台">仅 macOS 14 或更高版本</td><td data-label="源码与价格">GPL-3.0-or-later 应用，免费，不需要账号；它的云有付费套餐</td><td data-label="把智能体分开">没有找到为智能体创建 worktree 的功能；在它的云中使用彼此分开的机器</td><td data-label="关掉之后">布局和文件夹会恢复；运行中的进程只在需要手动开启的 tmux 模式下保留</td></tr>
+          <tr><td><a href="warp/">Warp</a></td><td data-label="它是什么">一个自带智能体的桌面终端应用，还有云端智能体</td><td data-label="运行平台">macOS、Windows 和 Linux</td><td data-label="源码与价格">客户端在 AGPL-3.0 下开源；一个免费套餐和若干付费套餐；登录可选</td><td data-label="把智能体分开">能识别你创建的 Git worktree；为它的云端智能体使用容器</td><td data-label="关掉之后">窗口、标签页和最近的输出会恢复；没有找到关于运行中程序的内容</td></tr>
+          <tr><td><a href="paradev/">Paradev</a></td><td data-label="它是什么">一个桌面应用，曾叫 Superset，带手机应用和云</td><td data-label="运行平台">macOS；一个实验性的 Linux 版本；不支持 Windows</td><td data-label="源码与价格">MIT；一个面向个人的免费套餐，以及付费套餐</td><td data-label="把智能体分开">每个任务一个 worktree、一个分支和一个终端</td><td data-label="关掉之后">终端在它的守护进程中继续运行，直到你完全退出它；重启会结束它们</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>每个工具一页</h2>
+    <p>每一页都有两者的完整对比表、它们的不同之处，以及对方有而 Aubergine 没有的东西。</p>
+  </div>
+  <ul class="cards cards-between">
+    <li><h2><a href="conductor/">Aubergine vs Conductor</a></h2><p><strong>选 Conductor</strong>：如果你想要一个 Mac 应用，把任务从一条提示词一直带到已合并的拉取请求，并有一个云，让工作在你的 Mac 关机时继续。</p></li>
+    <li><h2><a href="claude-squad/">Aubergine vs Claude Squad</a></h2><p><strong>选 Claude Squad</strong>：如果你整天待在终端里，想在那里有一个小程序，在 worktree 中启动智能体并推送它们的分支，别的都不需要。</p></li>
+    <li><h2><a href="vibe-kanban/">Aubergine vs Vibe Kanban</a></h2><p><strong>选 Vibe Kanban</strong>：如果你习惯用 issue 思考：在看板上规划，把每张卡片交给一个智能体，带评论审阅它的差异，然后合并。</p></li>
+    <li><h2><a href="cmux/">Aubergine vs cmux</a></h2><p><strong>选 cmux</strong>：如果你想要一个快速的原生 Mac 终端应用，带窗格、应用内浏览器和 macOS 通知，并在它之上用脚本搭建你自己的工作方式。</p></li>
+    <li><h2><a href="warp/">Aubergine vs Warp</a></h2><p><strong>选 Warp</strong>：如果你想要一个包揽一切的终端应用，在 Windows 和 Linux 上也能用，内置自己的智能体，还有可以安排计划的云端智能体。</p></li>
+    <li><h2><a href="paradev/">Aubergine vs Paradev（原名 Superset）</a></h2><p><strong>选 Paradev</strong>：如果你想要一个桌面应用，为每个任务创建 worktree，并带它走完差异、检查和合并，付费后还有手机应用和云。</p></li>
+  </ul>
+  <div class="prose">
+    <h2>Aubergine 围绕什么构建</h2>
+    <ul>
+      <li><strong>普通的终端。</strong>智能体在 Aubergine 里的运行方式，和在任何终端应用里一样。上面没有聊天视图，你和它打印的内容之间没有任何隔层。</li>
+      <li><strong>全部尽收眼底。</strong>终端并排摆在一张可以平移和缩放的画布上，还有一份列表，列出所有终端并用文字写出各自的状态。见<a href="../too-many-terminal-tabs/">找到正确的终端</a>。</li>
+      <li><strong>关掉窗口不会结束任何东西。</strong>每个终端都是一个 tmux 会话，所以浏览器和 Aubergine 本身都可以停下，而你的智能体继续运行。见<a href="../keep-terminals-after-restart/">重启会保留什么</a>。</li>
+      <li><strong>只在你的电脑上。</strong>没有账号，没有云，没有付费套餐，自己也没有模型；服务器监听 <code>127.0.0.1</code>。见<a href="../security/">安全</a>。</li>
+      <li><strong>由人来决定。</strong>智能体提出的东西等你审阅，工作流中的审批只能由你来做，而一份列表 For you 汇集了所有在等你的事。见<a href="../queue-and-schedules/">队列</a>。</li>
+    </ul>
+
+    <h2>Aubergine 没有的东西</h2>
+    <ul>
+      <li><strong>没有桌面应用，也没有手机应用。</strong>它是你浏览器里的一个页面。另一台设备可以通过你自己运行的代理来配对；这只在一台 Mac 上运行过一次，从未在真正的手机上试过。</li>
+      <li><strong>没有拉取请求，也不做合并。</strong>它会逐个文件显示工作副本中改了什么，但从不提交、推送、变基或合并。</li>
+      <li><strong>没有云。</strong>智能体运行在 Aubergine 所在的电脑上，定时计划只在电脑开着时触发。</li>
+      <li><strong>没有声音，也没有推送。</strong>通知来自你浏览器里打开的 Aubergine 页面。</li>
+      <li><strong>为 macOS 构建。</strong>在 Linux 上只在容器里运行过；在 Windows 上只能在 WSL 2 里运行，而这还没有试过。</li>
+      <li><strong>主要为 Claude Code。</strong>任何命令行智能体都能在终端里运行，但 Aubergine 自己为智能体做的事（看出它在等待、恢复对话）是为 Claude Code 构建的；其他智能体通过 <code>aubergine</code> 命令来报告。</li>
+    </ul>
+
+    <h2>常见问题</h2>
+    <div class="questions">
+      <details><summary>同时运行多个 Claude Code 智能体，最好的工具是什么？</summary><p>取决于你想在智能体周围有什么。想要一个带差异、拉取请求和合并的 Mac 应用：Conductor 或 Paradev。想要在你已经在用的终端里运行的程序：Claude Squad。想要一块 issue 看板：Vibe Kanban。想要原生 Mac 终端：cmux。想要一个自带智能体和云端智能体的终端：Warp。想要在浏览器页面里并排摆放普通终端、由 tmux 保持运行、不需要账号：Aubergine。</p></details>
+      <details><summary>这些工具中哪些是开源的？</summary><p>截至 2026 年 11 月 26 日的阅读：Aubergine（MIT）、Paradev（MIT）、Vibe Kanban（Apache-2.0）、Claude Squad（AGPL-3.0）、cmux 应用（GPL-3.0-or-later）和 Warp 客户端（AGPL-3.0）。Conductor 的条款称它为专有软件。</p></details>
+      <details><summary>这些工具中哪些能在 Linux 或 Windows 上运行？</summary><p>按它们自己的文档：Warp 支持 macOS、Windows 和 Linux；Vibe Kanban 三者都支持；Claude Squad 支持 macOS 和 Linux，在 Windows 上通过 WSL 使用 tmux；Paradev 支持 macOS，另有一个实验性的 Linux 版本；Conductor 和 cmux 只支持 macOS。Aubergine 为 macOS 构建，在 Linux 上只在容器里运行过，在 Windows 上只能在 WSL 2 里运行，尚未试过。</p></details>
+      <details><summary>关掉应用后，哪些工具能让智能体继续运行？</summary><p>Aubergine 和 Claude Squad 都把每个智能体放在一个 tmux 会话里运行。Paradev 的文档说明有一个后台守护进程，在窗口关闭时保留终端。cmux 只在需要手动开启的 tmux 模式下保留运行中的进程。Conductor 说本地会话随应用一起结束。Warp 恢复的是窗口和最近的输出，而不是正在运行的程序。Conductor、cmux、Warp 和 Paradev 还各自有一个云，智能体可以在那里继续运行。没有一个工具（包括 Aubergine）能让本地智能体在电脑重启后继续运行。</p></details>
+    </div>
+  </div>
+</div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">五分钟上手</h2>
+    <div class="close-do">
+      <p>你需要 macOS，以及 tmux 3.2 或更高版本和 Node.js 22 或更高版本。<code>brew install tmux node</code> 可以一次装好两者。</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="已复制" aria-live="polite" hidden>复制</button></p>
+      <p class="actions"><a class="button" href="../install/">安装</a><a class="button button-quiet" href="https://github.com/thirstyeggplant/aubergine">阅读源码</a></p>
+    </div>
+  </div>
+</section>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav aria-label="所有页面">
+      <ul class="foot-links">
+        <li><a href="../">首页</a></li>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex 与 ChatGPT</a></li>
+        <li><a href="../install/">安装</a></li>
+        <li><a href="../guides/">指南</a></li>
+        <li><a href="../run-multiple-coding-agents/">运行多个智能体</a></li>
+        <li><a href="../working-copies/">工作副本</a></li>
+        <li><a href="../queue-and-schedules/">队列与定时计划</a></li>
+        <li><a href="./" aria-current="page">对比</a></li>
+        <li><a href="../security/">安全</a></li>
+        <li><a href="../roadmap/">路线图</a></li>
+        <li><a href="../faq/">常见问题</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">Aubergine 免费开源，采用 <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">MIT 许可证</a>，运行在你自己的电脑上。</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    if (!navigator.clipboard) return;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+document.querySelectorAll('details.menu').forEach(function (menu) {
+  menu.addEventListener('toggle', function () {
+    if (!menu.open) return;
+    document.querySelectorAll('details.menu[open]').forEach(function (other) { if (other !== menu) other.open = false; });
+  });
+});
+</script>
+</body>
+</html>
