@@ -126,6 +126,17 @@ document.querySelectorAll('[data-copy]').forEach(function (button) {
     });
   });
 });
+document.querySelectorAll('[data-copy-text]').forEach(function (button) {
+  if (!navigator.clipboard) return;
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    navigator.clipboard.writeText(button.getAttribute('data-copy-text')).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
 document.addEventListener('keydown', function (event) {
   if (event.key !== 'Escape') return;
   document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });

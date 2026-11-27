@@ -417,3 +417,24 @@ describe('the prompt for a person\'s own agent', () => {
     assert.match(onPage, /Do not use sudo/);
   });
 });
+
+describe('sharing a page', () => {
+  const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+  const result = buildSite(path.join(root, 'site-src'));
+  const html = (file) => result.files.get(file).toString('utf8');
+
+  test('every page shares its own address, in its own language, with no script from another site', () => {
+    for (const [file, own] of [['index.html', `${ORIGIN}/`], ['compare/cmux/index.html', `${ORIGIN}/compare/cmux/`], ['de/install/index.html', `${ORIGIN}/de/install/`]]) {
+      const page = html(file);
+      const links = [...page.matchAll(/<div class="share">[\s\S]*?<\/div>/g)].join('');
+      assert.ok(links.includes('https://x.com/intent/post?'), file);
+      for (const match of links.matchAll(/href="(https:[^"]+)"/g)) assert.ok(match[1].includes(encodeURIComponent(own)), `${file}: ${match[1]}`);
+      assert.match(links, new RegExp(`data-copy-text="${own}"`));
+      assert.ok(!/<script[^>]+src=/.test(page), `${file} loads a script`);
+    }
+  });
+
+  test('the page that is not found offers no sharing', () => {
+    assert.ok(!html('404.html').includes('class="share"'));
+  });
+});

@@ -5014,5 +5014,17 @@
   "compare.it.agents": {
     "text": "你在其中运行的智能体是另一回事。每个智能体把它发送的内容发给它自己的提供商，各自需要单独批准；Aubergine 对此不做任何改变。Aubergine 保护什么、不保护什么，见<a href=\"/security/\">安全</a>页面。",
     "from": "b6838ee486ee"
+  },
+  "site.share.label": {
+    "text": "分享此页面",
+    "from": "e4ccddb6438f"
+  },
+  "site.share.email": {
+    "text": "邮件",
+    "from": "969ccbd3cf63"
+  },
+  "site.share.copy": {
+    "text": "复制链接",
+    "from": "dbf362d4f210"
   }
 }

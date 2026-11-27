@@ -240,6 +240,19 @@ aubergine describe --summary "Fixing the double redirect at sign-in"</code></pre
         <li><a href="../../llms.txt">llms.txt</a></li>
       </ul>
     </nav>
+
+    <div class="share">
+      <p class="share-label">Compartilhar esta página</p>
+      <ul class="foot-links">
+        <li><a href="https://x.com/intent/post?text=Mantenha%20seus%20terminais%20ap%C3%B3s%20reiniciar%20ou%20travar%20%7C%20Aubergine&amp;url=https%3A%2F%2Fthirstyeggplant.com%2Fpt%2Fkeep-terminals-after-restart%2F" rel="noopener nofollow">X</a></li>
+        <li><a href="https://bsky.app/intent/compose?text=Mantenha%20seus%20terminais%20ap%C3%B3s%20reiniciar%20ou%20travar%20%7C%20Aubergine%20https%3A%2F%2Fthirstyeggplant.com%2Fpt%2Fkeep-terminals-after-restart%2F" rel="noopener nofollow">Bluesky</a></li>
+        <li><a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fthirstyeggplant.com%2Fpt%2Fkeep-terminals-after-restart%2F" rel="noopener nofollow">LinkedIn</a></li>
+        <li><a href="https://www.reddit.com/submit?url=https%3A%2F%2Fthirstyeggplant.com%2Fpt%2Fkeep-terminals-after-restart%2F&amp;title=Mantenha%20seus%20terminais%20ap%C3%B3s%20reiniciar%20ou%20travar%20%7C%20Aubergine" rel="noopener nofollow">Reddit</a></li>
+        <li><a href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fthirstyeggplant.com%2Fpt%2Fkeep-terminals-after-restart%2F&amp;t=Mantenha%20seus%20terminais%20ap%C3%B3s%20reiniciar%20ou%20travar%20%7C%20Aubergine" rel="noopener nofollow">Hacker News</a></li>
+        <li><a href="mailto:?subject=Mantenha%20seus%20terminais%20ap%C3%B3s%20reiniciar%20ou%20travar%20%7C%20Aubergine&amp;body=https%3A%2F%2Fthirstyeggplant.com%2Fpt%2Fkeep-terminals-after-restart%2F">E-mail</a></li>
+        <li><button type="button" class="share-copy" data-copy-text="https://thirstyeggplant.com/pt/keep-terminals-after-restart/" data-copied="Copiado" aria-live="polite" hidden>Copiar link</button></li>
+      </ul>
+    </div>
     <p class="foot-line">O Aubergine é livre e de código aberto sob a <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">licença MIT</a>, e roda no seu próprio computador.</p>
   </div>
 </footer>
@@ -250,6 +263,17 @@ document.querySelectorAll('[data-copy]').forEach(function (button) {
     var words = button.textContent;
     if (!navigator.clipboard) return;
     navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.querySelectorAll('[data-copy-text]').forEach(function (button) {
+  if (!navigator.clipboard) return;
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    navigator.clipboard.writeText(button.getAttribute('data-copy-text')).then(function () {
       button.textContent = button.getAttribute('data-copied');
       setTimeout(function () { button.textContent = words; }, 1600);
     });

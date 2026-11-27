@@ -5014,5 +5014,17 @@
   "compare.it.agents": {
     "text": "Die Agenten, die du darin startest, sind eine eigene Frage. Jeder schickt, was er schickt, an seinen eigenen Anbieter und braucht seine eigene Genehmigung; Aubergine ändert daran nichts. Was Aubergine schützt und was nicht, steht auf der Seite <a href=\"/security/\">Sicherheit</a>.",
     "from": "b6838ee486ee"
+  },
+  "site.share.label": {
+    "text": "Diese Seite teilen",
+    "from": "e4ccddb6438f"
+  },
+  "site.share.email": {
+    "text": "E-Mail",
+    "from": "969ccbd3cf63"
+  },
+  "site.share.copy": {
+    "text": "Link kopieren",
+    "from": "dbf362d4f210"
   }
 }

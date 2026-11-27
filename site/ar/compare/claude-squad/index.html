@@ -226,6 +226,19 @@
         <li><a href="../../../llms.txt">llms.txt</a></li>
       </ul>
     </nav>
+
+    <div class="share">
+      <p class="share-label">شارك هذه الصفحة</p>
+      <ul class="foot-links">
+        <li><a href="https://x.com/intent/post?text=Aubergine%20%D9%85%D9%82%D8%A7%D8%A8%D9%84%20Claude%20Squad%3A%20%E2%80%8Ftmux%20%D9%88%D8%A3%D8%B4%D8%AC%D8%A7%D8%B1%20%D8%A7%D9%84%D8%B9%D9%85%D9%84%D8%8C%20%D8%A8%D8%B7%D8%B1%D9%8A%D9%82%D8%AA%D9%8A%D9%86&amp;url=https%3A%2F%2Fthirstyeggplant.com%2Far%2Fcompare%2Fclaude-squad%2F" rel="noopener nofollow">X</a></li>
+        <li><a href="https://bsky.app/intent/compose?text=Aubergine%20%D9%85%D9%82%D8%A7%D8%A8%D9%84%20Claude%20Squad%3A%20%E2%80%8Ftmux%20%D9%88%D8%A3%D8%B4%D8%AC%D8%A7%D8%B1%20%D8%A7%D9%84%D8%B9%D9%85%D9%84%D8%8C%20%D8%A8%D8%B7%D8%B1%D9%8A%D9%82%D8%AA%D9%8A%D9%86%20https%3A%2F%2Fthirstyeggplant.com%2Far%2Fcompare%2Fclaude-squad%2F" rel="noopener nofollow">Bluesky</a></li>
+        <li><a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fthirstyeggplant.com%2Far%2Fcompare%2Fclaude-squad%2F" rel="noopener nofollow">LinkedIn</a></li>
+        <li><a href="https://www.reddit.com/submit?url=https%3A%2F%2Fthirstyeggplant.com%2Far%2Fcompare%2Fclaude-squad%2F&amp;title=Aubergine%20%D9%85%D9%82%D8%A7%D8%A8%D9%84%20Claude%20Squad%3A%20%E2%80%8Ftmux%20%D9%88%D8%A3%D8%B4%D8%AC%D8%A7%D8%B1%20%D8%A7%D9%84%D8%B9%D9%85%D9%84%D8%8C%20%D8%A8%D8%B7%D8%B1%D9%8A%D9%82%D8%AA%D9%8A%D9%86" rel="noopener nofollow">Reddit</a></li>
+        <li><a href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fthirstyeggplant.com%2Far%2Fcompare%2Fclaude-squad%2F&amp;t=Aubergine%20%D9%85%D9%82%D8%A7%D8%A8%D9%84%20Claude%20Squad%3A%20%E2%80%8Ftmux%20%D9%88%D8%A3%D8%B4%D8%AC%D8%A7%D8%B1%20%D8%A7%D9%84%D8%B9%D9%85%D9%84%D8%8C%20%D8%A8%D8%B7%D8%B1%D9%8A%D9%82%D8%AA%D9%8A%D9%86" rel="noopener nofollow">Hacker News</a></li>
+        <li><a href="mailto:?subject=Aubergine%20%D9%85%D9%82%D8%A7%D8%A8%D9%84%20Claude%20Squad%3A%20%E2%80%8Ftmux%20%D9%88%D8%A3%D8%B4%D8%AC%D8%A7%D8%B1%20%D8%A7%D9%84%D8%B9%D9%85%D9%84%D8%8C%20%D8%A8%D8%B7%D8%B1%D9%8A%D9%82%D8%AA%D9%8A%D9%86&amp;body=https%3A%2F%2Fthirstyeggplant.com%2Far%2Fcompare%2Fclaude-squad%2F">البريد الإلكتروني</a></li>
+        <li><button type="button" class="share-copy" data-copy-text="https://thirstyeggplant.com/ar/compare/claude-squad/" data-copied="تم النسخ" aria-live="polite" hidden>نسخ الرابط</button></li>
+      </ul>
+    </div>
     <p class="foot-line">Aubergine مجاني ومفتوح المصدر بموجب <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">رخصة MIT</a>، ويعمل على حاسوبك أنت.</p>
   </div>
 </footer>
@@ -236,6 +249,17 @@ document.querySelectorAll('[data-copy]').forEach(function (button) {
     var words = button.textContent;
     if (!navigator.clipboard) return;
     navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.querySelectorAll('[data-copy-text]').forEach(function (button) {
+  if (!navigator.clipboard) return;
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    navigator.clipboard.writeText(button.getAttribute('data-copy-text')).then(function () {
       button.textContent = button.getAttribute('data-copied');
       setTimeout(function () { button.textContent = words; }, 1600);
     });

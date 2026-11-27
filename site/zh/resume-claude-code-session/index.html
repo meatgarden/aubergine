@@ -212,6 +212,19 @@
         <li><a href="../../llms.txt">llms.txt</a></li>
       </ul>
     </nav>
+
+    <div class="share">
+      <p class="share-label">分享此页面</p>
+      <ul class="foot-links">
+        <li><a href="https://x.com/intent/post?text=%E9%87%8D%E5%90%AF%E5%90%8E%E6%81%A2%E5%A4%8D%20Claude%20Code%20%E4%BC%9A%E8%AF%9D%20%7C%20Aubergine&amp;url=https%3A%2F%2Fthirstyeggplant.com%2Fzh%2Fresume-claude-code-session%2F" rel="noopener nofollow">X</a></li>
+        <li><a href="https://bsky.app/intent/compose?text=%E9%87%8D%E5%90%AF%E5%90%8E%E6%81%A2%E5%A4%8D%20Claude%20Code%20%E4%BC%9A%E8%AF%9D%20%7C%20Aubergine%20https%3A%2F%2Fthirstyeggplant.com%2Fzh%2Fresume-claude-code-session%2F" rel="noopener nofollow">Bluesky</a></li>
+        <li><a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fthirstyeggplant.com%2Fzh%2Fresume-claude-code-session%2F" rel="noopener nofollow">LinkedIn</a></li>
+        <li><a href="https://www.reddit.com/submit?url=https%3A%2F%2Fthirstyeggplant.com%2Fzh%2Fresume-claude-code-session%2F&amp;title=%E9%87%8D%E5%90%AF%E5%90%8E%E6%81%A2%E5%A4%8D%20Claude%20Code%20%E4%BC%9A%E8%AF%9D%20%7C%20Aubergine" rel="noopener nofollow">Reddit</a></li>
+        <li><a href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fthirstyeggplant.com%2Fzh%2Fresume-claude-code-session%2F&amp;t=%E9%87%8D%E5%90%AF%E5%90%8E%E6%81%A2%E5%A4%8D%20Claude%20Code%20%E4%BC%9A%E8%AF%9D%20%7C%20Aubergine" rel="noopener nofollow">Hacker News</a></li>
+        <li><a href="mailto:?subject=%E9%87%8D%E5%90%AF%E5%90%8E%E6%81%A2%E5%A4%8D%20Claude%20Code%20%E4%BC%9A%E8%AF%9D%20%7C%20Aubergine&amp;body=https%3A%2F%2Fthirstyeggplant.com%2Fzh%2Fresume-claude-code-session%2F">邮件</a></li>
+        <li><button type="button" class="share-copy" data-copy-text="https://thirstyeggplant.com/zh/resume-claude-code-session/" data-copied="已复制" aria-live="polite" hidden>复制链接</button></li>
+      </ul>
+    </div>
     <p class="foot-line">Aubergine 免费开源，采用 <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">MIT 许可证</a>，运行在你自己的电脑上。</p>
   </div>
 </footer>
@@ -222,6 +235,17 @@ document.querySelectorAll('[data-copy]').forEach(function (button) {
     var words = button.textContent;
     if (!navigator.clipboard) return;
     navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.querySelectorAll('[data-copy-text]').forEach(function (button) {
+  if (!navigator.clipboard) return;
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    navigator.clipboard.writeText(button.getAttribute('data-copy-text')).then(function () {
       button.textContent = button.getAttribute('data-copied');
       setTimeout(function () { button.textContent = words; }, 1600);
     });

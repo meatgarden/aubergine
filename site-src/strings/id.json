@@ -5014,5 +5014,17 @@
   "compare.it.agents": {
     "text": "Agen yang Anda jalankan di dalamnya adalah soal lain. Masing-masing mengirim apa yang dikirimnya ke penyedianya sendiri dan perlu persetujuannya sendiri; Aubergine tidak mengubah apa pun soal itu. Apa yang dilindungi Aubergine, dan apa yang tidak, ada di halaman <a href=\"/security/\">keamanan</a>.",
     "from": "b6838ee486ee"
+  },
+  "site.share.label": {
+    "text": "Bagikan halaman ini",
+    "from": "e4ccddb6438f"
+  },
+  "site.share.email": {
+    "text": "Email",
+    "from": "969ccbd3cf63"
+  },
+  "site.share.copy": {
+    "text": "Salin tautan",
+    "from": "dbf362d4f210"
   }
 }

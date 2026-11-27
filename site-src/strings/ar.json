@@ -5014,5 +5014,17 @@
   "compare.it.agents": {
     "text": "أما الوكلاء الذين تشغّلهم فيه فمسألة أخرى. كل وكيل يرسل ما يرسله إلى مزوّده هو، ويحتاج إلى موافقته الخاصة؛ ولا يغيّر Aubergine شيئًا من ذلك. ما يحميه Aubergine وما لا يحميه موجود في صفحة <a href=\"/security/\">الأمان</a>.",
     "from": "b6838ee486ee"
+  },
+  "site.share.label": {
+    "text": "شارك هذه الصفحة",
+    "from": "e4ccddb6438f"
+  },
+  "site.share.email": {
+    "text": "البريد الإلكتروني",
+    "from": "969ccbd3cf63"
+  },
+  "site.share.copy": {
+    "text": "نسخ الرابط",
+    "from": "dbf362d4f210"
   }
 }

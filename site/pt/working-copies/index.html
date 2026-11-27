@@ -219,6 +219,19 @@ aubergine copies discard api</code></pre>
         <li><a href="../../llms.txt">llms.txt</a></li>
       </ul>
     </nav>
+
+    <div class="share">
+      <p class="share-label">Compartilhar esta página</p>
+      <ul class="foot-links">
+        <li><a href="https://x.com/intent/post?text=Dois%20agentes%20de%20programa%C3%A7%C3%A3o%20em%20um%20reposit%C3%B3rio%20%7C%20Aubergine&amp;url=https%3A%2F%2Fthirstyeggplant.com%2Fpt%2Fworking-copies%2F" rel="noopener nofollow">X</a></li>
+        <li><a href="https://bsky.app/intent/compose?text=Dois%20agentes%20de%20programa%C3%A7%C3%A3o%20em%20um%20reposit%C3%B3rio%20%7C%20Aubergine%20https%3A%2F%2Fthirstyeggplant.com%2Fpt%2Fworking-copies%2F" rel="noopener nofollow">Bluesky</a></li>
+        <li><a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fthirstyeggplant.com%2Fpt%2Fworking-copies%2F" rel="noopener nofollow">LinkedIn</a></li>
+        <li><a href="https://www.reddit.com/submit?url=https%3A%2F%2Fthirstyeggplant.com%2Fpt%2Fworking-copies%2F&amp;title=Dois%20agentes%20de%20programa%C3%A7%C3%A3o%20em%20um%20reposit%C3%B3rio%20%7C%20Aubergine" rel="noopener nofollow">Reddit</a></li>
+        <li><a href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fthirstyeggplant.com%2Fpt%2Fworking-copies%2F&amp;t=Dois%20agentes%20de%20programa%C3%A7%C3%A3o%20em%20um%20reposit%C3%B3rio%20%7C%20Aubergine" rel="noopener nofollow">Hacker News</a></li>
+        <li><a href="mailto:?subject=Dois%20agentes%20de%20programa%C3%A7%C3%A3o%20em%20um%20reposit%C3%B3rio%20%7C%20Aubergine&amp;body=https%3A%2F%2Fthirstyeggplant.com%2Fpt%2Fworking-copies%2F">E-mail</a></li>
+        <li><button type="button" class="share-copy" data-copy-text="https://thirstyeggplant.com/pt/working-copies/" data-copied="Copiado" aria-live="polite" hidden>Copiar link</button></li>
+      </ul>
+    </div>
     <p class="foot-line">O Aubergine é livre e de código aberto sob a <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">licença MIT</a>, e roda no seu próprio computador.</p>
   </div>
 </footer>
@@ -229,6 +242,17 @@ document.querySelectorAll('[data-copy]').forEach(function (button) {
     var words = button.textContent;
     if (!navigator.clipboard) return;
     navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.querySelectorAll('[data-copy-text]').forEach(function (button) {
+  if (!navigator.clipboard) return;
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    navigator.clipboard.writeText(button.getAttribute('data-copy-text')).then(function () {
       button.textContent = button.getAttribute('data-copied');
       setTimeout(function () { button.textContent = words; }, 1600);
     });

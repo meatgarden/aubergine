@@ -5014,5 +5014,17 @@
   "compare.it.agents": {
     "text": "Los agentes que ejecutas en él son otra cuestión. Cada uno envía lo que envía a su propio proveedor y necesita su propia aprobación; Aubergine no cambia nada de eso. Lo que Aubergine protege, y lo que no, está en la página de <a href=\"/security/\">seguridad</a>.",
     "from": "b6838ee486ee"
+  },
+  "site.share.label": {
+    "text": "Compartir esta página",
+    "from": "e4ccddb6438f"
+  },
+  "site.share.email": {
+    "text": "Correo",
+    "from": "969ccbd3cf63"
+  },
+  "site.share.copy": {
+    "text": "Copiar enlace",
+    "from": "dbf362d4f210"
   }
 }
