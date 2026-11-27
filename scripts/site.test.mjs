@@ -8,7 +8,7 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { after, describe, test } from 'node:test';
 import { fileURLToPath } from 'node:url';
-import { ORIGIN, SITEMAP_STYLE, anchorsOf, buildSite, checkReadmes, codesOf, compareSite, fingerprint, headingAnchor, isDate, markupProblem, writeSite } from './site.mjs';
+import { ORIGIN, SITEMAP_STYLE, anchorsOf, buildSite, checkReadmes, codesOf, compareSite, fingerprint, headingAnchor, isDate, markupProblem, plainText, writeSite } from './site.mjs';
 
 const made = [];
 after(() => {
@@ -396,5 +396,24 @@ describe('the sitemap', () => {
       assert.match(page(result, 'robots.txt'), new RegExp(`^Sitemap: ${ORIGIN}/sitemap\\.xml$`, 'm'));
       assert.match(page(result, 'llms.txt'), new RegExp(`\\(${ORIGIN}/windows/\\)`));
     });
+  });
+});
+
+describe('the prompt for a person\'s own agent', () => {
+  const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+  const home = readFileSync(path.join(root, 'site-src', 'pages', 'home.html'), 'utf8');
+  const readme = readFileSync(path.join(root, 'README.md'), 'utf8');
+  const onPage = plainText(/<p class="cmd multi cmd-prompt"><code>([\s\S]*?)<\/code>/.exec(home)?.[1] ?? '');
+  const inReadme = /\*\*Or have your agent install it\.\*\*[\s\S]*?```text\n([\s\S]*?)\n```/.exec(readme)?.[1] ?? '';
+
+  test('the home page and the README give the same prompt', () => {
+    assert.ok(onPage.length > 200);
+    assert.equal(inReadme, onPage);
+  });
+
+  test('it never has the agent start the server, and points it at the guide', () => {
+    assert.match(onPage, /Do not start the server yourself/);
+    assert.match(onPage, /`aubergine guide --snippet`/);
+    assert.match(onPage, /Do not use sudo/);
   });
 });
