@@ -4990,5 +4990,29 @@
   "home.compare.more": {
     "text": "Comparado con Conductor, Claude Squad, cmux, Warp y otros",
     "from": "60e16e373973"
+  },
+  "home.agent.title": {
+    "text": "O haz que tu agente lo instale",
+    "from": "2c4a3f5be7e9"
+  },
+  "home.agent.intro": {
+    "text": "Pega esto en el agente de programación que ya usas. Comprueba lo que Aubergine necesita, lo instala y añade unas líneas a las instrucciones de tu proyecto para saber cómo trabajar en una terminal de Aubergine.",
+    "from": "a2c85edb7137"
+  },
+  "home.agent.note": {
+    "text": "El prompt está en inglés, como Aubergine; tu agente puede responderte en tu idioma. Todavía no se ha ejecutado con un agente real, así que lee lo que propone el tuyo antes de decir que sí. Lo que un agente puede hacer en una terminal está en la <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/for-agents.md\">guía para agentes</a>.",
+    "from": "ff60324cd0eb"
+  },
+  "compare.it.title": {
+    "text": "Si tu departamento de TI tiene que aprobarlo",
+    "from": "35a5d178dee3"
+  },
+  "compare.it.text": {
+    "text": "Algunas empresas no permiten herramientas de desarrollo que necesitan una cuenta con quien las hace, que envían código o la salida de las terminales a la nube de quien las hace, o cuyo código fuente no se puede leer. Aubergine no tiene nada de eso: se ejecuta en tu propio ordenador, su servidor escucha en <code>127.0.0.1</code>, no tiene cuenta ni nube, no llama a ningún modelo y es de código abierto bajo la licencia MIT, así que un equipo de seguridad puede leerlo entero.",
+    "from": "24cff3641a8c"
+  },
+  "compare.it.agents": {
+    "text": "Los agentes que ejecutas en él son otra cuestión. Cada uno envía lo que envía a su propio proveedor y necesita su propia aprobación; Aubergine no cambia nada de eso. Lo que Aubergine protege, y lo que no, está en la página de <a href=\"/security/\">seguridad</a>.",
+    "from": "b6838ee486ee"
   }
 }

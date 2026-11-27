@@ -4990,5 +4990,29 @@
   "home.compare.more": {
     "text": "Dibandingkan dengan Conductor, Claude Squad, cmux, Warp, dan lainnya",
     "from": "60e16e373973"
+  },
+  "home.agent.title": {
+    "text": "Atau minta agen Anda menginstalnya",
+    "from": "2c4a3f5be7e9"
+  },
+  "home.agent.intro": {
+    "text": "Tempelkan ini ke agen coding yang sudah Anda pakai. Ia memeriksa apa yang dibutuhkan Aubergine, menginstalnya, dan menambahkan beberapa baris ke instruksi proyek Anda agar ia tahu cara bekerja di terminal Aubergine.",
+    "from": "a2c85edb7137"
+  },
+  "home.agent.note": {
+    "text": "Prompt ini berbahasa Inggris, seperti Aubergine; agen Anda bisa menjawab dalam bahasa Anda. Prompt ini belum pernah dijalankan dengan agen sungguhan, jadi baca apa yang diusulkan agen Anda sebelum Anda setuju. Apa yang bisa dilakukan agen di terminal ada di <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/for-agents.md\">panduan untuk agen</a>.",
+    "from": "ff60324cd0eb"
+  },
+  "compare.it.title": {
+    "text": "Jika departemen IT Anda harus menyetujuinya",
+    "from": "35a5d178dee3"
+  },
+  "compare.it.text": {
+    "text": "Sebagian perusahaan tidak mengizinkan alat pengembang yang memerlukan akun di pembuatnya, yang mengirim kode atau output terminal ke cloud pembuatnya, atau yang kode sumbernya tidak bisa dibaca. Aubergine tidak punya satu pun dari itu: ia berjalan di komputer Anda sendiri, servernya mendengarkan di <code>127.0.0.1</code>, tanpa akun dan tanpa cloud, tidak memanggil model apa pun, dan open source di bawah lisensi MIT, sehingga tim keamanan bisa membaca seluruhnya.",
+    "from": "24cff3641a8c"
+  },
+  "compare.it.agents": {
+    "text": "Agen yang Anda jalankan di dalamnya adalah soal lain. Masing-masing mengirim apa yang dikirimnya ke penyedianya sendiri dan perlu persetujuannya sendiri; Aubergine tidak mengubah apa pun soal itu. Apa yang dilindungi Aubergine, dan apa yang tidak, ada di halaman <a href=\"/security/\">keamanan</a>.",
+    "from": "b6838ee486ee"
   }
 }

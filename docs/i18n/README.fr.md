@@ -8,6 +8,7 @@
 - Les terminaux continuent de tourner quand vous fermez le navigateur ou redémarrez Aubergine.
 - Fonctionne avec de simples shells comme avec des agents.
 - Aubergine n’a pas de modèle à elle, ne détient aucune clé et n’a pas de compte.
+- Conçue pour passer une revue informatique : certaines entreprises n’autorisent pas les outils qui exigent un compte chez leur éditeur, envoient votre code vers son cloud, ou dont le code source ne peut pas être lu. Aubergine n’a ni compte ni cloud, et elle est entièrement open source. Les agents que vous y lancez demandent toujours leur propre approbation.
 
 <img src="../../site/screenshots/canvas.png" alt="Le canevas d’Aubergine : trois canevas en colonne à gauche, la liste des terminaux avec ce que fait chacun, et six terminaux en direct, dont quatre dans leurs propres couleurs et un qui attend une réponse.">
 
@@ -69,6 +70,24 @@ aubergine start --open
 **3. Cliquez sur « Show me around »** au milieu du canevas vide.
 
 Cela crée un canevas nommé « Demo » avec quelques agents factices et vous fait faire le tour en huit courtes étapes, environ cinq minutes. Rien n’y est réel, et **Remove the demo** le retire.
+
+**Ou faites-la installer par votre agent.** Collez ceci dans l’agent de code que vous utilisez déjà. Il vérifie ce dont Aubergine a besoin, l’installe et ajoute quelques lignes aux instructions de votre projet pour savoir comment travailler dans un terminal Aubergine.
+
+```text
+Install Aubergine on this computer for me, then learn how to work in it.
+Aubergine shows my terminals and coding agents side by side in a browser page. It runs only on this computer and is built for macOS.
+
+1. Check what it needs: tmux 3.2 or newer and Node.js 22 or newer. Run `tmux -V` and `node --version`. If one is missing or too old, tell me the command that would install it (with Homebrew: `brew install tmux node`) and wait for my answer. Do not use sudo.
+2. Install it: `npm install -g @meatgarden/aubergine`
+3. Run `aubergine doctor` and read what it says. Fix what is yours to fix and tell me the rest.
+4. Do not start the server yourself: it runs until it is stopped, and it opens my browser. Tell me to run `aubergine start --open` in a terminal of my own, and to click "Show me around" on the empty canvas.
+5. So that you and later agents know how to work in an Aubergine terminal, run `aubergine guide --snippet` and add the lines it prints to this project's instructions for agents (the file you read at the start of every conversation). Show me the change before you save it.
+6. From now on, whenever the environment variable AUBERGINE_SESSION_ID is set, you are in an Aubergine terminal: run `aubergine guide` once, before other work, and report to me as it says.
+
+Finish by telling me what you installed, what you changed, and anything that did not work.
+```
+
+Le prompt est en anglais, comme Aubergine ; votre agent peut vous répondre dans votre langue. Il n’a encore jamais été lancé avec un vrai agent : lisez donc ce que le vôtre propose avant de dire oui. Ce qu’un agent peut faire dans un terminal est dans le [guide pour les agents](../for-agents.md).
 
 Quelque chose ne va pas ? Exécutez `aubergine doctor`, ou voyez [If something goes wrong](../../README.md#if-something-goes-wrong). Le script d’installation est décrit en entier sous [Quick start](../../README.md#quick-start).
 

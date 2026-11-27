@@ -8,6 +8,7 @@
 - 关掉浏览器或重启 Aubergine，终端照常运行。
 - 普通 shell 和智能体都能用。
 - Aubergine 自己没有模型，不持有密钥，也没有账号。
+- 为通过 IT 审查而做：有些公司不允许需要在开发方注册账号、会把你的代码发送到其云端，或者源码无法阅读的工具。Aubergine 没有账号，没有云，全部开源。你在其中运行的智能体仍需各自获得批准。
 
 <img src="../../site/screenshots/canvas.png" alt="Aubergine 画布：左侧一列三张画布，终端列表注明每个终端在做什么，以及六个实时终端，其中四个有各自的颜色，一个在等待回答。">
 
@@ -69,6 +70,24 @@ aubergine start --open
 **3. 点击空画布中间的“Show me around”。**
 
 它会创建一张名为“Demo”的画布，其中有几个替身智能体，并用八个简短步骤带你走一遍，大约五分钟。其中的一切都不是真的，**Remove the demo** 会再把它移除。
+
+**或者让你的智能体来安装**。把这段话粘贴给你已经在用的编程智能体。它会检查 Aubergine 需要什么、完成安装，并在你项目的指令里加几行，让它知道如何在 Aubergine 终端里工作。
+
+```text
+Install Aubergine on this computer for me, then learn how to work in it.
+Aubergine shows my terminals and coding agents side by side in a browser page. It runs only on this computer and is built for macOS.
+
+1. Check what it needs: tmux 3.2 or newer and Node.js 22 or newer. Run `tmux -V` and `node --version`. If one is missing or too old, tell me the command that would install it (with Homebrew: `brew install tmux node`) and wait for my answer. Do not use sudo.
+2. Install it: `npm install -g @meatgarden/aubergine`
+3. Run `aubergine doctor` and read what it says. Fix what is yours to fix and tell me the rest.
+4. Do not start the server yourself: it runs until it is stopped, and it opens my browser. Tell me to run `aubergine start --open` in a terminal of my own, and to click "Show me around" on the empty canvas.
+5. So that you and later agents know how to work in an Aubergine terminal, run `aubergine guide --snippet` and add the lines it prints to this project's instructions for agents (the file you read at the start of every conversation). Show me the change before you save it.
+6. From now on, whenever the environment variable AUBERGINE_SESSION_ID is set, you are in an Aubergine terminal: run `aubergine guide` once, before other work, and report to me as it says.
+
+Finish by telling me what you installed, what you changed, and anything that did not work.
+```
+
+和 Aubergine 一样，这段提示词是英文的；你的智能体可以用你的语言回答。它还没有用真实的智能体运行过，所以在同意之前，请先读一读你的智能体提出了什么。智能体在终端里能做什么，见[给智能体的指南](../for-agents.md)。
 
 遇到问题？运行 `aubergine doctor`，或查看 [If something goes wrong](../../README.md#if-something-goes-wrong)。安装脚本的完整说明在 [Quick start](../../README.md#quick-start) 中。
 

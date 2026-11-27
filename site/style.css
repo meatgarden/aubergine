@@ -388,6 +388,10 @@ pre code { font-size: 1em; overflow-wrap: normal; }
 .steps .cmd { color: var(--ink); }
 .steps a, .install-note a { color: var(--on-dark); }
 .install-note { margin-block-start: var(--s-8); color: var(--on-dark-soft); font-size: var(--size-s); max-inline-size: 64ch; }
+/* The prompt a person pastes to their own agent: the command box, several lines long, its Copy at the top. */
+.agent-install { margin-block-start: var(--s-9); padding-block-start: var(--s-7); border-block-start: var(--rule) solid var(--on-dark-soft); display: grid; gap: var(--s-4); max-inline-size: 52rem; }
+.agent-install .install-note { margin-block-start: 0; }
+.cmd-prompt { align-items: flex-start; max-inline-size: none; padding-block: var(--s-3); }
 
 /* ---------- a page's head ---------- */
 

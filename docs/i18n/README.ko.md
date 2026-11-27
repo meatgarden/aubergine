@@ -8,6 +8,7 @@
 - 브라우저를 닫거나 Aubergine을 다시 시작해도 터미널은 계속 실행됩니다.
 - 일반 셸에서도, 에이전트에서도 동작합니다.
 - Aubergine에는 자체 모델이 없고, 키를 보관하지 않으며, 계정도 없습니다.
+- IT 검토를 통과하도록 만들어졌습니다. 어떤 회사들은 만든 곳의 계정이 필요하거나, 여러분의 코드를 그 클라우드로 보내거나, 소스를 읽을 수 없는 도구를 허용하지 않습니다. Aubergine에는 계정도 클라우드도 없고, 전부 오픈 소스입니다. 그 안에서 실행하는 에이전트는 여전히 각자 승인이 필요합니다.
 
 <img src="../../site/screenshots/canvas.png" alt="Aubergine 캔버스: 왼쪽 열에 캔버스 세 개, 각 터미널이 무엇을 하고 있는지 보여 주는 터미널 목록, 그리고 실시간 터미널 여섯 개. 그중 네 개는 저마다의 색이 있고, 하나는 답을 기다리고 있습니다.">
 
@@ -69,6 +70,24 @@ aubergine start --open
 **3. 빈 캔버스 가운데에서 "Show me around"(둘러보기)를 클릭하세요.**
 
 대역 에이전트 몇 개가 있는 "Demo"라는 캔버스를 만들고, 여덟 개의 짧은 단계로 5분 정도 안내합니다. 그 안의 어떤 것도 진짜가 아니며, **Remove the demo**로 다시 없앨 수 있습니다.
+
+**또는 에이전트에게 설치를 맡기세요.** 이미 쓰고 있는 코딩 에이전트에 이것을 붙여 넣으세요. Aubergine에 필요한 것을 확인하고 설치한 뒤, Aubergine 터미널에서 일하는 방법을 알 수 있도록 프로젝트 지침에 몇 줄을 추가합니다.
+
+```text
+Install Aubergine on this computer for me, then learn how to work in it.
+Aubergine shows my terminals and coding agents side by side in a browser page. It runs only on this computer and is built for macOS.
+
+1. Check what it needs: tmux 3.2 or newer and Node.js 22 or newer. Run `tmux -V` and `node --version`. If one is missing or too old, tell me the command that would install it (with Homebrew: `brew install tmux node`) and wait for my answer. Do not use sudo.
+2. Install it: `npm install -g @meatgarden/aubergine`
+3. Run `aubergine doctor` and read what it says. Fix what is yours to fix and tell me the rest.
+4. Do not start the server yourself: it runs until it is stopped, and it opens my browser. Tell me to run `aubergine start --open` in a terminal of my own, and to click "Show me around" on the empty canvas.
+5. So that you and later agents know how to work in an Aubergine terminal, run `aubergine guide --snippet` and add the lines it prints to this project's instructions for agents (the file you read at the start of every conversation). Show me the change before you save it.
+6. From now on, whenever the environment variable AUBERGINE_SESSION_ID is set, you are in an Aubergine terminal: run `aubergine guide` once, before other work, and report to me as it says.
+
+Finish by telling me what you installed, what you changed, and anything that did not work.
+```
+
+Aubergine처럼 프롬프트도 영어로 되어 있지만, 에이전트는 여러분의 언어로 답할 수 있습니다. 아직 실제 에이전트로 실행해 본 적은 없으니, 승인하기 전에 에이전트가 제안하는 내용을 읽어 보세요. 에이전트가 터미널에서 할 수 있는 일은 [에이전트용 가이드](../for-agents.md)에 있습니다.
 
 뭔가 이상한가요? `aubergine doctor`를 실행하거나 [If something goes wrong](../../README.md#if-something-goes-wrong)(문제가 생기면)을 보세요. 설치 프로그램에 대한 전체 설명은 [Quick start](../../README.md#quick-start)에 있습니다.
 

@@ -8,6 +8,7 @@
 - ব্রাউজার বন্ধ করলে বা Aubergine রিস্টার্ট করলেও টার্মিনাল চলতে থাকে।
 - সাধারণ শেলের সঙ্গেও কাজ করে, এজেন্টের সঙ্গেও।
 - Aubergine-এর নিজের কোনো মডেল নেই, এটি কোনো key রাখে না, আর এর কোনো অ্যাকাউন্ট নেই।
+- IT পর্যালোচনায় পাস করার জন্য বানানো: কিছু কোম্পানি এমন টুল অনুমোদন করে না যেগুলোর জন্য নির্মাতার কাছে অ্যাকাউন্ট লাগে, যেগুলো আপনার কোড তার ক্লাউডে পাঠায়, বা যেগুলোর সোর্স পড়া যায় না। Aubergine-এর কোনো অ্যাকাউন্ট নেই, ক্লাউড নেই, আর এর পুরোটাই ওপেন সোর্স। এর ভেতরে আপনি যে এজেন্ট চালান, সেগুলোর তবুও নিজস্ব অনুমোদন লাগে।
 
 <img src="../../site/screenshots/canvas.png" alt="Aubergine ক্যানভাস: বাঁয়ে একটি কলামে তিনটি ক্যানভাস, টার্মিনালের তালিকা যেখানে প্রতিটি কী করছে লেখা, আর ছয়টি লাইভ টার্মিনাল, চারটি নিজস্ব রঙে, একটি উত্তরের অপেক্ষায়।">
 
@@ -69,6 +70,24 @@ aubergine start --open
 **3. ফাঁকা ক্যানভাসের মাঝখানে "Show me around"-এ ক্লিক করুন।**
 
 এটি "Demo" নামের একটি ক্যানভাস বানায়, কয়েকটি নকল এজেন্ট সহ, আর আটটি ছোট ধাপে আপনাকে ঘুরিয়ে দেখায়, মোটামুটি পাঁচ মিনিট। এর কিছুই আসল নয়, আর **Remove the demo** সেটি আবার সরিয়ে দেয়।
+
+**অথবা আপনার এজেন্টকে দিয়ে ইনস্টল করান।** আপনি যে কোডিং এজেন্ট আগে থেকেই ব্যবহার করেন, তাতে এটি পেস্ট করুন। এটি দেখে নেয় Aubergine-এর কী লাগে, সেটি ইনস্টল করে, আর আপনার প্রজেক্টের নির্দেশনায় কয়েকটি লাইন যোগ করে, যাতে এটি জানে Aubergine টার্মিনালে কীভাবে কাজ করতে হয়।
+
+```text
+Install Aubergine on this computer for me, then learn how to work in it.
+Aubergine shows my terminals and coding agents side by side in a browser page. It runs only on this computer and is built for macOS.
+
+1. Check what it needs: tmux 3.2 or newer and Node.js 22 or newer. Run `tmux -V` and `node --version`. If one is missing or too old, tell me the command that would install it (with Homebrew: `brew install tmux node`) and wait for my answer. Do not use sudo.
+2. Install it: `npm install -g @meatgarden/aubergine`
+3. Run `aubergine doctor` and read what it says. Fix what is yours to fix and tell me the rest.
+4. Do not start the server yourself: it runs until it is stopped, and it opens my browser. Tell me to run `aubergine start --open` in a terminal of my own, and to click "Show me around" on the empty canvas.
+5. So that you and later agents know how to work in an Aubergine terminal, run `aubergine guide --snippet` and add the lines it prints to this project's instructions for agents (the file you read at the start of every conversation). Show me the change before you save it.
+6. From now on, whenever the environment variable AUBERGINE_SESSION_ID is set, you are in an Aubergine terminal: run `aubergine guide` once, before other work, and report to me as it says.
+
+Finish by telling me what you installed, what you changed, and anything that did not work.
+```
+
+Aubergine-এর মতো প্রম্পটটিও ইংরেজিতে; আপনার এজেন্ট আপনার ভাষায় উত্তর দিতে পারে। এটি এখনো কোনো আসল এজেন্টের সঙ্গে চালানো হয়নি, তাই হ্যাঁ বলার আগে আপনার এজেন্ট কী প্রস্তাব করে তা পড়ে নিন। একটি এজেন্ট টার্মিনালে কী করতে পারে তা আছে [এজেন্টদের গাইডে](../for-agents.md)।
 
 কিছু ঠিক নেই? `aubergine doctor` চালান, বা দেখুন [If something goes wrong](../../README.md#if-something-goes-wrong)। ইনস্টলারের পুরো বিবরণ আছে [Quick start](../../README.md#quick-start)-এ।
 
