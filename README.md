@@ -4,6 +4,8 @@ English · [Español](docs/i18n/README.es.md) · [Português](docs/i18n/README.p
 
 **Mission control for your terminals and AI coding agents.** Run Claude Code, Codex and plain terminals side by side in one browser dashboard: as many as you like, with the agents and models you already use. See at a glance which one is waiting for you, which step each is on, and what each has written for you.
 
+[Website](https://thirstyeggplant.com/) · [Install](#start-in-two-minutes) · [With Claude Code](https://thirstyeggplant.com/claude/) · [Guides](https://thirstyeggplant.com/guides/) · [Compared with other tools](https://thirstyeggplant.com/compare/) · [npm](https://www.npmjs.com/package/@meatgarden/aubergine)
+
 - Runs on your own computer, and nowhere else.
 - Terminals keep running when you close the browser or restart Aubergine.
 - Works with plain shells and with agents.

@@ -90,7 +90,9 @@ const daemon = readJson('daemon/package.json');
 const manifest = {
   name,
   version: daemon.version,
-  description: 'A local, browser-based canvas of terminals, where each terminal session is a node you can arrange and use.',
+  description: 'Mission control for your terminals and AI coding agents: run Claude Code, Codex and plain terminals side by side in one browser dashboard.',
+  keywords: ['terminal', 'tmux', 'coding-agents', 'ai-agents', 'claude-code', 'codex', 'agent-orchestration', 'git-worktree', 'dashboard', 'productivity', 'developer-tools', 'mcp'],
+  homepage: 'https://thirstyeggplant.com/',
   type: 'module',
   license: 'MIT',
   repository: { type: 'git', url: 'git+https://github.com/thirstyeggplant/aubergine.git' },
