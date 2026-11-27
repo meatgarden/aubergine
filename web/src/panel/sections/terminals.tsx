@@ -480,6 +480,7 @@ export function terminalActions(session: Row['session'], where: { here: boolean;
     { key: 'details', label: 'Details' },
     { key: 'rename', label: 'Rename', command: 'terminal.rename' },
     { key: 'tags', label: 'Tags…', command: 'terminal.tags' },
+    { key: 'theme', label: 'Theme…', testid: 'row-theme', command: 'terminal.theme' },
     ...(exited || !where.desktop ? [] : [{ key: 'desktop', label: 'Open on desktop', testid: 'row-open-desktop', command: 'terminal.openOnDesktop' as const }]),
     ...(exited ? [] : [{ key: 'tab', label: 'Open in new browser tab', testid: 'row-open-tab', command: 'terminal.openInNewTab' as const }]),
     ...(where.canMove ? [{ key: 'move', label: 'Move to canvas…', command: 'terminal.moveToCanvas' as const }] : []),

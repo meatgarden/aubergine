@@ -12,6 +12,7 @@ import { AcceptedRepositoryWorkflow } from './repository';
 import { TypedBy } from './terminal';
 import { Run, Workflow } from './workflows';
 import { TerminalFields } from './fields';
+import { ColorThemeId } from './themes';
 
 import { Found, LINKS_MAX, SessionLink, Suggested, Written } from './links';
 
@@ -288,6 +289,8 @@ export const Session = z.object({
   tags: Tags.default([]),
   /** Its fields, in order: a label and a value each, and who set it (the owner, or the agent in it). The owner's win. */
   fields: TerminalFields.default([]),
+  /** The color theme its body is drawn in, whatever the page is drawn in. Null: the default for terminals (`terminalThemeOf`). */
+  theme: ColorThemeId.nullable().default(null),
   /** For a parked session: the canvas it came from and where it sat there. */
   parkedFrom: ParkedPlace.nullable().default(null),
   /** "People only": no token may read this terminal or type into it, whatever its scopes. Only the owner changes this. */

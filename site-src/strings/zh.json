@@ -271,6 +271,70 @@
     "text": "浏览器标签页中单独的一个终端：顶部是名称，详情里有工作流步骤、文件夹和字段，旁边是实时终端。",
     "from": "3b3df705e912"
   },
+  "home.themes.title": {
+    "text": "十种配色主题",
+    "from": "8580e1b84e0d"
+  },
+  "home.themes.intro": {
+    "text": "页面有十种配色主题，四种浅色，六种深色。每种类型各选一个，页面就会显示为浅色、深色，或跟随系统。单个颜色可以在设置文件中手动设置。",
+    "from": "80b841165125"
+  },
+  "home.themes.light.alt": {
+    "text": "采用 Light 主题的画布和六个终端：白色面板、深色文字、紫色强调色。",
+    "from": "844d3f919a94"
+  },
+  "home.themes.solarized.alt": {
+    "text": "同一画布采用 Solarized light 主题：奶油色页面、蓝色强调色，终端里是 Solarized 的配色。",
+    "from": "e5e87564cee0"
+  },
+  "home.themes.gruvbox.alt": {
+    "text": "同一画布采用 Gruvbox light 主题：温暖的黄色页面，终端里是 Gruvbox 的大地色。",
+    "from": "ac93cf1e5844"
+  },
+  "home.themes.nord.alt": {
+    "text": "同一画布采用 Nord 主题：蓝灰色页面、浅蓝色强调色，终端里是 Nord 的柔和配色。",
+    "from": "224f062eea1b"
+  },
+  "home.themes.dracula.alt": {
+    "text": "同一画布采用 Dracula 主题：深色页面、鲜艳的紫色强调色，终端里是 Dracula 的明亮配色。",
+    "from": "c99f61000a8d"
+  },
+  "home.themes.gruvboxdark.alt": {
+    "text": "同一画布采用 Gruvbox dark 主题：温暖的深棕色页面、粉色强调色，终端里是 Gruvbox 的配色。",
+    "from": "2ddae55bb038"
+  },
+  "home.themes.own.claim": {
+    "text": "每个终端都可以有自己的主题",
+    "from": "382e08bcfc07"
+  },
+  "home.themes.own.text": {
+    "text": "在终端菜单中选择 <strong>Theme…</strong>，就能用十种主题中的任意一种显示它，无论页面用的是哪种主题。其他终端则跟随你为终端设置的默认主题，或跟随页面。",
+    "from": "6b12c9a24623"
+  },
+  "home.themes.own.caption": {
+    "text": "深色页面上并排的两个终端：一个是 Solarized light，一个是 Dracula。",
+    "from": "ae01310ea824"
+  },
+  "home.themes.own.alt": {
+    "text": "深色页面上的两个终端：左边是 Solarized light 主题下的 Git 历史，右边是 Dracula 主题下的彩色 diff。",
+    "from": "947a05054760"
+  },
+  "home.themes.pick.claim": {
+    "text": "在 Settings 中选择",
+    "from": "d3556328ff6b"
+  },
+  "home.themes.pick.text": {
+    "text": "<strong>Settings → Appearance</strong> 会用一张小图展示每个主题的颜色。更改会立即应用到页面和所有终端，你在任何浏览器中打开都一致。",
+    "from": "68a65355c804"
+  },
+  "home.themes.pick.caption": {
+    "text": "浅色、深色或跟随系统，以及每种类型的主题，每个都配有一张小图展示其颜色。",
+    "from": "04e465e0c21a"
+  },
+  "home.themes.pick.alt": {
+    "text": "Settings 的 Appearance：浅色、深色或跟随系统的选择，然后是分成两组的十种配色主题，各带一张小预览；深色页面选了 Nord，浅色页面选了 Solarized light。",
+    "from": "4dfde638b037"
+  },
   "home.agents.title": {
     "text": "自带你的智能体",
     "from": "053237049eea"

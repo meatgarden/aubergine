@@ -1,7 +1,9 @@
 /*
  * The tokens: every size, colour, space, shape and layer the page uses.
  * Nothing else in the stylesheets states one of these as a number or a colour; docs/design.md says what each is for.
- * The light theme gives the same names other values, and nothing else.
+ * The light theme gives the same names other values, and nothing else. The colours of each are also given to an
+ * element marked data-theme-preview, so that it can show that theme without the page being in it; the other named
+ * themes are in themes.css, in the same way.
  */
 :root {
   /* Type: four sizes, two weights. */
@@ -69,6 +71,12 @@
   --z-tour: 200;
   --z-toast: 300;
 
+  font: var(--weight-normal) var(--font-body) / var(--leading) var(--font-sans);
+  color: var(--text);
+}
+
+:root,
+[data-theme-preview='dark'] {
   /* Colour, by job. Dark. */
   --bg: #17181c;
   --surface: #23252b;
@@ -123,12 +131,10 @@
   /* A QR code: near black on white in both themes, since a scanner reads dark modules on a light ground and not the other way round. */
   --qr-dark: #111214;
   --qr-light: #ffffff;
-
-  font: var(--weight-normal) var(--font-body) / var(--leading) var(--font-sans);
-  color: var(--text);
 }
 
-:root[data-theme='light'] {
+:root[data-theme='light'],
+[data-theme-preview='light'] {
   --bg: #eceef2;
   --surface: #ffffff;
   --surface-raised: #f1f3f6;

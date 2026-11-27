@@ -1,10 +1,12 @@
-import { useThemeShown } from './theme';
 import { useEffect, useRef, useState } from 'react';
 import { FitAddon } from '@xterm/addon-fit';
 import { Terminal } from '@xterm/xterm';
 import {
   TerminalServerMessage,
   paths,
+  resolveColors,
+  type Appearance,
+  type ColorThemeId,
   type TerminalClientMessage,
 } from '@aubergine/shared';
 import { isRefusal, isSuperseded, openSocket, socketIsCurrent } from './api';
@@ -14,6 +16,8 @@ import { activeShortcuts, pickBinding } from './shortcuts';
 import { Outbox } from './outbox';
 import { correctMouse } from './scaled-mouse';
 import { useApp } from './store';
+import { terminalTheme } from './terminal-themes';
+import { useTerminalTheme } from './theme';
 
 interface Props {
   /** The canvas's zoom now, so that the pointer lands on the right cell at any size. */
@@ -28,10 +32,11 @@ interface Props {
   chords?: boolean;
 }
 
-function terminalTheme(theme: 'light' | 'dark') {
-  return theme === 'light'
-    ? { background: '#fbfbfc', foreground: '#24262b', cursor: '#24262b', selectionBackground: '#c9d3e6' }
-    : { background: '#101114', foreground: '#d7dae0', cursor: '#d7dae0', selectionBackground: '#3f4f73' };
+/** A terminal's colors in that theme, with its ground set by hand (`terminal-bg`) where the settings file sets it. */
+function colorsOf(id: ColorThemeId, appearance: Appearance) {
+  const ground = resolveColors(appearance.colors, id).colors['terminal-bg'];
+  const theme = terminalTheme(id);
+  return ground ? { ...theme, background: ground } : theme;
 }
 
 type Link = 'connecting' | 'open' | 'reconnecting' | 'ended';
@@ -50,6 +55,10 @@ export function TerminalView({ sessionId, interactive, zoom, chords = true }: Pr
   zoomRef.current = zoom;
   const [link, setLink] = useState<Link>('connecting');
   const focus = useApp((s) => (s.focus?.sessionId === sessionId ? s.focus.tick : 0));
+  // The theme it is drawn in: its own, else the default for terminals, else the page's (`terminalThemeOf`).
+  const theme = useTerminalTheme(sessionId);
+  const themeRef = useRef(theme);
+  themeRef.current = theme;
 
   useEffect(() => {
     const element = host.current;
@@ -59,12 +68,13 @@ export function TerminalView({ sessionId, interactive, zoom, chords = true }: Pr
     const term = new Terminal({
       fontFamily: settings.font.family,
       fontSize: settings.font.size,
-      cursorBlink: true,
+      cursorStyle: settings.appearance.cursor,
+      cursorBlink: settings.appearance.cursorBlink,
       // History lives in the session runtime, not in the browser.
       scrollback: 0,
       macOptionClickForcesSelection: true,
       disableStdin: !interactiveRef.current,
-      theme: terminalTheme(document.documentElement.dataset.theme === 'light' ? 'light' : 'dark'),
+      theme: colorsOf(themeRef.current, settings.appearance),
     });
     const fit = new FitAddon();
     term.loadAddon(fit);
@@ -193,15 +203,17 @@ export function TerminalView({ sessionId, interactive, zoom, chords = true }: Pr
 
   // Follow changes to the settings file.
   const font = useApp((s) => s.settings.font);
-  // The theme that is drawn now: a terminal's colours are its own, and follow it at once.
-  const theme = useThemeShown();
+  const appearance = useApp((s) => s.settings.appearance);
+  // Its colors follow its theme at once, and the colors set by hand for that theme.
   useEffect(() => {
     const term = terminal.current;
     if (!term) return;
     term.options.fontFamily = font.family;
     term.options.fontSize = font.size;
-    term.options.theme = terminalTheme(theme);
-  }, [font, theme]);
+    term.options.cursorStyle = appearance.cursor;
+    term.options.cursorBlink = appearance.cursorBlink;
+    term.options.theme = colorsOf(theme, appearance);
+  }, [font, theme, appearance]);
 
   // Input is accepted while the terminal is the live one.
   useEffect(() => {

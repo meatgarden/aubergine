@@ -534,6 +534,110 @@ button.list-clear {
   background: var(--surface-raised);
 }
 
+/*
+ * One of a group of choices as a row (RadioRow): a tick at its end when it is the group's choice, and marked as the
+ * selected row of a list is when it is the one in use now: the soft fill and the accent line down its left edge.
+ * The arrow keys give the keyboard to a row that Tab does not reach, so its ring is drawn all the same.
+ */
+.ui-radio-rows {
+  display: flex;
+  flex-direction: column;
+}
+.ui-radio-row {
+  position: relative;
+}
+.ui-radio-row-tick {
+  margin-left: auto;
+  color: var(--accent-text);
+  font-weight: var(--weight-strong);
+}
+/* The tick is drawn, not written: the row's name is its words alone. */
+.ui-radio-row[aria-checked='true'] > .ui-radio-row-tick::before {
+  content: '✓';
+}
+.ui-radio-row.is-marked,
+.ui-radio-row.is-marked:hover {
+  background: var(--surface-active);
+}
+.ui-radio-row.is-marked::after {
+  content: '';
+  position: absolute;
+  top: var(--space-1);
+  bottom: var(--space-1);
+  left: 0;
+  width: 2px;
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+  pointer-events: none;
+}
+.ui-radio-row[tabindex='-1']:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/*
+ * A small picture of a color theme, drawn from that theme's own tokens (data-theme-preview on it): its page, a
+ * surface with a line of text and the accent, and the four colors of meaning. It says nothing; the name beside it does.
+ */
+.ui-theme-preview {
+  box-sizing: border-box;
+  display: inline-flex;
+  flex: none;
+  align-items: stretch;
+  gap: var(--space-1);
+  width: 64px;
+  height: 28px;
+  padding: var(--space-1);
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+}
+.ui-theme-preview-surface {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--space-1);
+  padding: 0 var(--space-1);
+  background: var(--surface);
+}
+.ui-theme-preview-surface > span {
+  height: 3px;
+  border-radius: var(--radius-pill);
+}
+.ui-theme-preview-text {
+  width: 80%;
+  background: var(--text);
+}
+.ui-theme-preview-accent {
+  width: 50%;
+  background: var(--accent);
+}
+.ui-theme-preview-dots {
+  display: grid;
+  grid-template-columns: repeat(2, 6px);
+  align-content: center;
+  gap: 2px;
+}
+.ui-theme-preview-dots > span {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--radius-pill);
+}
+.ui-theme-preview-dots > .is-attention {
+  background: var(--attention);
+}
+.ui-theme-preview-dots > .is-working {
+  background: var(--working);
+}
+.ui-theme-preview-dots > .is-ok {
+  background: var(--ok);
+}
+.ui-theme-preview-dots > .is-danger {
+  background: var(--danger);
+}
+
 /* Nothing here yet: a sentence and one thing to do. */
 .ui-empty {
   display: flex;
@@ -791,8 +895,8 @@ button.color-dot:hover {
   opacity: 1;
 }
 
-/* A terminal's title holds many things: each takes a little less room at the sides. */
-.node-title button:not(.node-close, .color-dot) {
+/* A terminal's title holds many things: each takes a little less room at the sides. A line of a menu that hangs from it is the menu's. */
+.node-title button:not(.node-close, .color-dot, [role^='menuitem']) {
   padding: 0 var(--space-2);
 }
 .node-title .node-name {
@@ -2575,6 +2679,48 @@ button.foryou-act {
 .settings-dialog > section > .ui-meta {
   margin: var(--space-2) 0 0;
   font-size: var(--font-body);
+}
+/* Appearance has parts of its own, each laid out as a part of Settings is: a heading, the control, one line under it. */
+.appearance-part {
+  margin-top: var(--space-6);
+}
+.appearance-part > h4 {
+  margin: 0 0 var(--space-2);
+}
+.appearance-part > .ui-meta {
+  margin: var(--space-2) 0 0;
+  font-size: var(--font-body);
+}
+/* The color themes: one readable column, the light ones then the dark ones, each kind under its name. */
+.appearance-themes {
+  max-width: 400px;
+}
+.appearance-kind-name {
+  margin: var(--space-3) 0 var(--space-1);
+  font-weight: var(--weight-strong);
+}
+.appearance-kind:first-child > .appearance-kind-name {
+  margin-top: 0;
+}
+.appearance-font {
+  flex-wrap: wrap;
+}
+.appearance-size {
+  width: 72px;
+}
+.appearance-family {
+  flex: 1 1 240px;
+  min-width: 0;
+  max-width: 400px;
+}
+.appearance-problems {
+  margin-top: var(--space-3);
+  color: var(--text);
+}
+.appearance-problems > p,
+.appearance-problems > ul {
+  margin: 0 0 var(--space-1);
+  color: inherit;
 }
 
 /* What the browser draws itself (a tick box not yet ticked, a scroll bar, the list of a select) is in the theme that is drawn, not the system's. */

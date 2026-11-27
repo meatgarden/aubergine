@@ -271,6 +271,70 @@
     "text": "طرفية واحدة وحدها في علامة تبويب في المتصفح: اسمها في الرأس، وتفاصيلها مع خطوة سير العمل ومجلدها وحقولها، والطرفية الحيّة بجانبها.",
     "from": "3b3df705e912"
   },
+  "home.themes.title": {
+    "text": "عشرة أنماط ألوان",
+    "from": "8580e1b84e0d"
+  },
+  "home.themes.intro": {
+    "text": "تأتي الصفحة في عشرة أنماط ألوان، أربعة فاتحة وستة داكنة. تختار نمطًا من كل نوع، فتظهر الصفحة فاتحة أو داكنة أو كما هو نظامك. ويمكن ضبط ألوان منفردة يدويًا في ملف الإعدادات.",
+    "from": "80b841165125"
+  },
+  "home.themes.light.alt": {
+    "text": "اللوحة مع ست طرفيات في نمط Light: ألواح بيضاء ونص داكن ولون إبراز بنفسجي.",
+    "from": "844d3f919a94"
+  },
+  "home.themes.solarized.alt": {
+    "text": "اللوحة نفسها في نمط Solarized light: صفحة بلون الكريم بإبراز أزرق، وألوان Solarized في الطرفيات.",
+    "from": "e5e87564cee0"
+  },
+  "home.themes.gruvbox.alt": {
+    "text": "اللوحة نفسها في نمط Gruvbox light: صفحة صفراء دافئة، وألوان Gruvbox الترابية في الطرفيات.",
+    "from": "ac93cf1e5844"
+  },
+  "home.themes.nord.alt": {
+    "text": "اللوحة نفسها في نمط Nord: صفحة رمادية مزرقة بإبراز أزرق فاتح، وألوان Nord الهادئة في الطرفيات.",
+    "from": "224f062eea1b"
+  },
+  "home.themes.dracula.alt": {
+    "text": "اللوحة نفسها في نمط Dracula: صفحة داكنة بإبراز بنفسجي زاهٍ، وألوان Dracula الحية في الطرفيات.",
+    "from": "c99f61000a8d"
+  },
+  "home.themes.gruvboxdark.alt": {
+    "text": "اللوحة نفسها في نمط Gruvbox dark: صفحة بنية داكنة دافئة بإبراز وردي، وألوان Gruvbox في الطرفيات.",
+    "from": "2ddae55bb038"
+  },
+  "home.themes.own.claim": {
+    "text": "نمط لكل طرفية",
+    "from": "382e08bcfc07"
+  },
+  "home.themes.own.text": {
+    "text": "<strong>Theme…</strong> في قائمة الطرفية يرسمها بأي من الأنماط العشرة، أيًّا كان نمط الصفحة. وتتبع الطرفيات الأخرى النمط الافتراضي الذي تضبطه للطرفيات، أو الصفحة.",
+    "from": "6b12c9a24623"
+  },
+  "home.themes.own.caption": {
+    "text": "جنبًا إلى جنب على صفحة داكنة: طرفية في Solarized light وأخرى في Dracula.",
+    "from": "ae01310ea824"
+  },
+  "home.themes.own.alt": {
+    "text": "طرفيتان على صفحة داكنة: على اليسار سجل Git في نمط Solarized light، وعلى اليمين diff ملوّن في نمط Dracula.",
+    "from": "947a05054760"
+  },
+  "home.themes.pick.claim": {
+    "text": "يُختار في Settings",
+    "from": "d3556328ff6b"
+  },
+  "home.themes.pick.text": {
+    "text": "<strong>Settings → Appearance</strong> يعرض كل نمط مع صورة صغيرة لألوانه. ويسري التغيير فورًا على الصفحة وعلى كل طرفية، وتتفق عليه كل المتصفحات التي تفتحها فيها.",
+    "from": "68a65355c804"
+  },
+  "home.themes.pick.caption": {
+    "text": "فاتح أو داكن أو كما هو النظام، ونمط لكل نوع، لكلٍّ منها صورة صغيرة لألوانه.",
+    "from": "04e465e0c21a"
+  },
+  "home.themes.pick.alt": {
+    "text": "Settings، Appearance: فاتح أو داكن أو كما هو النظام، ثم الأنماط العشرة في مجموعتين مع معاينة صغيرة لكل منها؛ وNord مختار للصفحة الداكنة وSolarized light للفاتحة.",
+    "from": "4dfde638b037"
+  },
   "home.agents.title": {
     "text": "أحضِر وكيلك الخاص",
     "from": "053237049eea"

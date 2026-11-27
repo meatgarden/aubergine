@@ -26,6 +26,23 @@
 | ![Workflows：カードとして並ぶステップの一覧](../../site/screenshots/workflows.png) | ![Library：インストール前に読む、エージェントに伝えられる内容](../../site/screenshots/library.png) |
 | **Workflows.** エージェントが1つずつ進むステップの一覧。 | **Library.** 何かをインストールする前に、エージェントに何が伝えられるかを正確に読めます。 |
 
+### カラーテーマ
+
+ページには10種類のカラーテーマがあります。ライトが4つ、ダークが6つで、**Settings → Appearance** で選びます。どのターミナルにも専用のテーマを設定でき（メニューの **Theme…**）、ほかのターミナルはターミナル用に設定した既定のテーマか、ページのテーマに従います。個々の色は[設定ファイル](../../README.md#settings)で手動で指定できます。
+
+| | | |
+|---|---|---|
+| ![Light テーマのキャンバスと6つのターミナル](../../site/screenshots/themes-light.png) | ![Solarized light テーマの同じキャンバス](../../site/screenshots/themes-solarized-light.png) | ![Gruvbox light テーマの同じキャンバス](../../site/screenshots/themes-gruvbox-light.png) |
+| **Light** | **Solarized light** | **Gruvbox light** |
+| ![Nord テーマの同じキャンバス](../../site/screenshots/themes-nord.png) | ![Dracula テーマの同じキャンバス](../../site/screenshots/themes-dracula.png) | ![Gruvbox dark テーマの同じキャンバス](../../site/screenshots/themes-gruvbox-dark.png) |
+| **Nord** | **Dracula** | **Gruvbox dark** |
+
+ほかに [Dark](../../site/screenshots/themes-dark.png)、[High contrast light](../../site/screenshots/themes-high-contrast-light.png)、[High contrast dark](../../site/screenshots/themes-high-contrast-dark.png)、[Solarized dark](../../site/screenshots/themes-solarized-dark.png) もあります。
+
+<img src="../../site/screenshots/terminal-themes.png" alt="ダークのページに6つのターミナル。それぞれ専用のテーマ：Solarized light、Dracula、Gruvbox dark、Nord、Gruvbox light、Solarized dark。">
+
+<sub>ダークのページの6つのターミナル。それぞれ専用のテーマで表示。架空のプロジェクトを普通のシェルで。</sub>
+
 ---
 
 ## 2分で始める

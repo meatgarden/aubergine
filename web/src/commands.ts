@@ -1,7 +1,7 @@
 import { foldMap, mapFolded } from './map-fold';
 import { canvasColumnFolded, canvasView, nextCanvasView, setCanvasColumnFolded, setCanvasView } from './canvas-view';
-import { COMMAND_IDS, THEMES, THEME_WORDS, demoOf, sortedCanvases, type CommandId, type Session } from '@aubergine/shared';
-import { chooseTheme } from './theme';
+import { COLOR_THEMES, COMMAND_IDS, THEMES, THEME_WORDS, demoOf, sortedCanvases, type CommandId, type Session } from '@aubergine/shared';
+import { chooseColorTheme, chooseTheme } from './theme';
 import { openOnDesktop } from './desktop';
 import { canvasHref, openInNewTab, terminalHref } from './address';
 import { api, isSuperseded } from './api';
@@ -554,6 +554,17 @@ export const COMMANDS: readonly Command[] = [
     },
   },
   {
+    id: 'terminal.theme',
+    title: 'Terminal theme…',
+    description: 'Opens the list of color themes for the terminal: its own, drawn in its body whatever the page is drawn in, or the same as the default for terminals.',
+    group: 'Terminals',
+    available: hasTarget,
+    run: (state) => {
+      const session = targetSession(state);
+      if (session) state.request({ kind: 'theme', id: session.id });
+    },
+  },
+  {
     id: 'attention.next',
     title: 'Go to the next waiting terminal',
     description: 'Goes to the next terminal that is waiting for you, on whichever canvas it is.',
@@ -898,7 +909,7 @@ export const COMMANDS: readonly Command[] = [
   {
     id: 'settings.show',
     title: 'Settings…',
-    description: 'What you change about the page itself: how it looks (light, dark, or matching the system) and whether the desktop is told when a terminal starts waiting.',
+    description: 'What you change about the page itself: how it looks (light, dark or matching the system, the color theme of each, a terminal’s text and cursor) and whether the desktop is told when a terminal starts waiting.',
     group: 'Panels',
     available: always,
     run: (state) => state.togglePanel('settings'),
@@ -942,6 +953,22 @@ export const COMMANDS: readonly Command[] = [
     group: 'View',
     available: always,
     run: () => chooseTheme(theme),
+  })),
+  {
+    id: 'theme.choose',
+    title: 'Color theme…',
+    description: 'Opens Settings at Appearance, with the keyboard on the theme drawn now: the color theme of the light page and of the dark one, the text and the cursor of a terminal.',
+    group: 'View',
+    available: always,
+    run: (state) => state.showSettings('appearance'),
+  },
+  ...COLOR_THEMES.map((theme): Command => ({
+    id: `theme.use.${theme.id}` as const,
+    title: `Color theme: ${theme.name}`,
+    description: `${theme.name} becomes the theme of the ${theme.kind} page, and the page is ${theme.kind} from now on if it was not. Kept in the settings file.`,
+    group: 'View',
+    available: always,
+    run: () => chooseColorTheme(theme.id),
   })),
   {
     id: 'help.show',

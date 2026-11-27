@@ -271,6 +271,70 @@
     "text": "Satu terminal sendirian di tab browser: namanya di bagian atas, detailnya dengan langkah workflow, folder dan field-nya, dan terminal yang hidup di sebelahnya.",
     "from": "3b3df705e912"
   },
+  "home.themes.title": {
+    "text": "Sepuluh tema warna",
+    "from": "8580e1b84e0d"
+  },
+  "home.themes.intro": {
+    "text": "Halaman ini hadir dalam sepuluh tema warna, empat terang dan enam gelap. Anda memilih satu dari tiap jenis, dan halaman tampil terang, gelap, atau mengikuti sistem Anda. Warna satu per satu bisa diatur sendiri di berkas pengaturan.",
+    "from": "80b841165125"
+  },
+  "home.themes.light.alt": {
+    "text": "Kanvas dengan enam terminal dalam tema Light: panel putih, teks gelap, aksen ungu.",
+    "from": "844d3f919a94"
+  },
+  "home.themes.solarized.alt": {
+    "text": "Kanvas yang sama dalam tema Solarized light: halaman krem dengan aksen biru dan warna Solarized di terminal.",
+    "from": "e5e87564cee0"
+  },
+  "home.themes.gruvbox.alt": {
+    "text": "Kanvas yang sama dalam tema Gruvbox light: halaman kuning hangat dengan warna tanah Gruvbox di terminal.",
+    "from": "ac93cf1e5844"
+  },
+  "home.themes.nord.alt": {
+    "text": "Kanvas yang sama dalam tema Nord: halaman abu-abu kebiruan dengan aksen biru muda dan warna lembut Nord di terminal.",
+    "from": "224f062eea1b"
+  },
+  "home.themes.dracula.alt": {
+    "text": "Kanvas yang sama dalam tema Dracula: halaman gelap dengan aksen ungu terang dan warna cerah Dracula di terminal.",
+    "from": "c99f61000a8d"
+  },
+  "home.themes.gruvboxdark.alt": {
+    "text": "Kanvas yang sama dalam tema Gruvbox dark: halaman cokelat tua yang hangat dengan aksen merah muda dan warna Gruvbox di terminal.",
+    "from": "2ddae55bb038"
+  },
+  "home.themes.own.claim": {
+    "text": "Tema untuk tiap terminal",
+    "from": "382e08bcfc07"
+  },
+  "home.themes.own.text": {
+    "text": "<strong>Theme…</strong> di menu sebuah terminal menampilkannya dalam salah satu dari sepuluh tema, apa pun tema halamannya. Terminal lain mengikuti tema bawaan yang Anda atur untuk terminal, atau halaman.",
+    "from": "6b12c9a24623"
+  },
+  "home.themes.own.caption": {
+    "text": "Berdampingan di halaman gelap: satu terminal dalam Solarized light, satu lagi dalam Dracula.",
+    "from": "ae01310ea824"
+  },
+  "home.themes.own.alt": {
+    "text": "Dua terminal di halaman gelap: di kiri riwayat Git dalam tema Solarized light, di kanan diff berwarna dalam tema Dracula.",
+    "from": "947a05054760"
+  },
+  "home.themes.pick.claim": {
+    "text": "Dipilih di Settings",
+    "from": "d3556328ff6b"
+  },
+  "home.themes.pick.text": {
+    "text": "<strong>Settings → Appearance</strong> menampilkan tiap tema dengan gambar kecil warnanya. Perubahan langsung berlaku untuk halaman dan semua terminal, dan setiap peramban tempat Anda membukanya akan sama.",
+    "from": "68a65355c804"
+  },
+  "home.themes.pick.caption": {
+    "text": "Terang, gelap, atau mengikuti sistem, dan satu tema untuk tiap jenis, masing-masing dengan gambar kecil warnanya.",
+    "from": "04e465e0c21a"
+  },
+  "home.themes.pick.alt": {
+    "text": "Settings, Appearance: terang, gelap, atau mengikuti sistem, lalu sepuluh tema warna dalam dua kelompok, masing-masing dengan pratinjau kecil; Nord dipilih untuk halaman gelap dan Solarized light untuk yang terang.",
+    "from": "4dfde638b037"
+  },
   "home.agents.title": {
     "text": "Bawa agen Anda sendiri",
     "from": "053237049eea"

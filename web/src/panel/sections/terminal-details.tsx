@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { sessionsWaiting, shortId, showControl, undescribed, type Session, type WaitingSession } from '@aubergine/shared';
+import { sessionsWaiting, shortId, showControl, undescribed, type ColorThemeId, type Session, type WaitingSession } from '@aubergine/shared';
 import { api } from '../../api';
 import { FieldsPart } from '../../fields/FieldsPart';
 import { LinkChip } from '../../links/LinkChip';
@@ -9,6 +9,8 @@ import { RecapBlock, type MoreFact } from '../../Recap';
 import { setDetailsFolds, useDetailsFolds } from '../../details-folds';
 import { SessionMessages } from '../../Messages';
 import { TerminalInput } from '../../TerminalInput';
+import { ThemeSelect, chooseTerminalTheme, defaultThemeWords } from '../../TerminalTheme';
+import { useColorThemeShown } from '../../theme';
 import { markNotesSeen, useUnseenNotes } from '../../notes-seen';
 import { atThisComputer, useApp } from '../../store';
 import { DOT_WORD, dotTone, rowState } from '../../terminal-rows';
@@ -26,6 +28,13 @@ import { actOnTerminal, chipOf, terminalActions } from './terminals';
 const session = (id: string) => (s: ReturnType<typeof useApp.getState>) => s.app?.sessions.find((x) => x.id === id);
 
 /** What was found about its folder, and the conversation its agent is in, as facts: each a chip, or a short id that is copied whole. */
+/** The theme a terminal's body is drawn in, chosen in its details: its own, or the same as the default. */
+function DetailsTheme({ sessionId, theme }: { sessionId: string; theme: ColorThemeId | null }) {
+  const appearance = useApp((s) => s.settings.appearance);
+  const page = useColorThemeShown();
+  return <ThemeSelect value={theme} onChange={(next) => chooseTerminalTheme(sessionId, next)} none={`Same as the default (${defaultThemeWords(appearance, page)})`} aria-label="Theme of this terminal" data-testid="details-theme" />;
+}
+
 function foundFacts(found: Session): MoreFact[] {
   const facts: MoreFact[] = [];
   const at = found.found;
@@ -42,6 +51,9 @@ function foundFacts(found: Session): MoreFact[] {
       ),
     });
   if (at?.pullRequest) facts.push({ group: 'place', key: 'pull-request', label: 'Pull request', value: <LinkChip url={at.pullRequest.url} kind="pull-request" label={`PR ${at.pullRequest.number}`} about={showControl(at.pullRequest.title)} state={at.pullRequest.state} testid="fact-pull-request" /> });
+  // Its own theme, where it has one: something known about it, changed where it is said. Without one it is drawn in the
+  // default, and Theme… in the menu at the end of the head gives it one.
+  if (found.theme) facts.push({ group: 'about', key: 'theme', label: 'Theme', value: <DetailsTheme sessionId={found.id} theme={found.theme} /> });
   const conversation = found.agent?.conversationId;
   if (conversation)
     facts.push({

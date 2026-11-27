@@ -271,6 +271,70 @@
     "text": "Um terminal sozinho em uma aba do navegador: o nome no cabeçalho, os detalhes com a etapa do fluxo de trabalho, a pasta e os campos, e o terminal ao vivo ao lado.",
     "from": "3b3df705e912"
   },
+  "home.themes.title": {
+    "text": "Dez temas de cores",
+    "from": "8580e1b84e0d"
+  },
+  "home.themes.intro": {
+    "text": "A página vem em dez temas de cores, quatro claros e seis escuros. Você escolhe um de cada tipo, e a página fica clara, escura ou como o seu sistema estiver. Cores isoladas podem ser definidas à mão no arquivo de configurações.",
+    "from": "80b841165125"
+  },
+  "home.themes.light.alt": {
+    "text": "O canvas com seis terminais no tema Light: painéis brancos, texto escuro e um destaque roxo.",
+    "from": "844d3f919a94"
+  },
+  "home.themes.solarized.alt": {
+    "text": "O mesmo canvas no tema Solarized light: uma página creme com destaques azuis e as cores do Solarized nos terminais.",
+    "from": "e5e87564cee0"
+  },
+  "home.themes.gruvbox.alt": {
+    "text": "O mesmo canvas no tema Gruvbox light: uma página amarela e quente com as cores terrosas do Gruvbox nos terminais.",
+    "from": "ac93cf1e5844"
+  },
+  "home.themes.nord.alt": {
+    "text": "O mesmo canvas no tema Nord: uma página cinza-azulada com destaques azul-claros e as cores suaves do Nord nos terminais.",
+    "from": "224f062eea1b"
+  },
+  "home.themes.dracula.alt": {
+    "text": "O mesmo canvas no tema Dracula: uma página escura com um destaque roxo vivo e as cores intensas do Dracula nos terminais.",
+    "from": "c99f61000a8d"
+  },
+  "home.themes.gruvboxdark.alt": {
+    "text": "O mesmo canvas no tema Gruvbox dark: uma página marrom-escura e quente com um destaque rosa e as cores do Gruvbox nos terminais.",
+    "from": "2ddae55bb038"
+  },
+  "home.themes.own.claim": {
+    "text": "Um tema para cada terminal",
+    "from": "382e08bcfc07"
+  },
+  "home.themes.own.text": {
+    "text": "<strong>Theme…</strong> no menu de um terminal o desenha em qualquer um dos dez, seja qual for o tema da página. Os outros seguem o padrão que você define para os terminais, ou a página.",
+    "from": "6b12c9a24623"
+  },
+  "home.themes.own.caption": {
+    "text": "Lado a lado em uma página escura: um terminal em Solarized light, outro em Dracula.",
+    "from": "ae01310ea824"
+  },
+  "home.themes.own.alt": {
+    "text": "Dois terminais em uma página escura: à esquerda, um histórico do Git no tema Solarized light; à direita, um diff colorido no tema Dracula.",
+    "from": "947a05054760"
+  },
+  "home.themes.pick.claim": {
+    "text": "Escolhido em Settings",
+    "from": "d3556328ff6b"
+  },
+  "home.themes.pick.text": {
+    "text": "<strong>Settings → Appearance</strong> mostra cada tema com uma pequena imagem das suas cores. Uma mudança vale na hora para a página e para todos os terminais, e todo navegador em que você a abrir concorda.",
+    "from": "68a65355c804"
+  },
+  "home.themes.pick.caption": {
+    "text": "Claro, escuro ou como o sistema estiver, e um tema de cada tipo, cada um com uma pequena imagem das suas cores.",
+    "from": "04e465e0c21a"
+  },
+  "home.themes.pick.alt": {
+    "text": "Settings, Appearance: claro, escuro ou igual ao sistema, depois os dez temas de cores em dois grupos, cada um com uma pequena prévia; Nord está escolhido para a página escura e Solarized light para a clara.",
+    "from": "4dfde638b037"
+  },
   "home.agents.title": {
     "text": "Traga seu próprio agente",
     "from": "053237049eea"

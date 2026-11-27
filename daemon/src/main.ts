@@ -134,7 +134,7 @@ async function main(): Promise<void> {
       settings: async () => (await settings.reload()).desktop,
     }),
     setDesktopOpenNew: (value) => settings.setDesktopOpenNew(value),
-    setTheme: (value) => settings.setTheme(value),
+    setAppearance: (change) => settings.setAppearance(change),
     setDescribeRemind: (value) => settings.setDescribeRemind(value),
     pullRequests: ghFinder(),
     runArchive: new FileRunArchive(config.dataDir, (error) => console.warn(`Could not write the archive of runs: ${String(error)}`)),

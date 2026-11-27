@@ -39,7 +39,7 @@ import {
   type RouteOutput,
   type RouteSpec,
   type AppearanceAnswer,
-  type ThemeSetting,
+  type ChangeAppearanceRequest,
 } from '@aubergine/shared';
 import type { ActivityLog } from './activity';
 import type { Principal, Resource } from './auth';
@@ -85,8 +85,8 @@ export interface PublicRouteDeps {
   described: Described;
   /** Writes the one key that says whether agents are reminded to describe their terminal. */
   changeDescribing: (remind: boolean) => Promise<DescribingSettings>;
-  /** Writes the one key that says how the page looks, and answers with what the settings say afterwards. */
-  changeTheme: (theme: ThemeSetting) => Promise<AppearanceAnswer>;
+  /** Writes the keys of how the page looks that a change sends, and answers with what the settings say afterwards. */
+  changeAppearance: (change: ChangeAppearanceRequest) => Promise<AppearanceAnswer>;
   projects: Projects;
   projectFiles: ProjectFiles;
   activity: ActivityLog;
@@ -426,7 +426,7 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
       return deps.desktop.open(params.sessionId);
     },
     changeDesktopSettings: ({ body }) => deps.desktop.setOpenNew(body.openNew),
-    changeAppearance: ({ body }) => deps.changeTheme(body.theme),
+    changeAppearance: ({ body }) => deps.changeAppearance(body),
     /* ---------- Projects, and what is shared between them ---------- */
 
     // Which projects there are: the ones the caller reaches. Everything that changes one is the owner's alone.

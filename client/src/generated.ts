@@ -309,6 +309,7 @@ export type ListCanvasSessionsResult = {
         at: string;
       };
     }[];
+    theme: ("light" | "high-contrast-light" | "solarized-light" | "gruvbox-light" | "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula") | null;
     parkedFrom: {
       canvasId: string;
       rect: {
@@ -482,6 +483,7 @@ export type StartSessionResult = {
         at: string;
       };
     }[];
+    theme: ("light" | "high-contrast-light" | "solarized-light" | "gruvbox-light" | "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula") | null;
     parkedFrom: {
       canvasId: string;
       rect: {
@@ -663,6 +665,7 @@ export type ListSessionsResult = {
         at: string;
       };
     }[];
+    theme: ("light" | "high-contrast-light" | "solarized-light" | "gruvbox-light" | "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula") | null;
     parkedFrom: {
       canvasId: string;
       rect: {
@@ -815,6 +818,7 @@ export type GetSessionResult = {
       at: string;
     };
   }[];
+  theme: ("light" | "high-contrast-light" | "solarized-light" | "gruvbox-light" | "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula") | null;
   parkedFrom: {
     canvasId: string;
     rect: {
@@ -915,6 +919,8 @@ export type UpdateSessionBody = {
     /** The value: one line of plain text. An address in it is shown as a link. */
     value: string;
   }[];
+  /** The color theme the terminal's body is drawn in, whatever the page is drawn in: one of the IDs of the color themes. `null` clears it: the terminal is then drawn in the default for terminals, or as the page is. */
+  theme?: ("light" | "high-contrast-light" | "solarized-light" | "gruvbox-light" | "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula") | null;
 };
 
 export type UpdateSessionResult = {
@@ -978,6 +984,7 @@ export type UpdateSessionResult = {
       at: string;
     };
   }[];
+  theme: ("light" | "high-contrast-light" | "solarized-light" | "gruvbox-light" | "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula") | null;
   parkedFrom: {
     canvasId: string;
     rect: {
@@ -1139,6 +1146,7 @@ export type MoveSessionResult = {
         at: string;
       };
     }[];
+    theme: ("light" | "high-contrast-light" | "solarized-light" | "gruvbox-light" | "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula") | null;
     parkedFrom: {
       canvasId: string;
       rect: {
@@ -1300,6 +1308,7 @@ export type ParkSessionResult = {
       at: string;
     };
   }[];
+  theme: ("light" | "high-contrast-light" | "solarized-light" | "gruvbox-light" | "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula") | null;
   parkedFrom: {
     canvasId: string;
     rect: {
@@ -1456,6 +1465,7 @@ export type RestoreSessionResult = {
         at: string;
       };
     }[];
+    theme: ("light" | "high-contrast-light" | "solarized-light" | "gruvbox-light" | "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula") | null;
     parkedFrom: {
       canvasId: string;
       rect: {
@@ -1579,12 +1589,43 @@ export type ChangeDesktopSettingsResult = {
 
 export type ChangeAppearanceBody = {
   /** `light`, `dark`, or `system` to match the system. */
-  theme: "light" | "dark" | "system";
+  theme?: "light" | "dark" | "system";
+  /** The color theme to draw when the page is light: one whose kind is light. */
+  light?: "light" | "high-contrast-light" | "solarized-light" | "gruvbox-light";
+  /** The color theme to draw when the page is dark: one whose kind is dark. */
+  dark?: "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula";
+  /** The size of a terminal's text, in pixels, from 8 to 32. */
+  fontSize?: number;
+  /** The font-family list for a terminal's text: one line of at most 300 characters, without control characters or any of `;{}<>`. */
+  fontFamily?: string;
+  /** The shape of a terminal's cursor: `block`, `bar` or `underline`. */
+  cursor?: "block" | "bar" | "underline";
+  /** Whether a terminal's cursor blinks. */
+  cursorBlink?: boolean;
+  /** The color theme every terminal is drawn in that has none of its own: one of the IDs of the color themes, of either kind. `null`: the theme the page is drawn in. */
+  terminal?: ("light" | "high-contrast-light" | "solarized-light" | "gruvbox-light" | "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula") | null;
 };
 
 export type ChangeAppearanceResult = {
   /** `light`, `dark`, or `system` for whichever the system is set to. */
   theme: "light" | "dark" | "system";
+  /** The color theme drawn when the page is light. */
+  light: "light" | "high-contrast-light" | "solarized-light" | "gruvbox-light";
+  /** The color theme drawn when the page is dark. */
+  dark: "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula";
+  /** A terminal's font. */
+  font: {
+    /** The font-family list for a terminal's text. */
+    family: string;
+    /** The size of a terminal's text, in pixels. */
+    size: number;
+  };
+  /** The shape of a terminal's cursor: `block`, `bar` or `underline`. */
+  cursor: "block" | "bar" | "underline";
+  /** Whether a terminal's cursor blinks. */
+  cursorBlink: boolean;
+  /** The color theme of a terminal that has none of its own; `null`: the theme the page is drawn in. */
+  terminal: ("light" | "high-contrast-light" | "solarized-light" | "gruvbox-light" | "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula") | null;
 };
 
 export type AppendNoteBody = {
@@ -8892,6 +8933,7 @@ export type ProtectSessionResult = {
       at: string;
     };
   }[];
+  theme: ("light" | "high-contrast-light" | "solarized-light" | "gruvbox-light" | "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula") | null;
   parkedFrom: {
     canvasId: string;
     rect: {
@@ -9047,6 +9089,7 @@ export type SetTakesMessagesResult = {
       at: string;
     };
   }[];
+  theme: ("light" | "high-contrast-light" | "solarized-light" | "gruvbox-light" | "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula") | null;
   parkedFrom: {
     canvasId: string;
     rect: {
@@ -10811,7 +10854,7 @@ export interface Client {
    */
   getSession(args: { sessionId: string } & CallOptions): Promise<GetSessionResult>;
   /**
-   * Rename or tag a session, change its fields, or change its pinned note.
+   * Rename or tag a session, change its fields or its color theme, or change its pinned note.
    *
    * `PATCH /v1/sessions/{sessionId}`. Scope: `sessions:write`.
    */
@@ -10859,7 +10902,7 @@ export interface Client {
    */
   changeDesktopSettings(args: { body: ChangeDesktopSettingsBody } & CallOptions): Promise<ChangeDesktopSettingsResult>;
   /**
-   * Choose how the page looks: light, dark, or matching the system.
+   * Choose how the page looks: light, dark or matching the system, each one's color theme, the default theme of terminals, a terminal's font and cursor.
    *
    * `PUT /v1/settings/appearance`. Signed-in browser only: no API token may call this.
    */

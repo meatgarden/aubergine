@@ -271,6 +271,70 @@
     "text": "Un terminal seul dans un onglet du navigateur : son nom en tête, ses détails avec l’étape de son workflow, son dossier et ses champs, et le terminal en direct à côté.",
     "from": "3b3df705e912"
   },
+  "home.themes.title": {
+    "text": "Dix thèmes de couleurs",
+    "from": "8580e1b84e0d"
+  },
+  "home.themes.intro": {
+    "text": "La page existe en dix thèmes de couleurs, quatre clairs et six sombres. Vous en choisissez un de chaque sorte, et la page est claire, sombre ou comme votre système. Des couleurs isolées se règlent à la main dans le fichier de réglages.",
+    "from": "80b841165125"
+  },
+  "home.themes.light.alt": {
+    "text": "Le canevas avec six terminaux dans le thème Light : panneaux blancs, texte sombre, un accent violet.",
+    "from": "844d3f919a94"
+  },
+  "home.themes.solarized.alt": {
+    "text": "Le même canevas dans le thème Solarized light : une page crème aux accents bleus, avec les couleurs de Solarized dans les terminaux.",
+    "from": "e5e87564cee0"
+  },
+  "home.themes.gruvbox.alt": {
+    "text": "Le même canevas dans le thème Gruvbox light : une page jaune et chaude, avec les couleurs terreuses de Gruvbox dans les terminaux.",
+    "from": "ac93cf1e5844"
+  },
+  "home.themes.nord.alt": {
+    "text": "Le même canevas dans le thème Nord : une page gris-bleu aux accents bleu pâle, avec les couleurs douces de Nord dans les terminaux.",
+    "from": "224f062eea1b"
+  },
+  "home.themes.dracula.alt": {
+    "text": "Le même canevas dans le thème Dracula : une page sombre à l’accent violet vif, avec les couleurs éclatantes de Dracula dans les terminaux.",
+    "from": "c99f61000a8d"
+  },
+  "home.themes.gruvboxdark.alt": {
+    "text": "Le même canevas dans le thème Gruvbox dark : une page brun foncé et chaude à l’accent rose, avec les couleurs de Gruvbox dans les terminaux.",
+    "from": "2ddae55bb038"
+  },
+  "home.themes.own.claim": {
+    "text": "Un thème pour chaque terminal",
+    "from": "382e08bcfc07"
+  },
+  "home.themes.own.text": {
+    "text": "<strong>Theme…</strong> dans le menu d’un terminal le dessine dans l’un des dix, quel que soit le thème de la page. Les autres suivent le thème par défaut que vous choisissez pour les terminaux, ou la page.",
+    "from": "6b12c9a24623"
+  },
+  "home.themes.own.caption": {
+    "text": "Côte à côte sur une page sombre : un terminal en Solarized light, un autre en Dracula.",
+    "from": "ae01310ea824"
+  },
+  "home.themes.own.alt": {
+    "text": "Deux terminaux sur une page sombre : à gauche, un historique Git dans le thème Solarized light ; à droite, un diff en couleurs dans le thème Dracula.",
+    "from": "947a05054760"
+  },
+  "home.themes.pick.claim": {
+    "text": "Choisi dans Settings",
+    "from": "d3556328ff6b"
+  },
+  "home.themes.pick.text": {
+    "text": "<strong>Settings → Appearance</strong> montre chaque thème avec une petite image de ses couleurs. Un changement s’applique aussitôt à la page et à tous les terminaux, et chaque navigateur où vous l’ouvrez s’accorde.",
+    "from": "68a65355c804"
+  },
+  "home.themes.pick.caption": {
+    "text": "Clair, sombre ou comme le système, et un thème de chaque sorte, chacun avec une petite image de ses couleurs.",
+    "from": "04e465e0c21a"
+  },
+  "home.themes.pick.alt": {
+    "text": "Settings, Appearance : clair, sombre ou comme le système, puis les dix thèmes de couleurs en deux groupes, chacun avec un petit aperçu ; Nord est choisi pour la page sombre et Solarized light pour la claire.",
+    "from": "4dfde638b037"
+  },
   "home.agents.title": {
     "text": "Apportez votre agent",
     "from": "053237049eea"

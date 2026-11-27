@@ -26,6 +26,23 @@
 | ![Workflows: 카드로 된 단계 목록](../../site/screenshots/workflows.png) | ![Library: 설치하기 전에 읽는, 에이전트가 듣게 될 내용](../../site/screenshots/library.png) |
 | **Workflows.** 에이전트가 하나씩 거쳐 가는 단계 목록. | **Library.** 무엇이든 설치하기 전에, 에이전트가 듣게 될 내용을 정확히 읽어 보세요. |
 
+### 색 테마
+
+페이지에는 10가지 색 테마가 있습니다. 밝은 테마 4개와 어두운 테마 6개이며 **Settings → Appearance**에서 고릅니다. 어느 터미널이든 자기 테마를 가질 수 있고(메뉴의 **Theme…**), 나머지는 터미널용으로 정한 기본 테마나 페이지를 따릅니다. 개별 색은 [설정 파일](../../README.md#settings)에서 직접 지정할 수 있습니다.
+
+| | | |
+|---|---|---|
+| ![Light 테마의 캔버스와 터미널 6개](../../site/screenshots/themes-light.png) | ![Solarized light 테마의 같은 캔버스](../../site/screenshots/themes-solarized-light.png) | ![Gruvbox light 테마의 같은 캔버스](../../site/screenshots/themes-gruvbox-light.png) |
+| **Light** | **Solarized light** | **Gruvbox light** |
+| ![Nord 테마의 같은 캔버스](../../site/screenshots/themes-nord.png) | ![Dracula 테마의 같은 캔버스](../../site/screenshots/themes-dracula.png) | ![Gruvbox dark 테마의 같은 캔버스](../../site/screenshots/themes-gruvbox-dark.png) |
+| **Nord** | **Dracula** | **Gruvbox dark** |
+
+그 밖에 [Dark](../../site/screenshots/themes-dark.png), [High contrast light](../../site/screenshots/themes-high-contrast-light.png), [High contrast dark](../../site/screenshots/themes-high-contrast-dark.png), [Solarized dark](../../site/screenshots/themes-solarized-dark.png)도 있습니다.
+
+<img src="../../site/screenshots/terminal-themes.png" alt="어두운 페이지의 터미널 6개, 각각 자기 테마: Solarized light, Dracula, Gruvbox dark, Nord, Gruvbox light, Solarized dark.">
+
+<sub>어두운 페이지의 터미널 6개, 각각 자기 테마로. 지어낸 프로젝트를 평범한 셸에서.</sub>
+
 ---
 
 ## 2분 만에 시작하기

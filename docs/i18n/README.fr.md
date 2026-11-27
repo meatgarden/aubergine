@@ -26,6 +26,23 @@
 | ![Workflows : des listes d’étapes sous forme de cartes](../../site/screenshots/workflows.png) | ![Library : ce qu’un agent recevrait comme consignes, à lire avant d’installer](../../site/screenshots/library.png) |
 | **Workflows.** Des listes d’étapes qu’un agent suit, une à la fois. | **Library.** Lisez exactement ce qu’un agent recevrait comme consignes avant d’installer quoi que ce soit. |
 
+### Thèmes de couleurs
+
+La page existe en dix thèmes de couleurs, quatre clairs et six sombres, choisis dans **Settings → Appearance**. Chaque terminal peut aussi avoir son propre thème (**Theme…** dans son menu), et les autres suivent le thème par défaut que vous choisissez pour les terminaux, ou la page. Des couleurs isolées se règlent à la main dans le [fichier de réglages](../../README.md#settings).
+
+| | | |
+|---|---|---|
+| ![Le canevas avec six terminaux dans le thème Light](../../site/screenshots/themes-light.png) | ![Le même canevas dans le thème Solarized light](../../site/screenshots/themes-solarized-light.png) | ![Le même canevas dans le thème Gruvbox light](../../site/screenshots/themes-gruvbox-light.png) |
+| **Light** | **Solarized light** | **Gruvbox light** |
+| ![Le même canevas dans le thème Nord](../../site/screenshots/themes-nord.png) | ![Le même canevas dans le thème Dracula](../../site/screenshots/themes-dracula.png) | ![Le même canevas dans le thème Gruvbox dark](../../site/screenshots/themes-gruvbox-dark.png) |
+| **Nord** | **Dracula** | **Gruvbox dark** |
+
+Et aussi [Dark](../../site/screenshots/themes-dark.png), [High contrast light](../../site/screenshots/themes-high-contrast-light.png), [High contrast dark](../../site/screenshots/themes-high-contrast-dark.png) et [Solarized dark](../../site/screenshots/themes-solarized-dark.png).
+
+<img src="../../site/screenshots/terminal-themes.png" alt="Une page sombre avec six terminaux, chacun dans son propre thème : Solarized light, Dracula, Gruvbox dark, Nord, Gruvbox light et Solarized dark.">
+
+<sub>Six terminaux sur une page sombre, chacun dans son propre thème. Un projet inventé, dans de simples shells.</sub>
+
 ---
 
 ## Démarrer en deux minutes

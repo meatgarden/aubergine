@@ -26,6 +26,23 @@
 | ![Workflows: ধাপের তালিকা, কার্ড হিসেবে](../../site/screenshots/workflows.png) | ![Library: একটি এজেন্টকে কী বলা হবে, ইনস্টলের আগে পড়ুন](../../site/screenshots/library.png) |
 | **Workflows.** ধাপের তালিকা যা একটি এজেন্ট একটির পর একটি পার হয়। | **Library.** কিছু ইনস্টল করার আগে ঠিক তা-ই পড়ুন যা একটি এজেন্টকে বলা হবে। |
 
+### কালার থিম
+
+পেজটি দশটি কালার থিমে আসে, চারটি লাইট আর ছয়টি ডার্ক, যা **Settings → Appearance**-এ বেছে নেওয়া হয়। যেকোনো টার্মিনালের নিজের থিমও থাকতে পারে (তার মেনুতে **Theme…**), আর বাকিগুলো টার্মিনালের জন্য আপনার সেট করা ডিফল্ট বা পেজকে অনুসরণ করে। আলাদা আলাদা রং [সেটিংস ফাইলে](../../README.md#settings) হাতে সেট করা যায়।
+
+| | | |
+|---|---|---|
+| ![Light থিমে ছয়টি টার্মিনালসহ ক্যানভাস](../../site/screenshots/themes-light.png) | ![Solarized light থিমে একই ক্যানভাস](../../site/screenshots/themes-solarized-light.png) | ![Gruvbox light থিমে একই ক্যানভাস](../../site/screenshots/themes-gruvbox-light.png) |
+| **Light** | **Solarized light** | **Gruvbox light** |
+| ![Nord থিমে একই ক্যানভাস](../../site/screenshots/themes-nord.png) | ![Dracula থিমে একই ক্যানভাস](../../site/screenshots/themes-dracula.png) | ![Gruvbox dark থিমে একই ক্যানভাস](../../site/screenshots/themes-gruvbox-dark.png) |
+| **Nord** | **Dracula** | **Gruvbox dark** |
+
+এ ছাড়া [Dark](../../site/screenshots/themes-dark.png), [High contrast light](../../site/screenshots/themes-high-contrast-light.png), [High contrast dark](../../site/screenshots/themes-high-contrast-dark.png) আর [Solarized dark](../../site/screenshots/themes-solarized-dark.png)।
+
+<img src="../../site/screenshots/terminal-themes.png" alt="ডার্ক পেজে ছয়টি টার্মিনাল, প্রতিটি নিজের থিমে: Solarized light, Dracula, Gruvbox dark, Nord, Gruvbox light আর Solarized dark।">
+
+<sub>ডার্ক পেজে ছয়টি টার্মিনাল, প্রতিটি নিজের থিমে। সাধারণ শেলে একটি বানানো প্রজেক্ট।</sub>
+
 ---
 
 ## দুই মিনিটে শুরু করুন
