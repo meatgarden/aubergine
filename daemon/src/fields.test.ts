@@ -246,6 +246,63 @@ describe('fields of a terminal', () => {
   });
 });
 
+describe('the color theme of a terminal', () => {
+  const themed = (): ChangeEvent[] => events.filter((e) => e.type === 'session.themed');
+
+  it('starts as none, is set, cleared with null, and left as it was when not sent', async () => {
+    const session = await make();
+    expect(session.theme).toBeNull();
+    const set = await asOwner('PATCH', publicPaths.session(session.id), { theme: 'dracula' });
+    expect(set.status, JSON.stringify(set.body)).toBe(200);
+    expect(set.body.theme).toBe('dracula');
+    expect(themed()).toEqual([{ type: 'session.themed', sessionId: session.id, theme: 'dracula' }]);
+    // A theme of either kind, whatever the page is drawn in; the page's own route takes it the same way.
+    expect((await asOwner('PATCH', paths.session(session.id), { theme: 'solarized-light' })).body.theme).toBe('solarized-light');
+    // A change of something else leaves it as it was, and says nothing about it.
+    await asOwner('PATCH', publicPaths.session(session.id), { name: 'Renamed', tags: ['api'] });
+    expect(now(session.id).theme).toBe('solarized-light');
+    expect(themed()).toHaveLength(2);
+    // Null: back to the default for terminals.
+    expect((await asOwner('PATCH', publicPaths.session(session.id), { theme: null })).body.theme).toBeNull();
+    expect(now(session.id).theme).toBeNull();
+    expect((await asOwner('GET', publicPaths.session(session.id))).body.theme).toBeNull();
+    // A theme alone is something to update.
+    expect(themed().at(-1)).toEqual({ type: 'session.themed', sessionId: session.id, theme: null });
+  });
+
+  it('is refused with 400 for a word that names no theme, and nothing changes', async () => {
+    const session = await make();
+    await asOwner('PATCH', publicPaths.session(session.id), { theme: 'nord' });
+    for (const theme of ['sepia', '', 'Nord', 12, true, { id: 'nord' }, '__proto__'])
+      for (const url of [publicPaths.session(session.id), paths.session(session.id)]) {
+        const answer = await asOwner('PATCH', url, { theme });
+        expect(answer.status, JSON.stringify(theme)).toBe(400);
+        expect(answer.body.error).toMatchObject({ code: expect.any(String), message: expect.any(String) });
+      }
+    expect(now(session.id).theme).toBe('nord');
+    expect(themed()).toHaveLength(1);
+  });
+
+  it('is changed by a token that may change sessions, by no token without that, and by no session, not even its own', async () => {
+    const session = await make();
+    const other = await make();
+    const reader = await makeToken('reader', ['read']);
+    const writer = await makeToken('writer', ['read', 'sessions:write']);
+    expect((await call(reader, 'PATCH', publicPaths.session(session.id), { theme: 'nord' })).status).toBe(403);
+    const own = sessionToken(ownerToken, session.id);
+    for (const id of [session.id, other.id]) {
+      expect((await call(own, 'PATCH', publicPaths.session(id), { theme: 'nord' })).status).toBe(403);
+      expect((await call(own, 'PATCH', paths.session(id), { theme: 'nord' })).status).toBe(403);
+    }
+    expect(themed()).toEqual([]);
+    const answer = await call(writer, 'PATCH', publicPaths.session(session.id), { theme: 'nord' });
+    expect(answer.status, JSON.stringify(answer.body)).toBe(200);
+    expect(now(session.id).theme).toBe('nord');
+    // Readers see it: it is not what a terminal shows.
+    expect((await call(reader, 'GET', publicPaths.session(session.id))).body.theme).toBe('nord');
+  });
+});
+
 describe('fields an agent sets on its own terminal', () => {
   const own = (id: string): string => sessionToken(ownerToken, id);
   const fieldsUrl = (id: string): string => `/v1/sessions/${id}/fields`;

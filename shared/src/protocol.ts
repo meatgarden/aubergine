@@ -27,7 +27,7 @@ import { CanvasChanges, ChangeEvent } from './events';
 import { Id } from './ids';
 import { FieldsInput } from './fields';
 import { Settings, ThemeSetting } from './settings';
-import { CursorStyle, DarkThemeId, LightThemeId } from './themes';
+import { ColorThemeId, CursorStyle, DarkThemeId, LightThemeId } from './themes';
 
 /**
  * The wire protocol between the browser and the daemon. Bump the version and
@@ -170,6 +170,7 @@ export const AppearanceAnswer = z.object({
     .describe("A terminal's font."),
   cursor: CursorStyle.describe("The shape of a terminal's cursor: `block`, `bar` or `underline`."),
   cursorBlink: z.boolean().describe("Whether a terminal's cursor blinks."),
+  terminal: ColorThemeId.nullable().describe('The color theme of a terminal that has none of its own; `null`: the theme the page is drawn in.'),
 });
 export type AppearanceAnswer = z.infer<typeof AppearanceAnswer>;
 /**
@@ -195,6 +196,7 @@ export const ChangeAppearanceRequest = z.object({
   fontFamily: FontFamilyChoice.optional().describe("The font-family list for a terminal's text: one line of at most 300 characters, without control characters or any of `;{}<>`."),
   cursor: CursorStyle.optional().describe("The shape of a terminal's cursor: `block`, `bar` or `underline`."),
   cursorBlink: z.boolean().optional().describe("Whether a terminal's cursor blinks."),
+  terminal: ColorThemeId.nullable().optional().describe('The color theme every terminal is drawn in that has none of its own: one of the IDs of the color themes, of either kind. `null`: the theme the page is drawn in.'),
 });
 export type ChangeAppearanceRequest = z.infer<typeof ChangeAppearanceRequest>;
 
@@ -242,9 +244,9 @@ export type CreateSessionResponse = z.infer<typeof CreateSessionResponse>;
 
 /** PATCH body: any of the fields the user can edit. */
 export const UpdateSessionRequest = z
-  .object({ name: SessionName, note: SessionNote, tags: Tags, fields: FieldsInput })
+  .object({ name: SessionName, note: SessionNote, tags: Tags, fields: FieldsInput, theme: ColorThemeId.nullable() })
   .partial()
-  .refine((body) => body.name !== undefined || body.note !== undefined || body.tags !== undefined || body.fields !== undefined, 'Nothing to update');
+  .refine((body) => body.name !== undefined || body.note !== undefined || body.tags !== undefined || body.fields !== undefined || body.theme !== undefined, 'Nothing to update');
 export type UpdateSessionRequest = z.infer<typeof UpdateSessionRequest>;
 
 /** PUT body for a node: where it is, and optionally its color. */
@@ -693,11 +695,17 @@ export const StartSessionRequest = z.object({
 });
 export type StartSessionRequest = z.infer<typeof StartSessionRequest>;
 
-/** Body of changing a session: any of its name, its tags and its fields. `tags` and `fields` each replace the whole list. */
+/** Body of changing a session: any of its name, its tags, its fields and its color theme. `tags` and `fields` each replace the whole list. */
 export const PatchSessionRequest = z
-  .object({ name: SessionName, tags: Tags, note: SessionNote, fields: FieldsInput })
+  .object({
+    name: SessionName,
+    tags: Tags,
+    note: SessionNote,
+    fields: FieldsInput,
+    theme: ColorThemeId.nullable().describe("The color theme the terminal's body is drawn in, whatever the page is drawn in: one of the IDs of the color themes. `null` clears it: the terminal is then drawn in the default for terminals, or as the page is."),
+  })
   .partial()
-  .refine((body) => body.name !== undefined || body.tags !== undefined || body.note !== undefined || body.fields !== undefined, 'Nothing to update');
+  .refine((body) => body.name !== undefined || body.tags !== undefined || body.note !== undefined || body.fields !== undefined || body.theme !== undefined, 'Nothing to update');
 export type PatchSessionRequest = z.infer<typeof PatchSessionRequest>;
 
 /** A session together with where it is. */

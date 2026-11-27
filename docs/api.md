@@ -28,7 +28,7 @@ How to create a token, what the scopes mean, the limits and the activity log are
 | [`POST /v1/canvases/{canvasId}/sessions`](#startsession) | Start a session on a canvas | `sessions:write` |
 | [`GET /v1/sessions`](#listsessions) | List every session | `read` |
 | [`GET /v1/sessions/{sessionId}`](#getsession) | One session | `read` |
-| [`PATCH /v1/sessions/{sessionId}`](#updatesession) | Rename or tag a session, change its fields, or change its pinned note | `sessions:write` |
+| [`PATCH /v1/sessions/{sessionId}`](#updatesession) | Rename or tag a session, change its fields or its color theme, or change its pinned note | `sessions:write` |
 | [`DELETE /v1/sessions/{sessionId}`](#endsession) | End a session | `sessions:write` |
 | [`POST /v1/sessions/{sessionId}/move`](#movesession) | Move a session to another canvas | `sessions:write` |
 | [`POST /v1/sessions/{sessionId}/park`](#parksession) | Park a session | `sessions:write` |
@@ -36,7 +36,7 @@ How to create a token, what the scopes mean, the limits and the activity log are
 | [`POST /v1/sessions/{sessionId}/show`](#showsession) | Bring a session up in an open browser | `sessions:write` |
 | [`POST /v1/sessions/{sessionId}/desktop`](#opensessionondesktop) | Open a session in the owner's terminal application | browser only |
 | [`PUT /v1/settings/desktop`](#changedesktopsettings) | Say whether new terminals made in the page also open on the desktop | browser only |
-| [`PUT /v1/settings/appearance`](#changeappearance) | Choose how the page looks: light, dark or matching the system, each one's color theme, a terminal's font and cursor | browser only |
+| [`PUT /v1/settings/appearance`](#changeappearance) | Choose how the page looks: light, dark or matching the system, each one's color theme, the default theme of terminals, a terminal's font and cursor | browser only |
 | [`POST /v1/sessions/{sessionId}/notes`](#appendnote) | Add an entry to a session's note log | session's own token, or `notes:write` |
 | [`PATCH /v1/canvases/{canvasId}/nodes/{nodeId}`](#updatenode) | Move, resize or color a node | `canvases:write` |
 | [`POST /v1/canvases/{canvasId}/frames`](#createframe) | Add a frame | `canvases:write` |
@@ -666,6 +666,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
         at: string;
       };
     }[];
+    theme: ("light" | "high-contrast-light" | "solarized-light" | "gruvbox-light" | "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula") | null;
     parkedFrom: {
       canvasId: string;
       rect: {
@@ -854,6 +855,7 @@ An API token needs the scope `sessions:write`. Sending `command` needs `terminal
         at: string;
       };
     }[];
+    theme: ("light" | "high-contrast-light" | "solarized-light" | "gruvbox-light" | "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula") | null;
     parkedFrom: {
       canvasId: string;
       rect: {
@@ -1045,6 +1047,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
         at: string;
       };
     }[];
+    theme: ("light" | "high-contrast-light" | "solarized-light" | "gruvbox-light" | "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula") | null;
     parkedFrom: {
       canvasId: string;
       rect: {
@@ -1218,6 +1221,7 @@ An API token needs the scope `read`.
       at: string;
     };
   }[];
+  theme: ("light" | "high-contrast-light" | "solarized-light" | "gruvbox-light" | "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula") | null;
   parkedFrom: {
     canvasId: string;
     rect: {
@@ -1317,9 +1321,9 @@ curl -H "Authorization: Bearer $TOKEN" \
 
 ### updateSession
 
-`PATCH /v1/sessions/{sessionId}`: Rename or tag a session, change its fields, or change its pinned note.
+`PATCH /v1/sessions/{sessionId}`: Rename or tag a session, change its fields or its color theme, or change its pinned note.
 
-Send any of `name`, `tags`, `fields`, `note`. `tags` and `fields` each replace the whole list; what is not sent stays as it was. The pinned note is a note, not a property of the session, so it needs the scope for notes.
+Send any of `name`, `tags`, `fields`, `theme`, `note`. `tags` and `fields` each replace the whole list; `theme` null clears the terminal's own color theme; what is not sent stays as it was. The pinned note is a note, not a property of the session, so it needs the scope for notes.
 
 An API token needs the scope `sessions:write`. Sending `note` needs `notes:write` instead, or as well when other fields are sent.
 
@@ -1335,6 +1339,7 @@ An API token needs the scope `sessions:write`. Sending `note` needs `notes:write
 | `tags` | `string[]` | no |  |
 | `note` | `string` | no |  |
 | `fields` | `{ /** What the value is, in a few words: one line of plain text, wi…` | no | The fields of the terminal, in order: at most 12, each label once. Who set each is the server’s to say: what is sent is the owner’s, except a field sent exactly as it stood, which keeps who set it. |
+| `theme` | `("light" \| "high-contrast-light" \| "solarized-light" \| "gruvbox-lig…` | no | The color theme the terminal's body is drawn in, whatever the page is drawn in: one of the IDs of the color themes. `null` clears it: the terminal is then drawn in the default for terminals, or as the page is. |
 
 **Answer** `200`:
 
@@ -1400,6 +1405,7 @@ An API token needs the scope `sessions:write`. Sending `note` needs `notes:write
       at: string;
     };
   }[];
+  theme: ("light" | "high-contrast-light" | "solarized-light" | "gruvbox-light" | "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula") | null;
   parkedFrom: {
     canvasId: string;
     rect: {
@@ -1603,6 +1609,7 @@ An API token needs the scope `sessions:write`.
         at: string;
       };
     }[];
+    theme: ("light" | "high-contrast-light" | "solarized-light" | "gruvbox-light" | "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula") | null;
     parkedFrom: {
       canvasId: string;
       rect: {
@@ -1788,6 +1795,7 @@ An API token needs the scope `sessions:write`.
       at: string;
     };
   }[];
+  theme: ("light" | "high-contrast-light" | "solarized-light" | "gruvbox-light" | "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula") | null;
   parkedFrom: {
     canvasId: string;
     rect: {
@@ -1968,6 +1976,7 @@ An API token needs the scope `sessions:write`.
         at: string;
       };
     }[];
+    theme: ("light" | "high-contrast-light" | "solarized-light" | "gruvbox-light" | "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula") | null;
     parkedFrom: {
       canvasId: string;
       rect: {
@@ -2156,9 +2165,9 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 
 ### changeAppearance
 
-`PUT /v1/settings/appearance`: Choose how the page looks: light, dark or matching the system, each one's color theme, a terminal's font and cursor.
+`PUT /v1/settings/appearance`: Choose how the page looks: light, dark or matching the system, each one's color theme, the default theme of terminals, a terminal's font and cursor.
 
-For the owner only: no token and no session can do this, whatever its scopes. It writes the keys that are sent, and only those: `theme`, `appearance.light`, `appearance.dark`, `appearance.cursor`, `appearance.cursorBlink`, `font.family` and `font.size`; the rest of the settings file stays as it was, and a body that sends none of them changes nothing and answers what the file says. None of them names anything that is run. `appearance.colors`, colors set over a theme, is written by hand in the file and changed by no route. Every browser has the choice from its next load.
+For the owner only: no token and no session can do this, whatever its scopes. It writes the keys that are sent, and only those: `theme`, `appearance.light`, `appearance.dark`, `appearance.terminal` (null: as the page is), `appearance.cursor`, `appearance.cursorBlink`, `font.family` and `font.size`; the rest of the settings file stays as it was, and a body that sends none of them changes nothing and answers what the file says. None of them names anything that is run. `appearance.colors`, colors set over a theme, is written by hand in the file and changed by no route. Every browser has the choice from its next load.
 
 For the signed-in browser only. No API token may call this, whatever its scopes.
 
@@ -2173,6 +2182,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 | `fontFamily` | `string` | no | The font-family list for a terminal's text: one line of at most 300 characters, without control characters or any of `;{}<>`. |
 | `cursor` | `"block" \| "bar" \| "underline"` | no | The shape of a terminal's cursor: `block`, `bar` or `underline`. |
 | `cursorBlink` | `boolean` | no | Whether a terminal's cursor blinks. |
+| `terminal` | `("light" \| "high-contrast-light" \| "solarized-light" \| "gruvbox-lig…` | no | The color theme every terminal is drawn in that has none of its own: one of the IDs of the color themes, of either kind. `null`: the theme the page is drawn in. |
 
 **Answer** `200`:
 
@@ -2195,6 +2205,8 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
   cursor: "block" | "bar" | "underline";
   /** Whether a terminal's cursor blinks. */
   cursorBlink: boolean;
+  /** The color theme of a terminal that has none of its own; `null`: the theme the page is drawn in. */
+  terminal: ("light" | "high-contrast-light" | "solarized-light" | "gruvbox-light" | "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula") | null;
 }
 ```
 
@@ -11261,6 +11273,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
       at: string;
     };
   }[];
+  theme: ("light" | "high-contrast-light" | "solarized-light" | "gruvbox-light" | "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula") | null;
   parkedFrom: {
     canvasId: string;
     rect: {
@@ -11437,6 +11450,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
       at: string;
     };
   }[];
+  theme: ("light" | "high-contrast-light" | "solarized-light" | "gruvbox-light" | "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula") | null;
   parkedFrom: {
     canvasId: string;
     rect: {

@@ -169,6 +169,8 @@ export const Appearance = z.object({
   cursor: CursorStyle.default('block').catch('block'),
   /** Whether a terminal's cursor blinks. */
   cursorBlink: z.boolean().default(true).catch(true),
+  /** The theme every terminal is drawn in that has none of its own. Null: the theme the page is drawn in. */
+  terminal: ColorThemeId.nullable().default(null).catch(null),
   /** Colors set by hand over the theme that is drawn; read by `resolveColors`. Written by hand: no route writes them. */
   colors: z.record(z.string(), z.unknown()).default({}).catch({}),
 });
@@ -176,3 +178,11 @@ export type Appearance = z.infer<typeof Appearance>;
 
 /** The theme that is drawn: the light one or the dark one, as the page is. */
 export const colorThemeShown = (appearance: Pick<Appearance, 'light' | 'dark'>, shown: ThemeKind): ColorThemeId => (shown === 'light' ? appearance.light : appearance.dark);
+
+/**
+ * The theme a terminal is drawn in: its own where it has one; else the default for terminals (`appearance.terminal`)
+ * where one is set; else the theme the page is drawn in. Nothing else decides it. Only the terminal's body is drawn in
+ * it; its title and its note are the page's.
+ */
+export const terminalThemeOf = (own: ColorThemeId | null | undefined, appearance: Pick<Appearance, 'light' | 'dark' | 'terminal'>, shown: ThemeKind): ColorThemeId =>
+  own ?? appearance.terminal ?? colorThemeShown(appearance, shown);

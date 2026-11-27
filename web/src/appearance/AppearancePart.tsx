@@ -1,7 +1,8 @@
 import { COLOR_THEMES, CURSOR_STYLES, CURSOR_WORDS, DEFAULT_SETTINGS, FontFamilyChoice, THEMES, THEME_WORDS, colorTheme, colorThemeShown, resolveColors, type ColorThemeId, type ThemeKind } from '@aubergine/shared';
 import { useEffect, useState } from 'react';
 import { useApp } from '../store';
-import { chooseColorTheme, chooseTheme, setCursor, setCursorBlink, setFontFamily, setFontSize, setTerminalFont, useThemeShown } from '../theme';
+import { chooseColorTheme, chooseTheme, setCursor, setCursorBlink, setFontFamily, setFontSize, setTerminalFont, setTerminalTheme, useThemeShown } from '../theme';
+import { ThemeSelect } from '../TerminalTheme';
 import { Button, RadioRow, RadioRows, Segmented, TextField } from '../ui';
 
 const nameOf = (id: ColorThemeId): string => colorTheme(id)?.name ?? id;
@@ -100,6 +101,18 @@ export function AppearancePart() {
         </div>
         <p className="ui-meta" data-testid="color-theme-says">
           {colorThemeSays(theme, appearance.light, appearance.dark)}
+        </p>
+      </div>
+
+      <div className="appearance-part">
+        <h4>
+          <label htmlFor="appearance-terminal-theme">Terminal theme</label>
+        </h4>
+        <div className="settings-line">
+          <ThemeSelect id="appearance-terminal-theme" value={appearance.terminal} onChange={setTerminalTheme} none="Same as the page" aria-describedby="appearance-terminal-theme-says" data-testid="terminal-theme-default" />
+        </div>
+        <p className="ui-meta" id="appearance-terminal-theme-says" data-testid="terminal-theme-says">
+          {appearance.terminal ? `Every terminal is drawn in ${nameOf(appearance.terminal)}, whatever the page is drawn in.` : `Every terminal is drawn as the page is, now in ${nameOf(drawn)}.`} A terminal can also have a theme of its own, from the menu in its title.
         </p>
       </div>
 

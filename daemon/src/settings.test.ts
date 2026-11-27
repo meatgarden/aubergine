@@ -141,6 +141,8 @@ describe('how the page looks', () => {
       [{ dark: 'dracula' }, { appearance: { ...OWNERS.appearance, dark: 'dracula' } }],
       [{ cursor: 'underline' }, { appearance: { ...OWNERS.appearance, cursor: 'underline' } }],
       [{ cursorBlink: true }, { appearance: { ...OWNERS.appearance, cursorBlink: true } }],
+      [{ terminal: 'nord' }, { appearance: { ...OWNERS.appearance, terminal: 'nord' } }],
+      [{ terminal: null }, { appearance: { ...OWNERS.appearance, terminal: null } }],
       [{ fontSize: 20 }, { font: { ...OWNERS.font, size: 20 } }],
       [{ fontFamily: 'Fira Code, monospace' }, { font: { ...OWNERS.font, family: 'Fira Code, monospace' } }],
     ] as const;
@@ -153,7 +155,7 @@ describe('how the page looks', () => {
     await writeFile(path.join(dir, SETTINGS_FILE), JSON.stringify(OWNERS));
     await file.setAppearance({ theme: 'system', dark: 'dark', fontSize: 9 });
     expect(await read()).toEqual({ ...OWNERS, theme: 'system', appearance: { ...OWNERS.appearance, dark: 'dark' }, font: { ...OWNERS.font, size: 9 } });
-    expect(appearanceOf(file.value)).toEqual({ theme: 'system', light: 'solarized-light', dark: 'dark', font: { family: 'Mono of mine', size: 9 }, cursor: 'bar', cursorBlink: false });
+    expect(appearanceOf(file.value)).toEqual({ theme: 'system', light: 'solarized-light', dark: 'dark', font: { family: 'Mono of mine', size: 9 }, cursor: 'bar', cursorBlink: false, terminal: null });
   });
 
   it('makes only what it needs where there is no file or no such part, and writes nothing for a change of nothing', async () => {

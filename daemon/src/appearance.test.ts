@@ -125,6 +125,9 @@ describe('the appearance route', () => {
       [{ dark: 'dracula' }, { appearance: { ...OWNERS.appearance, dark: 'dracula' } }],
       [{ cursor: 'underline' }, { appearance: { ...OWNERS.appearance, cursor: 'underline' } }],
       [{ cursorBlink: true }, { appearance: { ...OWNERS.appearance, cursorBlink: true } }],
+      [{ terminal: 'gruvbox-light' }, { appearance: { ...OWNERS.appearance, terminal: 'gruvbox-light' } }],
+      [{ terminal: 'dracula' }, { appearance: { ...OWNERS.appearance, terminal: 'dracula' } }],
+      [{ terminal: null }, { appearance: { ...OWNERS.appearance, terminal: null } }],
       [{ fontSize: 20 }, { font: { ...OWNERS.font, size: 20 } }],
       [{ fontFamily: ' Fira Code, "JetBrains Mono", monospace ' }, { font: { ...OWNERS.font, family: 'Fira Code, "JetBrains Mono", monospace' } }],
     ] as const;
@@ -141,14 +144,29 @@ describe('the appearance route', () => {
         font: { family: expected.font.family, size: expected.font.size },
         cursor: expected.appearance.cursor,
         cursorBlink: expected.appearance.cursorBlink,
+        terminal: ('terminal' in expected.appearance ? expected.appearance.terminal : null) ?? null,
       });
     }
+  });
+
+  it('writes the default theme of terminals, of either kind, and clears it with null', async () => {
+    await writeConfig(OWNERS);
+    expect((await asOwner('PUT', '/v1/settings/appearance', { terminal: 'solarized-light' })).body.terminal).toBe('solarized-light');
+    expect((await asOwner('GET', '/api/v1/state')).body.settings.appearance.terminal).toBe('solarized-light');
+    // Left out: as it was.
+    expect((await asOwner('PUT', '/v1/settings/appearance', { cursor: 'block' })).body.terminal).toBe('solarized-light');
+    const cleared = await asOwner('PUT', '/v1/settings/appearance', { terminal: null });
+    expect(cleared.body.terminal).toBeNull();
+    expect(((await config()) as { appearance: Record<string, unknown> }).appearance).toEqual({ ...OWNERS.appearance, cursor: 'block', terminal: null });
+    // A word that names no theme in the file is the page's, and the rest of the file still counts.
+    await writeConfig({ ...OWNERS, appearance: { ...OWNERS.appearance, terminal: 'sepia' } });
+    expect((await asOwner('PUT', '/v1/settings/appearance', {})).body).toMatchObject({ terminal: null, dark: 'nord' });
   });
 
   it('answers an old caller that sends only the theme as before, with the rest beside it', async () => {
     const answered = await asOwner('PUT', '/v1/settings/appearance', { theme: 'light' });
     expect(answered.status).toBe(200);
-    expect(answered.body).toEqual({ theme: 'light', light: 'light', dark: 'dark', font: DEFAULT_SETTINGS.font, cursor: 'block', cursorBlink: true });
+    expect(answered.body).toEqual({ theme: 'light', light: 'light', dark: 'dark', font: DEFAULT_SETTINGS.font, cursor: 'block', cursorBlink: true, terminal: null });
     // No file yet: one is made, holding that key alone.
     expect(await config()).toEqual({ theme: 'light' });
     expect((await asOwner('GET', '/api/v1/state')).body.settings.theme).toBe('light');
@@ -160,7 +178,7 @@ describe('the appearance route', () => {
     for (const body of [{}, { colors: { accent: '#000000' } }, { somethingElse: true }]) {
       const answered = await asOwner('PUT', '/v1/settings/appearance', body);
       expect(answered.status, JSON.stringify(body)).toBe(200);
-      expect(answered.body).toEqual({ theme: 'light', light: 'solarized-light', dark: 'nord', font: { family: 'Mono of mine', size: 15 }, cursor: 'bar', cursorBlink: false });
+      expect(answered.body).toEqual({ theme: 'light', light: 'solarized-light', dark: 'nord', font: { family: 'Mono of mine', size: 15 }, cursor: 'bar', cursorBlink: false, terminal: null });
       expect(await configText()).toBe(before);
     }
   });
@@ -184,6 +202,9 @@ describe('the appearance route', () => {
       { cursor: 'beam' },
       { cursorBlink: 'no' },
       { theme: 'dark', cursorBlink: 1 },
+      { terminal: 'sepia' },
+      { terminal: '' },
+      { terminal: 12 },
     ]) {
       const answered = await asOwner('PUT', '/v1/settings/appearance', body);
       expect(answered.status, JSON.stringify(body)).toBe(400);

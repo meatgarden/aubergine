@@ -554,6 +554,17 @@ export const COMMANDS: readonly Command[] = [
     },
   },
   {
+    id: 'terminal.theme',
+    title: 'Terminal theme…',
+    description: 'Opens the list of color themes for the terminal: its own, drawn in its body whatever the page is drawn in, or the same as the default for terminals.',
+    group: 'Terminals',
+    available: hasTarget,
+    run: (state) => {
+      const session = targetSession(state);
+      if (session) state.request({ kind: 'theme', id: session.id });
+    },
+  },
+  {
     id: 'attention.next',
     title: 'Go to the next waiting terminal',
     description: 'Goes to the next terminal that is waiting for you, on whichever canvas it is.',

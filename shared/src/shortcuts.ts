@@ -74,6 +74,7 @@ export const COMMAND_IDS = [
   'view.actualSize',
   'view.map',
   'terminal.tags',
+  'terminal.theme',
   'panel.toggle',
   'list.scope.toggle',
   'list.search',

@@ -3,7 +3,6 @@ import { FitAddon } from '@xterm/addon-fit';
 import { Terminal } from '@xterm/xterm';
 import {
   TerminalServerMessage,
-  colorTheme,
   paths,
   resolveColors,
   type Appearance,
@@ -18,7 +17,7 @@ import { Outbox } from './outbox';
 import { correctMouse } from './scaled-mouse';
 import { useApp } from './store';
 import { terminalTheme } from './terminal-themes';
-import { useColorThemeShown } from './theme';
+import { useTerminalTheme } from './theme';
 
 interface Props {
   /** The canvas's zoom now, so that the pointer lands on the right cell at any size. */
@@ -31,12 +30,6 @@ interface Props {
    * and every key but the paste chord goes to the program.
    */
   chords?: boolean;
-}
-
-/** The color theme the page is drawn in now, as the page's root says it: before the settings are read, too. */
-function themeOnPage(): ColorThemeId {
-  const root = document.documentElement;
-  return colorTheme(root.dataset.colorTheme ?? '')?.id ?? (root.dataset.theme === 'light' ? 'light' : 'dark');
 }
 
 /** A terminal's colors in that theme, with its ground set by hand (`terminal-bg`) where the settings file sets it. */
@@ -62,6 +55,10 @@ export function TerminalView({ sessionId, interactive, zoom, chords = true }: Pr
   zoomRef.current = zoom;
   const [link, setLink] = useState<Link>('connecting');
   const focus = useApp((s) => (s.focus?.sessionId === sessionId ? s.focus.tick : 0));
+  // The theme it is drawn in: its own, else the default for terminals, else the page's (`terminalThemeOf`).
+  const theme = useTerminalTheme(sessionId);
+  const themeRef = useRef(theme);
+  themeRef.current = theme;
 
   useEffect(() => {
     const element = host.current;
@@ -77,7 +74,7 @@ export function TerminalView({ sessionId, interactive, zoom, chords = true }: Pr
       scrollback: 0,
       macOptionClickForcesSelection: true,
       disableStdin: !interactiveRef.current,
-      theme: colorsOf(themeOnPage(), settings.appearance),
+      theme: colorsOf(themeRef.current, settings.appearance),
     });
     const fit = new FitAddon();
     term.loadAddon(fit);
@@ -207,8 +204,7 @@ export function TerminalView({ sessionId, interactive, zoom, chords = true }: Pr
   // Follow changes to the settings file.
   const font = useApp((s) => s.settings.font);
   const appearance = useApp((s) => s.settings.appearance);
-  // The color theme that is drawn now: a terminal's colors are its own, and follow it at once.
-  const theme = useColorThemeShown();
+  // Its colors follow its theme at once, and the colors set by hand for that theme.
   useEffect(() => {
     const term = terminal.current;
     if (!term) return;

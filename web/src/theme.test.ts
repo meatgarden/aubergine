@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import page from '../index.html?raw';
 import { colorThemeSays, familyProblem, sizeProblem } from './appearance/AppearancePart';
-import { colorsLine, pairsOf } from './theme';
+import { bodyThemeOf, colorsLine, pairsOf } from './theme';
+import { defaultThemeWords } from './TerminalTheme';
 
 /** The lines index.html runs before first paint, run against a stand-in page and storage. */
 function firstPaint({ attributes = {}, stored = {}, systemIsLight = false }: { attributes?: Record<string, string>; stored?: Record<string, string>; systemIsLight?: boolean }) {
@@ -79,5 +80,27 @@ describe('what Appearance says', () => {
     expect(familyProblem('  ')).toMatch(/^A font is needed/);
     expect(familyProblem('Mono; color: red')).toMatch(/without control characters or any of/);
     expect(familyProblem('a'.repeat(301))).toBe('A font-family list is at most 300 characters.');
+  });
+});
+
+describe('the body of a terminal', () => {
+  it('carries nothing where its theme is the page\'s, so the page\'s colors set by hand stay over it', () => {
+    expect(bodyThemeOf('nord', 'nord', { 'terminal-bg': '#000000' })).toEqual({});
+  });
+
+  it('is a preview of its own theme where that is another, with that theme\'s colors set by hand on it alone', () => {
+    expect(bodyThemeOf('dracula', 'dark', {})).toEqual({ 'data-theme-preview': 'dracula' });
+    const colors = { 'terminal-bg': '#101010', '[dracula]': { 'terminal-bg': '#202020', text: '#EEEEEE' }, '[dark]': { 'terminal-bg': '#303030' } };
+    expect(bodyThemeOf('dracula', 'dark', colors)).toEqual({ 'data-theme-preview': 'dracula', style: { '--text': '#eeeeee', '--terminal-bg': '#202020' } });
+    expect(bodyThemeOf('nord', 'dark', colors)).toEqual({ 'data-theme-preview': 'nord', style: { '--terminal-bg': '#101010' } });
+    // Nothing of a wrong entry reaches the style.
+    expect(bodyThemeOf('nord', 'dark', { 'terminal-bg': '#000000; color: red', 'x-y': '#000000', '[nord]': { bg: 'red' } })).toEqual({ 'data-theme-preview': 'nord' });
+  });
+});
+
+describe('the words for the default of terminals', () => {
+  it('name the default, or say it is the page\'s', () => {
+    expect(defaultThemeWords({ terminal: 'gruvbox-dark' }, 'light')).toBe('Gruvbox dark');
+    expect(defaultThemeWords({ terminal: null }, 'nord')).toBe('as the page: Nord');
   });
 });

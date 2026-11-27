@@ -460,6 +460,15 @@ code {
   min-height: 0;
   cursor: text;
 }
+/*
+ * A terminal's body is drawn in its own theme (data-theme-preview on it, where that is not the page's): its ground and
+ * its words are that theme's, under the live terminal and its snapshot alike. Its title and its note stay the page's.
+ */
+.node-body,
+.terminal-page-body {
+  color: var(--text);
+  background: var(--terminal-bg);
+}
 .node-shield {
   position: absolute;
   inset: 0;
@@ -1192,6 +1201,21 @@ code {
   background: transparent;
   border-color: transparent;
   white-space: nowrap;
+}
+/* The themes a terminal can have hang from its title, under its right end, as the list of canvases to move to does. */
+.terminal-theme {
+  position: relative;
+  flex: none;
+  width: 0;
+}
+.terminal-theme-menu {
+  position: absolute;
+  top: 24px;
+  right: 0;
+  z-index: var(--z-menu);
+  display: flex;
+  flex-direction: column;
+  min-width: 220px;
 }
 .picker-canvas {
   color: var(--accent-text);

@@ -895,8 +895,8 @@ button.color-dot:hover {
   opacity: 1;
 }
 
-/* A terminal's title holds many things: each takes a little less room at the sides. */
-.node-title button:not(.node-close, .color-dot) {
+/* A terminal's title holds many things: each takes a little less room at the sides. A line of a menu that hangs from it is the menu's. */
+.node-title button:not(.node-close, .color-dot, [role^='menuitem']) {
   padding: 0 var(--space-2);
 }
 .node-title .node-name {

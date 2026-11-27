@@ -5,6 +5,7 @@ import { FocusCanvases, FocusDetails, FocusNote } from './FocusColumns';
 import { setFocusColumns, useFocusColumns } from './focus-view';
 import { useApp } from './store';
 import { TerminalView } from './TerminalView';
+import { useBodyTheme } from './theme';
 import { colorClass, colorStyle } from './color';
 import { createRowSelector, DOT_WORD, dotTone } from './terminal-rows';
 import { Button, StateDot } from './ui';
@@ -35,6 +36,8 @@ export function TerminalPage({ sessionId }: { sessionId: string }) {
     if (present) useApp.getState().focusSession(sessionId);
   }, [sessionId, present]);
 
+  // Its body is drawn in its own theme, as on the canvas; the head and the columns are the page's.
+  const bodyTheme = useBodyTheme(sessionId);
   const columns = useFocusColumns();
   // The note takes the keyboard when it was just asked for, not when it was simply remembered open.
   const [noteAsked, setNoteAsked] = useState(false);
@@ -106,7 +109,7 @@ export function TerminalPage({ sessionId }: { sessionId: string }) {
       <div className="terminal-page-columns">
         {columns.canvases && <FocusCanvases sessionId={sessionId} />}
         {columns.details && <FocusDetails sessionId={sessionId} />}
-        <div className="terminal-page-body" data-testid="terminal-page-body">
+        <div className="terminal-page-body" data-testid="terminal-page-body" {...bodyTheme}>
           {session.state === 'exited' ? (
             <p className="terminal-page-ended" data-testid="terminal-page-ended">
               This shell has ended.

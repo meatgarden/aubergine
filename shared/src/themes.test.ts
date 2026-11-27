@@ -3,7 +3,11 @@ import { z } from 'zod';
 import { ChangeAppearanceRequest } from './protocol';
 import { DEFAULT_SETTINGS, Settings } from './settings';
 import { COMMAND_IDS } from './shortcuts';
-import { Appearance, COLOR_THEMES, DARK_THEME_IDS, LIGHT_THEME_IDS, THEME_COLORS, colorTheme, colorThemeShown, resolveColors } from './themes';
+import { applyEvent } from './events';
+import { PatchSessionRequest, UpdateSessionRequest } from './protocol';
+import { Session, createInitialState } from './entities';
+import { newId } from './ids';
+import { Appearance, COLOR_THEMES, DARK_THEME_IDS, LIGHT_THEME_IDS, THEME_COLORS, colorTheme, colorThemeShown, resolveColors, terminalThemeOf } from './themes';
 
 describe('the color themes', () => {
   it('have unique IDs and names, both kinds, and the two that come first', () => {
@@ -140,13 +144,16 @@ describe('colors set by hand', () => {
 
 describe('the appearance in the settings', () => {
   it('has its defaults in a file without it', () => {
-    expect(Settings.parse({}).appearance).toEqual({ light: 'light', dark: 'dark', cursor: 'block', cursorBlink: true, colors: {} });
+    expect(Settings.parse({}).appearance).toEqual({ light: 'light', dark: 'dark', cursor: 'block', cursorBlink: true, terminal: null, colors: {} });
     expect(DEFAULT_SETTINGS.appearance).toEqual(Appearance.parse({}));
   });
 
   it('lets a wrong field fall back to its default by itself, and keeps the others', () => {
-    expect(Settings.parse({ appearance: { light: 'nord', dark: 'dracula', cursor: 'bar' } }).appearance).toEqual({ light: 'light', dark: 'dracula', cursor: 'bar', cursorBlink: true, colors: {} });
-    expect(Settings.parse({ appearance: { light: 'solarized-light', dark: 'light', cursor: 'beam', cursorBlink: 'yes', colors: [1] } }).appearance).toEqual({ light: 'solarized-light', dark: 'dark', cursor: 'block', cursorBlink: true, colors: {} });
+    expect(Settings.parse({ appearance: { light: 'nord', dark: 'dracula', cursor: 'bar' } }).appearance).toEqual({ light: 'light', dark: 'dracula', cursor: 'bar', cursorBlink: true, terminal: null, colors: {} });
+    expect(Settings.parse({ appearance: { light: 'solarized-light', dark: 'light', cursor: 'beam', cursorBlink: 'yes', terminal: 'sepia', colors: [1] } }).appearance).toEqual({ light: 'solarized-light', dark: 'dark', cursor: 'block', cursorBlink: true, terminal: null, colors: {} });
+    // The default theme of terminals is any theme, of either kind.
+    expect(Settings.parse({ theme: 'dark', appearance: { terminal: 'solarized-light' } }).appearance.terminal).toBe('solarized-light');
+    expect(Settings.parse({ appearance: { terminal: 12 } }).appearance.terminal).toBeNull();
     expect(Settings.parse({ appearance: { cursorBlink: false, colors: { accent: '#000000' }, later: 1 } }).appearance).toMatchObject({ cursorBlink: false, colors: { accent: '#000000' } });
     // The rest of the file still counts.
     expect(Settings.parse({ theme: 'dark', appearance: { light: 12 } }).theme).toBe('dark');
@@ -172,6 +179,11 @@ describe('a change of how the page looks', () => {
     expect(ChangeAppearanceRequest.parse({})).toEqual({});
     expect(ChangeAppearanceRequest.parse({ theme: 'dark' })).toEqual({ theme: 'dark' });
     expect(ChangeAppearanceRequest.parse({ cursorBlink: false })).toEqual({ cursorBlink: false });
+    expect(ChangeAppearanceRequest.parse({ terminal: 'nord' })).toEqual({ terminal: 'nord' });
+    expect(ChangeAppearanceRequest.parse({ terminal: 'solarized-light' })).toEqual({ terminal: 'solarized-light' });
+    // Null is sent and kept: "as the page is". Left out is not null.
+    expect(ChangeAppearanceRequest.parse({ terminal: null })).toEqual({ terminal: null });
+    expect('terminal' in ChangeAppearanceRequest.parse({ theme: 'dark' })).toBe(false);
     expect(ChangeAppearanceRequest.parse({ fontFamily: '  Fira Code, "JetBrains Mono", monospace ' })).toEqual({ fontFamily: 'Fira Code, "JetBrains Mono", monospace' });
     // Unknown fields are ignored, as everywhere under /v1.
     expect(ChangeAppearanceRequest.parse({ light: 'gruvbox-light', colors: { accent: '#000000' } })).toEqual({ light: 'gruvbox-light' });
@@ -199,10 +211,60 @@ describe('a change of how the page looks', () => {
       { fontFamily: 'Mono\u0000' },
       { fontFamily: 'Mono\u2028monospace' },
       { fontFamily: 12 },
+      { terminal: 'sepia' },
+      { terminal: '' },
+      { terminal: 1 },
     ])
       expect(ChangeAppearanceRequest.safeParse(body).success, JSON.stringify(body)).toBe(false);
     expect(ChangeAppearanceRequest.safeParse({ fontFamily: 'x'.repeat(300) }).success).toBe(true);
     expect(ChangeAppearanceRequest.safeParse({ fontSize: 8 }).success).toBe(true);
     expect(ChangeAppearanceRequest.safeParse({ fontSize: 32 }).success).toBe(true);
+  });
+});
+
+describe('the theme a terminal is drawn in', () => {
+  const appearance = (terminal: Appearance['terminal']) => ({ light: 'gruvbox-light' as const, dark: 'nord' as const, terminal });
+
+  it('is its own, else the default for terminals, else the theme the page is drawn in', () => {
+    expect(terminalThemeOf(null, appearance(null), 'dark')).toBe('nord');
+    expect(terminalThemeOf(null, appearance(null), 'light')).toBe('gruvbox-light');
+    expect(terminalThemeOf(undefined, appearance(null), 'light')).toBe('gruvbox-light');
+    expect(terminalThemeOf(null, appearance('dracula'), 'light')).toBe('dracula');
+    expect(terminalThemeOf(null, appearance('solarized-light'), 'dark')).toBe('solarized-light');
+    expect(terminalThemeOf('high-contrast-dark', appearance('dracula'), 'light')).toBe('high-contrast-dark');
+    expect(terminalThemeOf('light', appearance(null), 'dark')).toBe('light');
+    // Every combination gives a theme that exists.
+    for (const own of [null, ...COLOR_THEMES.map((t) => t.id)])
+      for (const terminal of [null, ...COLOR_THEMES.map((t) => t.id)])
+        for (const shown of ['light', 'dark'] as const) expect(colorTheme(terminalThemeOf(own, appearance(terminal), shown))).toBeDefined();
+  });
+});
+
+describe('the theme of a session', () => {
+  const state = createInitialState(new Date('2026-01-01T00:00:00Z'));
+  const session = Session.parse({ id: newId(), projectId: state.projects[0]!.id, name: 'build', createdAt: '2026-01-01T00:00:00.000Z' });
+
+  it('is none in a stored session without it, and only a theme or null in one with it', () => {
+    expect(session.theme).toBeNull();
+    expect(Session.parse({ ...session, theme: 'nord' }).theme).toBe('nord');
+    expect(Session.safeParse({ ...session, theme: 'sepia' }).success).toBe(false);
+  });
+
+  it('changes by its one event, through the shared reducer', () => {
+    const withIt = { ...state, sessions: [session] };
+    const themed = applyEvent(withIt, { type: 'session.themed', sessionId: session.id, theme: 'dracula' });
+    expect(themed.sessions[0]!.theme).toBe('dracula');
+    expect({ ...themed.sessions[0], theme: null }).toEqual(session);
+    expect(applyEvent(themed, { type: 'session.themed', sessionId: session.id, theme: null }).sessions[0]!.theme).toBeNull();
+  });
+
+  it('is sent in the bodies that change a session: a theme, or null to clear it; left out is not null', () => {
+    for (const Body of [PatchSessionRequest, UpdateSessionRequest]) {
+      expect(Body.parse({ theme: 'nord' })).toEqual({ theme: 'nord' });
+      expect(Body.parse({ theme: null })).toEqual({ theme: null });
+      expect('theme' in Body.parse({ name: 'x' })).toBe(false);
+      for (const theme of ['sepia', '', 3, {}]) expect(Body.safeParse({ theme }).success, JSON.stringify(theme)).toBe(false);
+    }
+    expect(() => z.toJSONSchema(PatchSessionRequest, { io: 'input' })).not.toThrow();
   });
 });

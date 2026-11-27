@@ -9,7 +9,9 @@ import {
   type ChangeAppearanceRequest,
   type ColorThemeId,
   type ThemeSetting,
+  terminalThemeOf,
 } from '@aubergine/shared';
+import type { CSSProperties } from 'react';
 import { ownApi } from './api';
 import { useApp } from './store';
 
@@ -46,6 +48,42 @@ export function useThemeShown(): 'light' | 'dark' {
 export function useColorThemeShown(): ColorThemeId {
   const appearance = useApp((s) => s.settings.appearance);
   return colorThemeShown(appearance, useThemeShown());
+}
+
+/**
+ * The color theme a terminal's body is drawn in now: its own, else the default for terminals, else the page's
+ * (`terminalThemeOf`). Its live terminal, its snapshot and the ground under both read this, so they never disagree.
+ */
+export function useTerminalTheme(sessionId: string): ColorThemeId {
+  const own = useApp((s) => s.whole?.sessions.find((x) => x.id === sessionId)?.theme ?? null);
+  const appearance = useApp((s) => s.settings.appearance);
+  return terminalThemeOf(own, appearance, useThemeShown());
+}
+
+/** What is put on a terminal's body element so that it is drawn in its theme. */
+export interface BodyTheme {
+  'data-theme-preview'?: ColorThemeId;
+  style?: CSSProperties;
+}
+
+/**
+ * How a terminal's body carries its theme. Where it is the page's, nothing: the body is drawn as the page is, the colors
+ * set by hand on the page's root included. Where it is another, the body is a preview of that theme (its tokens, from
+ * tokens.css or themes.css) with that theme's own colors set by hand over it, written on the body itself. Only the
+ * body: the terminal's title and its note stay the page's. Pure.
+ */
+export function bodyThemeOf(id: ColorThemeId, pageId: ColorThemeId, colors: unknown): BodyTheme {
+  if (id === pageId) return {};
+  const style = Object.fromEntries(pairsOf(colorsLine(colors, id)).map(([name, value]) => [`--${name}`, value])) as CSSProperties;
+  return Object.keys(style).length > 0 ? { 'data-theme-preview': id, style } : { 'data-theme-preview': id };
+}
+
+/** `bodyThemeOf` for the terminal of that session, followed as anything it depends on changes. */
+export function useBodyTheme(sessionId: string): BodyTheme {
+  const id = useTerminalTheme(sessionId);
+  const page = useColorThemeShown();
+  const colors = useApp((s) => s.settings.appearance.colors);
+  return bodyThemeOf(id, page, colors);
 }
 
 /** One color as it may be written on the page: a name of `THEME_COLORS`, a colon, `#rrggbb`. The same rule as index.html's. */
@@ -131,6 +169,7 @@ function lookNow(change: ChangeAppearanceRequest): ChangeAppearanceRequest {
   if (change.fontFamily !== undefined) was.fontFamily = settings.font.family;
   if (change.cursor !== undefined) was.cursor = settings.appearance.cursor;
   if (change.cursorBlink !== undefined) was.cursorBlink = settings.appearance.cursorBlink;
+  if (change.terminal !== undefined) was.terminal = settings.appearance.terminal;
   return was;
 }
 
@@ -170,4 +209,6 @@ export const setFontSize = (fontSize: number): void => changeLook({ fontSize }, 
 export const setFontFamily = (fontFamily: string): void => changeLook({ fontFamily }, 'The font');
 export const setTerminalFont = (fontFamily: string, fontSize: number): void => changeLook({ fontFamily, fontSize }, 'The font');
 export const setCursor = (cursor: Appearance['cursor']): void => changeLook({ cursor }, 'The cursor');
+/** The theme of every terminal that has none of its own; null: as the page is drawn. */
+export const setTerminalTheme = (terminal: ColorThemeId | null): void => changeLook({ terminal }, 'The theme of terminals');
 export const setCursorBlink = (cursorBlink: boolean): void => changeLook({ cursorBlink }, 'The cursor');
