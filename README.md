@@ -24,6 +24,23 @@ English · [Español](docs/i18n/README.es.md) · [Português](docs/i18n/README.p
 | ![Workflows: lists of steps as cards](site/screenshots/workflows.png) | ![Library: what an agent would be told, read before installing](site/screenshots/library.png) |
 | **Workflows.** Lists of steps an agent goes through, one at a time. | **Library.** Read exactly what an agent would be told before you install anything. |
 
+### Color themes
+
+The page comes in ten color themes, four light and six dark, chosen in **Settings → Appearance**. Any terminal can also have a theme of its own (**Theme…** in its menu), and the others follow a default you set for terminals, or the page. Single colors can be set by hand in the [settings file](#settings).
+
+| | | |
+|---|---|---|
+| ![The canvas with six terminals in the Light theme](site/screenshots/themes-light.png) | ![The same canvas in the Solarized light theme](site/screenshots/themes-solarized-light.png) | ![The same canvas in the Gruvbox light theme](site/screenshots/themes-gruvbox-light.png) |
+| **Light** | **Solarized light** | **Gruvbox light** |
+| ![The same canvas in the Nord theme](site/screenshots/themes-nord.png) | ![The same canvas in the Dracula theme](site/screenshots/themes-dracula.png) | ![The same canvas in the Gruvbox dark theme](site/screenshots/themes-gruvbox-dark.png) |
+| **Nord** | **Dracula** | **Gruvbox dark** |
+
+Also [Dark](site/screenshots/themes-dark.png), [High contrast light](site/screenshots/themes-high-contrast-light.png), [High contrast dark](site/screenshots/themes-high-contrast-dark.png) and [Solarized dark](site/screenshots/themes-solarized-dark.png).
+
+<img src="site/screenshots/terminal-themes.png" alt="A dark page with six terminals, each in a theme of its own: Solarized light, Dracula, Gruvbox dark, Nord, Gruvbox light and Solarized dark.">
+
+<sub>Six terminals on a dark page, each in a theme of its own. A made-up project in plain shells.</sub>
+
 ---
 
 ## Start in two minutes

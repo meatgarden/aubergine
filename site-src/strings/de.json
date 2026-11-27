@@ -271,6 +271,70 @@
     "text": "Ein Terminal allein in einem Browser-Tab: sein Name im Kopf, seine Details mit dem Workflow-Schritt, dem Ordner und den Feldern, und das laufende Terminal daneben.",
     "from": "3b3df705e912"
   },
+  "home.themes.title": {
+    "text": "Zehn Farbthemen",
+    "from": "8580e1b84e0d"
+  },
+  "home.themes.intro": {
+    "text": "Die Seite gibt es in zehn Farbthemen, vier hellen und sechs dunklen. Sie wählen eines von jeder Art, und die Seite ist hell, dunkel oder wie Ihr System. Einzelne Farben lassen sich in der Einstellungsdatei von Hand setzen.",
+    "from": "80b841165125"
+  },
+  "home.themes.light.alt": {
+    "text": "Der Canvas mit sechs Terminals im Thema Light: weiße Flächen, dunkle Schrift, ein violetter Akzent.",
+    "from": "844d3f919a94"
+  },
+  "home.themes.solarized.alt": {
+    "text": "Derselbe Canvas im Thema Solarized light: eine cremefarbene Seite mit blauen Akzenten und den Farben von Solarized in den Terminals.",
+    "from": "e5e87564cee0"
+  },
+  "home.themes.gruvbox.alt": {
+    "text": "Derselbe Canvas im Thema Gruvbox light: eine warme gelbe Seite mit den erdigen Farben von Gruvbox in den Terminals.",
+    "from": "ac93cf1e5844"
+  },
+  "home.themes.nord.alt": {
+    "text": "Derselbe Canvas im Thema Nord: eine blaugraue Seite mit hellblauen Akzenten und den sanften Farben von Nord in den Terminals.",
+    "from": "224f062eea1b"
+  },
+  "home.themes.dracula.alt": {
+    "text": "Derselbe Canvas im Thema Dracula: eine dunkle Seite mit einem kräftigen violetten Akzent und den leuchtenden Farben von Dracula in den Terminals.",
+    "from": "c99f61000a8d"
+  },
+  "home.themes.gruvboxdark.alt": {
+    "text": "Derselbe Canvas im Thema Gruvbox dark: eine warme dunkelbraune Seite mit einem rosa Akzent und den Farben von Gruvbox in den Terminals.",
+    "from": "2ddae55bb038"
+  },
+  "home.themes.own.claim": {
+    "text": "Ein Thema für jedes Terminal",
+    "from": "382e08bcfc07"
+  },
+  "home.themes.own.text": {
+    "text": "<strong>Theme…</strong> im Menü eines Terminals zeichnet es in einem der zehn, gleich in welchem Thema die Seite gezeichnet ist. Die anderen folgen dem Standard, den Sie für Terminals festlegen, oder der Seite.",
+    "from": "6b12c9a24623"
+  },
+  "home.themes.own.caption": {
+    "text": "Nebeneinander auf einer dunklen Seite: ein Terminal in Solarized light, eines in Dracula.",
+    "from": "ae01310ea824"
+  },
+  "home.themes.own.alt": {
+    "text": "Zwei Terminals auf einer dunklen Seite: links ein Git-Verlauf im Thema Solarized light, rechts ein farbiges Diff im Thema Dracula.",
+    "from": "947a05054760"
+  },
+  "home.themes.pick.claim": {
+    "text": "Gewählt in Settings",
+    "from": "d3556328ff6b"
+  },
+  "home.themes.pick.text": {
+    "text": "<strong>Settings → Appearance</strong> zeigt jedes Thema mit einem kleinen Bild seiner Farben. Eine Änderung gilt sofort für die Seite und jedes Terminal, und jeder Browser, in dem Sie sie öffnen, stimmt damit überein.",
+    "from": "68a65355c804"
+  },
+  "home.themes.pick.caption": {
+    "text": "Hell, dunkel oder wie das System, und ein Thema jeder Art, jedes mit einem kleinen Bild seiner Farben.",
+    "from": "04e465e0c21a"
+  },
+  "home.themes.pick.alt": {
+    "text": "Settings, Appearance: hell, dunkel oder wie das System, dann die zehn Farbthemen in zwei Gruppen, jedes mit einer kleinen Vorschau; Nord ist für die dunkle Seite gewählt, Solarized light für die helle.",
+    "from": "4dfde638b037"
+  },
   "home.agents.title": {
     "text": "Bring deinen eigenen Agenten mit",
     "from": "053237049eea"

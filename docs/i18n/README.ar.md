@@ -26,6 +26,23 @@
 | ![Workflows: قوائم خطوات على شكل بطاقات](../../site/screenshots/workflows.png) | ![Library: ما سيُقال لوكيل، تقرؤه قبل التثبيت](../../site/screenshots/library.png) |
 | **Workflows.** قوائم خطوات يمرّ بها وكيل، خطوةً خطوة. | **Library.** اقرأ بالضبط ما سيُقال لوكيل قبل أن تثبّت أي شيء. |
 
+### أنماط الألوان
+
+تأتي الصفحة في عشرة أنماط ألوان، أربعة فاتحة وستة داكنة، تُختار في **Settings → Appearance**. ويمكن لأي طرفية أن يكون لها نمطها الخاص (**Theme…** في قائمتها)، وتتبع الطرفيات الأخرى النمط الافتراضي الذي تضبطه للطرفيات، أو الصفحة. ويمكن ضبط ألوان منفردة يدويًا في [ملف الإعدادات](../../README.md#settings).
+
+| | | |
+|---|---|---|
+| ![اللوحة مع ست طرفيات في نمط Light](../../site/screenshots/themes-light.png) | ![اللوحة نفسها في نمط Solarized light](../../site/screenshots/themes-solarized-light.png) | ![اللوحة نفسها في نمط Gruvbox light](../../site/screenshots/themes-gruvbox-light.png) |
+| **Light** | **Solarized light** | **Gruvbox light** |
+| ![اللوحة نفسها في نمط Nord](../../site/screenshots/themes-nord.png) | ![اللوحة نفسها في نمط Dracula](../../site/screenshots/themes-dracula.png) | ![اللوحة نفسها في نمط Gruvbox dark](../../site/screenshots/themes-gruvbox-dark.png) |
+| **Nord** | **Dracula** | **Gruvbox dark** |
+
+وأيضًا [Dark](../../site/screenshots/themes-dark.png), [High contrast light](../../site/screenshots/themes-high-contrast-light.png), [High contrast dark](../../site/screenshots/themes-high-contrast-dark.png) و [Solarized dark](../../site/screenshots/themes-solarized-dark.png).
+
+<img src="../../site/screenshots/terminal-themes.png" alt="صفحة داكنة فيها ست طرفيات، لكل منها نمطها الخاص: Solarized light وDracula وGruvbox dark وNord وGruvbox light وSolarized dark.">
+
+<sub>ست طرفيات على صفحة داكنة، لكل منها نمطها الخاص. مشروع مختلق في صدفات عادية.</sub>
+
 ---
 
 ## ابدأ في دقيقتين
