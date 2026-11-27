@@ -116,12 +116,12 @@
     "from": "21c2472673d7"
   },
   "home.meta.title": {
-    "text": "Aubergine: आपके टर्मिनलों और AI कोडिंग एजेंटों के लिए मिशन कंट्रोल",
-    "from": "9288ea1bcf71"
+    "text": "Aubergine: टर्मिनलों और कोडिंग एजेंटों का मिशन कंट्रोल",
+    "from": "cd63b652eab2"
   },
   "home.meta.description": {
-    "text": "आपके टर्मिनलों और AI कोडिंग एजेंटों के लिए मिशन कंट्रोल: Claude Code, Codex और सादे टर्मिनलों को साथ-साथ मैनेज करने के लिए आपके ब्राउज़र में एक ही डैशबोर्ड। देखें कि किसे आपकी ज़रूरत है और अपनी प्रोडक्टिविटी वापस पाएँ। मुफ़्त, लोकल, ओपन सोर्स।",
-    "from": "549f660755c7"
+    "text": "Claude Code, Codex और सादे टर्मिनल साथ-साथ चलाने और मैनेज करने के लिए ब्राउज़र में एक डैशबोर्ड। देखें किस एजेंट को आपकी ज़रूरत है। मुफ़्त, लोकल, ओपन सोर्स।",
+    "from": "ff38fa74a3da"
   },
   "home.ld.category": {
     "text": "टर्मिनल और कोडिंग एजेंट मैनेजमेंट डैशबोर्ड",
@@ -520,12 +520,12 @@
     "from": "5c6d1db70932"
   },
   "claude.meta.title": {
-    "text": "Aubergine में Claude Code | Aubergine",
-    "from": "964ec2c2f3df"
+    "text": "Claude Code सेशन साथ-साथ चलाएँ | Aubergine",
+    "from": "3c61aa83b994"
   },
   "claude.meta.description": {
-    "text": "Aubergine Claude Code के लिए खुद से क्या करता है: उसे मेन्यू से शुरू करना, यह देखना कि वह कब इंतज़ार कर रहा है, बातचीत फिर से शुरू करना, पुरानी बातचीत, वह कैसे सेट अप है, और टूल।",
-    "from": "53c5a33c5a7d"
+    "text": "कई Claude Code सेशन साथ-साथ चलाएँ। Aubergine उन्हें शुरू करता है, दिखाता है कौन आपका इंतज़ार कर रहा है, बातचीत फिर शुरू करता है और पुरानी बातचीत दिखाता है।",
+    "from": "6b7dc6fd962d"
   },
   "claude.title": {
     "text": "Aubergine Claude Code के लिए क्या करता है",
@@ -696,12 +696,12 @@
     "from": "cdae060f0648"
   },
   "chatgpt.meta.title": {
-    "text": "Aubergine में Codex और ChatGPT | Aubergine",
-    "from": "8dcd1dde8945"
+    "text": "टर्मिनलों में Codex एजेंट साथ-साथ चलाएँ | Aubergine",
+    "from": "c19dbd4b8744"
   },
   "chatgpt.meta.description": {
-    "text": "Codex, OpenAI का कमांड-लाइन कोडिंग एजेंट, किसी भी प्रोग्राम की तरह Aubergine टर्मिनल में चलता है। आज क्या काम करता है, aubergine कमांड से यह क्या रिपोर्ट कर सकता है, और क्या सिर्फ़ Claude Code के लिए बना है।",
-    "from": "6f8c78d52c06"
+    "text": "Codex, OpenAI का कमांड-लाइन कोडिंग एजेंट, किसी भी प्रोग्राम की तरह Aubergine टर्मिनल में चलता है। आज क्या चलता है, और क्या सिर्फ़ Claude Code के लिए बना है।",
+    "from": "ce1a16eaf055"
   },
   "chatgpt.crumb": {
     "text": "Codex और ChatGPT",
@@ -1104,8 +1104,8 @@
     "from": "82c0a75bef8c"
   },
   "windows.meta.description": {
-    "text": "Aubergine सीधे Windows पर नहीं चलता, पर WSL 2 के अंदर चल सकता है और Windows ब्राउज़र से इस्तेमाल हो सकता है। कदम, क्या आज़माया गया और क्या नहीं, और समाधान।",
-    "from": "eef730b3d958"
+    "text": "Aubergine सीधे Windows पर नहीं चलता। यह WSL 2 के अंदर चलता है और Windows ब्राउज़र से इस्तेमाल होता है: कदम, क्या आज़माया गया, और समाधान।",
+    "from": "ec5595885249"
   },
   "windows.crumb": {
     "text": "WSL के साथ Windows",
@@ -1252,8 +1252,8 @@
     "from": "6ee5544f775e"
   },
   "guides.meta.title": {
-    "text": "Aubergine गाइड | Aubergine",
-    "from": "0d501fb6af2e"
+    "text": "टर्मिनलों में कोडिंग एजेंट चलाने की गाइड | Aubergine",
+    "from": "f891421fd993"
   },
   "guides.meta.description": {
     "text": "Aubergine के साथ कई कोडिंग एजेंट चलाने की गाइड: पूरा परिचय, Claude Code और Codex, वर्किंग कॉपी, और क्यू और शेड्यूल।",
@@ -1512,12 +1512,12 @@
     "from": "60142c410708"
   },
   "copies.meta.title": {
-    "text": "वर्किंग कॉपी के साथ एक रिपॉज़िटरी पर दो कोडिंग एजेंट चलाएँ | Aubergine",
-    "from": "22fa024200af"
+    "text": "एक रिपॉज़िटरी पर दो कोडिंग एजेंट चलाएँ | Aubergine",
+    "from": "bdb9a97d9a45"
   },
   "copies.meta.description": {
-    "text": "वर्किंग कॉपी हर एजेंट को रिपॉज़िटरी का उसका अपना चेकआउट और ब्रांच देती है, ताकि दो एजेंट कभी एक ही फ़ाइलें न बदलें और आप हर एक का काम अलग से पढ़ सकें।",
-    "from": "a293deb1c990"
+    "text": "वर्किंग कॉपी हर एजेंट को उसका अपना Git worktree और ब्रांच देती है, ताकि दो एजेंट कभी एक ही फ़ाइलें न बदलें और आप हर एक का काम अलग से पढ़ सकें।",
+    "from": "0f5b56278a4e"
   },
   "copies.crumb": {
     "text": "वर्किंग कॉपी",
@@ -1700,12 +1700,12 @@
     "from": "515aa3442054"
   },
   "keep.meta.title": {
-    "text": "क्रैश, रीस्टार्ट या अपडेट के बाद भी टर्मिनल बनाए रखें | Aubergine",
-    "from": "d0521ba83d02"
+    "text": "रीस्टार्ट या क्रैश के बाद भी टर्मिनल बनाए रखें | Aubergine",
+    "from": "632ab04b6eba"
   },
   "keep.meta.description": {
-    "text": "जब ब्राउज़र बंद हो, Aubergine रीस्टार्ट हो, और जब कंप्यूटर क्रैश हो, रीस्टार्ट हो या रात में खुद अपडेट हो, तब आपके टर्मिनल और कोडिंग एजेंटों का क्या होता है, और जहाँ थे वहीं से फिर कैसे शुरू करें।",
-    "from": "4f824d2bcf4e"
+    "text": "ब्राउज़र बंद करने, Aubergine रीस्टार्ट करने और कंप्यूटर रीस्टार्ट करने से आपके टर्मिनलों और एजेंटों का क्या होता है, और जहाँ थे वहीं से फिर कैसे शुरू करें।",
+    "from": "27a4a64aebc5"
   },
   "keep.crumb": {
     "text": "रीस्टार्ट के बाद",
@@ -1944,12 +1944,12 @@
     "from": "730944daab4e"
   },
   "alive.meta.title": {
-    "text": "टर्मिनल बंद करने के बाद भी प्रोसेस चलता रहे | Aubergine",
-    "from": "b6893102f4dc"
+    "text": "टर्मिनल बंद होने के बाद भी प्रोसेस चलता रहे | Aubergine",
+    "from": "1cb4c894cd65"
   },
   "alive.meta.description": {
-    "text": "टर्मिनल विंडो बंद करने से उसमें चल रहा सब खत्म हो जाता है। आम उपाय हैं nohup, disown, screen और tmux; Aubergine हर टर्मिनल को आपके लिए tmux में चलाता है, इसलिए ब्राउज़र बंद करने से कुछ खत्म नहीं होता।",
-    "from": "91fc698775ac"
+    "text": "टर्मिनल बंद करने से उसमें चल रहा सब खत्म हो जाता है। आम उपाय हैं nohup, disown, screen और tmux। Aubergine हर टर्मिनल को आपके लिए tmux में चलाता है।",
+    "from": "697912690f11"
   },
   "alive.crumb": {
     "text": "चलता रहने दें",
@@ -2104,8 +2104,8 @@
     "from": "6298f70cc7f8"
   },
   "notify.meta.description": {
-    "text": "एक नज़र में देखें कि कौन-सा Claude Code टर्मिनल काम कर रहा है, आपका इंतज़ार कर रहा है या पूरा हो गया: Aubergine के बनाए हुक, For you की गिनती, अगले इंतज़ार वाले टर्मिनल की key, और खुले पेज से नोटिफ़िकेशन।",
-    "from": "ec167ae38aa3"
+    "text": "देखें कौन-सा Claude Code टर्मिनल काम कर रहा है, आपका इंतज़ार कर रहा है या पूरा हो गया: इंतज़ार की गिनती, अगले टर्मिनल की key, और ब्राउज़र नोटिफ़िकेशन।",
+    "from": "538211348bf4"
   },
   "notify.crumb": {
     "text": "पूरा या इंतज़ार में",
@@ -2244,12 +2244,12 @@
     "from": "60204a04f28a"
   },
   "resume.meta.title": {
-    "text": "रीस्टार्ट के बाद Claude Code की बातचीत फिर शुरू करें | Aubergine",
-    "from": "25d7c94055ab"
+    "text": "रीस्टार्ट के बाद Claude Code सेशन फिर शुरू करें | Aubergine",
+    "from": "03470fcd8946"
   },
   "resume.meta.description": {
-    "text": "claude --continue और --resume बातचीत वापस लाते हैं, अगर आप सही फ़ोल्डर में हों। Aubergine याद रखता है कि हर टर्मिनल किस बातचीत में था, Resume agent देता है, और फ़ोल्डर के हिसाब से पुरानी बातचीत की सूची दिखाता है।",
-    "from": "9c3fb52f17de"
+    "text": "claude --continue और --resume को सही फ़ोल्डर चाहिए। Aubergine हर टर्मिनल की बातचीत याद रखता है, Resume agent देता है और पुरानी बातचीत की सूची दिखाता है।",
+    "from": "f60b9e354755"
   },
   "resume.crumb": {
     "text": "बातचीत फिर शुरू करें",
@@ -2384,12 +2384,12 @@
     "from": "82d3fe458522"
   },
   "many.meta.title": {
-    "text": "बहुत सारे टैब हों तो सही टर्मिनल ढूँढें | Aubergine",
-    "from": "710b13634a0f"
+    "text": "बहुत सारे टर्मिनल टैब? सही टर्मिनल ढूँढें | Aubergine",
+    "from": "e727b8c72939"
   },
   "many.meta.description": {
-    "text": "बहुत सारे टर्मिनल टैब, सबका नाम zsh? Aubergine हर टर्मिनल को एक कैनवस पर और एक सूची में रखता है, उसकी स्थिति शब्दों में, फ़िल्टर, टैग, टर्मिनल आउटपुट में खोज, और एक टर्मिनल अकेले ब्राउज़र टैब में।",
-    "from": "0d77fee497f4"
+    "text": "बहुत सारे टर्मिनल टैब, सबका नाम zsh? Aubergine हर टर्मिनल को एक कैनवस और एक सूची में रखता है, स्थिति, फ़िल्टर, टैग और आउटपुट में खोज के साथ।",
+    "from": "0d52d247f772"
   },
   "many.crumb": {
     "text": "बहुत सारे टर्मिनल",
@@ -2516,8 +2516,8 @@
     "from": "a731849612b9"
   },
   "tmux.meta.description": {
-    "text": "ऐसे शेल जो विंडो के बाद भी चलते रहें, बिना प्रीफ़िक्स key या .tmux.conf के। Aubergine आपके लिए tmux को उसके अपने सॉकेट पर चलाता है, और व्हील, कॉपी-पेस्ट और आकार बदलना किसी भी टर्मिनल की तरह काम करते हैं।",
-    "from": "d876f30b4bcb"
+    "text": "ऐसे शेल जो विंडो के बाद भी चलते रहें, बिना प्रीफ़िक्स key या .tmux.conf के। Aubergine आपके लिए tmux चलाता है; व्हील और कॉपी-पेस्ट हमेशा की तरह काम करते हैं।",
+    "from": "de322a70f2bb"
   },
   "tmux.crumb": {
     "text": "tmux के बिना tmux",
@@ -2752,8 +2752,8 @@
     "from": "5e05181dcbf3"
   },
   "phone.meta.description": {
-    "text": "फ़ोन के ब्राउज़र से Aubergine तक पहुँचना: उसी कंप्यूटर पर HTTPS, सेटिंग्स में एक पता, हर डिवाइस एक बार के कोड या QR कोड से जोड़ा गया, और जब चाहें रद्द। एक Mac पर एक बार चलाया गया; फ़ोन पर आज़माया नहीं गया।",
-    "from": "4f87f330c4d4"
+    "text": "फ़ोन के ब्राउज़र से Aubergine तक: आपके अपने कंप्यूटर पर HTTPS, हर डिवाइस एक बार के कोड से जोड़ा गया। एक Mac पर एक बार चलाया गया; फ़ोन पर आज़माया नहीं गया।",
+    "from": "b82b5a179985"
   },
   "phone.crumb": {
     "text": "आपके फ़ोन से",
@@ -2880,8 +2880,8 @@
     "from": "2c9ecf2e9214"
   },
   "queue.meta.title": {
-    "text": "क्यू, For you सूची और शेड्यूल | Aubergine",
-    "from": "aaf91b58a021"
+    "text": "कोडिंग एजेंटों के लिए टास्क क्यू और शेड्यूल | Aubergine",
+    "from": "3fb36f54544d"
   },
   "queue.meta.description": {
     "text": "एक टास्क एक बार लिखें और किसी खाली एजेंट को उसे लेने दें, जो कुछ आपका इंतज़ार कर रहा है उसे एक सूची में देखें, और शेड्यूल से टास्क तय समय पर चलाएँ।",
@@ -3500,8 +3500,8 @@
     "from": "25c43f0bde14"
   },
   "faq.meta.title": {
-    "text": "अक्सर पूछे जाने वाले सवाल | Aubergine",
-    "from": "0956334109a5"
+    "text": "Aubergine FAQ: एजेंट, प्राइवेसी और ज़रूरतें",
+    "from": "c026a239ae64"
   },
   "faq.meta.description": {
     "text": "Aubergine के बारे में जवाब: यह क्या है, इसे क्या चाहिए, क्या यह निजी है, यह कोडिंग एजेंटों के साथ कैसे काम करता है, और क्या योजना में है।",
@@ -3692,12 +3692,12 @@
     "from": "ef74044c8bc1"
   },
   "compare.meta.title": {
-    "text": "कई कोडिंग एजेंट चलाने के टूल, तुलना में | Aubergine",
-    "from": "e45fe95912dd"
+    "text": "कोडिंग एजेंट चलाने के 7 टूल, तुलना में | Aubergine",
+    "from": "c99d6cc298c1"
   },
   "compare.meta.description": {
-    "text": "Conductor, Claude Squad, Vibe Kanban, cmux, Warp और Paradev के बगल में Aubergine: हर एक क्या है, कहाँ चलता है, कितने का है, एजेंटों को अलग कैसे रखता है और उसे बंद करने से क्या खत्म होता है।",
-    "from": "f8a5c374323f"
+    "text": "Conductor, Claude Squad, Vibe Kanban, cmux, Warp और Paradev के बगल में Aubergine: हर एक क्या है, कहाँ चलता है, कितने का है और बंद करने से क्या खत्म होता है।",
+    "from": "ab73688e9085"
   },
   "compare.crumb": {
     "text": "तुलना",
@@ -3936,12 +3936,12 @@
     "from": "14116bf4372e"
   },
   "vs.conductor.meta.title": {
-    "text": "Aubergine vs Conductor: एक मुफ़्त, ओपन सोर्स विकल्प | Aubergine",
-    "from": "e2c7866f349d"
+    "text": "Aubergine vs Conductor: मुफ़्त, ओपन सोर्स विकल्प",
+    "from": "35ece35e60d8"
   },
   "vs.conductor.meta.description": {
-    "text": "Conductor और Aubergine दोनों कोडिंग एजेंटों को Git worktree में साथ-साथ चलाते हैं। Conductor क्लाउड वाला एक Mac ऐप है; Aubergine ओपन सोर्स है, आपके ब्राउज़र में चलता है, और टर्मिनलों को tmux में चलाए रखता है।",
-    "from": "d87829790de4"
+    "text": "दोनों कोडिंग एजेंटों को Git worktree में साथ-साथ चलाते हैं। Conductor क्लाउड वाला Mac ऐप है; Aubergine ओपन सोर्स है और टर्मिनलों को tmux में चलाए रखता है।",
+    "from": "baeaaa943291"
   },
   "vs.conductor.title": {
     "text": "Aubergine vs Conductor",
@@ -4104,12 +4104,12 @@
     "from": "3c4fa1eb24c0"
   },
   "vs.claude-squad.meta.title": {
-    "text": "Aubergine vs Claude Squad: tmux और worktree, दो तरीके | Aubergine",
-    "from": "e01a63e97f29"
+    "text": "Aubergine vs Claude Squad: tmux और worktree, दो तरीके",
+    "from": "4166fb6975ea"
   },
   "vs.claude-squad.meta.description": {
-    "text": "Claude Squad और Aubergine दोनों हर कोडिंग एजेंट को एक tmux सेशन और एक Git worktree में चलाते हैं। Claude Squad आपके टर्मिनल में एक प्रोग्राम है; Aubergine आपके ब्राउज़र में टर्मिनलों का एक कैनवस है।",
-    "from": "49ec403afb34"
+    "text": "दोनों हर कोडिंग एजेंट को एक tmux सेशन और एक Git worktree में चलाते हैं। Claude Squad आपके टर्मिनल में एक प्रोग्राम है; Aubergine ब्राउज़र में एक कैनवस है।",
+    "from": "9c993cb105df"
   },
   "vs.claude-squad.title": {
     "text": "Aubergine vs Claude Squad",
@@ -4268,12 +4268,12 @@
     "from": "306161ab46c9"
   },
   "vs.vibe-kanban.meta.title": {
-    "text": "Aubergine vs Vibe Kanban: issues का बोर्ड या टर्मिनलों का कैनवस | Aubergine",
-    "from": "9f0bf97bf989"
+    "text": "Aubergine vs Vibe Kanban: एक ओपन सोर्स विकल्प",
+    "from": "670b010ba18d"
   },
   "vs.vibe-kanban.meta.description": {
-    "text": "Vibe Kanban और Aubergine दोनों लोकल, ओपन सोर्स हैं और आपके ब्राउज़र में दिखते हैं। Vibe Kanban काम को बोर्ड पर issues के रूप में प्लान करता है; Aubergine खुद एजेंटों को साथ-साथ टर्मिनलों के रूप में दिखाता है।",
-    "from": "3dad274de8a4"
+    "text": "दोनों लोकल, ओपन सोर्स और ब्राउज़र में हैं। Vibe Kanban काम को बोर्ड पर issues की तरह प्लान करता है; Aubergine एजेंटों को साथ-साथ टर्मिनलों में दिखाता है।",
+    "from": "bb53f7f86aa3"
   },
   "vs.vibe-kanban.title": {
     "text": "Aubergine vs Vibe Kanban",
@@ -4436,12 +4436,12 @@
     "from": "548d4fabc56e"
   },
   "vs.cmux.meta.title": {
-    "text": "Aubergine vs cmux: कोडिंग एजेंटों के लिए बने दो टर्मिनल | Aubergine",
-    "from": "dd38ae503d2d"
+    "text": "Aubergine vs cmux: कोडिंग एजेंटों के लिए बने दो टर्मिनल",
+    "from": "c625444e117b"
   },
   "vs.cmux.meta.description": {
-    "text": "cmux और Aubergine दोनों किसी भी कमांड-लाइन एजेंट को असली टर्मिनल में चलाते हैं और बताते हैं कि किसे आपकी ज़रूरत है। cmux एक नेटिव macOS ऐप है; Aubergine, tmux के ऊपर आपके ब्राउज़र में एक कैनवस है।",
-    "from": "9258c63e7091"
+    "text": "दोनों किसी भी कमांड-लाइन एजेंट को असली टर्मिनल में चलाते हैं और बताते हैं किसे आपकी ज़रूरत है। cmux नेटिव macOS ऐप है; Aubergine ब्राउज़र में एक कैनवस है।",
+    "from": "1018139b92b2"
   },
   "vs.cmux.title": {
     "text": "Aubergine vs cmux",
@@ -4600,12 +4600,12 @@
     "from": "3db7c958dfdf"
   },
   "vs.warp.meta.title": {
-    "text": "कई कोडिंग एजेंट चलाने के लिए Aubergine vs Warp | Aubergine",
-    "from": "cbd600eca532"
+    "text": "कई कोडिंग एजेंट चलाने के लिए Aubergine vs Warp",
+    "from": "b434edbfa3d3"
   },
   "vs.warp.meta.description": {
-    "text": "Warp एक डेस्कटॉप टर्मिनल है जिसका अपना एजेंट, पेड प्लान और क्लाउड एजेंट हैं, macOS, Windows और Linux पर। Aubergine किसी मॉडल को कॉल नहीं करता: यह उन्हीं एजेंटों को जो आप पहले से इस्तेमाल करते हैं, कैनवस पर टर्मिनलों में चलाता है, जिन्हें tmux चलाए रखता है।",
-    "from": "097dab708969"
+    "text": "Warp एक डेस्कटॉप टर्मिनल है, अपने एजेंट, पेड प्लान और क्लाउड के साथ। Aubergine किसी मॉडल को कॉल नहीं करता: वह आपके मौजूदा एजेंटों को साथ-साथ चलाता है।",
+    "from": "d9572d15388b"
   },
   "vs.warp.title": {
     "text": "Aubergine vs Warp",
@@ -4764,12 +4764,12 @@
     "from": "6ff850fa1891"
   },
   "vs.paradev.meta.title": {
-    "text": "Aubergine vs Paradev (पहले Superset) | Aubergine",
-    "from": "601eebcc9205"
+    "text": "Aubergine vs Paradev (पहले Superset): एक विकल्प",
+    "from": "07bdc273e5cb"
   },
   "vs.paradev.meta.description": {
-    "text": "Paradev, वह ऐप जो कभी Superset कहलाता था, और Aubergine दोनों MIT लाइसेंस वाले हैं और किसी भी कोडिंग एजेंट को Git worktree में चलाते हैं। Paradev पेड प्लान वाला एक डेस्कटॉप ऐप है; Aubergine आपके ब्राउज़र में एक कैनवस है, बिना अकाउंट के।",
-    "from": "24bc65c55b47"
+    "text": "Paradev, पहले Superset, और Aubergine दोनों MIT लाइसेंस वाले हैं और Git worktree में काम करते हैं। Paradev पेड प्लान वाला डेस्कटॉप ऐप है; Aubergine मुफ़्त है।",
+    "from": "9fd6946e998b"
   },
   "vs.paradev.title": {
     "text": "Aubergine vs Paradev, पहले Superset",
@@ -4922,5 +4922,9 @@
   "vs.paradev.c.timed": {
     "text": "शेड्यूल या किसी इवेंट पर ऑटोमेशन, पेड प्लान पर",
     "from": "d0a82cd975d3"
+  },
+  "home.compare.more": {
+    "text": "Conductor, Claude Squad, cmux, Warp और दूसरों से तुलना",
+    "from": "60e16e373973"
   }
 }

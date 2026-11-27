@@ -116,12 +116,12 @@
     "from": "21c2472673d7"
   },
   "home.meta.title": {
-    "text": "Aubergine : le centre de contrôle de vos terminaux et agents de code IA",
-    "from": "9288ea1bcf71"
+    "text": "Aubergine : centre de contrôle des terminaux et agents IA",
+    "from": "cd63b652eab2"
   },
   "home.meta.description": {
-    "text": "Le centre de contrôle de vos terminaux et agents de code IA : un seul tableau de bord, dans votre navigateur, pour gérer Claude Code, Codex et des terminaux ordinaires côte à côte. Voyez lequel a besoin de vous et retrouvez votre productivité. Gratuite, locale, open source.",
-    "from": "549f660755c7"
+    "text": "Un tableau de bord web pour lancer et gérer Claude Code, Codex et des terminaux côte à côte. Voyez quel agent vous attend. Gratuit, local, open source.",
+    "from": "ff38fa74a3da"
   },
   "home.ld.category": {
     "text": "Tableau de bord de gestion des terminaux et des agents de code",
@@ -520,12 +520,12 @@
     "from": "5c6d1db70932"
   },
   "claude.meta.title": {
-    "text": "Claude Code dans Aubergine | Aubergine",
-    "from": "964ec2c2f3df"
+    "text": "Lancer des sessions Claude Code côte à côte | Aubergine",
+    "from": "3c61aa83b994"
   },
   "claude.meta.description": {
-    "text": "Ce qu’Aubergine fait d’elle-même pour Claude Code : le lancer depuis le menu, voir quand il attend, reprendre une conversation, les anciennes conversations, sa configuration, et des outils.",
-    "from": "53c5a33c5a7d"
+    "text": "Lancez plusieurs sessions Claude Code côte à côte. Aubergine les démarre, montre laquelle vous attend, reprend les conversations et liste les anciennes.",
+    "from": "6b7dc6fd962d"
   },
   "claude.title": {
     "text": "Ce qu’Aubergine fait pour Claude Code",
@@ -696,12 +696,12 @@
     "from": "cdae060f0648"
   },
   "chatgpt.meta.title": {
-    "text": "Codex et ChatGPT dans Aubergine | Aubergine",
-    "from": "8dcd1dde8945"
+    "text": "Des agents Codex côte à côte dans des terminaux | Aubergine",
+    "from": "c19dbd4b8744"
   },
   "chatgpt.meta.description": {
-    "text": "Codex, l’agent de code en ligne de commande d’OpenAI, tourne dans un terminal Aubergine comme n’importe quel programme. Ce qui fonctionne aujourd’hui, ce qu’il peut signaler avec les commandes aubergine, et ce qui est construit uniquement pour Claude Code.",
-    "from": "6f8c78d52c06"
+    "text": "Codex, l’agent de code en CLI d’OpenAI, tourne dans un terminal Aubergine comme tout programme. Ce qui marche aujourd’hui et ce qui est réservé à Claude Code.",
+    "from": "ce1a16eaf055"
   },
   "chatgpt.crumb": {
     "text": "Codex et ChatGPT",
@@ -1104,8 +1104,8 @@
     "from": "82c0a75bef8c"
   },
   "windows.meta.description": {
-    "text": "Aubergine ne tourne pas sur Windows lui-même, mais peut tourner dans WSL 2 et s’utiliser depuis un navigateur Windows. Les étapes, ce qui a été essayé ou non, et les solutions.",
-    "from": "eef730b3d958"
+    "text": "Aubergine ne tourne pas sur Windows même. Elle tourne dans WSL 2 et s’utilise depuis un navigateur Windows : les étapes, ce qui a été essayé, les solutions.",
+    "from": "ec5595885249"
   },
   "windows.crumb": {
     "text": "Windows avec WSL",
@@ -1252,8 +1252,8 @@
     "from": "6ee5544f775e"
   },
   "guides.meta.title": {
-    "text": "Guides d’Aubergine | Aubergine",
-    "from": "0d501fb6af2e"
+    "text": "Guides : des agents de code dans des terminaux | Aubergine",
+    "from": "f891421fd993"
   },
   "guides.meta.description": {
     "text": "Des guides pour faire tourner plusieurs agents de code avec Aubergine : la vue d’ensemble, Claude Code et Codex, les copies de travail, la file d’attente et les planifications.",
@@ -1512,12 +1512,12 @@
     "from": "60142c410708"
   },
   "copies.meta.title": {
-    "text": "Deux agents de code sur un même dépôt avec des copies de travail | Aubergine",
-    "from": "22fa024200af"
+    "text": "Deux agents de code sur un même dépôt | Aubergine",
+    "from": "bdb9a97d9a45"
   },
   "copies.meta.description": {
-    "text": "Une copie de travail donne à chaque agent sa propre extraction et sa propre branche d’un dépôt, pour que deux agents ne modifient jamais les mêmes fichiers et que vous lisiez le travail de chacun à part.",
-    "from": "a293deb1c990"
+    "text": "Une copie de travail donne à chaque agent son worktree et sa branche Git : deux agents ne touchent jamais les mêmes fichiers et vous lisez chacun à part.",
+    "from": "0f5b56278a4e"
   },
   "copies.crumb": {
     "text": "Copies de travail",
@@ -1700,12 +1700,12 @@
     "from": "515aa3442054"
   },
   "keep.meta.title": {
-    "text": "Garder vos terminaux après un plantage, un redémarrage ou une mise à jour | Aubergine",
-    "from": "d0521ba83d02"
+    "text": "Garder ses terminaux après redémarrage ou crash | Aubergine",
+    "from": "632ab04b6eba"
   },
   "keep.meta.description": {
-    "text": "Ce qui arrive à vos terminaux et à vos agents de code quand le navigateur se ferme, quand Aubergine redémarre, et quand l’ordinateur plante, redémarre ou se met à jour la nuit, et comment reprendre là où vous en étiez.",
-    "from": "4f824d2bcf4e"
+    "text": "Ce que fermer le navigateur, redémarrer Aubergine et redémarrer l’ordinateur font à vos terminaux et agents, et comment reprendre là où vous en étiez.",
+    "from": "27a4a64aebc5"
   },
   "keep.crumb": {
     "text": "Après un redémarrage",
@@ -1944,12 +1944,12 @@
     "from": "730944daab4e"
   },
   "alive.meta.title": {
-    "text": "Garder un processus en marche après avoir fermé le terminal | Aubergine",
-    "from": "b6893102f4dc"
+    "text": "Processus actif après fermeture du terminal | Aubergine",
+    "from": "1cb4c894cd65"
   },
   "alive.meta.description": {
-    "text": "Fermer une fenêtre de terminal arrête ce qui y tourne. Les réponses habituelles sont nohup, disown, screen et tmux ; Aubergine fait tourner chaque terminal dans tmux pour vous, si bien que fermer le navigateur n’arrête rien.",
-    "from": "91fc698775ac"
+    "text": "Fermer un terminal arrête ce qui y tourne. Solutions habituelles : nohup, disown, screen et tmux. Aubergine fait tourner chaque terminal dans tmux pour vous.",
+    "from": "697912690f11"
   },
   "alive.crumb": {
     "text": "Garder en marche",
@@ -2104,8 +2104,8 @@
     "from": "6298f70cc7f8"
   },
   "notify.meta.description": {
-    "text": "Voyez d’un coup d’œil quel terminal Claude Code travaille, vous attend ou a fini : des hooks générés par Aubergine, le compteur For you, une touche vers le prochain terminal qui attend, et des notifications de la page ouverte.",
-    "from": "ec167ae38aa3"
+    "text": "Voyez quel terminal Claude Code travaille, vous attend ou a fini : un compteur de ce qui attend, une touche vers le suivant, des notifications du navigateur.",
+    "from": "538211348bf4"
   },
   "notify.crumb": {
     "text": "Fini ou en attente",
@@ -2244,12 +2244,12 @@
     "from": "60204a04f28a"
   },
   "resume.meta.title": {
-    "text": "Reprendre une conversation Claude Code après un redémarrage | Aubergine",
-    "from": "25d7c94055ab"
+    "text": "Reprendre une session Claude Code au redémarrage | Aubergine",
+    "from": "03470fcd8946"
   },
   "resume.meta.description": {
-    "text": "claude --continue et --resume ramènent une conversation si vous êtes dans le bon dossier. Aubergine se souvient de la conversation de chaque terminal, propose Resume agent, et liste les conversations passées par dossier.",
-    "from": "9c3fb52f17de"
+    "text": "claude --continue et --resume exigent le bon dossier. Aubergine retient la conversation de chaque terminal, propose Resume agent et liste les anciennes.",
+    "from": "f60b9e354755"
   },
   "resume.crumb": {
     "text": "Reprendre une conversation",
@@ -2384,12 +2384,12 @@
     "from": "82d3fe458522"
   },
   "many.meta.title": {
-    "text": "Trouver le bon terminal quand vous avez trop d’onglets | Aubergine",
-    "from": "710b13634a0f"
+    "text": "Trop d’onglets de terminal ? Trouvez le bon | Aubergine",
+    "from": "e727b8c72939"
   },
   "many.meta.description": {
-    "text": "Trop d’onglets de terminal, tous nommés zsh ? Aubergine met chaque terminal sur un canevas et dans une seule liste avec son état en toutes lettres, des filtres, des étiquettes, la recherche dans la sortie des terminaux et un terminal seul dans un onglet du navigateur.",
-    "from": "0d77fee497f4"
+    "text": "Trop d’onglets de terminal, tous nommés zsh ? Aubergine met chaque terminal sur un canevas et dans une liste, avec état, filtres, étiquettes et recherche.",
+    "from": "0d52d247f772"
   },
   "many.crumb": {
     "text": "Trop de terminaux",
@@ -2516,8 +2516,8 @@
     "from": "a731849612b9"
   },
   "tmux.meta.description": {
-    "text": "Des shells qui survivent à la fenêtre, sans touche de préfixe ni .tmux.conf. Aubergine fait tourner tmux pour vous sur son propre socket, avec la molette, le copier-coller et le redimensionnement qui marchent comme dans n’importe quel terminal.",
-    "from": "d876f30b4bcb"
+    "text": "Des shells qui survivent à la fenêtre, sans touche préfixe ni .tmux.conf. Aubergine gère tmux pour vous ; molette et copier-coller marchent comme d’habitude.",
+    "from": "de322a70f2bb"
   },
   "tmux.crumb": {
     "text": "tmux sans tmux",
@@ -2752,8 +2752,8 @@
     "from": "5e05181dcbf3"
   },
   "phone.meta.description": {
-    "text": "Accéder à Aubergine depuis le navigateur d’un téléphone : HTTPS sur le même ordinateur, une adresse dans les réglages, chaque appareil appairé avec un code à usage unique ou un code QR, et révoqué quand vous le voulez. Lancé une fois sur un Mac ; pas essayé sur un téléphone.",
-    "from": "4f87f330c4d4"
+    "text": "Aubergine dans le navigateur d’un mobile : HTTPS sur votre ordinateur, appareils appairés par code unique. Lancé une fois sur un Mac ; pas essayé sur mobile.",
+    "from": "b82b5a179985"
   },
   "phone.crumb": {
     "text": "Depuis votre téléphone",
@@ -2880,8 +2880,8 @@
     "from": "2c9ecf2e9214"
   },
   "queue.meta.title": {
-    "text": "La file d’attente, la liste For you et les planifications | Aubergine",
-    "from": "aaf91b58a021"
+    "text": "File d’attente de tâches et planification | Aubergine",
+    "from": "3fb36f54544d"
   },
   "queue.meta.description": {
     "text": "Écrivez une tâche une fois et laissez un agent libre la prendre, voyez tout ce qui vous attend dans une seule liste, et lancez des tâches à heure fixe avec des planifications.",
@@ -3500,8 +3500,8 @@
     "from": "25c43f0bde14"
   },
   "faq.meta.title": {
-    "text": "Questions fréquentes | Aubergine",
-    "from": "0956334109a5"
+    "text": "FAQ Aubergine : agents, confidentialité et prérequis",
+    "from": "c026a239ae64"
   },
   "faq.meta.description": {
     "text": "Des réponses sur Aubergine : ce que c’est, ce dont elle a besoin, si elle est privée, comment elle fonctionne avec les agents de code, et ce qui est prévu.",
@@ -3692,12 +3692,12 @@
     "from": "ef74044c8bc1"
   },
   "compare.meta.title": {
-    "text": "Outils pour faire tourner plusieurs agents de code, comparés | Aubergine",
-    "from": "e45fe95912dd"
+    "text": "7 outils pour agents de code comparés | Aubergine",
+    "from": "c99d6cc298c1"
   },
   "compare.meta.description": {
-    "text": "Aubergine à côté de Conductor, Claude Squad, Vibe Kanban, cmux, Warp et Paradev : ce qu’est chacun, où il tourne, ce qu’il coûte, comment il tient les agents à part et ce que sa fermeture arrête.",
-    "from": "f8a5c374323f"
+    "text": "Aubergine face à Conductor, Claude Squad, Vibe Kanban, cmux, Warp et Paradev : ce qu’est chacun, où il tourne, ce qu’il coûte et ce que sa fermeture arrête.",
+    "from": "ab73688e9085"
   },
   "compare.crumb": {
     "text": "Comparer",
@@ -3936,12 +3936,12 @@
     "from": "14116bf4372e"
   },
   "vs.conductor.meta.title": {
-    "text": "Aubergine vs Conductor : une alternative gratuite et open source | Aubergine",
-    "from": "e2c7866f349d"
+    "text": "Aubergine vs Conductor : alternative gratuite et open source",
+    "from": "35ece35e60d8"
   },
   "vs.conductor.meta.description": {
-    "text": "Conductor et Aubergine font tous deux tourner des agents de code en parallèle dans des worktrees Git. Conductor est une app Mac avec un cloud ; Aubergine est open source, tourne dans votre navigateur et garde les terminaux en marche dans tmux.",
-    "from": "d87829790de4"
+    "text": "Les deux lancent des agents de code en parallèle dans des worktrees Git. Conductor : app Mac avec cloud ; Aubergine : open source, terminaux gardés dans tmux.",
+    "from": "baeaaa943291"
   },
   "vs.conductor.title": {
     "text": "Aubergine vs Conductor",
@@ -4104,12 +4104,12 @@
     "from": "3c4fa1eb24c0"
   },
   "vs.claude-squad.meta.title": {
-    "text": "Aubergine vs Claude Squad : tmux et worktrees, de deux façons | Aubergine",
-    "from": "e01a63e97f29"
+    "text": "Aubergine vs Claude Squad : tmux et worktrees, deux façons",
+    "from": "4166fb6975ea"
   },
   "vs.claude-squad.meta.description": {
-    "text": "Claude Squad et Aubergine font tous deux tourner chaque agent de code dans une session tmux et un worktree Git. Claude Squad est un programme dans votre terminal ; Aubergine est un canevas de terminaux dans votre navigateur.",
-    "from": "49ec403afb34"
+    "text": "Les deux lancent chaque agent dans une session tmux et un worktree Git. Claude Squad est un programme dans votre terminal ; Aubergine, un canevas web.",
+    "from": "9c993cb105df"
   },
   "vs.claude-squad.title": {
     "text": "Aubergine vs Claude Squad",
@@ -4268,12 +4268,12 @@
     "from": "306161ab46c9"
   },
   "vs.vibe-kanban.meta.title": {
-    "text": "Aubergine vs Vibe Kanban : un tableau de tickets ou un canevas de terminaux | Aubergine",
-    "from": "9f0bf97bf989"
+    "text": "Aubergine vs Vibe Kanban : une alternative open source",
+    "from": "670b010ba18d"
   },
   "vs.vibe-kanban.meta.description": {
-    "text": "Vibe Kanban et Aubergine sont tous deux locaux, open source et affichés dans votre navigateur. Vibe Kanban planifie le travail en tickets sur un tableau ; Aubergine montre les agents eux-mêmes, en terminaux côte à côte.",
-    "from": "3dad274de8a4"
+    "text": "Les deux sont locaux, open source et dans le navigateur. Vibe Kanban planifie le travail en tickets sur un tableau ; Aubergine montre les agents en terminaux.",
+    "from": "bb53f7f86aa3"
   },
   "vs.vibe-kanban.title": {
     "text": "Aubergine vs Vibe Kanban",
@@ -4436,12 +4436,12 @@
     "from": "548d4fabc56e"
   },
   "vs.cmux.meta.title": {
-    "text": "Aubergine vs cmux : deux terminaux faits pour les agents de code | Aubergine",
-    "from": "dd38ae503d2d"
+    "text": "Aubergine vs cmux : deux terminaux pour agents de code",
+    "from": "c625444e117b"
   },
   "vs.cmux.meta.description": {
-    "text": "cmux et Aubergine font tous deux tourner n’importe quel agent en ligne de commande dans un vrai terminal et vous disent lequel a besoin de vous. cmux est une app macOS native ; Aubergine est un canevas dans votre navigateur, au-dessus de tmux.",
-    "from": "9258c63e7091"
+    "text": "Les deux lancent tout agent CLI dans un vrai terminal et montrent lequel vous attend. cmux est une app macOS native ; Aubergine, un canevas web.",
+    "from": "1018139b92b2"
   },
   "vs.cmux.title": {
     "text": "Aubergine vs cmux",
@@ -4600,12 +4600,12 @@
     "from": "3db7c958dfdf"
   },
   "vs.warp.meta.title": {
-    "text": "Aubergine vs Warp pour faire tourner plusieurs agents de code | Aubergine",
-    "from": "cbd600eca532"
+    "text": "Aubergine vs Warp pour lancer plusieurs agents de code",
+    "from": "b434edbfa3d3"
   },
   "vs.warp.meta.description": {
-    "text": "Warp est un terminal de bureau avec son propre agent, des offres payantes et des agents dans le cloud, sous macOS, Windows et Linux. Aubergine n’appelle aucun modèle : elle fait tourner les agents que vous utilisez déjà dans des terminaux sur un canevas, maintenus en marche par tmux.",
-    "from": "097dab708969"
+    "text": "Warp : un terminal de bureau avec son agent, des offres payantes et un cloud. Aubergine n’appelle aucun modèle : elle lance côte à côte vos agents habituels.",
+    "from": "d9572d15388b"
   },
   "vs.warp.title": {
     "text": "Aubergine vs Warp",
@@ -4764,12 +4764,12 @@
     "from": "6ff850fa1891"
   },
   "vs.paradev.meta.title": {
-    "text": "Aubergine vs Paradev (anciennement Superset) | Aubergine",
-    "from": "601eebcc9205"
+    "text": "Aubergine vs Paradev (ex-Superset) : une alternative",
+    "from": "07bdc273e5cb"
   },
   "vs.paradev.meta.description": {
-    "text": "Paradev, l’app appelée autrefois Superset, et Aubergine sont toutes deux sous licence MIT et font tourner n’importe quel agent de code dans des worktrees Git. Paradev est une app de bureau avec des offres payantes ; Aubergine est un canevas dans votre navigateur, sans compte.",
-    "from": "24bc65c55b47"
+    "text": "Paradev, ex-Superset, et Aubergine sont sous licence MIT et utilisent des worktrees Git. Paradev : app de bureau à offres payantes ; Aubergine : gratuite.",
+    "from": "9fd6946e998b"
   },
   "vs.paradev.title": {
     "text": "Aubergine vs Paradev, anciennement Superset",
@@ -4922,5 +4922,9 @@
   "vs.paradev.c.timed": {
     "text": "Des automatisations selon une planification ou un événement, avec une offre payante",
     "from": "d0a82cd975d3"
+  },
+  "home.compare.more": {
+    "text": "Comparée à Conductor, Claude Squad, cmux, Warp et d’autres",
+    "from": "60e16e373973"
   }
 }

@@ -116,12 +116,12 @@
     "from": "21c2472673d7"
   },
   "home.meta.title": {
-    "text": "Aubergine: আপনার টার্মিনাল আর AI কোডিং এজেন্টদের জন্য মিশন কন্ট্রোল",
-    "from": "9288ea1bcf71"
+    "text": "Aubergine: টার্মিনাল আর কোডিং এজেন্টদের মিশন কন্ট্রোল",
+    "from": "cd63b652eab2"
   },
   "home.meta.description": {
-    "text": "আপনার টার্মিনাল আর AI কোডিং এজেন্টদের জন্য মিশন কন্ট্রোল: Claude Code, Codex আর সাধারণ টার্মিনাল পাশাপাশি ম্যানেজ করার জন্য ব্রাউজারে একটি ড্যাশবোর্ড। দেখুন কার আপনাকে দরকার, আর আপনার প্রোডাক্টিভিটি ফিরে পান। বিনামূল্যে, লোকাল, ওপেন সোর্স।",
-    "from": "549f660755c7"
+    "text": "Claude Code, Codex আর সাধারণ টার্মিনাল পাশাপাশি চালাতে ও ম্যানেজ করতে ব্রাউজারে এক ড্যাশবোর্ড। দেখুন কোন এজেন্টের আপনাকে দরকার। বিনামূল্যে, লোকাল, ওপেন সোর্স।",
+    "from": "ff38fa74a3da"
   },
   "home.ld.category": {
     "text": "টার্মিনাল ও কোডিং এজেন্ট ম্যানেজমেন্ট ড্যাশবোর্ড",
@@ -520,12 +520,12 @@
     "from": "5c6d1db70932"
   },
   "claude.meta.title": {
-    "text": "Aubergine-এ Claude Code | Aubergine",
-    "from": "964ec2c2f3df"
+    "text": "Claude Code সেশন পাশাপাশি চালান | Aubergine",
+    "from": "3c61aa83b994"
   },
   "claude.meta.description": {
-    "text": "Aubergine নিজে থেকে Claude Code-এর জন্য যা করে: মেনু থেকে চালু করা, কখন অপেক্ষা করছে দেখা, কথোপকথন আবার শুরু করা, পুরোনো কথোপকথন, এটি কীভাবে সেট আপ করা, আর টুল।",
-    "from": "53c5a33c5a7d"
+    "text": "কয়েকটি Claude Code সেশন পাশাপাশি চালান। Aubergine সেগুলো চালু করে, দেখায় কোনটি আপনার অপেক্ষায়, কথোপকথন আবার শুরু করে আর পুরোনোগুলোর তালিকা দেয়।",
+    "from": "6b7dc6fd962d"
   },
   "claude.title": {
     "text": "Aubergine Claude Code-এর জন্য কী করে",
@@ -696,12 +696,12 @@
     "from": "cdae060f0648"
   },
   "chatgpt.meta.title": {
-    "text": "Aubergine-এ Codex আর ChatGPT | Aubergine",
-    "from": "8dcd1dde8945"
+    "text": "টার্মিনালে Codex এজেন্ট পাশাপাশি চালান | Aubergine",
+    "from": "c19dbd4b8744"
   },
   "chatgpt.meta.description": {
-    "text": "Codex, OpenAI-এর কমান্ড-লাইন কোডিং এজেন্ট, যেকোনো প্রোগ্রামের মতো Aubergine টার্মিনালে চলে। আজ কী কাজ করে, aubergine কমান্ড দিয়ে এটি কী জানাতে পারে, আর কী শুধু Claude Code-এর জন্য তৈরি।",
-    "from": "6f8c78d52c06"
+    "text": "Codex, OpenAI-এর কমান্ড-লাইন কোডিং এজেন্ট, যেকোনো প্রোগ্রামের মতো Aubergine টার্মিনালে চলে। আজ কী কাজ করে, আর কী শুধু Claude Code-এর জন্য তৈরি।",
+    "from": "ce1a16eaf055"
   },
   "chatgpt.crumb": {
     "text": "Codex আর ChatGPT",
@@ -1104,8 +1104,8 @@
     "from": "82c0a75bef8c"
   },
   "windows.meta.description": {
-    "text": "Aubergine সরাসরি Windows-এ চলে না, তবে WSL 2-এর ভেতরে চলতে পারে আর Windows ব্রাউজার থেকে ব্যবহার করা যায়। ধাপগুলো, কী চেষ্টা করা হয়েছে আর কী হয়নি, এবং সমাধান।",
-    "from": "eef730b3d958"
+    "text": "Aubergine সরাসরি Windows-এ চলে না। এটি WSL 2-এর ভেতরে চলে আর Windows ব্রাউজার থেকে ব্যবহার করা হয়: ধাপগুলো, কী চেষ্টা করা হয়েছে, আর সমাধান।",
+    "from": "ec5595885249"
   },
   "windows.crumb": {
     "text": "WSL দিয়ে Windows",
@@ -1252,8 +1252,8 @@
     "from": "6ee5544f775e"
   },
   "guides.meta.title": {
-    "text": "Aubergine গাইড | Aubergine",
-    "from": "0d501fb6af2e"
+    "text": "টার্মিনালে কোডিং এজেন্ট চালানোর গাইড | Aubergine",
+    "from": "f891421fd993"
   },
   "guides.meta.description": {
     "text": "Aubergine দিয়ে কয়েকটি কোডিং এজেন্ট চালানোর গাইড: সংক্ষিপ্ত পরিচয়, Claude Code আর Codex, ওয়ার্কিং কপি, আর কিউ ও শিডিউল।",
@@ -1512,12 +1512,12 @@
     "from": "60142c410708"
   },
   "copies.meta.title": {
-    "text": "ওয়ার্কিং কপি দিয়ে এক রিপোজিটরিতে দুটি কোডিং এজেন্ট চালান | Aubergine",
-    "from": "22fa024200af"
+    "text": "এক রিপোজিটরিতে দুটি কোডিং এজেন্ট চালান | Aubergine",
+    "from": "bdb9a97d9a45"
   },
   "copies.meta.description": {
-    "text": "ওয়ার্কিং কপি প্রতিটি এজেন্টকে রিপোজিটরির নিজস্ব চেকআউট আর ব্রাঞ্চ দেয়, যাতে দুটি এজেন্ট কখনো একই ফাইল না বদলায় আর আপনি প্রত্যেকের কাজ আলাদা করে পড়তে পারেন।",
-    "from": "a293deb1c990"
+    "text": "ওয়ার্কিং কপি প্রতিটি এজেন্টকে নিজস্ব Git worktree আর ব্রাঞ্চ দেয়, যাতে দুটি এজেন্ট কখনো একই ফাইল না বদলায় আর আপনি প্রত্যেকের কাজ আলাদা করে পড়তে পারেন।",
+    "from": "0f5b56278a4e"
   },
   "copies.crumb": {
     "text": "ওয়ার্কিং কপি",
@@ -1700,12 +1700,12 @@
     "from": "515aa3442054"
   },
   "keep.meta.title": {
-    "text": "ক্র্যাশ, রিস্টার্ট বা আপডেটের পরেও টার্মিনাল রেখে দিন | Aubergine",
-    "from": "d0521ba83d02"
+    "text": "রিস্টার্ট বা ক্র্যাশের পরেও টার্মিনাল রেখে দিন | Aubergine",
+    "from": "632ab04b6eba"
   },
   "keep.meta.description": {
-    "text": "ব্রাউজার বন্ধ হলে, Aubergine রিস্টার্ট হলে, আর কম্পিউটার ক্র্যাশ করলে, রিস্টার্ট হলে বা রাতে নিজে আপডেট হলে আপনার টার্মিনাল আর কোডিং এজেন্টদের কী হয়, আর যেখানে ছিলেন সেখান থেকে কীভাবে আবার শুরু করবেন।",
-    "from": "4f824d2bcf4e"
+    "text": "ব্রাউজার বন্ধ করা, Aubergine রিস্টার্ট করা আর কম্পিউটার রিস্টার্টে আপনার টার্মিনাল আর এজেন্টদের কী হয়, আর যেখানে ছিলেন সেখান থেকে কীভাবে আবার শুরু করবেন।",
+    "from": "27a4a64aebc5"
   },
   "keep.crumb": {
     "text": "রিস্টার্টের পরে",
@@ -1944,12 +1944,12 @@
     "from": "730944daab4e"
   },
   "alive.meta.title": {
-    "text": "টার্মিনাল বন্ধ করার পরেও প্রসেস চালু রাখুন | Aubergine",
-    "from": "b6893102f4dc"
+    "text": "টার্মিনাল বন্ধের পরেও প্রসেস চালু রাখুন | Aubergine",
+    "from": "1cb4c894cd65"
   },
   "alive.meta.description": {
-    "text": "টার্মিনাল উইন্ডো বন্ধ করলে তাতে যা চলে তা শেষ হয়ে যায়। প্রচলিত উপায় হলো nohup, disown, screen আর tmux; Aubergine প্রতিটি টার্মিনাল আপনার হয়ে tmux-এ চালায়, তাই ব্রাউজার বন্ধ করলে কিছুই শেষ হয় না।",
-    "from": "91fc698775ac"
+    "text": "টার্মিনাল বন্ধ করলে তাতে যা চলে তা শেষ হয়ে যায়। প্রচলিত উপায় হলো nohup, disown, screen আর tmux। Aubergine প্রতিটি টার্মিনাল আপনার হয়ে tmux-এ চালায়।",
+    "from": "697912690f11"
   },
   "alive.crumb": {
     "text": "চালু রাখুন",
@@ -2104,8 +2104,8 @@
     "from": "6298f70cc7f8"
   },
   "notify.meta.description": {
-    "text": "এক নজরে দেখুন কোন Claude Code টার্মিনাল কাজ করছে, আপনার অপেক্ষায় আছে বা শেষ করেছে: Aubergine-এর তৈরি হুক, For you-এর সংখ্যা, পরের অপেক্ষমাণ টার্মিনালের key, আর খোলা পেজ থেকে নোটিফিকেশন।",
-    "from": "ec167ae38aa3"
+    "text": "দেখুন কোন Claude Code টার্মিনাল কাজ করছে, আপনার অপেক্ষায় আছে বা শেষ করেছে: অপেক্ষমাণের সংখ্যা, পরেরটিতে যাওয়ার key, আর ব্রাউজার নোটিফিকেশন।",
+    "from": "538211348bf4"
   },
   "notify.crumb": {
     "text": "শেষ বা অপেক্ষায়",
@@ -2244,12 +2244,12 @@
     "from": "60204a04f28a"
   },
   "resume.meta.title": {
-    "text": "রিস্টার্টের পরে Claude Code-এর কথোপকথন আবার শুরু করুন | Aubergine",
-    "from": "25d7c94055ab"
+    "text": "রিস্টার্টের পরে Claude Code সেশন আবার শুরু করুন | Aubergine",
+    "from": "03470fcd8946"
   },
   "resume.meta.description": {
-    "text": "claude --continue আর --resume কথোপকথন ফিরিয়ে আনে, যদি আপনি ঠিক ফোল্ডারে থাকেন। Aubergine মনে রাখে প্রতিটি টার্মিনাল কোন কথোপকথনে ছিল, Resume agent দেখায়, আর ফোল্ডার অনুযায়ী পুরোনো কথোপকথনের তালিকা দেয়।",
-    "from": "9c3fb52f17de"
+    "text": "claude --continue আর --resume-এর জন্য ঠিক ফোল্ডার দরকার। Aubergine প্রতিটি টার্মিনালের কথোপকথন মনে রাখে, Resume agent দেখায় আর পুরোনোগুলোর তালিকা দেয়।",
+    "from": "f60b9e354755"
   },
   "resume.crumb": {
     "text": "কথোপকথন আবার শুরু",
@@ -2384,12 +2384,12 @@
     "from": "82d3fe458522"
   },
   "many.meta.title": {
-    "text": "অনেক ট্যাব থাকলে ঠিক টার্মিনালটি খুঁজে নিন | Aubergine",
-    "from": "710b13634a0f"
+    "text": "অনেক টার্মিনাল ট্যাব? ঠিকটি খুঁজে নিন | Aubergine",
+    "from": "e727b8c72939"
   },
   "many.meta.description": {
-    "text": "অনেক টার্মিনাল ট্যাব, সবগুলোর নাম zsh? Aubergine প্রতিটি টার্মিনাল একটি ক্যানভাসে আর একটি তালিকায় রাখে, তার অবস্থা কথায়, ফিল্টার, ট্যাগ, টার্মিনালের আউটপুটে সার্চ, আর একটি টার্মিনাল একা একটি ব্রাউজার ট্যাবে।",
-    "from": "0d77fee497f4"
+    "text": "অনেক টার্মিনাল ট্যাব, সবগুলোর নাম zsh? Aubergine প্রতিটি টার্মিনাল একটি ক্যানভাসে আর একটি তালিকায় রাখে, অবস্থা, ফিল্টার, ট্যাগ আর আউটপুটে সার্চ সহ।",
+    "from": "0d52d247f772"
   },
   "many.crumb": {
     "text": "অনেক বেশি টার্মিনাল",
@@ -2516,8 +2516,8 @@
     "from": "a731849612b9"
   },
   "tmux.meta.description": {
-    "text": "উইন্ডো বন্ধের পরেও চলা শেল, কোনো প্রিফিক্স key বা .tmux.conf ছাড়া। Aubergine আপনার হয়ে tmux তার নিজস্ব সকেটে চালায়, আর হুইল, কপি-পেস্ট আর আকার বদল যেকোনো টার্মিনালের মতোই কাজ করে।",
-    "from": "d876f30b4bcb"
+    "text": "উইন্ডো বন্ধের পরেও চলা শেল, কোনো প্রিফিক্স key বা .tmux.conf ছাড়া। Aubergine আপনার হয়ে tmux চালায়; হুইল আর কপি-পেস্ট আগের মতোই কাজ করে।",
+    "from": "de322a70f2bb"
   },
   "tmux.crumb": {
     "text": "tmux ছাড়া tmux",
@@ -2752,8 +2752,8 @@
     "from": "5e05181dcbf3"
   },
   "phone.meta.description": {
-    "text": "ফোনের ব্রাউজার থেকে Aubergine-এ পৌঁছানো: একই কম্পিউটারে HTTPS, সেটিংসে একটি ঠিকানা, প্রতিটি ডিভাইস একবারের কোড বা QR কোড দিয়ে যুক্ত, আর যখন খুশি বাতিল। একটি Mac-এ একবার চালানো হয়েছে; ফোনে পরীক্ষা করা হয়নি।",
-    "from": "4f87f330c4d4"
+    "text": "ফোনের ব্রাউজার থেকে Aubergine: আপনার নিজের কম্পিউটারে HTTPS, প্রতিটি ডিভাইস একবারের কোড দিয়ে যুক্ত। একটি Mac-এ একবার চালানো হয়েছে; ফোনে পরীক্ষা করা হয়নি।",
+    "from": "b82b5a179985"
   },
   "phone.crumb": {
     "text": "আপনার ফোন থেকে",
@@ -2880,8 +2880,8 @@
     "from": "2c9ecf2e9214"
   },
   "queue.meta.title": {
-    "text": "কিউ, For you তালিকা আর শিডিউল | Aubergine",
-    "from": "aaf91b58a021"
+    "text": "কোডিং এজেন্টদের জন্য টাস্ক কিউ আর শিডিউল | Aubergine",
+    "from": "3fb36f54544d"
   },
   "queue.meta.description": {
     "text": "একটি টাস্ক একবার লিখুন আর একটি ফাঁকা এজেন্টকে তা নিতে দিন, আপনার অপেক্ষায় থাকা সবকিছু একটি তালিকায় দেখুন, আর শিডিউল দিয়ে নির্দিষ্ট সময়ে টাস্ক চালান।",
@@ -3500,8 +3500,8 @@
     "from": "25c43f0bde14"
   },
   "faq.meta.title": {
-    "text": "প্রায়ই জিজ্ঞাসিত প্রশ্ন | Aubergine",
-    "from": "0956334109a5"
+    "text": "Aubergine FAQ: এজেন্ট, প্রাইভেসি আর যা দরকার",
+    "from": "c026a239ae64"
   },
   "faq.meta.description": {
     "text": "Aubergine সম্পর্কে উত্তর: এটি কী, এর কী লাগে, এটি ব্যক্তিগত কি না, কোডিং এজেন্টদের সঙ্গে কীভাবে কাজ করে, আর কী পরিকল্পনায় আছে।",
@@ -3692,12 +3692,12 @@
     "from": "ef74044c8bc1"
   },
   "compare.meta.title": {
-    "text": "একাধিক কোডিং এজেন্ট চালানোর টুল, তুলনায় | Aubergine",
-    "from": "e45fe95912dd"
+    "text": "কোডিং এজেন্ট চালানোর 7টি টুল, তুলনায় | Aubergine",
+    "from": "c99d6cc298c1"
   },
   "compare.meta.description": {
-    "text": "Conductor, Claude Squad, Vibe Kanban, cmux, Warp আর Paradev-এর পাশে Aubergine: প্রতিটি কী, কোথায় চলে, খরচ কত, এজেন্টদের কীভাবে আলাদা রাখে আর বন্ধ করলে কী শেষ হয়।",
-    "from": "f8a5c374323f"
+    "text": "Conductor, Claude Squad, Vibe Kanban, cmux, Warp আর Paradev-এর পাশে Aubergine: প্রতিটি কী, কোথায় চলে, খরচ কত আর বন্ধ করলে কী শেষ হয়।",
+    "from": "ab73688e9085"
   },
   "compare.crumb": {
     "text": "তুলনা",
@@ -3936,12 +3936,12 @@
     "from": "14116bf4372e"
   },
   "vs.conductor.meta.title": {
-    "text": "Aubergine vs Conductor: একটি বিনামূল্যের, ওপেন সোর্স বিকল্প | Aubergine",
-    "from": "e2c7866f349d"
+    "text": "Aubergine vs Conductor: বিনামূল্যের, ওপেন সোর্স বিকল্প",
+    "from": "35ece35e60d8"
   },
   "vs.conductor.meta.description": {
-    "text": "Conductor আর Aubergine দুটিই Git worktree-তে সমান্তরালে কোডিং এজেন্ট চালায়। Conductor ক্লাউড সহ একটি Mac অ্যাপ; Aubergine ওপেন সোর্স, আপনার ব্রাউজারে চলে, আর tmux-এ টার্মিনাল চালু রাখে।",
-    "from": "d87829790de4"
+    "text": "দুটিই Git worktree-তে সমান্তরালে কোডিং এজেন্ট চালায়। Conductor ক্লাউড সহ একটি Mac অ্যাপ; Aubergine ওপেন সোর্স আর tmux-এ টার্মিনাল চালু রাখে।",
+    "from": "baeaaa943291"
   },
   "vs.conductor.title": {
     "text": "Aubergine vs Conductor",
@@ -4104,12 +4104,12 @@
     "from": "3c4fa1eb24c0"
   },
   "vs.claude-squad.meta.title": {
-    "text": "Aubergine vs Claude Squad: tmux আর worktree, দুই রকমভাবে | Aubergine",
-    "from": "e01a63e97f29"
+    "text": "Aubergine vs Claude Squad: tmux আর worktree, দুই রকমে",
+    "from": "4166fb6975ea"
   },
   "vs.claude-squad.meta.description": {
-    "text": "Claude Squad আর Aubergine দুটিই প্রতিটি কোডিং এজেন্টকে একটি tmux সেশন আর একটি Git worktree-তে চালায়। Claude Squad আপনার টার্মিনালের ভেতরে একটি প্রোগ্রাম; Aubergine আপনার ব্রাউজারে টার্মিনালের একটি ক্যানভাস।",
-    "from": "49ec403afb34"
+    "text": "দুটিই প্রতিটি কোডিং এজেন্টকে একটি tmux সেশন আর একটি Git worktree-তে চালায়। Claude Squad আপনার টার্মিনালে একটি প্রোগ্রাম; Aubergine ব্রাউজারে একটি ক্যানভাস।",
+    "from": "9c993cb105df"
   },
   "vs.claude-squad.title": {
     "text": "Aubergine vs Claude Squad",
@@ -4268,12 +4268,12 @@
     "from": "306161ab46c9"
   },
   "vs.vibe-kanban.meta.title": {
-    "text": "Aubergine vs Vibe Kanban: ইস্যুর বোর্ড নাকি টার্মিনালের ক্যানভাস | Aubergine",
-    "from": "9f0bf97bf989"
+    "text": "Aubergine vs Vibe Kanban: একটি ওপেন সোর্স বিকল্প",
+    "from": "670b010ba18d"
   },
   "vs.vibe-kanban.meta.description": {
-    "text": "Vibe Kanban আর Aubergine দুটিই লোকাল, ওপেন সোর্স আর আপনার ব্রাউজারে দেখা যায়। Vibe Kanban কাজের পরিকল্পনা করে একটি বোর্ডে ইস্যু হিসেবে; Aubergine এজেন্টদের নিজেদেরই পাশাপাশি টার্মিনাল হিসেবে দেখায়।",
-    "from": "3dad274de8a4"
+    "text": "দুটিই লোকাল, ওপেন সোর্স আর ব্রাউজারে দেখা যায়। Vibe Kanban কাজের পরিকল্পনা করে বোর্ডে ইস্যু হিসেবে; Aubergine এজেন্টদের পাশাপাশি টার্মিনাল হিসেবে দেখায়।",
+    "from": "bb53f7f86aa3"
   },
   "vs.vibe-kanban.title": {
     "text": "Aubergine vs Vibe Kanban",
@@ -4436,12 +4436,12 @@
     "from": "548d4fabc56e"
   },
   "vs.cmux.meta.title": {
-    "text": "Aubergine vs cmux: কোডিং এজেন্টের জন্য তৈরি দুটি টার্মিনাল | Aubergine",
-    "from": "dd38ae503d2d"
+    "text": "Aubergine vs cmux: কোডিং এজেন্টের জন্য তৈরি দুটি টার্মিনাল",
+    "from": "c625444e117b"
   },
   "vs.cmux.meta.description": {
-    "text": "cmux আর Aubergine দুটিই যেকোনো কমান্ড-লাইন এজেন্টকে একটি আসল টার্মিনালে চালায় আর জানায় কোনটির আপনাকে দরকার। cmux একটি নেটিভ macOS অ্যাপ; Aubergine আপনার ব্রাউজারে tmux-এর ওপর একটি ক্যানভাস।",
-    "from": "9258c63e7091"
+    "text": "দুটিই যেকোনো কমান্ড-লাইন এজেন্টকে আসল টার্মিনালে চালায় আর জানায় কোনটির আপনাকে দরকার। cmux একটি নেটিভ macOS অ্যাপ; Aubergine ব্রাউজারে একটি ক্যানভাস।",
+    "from": "1018139b92b2"
   },
   "vs.cmux.title": {
     "text": "Aubergine vs cmux",
@@ -4600,12 +4600,12 @@
     "from": "3db7c958dfdf"
   },
   "vs.warp.meta.title": {
-    "text": "কয়েকটি কোডিং এজেন্ট চালাতে Aubergine vs Warp | Aubergine",
-    "from": "cbd600eca532"
+    "text": "কয়েকটি কোডিং এজেন্ট চালাতে Aubergine vs Warp",
+    "from": "b434edbfa3d3"
   },
   "vs.warp.meta.description": {
-    "text": "Warp একটি ডেস্কটপ টার্মিনাল, নিজের এজেন্ট, পেইড প্ল্যান আর ক্লাউড এজেন্ট সহ, macOS, Windows আর Linux-এ। Aubergine কোনো মডেল কল করে না: আপনি আগে থেকে যে এজেন্টগুলো ব্যবহার করেন সেগুলো একটি ক্যানভাসের টার্মিনালে চালায়, tmux দিয়ে চালু রেখে।",
-    "from": "097dab708969"
+    "text": "Warp একটি ডেস্কটপ টার্মিনাল, নিজের এজেন্ট, পেইড প্ল্যান আর ক্লাউড সহ। Aubergine কোনো মডেল কল করে না: আপনি যে এজেন্টগুলো ব্যবহার করেন সেগুলো পাশাপাশি চালায়।",
+    "from": "d9572d15388b"
   },
   "vs.warp.title": {
     "text": "Aubergine vs Warp",
@@ -4764,12 +4764,12 @@
     "from": "6ff850fa1891"
   },
   "vs.paradev.meta.title": {
-    "text": "Aubergine vs Paradev (আগে Superset) | Aubergine",
-    "from": "601eebcc9205"
+    "text": "Aubergine vs Paradev (আগে Superset): একটি বিকল্প",
+    "from": "07bdc273e5cb"
   },
   "vs.paradev.meta.description": {
-    "text": "Paradev, যে অ্যাপের নাম একসময় ছিল Superset, আর Aubergine দুটিই MIT লাইসেন্সে আর Git worktree-তে যেকোনো কোডিং এজেন্ট চালায়। Paradev পেইড প্ল্যান সহ একটি ডেস্কটপ অ্যাপ; Aubergine আপনার ব্রাউজারে একটি ক্যানভাস, কোনো অ্যাকাউন্ট ছাড়া।",
-    "from": "24bc65c55b47"
+    "text": "Paradev, আগে Superset, আর Aubergine দুটিই MIT লাইসেন্সে আর Git worktree-তে কাজ করে। Paradev পেইড প্ল্যান সহ একটি ডেস্কটপ অ্যাপ; Aubergine বিনামূল্যে।",
+    "from": "9fd6946e998b"
   },
   "vs.paradev.title": {
     "text": "Aubergine vs Paradev, আগে Superset",
@@ -4922,5 +4922,9 @@
   "vs.paradev.c.timed": {
     "text": "শিডিউলে বা কোনো ঘটনায় চলা অটোমেশন, পেইড প্ল্যানে",
     "from": "d0a82cd975d3"
+  },
+  "home.compare.more": {
+    "text": "Conductor, Claude Squad, cmux, Warp আর অন্যদের সঙ্গে তুলনা",
+    "from": "60e16e373973"
   }
 }

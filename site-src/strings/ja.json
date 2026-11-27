@@ -116,12 +116,12 @@
     "from": "21c2472673d7"
   },
   "home.meta.title": {
-    "text": "Aubergine：ターミナルと AI コーディングエージェントの司令塔",
-    "from": "9288ea1bcf71"
+    "text": "Aubergine：ターミナルとコーディングエージェントの司令塔",
+    "from": "cd63b652eab2"
   },
   "home.meta.description": {
-    "text": "ターミナルと AI コーディングエージェントの司令塔。Claude Code、Codex、普通のターミナルを並べて管理できる、ブラウザーの1つのダッシュボードです。どれがあなたを必要としているかが分かり、生産性を取り戻せます。無料、ローカル、オープンソース。",
-    "from": "549f660755c7"
+    "text": "Claude Code、Codex、普通のターミナルを並べて動かし管理できるブラウザーのダッシュボード。どのエージェントがあなた待ちか分かります。無料、ローカル、オープンソース。",
+    "from": "ff38fa74a3da"
   },
   "home.ld.category": {
     "text": "ターミナルとコーディングエージェントの管理ダッシュボード",
@@ -520,12 +520,12 @@
     "from": "5c6d1db70932"
   },
   "claude.meta.title": {
-    "text": "Aubergine の Claude Code | Aubergine",
-    "from": "964ec2c2f3df"
+    "text": "Claude Code のセッションを並べて動かす | Aubergine",
+    "from": "3c61aa83b994"
   },
   "claude.meta.description": {
-    "text": "Aubergine が Claude Code のために自ら行うこと：メニューからの起動、待っていることの把握、会話の再開、過去の会話、設定の確認、ツール。",
-    "from": "53c5a33c5a7d"
+    "text": "複数の Claude Code セッションを並べて実行。Aubergine が起動し、どれがあなた待ちかを示し、会話を再開し、過去の会話を一覧します。",
+    "from": "6b7dc6fd962d"
   },
   "claude.title": {
     "text": "Aubergine が Claude Code のためにすること",
@@ -696,12 +696,12 @@
     "from": "cdae060f0648"
   },
   "chatgpt.meta.title": {
-    "text": "Aubergine の Codex と ChatGPT | Aubergine",
-    "from": "8dcd1dde8945"
+    "text": "Codex エージェントをターミナルで並べて動かす | Aubergine",
+    "from": "c19dbd4b8744"
   },
   "chatgpt.meta.description": {
-    "text": "OpenAI のコマンドラインのコーディングエージェント Codex は、ほかのプログラムと同じように Aubergine のターミナルで動きます。今日できること、aubergine コマンドで報告できること、Claude Code 向けにだけ作られているもの。",
-    "from": "6f8c78d52c06"
+    "text": "OpenAI のコマンドラインのコーディングエージェント Codex は、Aubergine のターミナルで普通のプログラムとして動きます。今日できることと Claude Code 専用のもの。",
+    "from": "ce1a16eaf055"
   },
   "chatgpt.crumb": {
     "text": "Codex と ChatGPT",
@@ -1104,8 +1104,8 @@
     "from": "82c0a75bef8c"
   },
   "windows.meta.description": {
-    "text": "Aubergine は Windows そのものでは動きませんが、WSL 2 の中で動かして Windows のブラウザーから使えます。手順、試したことと試していないこと、困ったときの対処。",
-    "from": "eef730b3d958"
+    "text": "Aubergine は Windows そのものでは動きません。WSL 2 の中で動かし、Windows のブラウザーから使います。手順、試したこと、対処法。",
+    "from": "ec5595885249"
   },
   "windows.crumb": {
     "text": "WSL で Windows",
@@ -1252,8 +1252,8 @@
     "from": "6ee5544f775e"
   },
   "guides.meta.title": {
-    "text": "Aubergine のガイド | Aubergine",
-    "from": "0d501fb6af2e"
+    "text": "ターミナルでコーディングエージェントを使うガイド | Aubergine",
+    "from": "f891421fd993"
   },
   "guides.meta.description": {
     "text": "Aubergine で複数のコーディングエージェントを動かすためのガイド：概要、Claude Code と Codex、作業コピー、キューとスケジュール。",
@@ -1512,12 +1512,12 @@
     "from": "60142c410708"
   },
   "copies.meta.title": {
-    "text": "作業コピーで2つのコーディングエージェントを1つのリポジトリで動かす | Aubergine",
-    "from": "22fa024200af"
+    "text": "1リポジトリで2つのコーディングエージェントを動かす | Aubergine",
+    "from": "bdb9a97d9a45"
   },
   "copies.meta.description": {
-    "text": "作業コピーは各エージェントにリポジトリの専用チェックアウトとブランチを渡します。2つのエージェントが同じファイルを編集することはなく、それぞれの作業を分けて読めます。",
-    "from": "a293deb1c990"
+    "text": "作業コピーは各エージェントに専用の Git worktree とブランチを渡すので、2つのエージェントが同じファイルを編集することはなく、それぞれの作業を分けて読めます。",
+    "from": "0f5b56278a4e"
   },
   "copies.crumb": {
     "text": "作業コピー",
@@ -1700,12 +1700,12 @@
     "from": "515aa3442054"
   },
   "keep.meta.title": {
-    "text": "クラッシュ、再起動、アップデートのあともターミナルを残す | Aubergine",
-    "from": "d0521ba83d02"
+    "text": "再起動やクラッシュのあともターミナルを残す | Aubergine",
+    "from": "632ab04b6eba"
   },
   "keep.meta.description": {
-    "text": "ブラウザーが閉じたとき、Aubergine が再起動したとき、コンピューターがクラッシュ・再起動・夜間アップデートしたときに、ターミナルとコーディングエージェントがどうなるか。そして続きから再開する方法。",
-    "from": "4f824d2bcf4e"
+    "text": "ブラウザーを閉じたとき、Aubergine や コンピューターを再起動したときに、ターミナルとエージェントがそれぞれどうなるか。そして続きから再開する方法。",
+    "from": "27a4a64aebc5"
   },
   "keep.crumb": {
     "text": "再起動のあと",
@@ -1945,11 +1945,11 @@
   },
   "alive.meta.title": {
     "text": "ターミナルを閉じてもプロセスを動かし続ける | Aubergine",
-    "from": "b6893102f4dc"
+    "from": "1cb4c894cd65"
   },
   "alive.meta.description": {
-    "text": "ターミナルのウィンドウを閉じると、その中で動いているものは終わります。よくある答えは nohup、disown、screen、tmux です。Aubergine はすべてのターミナルを tmux で動かすので、ブラウザーを閉じても何も終わりません。",
-    "from": "91fc698775ac"
+    "text": "ターミナルを閉じると、その中で動いているものは終わります。よくある答えは nohup、disown、screen、tmux。Aubergine はすべてのターミナルを tmux で動かします。",
+    "from": "697912690f11"
   },
   "alive.crumb": {
     "text": "動かし続ける",
@@ -2104,8 +2104,8 @@
     "from": "6298f70cc7f8"
   },
   "notify.meta.description": {
-    "text": "どの Claude Code のターミナルが作業中か、あなた待ちか、完了したかがひと目で分かります。Aubergine が生成するフック、For you の数、次に待っているターミナルへ移るキー、開いているページからの通知。",
-    "from": "ec167ae38aa3"
+    "text": "どの Claude Code のターミナルが作業中か、あなた待ちか、完了したかが分かります。待っているものの数、次へ移るキー、ブラウザーの通知。",
+    "from": "538211348bf4"
   },
   "notify.crumb": {
     "text": "完了か待機か",
@@ -2244,12 +2244,12 @@
     "from": "60204a04f28a"
   },
   "resume.meta.title": {
-    "text": "再起動のあとに Claude Code の会話を再開する | Aubergine",
-    "from": "25d7c94055ab"
+    "text": "再起動後に Claude Code のセッションを再開 | Aubergine",
+    "from": "03470fcd8946"
   },
   "resume.meta.description": {
-    "text": "claude --continue と --resume は、正しいフォルダーにいれば会話を戻せます。Aubergine は各ターミナルがどの会話にいたかを覚えていて、Resume agent を出し、過去の会話をフォルダーごとに一覧します。",
-    "from": "9c3fb52f17de"
+    "text": "claude --continue と --resume には正しいフォルダーが必要です。Aubergine は各ターミナルの会話を覚え、Resume agent を出し、過去の会話を一覧します。",
+    "from": "f60b9e354755"
   },
   "resume.crumb": {
     "text": "会話を再開する",
@@ -2384,12 +2384,12 @@
     "from": "82d3fe458522"
   },
   "many.meta.title": {
-    "text": "タブが多すぎるときに目当てのターミナルを見つける | Aubergine",
-    "from": "710b13634a0f"
+    "text": "ターミナルのタブが多すぎる？目当てのものを探す | Aubergine",
+    "from": "e727b8c72939"
   },
   "many.meta.description": {
-    "text": "ターミナルのタブが多すぎて、どれも zsh という名前？ Aubergine はすべてのターミナルをキャンバスと1つの一覧に置き、状態を言葉で示し、フィルター、タグ、ターミナルの出力の検索、ブラウザーのタブで単独で開くターミナルを用意します。",
-    "from": "0d77fee497f4"
+    "text": "ターミナルのタブが多すぎて、どれも zsh？ Aubergine はすべてのターミナルをキャンバスと1つの一覧に置き、状態、フィルター、タグ、出力の検索を備えます。",
+    "from": "0d52d247f772"
   },
   "many.crumb": {
     "text": "ターミナルが多すぎる",
@@ -2516,8 +2516,8 @@
     "from": "a731849612b9"
   },
   "tmux.meta.description": {
-    "text": "ウィンドウを閉じても残るシェルを、プレフィックスキーも .tmux.conf もなしに。Aubergine は専用のソケットで tmux を動かし、ホイール、コピーとペースト、サイズ変更はどのターミナルとも同じように使えます。",
-    "from": "d876f30b4bcb"
+    "text": "ウィンドウを閉じても残るシェルを、プレフィックスキーも .tmux.conf もなしに。Aubergine が tmux を動かし、ホイール、コピー、ペーストはいつもどおり使えます。",
+    "from": "de322a70f2bb"
   },
   "tmux.crumb": {
     "text": "tmux なしの tmux",
@@ -2752,8 +2752,8 @@
     "from": "5e05181dcbf3"
   },
   "phone.meta.description": {
-    "text": "スマートフォンのブラウザーから Aubergine を使います。同じコンピューター上の HTTPS、設定に書くアドレス、使い捨てのコードか QR コードでデバイスごとにペアリングし、いつでも失効できます。1台の Mac で一度実行しただけで、スマートフォンでは試していません。",
-    "from": "4f87f330c4d4"
+    "text": "スマホのブラウザーから Aubergine へ：自分のコンピューター上の HTTPS、使い捨てコードでデバイスごとにペアリング。1台の Mac で一度実行、スマホでは未検証。",
+    "from": "b82b5a179985"
   },
   "phone.crumb": {
     "text": "スマートフォンから",
@@ -2880,8 +2880,8 @@
     "from": "2c9ecf2e9214"
   },
   "queue.meta.title": {
-    "text": "キュー、For you の一覧、スケジュール | Aubergine",
-    "from": "aaf91b58a021"
+    "text": "コーディングエージェントのタスクキューとスケジュール | Aubergine",
+    "from": "3fb36f54544d"
   },
   "queue.meta.description": {
     "text": "タスクを一度書けば空いているエージェントが引き受けます。あなたを待っているものを1つの一覧で確認し、スケジュールで決まった時刻にタスクを実行します。",
@@ -3500,8 +3500,8 @@
     "from": "25c43f0bde14"
   },
   "faq.meta.title": {
-    "text": "よくある質問 | Aubergine",
-    "from": "0956334109a5"
+    "text": "Aubergine のよくある質問：エージェント、プライバシー、要件",
+    "from": "c026a239ae64"
   },
   "faq.meta.description": {
     "text": "Aubergine についての答え：何なのか、何が必要か、プライベートか、コーディングエージェントとどう連携するか、何を予定しているか。",
@@ -3692,12 +3692,12 @@
     "from": "ef74044c8bc1"
   },
   "compare.meta.title": {
-    "text": "複数のコーディングエージェントを動かすツールの比較 | Aubergine",
-    "from": "e45fe95912dd"
+    "text": "コーディングエージェントを動かすツール7選を比較 | Aubergine",
+    "from": "c99d6cc298c1"
   },
   "compare.meta.description": {
-    "text": "Aubergine と Conductor、Claude Squad、Vibe Kanban、cmux、Warp、Paradev の比較：それぞれ何なのか、どこで動くか、費用はいくらか、エージェントをどう分けておくか、閉じると何が終わるか。",
-    "from": "f8a5c374323f"
+    "text": "Aubergine と Conductor、Claude Squad、Vibe Kanban、cmux、Warp、Paradev の比較：それぞれ何か、どこで動くか、費用、閉じると何が終わるか。",
+    "from": "ab73688e9085"
   },
   "compare.crumb": {
     "text": "比較",
@@ -3936,12 +3936,12 @@
     "from": "14116bf4372e"
   },
   "vs.conductor.meta.title": {
-    "text": "Aubergine と Conductor の比較：無料のオープンソースの代替 | Aubergine",
-    "from": "e2c7866f349d"
+    "text": "Aubergine と Conductor の比較：無料のオープンソースの代替",
+    "from": "35ece35e60d8"
   },
   "vs.conductor.meta.description": {
-    "text": "Conductor と Aubergine は、どちらもコーディングエージェントを Git の worktree で並行して動かします。Conductor はクラウド付きの Mac アプリ。Aubergine はオープンソースで、ブラウザーで動き、ターミナルを tmux で動かし続けます。",
-    "from": "d87829790de4"
+    "text": "どちらもコーディングエージェントを Git の worktree で並行実行。Conductor はクラウド付きの Mac アプリ、Aubergine はオープンソースでターミナルを tmux で動かし続けます。",
+    "from": "baeaaa943291"
   },
   "vs.conductor.title": {
     "text": "Aubergine と Conductor",
@@ -4104,12 +4104,12 @@
     "from": "3c4fa1eb24c0"
   },
   "vs.claude-squad.meta.title": {
-    "text": "Aubergine と Claude Squad の比較：tmux と worktree、2つのやり方 | Aubergine",
-    "from": "e01a63e97f29"
+    "text": "Aubergine と Claude Squad 比較：tmux と worktree の2つの方法",
+    "from": "4166fb6975ea"
   },
   "vs.claude-squad.meta.description": {
-    "text": "Claude Squad と Aubergine は、どちらも各コーディングエージェントを tmux セッションと Git の worktree で動かします。Claude Squad はターミナルの中のプログラム。Aubergine はブラウザーの中のターミナルのキャンバスです。",
-    "from": "49ec403afb34"
+    "text": "どちらも各コーディングエージェントを tmux セッションと Git の worktree で動かします。Claude Squad はターミナル内のプログラム、Aubergine はブラウザー内のキャンバス。",
+    "from": "9c993cb105df"
   },
   "vs.claude-squad.title": {
     "text": "Aubergine と Claude Squad",
@@ -4268,12 +4268,12 @@
     "from": "306161ab46c9"
   },
   "vs.vibe-kanban.meta.title": {
-    "text": "Aubergine と Vibe Kanban の比較：イシューのボードか、ターミナルのキャンバスか | Aubergine",
-    "from": "9f0bf97bf989"
+    "text": "Aubergine と Vibe Kanban の比較：オープンソースの代替",
+    "from": "670b010ba18d"
   },
   "vs.vibe-kanban.meta.description": {
-    "text": "Vibe Kanban と Aubergine は、どちらもローカルで動くオープンソースで、ブラウザーに表示されます。Vibe Kanban は作業をボード上のイシューとして計画し、Aubergine はエージェントそのものを並んだターミナルとして見せます。",
-    "from": "3dad274de8a4"
+    "text": "どちらもローカルで動くオープンソースで、ブラウザーに表示。Vibe Kanban は作業をボードのイシューとして計画し、Aubergine はエージェントをターミナルとして並べます。",
+    "from": "bb53f7f86aa3"
   },
   "vs.vibe-kanban.title": {
     "text": "Aubergine と Vibe Kanban",
@@ -4436,12 +4436,12 @@
     "from": "548d4fabc56e"
   },
   "vs.cmux.meta.title": {
-    "text": "Aubergine と cmux の比較：コーディングエージェントのために作られた2つのターミナル | Aubergine",
-    "from": "dd38ae503d2d"
+    "text": "Aubergine と cmux 比較：コーディングエージェント用ターミナル2つ",
+    "from": "c625444e117b"
   },
   "vs.cmux.meta.description": {
-    "text": "cmux と Aubergine は、どちらもどのコマンドラインエージェントも本物のターミナルで動かし、どれがあなたを必要としているかを知らせます。cmux はネイティブの macOS アプリ。Aubergine は tmux の上に作られたブラウザーの中のキャンバスです。",
-    "from": "9258c63e7091"
+    "text": "どちらも任意のコマンドラインエージェントを本物のターミナルで動かし、あなた待ちのものを示します。cmux はネイティブ macOS アプリ、Aubergine はブラウザー内のキャンバス。",
+    "from": "1018139b92b2"
   },
   "vs.cmux.title": {
     "text": "Aubergine と cmux",
@@ -4600,12 +4600,12 @@
     "from": "3db7c958dfdf"
   },
   "vs.warp.meta.title": {
-    "text": "複数のコーディングエージェントを動かすための Aubergine と Warp の比較 | Aubergine",
-    "from": "cbd600eca532"
+    "text": "Aubergine と Warp 比較：複数のコーディングエージェントを動かす",
+    "from": "b434edbfa3d3"
   },
   "vs.warp.meta.description": {
-    "text": "Warp は、自分のエージェント、有料プラン、クラウドのエージェントを持つデスクトップのターミナルで、macOS、Windows、Linux で動きます。Aubergine はモデルを呼びません。すでに使っているエージェントをキャンバス上のターミナルで動かし、tmux で動かし続けます。",
-    "from": "097dab708969"
+    "text": "Warp は自分のエージェント、有料プラン、クラウドを持つデスクトップのターミナル。Aubergine はモデルを呼ばず、すでに使っているエージェントを並べて動かします。",
+    "from": "d9572d15388b"
   },
   "vs.warp.title": {
     "text": "Aubergine と Warp",
@@ -4764,12 +4764,12 @@
     "from": "6ff850fa1891"
   },
   "vs.paradev.meta.title": {
-    "text": "Aubergine と Paradev（旧 Superset）の比較 | Aubergine",
-    "from": "601eebcc9205"
+    "text": "Aubergine と Paradev（旧 Superset）の比較：代替ツール",
+    "from": "07bdc273e5cb"
   },
   "vs.paradev.meta.description": {
-    "text": "以前 Superset と呼ばれていたアプリ Paradev と Aubergine は、どちらも MIT ライセンスで、どのコーディングエージェントも Git の worktree で動かします。Paradev は有料プランのあるデスクトップアプリ。Aubergine はアカウントの要らない、ブラウザーの中のキャンバスです。",
-    "from": "24bc65c55b47"
+    "text": "旧名 Superset の Paradev と Aubergine は、どちらも MIT ライセンスで Git の worktree で動きます。Paradev は有料プランのあるデスクトップアプリ、Aubergine は無料。",
+    "from": "9fd6946e998b"
   },
   "vs.paradev.title": {
     "text": "Aubergine と Paradev（旧 Superset）",
@@ -4922,5 +4922,9 @@
   "vs.paradev.c.timed": {
     "text": "スケジュールやイベントで動く自動化。有料プラン",
     "from": "d0a82cd975d3"
+  },
+  "home.compare.more": {
+    "text": "Conductor、Claude Squad、cmux、Warp などとの比較",
+    "from": "60e16e373973"
   }
 }

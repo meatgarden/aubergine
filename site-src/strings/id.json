@@ -116,12 +116,12 @@
     "from": "21c2472673d7"
   },
   "home.meta.title": {
-    "text": "Aubergine: pusat kendali untuk terminal dan agen coding AI Anda",
-    "from": "9288ea1bcf71"
+    "text": "Aubergine: pusat kendali untuk terminal dan agen coding",
+    "from": "cd63b652eab2"
   },
   "home.meta.description": {
-    "text": "Pusat kendali untuk terminal dan agen coding AI Anda: satu dasbor di browser untuk mengelola Claude Code, Codex, dan terminal biasa berdampingan. Lihat mana yang membutuhkan Anda dan dapatkan kembali produktivitas Anda. Gratis, lokal, open source.",
-    "from": "549f660755c7"
+    "text": "Satu dasbor browser untuk menjalankan dan mengelola Claude Code, Codex, dan terminal berdampingan. Lihat agen yang butuh Anda. Gratis, lokal, open source.",
+    "from": "ff38fa74a3da"
   },
   "home.ld.category": {
     "text": "Dasbor manajemen terminal dan agen coding",
@@ -520,12 +520,12 @@
     "from": "5c6d1db70932"
   },
   "claude.meta.title": {
-    "text": "Claude Code di Aubergine | Aubergine",
-    "from": "964ec2c2f3df"
+    "text": "Jalankan sesi Claude Code berdampingan | Aubergine",
+    "from": "3c61aa83b994"
   },
   "claude.meta.description": {
-    "text": "Apa yang dilakukan Aubergine sendiri untuk Claude Code: menjalankannya dari menu, melihat saat ia menunggu, melanjutkan percakapan, percakapan lama, bagaimana ia disiapkan, dan alat.",
-    "from": "53c5a33c5a7d"
+    "text": "Jalankan beberapa sesi Claude Code berdampingan. Aubergine memulainya, menunjukkan mana yang menunggu Anda, melanjutkan percakapan, dan mendaftar yang lama.",
+    "from": "6b7dc6fd962d"
   },
   "claude.title": {
     "text": "Apa yang dilakukan Aubergine untuk Claude Code",
@@ -696,12 +696,12 @@
     "from": "cdae060f0648"
   },
   "chatgpt.meta.title": {
-    "text": "Codex dan ChatGPT di Aubergine | Aubergine",
-    "from": "8dcd1dde8945"
+    "text": "Jalankan agen Codex berdampingan di terminal | Aubergine",
+    "from": "c19dbd4b8744"
   },
   "chatgpt.meta.description": {
-    "text": "Codex, agen coding command-line dari OpenAI, berjalan di terminal Aubergine seperti program lain. Apa yang berfungsi hari ini, apa yang bisa ia laporkan lewat perintah aubergine, dan apa yang hanya dibuat untuk Claude Code.",
-    "from": "6f8c78d52c06"
+    "text": "Codex, agen coding command-line OpenAI, berjalan di terminal Aubergine seperti program lain. Apa yang berfungsi kini, dan apa yang hanya untuk Claude Code.",
+    "from": "ce1a16eaf055"
   },
   "chatgpt.crumb": {
     "text": "Codex dan ChatGPT",
@@ -1104,8 +1104,8 @@
     "from": "82c0a75bef8c"
   },
   "windows.meta.description": {
-    "text": "Aubergine tidak berjalan di Windows sendiri, tetapi bisa berjalan di dalam WSL 2 dan dipakai dari browser Windows. Langkah-langkahnya, apa yang sudah dan belum dicoba, dan cara memperbaiki masalah.",
-    "from": "eef730b3d958"
+    "text": "Aubergine tidak berjalan di Windows sendiri. Ia berjalan di dalam WSL 2 dan dipakai dari browser Windows: langkah-langkahnya, apa yang dicoba, dan perbaikan.",
+    "from": "ec5595885249"
   },
   "windows.crumb": {
     "text": "Windows dengan WSL",
@@ -1252,8 +1252,8 @@
     "from": "6ee5544f775e"
   },
   "guides.meta.title": {
-    "text": "Panduan Aubergine | Aubergine",
-    "from": "0d501fb6af2e"
+    "text": "Panduan menjalankan agen coding di terminal | Aubergine",
+    "from": "f891421fd993"
   },
   "guides.meta.description": {
     "text": "Panduan menjalankan beberapa agen coding dengan Aubergine: gambaran umum, Claude Code dan Codex, salinan kerja, serta antrean dan jadwal.",
@@ -1512,12 +1512,12 @@
     "from": "60142c410708"
   },
   "copies.meta.title": {
-    "text": "Menjalankan dua agen coding di satu repositori dengan salinan kerja | Aubergine",
-    "from": "22fa024200af"
+    "text": "Jalankan dua agen coding di satu repositori | Aubergine",
+    "from": "bdb9a97d9a45"
   },
   "copies.meta.description": {
-    "text": "Salinan kerja memberi setiap agen checkout dan branch repositori miliknya sendiri, sehingga dua agen tidak pernah mengedit file yang sama dan Anda bisa membaca pekerjaan masing-masing secara terpisah.",
-    "from": "a293deb1c990"
+    "text": "Salinan kerja memberi tiap agen worktree dan branch Git sendiri, jadi dua agen tak pernah mengedit file yang sama dan kerja masing-masing terbaca terpisah.",
+    "from": "0f5b56278a4e"
   },
   "copies.crumb": {
     "text": "Salinan kerja",
@@ -1700,12 +1700,12 @@
     "from": "515aa3442054"
   },
   "keep.meta.title": {
-    "text": "Menjaga terminal setelah crash, mulai ulang, atau pembaruan | Aubergine",
-    "from": "d0521ba83d02"
+    "text": "Menjaga terminal setelah mulai ulang atau crash | Aubergine",
+    "from": "632ab04b6eba"
   },
   "keep.meta.description": {
-    "text": "Apa yang terjadi pada terminal dan agen coding Anda saat browser ditutup, saat Aubergine dimulai ulang, dan saat komputer crash, dimulai ulang, atau diperbarui di malam hari, serta cara melanjutkan dari tempat Anda berhenti.",
-    "from": "4f824d2bcf4e"
+    "text": "Apa akibat menutup browser, memulai ulang Aubergine, dan memulai ulang komputer bagi terminal dan agen Anda, serta cara melanjutkan dari tempat Anda berhenti.",
+    "from": "27a4a64aebc5"
   },
   "keep.crumb": {
     "text": "Setelah mulai ulang",
@@ -1944,12 +1944,12 @@
     "from": "730944daab4e"
   },
   "alive.meta.title": {
-    "text": "Menjaga proses tetap berjalan setelah terminal ditutup | Aubergine",
-    "from": "b6893102f4dc"
+    "text": "Proses tetap berjalan setelah terminal ditutup | Aubergine",
+    "from": "1cb4c894cd65"
   },
   "alive.meta.description": {
-    "text": "Menutup jendela terminal mengakhiri apa yang berjalan di dalamnya. Jawaban yang biasa adalah nohup, disown, screen, dan tmux; Aubergine menjalankan setiap terminal di tmux untuk Anda, jadi menutup browser tidak mengakhiri apa pun.",
-    "from": "91fc698775ac"
+    "text": "Menutup terminal mengakhiri yang berjalan di sana. Solusi biasanya nohup, disown, screen, dan tmux. Aubergine menjalankan tiap terminal di tmux untuk Anda.",
+    "from": "697912690f11"
   },
   "alive.crumb": {
     "text": "Tetap berjalan",
@@ -2104,8 +2104,8 @@
     "from": "6298f70cc7f8"
   },
   "notify.meta.description": {
-    "text": "Lihat sekilas terminal Claude Code mana yang sedang bekerja, menunggu Anda, atau selesai: hook yang dibuat Aubergine, angka For you, tombol ke terminal berikutnya yang menunggu, dan notifikasi dari halaman yang terbuka.",
-    "from": "ec167ae38aa3"
+    "text": "Lihat terminal Claude Code mana yang bekerja, menunggu Anda, atau selesai: jumlah yang menunggu, tombol ke terminal berikutnya, dan notifikasi browser.",
+    "from": "538211348bf4"
   },
   "notify.crumb": {
     "text": "Selesai atau menunggu",
@@ -2244,12 +2244,12 @@
     "from": "60204a04f28a"
   },
   "resume.meta.title": {
-    "text": "Melanjutkan percakapan Claude Code setelah mulai ulang | Aubergine",
-    "from": "25d7c94055ab"
+    "text": "Melanjutkan sesi Claude Code setelah mulai ulang | Aubergine",
+    "from": "03470fcd8946"
   },
   "resume.meta.description": {
-    "text": "claude --continue dan --resume mengembalikan percakapan jika Anda berada di folder yang benar. Aubergine mengingat percakapan mana tempat setiap terminal berada, menawarkan Resume agent, dan mendaftar percakapan sebelumnya per folder.",
-    "from": "9c3fb52f17de"
+    "text": "claude --continue dan --resume butuh folder yang benar. Aubergine mengingat percakapan tiap terminal, menawarkan Resume agent, dan mendaftar percakapan lama.",
+    "from": "f60b9e354755"
   },
   "resume.crumb": {
     "text": "Melanjutkan percakapan",
@@ -2384,12 +2384,12 @@
     "from": "82d3fe458522"
   },
   "many.meta.title": {
-    "text": "Menemukan terminal yang tepat saat tab terlalu banyak | Aubergine",
-    "from": "710b13634a0f"
+    "text": "Terlalu banyak tab terminal? Temukan yang tepat | Aubergine",
+    "from": "e727b8c72939"
   },
   "many.meta.description": {
-    "text": "Terlalu banyak tab terminal, semuanya bernama zsh? Aubergine menaruh setiap terminal di kanvas dan di satu daftar dengan statusnya dalam kata-kata, filter, tag, pencarian output terminal, dan satu terminal sendirian di tab browser.",
-    "from": "0d77fee497f4"
+    "text": "Terlalu banyak tab terminal, semua bernama zsh? Aubergine menaruh tiap terminal di kanvas dan satu daftar, dengan status, filter, tag, dan pencarian output.",
+    "from": "0d52d247f772"
   },
   "many.crumb": {
     "text": "Terminal terlalu banyak",
@@ -2516,8 +2516,8 @@
     "from": "a731849612b9"
   },
   "tmux.meta.description": {
-    "text": "Shell yang bertahan lebih lama dari jendelanya, tanpa tombol prefiks atau .tmux.conf. Aubergine menjalankan tmux untuk Anda di socket-nya sendiri, dengan roda mouse, salin dan tempel, serta pengubahan ukuran yang berfungsi seperti di terminal mana pun.",
-    "from": "d876f30b4bcb"
+    "text": "Shell yang bertahan melebihi jendelanya, tanpa tombol prefiks atau .tmux.conf. Aubergine menjalankan tmux untuk Anda; scroll, salin, dan tempel seperti biasa.",
+    "from": "de322a70f2bb"
   },
   "tmux.crumb": {
     "text": "tmux tanpa tmux",
@@ -2752,8 +2752,8 @@
     "from": "5e05181dcbf3"
   },
   "phone.meta.description": {
-    "text": "Menjangkau Aubergine dari browser ponsel: HTTPS di komputer yang sama, alamat di pengaturan, setiap perangkat dipasangkan dengan kode sekali pakai atau kode QR, dan dicabut kapan pun Anda mau. Dijalankan sekali di satu Mac; belum dicoba di ponsel.",
-    "from": "4f87f330c4d4"
+    "text": "Aubergine di browser ponsel: HTTPS di komputer Anda, perangkat dipasangkan lewat kode sekali pakai. Dijalankan sekali di satu Mac; belum dicoba di ponsel.",
+    "from": "b82b5a179985"
   },
   "phone.crumb": {
     "text": "Dari ponsel",
@@ -2880,8 +2880,8 @@
     "from": "2c9ecf2e9214"
   },
   "queue.meta.title": {
-    "text": "Antrean, daftar For you, dan jadwal | Aubergine",
-    "from": "aaf91b58a021"
+    "text": "Antrean tugas dan jadwal untuk agen coding | Aubergine",
+    "from": "3fb36f54544d"
   },
   "queue.meta.description": {
     "text": "Tulis tugas sekali dan biarkan agen yang sedang bebas mengambilnya, lihat semua yang menunggu Anda di satu daftar, dan jalankan tugas pada waktu tertentu dengan jadwal.",
@@ -3500,8 +3500,8 @@
     "from": "25c43f0bde14"
   },
   "faq.meta.title": {
-    "text": "Pertanyaan yang sering diajukan | Aubergine",
-    "from": "0956334109a5"
+    "text": "FAQ Aubergine: agen, privasi, dan persyaratan",
+    "from": "c026a239ae64"
   },
   "faq.meta.description": {
     "text": "Jawaban tentang Aubergine: apa itu, apa yang dibutuhkannya, apakah ia privat, bagaimana ia bekerja dengan agen coding, dan apa yang direncanakan.",
@@ -3692,12 +3692,12 @@
     "from": "ef74044c8bc1"
   },
   "compare.meta.title": {
-    "text": "Alat untuk menjalankan beberapa agen coding, dibandingkan | Aubergine",
-    "from": "e45fe95912dd"
+    "text": "7 alat menjalankan agen coding, dibandingkan | Aubergine",
+    "from": "c99d6cc298c1"
   },
   "compare.meta.description": {
-    "text": "Aubergine di samping Conductor, Claude Squad, Vibe Kanban, cmux, Warp, dan Paradev: apa masing-masing itu, di mana berjalan, berapa biayanya, bagaimana memisahkan agen, dan apa yang berakhir saat ditutup.",
-    "from": "f8a5c374323f"
+    "text": "Aubergine di samping Conductor, Claude Squad, Vibe Kanban, cmux, Warp, dan Paradev: apa itu, di mana berjalan, biayanya, dan apa yang berakhir saat ditutup.",
+    "from": "ab73688e9085"
   },
   "compare.crumb": {
     "text": "Perbandingan",
@@ -3936,12 +3936,12 @@
     "from": "14116bf4372e"
   },
   "vs.conductor.meta.title": {
-    "text": "Aubergine vs Conductor: alternatif gratis dan open source | Aubergine",
-    "from": "e2c7866f349d"
+    "text": "Aubergine vs Conductor: alternatif gratis dan open source",
+    "from": "35ece35e60d8"
   },
   "vs.conductor.meta.description": {
-    "text": "Conductor dan Aubergine sama-sama menjalankan agen coding secara paralel di worktree Git. Conductor adalah aplikasi Mac dengan cloud; Aubergine open source, berjalan di browser Anda, dan menjaga terminal tetap berjalan di tmux.",
-    "from": "d87829790de4"
+    "text": "Keduanya menjalankan agen coding paralel di worktree Git. Conductor aplikasi Mac dengan cloud; Aubergine open source dan menjaga terminal berjalan di tmux.",
+    "from": "baeaaa943291"
   },
   "vs.conductor.title": {
     "text": "Aubergine vs Conductor",
@@ -4104,12 +4104,12 @@
     "from": "3c4fa1eb24c0"
   },
   "vs.claude-squad.meta.title": {
-    "text": "Aubergine vs Claude Squad: tmux dan worktree, dua cara | Aubergine",
-    "from": "e01a63e97f29"
+    "text": "Aubergine vs Claude Squad: tmux dan worktree, dua cara",
+    "from": "4166fb6975ea"
   },
   "vs.claude-squad.meta.description": {
-    "text": "Claude Squad dan Aubergine sama-sama menjalankan setiap agen coding di sesi tmux dan worktree Git. Claude Squad adalah program di terminal Anda; Aubergine adalah kanvas berisi terminal di browser Anda.",
-    "from": "49ec403afb34"
+    "text": "Keduanya menjalankan setiap agen coding di sesi tmux dan worktree Git. Claude Squad adalah program di terminal Anda; Aubergine adalah kanvas di browser Anda.",
+    "from": "9c993cb105df"
   },
   "vs.claude-squad.title": {
     "text": "Aubergine vs Claude Squad",
@@ -4268,12 +4268,12 @@
     "from": "306161ab46c9"
   },
   "vs.vibe-kanban.meta.title": {
-    "text": "Aubergine vs Vibe Kanban: papan issue atau kanvas berisi terminal | Aubergine",
-    "from": "9f0bf97bf989"
+    "text": "Aubergine vs Vibe Kanban: alternatif open source",
+    "from": "670b010ba18d"
   },
   "vs.vibe-kanban.meta.description": {
-    "text": "Vibe Kanban dan Aubergine sama-sama lokal, open source, dan ditampilkan di browser Anda. Vibe Kanban merencanakan pekerjaan sebagai issue di papan; Aubergine menampilkan agen itu sendiri sebagai terminal yang berdampingan.",
-    "from": "3dad274de8a4"
+    "text": "Keduanya lokal, open source, dan tampil di browser. Vibe Kanban menyusun kerja jadi issue di papan; Aubergine menampilkan agen sebagai terminal berdampingan.",
+    "from": "bb53f7f86aa3"
   },
   "vs.vibe-kanban.title": {
     "text": "Aubergine vs Vibe Kanban",
@@ -4436,12 +4436,12 @@
     "from": "548d4fabc56e"
   },
   "vs.cmux.meta.title": {
-    "text": "Aubergine vs cmux: dua terminal yang dibuat untuk agen coding | Aubergine",
-    "from": "dd38ae503d2d"
+    "text": "Aubergine vs cmux: dua terminal untuk agen coding",
+    "from": "c625444e117b"
   },
   "vs.cmux.meta.description": {
-    "text": "cmux dan Aubergine sama-sama menjalankan agen command-line apa pun di terminal sungguhan dan memberi tahu Anda mana yang membutuhkan Anda. cmux adalah aplikasi macOS native; Aubergine adalah kanvas di browser Anda di atas tmux.",
-    "from": "9258c63e7091"
+    "text": "Keduanya menjalankan agen command-line apa pun di terminal asli dan menunjukkan mana yang butuh Anda. cmux aplikasi macOS native; Aubergine kanvas di browser.",
+    "from": "1018139b92b2"
   },
   "vs.cmux.title": {
     "text": "Aubergine vs cmux",
@@ -4600,12 +4600,12 @@
     "from": "3db7c958dfdf"
   },
   "vs.warp.meta.title": {
-    "text": "Aubergine vs Warp untuk menjalankan beberapa agen coding | Aubergine",
-    "from": "cbd600eca532"
+    "text": "Aubergine vs Warp untuk menjalankan beberapa agen coding",
+    "from": "b434edbfa3d3"
   },
   "vs.warp.meta.description": {
-    "text": "Warp adalah terminal desktop dengan agennya sendiri, paket berbayar, dan agen cloud, di macOS, Windows, dan Linux. Aubergine tidak memanggil model: ia menjalankan agen yang sudah Anda pakai di terminal di kanvas, tetap berjalan berkat tmux.",
-    "from": "097dab708969"
+    "text": "Warp terminal desktop dengan agen sendiri, paket berbayar, dan cloud. Aubergine tidak memanggil model: menjalankan agen yang sudah Anda pakai, berdampingan.",
+    "from": "d9572d15388b"
   },
   "vs.warp.title": {
     "text": "Aubergine vs Warp",
@@ -4764,12 +4764,12 @@
     "from": "6ff850fa1891"
   },
   "vs.paradev.meta.title": {
-    "text": "Aubergine vs Paradev (dulu Superset) | Aubergine",
-    "from": "601eebcc9205"
+    "text": "Aubergine vs Paradev (dulu Superset): sebuah alternatif",
+    "from": "07bdc273e5cb"
   },
   "vs.paradev.meta.description": {
-    "text": "Paradev, aplikasi yang dulu bernama Superset, dan Aubergine sama-sama berlisensi MIT dan menjalankan agen coding apa pun di worktree Git. Paradev adalah aplikasi desktop dengan paket berbayar; Aubergine adalah kanvas di browser Anda tanpa akun.",
-    "from": "24bc65c55b47"
+    "text": "Paradev, dulu Superset, dan Aubergine sama-sama berlisensi MIT dan bekerja di worktree Git. Paradev aplikasi desktop dengan paket berbayar; Aubergine gratis.",
+    "from": "9fd6946e998b"
   },
   "vs.paradev.title": {
     "text": "Aubergine vs Paradev, dulu Superset",
@@ -4922,5 +4922,9 @@
   "vs.paradev.c.timed": {
     "text": "Otomatisasi sesuai jadwal atau peristiwa, di paket berbayar",
     "from": "d0a82cd975d3"
+  },
+  "home.compare.more": {
+    "text": "Dibandingkan dengan Conductor, Claude Squad, cmux, Warp, dan lainnya",
+    "from": "60e16e373973"
   }
 }

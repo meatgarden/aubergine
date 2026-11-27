@@ -116,12 +116,12 @@
     "from": "21c2472673d7"
   },
   "home.meta.title": {
-    "text": "Aubergine: 터미널과 AI 코딩 에이전트를 위한 관제 센터",
-    "from": "9288ea1bcf71"
+    "text": "Aubergine: 터미널과 코딩 에이전트를 위한 관제 센터",
+    "from": "cd63b652eab2"
   },
   "home.meta.description": {
-    "text": "터미널과 AI 코딩 에이전트를 위한 관제 센터. 브라우저 속 하나의 대시보드에서 Claude Code, Codex, 일반 터미널을 나란히 놓고 관리하세요. 어느 것이 여러분을 필요로 하는지 확인하고 생산성을 되찾으세요. 무료, 로컬, 오픈 소스.",
-    "from": "549f660755c7"
+    "text": "브라우저 대시보드 하나에서 Claude Code, Codex, 일반 터미널을 나란히 실행하고 관리하세요. 어느 에이전트가 여러분을 기다리는지 보입니다. 무료, 로컬, 오픈 소스.",
+    "from": "ff38fa74a3da"
   },
   "home.ld.category": {
     "text": "터미널 및 코딩 에이전트 관리 대시보드",
@@ -520,12 +520,12 @@
     "from": "5c6d1db70932"
   },
   "claude.meta.title": {
-    "text": "Aubergine의 Claude Code | Aubergine",
-    "from": "964ec2c2f3df"
+    "text": "Claude Code 세션 여러 개 나란히 실행하기 | Aubergine",
+    "from": "3c61aa83b994"
   },
   "claude.meta.description": {
-    "text": "Aubergine이 Claude Code를 위해 스스로 해 주는 일: 메뉴에서 시작하기, 기다릴 때 알아보기, 대화 재개, 지난 대화, 설정 상태, 그리고 도구.",
-    "from": "53c5a33c5a7d"
+    "text": "Claude Code 세션 여러 개를 나란히 실행하세요. Aubergine이 시작하고, 어느 것이 여러분을 기다리는지 보여 주며, 대화를 재개하고 지난 대화를 나열합니다.",
+    "from": "6b7dc6fd962d"
   },
   "claude.title": {
     "text": "Aubergine이 Claude Code를 위해 하는 일",
@@ -696,12 +696,12 @@
     "from": "cdae060f0648"
   },
   "chatgpt.meta.title": {
-    "text": "Aubergine의 Codex와 ChatGPT | Aubergine",
-    "from": "8dcd1dde8945"
+    "text": "터미널에서 Codex 에이전트 나란히 실행하기 | Aubergine",
+    "from": "c19dbd4b8744"
   },
   "chatgpt.meta.description": {
-    "text": "OpenAI의 명령줄 코딩 에이전트인 Codex는 Aubergine 터미널에서 여느 프로그램처럼 실행됩니다. 지금 동작하는 것, aubergine 명령으로 보고할 수 있는 것, 그리고 Claude Code 전용으로만 만들어진 것.",
-    "from": "6f8c78d52c06"
+    "text": "OpenAI의 명령줄 코딩 에이전트인 Codex는 Aubergine 터미널에서 여느 프로그램처럼 실행됩니다. 지금 동작하는 것과 Claude Code 전용으로 만들어진 것.",
+    "from": "ce1a16eaf055"
   },
   "chatgpt.crumb": {
     "text": "Codex와 ChatGPT",
@@ -1104,8 +1104,8 @@
     "from": "82c0a75bef8c"
   },
   "windows.meta.description": {
-    "text": "Aubergine은 Windows 자체에서는 실행되지 않지만, WSL 2 안에서 실행하고 Windows 브라우저에서 사용할 수 있습니다. 단계, 시도한 것과 시도하지 않은 것, 문제 해결.",
-    "from": "eef730b3d958"
+    "text": "Aubergine은 Windows 자체에서는 실행되지 않습니다. WSL 2 안에서 실행하고 Windows 브라우저에서 사용합니다: 단계, 시도한 것, 문제 해결.",
+    "from": "ec5595885249"
   },
   "windows.crumb": {
     "text": "WSL로 Windows",
@@ -1252,8 +1252,8 @@
     "from": "6ee5544f775e"
   },
   "guides.meta.title": {
-    "text": "Aubergine 가이드 | Aubergine",
-    "from": "0d501fb6af2e"
+    "text": "터미널에서 코딩 에이전트 실행하기 가이드 | Aubergine",
+    "from": "f891421fd993"
   },
   "guides.meta.description": {
     "text": "Aubergine으로 여러 코딩 에이전트를 실행하는 가이드: 개요, Claude Code와 Codex, 작업 사본, 대기열과 일정.",
@@ -1512,12 +1512,12 @@
     "from": "60142c410708"
   },
   "copies.meta.title": {
-    "text": "작업 사본으로 한 저장소에서 두 코딩 에이전트 실행하기 | Aubergine",
-    "from": "22fa024200af"
+    "text": "한 저장소에서 코딩 에이전트 두 개 실행하기 | Aubergine",
+    "from": "bdb9a97d9a45"
   },
   "copies.meta.description": {
-    "text": "작업 사본은 각 에이전트에게 저장소의 자체 체크아웃과 브랜치를 주므로, 두 에이전트가 같은 파일을 편집하는 일이 없고 각자의 작업을 따로 읽을 수 있습니다.",
-    "from": "a293deb1c990"
+    "text": "작업 사본은 각 에이전트에게 자체 Git 워크트리와 브랜치를 주므로, 두 에이전트가 같은 파일을 편집하는 일이 없고 각자의 작업을 따로 읽을 수 있습니다.",
+    "from": "0f5b56278a4e"
   },
   "copies.crumb": {
     "text": "작업 사본",
@@ -1700,12 +1700,12 @@
     "from": "515aa3442054"
   },
   "keep.meta.title": {
-    "text": "충돌, 재시작, 업데이트 후에도 터미널 유지하기 | Aubergine",
-    "from": "d0521ba83d02"
+    "text": "재시작이나 충돌 후에도 터미널 유지하기 | Aubergine",
+    "from": "632ab04b6eba"
   },
   "keep.meta.description": {
-    "text": "브라우저가 닫힐 때, Aubergine이 다시 시작될 때, 컴퓨터가 멈추거나 재시작되거나 밤사이 업데이트될 때 터미널과 코딩 에이전트에 무슨 일이 생기는지, 그리고 하던 곳에서 이어 가는 방법.",
-    "from": "4f824d2bcf4e"
+    "text": "브라우저를 닫을 때, Aubergine을 재시작할 때, 컴퓨터를 재시작할 때 터미널과 에이전트에 각각 무슨 일이 생기는지, 하던 곳에서 이어 가는 방법.",
+    "from": "27a4a64aebc5"
   },
   "keep.crumb": {
     "text": "재시작 후",
@@ -1945,11 +1945,11 @@
   },
   "alive.meta.title": {
     "text": "터미널을 닫은 뒤에도 프로세스 계속 실행하기 | Aubergine",
-    "from": "b6893102f4dc"
+    "from": "1cb4c894cd65"
   },
   "alive.meta.description": {
-    "text": "터미널 창을 닫으면 그 안에서 실행되던 것이 끝납니다. 흔한 해결책은 nohup, disown, screen, tmux입니다. Aubergine은 모든 터미널을 대신 tmux에서 실행하므로, 브라우저를 닫아도 아무것도 끝나지 않습니다.",
-    "from": "91fc698775ac"
+    "text": "터미널을 닫으면 그 안에서 실행되던 것이 끝납니다. 흔한 해결책은 nohup, disown, screen, tmux입니다. Aubergine은 모든 터미널을 대신 tmux에서 실행합니다.",
+    "from": "697912690f11"
   },
   "alive.crumb": {
     "text": "계속 실행하기",
@@ -2104,8 +2104,8 @@
     "from": "6298f70cc7f8"
   },
   "notify.meta.description": {
-    "text": "어느 Claude Code 터미널이 작업 중인지, 여러분을 기다리는지, 끝났는지 한눈에 봅니다. Aubergine이 만드는 훅, For you 숫자, 다음 대기 터미널로 가는 키, 열린 페이지의 알림.",
-    "from": "ec167ae38aa3"
+    "text": "어느 Claude Code 터미널이 작업 중인지, 여러분을 기다리는지, 끝났는지 보세요: 기다리는 것의 수, 다음 터미널로 가는 키, 브라우저 알림.",
+    "from": "538211348bf4"
   },
   "notify.crumb": {
     "text": "완료 또는 대기",
@@ -2244,12 +2244,12 @@
     "from": "60204a04f28a"
   },
   "resume.meta.title": {
-    "text": "재시작 후 Claude Code 대화 재개하기 | Aubergine",
-    "from": "25d7c94055ab"
+    "text": "재시작 후 Claude Code 세션 재개하기 | Aubergine",
+    "from": "03470fcd8946"
   },
   "resume.meta.description": {
-    "text": "claude --continue와 --resume은 올바른 폴더에 있으면 대화를 되살립니다. Aubergine은 각 터미널이 어느 대화에 있었는지 기억하고, Resume agent를 제공하며, 지난 대화를 폴더별로 나열합니다.",
-    "from": "9c3fb52f17de"
+    "text": "claude --continue와 --resume은 올바른 폴더가 필요합니다. Aubergine은 각 터미널의 대화를 기억하고, Resume agent를 제공하며, 지난 대화를 나열합니다.",
+    "from": "f60b9e354755"
   },
   "resume.crumb": {
     "text": "대화 재개",
@@ -2384,12 +2384,12 @@
     "from": "82d3fe458522"
   },
   "many.meta.title": {
-    "text": "탭이 너무 많을 때 원하는 터미널 찾기 | Aubergine",
-    "from": "710b13634a0f"
+    "text": "터미널 탭이 너무 많다면? 원하는 터미널 찾기 | Aubergine",
+    "from": "e727b8c72939"
   },
   "many.meta.description": {
-    "text": "터미널 탭이 너무 많고 이름이 전부 zsh인가요? Aubergine은 모든 터미널을 캔버스와 목록 하나에 올리고, 상태를 글로 보여 주며, 필터, 태그, 터미널 출력 검색, 그리고 브라우저 탭에 터미널 하나만 여는 기능을 제공합니다.",
-    "from": "0d77fee497f4"
+    "text": "터미널 탭이 너무 많고 이름이 전부 zsh인가요? Aubergine은 모든 터미널을 캔버스와 목록 하나에 올리고 상태, 필터, 태그, 출력 검색을 제공합니다.",
+    "from": "0d52d247f772"
   },
   "many.crumb": {
     "text": "너무 많은 터미널",
@@ -2516,8 +2516,8 @@
     "from": "a731849612b9"
   },
   "tmux.meta.description": {
-    "text": "프리픽스 키도 .tmux.conf도 없이 창보다 오래 사는 셸. Aubergine은 자체 소켓에서 tmux를 대신 실행하며, 휠, 복사와 붙여넣기, 크기 조절은 여느 터미널처럼 동작합니다.",
-    "from": "d876f30b4bcb"
+    "text": "프리픽스 키도 .tmux.conf도 없이 창보다 오래 사는 셸. Aubergine이 tmux를 대신 실행하며, 휠, 복사와 붙여넣기는 평소처럼 동작합니다.",
+    "from": "de322a70f2bb"
   },
   "tmux.crumb": {
     "text": "tmux 없이 tmux",
@@ -2752,8 +2752,8 @@
     "from": "5e05181dcbf3"
   },
   "phone.meta.description": {
-    "text": "휴대폰 브라우저에서 Aubergine에 접속하기: 같은 컴퓨터의 HTTPS, 설정에 적는 주소, 일회용 코드나 QR 코드로 기기마다 페어링하고 원할 때 폐기. Mac 한 대에서 한 번 실행해 봤고, 휴대폰에서는 시도하지 않았습니다.",
-    "from": "4f87f330c4d4"
+    "text": "휴대폰 브라우저에서 Aubergine에 접속하기: 내 컴퓨터의 HTTPS, 일회용 코드로 기기마다 페어링. Mac 한 대에서 한 번 실행해 봤고, 휴대폰에서는 시도하지 않았습니다.",
+    "from": "b82b5a179985"
   },
   "phone.crumb": {
     "text": "휴대폰에서",
@@ -2880,8 +2880,8 @@
     "from": "2c9ecf2e9214"
   },
   "queue.meta.title": {
-    "text": "대기열, For you 목록, 일정 | Aubergine",
-    "from": "aaf91b58a021"
+    "text": "코딩 에이전트를 위한 작업 대기열과 일정 | Aubergine",
+    "from": "3fb36f54544d"
   },
   "queue.meta.description": {
     "text": "작업을 한 번 적어 두면 한가한 에이전트가 가져가게 하고, 여러분을 기다리는 모든 것을 하나의 목록에서 보고, 일정으로 정해진 시각에 작업을 실행하세요.",
@@ -3500,8 +3500,8 @@
     "from": "25c43f0bde14"
   },
   "faq.meta.title": {
-    "text": "자주 묻는 질문 | Aubergine",
-    "from": "0956334109a5"
+    "text": "Aubergine 자주 묻는 질문: 에이전트, 개인정보, 요구 사항",
+    "from": "c026a239ae64"
   },
   "faq.meta.description": {
     "text": "Aubergine에 대한 답변: 무엇인지, 무엇이 필요한지, 비공개인지, 코딩 에이전트와 어떻게 동작하는지, 무엇이 계획되어 있는지.",
@@ -3692,12 +3692,12 @@
     "from": "ef74044c8bc1"
   },
   "compare.meta.title": {
-    "text": "여러 코딩 에이전트를 실행하는 도구 비교 | Aubergine",
-    "from": "e45fe95912dd"
+    "text": "코딩 에이전트 실행 도구 7가지 비교 | Aubergine",
+    "from": "c99d6cc298c1"
   },
   "compare.meta.description": {
-    "text": "Conductor, Claude Squad, Vibe Kanban, cmux, Warp, Paradev와 나란히 놓은 Aubergine: 각각 무엇인지, 어디서 실행되는지, 비용은 얼마인지, 에이전트를 어떻게 서로 떼어 놓는지, 닫으면 무엇이 끝나는지.",
-    "from": "f8a5c374323f"
+    "text": "Conductor, Claude Squad, Vibe Kanban, cmux, Warp, Paradev와 나란히 놓은 Aubergine: 각각 무엇인지, 어디서 실행되는지, 비용, 닫으면 무엇이 끝나는지.",
+    "from": "ab73688e9085"
   },
   "compare.crumb": {
     "text": "비교",
@@ -3936,12 +3936,12 @@
     "from": "14116bf4372e"
   },
   "vs.conductor.meta.title": {
-    "text": "Aubergine vs Conductor: 무료 오픈 소스 대안 | Aubergine",
-    "from": "e2c7866f349d"
+    "text": "Aubergine vs Conductor: 무료 오픈 소스 대안",
+    "from": "35ece35e60d8"
   },
   "vs.conductor.meta.description": {
-    "text": "Conductor와 Aubergine은 둘 다 Git 워크트리에서 코딩 에이전트를 병렬로 실행합니다. Conductor는 클라우드가 있는 Mac 앱이고, Aubergine은 오픈 소스이며 브라우저에서 실행되고 터미널을 tmux에서 계속 실행합니다.",
-    "from": "d87829790de4"
+    "text": "둘 다 Git 워크트리에서 코딩 에이전트를 병렬로 실행합니다. Conductor는 클라우드가 있는 Mac 앱이고, Aubergine은 오픈 소스이며 터미널을 tmux에서 계속 실행합니다.",
+    "from": "baeaaa943291"
   },
   "vs.conductor.title": {
     "text": "Aubergine vs Conductor",
@@ -4104,12 +4104,12 @@
     "from": "3c4fa1eb24c0"
   },
   "vs.claude-squad.meta.title": {
-    "text": "Aubergine vs Claude Squad: tmux와 워크트리, 두 가지 방식 | Aubergine",
-    "from": "e01a63e97f29"
+    "text": "Aubergine vs Claude Squad: tmux와 워크트리, 두 가지 방식",
+    "from": "4166fb6975ea"
   },
   "vs.claude-squad.meta.description": {
-    "text": "Claude Squad와 Aubergine은 둘 다 각 코딩 에이전트를 tmux 세션과 Git 워크트리에서 실행합니다. Claude Squad는 터미널 속 프로그램이고, Aubergine은 브라우저 속 터미널 캔버스입니다.",
-    "from": "49ec403afb34"
+    "text": "둘 다 각 코딩 에이전트를 tmux 세션과 Git 워크트리에서 실행합니다. Claude Squad는 터미널 속 프로그램이고, Aubergine은 브라우저 속 캔버스입니다.",
+    "from": "9c993cb105df"
   },
   "vs.claude-squad.title": {
     "text": "Aubergine vs Claude Squad",
@@ -4268,12 +4268,12 @@
     "from": "306161ab46c9"
   },
   "vs.vibe-kanban.meta.title": {
-    "text": "Aubergine vs Vibe Kanban: 이슈 보드냐 터미널 캔버스냐 | Aubergine",
-    "from": "9f0bf97bf989"
+    "text": "Aubergine vs Vibe Kanban: 오픈 소스 대안",
+    "from": "670b010ba18d"
   },
   "vs.vibe-kanban.meta.description": {
-    "text": "Vibe Kanban과 Aubergine은 둘 다 로컬에서 실행되는 오픈 소스이며 브라우저에서 보여 줍니다. Vibe Kanban은 일을 보드 위의 이슈로 계획하고, Aubergine은 에이전트 자체를 나란히 놓인 터미널로 보여 줍니다.",
-    "from": "3dad274de8a4"
+    "text": "둘 다 로컬에서 실행되는 오픈 소스이며 브라우저에 표시됩니다. Vibe Kanban은 일을 보드 위 이슈로 계획하고, Aubergine은 에이전트를 나란히 놓인 터미널로 보여 줍니다.",
+    "from": "bb53f7f86aa3"
   },
   "vs.vibe-kanban.title": {
     "text": "Aubergine vs Vibe Kanban",
@@ -4436,12 +4436,12 @@
     "from": "548d4fabc56e"
   },
   "vs.cmux.meta.title": {
-    "text": "Aubergine vs cmux: 코딩 에이전트를 위해 만든 두 터미널 | Aubergine",
-    "from": "dd38ae503d2d"
+    "text": "Aubergine vs cmux: 코딩 에이전트를 위해 만든 두 터미널",
+    "from": "c625444e117b"
   },
   "vs.cmux.meta.description": {
-    "text": "cmux와 Aubergine은 둘 다 모든 명령줄 에이전트를 진짜 터미널에서 실행하고, 어느 것이 여러분을 필요로 하는지 알려 줍니다. cmux는 네이티브 macOS 앱이고, Aubergine은 tmux 위에서 동작하는 브라우저 속 캔버스입니다.",
-    "from": "9258c63e7091"
+    "text": "둘 다 모든 명령줄 에이전트를 진짜 터미널에서 실행하고 어느 것이 여러분을 기다리는지 보여 줍니다. cmux는 네이티브 macOS 앱, Aubergine은 브라우저 속 캔버스입니다.",
+    "from": "1018139b92b2"
   },
   "vs.cmux.title": {
     "text": "Aubergine vs cmux",
@@ -4600,12 +4600,12 @@
     "from": "3db7c958dfdf"
   },
   "vs.warp.meta.title": {
-    "text": "여러 코딩 에이전트 실행하기: Aubergine vs Warp | Aubergine",
-    "from": "cbd600eca532"
+    "text": "여러 코딩 에이전트 실행하기: Aubergine vs Warp",
+    "from": "b434edbfa3d3"
   },
   "vs.warp.meta.description": {
-    "text": "Warp는 자체 에이전트, 유료 요금제, 클라우드 에이전트가 있는 데스크톱 터미널로, macOS, Windows, Linux에서 실행됩니다. Aubergine은 모델을 호출하지 않습니다. 이미 쓰는 에이전트를 tmux로 계속 실행되는, 캔버스 위의 터미널에서 실행합니다.",
-    "from": "097dab708969"
+    "text": "Warp는 자체 에이전트, 유료 요금제, 클라우드가 있는 데스크톱 터미널입니다. Aubergine은 모델을 호출하지 않고, 이미 쓰는 에이전트를 나란히 실행합니다.",
+    "from": "d9572d15388b"
   },
   "vs.warp.title": {
     "text": "Aubergine vs Warp",
@@ -4764,12 +4764,12 @@
     "from": "6ff850fa1891"
   },
   "vs.paradev.meta.title": {
-    "text": "Aubergine vs Paradev(이전 이름 Superset) | Aubergine",
-    "from": "601eebcc9205"
+    "text": "Aubergine vs Paradev(이전 이름 Superset): 대안",
+    "from": "07bdc273e5cb"
   },
   "vs.paradev.meta.description": {
-    "text": "한때 Superset이라 불린 앱인 Paradev와 Aubergine은 둘 다 MIT 라이선스이며, 모든 코딩 에이전트를 Git 워크트리에서 실행합니다. Paradev는 유료 요금제가 있는 데스크톱 앱이고, Aubergine은 계정이 필요 없는 브라우저 속 캔버스입니다.",
-    "from": "24bc65c55b47"
+    "text": "한때 Superset이던 Paradev와 Aubergine은 둘 다 MIT 라이선스이며 Git 워크트리에서 동작합니다. Paradev는 유료 요금제가 있는 데스크톱 앱, Aubergine은 무료입니다.",
+    "from": "9fd6946e998b"
   },
   "vs.paradev.title": {
     "text": "Aubergine vs Paradev(이전 이름 Superset)",
@@ -4922,5 +4922,9 @@
   "vs.paradev.c.timed": {
     "text": "일정이나 이벤트에 따른 자동화, 유료 요금제",
     "from": "d0a82cd975d3"
+  },
+  "home.compare.more": {
+    "text": "Conductor, Claude Squad, cmux, Warp 등과 비교",
+    "from": "60e16e373973"
   }
 }
