@@ -4,6 +4,8 @@
 
 **Die Kommandozentrale für deine Terminals und KI-Coding-Agenten.** Starte Claude Code, Codex und normale Terminals nebeneinander in einem Dashboard in deinem Browser: so viele, wie du willst, mit den Agenten und Modellen, die du schon nutzt. Sieh auf einen Blick, welches auf dich wartet, bei welchem Schritt jedes steht und was jedes für dich geschrieben hat.
 
+Aubergine teilen: [X](https://x.com/intent/post?text=Aubergine%3A%20mission%20control%20for%20your%20terminals%20and%20AI%20coding%20agents.%20Free%2C%20local%2C%20open%20source.&url=https%3A%2F%2Fthirstyeggplant.com%2F) · [Bluesky](https://bsky.app/intent/compose?text=Aubergine%3A%20mission%20control%20for%20your%20terminals%20and%20AI%20coding%20agents.%20Free%2C%20local%2C%20open%20source.%20https%3A%2F%2Fthirstyeggplant.com%2F) · [LinkedIn](https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fthirstyeggplant.com%2F) · [Reddit](https://www.reddit.com/submit?url=https%3A%2F%2Fthirstyeggplant.com%2F&title=Aubergine%3A%20mission%20control%20for%20your%20terminals%20and%20AI%20coding%20agents.%20Free%2C%20local%2C%20open%20source.) · [Hacker News](https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fthirstyeggplant.com%2F&t=Aubergine%3A%20mission%20control%20for%20your%20terminals%20and%20AI%20coding%20agents.%20Free%2C%20local%2C%20open%20source.)
+
 - Läuft auf deinem eigenen Rechner und nirgends sonst.
 - Terminals laufen weiter, wenn du den Browser schließt oder Aubergine neu startest.
 - Funktioniert mit einfachen Shells und mit Agenten.

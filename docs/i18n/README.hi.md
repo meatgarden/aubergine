@@ -4,6 +4,8 @@
 
 **आपके टर्मिनलों और AI कोडिंग एजेंटों के लिए मिशन कंट्रोल।** Claude Code, Codex और सादे टर्मिनल अपने ब्राउज़र में एक ही डैशबोर्ड पर साथ-साथ चलाएँ: जितने चाहें उतने, उन्हीं एजेंटों और मॉडलों के साथ जो आप पहले से इस्तेमाल करते हैं। एक नज़र में देखें कि कौन-सा आपका इंतज़ार कर रहा है, हर एक किस स्टेप पर है, और हर एक ने आपके लिए क्या लिखा है।
 
+Aubergine शेयर करें: [X](https://x.com/intent/post?text=Aubergine%3A%20mission%20control%20for%20your%20terminals%20and%20AI%20coding%20agents.%20Free%2C%20local%2C%20open%20source.&url=https%3A%2F%2Fthirstyeggplant.com%2F) · [Bluesky](https://bsky.app/intent/compose?text=Aubergine%3A%20mission%20control%20for%20your%20terminals%20and%20AI%20coding%20agents.%20Free%2C%20local%2C%20open%20source.%20https%3A%2F%2Fthirstyeggplant.com%2F) · [LinkedIn](https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fthirstyeggplant.com%2F) · [Reddit](https://www.reddit.com/submit?url=https%3A%2F%2Fthirstyeggplant.com%2F&title=Aubergine%3A%20mission%20control%20for%20your%20terminals%20and%20AI%20coding%20agents.%20Free%2C%20local%2C%20open%20source.) · [Hacker News](https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fthirstyeggplant.com%2F&t=Aubergine%3A%20mission%20control%20for%20your%20terminals%20and%20AI%20coding%20agents.%20Free%2C%20local%2C%20open%20source.)
+
 - आपके अपने कंप्यूटर पर चलता है, और कहीं नहीं।
 - ब्राउज़र बंद करने या Aubergine रीस्टार्ट करने पर भी टर्मिनल चलते रहते हैं।
 - सादे शेल के साथ भी काम करता है और एजेंटों के साथ भी।

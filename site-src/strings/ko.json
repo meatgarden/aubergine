@@ -5014,5 +5014,17 @@
   "compare.it.agents": {
     "text": "그 안에서 실행하는 에이전트는 별개의 문제입니다. 각 에이전트는 보내는 것을 자기 제공업체로 보내고 각자 승인이 필요합니다. Aubergine은 그 점을 전혀 바꾸지 않습니다. Aubergine이 무엇을 보호하고 무엇을 보호하지 않는지는 <a href=\"/security/\">보안</a> 페이지에 있습니다.",
     "from": "b6838ee486ee"
+  },
+  "site.share.label": {
+    "text": "이 페이지 공유",
+    "from": "e4ccddb6438f"
+  },
+  "site.share.email": {
+    "text": "이메일",
+    "from": "969ccbd3cf63"
+  },
+  "site.share.copy": {
+    "text": "링크 복사",
+    "from": "dbf362d4f210"
   }
 }

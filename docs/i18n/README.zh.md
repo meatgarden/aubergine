@@ -4,6 +4,8 @@
 
 **你的终端和 AI 编程智能体的指挥中心。** 在浏览器里的一个仪表盘上并排运行 Claude Code、Codex 和普通终端：想开多少就开多少，用你已经在用的智能体和模型。一眼看清哪一个在等你、每个走到了哪一步、每个为你写了什么。
 
+分享 Aubergine： [X](https://x.com/intent/post?text=Aubergine%3A%20mission%20control%20for%20your%20terminals%20and%20AI%20coding%20agents.%20Free%2C%20local%2C%20open%20source.&url=https%3A%2F%2Fthirstyeggplant.com%2F) · [Bluesky](https://bsky.app/intent/compose?text=Aubergine%3A%20mission%20control%20for%20your%20terminals%20and%20AI%20coding%20agents.%20Free%2C%20local%2C%20open%20source.%20https%3A%2F%2Fthirstyeggplant.com%2F) · [LinkedIn](https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fthirstyeggplant.com%2F) · [Reddit](https://www.reddit.com/submit?url=https%3A%2F%2Fthirstyeggplant.com%2F&title=Aubergine%3A%20mission%20control%20for%20your%20terminals%20and%20AI%20coding%20agents.%20Free%2C%20local%2C%20open%20source.) · [Hacker News](https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fthirstyeggplant.com%2F&t=Aubergine%3A%20mission%20control%20for%20your%20terminals%20and%20AI%20coding%20agents.%20Free%2C%20local%2C%20open%20source.)
+
 - 运行在你自己的电脑上，不在其他任何地方。
 - 关掉浏览器或重启 Aubergine，终端照常运行。
 - 普通 shell 和智能体都能用。

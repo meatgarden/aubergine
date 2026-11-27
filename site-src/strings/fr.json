@@ -5014,5 +5014,17 @@
   "compare.it.agents": {
     "text": "Les agents que vous y lancez sont une autre question. Chacun envoie ce qu’il envoie à son propre fournisseur et demande sa propre approbation ; Aubergine n’y change rien. Ce qu’Aubergine protège, et ce qu’elle ne protège pas, se trouve sur la page <a href=\"/security/\">sécurité</a>.",
     "from": "b6838ee486ee"
+  },
+  "site.share.label": {
+    "text": "Partager cette page",
+    "from": "e4ccddb6438f"
+  },
+  "site.share.email": {
+    "text": "E-mail",
+    "from": "969ccbd3cf63"
+  },
+  "site.share.copy": {
+    "text": "Copier le lien",
+    "from": "dbf362d4f210"
   }
 }

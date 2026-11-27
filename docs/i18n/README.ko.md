@@ -4,6 +4,8 @@
 
 **터미널과 AI 코딩 에이전트를 위한 관제 센터.** Claude Code, Codex, 일반 터미널을 브라우저 속 하나의 대시보드에 나란히 놓고 실행하세요. 이미 쓰고 있는 에이전트와 모델로, 원하는 만큼. 어느 것이 여러분을 기다리는지, 각각 어느 단계에 있는지, 각각 여러분을 위해 무엇을 써 두었는지 한눈에 확인하세요.
 
+Aubergine 공유하기: [X](https://x.com/intent/post?text=Aubergine%3A%20mission%20control%20for%20your%20terminals%20and%20AI%20coding%20agents.%20Free%2C%20local%2C%20open%20source.&url=https%3A%2F%2Fthirstyeggplant.com%2F) · [Bluesky](https://bsky.app/intent/compose?text=Aubergine%3A%20mission%20control%20for%20your%20terminals%20and%20AI%20coding%20agents.%20Free%2C%20local%2C%20open%20source.%20https%3A%2F%2Fthirstyeggplant.com%2F) · [LinkedIn](https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fthirstyeggplant.com%2F) · [Reddit](https://www.reddit.com/submit?url=https%3A%2F%2Fthirstyeggplant.com%2F&title=Aubergine%3A%20mission%20control%20for%20your%20terminals%20and%20AI%20coding%20agents.%20Free%2C%20local%2C%20open%20source.) · [Hacker News](https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fthirstyeggplant.com%2F&t=Aubergine%3A%20mission%20control%20for%20your%20terminals%20and%20AI%20coding%20agents.%20Free%2C%20local%2C%20open%20source.)
+
 - 여러분의 컴퓨터에서만 실행되며, 다른 어디에서도 실행되지 않습니다.
 - 브라우저를 닫거나 Aubergine을 다시 시작해도 터미널은 계속 실행됩니다.
 - 일반 셸에서도, 에이전트에서도 동작합니다.

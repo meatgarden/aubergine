@@ -5014,5 +5014,17 @@
   "compare.it.agents": {
     "text": "その中で動かすエージェントは別の問題です。それぞれが自分のプロバイダーに送るものを送り、それぞれに承認が必要です。Aubergine はその点を何も変えません。Aubergine が何を守り、何を守らないかは<a href=\"/security/\">セキュリティ</a>のページにあります。",
     "from": "b6838ee486ee"
+  },
+  "site.share.label": {
+    "text": "このページを共有",
+    "from": "e4ccddb6438f"
+  },
+  "site.share.email": {
+    "text": "メール",
+    "from": "969ccbd3cf63"
+  },
+  "site.share.copy": {
+    "text": "リンクをコピー",
+    "from": "dbf362d4f210"
   }
 }
