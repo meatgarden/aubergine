@@ -31,14 +31,15 @@ export function App() {
   // A tab that shows one terminal by itself has no canvas for the keys of the canvas to act on.
   useEffect(() => (terminalPage === null ? startShortcuts() : undefined), []);
 
-  // The theme that was chosen, or the system's for "match the system": put on the page as soon as either changes.
+  // The theme that was chosen, or the system's for "match the system", and its color theme: put on the page as soon as any of them changes.
   const setting = useApp((s) => s.settings.theme);
   const settled = useApp((s) => s.phase === 'ready');
   const shown = useThemeShown();
+  const appearance = useApp((s) => s.settings.appearance);
   useEffect(() => {
     // Until the settings have been read the page keeps what it was drawn with before first paint.
-    if (settled) applyTheme(setting, shown);
-  }, [setting, shown, settled]);
+    if (settled) applyTheme(setting, shown, appearance);
+  }, [setting, shown, appearance, settled]);
 
   if (phase === 'loading') return <Message title="Loading…" />;
 

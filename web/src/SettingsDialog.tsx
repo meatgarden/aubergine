@@ -1,5 +1,5 @@
-import { THEMES, THEME_WORDS } from '@aubergine/shared';
 import { useEffect } from 'react';
+import { AppearancePart } from './appearance/AppearancePart';
 import { NotifySwitch } from './AttentionQueue';
 import { api, isSuperseded } from './api';
 import { keepBarOpen, useBarKeptOpen } from './bar-open';
@@ -7,19 +7,17 @@ import { BAR_PLACES, BAR_PLACE_WORDS, placeBar, placeFrom, useBarPlace } from '.
 import { setOpenNew } from './desktop';
 import { DevicesPart } from './devices/Devices';
 import { atThisComputer, useApp } from './store';
-import { chooseTheme, useThemeShown } from './theme';
 import { findServer, hostOf, loadServers } from './servers';
 import { ScreenHead, Select } from './ui';
 
 /**
- * Settings: the one place for what a person changes about the page itself. How it looks, whether a new terminal
+ * Settings: the one place for what a person changes about the page itself. How it looks (light or dark, the color
+ * theme of each, a terminal's text and cursor), whether a new terminal
  * also opens on the desktop (only at the computer Aubergine runs on), whether the desktop is told when a terminal starts
  * waiting, and the devices signed in with a code. Everything else is written in the settings file by hand.
  */
 export function SettingsDialog() {
   const open = useApp((s) => s.panel === 'settings');
-  const theme = useApp((s) => s.settings.theme);
-  const shown = useThemeShown();
   const openNew = useApp((s) => s.settings.desktop.openNew);
   const remind = useApp((s) => s.settings.describe.remind);
   const barOpen = useBarKeptOpen();
@@ -29,7 +27,7 @@ export function SettingsDialog() {
   // A linked server shown: what is not about the page itself is about that server.
   const server = useApp((s) => s.server);
   const shownServer = server === null ? null : findServer(loadServers(), server);
-  // Asked to show a part (Devices, from its command): brought into view once, and what is done there first has the keyboard.
+  // Asked to show a part (Devices or Appearance, from its command): brought into view once, and what is done there first has the keyboard.
   useEffect(() => {
     if (!open || at === null) return;
     // A moment later: what opened Settings (the palette, a menu) gives the keyboard back as it closes.
@@ -37,7 +35,8 @@ export function SettingsDialog() {
       useApp.setState({ settingsAt: null });
       const part = document.querySelector<HTMLElement>(`[data-testid="settings-${at}"]`);
       part?.scrollIntoView({ block: 'nearest' });
-      part?.querySelector<HTMLElement>('button')?.focus();
+      // The part may say what is done there first (Appearance: the theme drawn now); else its first button.
+      (part?.querySelector<HTMLElement>('[data-autofocus]') ?? part?.querySelector<HTMLElement>('button'))?.focus();
     }, 0);
     return () => window.clearTimeout(timer);
   }, [open, at]);
@@ -63,19 +62,7 @@ export function SettingsDialog() {
             The appearance, the bar and notifications are this page’s own. Everything else here is about “{shownServer.label}” at {hostOf(shownServer)}, the server shown.
           </p>
         )}
-        <section>
-          <h3>Appearance</h3>
-          <div className="ui-segmented" role="radiogroup" aria-label="Theme" data-testid="theme-switch">
-            {THEMES.map((choice) => (
-              <button key={choice} type="button" role="radio" aria-checked={choice === theme} aria-pressed={choice === theme} onClick={() => chooseTheme(choice)} data-testid={`theme-${choice}`}>
-                {THEME_WORDS[choice]}
-              </button>
-            ))}
-          </div>
-          <p className="ui-meta" data-testid="theme-says">
-            {theme === 'system' ? `The system is set to ${shown} now; the page follows it when that changes.` : 'It changes at once, and is the same in every browser you open this in.'}
-          </p>
-        </section>
+        <AppearancePart />
         <section>
           <h3>Canvas</h3>
           <p className="help-setting">

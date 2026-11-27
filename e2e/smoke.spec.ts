@@ -4904,6 +4904,199 @@ test('theme: light, dark or the system\'s, chosen in Settings, at once and witho
   }
 });
 
+test('color themes: chosen in Settings, with the keyboard and from the palette, drawn at once and from the first paint, a terminal follows with its font and cursor, and colors set by hand', async ({ page }) => {
+  const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
+  const configFile = path.join(e2e.dataDir, 'config.json');
+  const original = existsSync(configFile) ? readFileSync(configFile, 'utf8') : null;
+  // Every pair of kind and color theme the page has, from before anything is drawn, and the accent set by hand then.
+  await page.addInitScript(() => {
+    const seen: string[] = [];
+    const w = window as unknown as { looksSeen: string[]; firstAccent: string | null };
+    w.looksSeen = seen;
+    w.firstAccent = null;
+    const note = (): void => {
+      const root = document.documentElement;
+      const kind = root?.getAttribute('data-theme') ?? null;
+      const id = root?.getAttribute('data-color-theme') ?? null;
+      if (kind === null && id === null) return;
+      if (w.firstAccent === null) w.firstAccent = root.style.getPropertyValue('--accent');
+      const now = `${kind}/${id}`;
+      if (seen.at(-1) !== now) seen.push(now);
+    };
+    new MutationObserver(note).observe(document, { attributes: true, subtree: true, attributeFilter: ['data-theme', 'data-color-theme'] });
+    document.addEventListener('DOMContentLoaded', note);
+    requestAnimationFrame(note);
+  });
+  await page.goto(`/auth?token=${token}`);
+  await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
+  type Saved = { theme?: string; font?: { family?: string; size?: number }; appearance?: { light?: string; dark?: string; cursor?: string; cursorBlink?: boolean } };
+  const saved = (): Saved => (existsSync(configFile) ? (JSON.parse(readFileSync(configFile, 'utf8')) as Saved) : {});
+  const before = page.url();
+  await page.getByRole('button', { name: 'New canvas' }).click();
+  await expect(page).not.toHaveURL(before);
+  await page.getByTestId('toolbar-new-terminal').click();
+  await expect(page.locator('.xterm-rows')).toContainText(/[$%#>]/, { timeout: 20_000 });
+  const html = page.locator('html');
+  const mac = await page.evaluate(() => navigator.platform.toLowerCase().includes('mac'));
+  /** A color token as the page has it now, and as the theme of that ID says it (its preview carries the theme's own). */
+  const tokenOnPage = (name: string): Promise<string> => page.evaluate((n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim(), name);
+  const tokenOfTheme = (id: string, name: string): Promise<string> =>
+    page.evaluate(([i, n]) => getComputedStyle(document.querySelector(`[data-theme-preview="${i}"]`) as Element).getPropertyValue(n as string).trim(), [id, name]);
+  /** The ground a terminal is drawn on: its own colors, set by its theme. */
+  const terminalGround = (): Promise<string> =>
+    page.evaluate(() => {
+      for (const el of document.querySelectorAll('.xterm .xterm-viewport, .xterm .xterm-scrollable-element, .xterm .xterm-screen, .xterm')) {
+        const color = getComputedStyle(el).backgroundColor;
+        const parts = color.match(/\d+(\.\d+)?/g);
+        if (parts && (parts.length < 4 || Number(parts[3]) > 0)) return color;
+      }
+      throw new Error('no background on a terminal');
+    });
+  const rgb = (hex: string): string => `rgb(${[1, 3, 5].map((at) => Number.parseInt(hex.slice(at, at + 2), 16)).join(', ')})`;
+  const palette = async (words: string): Promise<void> => {
+    await page.keyboard.press(mac ? 'Meta+k' : 'Control+Shift+K');
+    await page.keyboard.type(`>${words}`);
+    await expect(page.getByTestId('picker-command-row').first()).toContainText(words);
+    await page.keyboard.press('Enter');
+  };
+  try {
+    // As a new install has it: the system's kind (dark here) in the theme that comes first.
+    await expect(html).toHaveAttribute('data-color-theme', 'dark');
+    await page.getByTestId('toolbar-settings').click();
+    const settings = page.getByTestId('settings-dialog');
+    const part = settings.getByTestId('settings-appearance');
+    await expect(part.getByTestId('color-themes-light').getByRole('radio')).toHaveText(['Light', 'High contrast light', 'Solarized light', 'Gruvbox light']);
+    await expect(part.getByTestId('color-themes-dark').getByRole('radio')).toHaveText(['Dark', 'High contrast dark', 'Solarized dark', 'Gruvbox dark', 'Nord', 'Dracula']);
+    await expect(part.getByRole('radiogroup', { name: 'Light theme' })).toBeVisible();
+    await expect(part.getByRole('radiogroup', { name: 'Dark theme' })).toBeVisible();
+    // Each kind's choice is ticked; only the one drawn is marked.
+    await expect(part.getByTestId('color-theme-dark')).toHaveAttribute('aria-checked', 'true');
+    await expect(part.getByTestId('color-theme-dark')).toHaveAttribute('data-drawn', 'true');
+    await expect(part.getByTestId('color-theme-light')).toHaveAttribute('aria-checked', 'true');
+    await expect(part.getByTestId('color-theme-light')).not.toHaveAttribute('data-drawn');
+    // A preview is drawn in its own theme's colors, not the page's.
+    expect(await part.getByTestId('color-theme-nord').locator('.ui-theme-preview').evaluate((el) => getComputedStyle(el).backgroundColor)).toBe(rgb(await tokenOfTheme('nord', '--bg')));
+    expect(await part.getByTestId('color-theme-solarized-light').locator('.ui-theme-preview').evaluate((el) => getComputedStyle(el).backgroundColor)).toBe(rgb(await tokenOfTheme('solarized-light', '--bg')));
+
+    // Nord, pressed: drawn at once, the page still dark and still matching the system; a terminal's own colors follow.
+    await part.getByTestId('color-theme-nord').click();
+    await expect(html).toHaveAttribute('data-color-theme', 'nord');
+    await expect(html).toHaveAttribute('data-theme', 'dark');
+    expect(await tokenOnPage('--accent')).toBe(await tokenOfTheme('nord', '--accent'));
+    await expect.poll(terminalGround).toBe(rgb('#2e3440'));
+    await expect.poll(() => saved().appearance?.dark).toBe('nord');
+    expect(saved().theme ?? 'system').toBe('system');
+    await expect(part.getByTestId('color-theme-nord')).toHaveAttribute('data-drawn', 'true');
+    await expect(part.getByTestId('color-theme-dark')).toHaveAttribute('aria-checked', 'false');
+    await expect(part.getByTestId('color-theme-says')).toHaveText('Light is used while the system is light, Nord while it is dark.');
+
+    // A light theme, while the page is dark: the page becomes light, so that what was chosen is seen. One request with both.
+    await part.getByTestId('color-theme-solarized-light').click();
+    await expect(html).toHaveAttribute('data-theme', 'light');
+    await expect(html).toHaveAttribute('data-color-theme', 'solarized-light');
+    await expect.poll(() => [saved().theme, saved().appearance?.light, saved().appearance?.dark]).toEqual(['light', 'solarized-light', 'nord']);
+    await expect(part.getByTestId('theme-light')).toHaveAttribute('aria-checked', 'true');
+    await expect(part.getByTestId('color-theme-nord')).toHaveAttribute('aria-checked', 'true');
+    await expect(part.getByTestId('color-theme-nord')).not.toHaveAttribute('data-drawn');
+    await expect.poll(terminalGround).toBe(rgb('#fdf6e3'));
+    await page.keyboard.press('Escape');
+    await expect(settings).toHaveCount(0);
+
+    // With the keyboard only: "Color theme…" from the palette opens Settings on the theme drawn, and an arrow chooses the next.
+    await palette('Color theme…');
+    await expect(settings).toBeVisible();
+    await expect.poll(() => page.evaluate(() => document.activeElement?.getAttribute('data-testid'))).toBe('color-theme-solarized-light');
+    await page.keyboard.press('ArrowDown');
+    await expect(html).toHaveAttribute('data-color-theme', 'gruvbox-light');
+    expect(await page.evaluate(() => document.activeElement?.getAttribute('data-testid'))).toBe('color-theme-gruvbox-light');
+    // Tab leaves the group: only its chosen row is reached with Tab.
+    await page.keyboard.press('Tab');
+    expect(await page.evaluate(() => document.activeElement?.closest('[role="radiogroup"]')?.getAttribute('aria-label') ?? null)).toBe('Dark theme');
+    await expect(page.locator(':focus')).toHaveAttribute('data-testid', 'color-theme-nord');
+    await expect.poll(() => saved().appearance?.light).toBe('gruvbox-light');
+    await page.keyboard.press('Escape');
+    await expect(settings).toHaveCount(0);
+
+    // From the palette by name: a dark theme while the page is light makes the page dark.
+    await palette('Color theme: Dracula');
+    await expect(html).toHaveAttribute('data-color-theme', 'dracula');
+    await expect(html).toHaveAttribute('data-theme', 'dark');
+    await expect.poll(() => [saved().theme, saved().appearance?.dark]).toEqual(['dark', 'dracula']);
+    await expect.poll(terminalGround).toBe(rgb('#282a36'));
+
+    // The page the server sends carries both IDs, and after a reload no other theme is ever drawn first.
+    const sent = await (await page.request.get(page.url())).text();
+    expect(sent).toContain('data-theme-setting="dark"');
+    expect(sent).toContain('data-theme-light="gruvbox-light"');
+    expect(sent).toContain('data-theme-dark="dracula"');
+    await page.reload();
+    await expect(page.getByTestId('appbar')).toBeVisible();
+    await expect(page.locator('.xterm-rows')).toContainText(/[$%#>]/, { timeout: 20_000 });
+    expect(await page.evaluate(() => (window as unknown as { looksSeen: string[] }).looksSeen)).toEqual(['dark/dracula']);
+    expect(await terminalGround()).toBe(rgb('#282a36'));
+
+    // A terminal's text and cursor: written to the file, and a live terminal follows.
+    await page.getByTestId('toolbar-settings').click();
+    await part.getByTestId('font-size').fill('50');
+    await part.getByTestId('font-size').press('Enter');
+    await expect(part.getByTestId('font-says')).toHaveText('The size is from 8 to 32 pixels.');
+    expect(saved().font?.size).toBeUndefined();
+    await part.getByTestId('font-size').fill('16');
+    await part.getByTestId('font-size').press('Enter');
+    await expect.poll(() => saved().font?.size).toBe(16);
+    await expect(part.getByTestId('font-says')).not.toContainText('The size is');
+    await part.getByTestId('font-family').fill('Mono; color: red');
+    await part.getByTestId('font-family').press('Enter');
+    await expect(part.getByTestId('font-says')).toContainText('without control characters or any of');
+    await part.getByTestId('font-family').fill('monospace');
+    await part.getByTestId('font-family').press('Enter');
+    await expect.poll(() => saved().font?.family).toBe('monospace');
+    await part.getByTestId('cursor-bar').click();
+    await expect.poll(() => saved().appearance?.cursor).toBe('bar');
+    await part.getByTestId('cursor-blink').uncheck();
+    await expect.poll(() => saved().appearance?.cursorBlink).toBe(false);
+    await page.keyboard.press('Escape');
+    await expect(settings).toHaveCount(0);
+    await expect.poll(() => page.locator('.xterm-rows').evaluate((el) => getComputedStyle(el).fontSize)).toBe('16px');
+    await page.getByTestId('node-body').click();
+    await expect(page.locator('.xterm-rows .xterm-cursor-bar')).toHaveCount(1);
+    await expect(page.locator('.xterm .xterm-cursor-blink')).toHaveCount(0);
+    // Reset puts the text back as it came, and is not offered once it is.
+    await page.getByTestId('toolbar-settings').click();
+    await part.getByTestId('font-reset').click();
+    await expect.poll(() => [saved().font?.size, saved().font?.family]).toEqual([13, 'Menlo, Monaco, "DejaVu Sans Mono", Consolas, monospace']);
+    await expect(part.getByTestId('font-reset')).toHaveCount(0);
+    await page.keyboard.press('Escape');
+
+    // Colors set by hand, in the file: drawn before first paint, a terminal's ground too, and a wrong entry said in Settings.
+    const file = JSON.parse(readFileSync(configFile, 'utf8')) as Record<string, Record<string, unknown>>;
+    file.appearance = { ...file.appearance, colors: { accent: '#123456', '[dracula]': { 'terminal-bg': '#010203' }, bogus: '#000000' } };
+    writeFileSync(configFile, JSON.stringify(file));
+    expect(await (await page.request.get(page.url())).text()).toContain('data-colors-dark="accent:#123456,terminal-bg:#010203"');
+    await page.reload();
+    await expect(page.getByTestId('appbar')).toBeVisible();
+    await expect(page.locator('.xterm-rows')).toContainText(/[$%#>]/, { timeout: 20_000 });
+    expect(await page.evaluate(() => (window as unknown as { firstAccent: string }).firstAccent)).toBe('#123456');
+    expect(await page.evaluate(() => (window as unknown as { looksSeen: string[] }).looksSeen)).toEqual(['dark/dracula']);
+    expect(await tokenOnPage('--accent')).toBe('#123456');
+    expect(await terminalGround()).toBe(rgb('#010203'));
+    await page.getByTestId('toolbar-settings').click();
+    await expect(part.getByTestId('colors-problems')).toContainText('"bogus" is not a color that can be set. It is skipped.');
+    await part.getByTestId('colors-by-hand').locator('summary').click();
+    await expect(part.getByTestId('colors-set')).toHaveText('Set by hand for Dracula: accent, terminal-bg.');
+    // Another theme drawn: the colors set for every theme stay, those for Dracula alone go, and nothing is left behind.
+    await part.getByTestId('color-theme-nord').click();
+    await expect(html).toHaveAttribute('data-color-theme', 'nord');
+    expect(await tokenOnPage('--accent')).toBe('#123456');
+    expect(await page.evaluate(() => document.documentElement.style.getPropertyValue('--terminal-bg'))).toBe('');
+    await expect.poll(terminalGround).toBe(rgb('#2e3440'));
+  } finally {
+    // As the file was before this test, for the tests that follow (system, dark, light).
+    if (original === null) rmSync(configFile, { force: true });
+    else writeFileSync(configFile, original);
+  }
+});
+
 test('states: every piece draws hover, pressed, focus and disabled differently from rest in both themes, nothing moves under the pointer, and what opens travels only where motion is wanted', async ({ page }) => {
   const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
   await page.goto(`/auth?token=${token}`);
@@ -4924,7 +5117,7 @@ test('states: every piece draws hover, pressed, focus and disabled differently f
       <select data-piece="select"><option>one</option></select>
       <div class="ui-segmented"><button data-piece="segmented part">One</button><button aria-pressed="true">Two</button></div>
       <div class="ui-tabs" role="tablist"><button class="ui-tab" role="tab" data-piece="tab">Tab</button><button class="ui-tab" role="tab" aria-selected="true">Now</button></div>
-      <button class="ui-row" data-piece="row">A row</button>
+      <div style="display:flex;gap:12px"><button class="ui-row" data-piece="row">A row</button><div class="ui-radio-rows" role="radiogroup" style="flex:1"><button class="ui-row ui-radio-row" role="radio" aria-checked="false" tabindex="0" data-piece="radio row"><span>A choice</span><span class="ui-radio-row-tick"></span></button></div></div>
       <div class="ui-card is-pressed" role="button" tabindex="0" data-piece="card">A card</div>
       <span class="ui-menu" role="menu" style="position:static"><button role="menuitem" data-piece="menu item">A line</button></span>
       <button class="ui-chip" data-piece="chip">chip</button>
@@ -4943,7 +5136,7 @@ test('states: every piece draws hover, pressed, focus and disabled differently f
     });
   const pieces = page.locator('#gallery [data-piece]');
   const names = await pieces.evaluateAll((all) => all.map((el) => el.getAttribute('data-piece') ?? ''));
-  expect(names).toHaveLength(19);
+  expect(names).toHaveLength(20);
   const missing: string[] = [];
   for (const scheme of ['dark', 'light'] as const) {
     await page.emulateMedia({ colorScheme: scheme, reducedMotion: 'reduce' });

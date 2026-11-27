@@ -358,3 +358,37 @@ export function HowThisWorks({ line, children }: { line: ReactNode; children: Re
     </details>
   );
 }
+
+/**
+ * One of a group of choices, as a row pressed as a whole: ticked when it is the group's choice, and marked (the soft
+ * fill and the accent line down its left edge, as the selected row of a list) when it is the one in use now. Only the
+ * ticked row of its group is reached with Tab; the arrow keys move and choose within the group (`RadioRows`).
+ */
+export function RadioRow({ checked, marked = false, onChoose, className, children, ...rest }: Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'onClick'> & { checked: boolean; marked?: boolean; onChoose: () => void }) {
+  return (
+    <button type="button" role="radio" aria-checked={checked} tabIndex={checked ? 0 : -1} className={join('ui-row ui-radio-row', marked && 'is-marked', className)} onClick={onChoose} {...rest}>
+      {children}
+      <span className="ui-radio-row-tick" aria-hidden="true" />
+    </button>
+  );
+}
+
+/** A group of `RadioRow`s: the arrow keys move to the next or the previous and choose it, as radio buttons do. */
+export function RadioRows({ label, className, children, ...rest }: HTMLAttributes<HTMLDivElement> & { label: string }) {
+  const move = (event: ReactKeyboardEvent<HTMLDivElement>): void => {
+    const step = event.key === 'ArrowDown' || event.key === 'ArrowRight' ? 1 : event.key === 'ArrowUp' || event.key === 'ArrowLeft' ? -1 : 0;
+    if (step === 0) return;
+    const rows = [...event.currentTarget.querySelectorAll<HTMLButtonElement>(':scope > [role="radio"]')];
+    const at = rows.indexOf(document.activeElement as HTMLButtonElement);
+    if (at < 0) return;
+    event.preventDefault();
+    const next = rows[(at + step + rows.length) % rows.length];
+    next?.focus();
+    next?.click();
+  };
+  return (
+    <div role="radiogroup" aria-label={label} className={join('ui-radio-rows', className)} onKeyDown={move} {...rest}>
+      {children}
+    </div>
+  );
+}

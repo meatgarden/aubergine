@@ -6,9 +6,11 @@ Every screen is made from one set of sizes, colors, spaces, shapes and controls.
 
 | File | What it holds |
 | --- | --- |
-| `web/src/tokens.css` | The tokens: every size, weight, color, space, corner, control height and layer, for both themes. |
+| `web/src/tokens.css` | The tokens: every size, weight, color, space, corner, control height and layer, with the colors of the two themes that come first, Light and Dark. |
+| `web/src/themes.css` | The colors of every other color theme, one block each. Part of the tokens: nothing but color tokens. |
+| `web/src/terminal-themes.ts` | A terminal's own colors in each color theme. |
 | `web/src/ui/ui.css` | The pieces: the one button, field, select, chip, tab, menu, card, heading. Outside any layer, so it decides. |
-| `web/src/ui/index.tsx` | The same pieces as components, for the kind of a thing (`Button`, `IconButton`, `TextField`, `Select`, `Segmented`, `Badge`, `StateDot`, `Card`, `Row`, `SectionTitle`, `EmptyState`, `Menu`, `ScreenHead`, `Page`, `Banner`). |
+| `web/src/ui/index.tsx` | The same pieces as components, for the kind of a thing (`Button`, `IconButton`, `TextField`, `Select`, `Segmented`, `Badge`, `StateDot`, `Card`, `Row`, `RadioRow`, `SectionTitle`, `EmptyState`, `Menu`, `ScreenHead`, `Page`, `Banner`). |
 | `web/src/styles.css` | The screens' own rules: where things are put. In the layer `legacy`, below the pieces. |
 | `web/src/vendor.css` | The canvas library's and the terminal's own styles, in the lowest layer. |
 
@@ -38,13 +40,26 @@ Named by what it is for.
 - **Text:** `--text` and `--text-muted`. Muted is for what is known about a thing only: a time, a folder, a count, a hint. A name, a heading, a button's words and a paragraph are `--text`.
 - **Meaning:** `--accent` (the product, what is chosen, the one primary button, the focus ring), `--attention` (it waits for the owner), `--working` (busy, running), `--ok`, `--danger`. Each has `-soft` (a background) and `-text` (words that are 4.5 to 1 on that background and on a surface). `--on-accent`, `--on-attention` and `--on-danger` are the words on the full color.
 
-- **A QR code:** `--qr-dark` on `--qr-light`, near black on white, the same in both themes: a scanner reads dark modules on a light ground, and a code drawn in the dark theme's colors would be light on dark. Nothing else uses them.
+- **A QR code:** `--qr-dark` on `--qr-light`, near black on white, the same in every theme: a scanner reads dark modules on a light ground, and a code drawn in the dark theme's colors would be light on dark. Nothing else uses them.
 
 No color is written outside the tokens, with two exceptions that are not the system's to decide: the colors a person picks for a terminal, a tab or a frame (`--swatch`), and the terminal's own theme.
 
-The light theme gives the same names other values and changes nothing else. The contrast of every pair above is tested in both themes: text and muted text are at least 4.5 to 1 on every surface and on every soft tint.
+### Color themes
 
-Which theme is drawn is a setting with three choices (light, dark, match the system), changed in Settings and written to the settings file. The page is sent with the choice on it and a few lines before first paint put the theme on the page, so it is never drawn in the other one first. Whatever draws colors of its own (a terminal) reads the theme that is drawn (`useThemeShown`) and follows at once.
+The page is drawn light or dark (`theme`: light, dark, or as the system is), and each kind in a color theme of its own (`appearance.light`, `appearance.dark`). The themes are `COLOR_THEMES` in `shared/src/themes.ts`, each with its kind:
+
+| Light | Dark |
+| --- | --- |
+| Light, High contrast light, Solarized light, Gruvbox light | Dark, High contrast dark, Solarized dark, Gruvbox dark, Nord, Dracula |
+
+- **A theme is three things, and the tests fail on one without the others:** a row of `COLOR_THEMES`, a block of color tokens (Light and Dark in `tokens.css`, every other in `themes.css`), and a terminal's colors in `terminal-themes.ts`.
+- **A theme gives every color token a value and nothing else.** No size, space, corner, motion or layer differs between themes. A block applies to the page under `:root[data-color-theme='<id>']`, beside `data-theme`, which stays light or dark.
+- **Every theme passes the same contrast pairs:** text and muted text at least 4.5 to 1 on every surface and soft tint, the words of meaning on their tints, the line round a control and the accent 3 to 1. The two high-contrast themes pass stronger ones: text 12 to 1 and muted text 7 to 1 on every surface, the words of meaning 7 to 1, the line round a control 4.5 to 1. A dark theme's ground is darker than its words, a light theme's the reverse. The QR code's two colors are the same in every theme.
+- **A preview of a theme is drawn from its own tokens.** An element with `data-theme-preview="<id>"` carries that theme's colors for everything inside it, whatever the page is drawn in; it sets `color: var(--text)` and its own background. Settings draws each theme this way (`.ui-theme-preview`).
+- **A terminal has its own colors in each theme** (`terminal-themes.ts`): its ground is the theme's `--terminal-bg`, and the sixteen colors a program asks for come from the theme's published palette, made lighter or darker, with their hue kept, where one would be less than 4.5 to 1 on the ground. Black on a dark theme, and white and bright white on a light one, are left as published. Light and Dark leave the sixteen to the terminal's own.
+- **Colors set by hand are the owner's.** `appearance.colors` in the settings file, written by hand and by no route: a token's name from `THEME_COLORS` (the color tokens that are one plain color) and `#rrggbb`, for every theme or for one theme under `"[<id>]"`. `resolveColors` checks them, and they are checked again where they are written on the page; a wrong entry is reported in Settings and skipped. They are put on the page's root as inline values, so a preview still shows its theme's own. They are not tested for contrast.
+
+Which theme is drawn is chosen in Settings (or from the palette) and written to the settings file. The page is sent with the choice on it (the kind, each kind's theme, and the colors set by hand for each), and a few lines in `index.html` put it on the page before first paint, so it is never drawn in another theme first. Whatever draws colors of its own (a terminal) reads the color theme that is drawn (`useColorThemeShown`) and follows at once.
 
 ## Space
 
@@ -102,11 +117,11 @@ Two durations and one curve: `--motion-quick` (120ms) for a change of state, `--
 
 What opens, opens the same way: a short fade and `--motion-travel` (6px) from the edge it hangs from. A menu, the note under a fold and a banner come down; a dialog, the tour's card and the line that says what just happened come up; the drawer comes from its side; a page only fades. Nothing bounces, and closing is at once. For someone who asked the system for less motion nothing travels: the same things only fade, quickly.
 
-Changing the theme is at once. For that moment no color on the page takes time to change, so nothing is caught half-way between the two.
+Changing the theme, the color theme or a color set by hand is at once. For that moment no color on the page takes time to change, so nothing is caught half-way between the two.
 
 ## What floats
 
-One shadow for each layer that floats, each defined for both themes: `--shadow-bar` (the bar over the canvas and what is beside it), `--shadow-node` (a terminal), `--shadow-menu` (a menu, a palette, a tooltip of our own), `--shadow-dialog` (a dialog, the tour's card, the line of what just happened). In the light theme a surface is told from the page by its border and its shadow, not by a grey of its own: grey is what disabled looks like.
+One shadow for each layer that floats, each defined in every theme: `--shadow-bar` (the bar over the canvas and what is beside it), `--shadow-node` (a terminal), `--shadow-menu` (a menu, a palette, a tooltip of our own), `--shadow-dialog` (a dialog, the tour's card, the line of what just happened). In the light theme a surface is told from the page by its border and its shadow, not by a grey of its own: grey is what disabled looks like.
 
 ## What just happened
 
@@ -151,6 +166,7 @@ A tick box or a radio button is 16px, one gap (`--space-2`) from its words and l
 
 ## Rows, cards, headings
 
+- **One of a group of choices as rows** (`RadioRow` in `RadioRows`): a row pressed as a whole, a tick at its end when it is its group's choice, and the soft fill and the accent line down its left edge when it is the one in use now, as the selected row of a list. Only the ticked row is reached with Tab; the arrow keys move and choose within the group. Settings → Appearance lists the color themes this way.
 - **A row of a list:** the dot of its state in a slot 16px wide, then its name in `--text` with the whole first line; on the second its state as a soft chip where that is not the ordinary one, then what is known about it in `--text-muted`; its one menu quiet at the right, shown while the pointer or the keyboard is on the row. Nothing else is on a row.
 - **A card:** `--gutter-card` inside, `--radius-surface`, a line round it.
 - **A heading inside a list** (a canvas's name over its terminals, Parked): strong words on the list's gutter with an arrow that folds it and a plain count. No fill, open or shut.

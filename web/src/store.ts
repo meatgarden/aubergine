@@ -2,6 +2,7 @@ import { showNotification } from './attention';
 import { create } from 'zustand';
 import {
   type ThemeSetting,
+  type ChangeAppearanceRequest,
   isPageName,
   type PageName,
   DEFAULT_SETTINGS,
@@ -102,9 +103,9 @@ export interface AppStore {
   /** Whether the dialog that adds a device is open. What it shows (the code) is the dialog's own, and nobody else's. */
   addingDevice: boolean;
   /** The part of Settings to bring into view when it opens; used once. */
-  settingsAt: 'devices' | null;
+  settingsAt: 'devices' | 'appearance' | null;
   addDevice: (open: boolean) => void;
-  showSettings: (at: 'devices' | null) => void;
+  showSettings: (at: 'devices' | 'appearance' | null) => void;
   /**
    * The page that is shown in place of the canvas, if any: Queue, Board, Workflows or Library. The canvas stays as it
    * was underneath, and a panel or a dialog opens over a page as it does over the canvas. Its name is in the address.
@@ -195,6 +196,11 @@ export interface AppStore {
   say: (text: string | null, undo?: { label: string; run: () => void }) => void;
   /** How the page looks, as it was just chosen: the page follows at once; the file is written by whoever chose. */
   setTheme: (theme: ThemeSetting) => void;
+  /**
+   * How the page looks, as it was just chosen: the theme, each kind's color theme, a terminal's font and cursor. Only
+   * what is given changes, in the settings drawn and in the own server's: all of it is the page's own.
+   */
+  setLook: (change: ChangeAppearanceRequest) => void;
   setDescribeRemind: (remind: boolean) => void;
   setSide: (change: Partial<PanelPrefs>) => void;
   setListView: (change: Partial<ListView>) => void;
@@ -438,7 +444,23 @@ export const useApp = create<AppStore>((set, get) => ({
   said: null,
   say: (text, undo) => set((state) => ({ said: text === null ? null : { text, undo, tick: (state.said?.tick ?? 0) + 1 } })),
   setDesktopOpenNew: (openNew) => set((state) => ({ settings: { ...state.settings, desktop: { ...state.settings.desktop, openNew } } })),
-  setTheme: (theme) => set((state) => ({ settings: { ...state.settings, theme }, ...(state.ownSettings ? { ownSettings: { ...state.ownSettings, theme } } : {}) })),
+  setTheme: (theme) => get().setLook({ theme }),
+  setLook: (change) =>
+    set((state) => {
+      const changed = (settings: Settings): Settings => ({
+        ...settings,
+        ...(change.theme !== undefined ? { theme: change.theme } : {}),
+        font: { family: change.fontFamily ?? settings.font.family, size: change.fontSize ?? settings.font.size },
+        appearance: {
+          ...settings.appearance,
+          ...(change.light !== undefined ? { light: change.light } : {}),
+          ...(change.dark !== undefined ? { dark: change.dark } : {}),
+          ...(change.cursor !== undefined ? { cursor: change.cursor } : {}),
+          ...(change.cursorBlink !== undefined ? { cursorBlink: change.cursorBlink } : {}),
+        },
+      });
+      return { settings: changed(state.settings), ...(state.ownSettings ? { ownSettings: changed(state.ownSettings) } : {}) };
+    }),
   setDescribeRemind: (remind) => set((state) => ({ settings: { ...state.settings, describe: { ...state.settings.describe, remind } } })),
   setSide: (change) => {
     const side = { ...get().side, ...change };

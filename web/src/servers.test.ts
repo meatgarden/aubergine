@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { DEFAULT_SETTINGS, Settings } from '@aubergine/shared';
-import { MAX_SERVERS, addServer, findByAddress, findServer, hostOf, newLinkId, readServers, removeServer, renameServer, serverAddressProblem, withPageSettings, type LinkedServer } from './servers';
+import { MAX_SERVERS, PAGE_SETTINGS, addServer, findByAddress, findServer, hostOf, newLinkId, readServers, removeServer, renameServer, serverAddressProblem, withPageSettings, type LinkedServer } from './servers';
 
 const one: LinkedServer = {
   id: 'abcd1234',
@@ -117,10 +117,12 @@ describe('a short name', () => {
 
 describe('what is about the page itself', () => {
   it('is the own server’s, and everything else is the server shown’s', () => {
-    const own = Settings.parse({ theme: 'light', font: { family: 'Own Mono', size: 15 }, shortcuts: { 'canvas.next': 'Mod+J' }, away: { afterMinutes: 1 } });
-    const shown = Settings.parse({ theme: 'dark', font: { family: 'Shown Mono', size: 11 }, away: { afterMinutes: 99 }, describe: { remind: false } });
+    const own = Settings.parse({ theme: 'light', appearance: { light: 'solarized-light', dark: 'nord', cursor: 'bar', cursorBlink: false, colors: { accent: '#112233' } }, font: { family: 'Own Mono', size: 15 }, shortcuts: { 'canvas.next': 'Mod+J' }, away: { afterMinutes: 1 } });
+    const shown = Settings.parse({ theme: 'dark', appearance: { light: 'gruvbox-light', dark: 'dracula', cursor: 'underline', colors: { accent: '#445566' } }, font: { family: 'Shown Mono', size: 11 }, away: { afterMinutes: 99 }, describe: { remind: false } });
     const drawn = withPageSettings(shown, own);
-    expect([drawn.theme, drawn.font, drawn.shortcuts, drawn.shortcutsInAppWindow]).toEqual([own.theme, own.font, own.shortcuts, own.shortcutsInAppWindow]);
+    expect([drawn.theme, drawn.appearance, drawn.font, drawn.shortcuts, drawn.shortcutsInAppWindow]).toEqual([own.theme, own.appearance, own.font, own.shortcuts, own.shortcutsInAppWindow]);
+    // Every setting that is about the page is taken from the own server: the list and the function say the same.
+    for (const key of PAGE_SETTINGS) expect(drawn[key], key).toEqual(own[key]);
     expect([drawn.away, drawn.describe, drawn.workflows]).toEqual([shown.away, shown.describe, shown.workflows]);
     expect(withPageSettings(DEFAULT_SETTINGS, null)).toBe(DEFAULT_SETTINGS);
     expect(withPageSettings(own, own)).toBe(own);
