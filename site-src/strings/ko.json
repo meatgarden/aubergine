@@ -4990,5 +4990,17 @@
   "home.compare.more": {
     "text": "Conductor, Claude Squad, cmux, Warp 등과 비교",
     "from": "60e16e373973"
+  },
+  "home.agent.title": {
+    "text": "또는 에이전트에게 설치를 맡기세요",
+    "from": "2c4a3f5be7e9"
+  },
+  "home.agent.intro": {
+    "text": "이미 쓰고 있는 코딩 에이전트에 이것을 붙여 넣으세요. Aubergine에 필요한 것을 확인하고 설치한 뒤, Aubergine 터미널에서 일하는 방법을 알 수 있도록 프로젝트 지침에 몇 줄을 추가합니다.",
+    "from": "a2c85edb7137"
+  },
+  "home.agent.note": {
+    "text": "Aubergine처럼 프롬프트도 영어로 되어 있지만, 에이전트는 여러분의 언어로 답할 수 있습니다. 아직 실제 에이전트로 실행해 본 적은 없으니, 승인하기 전에 에이전트가 제안하는 내용을 읽어 보세요. 에이전트가 터미널에서 할 수 있는 일은 <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/for-agents.md\">에이전트용 가이드</a>에 있습니다.",
+    "from": "ff60324cd0eb"
   }
 }

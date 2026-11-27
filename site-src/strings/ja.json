@@ -4990,5 +4990,17 @@
   "home.compare.more": {
     "text": "Conductor、Claude Squad、cmux、Warp などとの比較",
     "from": "60e16e373973"
+  },
+  "home.agent.title": {
+    "text": "エージェントにインストールしてもらう",
+    "from": "2c4a3f5be7e9"
+  },
+  "home.agent.intro": {
+    "text": "いま使っているコーディングエージェントに、これを貼り付けてください。Aubergine に必要なものを確認してインストールし、Aubergine のターミナルでの作業のしかたがわかるよう、プロジェクトの指示に数行を追加します。",
+    "from": "a2c85edb7137"
+  },
+  "home.agent.note": {
+    "text": "Aubergine と同じく、プロンプトは英語です。エージェントはお使いの言語で答えられます。まだ本物のエージェントで実行したことはないので、承認する前に、エージェントの提案を読んでください。エージェントがターミナルでできることは<a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/for-agents.md\">エージェント向けのガイド</a>にあります。",
+    "from": "ff60324cd0eb"
   }
 }

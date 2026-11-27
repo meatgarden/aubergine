@@ -4990,5 +4990,17 @@
   "home.compare.more": {
     "text": "Dibandingkan dengan Conductor, Claude Squad, cmux, Warp, dan lainnya",
     "from": "60e16e373973"
+  },
+  "home.agent.title": {
+    "text": "Atau minta agen Anda menginstalnya",
+    "from": "2c4a3f5be7e9"
+  },
+  "home.agent.intro": {
+    "text": "Tempelkan ini ke agen coding yang sudah Anda pakai. Ia memeriksa apa yang dibutuhkan Aubergine, menginstalnya, dan menambahkan beberapa baris ke instruksi proyek Anda agar ia tahu cara bekerja di terminal Aubergine.",
+    "from": "a2c85edb7137"
+  },
+  "home.agent.note": {
+    "text": "Prompt ini berbahasa Inggris, seperti Aubergine; agen Anda bisa menjawab dalam bahasa Anda. Prompt ini belum pernah dijalankan dengan agen sungguhan, jadi baca apa yang diusulkan agen Anda sebelum Anda setuju. Apa yang bisa dilakukan agen di terminal ada di <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/for-agents.md\">panduan untuk agen</a>.",
+    "from": "ff60324cd0eb"
   }
 }

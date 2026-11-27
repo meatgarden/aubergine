@@ -10,6 +10,7 @@ English · [Español](docs/i18n/README.es.md) · [Português](docs/i18n/README.p
 - Terminals keep running when you close the browser or restart Aubergine.
 - Works with plain shells and with agents.
 - Aubergine has no model of its own, holds no key and has no account.
+- Made to pass an IT review: some companies do not allow tools that need an account with their maker, send your code to its cloud, or cannot be read as source. Aubergine has no account and no cloud, and all of it is open source. The agents you run in it still need their own approval.
 
 <img src="site/screenshots/canvas.png" alt="The Aubergine canvas: three canvases in a column on the left, the list of terminals with what each is doing, and six live terminals, four in colors of their own, one waiting for an answer.">
 

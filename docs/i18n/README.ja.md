@@ -70,6 +70,24 @@ aubergine start --open
 
 代役のエージェントがいくつか並ぶ「Demo」という名前のキャンバスが作られ、8つの短いステップで案内します。約5分です。中に本物はなく、**Remove the demo** でまた取り除けます。
 
+**エージェントにインストールしてもらうこともできます**。いま使っているコーディングエージェントに、これを貼り付けてください。Aubergine に必要なものを確認してインストールし、Aubergine のターミナルでの作業のしかたがわかるよう、プロジェクトの指示に数行を追加します。
+
+```text
+Install Aubergine on this computer for me, then learn how to work in it.
+Aubergine shows my terminals and coding agents side by side in a browser page. It runs only on this computer and is built for macOS.
+
+1. Check what it needs: tmux 3.2 or newer and Node.js 22 or newer. Run `tmux -V` and `node --version`. If one is missing or too old, tell me the command that would install it (with Homebrew: `brew install tmux node`) and wait for my answer. Do not use sudo.
+2. Install it: `npm install -g @meatgarden/aubergine`
+3. Run `aubergine doctor` and read what it says. Fix what is yours to fix and tell me the rest.
+4. Do not start the server yourself: it runs until it is stopped, and it opens my browser. Tell me to run `aubergine start --open` in a terminal of my own, and to click "Show me around" on the empty canvas.
+5. So that you and later agents know how to work in an Aubergine terminal, run `aubergine guide --snippet` and add the lines it prints to this project's instructions for agents (the file you read at the start of every conversation). Show me the change before you save it.
+6. From now on, whenever the environment variable AUBERGINE_SESSION_ID is set, you are in an Aubergine terminal: run `aubergine guide` once, before other work, and report to me as it says.
+
+Finish by telling me what you installed, what you changed, and anything that did not work.
+```
+
+Aubergine と同じく、プロンプトは英語です。エージェントはお使いの言語で答えられます。まだ本物のエージェントで実行したことはないので、承認する前に、エージェントの提案を読んでください。エージェントがターミナルでできることは[エージェント向けのガイド](../for-agents.md)にあります。
+
 うまくいかないときは、`aubergine doctor` を実行するか、[If something goes wrong](../../README.md#if-something-goes-wrong) を参照してください。インストーラーの詳しい説明は [Quick start](../../README.md#quick-start) にあります。
 
 ---

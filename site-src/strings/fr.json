@@ -4990,5 +4990,17 @@
   "home.compare.more": {
     "text": "Comparée à Conductor, Claude Squad, cmux, Warp et d’autres",
     "from": "60e16e373973"
+  },
+  "home.agent.title": {
+    "text": "Ou faites-la installer par votre agent",
+    "from": "2c4a3f5be7e9"
+  },
+  "home.agent.intro": {
+    "text": "Collez ceci dans l’agent de code que vous utilisez déjà. Il vérifie ce dont Aubergine a besoin, l’installe et ajoute quelques lignes aux instructions de votre projet pour savoir comment travailler dans un terminal Aubergine.",
+    "from": "a2c85edb7137"
+  },
+  "home.agent.note": {
+    "text": "Le prompt est en anglais, comme Aubergine ; votre agent peut vous répondre dans votre langue. Il n’a encore jamais été lancé avec un vrai agent : lisez donc ce que le vôtre propose avant de dire oui. Ce qu’un agent peut faire dans un terminal est dans le <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/for-agents.md\">guide pour les agents</a>.",
+    "from": "ff60324cd0eb"
   }
 }

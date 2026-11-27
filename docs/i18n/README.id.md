@@ -70,6 +70,24 @@ aubergine start --open
 
 Ia membuat kanvas bernama "Demo" dengan beberapa agen pengganti dan memandu Anda dalam delapan langkah singkat, sekitar lima menit. Tidak ada yang sungguhan di dalamnya, dan **Remove the demo** menghapusnya lagi.
 
+**Atau minta agen Anda menginstalnya.** Tempelkan ini ke agen coding yang sudah Anda pakai. Ia memeriksa apa yang dibutuhkan Aubergine, menginstalnya, dan menambahkan beberapa baris ke instruksi proyek Anda agar ia tahu cara bekerja di terminal Aubergine.
+
+```text
+Install Aubergine on this computer for me, then learn how to work in it.
+Aubergine shows my terminals and coding agents side by side in a browser page. It runs only on this computer and is built for macOS.
+
+1. Check what it needs: tmux 3.2 or newer and Node.js 22 or newer. Run `tmux -V` and `node --version`. If one is missing or too old, tell me the command that would install it (with Homebrew: `brew install tmux node`) and wait for my answer. Do not use sudo.
+2. Install it: `npm install -g @meatgarden/aubergine`
+3. Run `aubergine doctor` and read what it says. Fix what is yours to fix and tell me the rest.
+4. Do not start the server yourself: it runs until it is stopped, and it opens my browser. Tell me to run `aubergine start --open` in a terminal of my own, and to click "Show me around" on the empty canvas.
+5. So that you and later agents know how to work in an Aubergine terminal, run `aubergine guide --snippet` and add the lines it prints to this project's instructions for agents (the file you read at the start of every conversation). Show me the change before you save it.
+6. From now on, whenever the environment variable AUBERGINE_SESSION_ID is set, you are in an Aubergine terminal: run `aubergine guide` once, before other work, and report to me as it says.
+
+Finish by telling me what you installed, what you changed, and anything that did not work.
+```
+
+Prompt ini berbahasa Inggris, seperti Aubergine; agen Anda bisa menjawab dalam bahasa Anda. Prompt ini belum pernah dijalankan dengan agen sungguhan, jadi baca apa yang diusulkan agen Anda sebelum Anda setuju. Apa yang bisa dilakukan agen di terminal ada di [panduan untuk agen](../for-agents.md).
+
 Ada yang tidak beres? Jalankan `aubergine doctor`, atau lihat [If something goes wrong](../../README.md#if-something-goes-wrong) (Jika ada yang salah). Installer dijelaskan selengkapnya di [Quick start](../../README.md#quick-start).
 
 ---

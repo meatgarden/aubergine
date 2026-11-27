@@ -4990,5 +4990,17 @@
   "home.compare.more": {
     "text": "مقارنة مع Conductor وClaude Squad وcmux وWarp وغيرها",
     "from": "60e16e373973"
+  },
+  "home.agent.title": {
+    "text": "أو دع وكيلك يثبّته",
+    "from": "2c4a3f5be7e9"
+  },
+  "home.agent.intro": {
+    "text": "الصق هذا في وكيل البرمجة الذي تستخدمه أصلًا. يتحقق مما يحتاجه Aubergine، ويثبّته، ويضيف بضعة أسطر إلى تعليمات مشروعك ليعرف كيف يعمل في طرفية Aubergine.",
+    "from": "a2c85edb7137"
+  },
+  "home.agent.note": {
+    "text": "الموجّه بالإنجليزية، مثل Aubergine نفسه؛ ويمكن لوكيلك أن يجيبك بلغتك. لم يُشغَّل بعد مع وكيل حقيقي، فاقرأ ما يقترحه وكيلك قبل أن توافق. ما يستطيع الوكيل فعله في طرفية موجود في <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/for-agents.md\">دليل الوكلاء</a>.",
+    "from": "ff60324cd0eb"
   }
 }

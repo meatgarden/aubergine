@@ -70,6 +70,24 @@ aubergine start --open
 
 Ele cria um canvas chamado “Demo” com alguns agentes simulados e guia você por oito etapas curtas, cerca de cinco minutos. Nada nele é real, e **Remove the demo** (remover a demo) o remove de novo.
 
+**Ou peça para o seu agente instalar.** Cole isto no agente de programação que você já usa. Ele verifica do que o Aubergine precisa, instala e adiciona algumas linhas às instruções do seu projeto para saber como trabalhar em um terminal do Aubergine.
+
+```text
+Install Aubergine on this computer for me, then learn how to work in it.
+Aubergine shows my terminals and coding agents side by side in a browser page. It runs only on this computer and is built for macOS.
+
+1. Check what it needs: tmux 3.2 or newer and Node.js 22 or newer. Run `tmux -V` and `node --version`. If one is missing or too old, tell me the command that would install it (with Homebrew: `brew install tmux node`) and wait for my answer. Do not use sudo.
+2. Install it: `npm install -g @meatgarden/aubergine`
+3. Run `aubergine doctor` and read what it says. Fix what is yours to fix and tell me the rest.
+4. Do not start the server yourself: it runs until it is stopped, and it opens my browser. Tell me to run `aubergine start --open` in a terminal of my own, and to click "Show me around" on the empty canvas.
+5. So that you and later agents know how to work in an Aubergine terminal, run `aubergine guide --snippet` and add the lines it prints to this project's instructions for agents (the file you read at the start of every conversation). Show me the change before you save it.
+6. From now on, whenever the environment variable AUBERGINE_SESSION_ID is set, you are in an Aubergine terminal: run `aubergine guide` once, before other work, and report to me as it says.
+
+Finish by telling me what you installed, what you changed, and anything that did not work.
+```
+
+O prompt está em inglês, como o Aubergine; seu agente pode responder no seu idioma. Ele ainda não foi rodado com um agente real, então leia o que o seu propõe antes de dizer sim. O que um agente pode fazer em um terminal está no [guia para agentes](../for-agents.md).
+
 Algo não está certo? Rode `aubergine doctor`, ou veja [If something goes wrong](../../README.md#if-something-goes-wrong) (se algo der errado). O instalador é descrito por completo em [Quick start](../../README.md#quick-start).
 
 ---
