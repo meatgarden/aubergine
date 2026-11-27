@@ -328,6 +328,13 @@ pre code { font-size: 1em; overflow-wrap: normal; }
 .powers p { color: var(--muted); max-inline-size: 36ch; }
 
 .shows { display: grid; gap: var(--s-10); }
+/* The page in six of its color themes: small, each a link to the whole picture; then two readable captures. */
+.themes { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-6); }
+.themes .frame figcaption { color: var(--ink); font-weight: var(--weight-semi); }
+.themes-shows { margin-block-start: var(--s-9); }
+/* Words over a capture that needs the whole width to be read. */
+.show.show-wide { grid-template-columns: minmax(0, 1fr); gap: var(--s-6); }
+.show-wide .show-words p { max-inline-size: var(--measure); }
 .show { display: grid; grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.25fr); gap: var(--s-8); align-items: center; }
 .show-flip { grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr); }
 .show-flip .show-words { order: 2; }
@@ -573,6 +580,7 @@ pre code { font-size: 1em; overflow-wrap: normal; }
   .show-flip .show-words { order: 0; }
   .features > li.with-pic.flip > .frame { order: 0; }
   .shows { gap: var(--s-9); }
+  .themes { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-5); }
   .pairs li { grid-template-columns: minmax(0, 1fr); }
   .across { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
@@ -592,6 +600,8 @@ pre code { font-size: 1em; overflow-wrap: normal; }
   .cmd-big code { font-size: var(--size-s); }
   .hero-under { margin-block-start: var(--s-6); gap: var(--s-6); }
   .frame-big img { aspect-ratio: 1.15 / 1; object-fit: cover; object-position: right top; }
+  .themes { gap: var(--s-4); }
+  .themes-shows { margin-block-start: var(--s-8); }
   .stage { margin-block-start: var(--s-7); }
   .num { margin-block-end: var(--s-3); }
   .foot-in { grid-template-columns: minmax(0, 1fr); }

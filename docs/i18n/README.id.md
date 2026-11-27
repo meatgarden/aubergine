@@ -26,6 +26,23 @@
 | ![Workflows: daftar langkah sebagai kartu](../../site/screenshots/workflows.png) | ![Library: apa yang akan disampaikan kepada agen, dibaca sebelum menginstal](../../site/screenshots/library.png) |
 | **Workflows.** Daftar langkah yang dilalui agen, satu per satu. | **Library.** Baca persis apa yang akan disampaikan kepada agen sebelum Anda menginstal apa pun. |
 
+### Tema warna
+
+Halaman ini hadir dalam sepuluh tema warna, empat terang dan enam gelap, dipilih di **Settings → Appearance**. Terminal mana pun juga bisa punya tema sendiri (**Theme…** di menunya), dan yang lain mengikuti tema bawaan yang Anda atur untuk terminal, atau halaman. Warna satu per satu bisa diatur sendiri di [berkas pengaturan](../../README.md#settings).
+
+| | | |
+|---|---|---|
+| ![Kanvas dengan enam terminal dalam tema Light](../../site/screenshots/themes-light.png) | ![Kanvas yang sama dalam tema Solarized light](../../site/screenshots/themes-solarized-light.png) | ![Kanvas yang sama dalam tema Gruvbox light](../../site/screenshots/themes-gruvbox-light.png) |
+| **Light** | **Solarized light** | **Gruvbox light** |
+| ![Kanvas yang sama dalam tema Nord](../../site/screenshots/themes-nord.png) | ![Kanvas yang sama dalam tema Dracula](../../site/screenshots/themes-dracula.png) | ![Kanvas yang sama dalam tema Gruvbox dark](../../site/screenshots/themes-gruvbox-dark.png) |
+| **Nord** | **Dracula** | **Gruvbox dark** |
+
+Juga [Dark](../../site/screenshots/themes-dark.png), [High contrast light](../../site/screenshots/themes-high-contrast-light.png), [High contrast dark](../../site/screenshots/themes-high-contrast-dark.png) dan [Solarized dark](../../site/screenshots/themes-solarized-dark.png).
+
+<img src="../../site/screenshots/terminal-themes.png" alt="Halaman gelap dengan enam terminal, masing-masing dalam tema sendiri: Solarized light, Dracula, Gruvbox dark, Nord, Gruvbox light, dan Solarized dark.">
+
+<sub>Enam terminal di halaman gelap, masing-masing dalam tema sendiri. Proyek karangan di shell biasa.</sub>
+
 ---
 
 ## Mulai dalam dua menit

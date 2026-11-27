@@ -26,6 +26,23 @@
 | ![Workflows: listas de etapas como cards](../../site/screenshots/workflows.png) | ![Library: o que seria dito a um agente, para ler antes de instalar](../../site/screenshots/library.png) |
 | **Workflows.** Listas de etapas que um agente percorre, uma de cada vez. | **Library.** Leia exatamente o que seria dito a um agente antes de instalar qualquer coisa. |
 
+### Temas de cores
+
+A página vem em dez temas de cores, quatro claros e seis escuros, escolhidos em **Settings → Appearance**. Qualquer terminal também pode ter um tema próprio (**Theme…** no menu dele), e os outros seguem o padrão que você define para os terminais, ou a página. Cores isoladas podem ser definidas à mão no [arquivo de configurações](../../README.md#settings).
+
+| | | |
+|---|---|---|
+| ![O canvas com seis terminais no tema Light](../../site/screenshots/themes-light.png) | ![O mesmo canvas no tema Solarized light](../../site/screenshots/themes-solarized-light.png) | ![O mesmo canvas no tema Gruvbox light](../../site/screenshots/themes-gruvbox-light.png) |
+| **Light** | **Solarized light** | **Gruvbox light** |
+| ![O mesmo canvas no tema Nord](../../site/screenshots/themes-nord.png) | ![O mesmo canvas no tema Dracula](../../site/screenshots/themes-dracula.png) | ![O mesmo canvas no tema Gruvbox dark](../../site/screenshots/themes-gruvbox-dark.png) |
+| **Nord** | **Dracula** | **Gruvbox dark** |
+
+Também [Dark](../../site/screenshots/themes-dark.png), [High contrast light](../../site/screenshots/themes-high-contrast-light.png), [High contrast dark](../../site/screenshots/themes-high-contrast-dark.png) e [Solarized dark](../../site/screenshots/themes-solarized-dark.png).
+
+<img src="../../site/screenshots/terminal-themes.png" alt="Uma página escura com seis terminais, cada um em um tema próprio: Solarized light, Dracula, Gruvbox dark, Nord, Gruvbox light e Solarized dark.">
+
+<sub>Seis terminais em uma página escura, cada um em um tema próprio. Um projeto inventado em shells comuns.</sub>
+
 ---
 
 ## Comece em dois minutos

@@ -1,7 +1,7 @@
 import { mkdir, readFile, rename, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
-import { DEFAULT_SETTINGS, Settings, accessEntries, resolveShortcuts, type Platform, type ThemeSetting } from '@aubergine/shared';
+import { DEFAULT_SETTINGS, Settings, accessEntries, resolveColors, resolveShortcuts, type AppearanceAnswer, type ChangeAppearanceRequest, type Platform } from '@aubergine/shared';
 
 export const SETTINGS_FILE = 'config.json';
 
@@ -24,6 +24,7 @@ export async function loadSettings(dir: string, onWarning: (message: string) => 
     const settings = Settings.parse(raw);
     for (const problem of shortcutProblems(settings)) onWarning(`${file}: ${problem}`);
     for (const problem of accessProblems(raw, settings)) onWarning(`${file}: ${problem} It is skipped.`);
+    for (const problem of colorProblems(raw)) onWarning(`${file}: ${problem}`);
     return settings;
   } catch (error) {
     const detail =
@@ -50,6 +51,30 @@ export function shortcutProblems(settings: Settings, platform: Platform = proces
   const inApp = resolveShortcuts({ platform, mode: 'app', shortcuts, shortcutsInAppWindow }).problems.map((p) => p.message);
   return [...new Set([...inTab, ...inApp])];
 }
+
+/**
+ * What is wrong with `appearance.colors` in the settings: each entry that names no color that can be set, no theme,
+ * or no color written as `#rrggbb`. `raw` is the file as it was read, so that an entry the schema drops by itself is
+ * still said. The problems are the same whichever theme is asked about.
+ */
+export function colorProblems(raw: unknown): string[] {
+  const appearance = isObject(raw) ? raw.appearance : undefined;
+  if (!isObject(appearance)) return [];
+  return [...new Set(resolveColors(appearance.colors, 'dark').problems)];
+}
+
+/** What the settings say about how the page looks, as the appearance route answers it. */
+export const appearanceOf = (settings: Settings): AppearanceAnswer => ({
+  theme: settings.theme,
+  light: settings.appearance.light,
+  dark: settings.appearance.dark,
+  font: { family: settings.font.family, size: settings.font.size },
+  cursor: settings.appearance.cursor,
+  cursorBlink: settings.appearance.cursorBlink,
+  terminal: settings.appearance.terminal,
+});
+
+const isObject = (value: unknown): value is Record<string, unknown> => value !== null && typeof value === 'object' && !Array.isArray(value);
 
 /**
  * What is wrong with `access` in the settings: each entry that is not an origin that can be used, and a list that is
@@ -150,9 +175,27 @@ export class SettingsFile {
     });
   }
 
-  /** Writes `theme`: the other key the page changes. It names one of three choices and nothing that is run. */
-  async setTheme(value: ThemeSetting): Promise<void> {
-    await this.write((whole) => ({ ...whole, theme: value }));
+  /**
+   * Writes how the page looks: of `theme`, `appearance.light`, `appearance.dark`, `appearance.cursor`,
+   * `appearance.cursorBlink`, `appearance.terminal`, `font.family` and `font.size`, the ones that are sent, in one write. Every other key of
+   * the file stays as it was, also the others inside `appearance` and `font`. None of them names anything that is run;
+   * `appearance.colors` is written by hand only. A change that sends none of them does not write the file.
+   */
+  async setAppearance(change: ChangeAppearanceRequest): Promise<void> {
+    const appearance: Record<string, unknown> = {};
+    // `terminal` may be sent as null, which is written: the theme the page is drawn in.
+    for (const key of ['light', 'dark', 'cursor', 'cursorBlink', 'terminal'] as const) if (change[key] !== undefined) appearance[key] = change[key];
+    const font: Record<string, unknown> = {};
+    if (change.fontFamily !== undefined) font.family = change.fontFamily;
+    if (change.fontSize !== undefined) font.size = change.fontSize;
+    const any = change.theme !== undefined || Object.keys(appearance).length > 0 || Object.keys(font).length > 0;
+    if (!any) return;
+    await this.write((whole) => ({
+      ...whole,
+      ...(change.theme === undefined ? {} : { theme: change.theme }),
+      ...(Object.keys(appearance).length === 0 ? {} : { appearance: { ...(isObject(whole.appearance) ? whole.appearance : {}), ...appearance } }),
+      ...(Object.keys(font).length === 0 ? {} : { font: { ...(isObject(whole.font) ? whole.font : {}), ...font } }),
+    }));
   }
 
   async reload(): Promise<Settings> {

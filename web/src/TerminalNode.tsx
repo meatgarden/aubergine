@@ -16,6 +16,8 @@ import { StatusBadges, TitleDot } from './StatusBadges';
 import { useUnseenNotes } from './notes-seen';
 import { atThisComputer, currentLayout, useApp } from './store';
 import { TerminalView } from './TerminalView';
+import { useBodyTheme, useColorThemeShown } from './theme';
+import { TerminalThemeMenu } from './TerminalTheme';
 import { colorClass, colorStyle } from './color';
 import { noteRoom, noteStartsOpen, rememberNoteOpen } from './note-open';
 import { tourSignal } from './tour/tour-store';
@@ -123,6 +125,9 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
 
   // Live only while on screen and large enough to read; see culling.ts.
   const modeRef = useRef<NodeMode>('live');
+  // Its body, live or a snapshot, is drawn in its own theme; its title and note are the page's.
+  const bodyTheme = useBodyTheme(sessionId);
+  const pageTheme = useColorThemeShown();
   const mode = useStore((s) => {
     if (!node) return modeRef.current;
     return nodeMode({
@@ -284,6 +289,8 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
         )}
         {/* The list of canvases to move to hangs from the title; its own button is not shown, the menu's line and the key ask for it. */}
         {draft === null && <MoveToCanvas sessionId={sessionId} name={name} />}
+        {/* The themes it can have hang from the title too; the menu's line, a key or the palette ask for them. */}
+        {draft === null && <TerminalThemeMenu sessionId={sessionId} name={name} page={pageTheme} />}
         {draft === null && (
           <span className="node-more nodrag" ref={moreRoot}>
             <button type="button" className="node-tool" aria-haspopup="menu" aria-expanded={more} aria-label={`More for ${name}`} title="More: tags, a workflow, a message, the desktop, move, colour, park" onClick={() => setMore((v) => !v)} data-testid="node-more">
@@ -381,6 +388,20 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
                   />
                 </span>
               )}
+              {draft === null && (
+                <button
+                  type="button"
+                  role="menuitem"
+                  aria-label={`Theme of ${name}`}
+                  title={hint('terminal.theme', 'The color theme its body is drawn in, whatever the page is drawn in')}
+                  data-testid="terminal-theme"
+                  onClick={() => {
+                    actHere('terminal.theme');
+                  }}
+                >
+                  Theme…
+                </button>
+              )}
               {draft === null && !exited && session && (
                 <button
                   type="button"
@@ -454,7 +475,7 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
       ) : mode === 'live' ? (
         <LiveBody sessionId={sessionId} onFocusChange={onFocusChange} />
       ) : (
-        <div className="node-body nodrag nopan" data-testid="node-body" data-mode={mode}>
+        <div className="node-body nodrag nopan" data-testid="node-body" data-mode={mode} {...bodyTheme}>
           <SnapshotView sessionId={sessionId} refreshing={mode === 'snapshot'} />
           <div className="node-shield zoomed-out" title="Too small to type in: click to zoom in" />
         </div>
@@ -494,6 +515,7 @@ function LiveBody({ sessionId, onFocusChange }: { sessionId: string; onFocusChan
   const flow = useStoreApi();
   const zoom = useCallback(() => flow.getState().transform[2], [flow]);
   const live = focused;
+  const bodyTheme = useBodyTheme(sessionId);
   const change = (now: boolean): void => {
     setFocused(now);
     onFocusChange(now);
@@ -504,6 +526,7 @@ function LiveBody({ sessionId, onFocusChange }: { sessionId: string; onFocusChan
       onFocus={() => change(true)}
       onBlur={() => change(false)}
       data-testid="node-body"
+      {...bodyTheme}
     >
       <TerminalView sessionId={sessionId} interactive zoom={zoom} />
       {!live && (

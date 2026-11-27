@@ -34,7 +34,7 @@ function withSession(state: AppState, name: string): AppState {
       noteLog: [],
       agent: null,
       parkedFrom: null, peopleOnly: false, typedBy: null,
-    recap: null, takesMessages: false, untold: null, messages: { unread: 0, from: null, forOwner: 0, paused: 0, at: null }, links: [], written: {}, suggested: {}, found: null,
+    recap: null, takesMessages: false, theme: null, untold: null, messages: { unread: 0, from: null, forOwner: 0, paused: 0, at: null }, links: [], written: {}, suggested: {}, found: null,
     lastInputAt: null,
     lastOutputAt: null,
     tags: [], fields: [],
@@ -517,7 +517,9 @@ describe('JsonStore', () => {
     expect(state.devices).toEqual([]);
     // Fields came later still, with a default and no new version: each terminal of the file has none.
     expect(state.sessions.map((session) => session.fields)).toEqual(before.sessions.map(() => []));
-    const sessionsBefore = (before.sessions as object[]).map((session) => ({ ...session, fields: [] }));
+    // So did a terminal's own color theme: each terminal of the file has none, and is drawn in the default.
+    expect(state.sessions.map((session) => session.theme)).toEqual(before.sessions.map(() => null));
+    const sessionsBefore = (before.sessions as object[]).map((session) => ({ ...session, fields: [], theme: null }));
     expect({ ...state, devices: undefined }).toEqual({ ...before, sessions: sessionsBefore, devices: undefined });
 
     await store.save(state);

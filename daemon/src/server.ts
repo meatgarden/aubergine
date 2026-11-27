@@ -1,11 +1,12 @@
 import { packageRoot } from './package-root';
-import { DEVICE_UNUSED_DAYS, LINKED_PAGE_HEADERS, PROJECT_HEADER, PairRequest, PairingCodeRequest, TICKET_PARAM, ThemeSetting, accessEntries, accessProblem, deviceStatus, isLocalHost, viewOfDevice, type DeviceList, type OpenedOnDesktop, type PairedPage, type PairingCodeAnswer, type RevokedDevice, type SocketTicket } from '@aubergine/shared';
+import { DEVICE_UNUSED_DAYS, LINKED_PAGE_HEADERS, PROJECT_HEADER, PairRequest, PairingCodeRequest, TICKET_PARAM, accessEntries, accessProblem, deviceStatus, isLocalHost, viewOfDevice, type ChangeAppearanceRequest, type DeviceList, type OpenedOnDesktop, type PairedPage, type PairingCodeAnswer, type RevokedDevice, type SocketTicket } from '@aubergine/shared';
 import { DeviceNotFoundError, Devices } from './devices';
 import { Pairing } from './pairing';
 import { SocketTickets } from './socket-tickets';
 import { existsSync } from 'node:fs';
 import { readFile } from 'node:fs/promises';
-import { SettingsUnreadableError } from './settings';
+import { SettingsUnreadableError, appearanceOf } from './settings';
+import { pageAttributes } from './page-choice';
 import type { AddressInfo } from 'node:net';
 import cookie from '@fastify/cookie';
 import fastifyStatic from '@fastify/static';
@@ -156,8 +157,8 @@ export interface ServerOptions {
   desktop?: DesktopOpener;
   /** Writes `desktop.openNew` into the settings file. Left out: the page cannot change it. */
   setDesktopOpenNew?: (value: boolean) => Promise<void>;
-  /** Writes `theme` into the settings file. Left out: the page cannot change it. */
-  setTheme?: (value: ThemeSetting) => Promise<void>;
+  /** Writes how the page looks into the settings file: the keys that are sent, and only those. Left out: the page cannot change it. */
+  setAppearance?: (change: ChangeAppearanceRequest) => Promise<void>;
   /** Writes `describe.remind` into the settings file. Left out: the page cannot change it. */
   setDescribeRemind?: (value: boolean) => Promise<void>;
   /** Asks a signed-in local tool for a branch's pull request. Left out: none is ever asked for. */
@@ -1150,16 +1151,20 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
       }
       return { remind: (await options.settings()).describe.remind };
     },
-    // How the page looks: the one key is written, and the answer is what the file says afterwards.
-    changeTheme: async (theme) => {
-      if (!options.setTheme) throw new ConflictError('This server has no settings file to write.');
-      try {
-        await options.setTheme(theme);
-      } catch (error) {
-        if (error instanceof SettingsUnreadableError) throw new ConflictError(error.message);
-        throw error;
+    // How the page looks: the keys sent are written, and the answer is what the file says afterwards. A body that
+    // sends none of them writes nothing.
+    changeAppearance: async (change) => {
+      const sent = Object.values(change).some((value) => value !== undefined);
+      if (sent) {
+        if (!options.setAppearance) throw new ConflictError('This server has no settings file to write.');
+        try {
+          await options.setAppearance(change);
+        } catch (error) {
+          if (error instanceof SettingsUnreadableError) throw new ConflictError(error.message);
+          throw error;
+        }
       }
-      return { theme: (await options.settings()).theme };
+      return appearanceOf(await options.settings());
     },
     projects,
     projectFiles,
@@ -1324,18 +1329,20 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
   if (existsSync(options.webDist)) {
     await app.register(fastifyStatic, { root: options.webDist, index: false });
     // The page is sent with the theme that is chosen already written on it, so that it is never drawn in the other
-    // one first. Only that one word of the settings is in it. Never kept by a browser: the choice may change.
+    // one first: light, dark or the system's, the color theme of each, and the colors set by hand over each. Only
+    // those words of the settings are in it, each in a shape that needs no escaping (`pageAttributes`). Never kept
+    // by a browser: the choice may change.
     const pageFile = path.join(options.webDist, 'index.html');
     const sendPage = async (_request: unknown, reply: FastifyReply): Promise<FastifyReply> => {
       const html = await readFile(pageFile, 'utf8');
-      const theme = ThemeSetting.safeParse((await options.settings()).theme);
+      const attributes = pageAttributes(await options.settings());
       return reply
         .type('text/html; charset=utf-8')
         .header('cache-control', 'no-cache')
         // The page is never shown inside another page.
         .header('content-security-policy', "frame-ancestors 'none'")
         .header('x-frame-options', 'DENY')
-        .send(html.replace('<html lang="en"', `<html lang="en" data-theme-setting="${theme.success ? theme.data : 'system'}"`));
+        .send(html.replace('<html lang="en"', `<html lang="en" ${attributes}`));
     };
     app.get('/', sendPage);
     app.get('/index.html', sendPage);

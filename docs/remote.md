@@ -308,7 +308,7 @@ The browser sends the code to that server itself and is answered with a credenti
 - **One server is shown at a time.** Everything on it, from the canvases and terminals to the queue, the runs, the tokens and the devices, is that server's.
 - Its canvases have addresses of their own in this page, `/s/<link>/p/<project>/c/<canvas>`. A reload, the back button and a terminal opened in a browser tab of its own stay on that server.
 - The page is a device on the other server: its `aubergine device list` shows it as `page` with its origin.
-- What stays this page's own: how the page looks (the theme, and the terminals' font) and the keys are this page's own server's settings whatever is shown. What this browser remembers (the side panel, the bar, the tour) is this browser's. Settings says which server everything else in it is about.
+- What stays this page's own: how the page looks (light or dark, the color theme of each, colors set by hand, and the terminals' font and cursor) and the keys are this page's own server's settings whatever is shown. What this browser remembers (the side panel, the bar, the tour) is this browser's. Settings says which server everything else in it is about.
 - No canvas holds terminals of both servers, and a canvas does not move between servers. What waits for you is counted for the server shown only. Both servers must run the same version of Aubergine.
 - This page's own server is never told that a linked server exists, and never calls one: the browser does.
 - On the other server, the credential works only from this page's origin, only as the page sends it itself. No cookie is taken from another page, and API tokens and terminals' credentials are refused from it.

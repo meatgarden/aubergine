@@ -26,6 +26,23 @@
 | ![Workflows：以卡片呈现的步骤清单](../../site/screenshots/workflows.png) | ![Library：安装前先读一读智能体会被告知什么](../../site/screenshots/library.png) |
 | **Workflows.** 智能体逐一完成的步骤清单。 | **Library.** 在安装任何东西之前，准确读到智能体会被告知什么。 |
 
+### 配色主题
+
+页面有十种配色主题，四种浅色，六种深色，在 **Settings → Appearance** 中选择。任何终端也可以有自己的主题（菜单中的 **Theme…**），其他终端则跟随你为终端设置的默认主题，或跟随页面。单个颜色可以在[设置文件](../../README.md#settings)中手动设置。
+
+| | | |
+|---|---|---|
+| ![采用 Light 主题的画布和六个终端](../../site/screenshots/themes-light.png) | ![同一画布采用 Solarized light 主题](../../site/screenshots/themes-solarized-light.png) | ![同一画布采用 Gruvbox light 主题](../../site/screenshots/themes-gruvbox-light.png) |
+| **Light** | **Solarized light** | **Gruvbox light** |
+| ![同一画布采用 Nord 主题](../../site/screenshots/themes-nord.png) | ![同一画布采用 Dracula 主题](../../site/screenshots/themes-dracula.png) | ![同一画布采用 Gruvbox dark 主题](../../site/screenshots/themes-gruvbox-dark.png) |
+| **Nord** | **Dracula** | **Gruvbox dark** |
+
+另有 [Dark](../../site/screenshots/themes-dark.png)、[High contrast light](../../site/screenshots/themes-high-contrast-light.png)、[High contrast dark](../../site/screenshots/themes-high-contrast-dark.png) 和 [Solarized dark](../../site/screenshots/themes-solarized-dark.png)。
+
+<img src="../../site/screenshots/terminal-themes.png" alt="深色页面上的六个终端，各用自己的主题：Solarized light、Dracula、Gruvbox dark、Nord、Gruvbox light 和 Solarized dark。">
+
+<sub>深色页面上的六个终端，各用自己的主题。一个虚构的项目，运行在普通 shell 中。</sub>
+
 ---
 
 ## 两分钟上手

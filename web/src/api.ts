@@ -1,4 +1,4 @@
-import { CLOSE_DEVICE_REVOKED, PROJECT_HEADER, type LinkKind, type ThemeSetting } from '@aubergine/shared';
+import { CLOSE_DEVICE_REVOKED, PROJECT_HEADER, type LinkKind, type ThemeSetting, type ChangeAppearanceRequest } from '@aubergine/shared';
 import { z, type ZodType } from 'zod';
 import { createClient } from '@aubergine/client';
 import {
@@ -425,6 +425,8 @@ export const api = guardAll({
 export const ownApi = {
   getState: () => callAt(null, StateResponse, 'GET', paths.state),
   setTheme: (theme: ThemeSetting) => ownV1.changeAppearance({ body: { theme } }),
+  /** How the page looks: only the fields that are sent are written. */
+  setLook: (change: ChangeAppearanceRequest) => ownV1.changeAppearance({ body: change }),
   projects: async () => z.array(ProjectRow).parse((await ownV1.listProjects({ query: { limit: 200 } })).items),
 };
 

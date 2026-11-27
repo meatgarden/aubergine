@@ -26,6 +26,23 @@
 | ![Workflows: listas de pasos como tarjetas](../../site/screenshots/workflows.png) | ![Library: lo que se le diría a un agente, para leerlo antes de instalar](../../site/screenshots/library.png) |
 | **Workflows.** Listas de pasos que un agente recorre, de uno en uno. | **Library.** Lee exactamente lo que se le diría a un agente antes de instalar nada. |
 
+### Temas de color
+
+La página viene en diez temas de color, cuatro claros y seis oscuros, que se eligen en **Settings → Appearance**. Cualquier terminal puede tener además un tema propio (**Theme…** en su menú), y las demás siguen el tema predeterminado que elijas para las terminales, o el de la página. Los colores sueltos se pueden ajustar a mano en el [archivo de configuración](../../README.md#settings).
+
+| | | |
+|---|---|---|
+| ![El lienzo con seis terminales en el tema Light](../../site/screenshots/themes-light.png) | ![El mismo lienzo en el tema Solarized light](../../site/screenshots/themes-solarized-light.png) | ![El mismo lienzo en el tema Gruvbox light](../../site/screenshots/themes-gruvbox-light.png) |
+| **Light** | **Solarized light** | **Gruvbox light** |
+| ![El mismo lienzo en el tema Nord](../../site/screenshots/themes-nord.png) | ![El mismo lienzo en el tema Dracula](../../site/screenshots/themes-dracula.png) | ![El mismo lienzo en el tema Gruvbox dark](../../site/screenshots/themes-gruvbox-dark.png) |
+| **Nord** | **Dracula** | **Gruvbox dark** |
+
+También [Dark](../../site/screenshots/themes-dark.png), [High contrast light](../../site/screenshots/themes-high-contrast-light.png), [High contrast dark](../../site/screenshots/themes-high-contrast-dark.png) y [Solarized dark](../../site/screenshots/themes-solarized-dark.png).
+
+<img src="../../site/screenshots/terminal-themes.png" alt="Una página oscura con seis terminales, cada una en un tema propio: Solarized light, Dracula, Gruvbox dark, Nord, Gruvbox light y Solarized dark.">
+
+<sub>Seis terminales en una página oscura, cada una en un tema propio. Un proyecto inventado en shells normales.</sub>
+
 ---
 
 ## Empieza en dos minutos

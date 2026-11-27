@@ -123,12 +123,12 @@ export const hostOf = (server: Pick<LinkedServer, 'address'>): string => {
  * The settings that are about the page itself, not about terminals or agents: how it looks (the theme, and the
  * terminals' font) and the keys. Whatever server is shown, these are the own server's.
  */
-export const PAGE_SETTINGS = ['theme', 'font', 'shortcuts', 'shortcutsInAppWindow'] as const satisfies readonly (keyof Settings)[];
+export const PAGE_SETTINGS = ['theme', 'appearance', 'font', 'shortcuts', 'shortcutsInAppWindow'] as const satisfies readonly (keyof Settings)[];
 
 /** The settings the page is drawn with: the server shown's, with the page's own taken from the own server. Pure. */
 export function withPageSettings(shownSettings: Settings, own: Settings | null): Settings {
   if (own === null || own === shownSettings) return shownSettings;
-  return { ...shownSettings, theme: own.theme, font: own.font, shortcuts: own.shortcuts, shortcutsInAppWindow: own.shortcutsInAppWindow };
+  return { ...shownSettings, theme: own.theme, appearance: own.appearance, font: own.font, shortcuts: own.shortcuts, shortcutsInAppWindow: own.shortcutsInAppWindow };
 }
 
 /* ---------- This browser's storage ---------- */

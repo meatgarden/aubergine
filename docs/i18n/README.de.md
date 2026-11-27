@@ -26,6 +26,23 @@
 | ![Workflows: Listen von Schritten als Karten](../../site/screenshots/workflows.png) | ![Library: was einem Agenten gesagt würde, vor dem Installieren zu lesen](../../site/screenshots/library.png) |
 | **Workflows.** Listen von Schritten, die ein Agent nacheinander abarbeitet. | **Library.** Lies genau, was einem Agenten gesagt würde, bevor du irgendetwas installierst. |
 
+### Farbthemen
+
+Die Seite gibt es in zehn Farbthemen, vier hellen und sechs dunklen, gewählt unter **Settings → Appearance**. Jedes Terminal kann auch ein eigenes Thema haben (**Theme…** in seinem Menü), die anderen folgen dem Standard, den Sie für Terminals festlegen, oder der Seite. Einzelne Farben lassen sich in der [Einstellungsdatei](../../README.md#settings) von Hand setzen.
+
+| | | |
+|---|---|---|
+| ![Der Canvas mit sechs Terminals im Thema Light](../../site/screenshots/themes-light.png) | ![Derselbe Canvas im Thema Solarized light](../../site/screenshots/themes-solarized-light.png) | ![Derselbe Canvas im Thema Gruvbox light](../../site/screenshots/themes-gruvbox-light.png) |
+| **Light** | **Solarized light** | **Gruvbox light** |
+| ![Derselbe Canvas im Thema Nord](../../site/screenshots/themes-nord.png) | ![Derselbe Canvas im Thema Dracula](../../site/screenshots/themes-dracula.png) | ![Derselbe Canvas im Thema Gruvbox dark](../../site/screenshots/themes-gruvbox-dark.png) |
+| **Nord** | **Dracula** | **Gruvbox dark** |
+
+Außerdem [Dark](../../site/screenshots/themes-dark.png), [High contrast light](../../site/screenshots/themes-high-contrast-light.png), [High contrast dark](../../site/screenshots/themes-high-contrast-dark.png) und [Solarized dark](../../site/screenshots/themes-solarized-dark.png).
+
+<img src="../../site/screenshots/terminal-themes.png" alt="Eine dunkle Seite mit sechs Terminals, jedes in einem eigenen Thema: Solarized light, Dracula, Gruvbox dark, Nord, Gruvbox light und Solarized dark.">
+
+<sub>Sechs Terminals auf einer dunklen Seite, jedes in einem eigenen Thema. Ein ausgedachtes Projekt in einfachen Shells.</sub>
+
 ---
 
 ## In zwei Minuten loslegen

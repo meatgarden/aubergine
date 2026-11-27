@@ -24,6 +24,23 @@ English · [Español](docs/i18n/README.es.md) · [Português](docs/i18n/README.p
 | ![Workflows: lists of steps as cards](site/screenshots/workflows.png) | ![Library: what an agent would be told, read before installing](site/screenshots/library.png) |
 | **Workflows.** Lists of steps an agent goes through, one at a time. | **Library.** Read exactly what an agent would be told before you install anything. |
 
+### Color themes
+
+The page comes in ten color themes, four light and six dark, chosen in **Settings → Appearance**. Any terminal can also have a theme of its own (**Theme…** in its menu), and the others follow a default you set for terminals, or the page. Single colors can be set by hand in the [settings file](#settings).
+
+| | | |
+|---|---|---|
+| ![The canvas with six terminals in the Light theme](site/screenshots/themes-light.png) | ![The same canvas in the Solarized light theme](site/screenshots/themes-solarized-light.png) | ![The same canvas in the Gruvbox light theme](site/screenshots/themes-gruvbox-light.png) |
+| **Light** | **Solarized light** | **Gruvbox light** |
+| ![The same canvas in the Nord theme](site/screenshots/themes-nord.png) | ![The same canvas in the Dracula theme](site/screenshots/themes-dracula.png) | ![The same canvas in the Gruvbox dark theme](site/screenshots/themes-gruvbox-dark.png) |
+| **Nord** | **Dracula** | **Gruvbox dark** |
+
+Also [Dark](site/screenshots/themes-dark.png), [High contrast light](site/screenshots/themes-high-contrast-light.png), [High contrast dark](site/screenshots/themes-high-contrast-dark.png) and [Solarized dark](site/screenshots/themes-solarized-dark.png).
+
+<img src="site/screenshots/terminal-themes.png" alt="A dark page with six terminals, each in a theme of its own: Solarized light, Dracula, Gruvbox dark, Nord, Gruvbox light and Solarized dark.">
+
+<sub>Six terminals on a dark page, each in a theme of its own. A made-up project in plain shells.</sub>
+
 ---
 
 ## Start in two minutes
@@ -564,6 +581,7 @@ Each new tab makes a new terminal, so park or end the ones you no longer need.
 - Drag the background to pan; scroll or pinch to zoom. **Fit** (or `F`) shows everything; the percentage (or `0`) returns to 100%. The map in the corner also pans and zooms. It starts folded: the map button (a picture of a map) beside **Go to…** brings it out and folds it away again, and the browser remembers which. While shown, it steps aside by itself when the terminal you are typing in lies under it.
 - **+ Frame** adds a labeled frame. Drag a frame by its label and the terminals inside it move along.
 - The dot in a title bar gives a node or frame a color: one of thirteen, or **Your own…** for any color.
+- **Theme…** in a terminal's menu (in its title, its row in the list, its details, or "Terminal theme…" in the palette) draws that terminal in a color theme of its own, whatever the page is drawn in: **Same as the default**, or any of the ten. Only its body changes, live and zoomed out alike; its title and its note stay as the page is. Once it has one, its details say which, and change it there.
 - The title bar shows the running command and current folder of each terminal.
 
 ### Projects
@@ -732,7 +750,7 @@ The panel on the left shows one thing at a time, chosen by the tabs at its top: 
 
 The top of the page says where you are and what waits for you: the name, the project, the places of that project (**Canvas**, **Library**, **Workflows**, **Runs**, the one you are in marked), and at the right **For you**, with a count of everything that waits on you, and **Help**. The canvases start as a column of their own at the left of the window, before the side panel; as tabs (chosen from the button at the start of that column) they are a bar of their own over the canvas, to the right of the side panel, with a line under it; the tab you are on is filled, with a line under it. A tab has its name, a plain number while terminals on it wait for you, and, on the tab you are on or point at, one menu (**⋯**) for what is done seldom (rename, its color, messages between its terminals, moving it to another project, removing the demo) and the mark that closes it. The bar over the canvas holds only what acts on that canvas: the view (**Go to…**, **Fit**, the zoom), and parked and outside terminals while there are any; **New terminal** is at the top of the list of terminals in the side panel. It shows only **Go to…** and the map button until you point at it or reach it with the keyboard; then all of it shows, and it stays open while one of its menus is open. **Settings** has **Keep the whole bar over the canvas open** and **Where the bar stands** (bottom right, under the map, where it starts; or top left, top center, top right, bottom left or bottom center), both remembered in that browser. At the bottom, its menus open upward. The gear at the end of the bar does the same in fewer steps: point at it (or reach it with the keyboard) for the places, one press each; press it for **Settings**.
 
-**Settings**, beside Help, is the one place for what you change about the page itself. **Appearance** has three choices: **Light**, **Dark**, and **Match the system**, which is how a new install starts and follows the system when it changes while the page is open. The choice applies at once to the page and to every terminal, without a reload, and is kept in the settings file (`theme`), so every browser and the next start agree. The palette has the same three as commands ("Theme: light", "Theme: dark", "Theme: match the system"). **Notifications** has the switch for being told on the desktop when a terminal starts waiting.
+**Settings**, beside Help, is the one place for what you change about the page itself. **Appearance** starts with three choices: **Light**, **Dark**, and **Match the system**, which is how a new install starts and follows the system when it changes while the page is open. Under them, **Color theme** lists the themes of each kind, each with a small picture of its colors: Light, High contrast light, Solarized light and Gruvbox light; Dark, High contrast dark, Solarized dark, Gruvbox dark, Nord and Dracula. Each kind has its own theme; the one drawn now is marked, and the other kind's is ticked. Choosing a theme of the kind that is not drawn makes the page that kind. **Terminal theme** is the theme every terminal is drawn in that has none of its own: **Same as the page**, where it starts, or any of the ten, of either kind. **Terminal text** sets the size and the font of a terminal's text, **Cursor** its shape (block, bar or underline) and whether it blinks, and **Set colors by hand** says how to change single colors in the settings file. Every change applies at once to the page and to every terminal, without a reload, and is kept in the settings file, so every browser and the next start agree. The palette has the same as commands: "Theme: light", "Theme: dark", "Theme: match the system", "Color theme…", and "Color theme: Nord" and its like for each theme. **Notifications** has the switch for being told on the desktop when a terminal starts waiting.
 
 **Library**, **Workflows** and **Runs** are pages: each takes the place of the canvas under the top bar and is laid out the same way, with its name and what is done most at the top, its tabs under that, and its content below. A page has no Close: **Canvas** in the top bar, the page's own name pressed again, `Esc` or the browser's back button lead back to the canvas exactly as you left it (the same tab, the same view, the same terminal selected; the terminals keep running meanwhile). Each page has an address (the canvas's, with `/library`, `/workflows` or `/runs` after it; the older `/queue` and `/board` open Runs), so a reload stays on it. What is a question about one thing (running a workflow, describing one, tags, API tokens, Review, the editors) still opens as a dialog, over a page or over the canvas alike.
 
@@ -1321,6 +1339,7 @@ Create `config.json` in the data folder (the server prints its location at start
 {
   "font": { "family": "Menlo, monospace", "size": 13 },
   "theme": "dark",
+  "appearance": { "light": "light", "dark": "nord", "terminal": null, "cursor": "block", "cursorBlink": true, "colors": {} },
   "shell": null,
   "defaultFolder": "~/work",
   "agents": { "logPrompts": true, "claudeCommand": "claude" },
@@ -1337,7 +1356,14 @@ Create `config.json` in the data folder (the server prints its location at start
 }
 ```
 
-- `theme`: `"dark"` or `"light"`.
+- `theme`: `"dark"`, `"light"` or `"system"` (the default, which follows the system).
+- `appearance`: how the page looks beyond light or dark, changed in Settings. `light` and `dark` are the color theme of each kind: `light`, `high-contrast-light`, `solarized-light`, `gruvbox-light`; `dark`, `high-contrast-dark`, `solarized-dark`, `gruvbox-dark`, `nord`, `dracula`. `terminal` is the theme of every terminal that has none of its own, any of the ten, or `null` for the page's. `cursor` is `block`, `bar` or `underline`, and `cursorBlink` says whether it blinks. `colors` is written by hand only: a color of the page by its token's name, over every theme, or under a theme's ID in brackets, over that theme alone, which wins:
+
+  ```json
+  { "appearance": { "colors": { "accent": "#c678dd", "[nord]": { "terminal-bg": "#242933" } } } }
+  ```
+
+  The names are the page's color tokens (`bg`, `surface`, `text`, `accent`, `terminal-bg` and the rest; [docs/design.md](docs/design.md) lists them), and a value is `#rrggbb`. A wrong entry is skipped, and Settings → Appearance lists it. Colors set by hand are yours: nothing checks that what you wrote can be read.
 - `shell`: absolute path of the shell to start; `null` uses your own `$SHELL`.
 - `defaultFolder`: where new terminals start; `null` means your home folder.
 - `agents.logPrompts`: `false` keeps prompts given to agents out of the note log. Default `true`.
@@ -1359,7 +1385,7 @@ Create `config.json` in the data folder (the server prints its location at start
 - `access.addresses`: the HTTPS addresses this server also answers under, for [another device](#from-another-device). Read when the server starts; written by hand only. `access.pages`: the origins of pages of another Aubergine that may [show this server](#letting-another-aubergines-page-show-this-server), read and written the same way. Both are explained in [Using Aubergine from elsewhere](docs/remote.md).
 - `shortcuts`, `shortcutsInAppWindow`: your own keys; see [Keyboard](#keyboard).
 
-Font, theme and keys apply when you reload the page; shell and folder apply to the next new terminal.
+Font, theme, appearance and keys apply when you reload the page (or at once, when changed in Settings); shell and folder apply to the next new terminal.
 
 ## Shell environment
 
