@@ -8,6 +8,7 @@
 - Terminal tetap berjalan saat Anda menutup browser atau memulai ulang Aubergine.
 - Bekerja dengan shell biasa maupun dengan agen.
 - Aubergine tidak punya model sendiri, tidak menyimpan kunci, dan tidak punya akun.
+- Dibuat agar lolos tinjauan IT: sebagian perusahaan tidak mengizinkan alat yang memerlukan akun di pembuatnya, mengirim kode Anda ke cloud-nya, atau kode sumbernya tidak bisa dibaca. Aubergine tidak punya akun dan tidak punya cloud, dan seluruhnya open source. Agen yang Anda jalankan di dalamnya tetap perlu persetujuannya sendiri.
 
 <img src="../../site/screenshots/canvas.png" alt="Kanvas Aubergine: tiga kanvas dalam satu kolom di kiri, daftar terminal beserta apa yang sedang dikerjakan masing-masing, dan enam terminal yang hidup, empat dengan warnanya sendiri, satu menunggu jawaban.">
 

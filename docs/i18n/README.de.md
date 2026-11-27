@@ -8,6 +8,7 @@
 - Terminals laufen weiter, wenn du den Browser schließt oder Aubergine neu startest.
 - Funktioniert mit einfachen Shells und mit Agenten.
 - Aubergine hat kein eigenes Modell, hält keinen Schlüssel und hat kein Konto.
+- Gemacht, um eine IT-Prüfung zu bestehen: Manche Firmen erlauben keine Werkzeuge, die ein Konto beim Hersteller brauchen, deinen Code in seine Cloud schicken oder deren Quellcode sich nicht lesen lässt. Aubergine hat kein Konto und keine Cloud, und alles daran ist Open Source. Die Agenten, die du darin startest, brauchen weiterhin ihre eigene Genehmigung.
 
 <img src="../../site/screenshots/canvas.png" alt="Das Aubergine-Canvas: links drei Canvases in einer Spalte, die Liste der Terminals mit dem, was jedes gerade tut, und sechs laufende Terminals, vier davon in eigenen Farben, eines wartet auf eine Antwort.">
 

@@ -5002,5 +5002,17 @@
   "home.agent.note": {
     "text": "O prompt está em inglês, como o Aubergine; seu agente pode responder no seu idioma. Ele ainda não foi rodado com um agente real, então leia o que o seu propõe antes de dizer sim. O que um agente pode fazer em um terminal está no <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/for-agents.md\">guia para agentes</a>.",
     "from": "ff60324cd0eb"
+  },
+  "compare.it.title": {
+    "text": "Se o seu departamento de TI precisa aprovar",
+    "from": "35a5d178dee3"
+  },
+  "compare.it.text": {
+    "text": "Algumas empresas não permitem ferramentas de desenvolvimento que precisam de uma conta com quem as faz, que enviam código ou a saída dos terminais para a nuvem de quem as faz, ou cujo código-fonte não pode ser lido. O Aubergine não tem nada disso: roda no seu próprio computador, o servidor escuta em <code>127.0.0.1</code>, não tem conta nem nuvem, não chama nenhum modelo e é de código aberto sob a licença MIT, então uma equipe de segurança pode ler tudo.",
+    "from": "24cff3641a8c"
+  },
+  "compare.it.agents": {
+    "text": "Os agentes que você roda nele são outra questão. Cada um envia o que envia para o seu próprio provedor e precisa da sua própria aprovação; o Aubergine não muda nada nisso. O que o Aubergine protege, e o que não protege, está na página de <a href=\"/security/\">segurança</a>.",
+    "from": "b6838ee486ee"
   }
 }

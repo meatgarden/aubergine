@@ -5002,5 +5002,17 @@
   "home.agent.note": {
     "text": "Aubergine처럼 프롬프트도 영어로 되어 있지만, 에이전트는 여러분의 언어로 답할 수 있습니다. 아직 실제 에이전트로 실행해 본 적은 없으니, 승인하기 전에 에이전트가 제안하는 내용을 읽어 보세요. 에이전트가 터미널에서 할 수 있는 일은 <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/for-agents.md\">에이전트용 가이드</a>에 있습니다.",
     "from": "ff60324cd0eb"
+  },
+  "compare.it.title": {
+    "text": "IT 부서의 승인이 필요하다면",
+    "from": "35a5d178dee3"
+  },
+  "compare.it.text": {
+    "text": "어떤 회사들은 만든 곳의 계정이 필요하거나, 코드나 터미널 출력을 만든 곳의 클라우드로 보내거나, 소스를 읽을 수 없는 개발자 도구를 허용하지 않습니다. Aubergine에는 이 중 어느 것도 없습니다. 여러분의 컴퓨터에서 실행되고, 서버는 <code>127.0.0.1</code>에서 수신하며, 계정도 클라우드도 없고, 어떤 모델도 호출하지 않으며, MIT 라이선스의 오픈 소스이므로 보안 팀이 전부 읽을 수 있습니다.",
+    "from": "24cff3641a8c"
+  },
+  "compare.it.agents": {
+    "text": "그 안에서 실행하는 에이전트는 별개의 문제입니다. 각 에이전트는 보내는 것을 자기 제공업체로 보내고 각자 승인이 필요합니다. Aubergine은 그 점을 전혀 바꾸지 않습니다. Aubergine이 무엇을 보호하고 무엇을 보호하지 않는지는 <a href=\"/security/\">보안</a> 페이지에 있습니다.",
+    "from": "b6838ee486ee"
   }
 }

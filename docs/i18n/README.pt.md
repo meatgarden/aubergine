@@ -8,6 +8,7 @@
 - Os terminais continuam rodando quando você fecha o navegador ou reinicia o Aubergine.
 - Funciona com shells comuns e com agentes.
 - O Aubergine não tem modelo próprio, não guarda nenhuma chave e não tem conta.
+- Feito para passar por uma revisão de TI: algumas empresas não permitem ferramentas que precisam de uma conta com quem as faz, enviam o seu código para a nuvem dele ou cujo código-fonte não pode ser lido. O Aubergine não tem conta nem nuvem, e é todo de código aberto. Os agentes que você roda nele continuam precisando da sua própria aprovação.
 
 <img src="../../site/screenshots/canvas.png" alt="O canvas do Aubergine: três canvases em uma coluna à esquerda, a lista de terminais com o que cada um está fazendo, e seis terminais ao vivo, quatro com cores próprias e um esperando uma resposta.">
 

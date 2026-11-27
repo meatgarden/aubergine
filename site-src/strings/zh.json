@@ -5002,5 +5002,17 @@
   "home.agent.note": {
     "text": "和 Aubergine 一样，这段提示词是英文的；你的智能体可以用你的语言回答。它还没有用真实的智能体运行过，所以在同意之前，请先读一读你的智能体提出了什么。智能体在终端里能做什么，见<a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/for-agents.md\">给智能体的指南</a>。",
     "from": "ff60324cd0eb"
+  },
+  "compare.it.title": {
+    "text": "如果需要你们的 IT 部门批准",
+    "from": "35a5d178dee3"
+  },
+  "compare.it.text": {
+    "text": "有些公司不允许这样的开发者工具：需要在开发方注册账号的、把代码或终端输出发送到开发方云端的，或者源码无法阅读的。Aubergine 一样都没有：它运行在你自己的电脑上，服务器监听 <code>127.0.0.1</code>，没有账号，没有云，不调用任何模型，并以 MIT 许可证开源，安全团队可以读完它的全部代码。",
+    "from": "24cff3641a8c"
+  },
+  "compare.it.agents": {
+    "text": "你在其中运行的智能体是另一回事。每个智能体把它发送的内容发给它自己的提供商，各自需要单独批准；Aubergine 对此不做任何改变。Aubergine 保护什么、不保护什么，见<a href=\"/security/\">安全</a>页面。",
+    "from": "b6838ee486ee"
   }
 }

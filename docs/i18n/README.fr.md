@@ -8,6 +8,7 @@
 - Les terminaux continuent de tourner quand vous fermez le navigateur ou redémarrez Aubergine.
 - Fonctionne avec de simples shells comme avec des agents.
 - Aubergine n’a pas de modèle à elle, ne détient aucune clé et n’a pas de compte.
+- Conçue pour passer une revue informatique : certaines entreprises n’autorisent pas les outils qui exigent un compte chez leur éditeur, envoient votre code vers son cloud, ou dont le code source ne peut pas être lu. Aubergine n’a ni compte ni cloud, et elle est entièrement open source. Les agents que vous y lancez demandent toujours leur propre approbation.
 
 <img src="../../site/screenshots/canvas.png" alt="Le canevas d’Aubergine : trois canevas en colonne à gauche, la liste des terminaux avec ce que fait chacun, et six terminaux en direct, dont quatre dans leurs propres couleurs et un qui attend une réponse.">
 

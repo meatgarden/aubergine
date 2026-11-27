@@ -8,6 +8,7 @@
 - Las terminales siguen en marcha cuando cierras el navegador o reinicias Aubergine.
 - Funciona con shells normales y con agentes.
 - Aubergine no tiene modelo propio, no guarda ninguna clave y no tiene cuentas.
+- Pensado para pasar una revisión de TI: algunas empresas no permiten herramientas que necesitan una cuenta con quien las hace, envían tu código a su nube o cuyo código fuente no se puede leer. Aubergine no tiene cuenta ni nube, y todo él es de código abierto. Los agentes que ejecutas en él siguen necesitando su propia aprobación.
 
 <img src="../../site/screenshots/canvas.png" alt="El lienzo de Aubergine: tres lienzos en una columna a la izquierda, la lista de terminales con lo que hace cada una, y seis terminales en vivo, cuatro con colores propios y una esperando una respuesta.">
 
