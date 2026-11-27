@@ -572,6 +572,12 @@ pre code { font-size: 1em; overflow-wrap: normal; }
 .foot-links { display: flex; flex-wrap: wrap; justify-content: end; gap: var(--s-2) var(--s-5); list-style: none; margin: 0; padding: 0; }
 .foot-links a { font-weight: var(--weight-semi); font-size: var(--size-s); text-decoration: none; }
 .foot-links a:hover, .foot-links a[aria-current] { text-decoration: underline; text-decoration-color: var(--purple); }
+/* Sharing a page: plain links to other sites' own share pages, no script of theirs and no picture. */
+.share { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--s-2) var(--s-5); }
+.share-label { margin: 0; color: var(--muted); font-size: var(--size-s); }
+.share .foot-links { justify-content: start; }
+.share-copy { padding: 0; border: 0; background: none; color: inherit; font-family: var(--font-body); font-weight: var(--weight-semi); font-size: var(--size-s); line-height: inherit; cursor: pointer; }
+.share-copy:hover { text-decoration: underline; text-decoration-color: var(--purple); }
 .foot-line { grid-column: 1 / -1; padding-block-start: var(--s-5); border-block-start: var(--rule) solid var(--ink); color: var(--muted); font-size: var(--size-s); }
 
 /* ---------- narrower ---------- */

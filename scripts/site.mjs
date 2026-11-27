@@ -20,8 +20,10 @@
 // text, {{json:key}} as a JSON string of its text, {{=name}} is made here.
 // <!--if:translated-->…<!--/if:translated--> is kept on a translated page only,
 // <!--if:languages-->…<!--/if:languages--> only while there is more than one language.
+// <!--if:indexed-->…<!--/if:indexed--> is left out of a page marked noindex (the share links).
 // Made for each page: lang, dir, page, canonical, url, robots, ogType, alternates, langmenu, updated,
-// langname (the language's own name), langshort (its code in capitals), title, description.
+// langname (the language's own name), langshort (its code in capitals), title, description,
+// shareurl and sharetitle (the page's address and title, encoded to stand inside another address).
 // Internal addresses are written from the site's root (/install/, /style.css);
 // each page gets them relative to itself, and in its own language's folder.
 import { createHash } from 'node:crypto';
@@ -276,10 +278,14 @@ export function buildSite(srcDir) {
         langshort: language.code.toUpperCase(),
         title: escapeAttr(plainText(words[`${keyOf(page)}.meta.title`]?.text ?? '')),
         description: escapeAttr(plainText(words[`${keyOf(page)}.meta.description`]?.text ?? '')),
+        // For the share links: this page's own address and title, as they go into another address.
+        shareurl: encodeURIComponent(urlOf(language, page)),
+        sharetitle: encodeURIComponent(plainText(words[`${keyOf(page)}.meta.title`]?.text ?? '')),
       };
 
       let html = keepIf(source.layout, 'translated', translated);
       html = keepIf(html, 'languages', several && !page.meta.englishOnly);
+      html = keepIf(html, 'indexed', !page.meta.noindex);
       html = html.replace('{{=content}}', () => keepIf(keepIf(page.body, 'translated', translated), 'languages', several));
       html = html.replace(PLACEHOLDER, (whole, form, name) => {
         if (form === '=') {

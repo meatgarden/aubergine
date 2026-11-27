@@ -6,6 +6,8 @@ English · [Español](docs/i18n/README.es.md) · [Português](docs/i18n/README.p
 
 [Website](https://thirstyeggplant.com/) · [Install](#start-in-two-minutes) · [With Claude Code](https://thirstyeggplant.com/claude/) · [Guides](https://thirstyeggplant.com/guides/) · [Compared with other tools](https://thirstyeggplant.com/compare/) · [npm](https://www.npmjs.com/package/@meatgarden/aubergine)
 
+Share Aubergine: [X](https://x.com/intent/post?text=Aubergine%3A%20mission%20control%20for%20your%20terminals%20and%20AI%20coding%20agents.%20Free%2C%20local%2C%20open%20source.&url=https%3A%2F%2Fthirstyeggplant.com%2F) · [Bluesky](https://bsky.app/intent/compose?text=Aubergine%3A%20mission%20control%20for%20your%20terminals%20and%20AI%20coding%20agents.%20Free%2C%20local%2C%20open%20source.%20https%3A%2F%2Fthirstyeggplant.com%2F) · [LinkedIn](https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fthirstyeggplant.com%2F) · [Reddit](https://www.reddit.com/submit?url=https%3A%2F%2Fthirstyeggplant.com%2F&title=Aubergine%3A%20mission%20control%20for%20your%20terminals%20and%20AI%20coding%20agents.%20Free%2C%20local%2C%20open%20source.) · [Hacker News](https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fthirstyeggplant.com%2F&t=Aubergine%3A%20mission%20control%20for%20your%20terminals%20and%20AI%20coding%20agents.%20Free%2C%20local%2C%20open%20source.)
+
 - Runs on your own computer, and nowhere else.
 - Terminals keep running when you close the browser or restart Aubergine.
 - Works with plain shells and with agents.

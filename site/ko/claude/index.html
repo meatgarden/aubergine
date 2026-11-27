@@ -183,6 +183,19 @@
         <li><a href="../../llms.txt">llms.txt</a></li>
       </ul>
     </nav>
+
+    <div class="share">
+      <p class="share-label"><span lang="en" dir="ltr">Share this page</span></p>
+      <ul class="foot-links">
+        <li><a href="https://x.com/intent/post?text=Claude%20Code%20%EC%84%B8%EC%85%98%20%EC%97%AC%EB%9F%AC%20%EA%B0%9C%20%EB%82%98%EB%9E%80%ED%9E%88%20%EC%8B%A4%ED%96%89%ED%95%98%EA%B8%B0%20%7C%20Aubergine&amp;url=https%3A%2F%2Fthirstyeggplant.com%2Fko%2Fclaude%2F" rel="noopener nofollow">X</a></li>
+        <li><a href="https://bsky.app/intent/compose?text=Claude%20Code%20%EC%84%B8%EC%85%98%20%EC%97%AC%EB%9F%AC%20%EA%B0%9C%20%EB%82%98%EB%9E%80%ED%9E%88%20%EC%8B%A4%ED%96%89%ED%95%98%EA%B8%B0%20%7C%20Aubergine%20https%3A%2F%2Fthirstyeggplant.com%2Fko%2Fclaude%2F" rel="noopener nofollow">Bluesky</a></li>
+        <li><a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fthirstyeggplant.com%2Fko%2Fclaude%2F" rel="noopener nofollow">LinkedIn</a></li>
+        <li><a href="https://www.reddit.com/submit?url=https%3A%2F%2Fthirstyeggplant.com%2Fko%2Fclaude%2F&amp;title=Claude%20Code%20%EC%84%B8%EC%85%98%20%EC%97%AC%EB%9F%AC%20%EA%B0%9C%20%EB%82%98%EB%9E%80%ED%9E%88%20%EC%8B%A4%ED%96%89%ED%95%98%EA%B8%B0%20%7C%20Aubergine" rel="noopener nofollow">Reddit</a></li>
+        <li><a href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fthirstyeggplant.com%2Fko%2Fclaude%2F&amp;t=Claude%20Code%20%EC%84%B8%EC%85%98%20%EC%97%AC%EB%9F%AC%20%EA%B0%9C%20%EB%82%98%EB%9E%80%ED%9E%88%20%EC%8B%A4%ED%96%89%ED%95%98%EA%B8%B0%20%7C%20Aubergine" rel="noopener nofollow">Hacker News</a></li>
+        <li><a href="mailto:?subject=Claude%20Code%20%EC%84%B8%EC%85%98%20%EC%97%AC%EB%9F%AC%20%EA%B0%9C%20%EB%82%98%EB%9E%80%ED%9E%88%20%EC%8B%A4%ED%96%89%ED%95%98%EA%B8%B0%20%7C%20Aubergine&amp;body=https%3A%2F%2Fthirstyeggplant.com%2Fko%2Fclaude%2F"><span lang="en" dir="ltr">Email</span></a></li>
+        <li><button type="button" class="share-copy" data-copy-text="https://thirstyeggplant.com/ko/claude/" data-copied="복사됨" aria-live="polite" hidden><span lang="en" dir="ltr">Copy link</span></button></li>
+      </ul>
+    </div>
     <p class="foot-line">Aubergine은 <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">MIT 라이선스</a>로 공개된 무료 오픈 소스이며, 여러분의 컴퓨터에서 실행됩니다.</p>
   </div>
 </footer>
@@ -193,6 +206,17 @@ document.querySelectorAll('[data-copy]').forEach(function (button) {
     var words = button.textContent;
     if (!navigator.clipboard) return;
     navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.querySelectorAll('[data-copy-text]').forEach(function (button) {
+  if (!navigator.clipboard) return;
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    navigator.clipboard.writeText(button.getAttribute('data-copy-text')).then(function () {
       button.textContent = button.getAttribute('data-copied');
       setTimeout(function () { button.textContent = words; }, 1600);
     });
