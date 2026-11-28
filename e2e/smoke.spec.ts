@@ -2040,7 +2040,7 @@ test('the side panel shows one section at a time with all of its height, says ho
   }
   await page.keyboard.press(mac ? 'Control+Meta+Period' : 'Control+Shift+Period');
   await expect(page.getByTestId('list-row').first()).toHaveAttribute('data-session', newer);
-  const layoutLines = ['layout-canvas', 'layout-flat-canvas', 'layout-flat-updated', 'layout-flat-typed', 'layout-flat-name'];
+  const layoutLines = ['layout-canvas', 'layout-group', 'layout-flat-canvas', 'layout-flat-updated', 'layout-flat-typed', 'layout-flat-name'];
   const filterMenu = page.getByTestId('list-more-filters');
   const menuLines = (): Promise<string[]> => filterMenu.locator('button, .ui-menu-label').evaluateAll((all) => all.map((el) => (el as HTMLElement).dataset.testid ?? (el as HTMLElement).dataset.filter ?? (el.textContent ?? '')));
   const checkedLayout = filterMenu.locator('[data-testid^="layout-"][aria-checked="true"]');
@@ -2055,7 +2055,7 @@ test('the side panel shows one section at a time with all of its height, says ho
     ['layout-flat-name', 'menuitemradio', 'Flat, by name'],
   ]);
   // "One line per terminal" comes after them.
-  expect((await menuLines()).slice(-6)).toEqual([...layoutLines, 'list-density']);
+  expect((await menuLines()).slice(-7)).toEqual([...layoutLines, 'list-density']);
   await expect(checkedLayout).toHaveCount(1);
   await expect(checkedLayout).toHaveAttribute('data-testid', 'layout-canvas');
   const linesBefore = await menuLines();
