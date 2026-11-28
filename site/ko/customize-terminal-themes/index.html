@@ -126,7 +126,7 @@
         { "@type": "Question", "name": "터미널마다 다른 색 테마를 쓸 수 있나요?", "acceptedAnswer": { "@type": "Answer", "text": "네. 터미널 메뉴의 Theme…는 페이지의 테마와 상관없이 그 본문을 열 가지 테마 중 어느 것으로든 그립니다. 나머지는 터미널에 정한 기본값이나 페이지를 따릅니다." } },
         { "@type": "Question", "name": "Aubergine에 내 CSS를 넣을 수 있나요?", "acceptedAnswer": { "@type": "Answer", "text": "지금은 안 됩니다. 개별 색은 설정 파일에서 직접 정할 수 있고, 문서화된 훅이 있는 custom.css는 계획되어 있지만 아직 만들어지지 않았습니다." } },
         { "@type": "Question", "name": "Aubergine의 설정 파일은 어디에 있나요?", "acceptedAnswer": { "@type": "Answer", "text": "Aubergine 데이터 폴더의 config.json입니다. aubergine settings path가 위치를 알려 주고, 서버도 시작할 때 보여 줍니다." } },
-        { "@type": "Question", "name": "에이전트가 Aubergine의 모양을 바꿀 수 있나요?", "acceptedAnswer": { "@type": "Answer", "text": "설정은 아닙니다. 설정은 오직 여러분의 것입니다. 에이전트는 자기 터미널의 이름을 정하고 설명할 수 있으며, API 토큰이 허락하는 프로그램은 터미널의 이름을 바꾸고 태그를 달고 테마를 주고 캔버스를 정리할 수 있습니다." } }
+        { "@type": "Question", "name": "에이전트가 Aubergine의 모양을 바꿀 수 있나요?", "acceptedAnswer": { "@type": "Answer", "text": "설정은 아닙니다. 설정은 오직 여러분의 것입니다. 에이전트는 자기 터미널의 이름을 정하고 설명할 수 있으며, 여러분이 읽고 받아들이기를 기다리는 색상 테마를 제안할 수 있습니다. API 토큰이 허락하는 프로그램은 터미널의 이름을 바꾸고 태그를 달고 테마를 주고 캔버스를 정리할 수 있으며, 테마를 제안할 수도 있습니다." } }
       ]
     }
   ]
@@ -203,7 +203,7 @@ aubergine settings schema</code></pre>
 
     <h2 id="programs-and-agents">프로그램이나 에이전트가 바꿀 수 있는 것, 여러분의 것으로 남는 것</h2>
     <p><a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/api.md">로컬 API</a>를 통해, API 토큰을 가진 프로그램은 <code>canvases:write</code>로 캔버스를 정리할 수 있습니다. 이름, 색, 순서를 정하고, 그 위의 터미널을 옮기고 크기를 바꾸고 색을 주고, 프레임을 더합니다. <code>sessions:write</code>로는 터미널의 이름을 바꾸고 태그를 달고 필드를 바꾸고 색 테마를 줄 수 있습니다. 토큰이 닿는 프로젝트에만 닿습니다.</p>
-    <p>터미널 안의 에이전트는 자기 터미널만 설명하고 다른 터미널은 설명하지 않습니다. 이름, 무엇을 위한 것인지에 대한 요약, 링크, 필드를 <code>aubergine describe</code>, <code>aubergine link add</code>, <code>aubergine field set</code>으로 정합니다. 여러분이 직접 쓴 이름, 요약, 필드는 그대로 남고, 에이전트가 보낸 것은 제안으로 옆에 보관됩니다.</p>
+    <p>터미널 안의 에이전트는 자기 터미널만 설명하고 다른 터미널은 설명하지 않습니다. 이름, 무엇을 위한 것인지에 대한 요약, 링크, 필드를 <code>aubergine describe</code>, <code>aubergine link add</code>, <code>aubergine field set</code>으로 정합니다. 여러분이 직접 쓴 이름, 요약, 필드는 그대로 남고, 에이전트가 보낸 것은 제안으로 옆에 보관됩니다. 에이전트나 <code>workflows:write</code>이 있는 프로그램은 <code>aubergine theme propose</code>으로 색상 테마를 제안할 수도 있습니다. 여러분이 Review에서 읽고, 그려진 모습을 보고, 페이지에서 시험해 본 뒤 받아들이기 전까지는 어디에도 그려지지 않으며, 받아들이면 그 파일이 쓰일 뿐 아무것도 선택되지 않습니다.</p>
     <p>설정 자체는 오직 여러분의 것입니다. 어떤 토큰, 터미널, 에이전트도 바꿀 수 없습니다. <code>PUT /v1/settings/appearance</code>는 로그인한 브라우저에만 응답하고, <code>appearance.colors</code>, <code>shortcuts</code> 등은 파일에 직접 씁니다.</p>
 
     <h2 id="other-tools">다른 도구는 인터페이스를 어떻게 사용자 지정하게 하나요?</h2>
@@ -231,14 +231,14 @@ aubergine settings schema</code></pre>
     <p>오늘의 Aubergine은 설정 쪽에 있습니다. 테마, 색, 키는 스스로를 설명하는 파일에 있고, 페이지가 설정의 일부를 씁니다. 페이지에서 여러분의 코드를 실행하지 않고, 여러분의 스타일시트를 받지 않으며, 템플릿도 없습니다. 이것들은 <a href="../roadmap/#rm-yours">로드맵</a>에 있고 아직 만들어지지 않았습니다.</p>
 
     <h2 id="planned">계획된 것</h2>
-    <p>프로젝트나 태그별 모습, 템플릿, <code>custom.css</code>, 플러그인, 그리고 에이전트가 제안하고 여러분의 승인을 기다리는 테마는 계획되어 있으며 아직 만들어지지 않았습니다. <a href="../roadmap/#rm-yours">로드맵</a>을 보세요.</p>
+    <p>프로젝트나 태그별 모습, 템플릿, <code>custom.css</code>, 플러그인은 계획되어 있으며 아직 만들어지지 않았습니다. <a href="../roadmap/#rm-yours">로드맵</a>을 보세요.</p>
 
     <h2 id="faq">질문</h2>
     <div class="questions">
       <details><summary>터미널마다 다른 색 테마를 쓸 수 있나요?</summary><p>네. 터미널 메뉴의 Theme…는 페이지의 테마와 상관없이 그 본문을 열 가지 테마 중 어느 것으로든 그립니다. 나머지는 터미널에 정한 기본값이나 페이지를 따릅니다.</p></details>
       <details><summary>Aubergine에 내 CSS를 넣을 수 있나요?</summary><p>지금은 안 됩니다. 개별 색은 설정 파일에서 직접 정할 수 있고, 문서화된 훅이 있는 <code>custom.css</code>는 계획되어 있지만 아직 만들어지지 않았습니다.</p></details>
       <details><summary>Aubergine의 설정 파일은 어디에 있나요?</summary><p>Aubergine 데이터 폴더의 <code>config.json</code>입니다. <code>aubergine settings path</code>가 위치를 알려 주고, 서버도 시작할 때 보여 줍니다.</p></details>
-      <details><summary>에이전트가 Aubergine의 모양을 바꿀 수 있나요?</summary><p>설정은 아닙니다. 설정은 오직 여러분의 것입니다. 에이전트는 자기 터미널의 이름을 정하고 설명할 수 있으며, API 토큰이 허락하는 프로그램은 터미널의 이름을 바꾸고 태그를 달고 테마를 주고 캔버스를 정리할 수 있습니다.</p></details>
+      <details><summary>에이전트가 Aubergine의 모양을 바꿀 수 있나요?</summary><p>설정은 아닙니다. 설정은 오직 여러분의 것입니다. 에이전트는 자기 터미널의 이름을 정하고 설명할 수 있으며, 여러분이 읽고 받아들이기를 기다리는 색상 테마를 제안할 수 있습니다. API 토큰이 허락하는 프로그램은 터미널의 이름을 바꾸고 태그를 달고 테마를 주고 캔버스를 정리할 수 있으며, 테마를 제안할 수도 있습니다.</p></details>
     </div>
     <p>관련: <a href="../too-many-terminal-tabs/">원하는 터미널 찾기</a> · <a href="../tmux-without-learning-tmux/">tmux를 배우지 않고 tmux 쓰기</a> · <a href="../security/">보안과 개인 정보</a> · <a href="../faq/">자주 묻는 질문</a></p>
     <p>Aubergine은 이 페이지에 이름이 나온 어떤 도구와도 제휴하지 않았습니다. 각 이름은 해당 소유자의 상표입니다.</p>

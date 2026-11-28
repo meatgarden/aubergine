@@ -23,7 +23,7 @@ function ForYou() {
   const waiting = useWaitingWords();
   // Said apart for whoever asks: how many terminals wait, and how many things wait to be read.
   const waitingCount = useApp((s) => waitingQueue(s.whole?.sessions ?? [], s.whole?.runs ?? []).length);
-  const reviews = useApp((s) => (s.whole?.drafts ?? []).filter((d) => d.status === 'waiting').length);
+  const reviews = useApp((s) => (s.whole?.drafts ?? []).filter((d) => d.status === 'waiting').length + (s.whole?.themeProposals.waiting.length ?? 0));
   // Workflow files in repositories that were never accepted, or changed since: they are read from the Workflows page, and are not items of the list.
   const files = itemsOfListing(useRepositoryListing()).length;
   return (

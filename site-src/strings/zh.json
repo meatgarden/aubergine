@@ -5184,8 +5184,8 @@
     "from": "a0cf33b31432"
   },
   "custom.program.agent": {
-    "text": "终端里的代理只描述自己的终端，不涉及其他终端：名称、用途摘要、链接和字段，通过 <code>aubergine describe</code>、<code>aubergine link add</code> 和 <code>aubergine field set</code> 完成。凡是你亲自写下的名称、摘要或字段，都以你的为准，代理发送的内容会作为建议保存在旁边。",
-    "from": "b99f1d5ab90f"
+    "text": "终端里的代理只描述自己的终端，不涉及其他终端：名称、用途摘要、链接和字段，通过 <code>aubergine describe</code>、<code>aubergine link add</code> 和 <code>aubergine field set</code> 完成。凡是你亲自写下的名称、摘要或字段，都以你的为准，代理发送的内容会作为建议保存在旁边。代理或拥有 <code>workflows:write</code> 的程序还可以用 <code>aubergine theme propose</code> 提议一个颜色主题：在你于 Review 中读过、看过它画出来的样子、在页面上试过并接受之前，它不会在任何地方被画出；接受只会写入它的文件，不会选中任何东西。",
+    "from": "5f84d264cd4d"
   },
   "custom.program.owner": {
     "text": "设置本身只属于你。任何令牌、终端或代理都不能更改：<code>PUT /v1/settings/appearance</code> 只响应已登录的浏览器，<code>appearance.colors</code>、<code>shortcuts</code> 等都需要在文件中手写。",
@@ -5444,8 +5444,8 @@
     "from": "e10eed0040ae"
   },
   "custom.plan.text": {
-    "text": "按项目或标签的外观、模板、<code>custom.css</code>、插件，以及由智能体提议并等待你同意的主题，都在计划中，尚未构建：见<a href=\"/roadmap/#rm-yours\">路线图</a>。",
-    "from": "6d31705c7ce4"
+    "text": "按项目或标签的外观、模板、<code>custom.css</code> 和插件都在计划中，尚未构建：见<a href=\"/roadmap/#rm-yours\">路线图</a>。",
+    "from": "034f77f12f02"
   },
   "custom.q.terminal.q": {
     "text": "每个终端可以用不同的配色主题吗？",
@@ -5476,8 +5476,8 @@
     "from": "f2f43a3f85b7"
   },
   "custom.q.agent.a": {
-    "text": "不能改设置：设置只属于你。代理可以为自己的终端命名和描述；API 令牌允许的程序可以重命名终端、加标签、设置主题以及整理画布。",
-    "from": "283900c4f919"
+    "text": "不能改设置：设置只属于你。代理可以为自己的终端命名和描述，并提议一个等你阅读和接受的颜色主题；API 令牌允许的程序可以重命名终端、加标签、设置主题、整理画布，也可以提议主题。",
+    "from": "4fff2dbea759"
   },
   "custom.related": {
     "text": "相关：<a href=\"/too-many-terminal-tabs/\">找到需要的终端</a> · <a href=\"/tmux-without-learning-tmux/\">不学 tmux 也能用 tmux</a> · <a href=\"/security/\">安全与隐私</a> · <a href=\"/faq/\">常见问题</a>",
@@ -5490,14 +5490,6 @@
   "roadmap.yours.sub": {
     "text": "在今天的主题、颜色和按键之外，让页面更多地由你塑造。",
     "from": "6fef807ba454"
-  },
-  "roadmap.yours.themes.name": {
-    "text": "由智能体提议的主题",
-    "from": "9227cd56845e"
-  },
-  "roadmap.yours.themes.text": {
-    "text": "智能体可以提议一个颜色主题，它要等你同意后才会和其他主题列在一起。你自己编写的主题文件已经可以用了。",
-    "from": "593bf89b9177"
   },
   "roadmap.yours.when.name": {
     "text": "按条件变化的外观",

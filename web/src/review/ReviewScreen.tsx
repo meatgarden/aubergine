@@ -67,10 +67,11 @@ export function ReviewScreen() {
     useApp.getState().wantReview(null);
   }, [open, wanted, all]);
 
-  // Something to read is chosen when the screen opens, and when what was chosen is gone.
+  // Something to read is chosen when the screen opens, and when what was chosen is gone; not over the one asked for.
+  const wantedThere = wanted !== null && all.some((entry) => entry.key === wanted);
   useEffect(() => {
-    if (open && !current && firstWaiting) setSelected(firstWaiting);
-  }, [open, current, firstWaiting]);
+    if (open && !current && firstWaiting && !wantedThere) setSelected(firstWaiting);
+  }, [open, current, firstWaiting, wantedThere]);
 
   const currentKey = current?.key ?? null;
   const currentRevision = current?.item.revision ?? 0;
@@ -226,7 +227,7 @@ export function ReviewScreen() {
                     ) : (
                       <>
                         <div className="wf-label">
-                          What an agent would be told
+                          {detail.textTitle ?? 'What an agent would be told'}
                           {detail.previousText !== null && (
                             <button type="button" className="quiet" aria-pressed={changes} onClick={() => setChanges(!changes)} data-testid="review-changes">
                               {changes ? 'Show the text' : 'Show what changed'}

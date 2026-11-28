@@ -8,6 +8,7 @@ import { Id, newId } from './ids';
 import { SessionMessages } from './messages';
 import { LibraryState } from './library';
 import { Draft, ShelfElement } from './drafts';
+import { ThemeProposals } from './theme-proposals';
 import { AcceptedRepositoryWorkflow } from './repository';
 import { TypedBy } from './terminal';
 import { Run, Workflow } from './workflows';
@@ -431,6 +432,8 @@ export const AppState = z.object({
   queue: QueueState.prefault({}),
   /** Schedules: at these times, run this there. Each of their times becomes a task of the queue. */
   schedules: SchedulesState.prefault({}),
+  /** Color themes proposed by agents and programs, waiting for the owner, and what became of the latest. Of no project, as themes are the page's own. */
+  themeProposals: ThemeProposals.prefault({}),
 });
 export type AppState = z.infer<typeof AppState>;
 
@@ -462,7 +465,7 @@ export function createInitialState(now: Date = new Date()): AppState {
     createdAt,
   };
   const project: Project = { id: newId(), workspaceId: workspace.id, name: 'Default', color: 'none', order: 0, labels: {}, folders: [], defaultFolder: null, home: LOCAL_HOME, state: 'open', createdAt };
-  return { organization, workspace, projects: [project], sharing: {}, sessions: [], canvases: [newCanvas(project.id, FIRST_CANVAS_NAME, 0, now)], tokens: [], devices: [], workflows: [], runs: [], drafts: [], shelf: [], repositoryAccepted: [], library: { sources: [], installed: [], requests: [] }, environments: [], queue: QueueState.parse({}), schedules: SchedulesState.parse({}) };
+  return { organization, workspace, projects: [project], sharing: {}, sessions: [], canvases: [newCanvas(project.id, FIRST_CANVAS_NAME, 0, now)], tokens: [], devices: [], workflows: [], runs: [], drafts: [], shelf: [], repositoryAccepted: [], library: { sources: [], installed: [], requests: [] }, environments: [], queue: QueueState.parse({}), schedules: SchedulesState.parse({}), themeProposals: { waiting: [], decided: [] } };
 }
 
 /** Canvases in tab order. */

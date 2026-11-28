@@ -5184,8 +5184,8 @@
     "from": "a0cf33b31432"
   },
   "custom.program.agent": {
-    "text": "Der Agent in einem Terminal beschreibt sein eigenes Terminal und kein anderes: einen Namen, eine Zusammenfassung, wofür es da ist, seine Links und seine Felder, mit <code>aubergine describe</code>, <code>aubergine link add</code> und <code>aubergine field set</code>. Wo Sie selbst einen Namen, eine Zusammenfassung oder ein Feld geschrieben haben, bleibt Ihres, und was der Agent geschickt hat, wird daneben als Vorschlag aufbewahrt.",
-    "from": "b99f1d5ab90f"
+    "text": "Der Agent in einem Terminal beschreibt sein eigenes Terminal und kein anderes: einen Namen, eine Zusammenfassung, wofür es da ist, seine Links und seine Felder, mit <code>aubergine describe</code>, <code>aubergine link add</code> und <code>aubergine field set</code>. Wo Sie selbst einen Namen, eine Zusammenfassung oder ein Feld geschrieben haben, bleibt Ihres, und was der Agent geschickt hat, wird daneben als Vorschlag aufbewahrt. Ein Agent oder ein Programm mit <code>workflows:write</code> kann außerdem mit <code>aubergine theme propose</code> ein Farbthema vorschlagen: Es wird nirgends gezeichnet, bis Sie es unter Review gelesen, gezeichnet gesehen, auf der Seite ausprobiert und angenommen haben, und das Annehmen schreibt seine Datei und wählt nichts aus.",
+    "from": "5f84d264cd4d"
   },
   "custom.program.owner": {
     "text": "Die Einstellungen selbst gehören allein Ihnen. Kein Token, kein Terminal und kein Agent kann sie ändern: <code>PUT /v1/settings/appearance</code> antwortet nur dem angemeldeten Browser, und <code>appearance.colors</code>, <code>shortcuts</code> und der Rest werden von Hand in die Datei geschrieben.",
@@ -5444,8 +5444,8 @@
     "from": "e10eed0040ae"
   },
   "custom.plan.text": {
-    "text": "Ein Aussehen für ein Projekt oder einen Tag, Vorlagen, eine <code>custom.css</code>, Plugins und ein von einem Agenten vorgeschlagenes Thema, das auf Ihre Zustimmung wartet, sind geplant und nicht gebaut: siehe die <a href=\"/roadmap/#rm-yours\">Roadmap</a>.",
-    "from": "6d31705c7ce4"
+    "text": "Ein Aussehen für ein Projekt oder einen Tag, Vorlagen, eine <code>custom.css</code> und Plugins sind geplant und nicht gebaut: siehe die <a href=\"/roadmap/#rm-yours\">Roadmap</a>.",
+    "from": "034f77f12f02"
   },
   "custom.q.terminal.q": {
     "text": "Kann jedes Terminal ein eigenes Farbthema haben?",
@@ -5476,8 +5476,8 @@
     "from": "f2f43a3f85b7"
   },
   "custom.q.agent.a": {
-    "text": "Nicht die Einstellungen: Die gehören allein Ihnen. Ein Agent kann sein eigenes Terminal benennen und beschreiben, und ein Programm, dessen API-Token es erlaubt, kann Terminals umbenennen, taggen und ihnen ein Thema geben und Leinwände ordnen.",
-    "from": "283900c4f919"
+    "text": "Nicht die Einstellungen: Die gehören allein Ihnen. Ein Agent kann sein eigenes Terminal benennen und beschreiben und ein Farbthema vorschlagen, das darauf wartet, dass Sie es lesen und annehmen; ein Programm, dessen API-Token es erlaubt, kann Terminals umbenennen, taggen und ihnen ein Thema geben, Leinwände ordnen und ebenfalls ein Thema vorschlagen.",
+    "from": "4fff2dbea759"
   },
   "custom.related": {
     "text": "Siehe auch: <a href=\"/too-many-terminal-tabs/\">Das richtige Terminal finden</a> · <a href=\"/tmux-without-learning-tmux/\">tmux, ohne tmux zu lernen</a> · <a href=\"/security/\">Sicherheit und Datenschutz</a> · <a href=\"/faq/\">FAQ</a>",
@@ -5490,14 +5490,6 @@
   "roadmap.yours.sub": {
     "text": "Mehr von der Seite nach Ihren Vorstellungen, über die heutigen Themen, Farben und Tasten hinaus.",
     "from": "6fef807ba454"
-  },
-  "roadmap.yours.themes.name": {
-    "text": "Ein von einem Agenten vorgeschlagenes Thema",
-    "from": "9227cd56845e"
-  },
-  "roadmap.yours.themes.text": {
-    "text": "Ein Agent kann ein Farbthema vorschlagen, und es wartet auf Ihre Zustimmung, bevor es neben den anderen steht. Themendateien, die Sie selbst schreiben, gibt es schon.",
-    "from": "593bf89b9177"
   },
   "roadmap.yours.when.name": {
     "text": "Aussehen nach Bedingung",

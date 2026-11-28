@@ -1,4 +1,4 @@
-import { useSyncExternalStore } from 'react';
+import { useMemo, useSyncExternalStore } from 'react';
 import {
   THEME_COLORS,
   colorThemeShown,
@@ -13,6 +13,7 @@ import {
 } from '@aubergine/shared';
 import type { CSSProperties } from 'react';
 import { ownApi } from './api';
+import { appearanceTried, useTrying, withTried } from './appearance/trying';
 import { useApp } from './store';
 
 /**
@@ -41,19 +42,30 @@ export function useSystemIsLight(): boolean {
   return useSyncExternalStore(subscribe, () => query?.matches ?? false);
 }
 
-/** The theme that is drawn now: `light` or `dark`. */
+/** The theme that is drawn now: `light` or `dark`. While a proposed theme is tried on the page, its kind. */
 export function useThemeShown(): 'light' | 'dark' {
   const setting = useApp((s) => s.settings.theme);
-  return themeShown(setting, useSystemIsLight());
+  const system = themeShown(setting, useSystemIsLight());
+  return useTrying((s) => s.theme?.kind) ?? system;
 }
 
-/** The owner's themes of their own, as the own server read them. */
-export const useUserThemes = (): UserTheme[] => useApp((s) => s.themes.themes);
+/** The owner's themes of their own, as the own server read them; with a proposed theme among them while it is tried. */
+export function useUserThemes(): UserTheme[] {
+  const themes = useApp((s) => s.themes.themes);
+  const tried = useTrying((s) => s.theme);
+  return useMemo(() => withTried(themes, tried), [themes, tried]);
+}
+
+/** The appearance as it is drawn: the settings', with a proposed theme as the theme of its kind while it is tried. */
+export function useAppearanceShown(): Appearance {
+  const appearance = useApp((s) => s.settings.appearance);
+  const tried = useTrying((s) => s.theme);
+  return useMemo(() => appearanceTried(appearance, tried), [appearance, tried]);
+}
 
 /** The color theme that is drawn now, built-in or of a file. Everything that draws colors of its own (a terminal) reads this. */
 export function useColorThemeShown(): string {
-  const appearance = useApp((s) => s.settings.appearance);
-  return colorThemeShown(appearance, useThemeShown(), useUserThemes());
+  return colorThemeShown(useAppearanceShown(), useThemeShown(), useUserThemes());
 }
 
 /**
@@ -62,8 +74,7 @@ export function useColorThemeShown(): string {
  */
 export function useTerminalTheme(sessionId: string): string {
   const own = useApp((s) => s.whole?.sessions.find((x) => x.id === sessionId)?.theme ?? null);
-  const appearance = useApp((s) => s.settings.appearance);
-  return terminalThemeOf(own, appearance, useThemeShown(), useUserThemes());
+  return terminalThemeOf(own, useAppearanceShown(), useThemeShown(), useUserThemes());
 }
 
 /** What is put on an element so that it is drawn in a theme: its base's tokens, the theme's own ID, and what is laid over the base. */
@@ -140,9 +151,9 @@ function colorsOnPage(root: HTMLElement): string {
 
 /**
  * Puts the theme on the page: which kind, which color theme, and the colors set by hand over it; and keeps copies of
- * the choice in this browser for the next load's first paint.
+ * the choice in this browser for the next load's first paint, unless `remember` is off (a theme only tried).
  */
-export function applyTheme(setting: ThemeSetting, shown: 'light' | 'dark', appearance: Appearance, themes: readonly UserTheme[] = []): void {
+export function applyTheme(setting: ThemeSetting, shown: 'light' | 'dark', appearance: Appearance, themes: readonly UserTheme[] = [], remember = true): void {
   const root = document.documentElement;
   const ids = { light: colorThemeShown(appearance, 'light', themes), dark: colorThemeShown(appearance, 'dark', themes) };
   const bases = { light: themeOf(ids.light, themes)?.base ?? 'light', dark: themeOf(ids.dark, themes)?.base ?? 'dark' };
@@ -168,6 +179,8 @@ export function applyTheme(setting: ThemeSetting, shown: 'light' | 'dark', appea
     else root.style.setProperty(`--${name}`, value);
   }
   document.querySelector('meta[name="theme-color"]')?.setAttribute('content', getComputedStyle(root).getPropertyValue('--surface').trim() || '#17181c');
+  // A theme only tried on the page is not remembered for the next load.
+  if (!remember) return;
   try {
     localStorage.setItem(KEY, setting);
     for (const kind of ['light', 'dark'] as const) {

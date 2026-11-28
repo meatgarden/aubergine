@@ -51,6 +51,7 @@ import type { StateHub } from './state-hub';
 import type { Tokens } from './tokens';
 import type { Viewers } from './viewers';
 import type { Drafts } from './drafts';
+import type { ThemeProposals } from './theme-proposals';
 import type { Repositories } from './repositories';
 import type { TerminalAccess, TerminalTrace, Typist } from './terminal-access';
 import { isTerminalContentEvent, withoutTerminalContent } from './terminal-redact';
@@ -75,6 +76,7 @@ export interface PublicRouteDeps {
   tokens: Tokens;
   workflows: Workflows;
   drafts: Drafts;
+  themeProposals: ThemeProposals;
   repositories: Repositories;
   terminals: TerminalAccess;
   messages: Messages;
@@ -530,6 +532,22 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
 
     requestDraft: ({ body }) => drafts.request(body),
 
+    /* ---------- Color themes, and those proposed ---------- */
+
+    listThemes: async ({ query }) => paginate(await deps.themeProposals.list(), (t) => t.id, query),
+
+    listThemeProposals: ({ query }) => paginate(deps.themeProposals.rows(), (r) => `${r.state}:${r.id}`, query),
+
+    // What comes in here is read and kept, and nothing more: nothing is drawn, written, chosen or typed.
+    proposeTheme: ({ body, principal }) => deps.themeProposals.propose(body, principal.kind === 'token' ? { kind: 'token', tokenId: principal.tokenId, name: principal.name } : principal.kind === 'session' ? { kind: 'session', sessionId: principal.sessionId } : { kind: 'person' }),
+
+    // `authorize` has refused everyone but the owner.
+    acceptThemeProposal: ({ params, body, request }) => deps.themeProposals.accept(params.proposalId, body.digest, deps.ownerCaller(request)),
+
+    declineThemeProposal: ({ params, request }) => {
+      deps.themeProposals.decline(params.proposalId, deps.ownerCaller(request));
+    },
+
     /* ---------- The library ---------- */
 
     listLibrarySources: ({ project }) => ({ sources: library.sources().filter((source) => visibleIn(source, project.scope)) }),
@@ -810,6 +828,22 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
     listSessionDrafts: ({ params, query }) => paginate(drafts.ofSession(params.sessionId), (d) => d.id, query),
 
     proposeSessionDraft: ({ params, body }) => drafts.proposeFromSession(params.sessionId, body),
+
+    // The themes there are, and the session's own proposals: its own, by its own address. It cannot accept anything.
+    listSessionThemes: async ({ params, query }) => {
+      sessions.get(params.sessionId);
+      return paginate(await deps.themeProposals.list(), (t) => t.id, query);
+    },
+
+    listSessionThemeProposals: ({ params, query }) => {
+      sessions.get(params.sessionId);
+      return paginate(deps.themeProposals.rows({ kind: 'session', sessionId: params.sessionId }), (r) => `${r.state}:${r.id}`, query);
+    },
+
+    proposeSessionTheme: ({ params, body }) => {
+      sessions.get(params.sessionId);
+      return deps.themeProposals.propose(body, { kind: 'session', sessionId: params.sessionId });
+    },
 
     // What the repository of the session's own folder offers, and whether each was accepted. Reading only.
     getSessionRepositoryWorkflows: ({ params }) => repositories.offer(params.sessionId),

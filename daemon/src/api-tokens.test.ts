@@ -330,6 +330,10 @@ describe('every route has a rule', () => {
     'GET /v1/sessions/:sessionId/brief',
     'GET /v1/sessions/:sessionId/drafts',
     'POST /v1/sessions/:sessionId/drafts',
+    // The themes a session reads, proposes and reads back: its own, and no token's.
+    'GET /v1/sessions/:sessionId/themes',
+    'GET /v1/sessions/:sessionId/theme-proposals',
+    'POST /v1/sessions/:sessionId/theme-proposals',
     // What a session proposes for the queue and asks of its owner, and what it reads back of them: no token speaks as a session.
     'POST /v1/sessions/:sessionId/tasks',
     'POST /v1/sessions/:sessionId/asks',
@@ -409,6 +413,9 @@ describe('every route has a rule', () => {
     'PUT /v1/settings/desktop',
     'PUT /v1/settings/appearance',
     'POST /v1/settings/themes/read',
+    // Accepting or declining a proposed theme.
+    'POST /v1/themes/proposals/:proposalId/accept',
+    'DELETE /v1/themes/proposals/:proposalId',
     'PATCH /v1/schedules/:scheduleId',
     'DELETE /v1/schedules/:scheduleId',
     'POST /v1/schedules/:scheduleId/run',
@@ -548,6 +555,9 @@ describe('every route has a rule', () => {
       'GET /v1/sessions/:sessionId/queue',
       'GET /v1/sessions/:sessionId/repository-workflows',
       'GET /v1/sessions/:sessionId/run',
+      // The themes there are, and its own proposals: proposing one waits for the owner.
+      'GET /v1/sessions/:sessionId/theme-proposals',
+      'GET /v1/sessions/:sessionId/themes',
       'PATCH /v1/sessions/:sessionId/links/:linkId',
       'POST /v1/sessions/:sessionId/asks',
       'POST /v1/sessions/:sessionId/described/check',
@@ -560,6 +570,7 @@ describe('every route has a rule', () => {
       'POST /v1/sessions/:sessionId/run/report',
       'POST /v1/sessions/:sessionId/tasks',
       'POST /v1/sessions/:sessionId/tell',
+      'POST /v1/sessions/:sessionId/theme-proposals',
       'PUT /v1/sessions/:sessionId/agent',
       'PUT /v1/sessions/:sessionId/attention',
       'PUT /v1/sessions/:sessionId/described',

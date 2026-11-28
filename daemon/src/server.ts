@@ -102,6 +102,7 @@ import { tokensMatch } from './token';
 import { MemoryRunArchive, type RunArchive } from './run-archive';
 import type { DraftLog } from './draft-log';
 import { Drafts } from './drafts';
+import { ThemeProposals } from './theme-proposals';
 import { Repositories } from './repositories';
 import { noInputAudit, type InputAudit } from './input-audit';
 import { TerminalAccess, TerminalRefusal, type TerminalTrace } from './terminal-access';
@@ -318,6 +319,7 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
   const workflowLimits = (): { maxElements: number; maxElementChars: number } => ({ maxElements: workflowSettings.maxElements, maxElementChars: workflowSettings.maxElementChars });
   const drafts = new Drafts(hub, sessions, workflows, workflowLimits, options.draftLog);
   const repositories = new Repositories(hub, sessions, workflows, workflowLimits, options.homeFolder);
+  const themeProposals = new ThemeProposals(hub, themes);
   const terminalSettings = (await options.settings()).terminal;
   const messageSettings = (await options.settings()).messages;
   const messages = new Messages(hub, sessions, () => messageSettings, options.messageLog);
@@ -436,7 +438,7 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     return typeof said === 'string' && ClientName.safeParse(said).success ? said : null;
   };
   /** What only the owner may do and is worth seeing when it was not done in the browser. */
-  const WATCHED: readonly Action[] = ['desktop.open', 'settings.write', 'drafts.review', 'repository.review', 'repository.write', 'tokens.manage', 'terminal.input', 'sessions.protect', 'messages.manage', 'runs.approve'];
+  const WATCHED: readonly Action[] = ['desktop.open', 'settings.write', 'drafts.review', 'repository.review', 'repository.write', 'tokens.manage', 'terminal.input', 'sessions.protect', 'messages.manage', 'runs.approve', 'themes.manage'];
   /** Reading a terminal is watched too, though it changes nothing. */
   const WATCHED_READS: readonly Action[] = ['terminal.read'];
   const ownerLogged = new WeakSet<FastifyRequest>();
@@ -1157,6 +1159,7 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     tokens,
     workflows,
     drafts,
+    themeProposals,
     repositories,
     terminals,
     messages,

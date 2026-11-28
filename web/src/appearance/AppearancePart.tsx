@@ -13,14 +13,16 @@ import {
   themeOf,
   type ThemeKind,
   type ThemeOf,
+  type ThemeProposal,
   type UserTheme,
 } from '@aubergine/shared';
 import { useEffect, useState, type CSSProperties } from 'react';
 import { useApp } from '../store';
 import { chooseColorTheme, chooseTheme, readThemesAgain, setCursor, setCursorBlink, setFontFamily, setFontSize, setTerminalFont, setTerminalTheme, useThemeShown } from '../theme';
 import { ThemeSelect } from '../TerminalTheme';
-import { Button, RadioRow, RadioRows, Segmented, TextField } from '../ui';
+import { Banner, Button, RadioRow, RadioRows, Segmented, TextField } from '../ui';
 
+const NO_PROPOSALS: readonly ThemeProposal[] = [];
 const nameOf = (id: string, themes: readonly UserTheme[] = []): string => themeOf(id, themes)?.name ?? id;
 const KIND_WORDS: Record<ThemeKind, string> = { light: 'Light', dark: 'Dark' };
 const MIN_SIZE = 8;
@@ -32,6 +34,11 @@ export function colorThemeSays(setting: (typeof THEMES)[number], light: string, 
   if (setting === 'system') return `${l} is used while the system is light, ${d} while it is dark.`;
   if (setting === 'light') return `The page is drawn in ${l}. ${d} is the theme of the dark page.`;
   return `The page is drawn in ${d}. ${l} is the theme of the light page.`;
+}
+
+/** What is said in Settings while themes proposed by agents and programs wait to be read. Pure. */
+export function proposedWords(count: number): string {
+  return `${count === 1 ? 'One color theme was' : `${count} color themes were`} proposed by an agent or a program, to read before ${count === 1 ? 'it' : 'they'} can be chosen.`;
 }
 
 /** Where the theme files are, from where the settings file is: `themes` beside `config.json`. Pure. */
@@ -88,6 +95,8 @@ export function AppearancePart() {
   const fallbacks = themeFallbacks(appearance, userThemes);
   const hard = hardToReadSays(userThemes);
   const folder = themesFolderOf(settingsFile);
+  // Themes proposed by agents and programs, of the page's own server: said here only while one waits.
+  const proposed = useApp((s) => (s.server === null ? (s.whole?.themeProposals.waiting ?? NO_PROPOSALS) : NO_PROPOSALS));
   return (
     <section data-testid="settings-appearance">
       <h3>Appearance</h3>
@@ -159,6 +168,19 @@ export function AppearancePart() {
           <p className="ui-meta" data-testid="theme-hard-to-read">
             {hard.join(' ')}
           </p>
+        )}
+        {proposed.length > 0 && (
+          <Banner
+            action="Read"
+            onAction={() => {
+              useApp.getState().wantReview(`theme-proposals:${proposed[0]?.id ?? ''}`);
+              useApp.getState().togglePanel('review');
+            }}
+            testid="themes-proposed"
+            actionTestid="themes-proposed-read"
+          >
+            {proposedWords(proposed.length)}
+          </Banner>
         )}
         <p className="ui-meta" data-testid="theme-files-says">
           Themes of your own are files in {folder ? <code>{folder}</code> : <>the folder <code>themes</code> in the data folder</>}: <code>aubergine theme new &lt;name&gt;</code> writes one to start from. Nothing in a theme file is run.

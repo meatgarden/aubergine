@@ -2,14 +2,15 @@ import type { Dirent } from 'node:fs';
 import { lstat, readdir } from 'node:fs/promises';
 import path from 'node:path';
 import { THEMES_FOLDER, THEME_FILES_MAX, THEME_FILE_MAX_BYTES, plain, readThemeFile, type ThemesAnswer, type UserTheme } from '@aubergine/shared';
-import { readInside } from './repository-files';
+import { RepositoryWriteError, readInside, writeInside } from './repository-files';
 
 /**
  * The owner's theme files: `themes/<id>.json` in the data folder. This module is the one place the folder is read, and
  * what a file holds is decided by `readThemeFile` in shared/. Only regular files directly in the folder are read, by
  * the same reader as a repository's files (`readInside`: no link followed, the folder itself included, at most
- * `THEME_FILE_MAX_BYTES` each), and at most `THEME_FILES_MAX` of them. Nothing in a file is run, and nothing is written
- * here. A file that cannot be read is reported and never stops the others.
+ * `THEME_FILE_MAX_BYTES` each), and at most `THEME_FILES_MAX` of them. Nothing in a file is run. The one thing written
+ * here is a file the owner accepted from a proposal (`write`): one file, never over one that is there, never through a
+ * link. A file that cannot be read is reported and never stops the others.
  */
 
 /** The theme files there are now, and what was wrong with them. */
@@ -64,10 +65,24 @@ export async function readThemeFolder(folder: string): Promise<ThemesNow> {
 export interface Themes {
   readonly value: ThemesNow;
   reload(): Promise<ThemesNow>;
+  /** Whether a file of that theme's ID is in the folder now, of any kind (a link included). */
+  has(id: string): Promise<boolean>;
+  /** Writes `themes/<id>.json` with this text: never over a file that is there, never through a link. Throws `ThemeWriteError` with a sentence. */
+  write(id: string, text: string): Promise<void>;
 }
 
+/** Why a theme file was not written, in a sentence for the owner. */
+export class ThemeWriteError extends Error {}
+
 /** No theme files: a server started without a data folder, and the tests that do not look at themes. */
-export const NO_THEMES: Themes = { value: NOTHING, reload: async () => NOTHING };
+export const NO_THEMES: Themes = {
+  value: NOTHING,
+  reload: async () => NOTHING,
+  has: async () => false,
+  write: async () => {
+    throw new ThemeWriteError('This server was started without a data folder, so it has no theme files to write.');
+  },
+};
 
 /**
  * The theme files of a data folder, kept at hand and read again when asked: when the server starts, whenever it reads
@@ -88,6 +103,24 @@ export class ThemeFolder implements Themes {
 
   get value(): ThemesNow {
     return this.current;
+  }
+
+  async has(id: string): Promise<boolean> {
+    return lstat(path.join(this.folder, `${id}.json`)).then(
+      () => true,
+      () => false,
+    );
+  }
+
+  async write(id: string, text: string): Promise<void> {
+    if (await this.has(id)) throw new ThemeWriteError(`There is already a file named ${id}.json in the theme files. Nothing was written: rename or remove that file, then accept again.`);
+    try {
+      // From the data folder: neither the folder of themes nor the file may be a link, and a file that is there is not written over.
+      await writeInside(this.dataDir, `${THEMES_FOLDER}/${id}.json`, text, false);
+    } catch (error) {
+      if (error instanceof RepositoryWriteError) throw new ThemeWriteError(`Nothing was written: ${error.message}`);
+      throw error;
+    }
   }
 
   async reload(): Promise<ThemesNow> {

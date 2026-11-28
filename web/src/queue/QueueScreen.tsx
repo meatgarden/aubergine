@@ -178,7 +178,9 @@ export function ReviewLine() {
   const installs = useApp((s) => s.app?.library.requests.length ?? 0);
   // Workflow files in repositories that were never accepted, or changed since.
   const files = itemsOfListing(useRepositoryListing()).length;
-  const words = toReadWords({ agentDrafts: waiting.filter(Boolean).length, programDrafts: waiting.filter((byAgent) => !byAgent).length, installs, files });
+  // Color themes proposed by agents and programs: the page's own, of no project.
+  const themes = useApp((s) => s.whole?.themeProposals.waiting.length ?? 0);
+  const words = toReadWords({ agentDrafts: waiting.filter(Boolean).length, programDrafts: waiting.filter((byAgent) => !byAgent).length, installs, files, themes });
   if (words === '') return null;
   return (
     <Banner action="Review" onAction={() => runCommand('drafts.review')} testid="drafts-waiting" actionTestid="review-open">

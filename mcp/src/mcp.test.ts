@@ -59,9 +59,9 @@ describe('which tools a credential is offered', () => {
     expect(names(token(['notes:write']))).toEqual(['note_add', 'link_add', 'link_remove', 'note_write']);
     expect(names(token(['sessions:write']))).toEqual(['session_start', 'session_move', 'session_park']);
     expect(names(token(['runs:write']))).toEqual(['workflow_done', 'workflow_blocked', 'workflow_goto', 'workflow_run', 'element_run']);
-    expect(names(token(['workflows:write']))).toEqual(['draft_propose_element', 'draft_propose_workflow', 'library_request_install']);
+    expect(names(token(['workflows:write']))).toEqual(['draft_propose_element', 'draft_propose_workflow', 'theme_propose', 'library_request_install']);
     expect(names(token(['read'])).filter((name) => name.startsWith('library'))).toEqual(['library_list', 'library_show']);
-    expect(names(session)).toEqual(['workflow_status', 'workflow_done', 'workflow_blocked', 'workflow_goto', 'note_add', 'describe_self', 'link_add', 'links_read', 'link_remove', 'attention_set', 'draft_brief', 'draft_propose_element', 'draft_propose_workflow', 'messages_inbox', 'message_reply', 'message_send', 'task_propose', 'ask_owner', 'queue_read', 'projects_list', 'repository_workflows', 'where_am_i']);
+    expect(names(session)).toEqual(['workflow_status', 'workflow_done', 'workflow_blocked', 'workflow_goto', 'note_add', 'describe_self', 'link_add', 'links_read', 'link_remove', 'attention_set', 'draft_brief', 'draft_propose_element', 'draft_propose_workflow', 'themes_list', 'theme_propose', 'messages_inbox', 'message_reply', 'message_send', 'task_propose', 'ask_owner', 'queue_read', 'projects_list', 'repository_workflows', 'where_am_i']);
     expect(names(token(['messages:read']))).toEqual(['messages_inbox']);
     expect(names(token(['messages:write']))).toEqual(['message_reply', 'message_send']);
   });

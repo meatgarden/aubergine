@@ -71,6 +71,17 @@ describe('JsonStore', () => {
     expect(raw.canvases[0].layout.nodes[0].sessionId).toBe(raw.sessions[0].id);
   });
 
+  it('loads a file of this version written before themes could be proposed, with none waiting, and keeps it beside', async () => {
+    const store = new JsonStore(dir);
+    await store.save(withSession(await store.load(), 'one'));
+    const raw = JSON.parse(await readFile(store.file, 'utf8'));
+    delete raw.themeProposals;
+    await writeFile(store.file, JSON.stringify(raw));
+    const loaded = await new JsonStore(dir).load();
+    expect(loaded.themeProposals).toEqual({ waiting: [], decided: [] });
+    expect(loaded.sessions.map((s) => s.name)).toEqual(['one']);
+  });
+
   it('creates the data folder when it does not exist', async () => {
     const nested = path.join(dir, 'a', 'b');
     const store = new JsonStore(nested);
@@ -520,7 +531,9 @@ describe('JsonStore', () => {
     // So did a terminal's own color theme: each terminal of the file has none, and is drawn in the default.
     expect(state.sessions.map((session) => session.theme)).toEqual(before.sessions.map(() => null));
     const sessionsBefore = (before.sessions as object[]).map((session) => ({ ...session, fields: [], theme: null }));
-    expect({ ...state, devices: undefined }).toEqual({ ...before, sessions: sessionsBefore, devices: undefined });
+    // And themes proposed by agents: none wait.
+    expect(state.themeProposals).toEqual({ waiting: [], decided: [] });
+    expect({ ...state, devices: undefined, themeProposals: undefined }).toEqual({ ...before, sessions: sessionsBefore, devices: undefined, themeProposals: undefined });
 
     await store.save(state);
     const raw = JSON.parse(await readFile(store.file, 'utf8'));

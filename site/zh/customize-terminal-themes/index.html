@@ -126,7 +126,7 @@
         { "@type": "Question", "name": "每个终端可以用不同的配色主题吗？", "acceptedAnswer": { "@type": "Answer", "text": "可以。终端菜单里的 Theme… 可以用十个主题中的任意一个绘制其主体，与页面的主题无关。其他终端遵循你为终端设置的默认主题，或跟随页面。" } },
         { "@type": "Question", "name": "可以给 Aubergine 加上自己的 CSS 吗？", "acceptedAnswer": { "@type": "Answer", "text": "目前不行。单个颜色可以在设置文件中手动设置；带文档化钩子的 custom.css 在计划中，尚未构建。" } },
         { "@type": "Question", "name": "Aubergine 的设置文件在哪里？", "acceptedAnswer": { "@type": "Answer", "text": "是 Aubergine 数据文件夹中的 config.json。aubergine settings path 会显示其位置，服务器启动时也会显示。" } },
-        { "@type": "Question", "name": "代理能改变 Aubergine 的外观吗？", "acceptedAnswer": { "@type": "Answer", "text": "不能改设置：设置只属于你。代理可以为自己的终端命名和描述；API 令牌允许的程序可以重命名终端、加标签、设置主题以及整理画布。" } }
+        { "@type": "Question", "name": "代理能改变 Aubergine 的外观吗？", "acceptedAnswer": { "@type": "Answer", "text": "不能改设置：设置只属于你。代理可以为自己的终端命名和描述，并提议一个等你阅读和接受的颜色主题；API 令牌允许的程序可以重命名终端、加标签、设置主题、整理画布，也可以提议主题。" } }
       ]
     }
   ]
@@ -203,7 +203,7 @@ aubergine settings schema</code></pre>
 
     <h2 id="programs-and-agents">程序或代理能改什么，什么仍归你</h2>
     <p>通过<a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/api.md">本地 API</a>，拥有 API 令牌的程序可以凭 <code>canvases:write</code> 整理画布：命名、着色、排序，移动、调整大小和着色其上的终端，以及添加框架。凭 <code>sessions:write</code>，它可以重命名终端、加标签、修改字段并设置配色主题。它只能触及其令牌可触及的项目。</p>
-    <p>终端里的代理只描述自己的终端，不涉及其他终端：名称、用途摘要、链接和字段，通过 <code>aubergine describe</code>、<code>aubergine link add</code> 和 <code>aubergine field set</code> 完成。凡是你亲自写下的名称、摘要或字段，都以你的为准，代理发送的内容会作为建议保存在旁边。</p>
+    <p>终端里的代理只描述自己的终端，不涉及其他终端：名称、用途摘要、链接和字段，通过 <code>aubergine describe</code>、<code>aubergine link add</code> 和 <code>aubergine field set</code> 完成。凡是你亲自写下的名称、摘要或字段，都以你的为准，代理发送的内容会作为建议保存在旁边。代理或拥有 <code>workflows:write</code> 的程序还可以用 <code>aubergine theme propose</code> 提议一个颜色主题：在你于 Review 中读过、看过它画出来的样子、在页面上试过并接受之前，它不会在任何地方被画出；接受只会写入它的文件，不会选中任何东西。</p>
     <p>设置本身只属于你。任何令牌、终端或代理都不能更改：<code>PUT /v1/settings/appearance</code> 只响应已登录的浏览器，<code>appearance.colors</code>、<code>shortcuts</code> 等都需要在文件中手写。</p>
 
     <h2 id="other-tools">其他工具如何让你自定义界面？</h2>
@@ -231,14 +231,14 @@ aubergine settings schema</code></pre>
     <p>如今的 Aubergine 处在设置这一端：主题、颜色和按键放在自我描述的文件里，页面写入其中一部分设置。它不在页面中运行你的代码，不接受你的样式表，也没有模板。这些都在<a href="../roadmap/#rm-yours">路线图</a>上，尚未构建。</p>
 
     <h2 id="planned">计划中的内容</h2>
-    <p>按项目或标签的外观、模板、<code>custom.css</code>、插件，以及由智能体提议并等待你同意的主题，都在计划中，尚未构建：见<a href="../roadmap/#rm-yours">路线图</a>。</p>
+    <p>按项目或标签的外观、模板、<code>custom.css</code> 和插件都在计划中，尚未构建：见<a href="../roadmap/#rm-yours">路线图</a>。</p>
 
     <h2 id="faq">常见问题</h2>
     <div class="questions">
       <details><summary>每个终端可以用不同的配色主题吗？</summary><p>可以。终端菜单里的 Theme… 可以用十个主题中的任意一个绘制其主体，与页面的主题无关。其他终端遵循你为终端设置的默认主题，或跟随页面。</p></details>
       <details><summary>可以给 Aubergine 加上自己的 CSS 吗？</summary><p>目前不行。单个颜色可以在设置文件中手动设置；带文档化钩子的 <code>custom.css</code> 在计划中，尚未构建。</p></details>
       <details><summary>Aubergine 的设置文件在哪里？</summary><p>是 Aubergine 数据文件夹中的 <code>config.json</code>。<code>aubergine settings path</code> 会显示其位置，服务器启动时也会显示。</p></details>
-      <details><summary>代理能改变 Aubergine 的外观吗？</summary><p>不能改设置：设置只属于你。代理可以为自己的终端命名和描述；API 令牌允许的程序可以重命名终端、加标签、设置主题以及整理画布。</p></details>
+      <details><summary>代理能改变 Aubergine 的外观吗？</summary><p>不能改设置：设置只属于你。代理可以为自己的终端命名和描述，并提议一个等你阅读和接受的颜色主题；API 令牌允许的程序可以重命名终端、加标签、设置主题、整理画布，也可以提议主题。</p></details>
     </div>
     <p>相关：<a href="../too-many-terminal-tabs/">找到需要的终端</a> · <a href="../tmux-without-learning-tmux/">不学 tmux 也能用 tmux</a> · <a href="../security/">安全与隐私</a> · <a href="../faq/">常见问题</a></p>
     <p>Aubergine 与本页提到的任何工具均无关联。这些名称是其各自所有者的商标。</p>

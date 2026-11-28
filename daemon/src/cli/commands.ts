@@ -16,7 +16,7 @@ export type Command =
   | { name: 'device'; words: string[] }
   /** `settings …`: where the settings file is, its schema, every key. Read from the file; the server is not needed. */
   | { name: 'settings'; words: string[] }
-  /** `theme …`: the color themes there are, the owner's theme files, a new one. Read from the files; the server is not needed. */
+  /** `theme …`: the color themes there are, the owner's theme files, a new one; inside a terminal, proposing one. For the owner read from the files, the server not needed; inside a terminal, through the server. */
   | { name: 'theme'; words: string[] }
   | { name: 'canvas-list' }
   | { name: 'canvas-new'; canvasName: string }
@@ -139,6 +139,7 @@ export const USAGE = `Usage: aubergine <command>
                              of the theme it is from (default: dark), for you to change. Never over a file that is there
   theme check <file>         Say what is wrong with a theme file, as the server reads it
   theme path                 Where the theme files are (themes/ in the data folder)
+  theme proposals            The color themes agents and programs proposed that wait for you (read them under Review)
   uninstall                  Remove the command and an installed copy. Your data and terminals are kept. (--yes: do not ask)
 
   demo                       Make a canvas named "Demo" with a small scene of stand-ins, and a tour of it in the browser.
@@ -251,6 +252,9 @@ export const USAGE = `Usage: aubergine <command>
   workflow brief             Inside a session that was asked to write a workflow or a step: the request
   workflow propose --file <file>   Hand a workflow in as a draft, for a person to read (- or nothing: standard input)
   element propose --file <file>    The same for one step
+  theme propose <file> [--id <id>] [--why "<one line>"]
+                             Inside a session: propose a color theme file, for a person to read. Inside a session,
+                             theme new writes the file into the current folder, and theme proposals says what became of yours
   element list | show <name> | remove <name>     The saved steps
   element run <name> [--session <name|id>] [--input key=value …] [--replace]
                              Run one step by itself on a session

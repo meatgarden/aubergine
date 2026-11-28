@@ -346,6 +346,8 @@ export const api = guardAll({
   acceptDraft: (draftId: string, body: Parameters<typeof v1.acceptDraft>[0]['body'] = {}) => v1.acceptDraft({ draftId, body }),
   returnDraft: (draftId: string, comment: string) => v1.returnDraft({ draftId, body: { comment } }),
   discardDraft: (draftId: string) => v1.discardDraft({ draftId }),
+  acceptThemeProposal: (proposalId: string, digest: string) => v1.acceptThemeProposal({ proposalId, body: { digest } }),
+  declineThemeProposal: (proposalId: string) => v1.declineThemeProposal({ proposalId }),
   requestDraft: (body: { kind: 'workflow' | 'element'; description: string; sessionId: string; tell?: boolean }) => v1.requestDraft({ body: { tell: true, ...body } }),
   listRepositoryWorkflows: () => v1.listRepositoryWorkflows({ query: { limit: 100 } }),
   getRepositoryWorkflow: (root: string, file: string) => v1.getRepositoryWorkflow({ query: { root, file } }),

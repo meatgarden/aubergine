@@ -5184,8 +5184,8 @@
     "from": "a0cf33b31432"
   },
   "custom.program.agent": {
-    "text": "Agen di dalam terminal menjelaskan terminalnya sendiri dan tidak yang lain: nama, ringkasan untuk apa terminal itu, tautan, dan kolomnya, dengan <code>aubergine describe</code>, <code>aubergine link add</code>, dan <code>aubergine field set</code>. Di tempat Anda sendiri menulis nama, ringkasan, atau kolom, milik Anda tetap dipakai, dan yang dikirim agen disimpan di sampingnya sebagai saran.",
-    "from": "b99f1d5ab90f"
+    "text": "Agen di dalam terminal menjelaskan terminalnya sendiri dan tidak yang lain: nama, ringkasan untuk apa terminal itu, tautan, dan kolomnya, dengan <code>aubergine describe</code>, <code>aubergine link add</code>, dan <code>aubergine field set</code>. Di tempat Anda sendiri menulis nama, ringkasan, atau kolom, milik Anda tetap dipakai, dan yang dikirim agen disimpan di sampingnya sebagai saran. Agen, atau program dengan <code>workflows:write</code>, juga bisa mengusulkan tema warna dengan <code>aubergine theme propose</code>: tema itu tidak digambar di mana pun sampai Anda membacanya di Review, melihatnya digambar, mencobanya di halaman, lalu menerimanya, dan menerimanya menulis berkasnya tanpa memilih apa pun.",
+    "from": "5f84d264cd4d"
   },
   "custom.program.owner": {
     "text": "Pengaturan itu sendiri hanya milik Anda. Tidak ada token, terminal, atau agen yang bisa mengubahnya: <code>PUT /v1/settings/appearance</code> hanya menjawab peramban yang sudah masuk, dan <code>appearance.colors</code>, <code>shortcuts</code>, dan lainnya ditulis sendiri di berkas.",
@@ -5444,8 +5444,8 @@
     "from": "e10eed0040ae"
   },
   "custom.plan.text": {
-    "text": "Tampilan untuk satu proyek atau tag, templat, <code>custom.css</code>, plugin, dan tema yang diusulkan agen lalu menunggu persetujuan Anda direncanakan dan belum dibuat: lihat <a href=\"/roadmap/#rm-yours\">peta jalan</a>.",
-    "from": "6d31705c7ce4"
+    "text": "Tampilan untuk satu proyek atau tag, templat, <code>custom.css</code>, dan plugin direncanakan dan belum dibuat: lihat <a href=\"/roadmap/#rm-yours\">peta jalan</a>.",
+    "from": "034f77f12f02"
   },
   "custom.q.terminal.q": {
     "text": "Bisakah setiap terminal punya tema warna yang berbeda?",
@@ -5476,8 +5476,8 @@
     "from": "f2f43a3f85b7"
   },
   "custom.q.agent.a": {
-    "text": "Bukan pengaturannya: itu hanya milik Anda. Agen bisa memberi nama dan menjelaskan terminalnya sendiri, dan program yang token API-nya mengizinkan bisa mengganti nama, menandai, dan memberi tema terminal serta menata kanvas.",
-    "from": "283900c4f919"
+    "text": "Bukan pengaturannya: itu hanya milik Anda. Agen bisa memberi nama dan menjelaskan terminalnya sendiri serta mengusulkan tema warna yang menunggu Anda baca dan terima; program yang token API-nya mengizinkan bisa mengganti nama, menandai, dan memberi tema terminal, menata kanvas, dan juga mengusulkan tema.",
+    "from": "4fff2dbea759"
   },
   "custom.related": {
     "text": "Terkait: <a href=\"/too-many-terminal-tabs/\">Temukan terminal yang tepat</a> · <a href=\"/tmux-without-learning-tmux/\">tmux tanpa belajar tmux</a> · <a href=\"/security/\">Keamanan dan privasi</a> · <a href=\"/faq/\">FAQ</a>",
@@ -5490,14 +5490,6 @@
   "roadmap.yours.sub": {
     "text": "Lebih banyak bagian halaman yang Anda bentuk, melampaui tema, warna, dan tombol hari ini.",
     "from": "6fef807ba454"
-  },
-  "roadmap.yours.themes.name": {
-    "text": "Tema yang diusulkan agen",
-    "from": "9227cd56845e"
-  },
-  "roadmap.yours.themes.text": {
-    "text": "Agen dapat mengusulkan tema warna, dan tema itu menunggu persetujuan Anda sebelum tercantum di samping yang lain. File tema yang Anda tulis sendiri sudah dibuat.",
-    "from": "593bf89b9177"
   },
   "roadmap.yours.when.name": {
     "text": "Tampilan menurut kondisi",

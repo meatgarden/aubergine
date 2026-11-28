@@ -1,8 +1,20 @@
 import { mkdir, mkdtemp, readFile, readdir, rm, symlink, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
-import { BUILT_IN_THEME_COLORS, COLOR_THEMES, readThemeFile } from '@aubergine/shared';
+import type { AddressInfo } from 'node:net';
+import { createClient, type Client } from '@aubergine/client';
+import { BUILT_IN_THEME_COLORS, COLOR_THEMES, NO_ATTENTION, NO_STATUS, SESSION_ENV, newId, readThemeFile, type Session } from '@aubergine/shared';
+import type { FastifyInstance } from 'fastify';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { sessionToken } from '../auth';
+import type { SessionRuntime } from '../runtime/runtime';
+import { buildServer, cookieName } from '../server';
+import { Sessions } from '../sessions';
+import { SettingsFile } from '../settings';
+import { StateHub } from '../state-hub';
+import { JsonStore } from '../store/json-store';
+import { ThemeFolder } from '../theme-files';
+import { loadOrCreateToken } from '../token';
 import { UsageError, parseCommand } from './commands';
 import { parseThemeCommand, runThemeCommand, type ThemeCommand } from './theme';
 
@@ -29,6 +41,10 @@ describe('parsing the theme commands', () => {
     expect(parseThemeCommand(['check', 'a.json'])).toEqual({ action: 'check', file: 'a.json' });
     expect(parseThemeCommand(['new', 'harbor'])).toEqual({ action: 'new', id: 'harbor', from: null, name: null });
     expect(parseThemeCommand(['new', 'harbor', '--from', 'nord', '--name', 'Harbor night'])).toEqual({ action: 'new', id: 'harbor', from: 'nord', name: 'Harbor night' });
+    expect(parseThemeCommand(['propose', 'harbor.json'])).toEqual({ action: 'propose', file: 'harbor.json', id: null, why: null });
+    expect(parseThemeCommand(['propose', 'h.json', '--id', 'harbor', '--why', 'at night'])).toEqual({ action: 'propose', file: 'h.json', id: 'harbor', why: 'at night' });
+    expect(parseThemeCommand(['proposals'])).toEqual({ action: 'proposals' });
+    for (const words of [['propose'], ['propose', 'a', 'b'], ['proposals', 'x'], ['propose', '--why', 'x']]) expect(() => parseThemeCommand(words), words.join(' ')).toThrow(UsageError);
     for (const words of [['set'], ['check'], ['check', 'a', 'b'], ['new'], ['new', 'a', 'b'], ['path', 'x'], ['new', '--from', 'nord']]) expect(() => parseThemeCommand(words), words.join(' ')).toThrow(UsageError);
   });
 });
@@ -103,5 +119,83 @@ describe('aubergine theme', () => {
     expect(await run({ action: 'check', file: bad })).toEqual({ code: 1, out: '', err: 'themes/bad.json: it is not JSON. It is not read.' });
     expect((await run({ action: 'check', file: path.join(dir, 'missing.json') })).code).toBe(1);
     expect((await run({ action: 'check', file: path.join(dir, 'a.txt') })).err).toContain('ends in .json');
+  });
+});
+
+describe('aubergine theme, inside a terminal', () => {
+  // A real server with its own data folder; the command runs as the agent in one of its terminals.
+  let app: FastifyInstance;
+  let hub: StateHub;
+  let origin: string;
+  let ownerToken: string;
+  let session: Session;
+  let work: string;
+
+  beforeEach(async () => {
+    ownerToken = await loadOrCreateToken(dir);
+    const store = new JsonStore(dir);
+    hub = new StateHub(await store.load(), store);
+    const themes = new ThemeFolder(dir);
+    const settings = new SettingsFile(dir, () => {}, () => themes.value.themes);
+    const runtime = { check: async () => ({ status: 'ok', version: '3.4' }), list: async () => [], has: async () => true, kill: async () => {} } as unknown as SessionRuntime;
+    app = await buildServer({ hub, sessions: new Sessions(hub, runtime, {}), runtime, settings: () => settings.reload(), token: ownerToken, devOrigin: null, webDist: path.join(dir, 'none'), themes });
+    await app.listen({ host: '127.0.0.1', port: 0 });
+    origin = `http://127.0.0.1:${(app.server.address() as AddressInfo).port}`;
+    session = { id: newId(), projectId: hub.state.projects[0]!.id, name: 'designer', createdAt: new Date().toISOString(), state: 'open', cwd: null, command: null, note: '', status: NO_STATUS, attention: NO_ATTENTION, noteLog: [], agent: null, lastInputAt: null, lastOutputAt: null, tags: [], fields: [], parkedFrom: null, peopleOnly: false, typedBy: null,
+      recap: null, takesMessages: false, theme: null, untold: null, messages: { unread: 0, from: null, forOwner: 0, paused: 0, at: null }, links: [], written: {}, suggested: {}, found: null };
+    hub.emit({ type: 'session.created', session, canvasId: hub.state.canvases[0]!.id, node: { id: newId(), sessionId: session.id, x: 0, y: 0, width: 640, height: 400, color: 'none' } });
+    work = path.join(dir, 'work');
+    await mkdir(work);
+  });
+  afterEach(async () => {
+    await hub.flush();
+    await app.close();
+  });
+
+  const inside = async (command: ThemeCommand): Promise<{ code: number; out: string; err: string }> => {
+    const out: string[] = [];
+    const err: string[] = [];
+    const env = { [SESSION_ENV.url]: origin, [SESSION_ENV.sessionId]: session.id, [SESSION_ENV.token]: sessionToken(ownerToken, session.id) };
+    const code = await runThemeCommand(command, { dataDir: dir, print: (text) => out.push(text), warn: (text) => err.push(text), env, cwd: work });
+    return { code, out: out.join('\n'), err: err.join('\n') };
+  };
+
+  it('lists the themes through the server, writes a new file into the current folder, and proposes it for the owner to read', async () => {
+    const listed = await inside({ action: 'list' });
+    expect(listed.code, listed.err).toBe(0);
+    expect(listed.out).toMatch(/nord +comes with Aubergine +Nord/);
+    expect(listed.out).toContain('aubergine theme propose <file>');
+
+    const made = await inside({ action: 'new', id: 'harbor', from: 'nord', name: null });
+    expect(made.code, made.err).toBe(0);
+    expect(made.out).toContain(`Wrote ${path.join(work, 'harbor.json')}`);
+    expect(await readdir(dir)).not.toContain('themes');
+
+    const proposed = await inside({ action: 'propose', file: 'harbor.json', id: null, why: 'night \u001b[31mred' });
+    expect(proposed.code).toBe(1);
+    expect(proposed.err).not.toMatch(/\u001b/); // eslint-disable-line no-control-regex -- what is looked for
+    expect((await inside({ action: 'propose', file: 'harbor.json', id: null, why: 'easier at night' })).code).toBe(0);
+    expect(hub.state.themeProposals.waiting.map((one) => [one.themeId, one.why, one.proposedBy])).toEqual([['harbor', 'easier at night', { kind: 'session', sessionId: session.id }]]);
+    expect(hub.state.themeProposals.waiting[0]?.text).toBe(await readFile(path.join(work, 'harbor.json'), 'utf8'));
+    // Nothing was written into the theme files.
+    expect(await readdir(dir)).not.toContain('themes');
+
+    const mine = await inside({ action: 'proposals' });
+    expect(mine.out).toMatch(/^harbor {2}Harbor \(dark, over Nord\): waits for the owner/);
+    expect((await inside({ action: 'propose', file: 'missing.json', id: null, why: null })).code).toBe(1);
+    expect((await inside({ action: 'propose', file: 'harbor.json', id: 'Bad Id', why: null })).err).toContain("a theme's ID is");
+  });
+
+  it('outside a terminal, propose says to write the file, and proposals lists what waits for the owner', async () => {
+    const outside = await run({ action: 'propose', file: path.join(work, 'x.json'), id: null, why: null });
+    expect(outside.code).toBe(1);
+    expect(outside.err).toContain('from inside an Aubergine terminal');
+    await inside({ action: 'new', id: 'harbor', from: null, name: null });
+    await inside({ action: 'propose', file: 'harbor.json', id: null, why: null });
+    const out: string[] = [];
+    const owner = <T>(call: (client: Client) => Promise<T>): Promise<T> => call(createClient({ baseUrl: origin, headers: { origin, cookie: `${cookieName(Number(new URL(origin).port))}=${ownerToken}` } }));
+    expect(await runThemeCommand({ action: 'proposals' }, { dataDir: dir, print: (text) => out.push(text), warn: () => {}, owner })).toBe(0);
+    expect(out.join('\n')).toContain(`harbor  Harbor (dark, over Dark), from a terminal (${session.id}): waits for the owner`);
+    expect(out.join('\n')).toContain('under Review');
   });
 });

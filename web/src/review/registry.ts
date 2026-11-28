@@ -37,6 +37,8 @@ export interface ReviewDetail {
   notices?: string[];
   /** Further texts to read beside it, each with what it is. */
   also?: { title: string; text: string }[];
+  /** What the text is, over it, where it is not what an agent would be told (a file to be written as it is). */
+  textTitle?: string;
 }
 
 export interface ReviewSource {

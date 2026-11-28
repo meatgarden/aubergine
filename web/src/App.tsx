@@ -14,7 +14,8 @@ import { Away } from './Away';
 import { TagDialog } from './TagDialog';
 import { Tour } from './tour/Tour';
 import { Toast } from './Toast';
-import { applyTheme, useThemeShown } from './theme';
+import { applyTheme, useAppearanceShown, useThemeShown, useUserThemes } from './theme';
+import { useTrying } from './appearance/trying';
 import { Pages, Screens } from './Screens';
 import { SignIn } from './devices/SignIn';
 
@@ -35,12 +36,14 @@ export function App() {
   const setting = useApp((s) => s.settings.theme);
   const settled = useApp((s) => s.phase === 'ready');
   const shown = useThemeShown();
-  const appearance = useApp((s) => s.settings.appearance);
-  const userThemes = useApp((s) => s.themes.themes);
+  // While a proposed theme is tried on the page, it is what is drawn, and nothing of it is remembered.
+  const appearance = useAppearanceShown();
+  const userThemes = useUserThemes();
+  const trying = useTrying((s) => s.theme !== null);
   useEffect(() => {
     // Until the settings have been read the page keeps what it was drawn with before first paint.
-    if (settled) applyTheme(setting, shown, appearance, userThemes);
-  }, [setting, shown, appearance, userThemes, settled]);
+    if (settled) applyTheme(setting, shown, appearance, userThemes, !trying);
+  }, [setting, shown, appearance, userThemes, settled, trying]);
 
   if (phase === 'loading') return <Message title="Loading…" />;
 

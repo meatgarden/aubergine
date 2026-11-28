@@ -5184,8 +5184,8 @@
     "from": "a0cf33b31432"
   },
   "custom.program.agent": {
-    "text": "터미널 안의 에이전트는 자기 터미널만 설명하고 다른 터미널은 설명하지 않습니다. 이름, 무엇을 위한 것인지에 대한 요약, 링크, 필드를 <code>aubergine describe</code>, <code>aubergine link add</code>, <code>aubergine field set</code>으로 정합니다. 여러분이 직접 쓴 이름, 요약, 필드는 그대로 남고, 에이전트가 보낸 것은 제안으로 옆에 보관됩니다.",
-    "from": "b99f1d5ab90f"
+    "text": "터미널 안의 에이전트는 자기 터미널만 설명하고 다른 터미널은 설명하지 않습니다. 이름, 무엇을 위한 것인지에 대한 요약, 링크, 필드를 <code>aubergine describe</code>, <code>aubergine link add</code>, <code>aubergine field set</code>으로 정합니다. 여러분이 직접 쓴 이름, 요약, 필드는 그대로 남고, 에이전트가 보낸 것은 제안으로 옆에 보관됩니다. 에이전트나 <code>workflows:write</code>이 있는 프로그램은 <code>aubergine theme propose</code>으로 색상 테마를 제안할 수도 있습니다. 여러분이 Review에서 읽고, 그려진 모습을 보고, 페이지에서 시험해 본 뒤 받아들이기 전까지는 어디에도 그려지지 않으며, 받아들이면 그 파일이 쓰일 뿐 아무것도 선택되지 않습니다.",
+    "from": "5f84d264cd4d"
   },
   "custom.program.owner": {
     "text": "설정 자체는 오직 여러분의 것입니다. 어떤 토큰, 터미널, 에이전트도 바꿀 수 없습니다. <code>PUT /v1/settings/appearance</code>는 로그인한 브라우저에만 응답하고, <code>appearance.colors</code>, <code>shortcuts</code> 등은 파일에 직접 씁니다.",
@@ -5444,8 +5444,8 @@
     "from": "e10eed0040ae"
   },
   "custom.plan.text": {
-    "text": "프로젝트나 태그별 모습, 템플릿, <code>custom.css</code>, 플러그인, 그리고 에이전트가 제안하고 여러분의 승인을 기다리는 테마는 계획되어 있으며 아직 만들어지지 않았습니다. <a href=\"/roadmap/#rm-yours\">로드맵</a>을 보세요.",
-    "from": "6d31705c7ce4"
+    "text": "프로젝트나 태그별 모습, 템플릿, <code>custom.css</code>, 플러그인은 계획되어 있으며 아직 만들어지지 않았습니다. <a href=\"/roadmap/#rm-yours\">로드맵</a>을 보세요.",
+    "from": "034f77f12f02"
   },
   "custom.q.terminal.q": {
     "text": "터미널마다 다른 색 테마를 쓸 수 있나요?",
@@ -5476,8 +5476,8 @@
     "from": "f2f43a3f85b7"
   },
   "custom.q.agent.a": {
-    "text": "설정은 아닙니다. 설정은 오직 여러분의 것입니다. 에이전트는 자기 터미널의 이름을 정하고 설명할 수 있으며, API 토큰이 허락하는 프로그램은 터미널의 이름을 바꾸고 태그를 달고 테마를 주고 캔버스를 정리할 수 있습니다.",
-    "from": "283900c4f919"
+    "text": "설정은 아닙니다. 설정은 오직 여러분의 것입니다. 에이전트는 자기 터미널의 이름을 정하고 설명할 수 있으며, 여러분이 읽고 받아들이기를 기다리는 색상 테마를 제안할 수 있습니다. API 토큰이 허락하는 프로그램은 터미널의 이름을 바꾸고 태그를 달고 테마를 주고 캔버스를 정리할 수 있으며, 테마를 제안할 수도 있습니다.",
+    "from": "4fff2dbea759"
   },
   "custom.related": {
     "text": "관련: <a href=\"/too-many-terminal-tabs/\">원하는 터미널 찾기</a> · <a href=\"/tmux-without-learning-tmux/\">tmux를 배우지 않고 tmux 쓰기</a> · <a href=\"/security/\">보안과 개인 정보</a> · <a href=\"/faq/\">자주 묻는 질문</a>",
@@ -5490,14 +5490,6 @@
   "roadmap.yours.sub": {
     "text": "오늘의 테마, 색, 키를 넘어, 페이지를 더 내 뜻대로.",
     "from": "6fef807ba454"
-  },
-  "roadmap.yours.themes.name": {
-    "text": "에이전트가 제안하는 테마",
-    "from": "9227cd56845e"
-  },
-  "roadmap.yours.themes.text": {
-    "text": "에이전트가 색 테마를 제안할 수 있고, 여러분이 승인해야 다른 테마들과 나란히 표시됩니다. 직접 쓰는 테마 파일은 이미 만들어져 있습니다.",
-    "from": "593bf89b9177"
   },
   "roadmap.yours.when.name": {
     "text": "조건에 따른 모양",

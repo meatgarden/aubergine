@@ -2797,6 +2797,92 @@ div.every-setting-row {
   color: inherit;
 }
 
+/*
+ * A proposed theme in the review: no box of its own (it is read on the review's surface), then the theme drawn
+ * beside the one it is laid over, each a small page and a terminal in that theme's own tokens, then its colors.
+ */
+.review-choices.theme-review {
+  padding: 0;
+  border: 0;
+}
+.theme-review > h4 {
+  margin: var(--space-4) 0 var(--space-2);
+}
+.theme-review-previews {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  margin: var(--space-3) 0;
+}
+.theme-review-figure {
+  display: flex;
+  flex: 1 1 240px;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+  margin: 0;
+}
+.theme-review-sample {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-surface);
+}
+.theme-review-surface {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  background: var(--surface);
+  border-radius: var(--radius-control);
+}
+.theme-review-muted {
+  color: var(--text-muted);
+  font-size: var(--font-meta);
+}
+.theme-review-accent {
+  padding: 0 var(--space-2);
+  color: var(--on-accent);
+  background: var(--accent);
+  border-radius: var(--radius-control);
+}
+.theme-review-terminal {
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  overflow: hidden;
+  font: var(--font-meta) / var(--leading) var(--font-mono);
+  border-radius: var(--radius-control);
+}
+.theme-review-colors {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--space-1) var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.theme-review-colors > li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+}
+.theme-review-colors code {
+  margin-left: auto;
+}
+.theme-review-swatch {
+  flex: none;
+  width: var(--space-4);
+  height: var(--space-4);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-control);
+}
+
 /* What the browser draws itself (a tick box not yet ticked, a scroll bar, the list of a select) is in the theme that is drawn, not the system's. */
 :root {
   color-scheme: dark;

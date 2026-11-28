@@ -39,6 +39,7 @@ import {
 import { Capabilities, CreateTokenRequest, CreatedToken, TokenView } from './tokens';
 import { Draft, ShelfElement } from './drafts';
 import { ThemesAnswer } from './theme-files';
+import { AcceptThemeRequest, AcceptedTheme, ProposeThemeRequest, ThemeProposalList, ThemeProposalRow, ThemeRowList } from './theme-proposals';
 import { WriteRecapRequest, WrittenRecap } from './recap';
 import { AddLinkRequest, ChangeLinkRequest, DescribeCheckAnswer, DescribeCheckRequest, DescribeRequest, DescribedAnswer, DescribingSettings, FoundAnswer, KeepSeenRequest, LinkAnswer, LinksAnswer, SeenLinksAnswer, UseSuggestionRequest } from './links-api';
 import { OwnFieldAnswer, OwnFieldsAnswer, SetOwnFieldRequest } from './fields';
@@ -118,7 +119,7 @@ const ProjectList = pageOf(ProjectRow);
 /** For a route that is not a list and is about one project. */
 const ProjectQuery = z.object({ projectId: ProjectAsked });
 
-export const ROUTE_TAGS = ['Server', 'Canvases', 'Sessions', 'Notes', 'Links', 'Layout', 'Workflows', 'Runs', 'Drafts', 'Elements', 'Library', 'Environments', 'Queue', 'Projects', 'Repository workflows', 'Terminals', 'Messages', 'Events', 'Tokens', 'For a session itself'] as const;
+export const ROUTE_TAGS = ['Server', 'Canvases', 'Sessions', 'Notes', 'Links', 'Layout', 'Workflows', 'Runs', 'Drafts', 'Themes', 'Elements', 'Library', 'Environments', 'Queue', 'Projects', 'Repository workflows', 'Terminals', 'Messages', 'Events', 'Tokens', 'For a session itself'] as const;
 export type RouteTag = (typeof ROUTE_TAGS)[number];
 
 export interface RouteSpec {
@@ -175,6 +176,7 @@ const linkOfSession = z.object({ sessionId: Id, linkId: z.string().min(1).max(64
 const workflowId = z.object({ workflowId: Id });
 const runId = z.object({ runId: Id });
 const draftId = z.object({ draftId: Id });
+const proposalId = z.object({ proposalId: Id });
 const elementId = z.object({ elementId: Id });
 import { ElementId } from './workflows';
 import { Board, BoardFilters } from './board';
@@ -890,6 +892,72 @@ export const ROUTES = {
     response: RequestedDraft,
     status: 201,
     errors: [404, 409],
+  }),
+
+  /* ---------- Color themes, and themes proposed for the owner to review ---------- */
+  listThemes: route({
+    method: 'GET',
+    path: '/v1/themes',
+    tag: 'Themes',
+    summary: 'List the color themes there are',
+    description: 'The ten that come with Aubergine, then the owner’s theme files, each with its ID, name, kind and the built-in theme it is laid over. No colors, and nothing about which is chosen.',
+    action: 'themes.read',
+    query: PageQuery,
+    response: ThemeRowList,
+    status: 200,
+    paged: true,
+  }),
+  listThemeProposals: route({
+    method: 'GET',
+    path: '/v1/themes/proposals',
+    tag: 'Themes',
+    summary: 'List the color themes proposed, and what became of the latest',
+    description: 'Those that wait for the owner, oldest first, then the latest decisions, newest first. Never the text of a file.',
+    action: 'themes.read',
+    query: PageQuery,
+    response: ThemeProposalList,
+    status: 200,
+    paged: true,
+  }),
+  proposeTheme: route({
+    method: 'POST',
+    path: '/v1/themes/proposals',
+    tag: 'Themes',
+    summary: 'Propose a color theme',
+    description:
+      'The text of a theme file, read as it arrives: one that cannot be read is refused whole (400) and nothing is kept; one with entries that are skipped is kept with what was skipped. It is drawn nowhere and written nowhere until the owner has read it and accepted it in the browser; accepting chooses nothing. At most 20 wait at once (409 beyond that), and a newer proposal of the same ID by the same proposer takes the place of the older.',
+    action: 'themes.propose',
+    body: ProposeThemeRequest,
+    response: ThemeProposalRow,
+    status: 201,
+    idempotent: true,
+    errors: [409],
+  }),
+  acceptThemeProposal: route({
+    method: 'POST',
+    path: '/v1/themes/proposals/:proposalId/accept',
+    tag: 'Themes',
+    summary: 'Accept a proposed color theme',
+    description:
+      'For the owner only: no token and no session can do this, whatever its scopes. The digest names the text that was shown; another is refused with 409. The text that was kept is written as `themes/<id>.json` in the data folder, never through a link, and never over a file that is there (409: rename or remove that file first). It chooses nothing: the theme is then one the owner can choose.',
+    action: 'themes.manage',
+    params: proposalId,
+    body: AcceptThemeRequest,
+    response: AcceptedTheme,
+    status: 200,
+    errors: [404, 409],
+  }),
+  declineThemeProposal: route({
+    method: 'DELETE',
+    path: '/v1/themes/proposals/:proposalId',
+    tag: 'Themes',
+    summary: 'Decline a proposed color theme',
+    description: 'For the owner only: no token and no session can do this, whatever its scopes. Nothing of it is kept but that it was declined.',
+    action: 'themes.manage',
+    params: proposalId,
+    response: null,
+    status: 204,
+    errors: [404],
   }),
 
   /* ---------- The library: what others published, to browse, read and install ---------- */
@@ -2437,6 +2505,47 @@ export const ROUTES = {
     params: sessionId,
     body: ProposeDraftRequest,
     response: Draft,
+    status: 201,
+    errors: [404, 409],
+  }),
+  listSessionThemes: route({
+    method: 'GET',
+    path: '/v1/sessions/:sessionId/themes',
+    tag: 'For a session itself',
+    summary: 'The color themes there are',
+    description: "With that session's own token: the same list as `GET /v1/themes`, so that an agent knows which IDs are taken and which built-in theme it can lay one over.",
+    action: 'theme.own.read',
+    params: sessionId,
+    query: PageQuery,
+    response: ThemeRowList,
+    status: 200,
+    paged: true,
+    errors: [404],
+  }),
+  listSessionThemeProposals: route({
+    method: 'GET',
+    path: '/v1/sessions/:sessionId/theme-proposals',
+    tag: 'For a session itself',
+    summary: 'The color themes a session proposed, and what became of them',
+    description: "With that session's own token: its own proposals, waiting, accepted or declined, and no others.",
+    action: 'theme.own.read',
+    params: sessionId,
+    query: PageQuery,
+    response: ThemeProposalList,
+    status: 200,
+    paged: true,
+    errors: [404],
+  }),
+  proposeSessionTheme: route({
+    method: 'POST',
+    path: '/v1/sessions/:sessionId/theme-proposals',
+    tag: 'For a session itself',
+    summary: 'Propose a color theme from a session',
+    description: "With that session's own token. The same as `POST /v1/themes/proposals`, proposed as that session: nothing is drawn or written until the owner has read it and accepted it.",
+    action: 'theme.own.propose',
+    params: sessionId,
+    body: ProposeThemeRequest,
+    response: ThemeProposalRow,
     status: 201,
     errors: [404, 409],
   }),

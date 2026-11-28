@@ -36,6 +36,7 @@ import { TerminalFields } from './fields';
 import { SessionMessages } from './messages';
 import { InstallRequest, InstalledItem, LibrarySource } from './library';
 import { Draft, ShelfElement } from './drafts';
+import { ThemeDecision, ThemeProposal, withDecision, withProposal } from './theme-proposals';
 import { AcceptedRepositoryWorkflow, REPOSITORY_ACCEPTED_MAX } from './repository';
 import { TypedBy } from './terminal';
 import { Run, Workflow } from './workflows';
@@ -183,6 +184,10 @@ export const ChangeEvent = z.discriminatedUnion('type', [
   z.object({ type: z.literal('draft.changed'), draft: Draft }),
   /** Accepted or discarded: it leaves. */
   z.object({ type: z.literal('draft.removed'), draftId: Id }),
+  /** A color theme was proposed by an agent or a program. The proposer's older one for the same theme ID goes. */
+  z.object({ type: z.literal('theme.proposed'), proposal: ThemeProposal }),
+  /** The owner accepted or declined a proposed theme: it leaves, and the decision is kept. */
+  z.object({ type: z.literal('theme.decided'), decision: ThemeDecision }),
   z.object({ type: z.literal('shelf.changed'), item: ShelfElement }),
   z.object({ type: z.literal('shelf.removed'), elementId: Id }),
   /** The owner accepted a repository workflow as it is now. */
@@ -439,6 +444,10 @@ export function applyEvent(state: AppState, event: ChangeEvent): AppState {
       return { ...state, drafts: [...state.drafts.filter((d) => d.id !== event.draft.id), event.draft] };
     case 'draft.removed':
       return { ...state, drafts: state.drafts.filter((d) => d.id !== event.draftId) };
+    case 'theme.proposed':
+      return { ...state, themeProposals: withProposal(state.themeProposals, event.proposal) };
+    case 'theme.decided':
+      return { ...state, themeProposals: withDecision(state.themeProposals, event.decision) };
     case 'shelf.changed':
       return { ...state, shelf: [...state.shelf.filter((e) => e.id !== event.item.id), event.item] };
     case 'shelf.removed':

@@ -52,9 +52,30 @@ aubergine theme new <name>        write themes/<name>.json to start from: every 
                                   --name <words>  what it is called (default: from the name of the file)
 aubergine theme check <file>      say what is wrong with a file, as the server reads it
 aubergine theme path              where the theme files are
+aubergine theme proposals         the themes agents and programs proposed that wait for you
 ```
 
 `new` never writes over a file that is there, and never through a link. Change the colors you want and remove the ones you do not, then press **Read themes again**.
+
+## Proposed by an agent or a program
+
+An agent in one of your terminals, or a program with an API token, may propose a theme; it cannot write one. Inside a terminal the commands change:
+
+```
+aubergine theme list                       the themes there are, asked of the server with the terminal's own credential
+aubergine theme new <id> [--from <theme>]  writes <id>.json in the current folder, not in themes/
+aubergine theme propose <file> [--id <id>] [--why "<one line>"]
+                                           sends the file's text, for you to read
+aubergine theme proposals                  what became of this terminal's own: waiting, accepted or declined
+```
+
+A program uses `POST /v1/themes/proposals` (the scope `workflows:write`, the one that proposes drafts) and `GET /v1/themes` (`read`); there are two MCP tools, `themes_list` and `theme_propose`. A terminal's own credential proposes through its own address and reads back only its own proposals.
+
+The text is read the moment it arrives, by the same reader as a file in `themes/`: a file that would not be read is refused whole, with its sentence, and nothing is kept; one with entries that are skipped is kept with what was skipped. It is kept exactly as it was sent, with a digest of that text. At most 20 wait at once, and a newer proposal of the same ID from the same terminal or token takes the place of its older one. Nothing about it is typed into a terminal: whoever proposed asks what became of it.
+
+Nothing of a proposal is drawn or written until you have looked at it. It waits on your list (**For you**, "Theme to read") and in **Settings → Appearance**, and is read under **Review**: who proposed it and their line on why, the theme drawn on a small page and a terminal beside the theme it is laid over, every color it sets with its value, what was skipped, and the file's whole text. **Try on this page** draws it on this page, in this browser only, until you read something else in the review or close it; nothing is saved or sent.
+
+**Accept** writes `themes/<id>.json` with exactly the text that was shown (the server compares the digest), never through a link and never over a file that is there: if one of that name is there, accepting is refused until you rename or remove it. Accepting chooses nothing: the page stays as it is, and **Use it**, in the line that says it was accepted, chooses it as any theme is chosen. **Discard** declines it: nothing of it is kept but that it was declined. Both are yours alone, in the browser: the routes take your sign-in, and no token and no terminal's credential accepts or declines. A decision made as you from outside the browser is in the activity log. What became of the latest 50 is kept in the state, without their text, for whoever proposed them to read.
 
 ## What a file cannot set
 

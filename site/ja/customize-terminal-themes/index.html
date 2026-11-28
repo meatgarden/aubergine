@@ -126,7 +126,7 @@
         { "@type": "Question", "name": "ターミナルごとに違うカラーテーマにできますか？", "acceptedAnswer": { "@type": "Answer", "text": "はい。ターミナルのメニューの Theme… で、ページのテーマに関係なく、その本体を 10 のテーマのどれでも描けます。ほかのターミナルは、ターミナルの既定か、ページに従います。" } },
         { "@type": "Question", "name": "Aubergine に自分の CSS を加えられますか？", "acceptedAnswer": { "@type": "Answer", "text": "今はできません。個々の色は設定ファイルで手で決められます。文書化されたフック付きの custom.css は予定で、まだ作られていません。" } },
         { "@type": "Question", "name": "Aubergine の設定ファイルはどこにありますか？", "acceptedAnswer": { "@type": "Answer", "text": "Aubergine のデータフォルダーにある config.json です。aubergine settings path が場所を表示し、サーバーも起動時に表示します。" } },
-        { "@type": "Question", "name": "エージェントが Aubergine の見た目を変えられますか？", "acceptedAnswer": { "@type": "Answer", "text": "設定は変えられません。設定はあなただけのものです。エージェントは自分のターミナルに名前を付けて説明でき、API トークンが許すプログラムは、ターミナルの名前変更、タグ付け、テーマ指定、キャンバスの整理ができます。" } }
+        { "@type": "Question", "name": "エージェントが Aubergine の見た目を変えられますか？", "acceptedAnswer": { "@type": "Answer", "text": "設定は変えられません。設定はあなただけのものです。エージェントは自分のターミナルに名前を付けて説明でき、あなたが読んで受け入れるのを待つカラーテーマを提案できます。API トークンが許すプログラムは、ターミナルの名前変更、タグ付け、テーマ指定、キャンバスの整理ができ、テーマの提案もできます。" } }
       ]
     }
   ]
@@ -203,7 +203,7 @@ aubergine settings schema</code></pre>
 
     <h2 id="programs-and-agents">プログラムやエージェントが変えられること、あなたのものとして残ること</h2>
     <p><a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/api.md">ローカル API</a> を通じて、API トークンを持つプログラムは <code>canvases:write</code> でキャンバスを整えられます。名前、色、順序を決め、その上のターミナルを動かし、大きさを変え、色を付け、枠を加えます。<code>sessions:write</code> では、ターミナルの名前変更とタグ付け、フィールドの変更、カラーテーマの指定ができます。届くのはトークンが届くプロジェクトだけです。</p>
-    <p>ターミナルの中のエージェントは、自分のターミナルだけを説明し、ほかのものは説明しません。名前、何のためのものかの要約、リンク、フィールドを、<code>aubergine describe</code>、<code>aubergine link add</code>、<code>aubergine field set</code> で決めます。あなたが自分で書いた名前、要約、フィールドはそのまま残り、エージェントが送ったものは提案として横に保存されます。</p>
+    <p>ターミナルの中のエージェントは、自分のターミナルだけを説明し、ほかのものは説明しません。名前、何のためのものかの要約、リンク、フィールドを、<code>aubergine describe</code>、<code>aubergine link add</code>、<code>aubergine field set</code> で決めます。あなたが自分で書いた名前、要約、フィールドはそのまま残り、エージェントが送ったものは提案として横に保存されます。エージェントや <code>workflows:write</code> を持つプログラムは、<code>aubergine theme propose</code> でカラーテーマを提案することもできます。あなたが Review で読み、描かれた姿を見て、ページで試し、受け入れるまで、どこにも描かれません。受け入れるとそのファイルが書かれますが、何も選ばれません。</p>
     <p>設定そのものはあなただけのものです。トークンも、ターミナルも、エージェントも変えられません。<code>PUT /v1/settings/appearance</code> はサインインしたブラウザーにしか応えず、<code>appearance.colors</code>、<code>shortcuts</code> などはファイルに手で書きます。</p>
 
     <h2 id="other-tools">ほかのツールではインターフェースをどうカスタマイズできるのか</h2>
@@ -231,14 +231,14 @@ aubergine settings schema</code></pre>
     <p>現在の Aubergine は設定の側にあります。テーマ、色、キーは自分自身を説明するファイルにあり、ページが設定の一部を書きます。ページであなたのコードは実行せず、あなたのスタイルシートも受け付けず、テンプレートもありません。それらは<a href="../roadmap/#rm-yours">ロードマップ</a>にあり、まだ作られていません。</p>
 
     <h2 id="planned">予定していること</h2>
-    <p>プロジェクトやタグごとの見た目、テンプレート、<code>custom.css</code>、プラグイン、そしてエージェントが提案しあなたの承認を待つテーマは予定で、まだ作られていません。<a href="../roadmap/#rm-yours">ロードマップ</a>をご覧ください。</p>
+    <p>プロジェクトやタグごとの見た目、テンプレート、<code>custom.css</code>、プラグインは予定で、まだ作られていません。<a href="../roadmap/#rm-yours">ロードマップ</a>をご覧ください。</p>
 
     <h2 id="faq">よくある質問</h2>
     <div class="questions">
       <details><summary>ターミナルごとに違うカラーテーマにできますか？</summary><p>はい。ターミナルのメニューの Theme… で、ページのテーマに関係なく、その本体を 10 のテーマのどれでも描けます。ほかのターミナルは、ターミナルの既定か、ページに従います。</p></details>
       <details><summary>Aubergine に自分の CSS を加えられますか？</summary><p>今はできません。個々の色は設定ファイルで手で決められます。文書化されたフック付きの <code>custom.css</code> は予定で、まだ作られていません。</p></details>
       <details><summary>Aubergine の設定ファイルはどこにありますか？</summary><p>Aubergine のデータフォルダーにある <code>config.json</code> です。<code>aubergine settings path</code> が場所を表示し、サーバーも起動時に表示します。</p></details>
-      <details><summary>エージェントが Aubergine の見た目を変えられますか？</summary><p>設定は変えられません。設定はあなただけのものです。エージェントは自分のターミナルに名前を付けて説明でき、API トークンが許すプログラムは、ターミナルの名前変更、タグ付け、テーマ指定、キャンバスの整理ができます。</p></details>
+      <details><summary>エージェントが Aubergine の見た目を変えられますか？</summary><p>設定は変えられません。設定はあなただけのものです。エージェントは自分のターミナルに名前を付けて説明でき、あなたが読んで受け入れるのを待つカラーテーマを提案できます。API トークンが許すプログラムは、ターミナルの名前変更、タグ付け、テーマ指定、キャンバスの整理ができ、テーマの提案もできます。</p></details>
     </div>
     <p>関連：<a href="../too-many-terminal-tabs/">目的のターミナルを見つける</a> · <a href="../tmux-without-learning-tmux/">tmux を覚えずに tmux を使う</a> · <a href="../security/">セキュリティとプライバシー</a> · <a href="../faq/">よくある質問</a></p>
     <p>Aubergine は、このページで名前を挙げたどのツールとも提携していません。各名称はそれぞれの所有者の商標です。</p>

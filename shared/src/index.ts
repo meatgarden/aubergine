@@ -25,6 +25,7 @@ export * from './settings';
 export * from './settings-schema';
 export * from './themes';
 export * from './theme-files';
+export * from './theme-proposals';
 export * from './contrast';
 export * from './chords';
 export * from './shortcuts';

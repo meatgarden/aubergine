@@ -146,6 +146,30 @@ As a tool, for the request: draft_brief.
 
 As tools, to hand in: draft_propose_element, draft_propose_workflow.
 
+## Proposing a color theme
+
+(Needs the terminal's own credential, or an API token with the scope workflows:write.)
+
+Your owner's page can be drawn in a color theme of their own: a file with a name and colors, laid over a theme that comes with Aubergine. You may propose one. It is drawn and written nowhere until your owner has looked at it and accepted it, and accepting does not choose it: choosing is your owner's. Nothing tells you when it is decided; ask.
+
+(Needs the terminal's own credential.)
+
+To see the themes there are, start a file in this folder from one, and propose it with one line on why:
+
+    aubergine theme list
+    aubergine theme new harbor --from nord
+    aubergine theme propose harbor.json --why "easier on the eyes at night"
+
+`aubergine theme check harbor.json` says first what is wrong in it; `aubergine theme proposals` says what became of yours.
+
+(Needs the terminal's own credential, or an API token with the scope read.)
+
+As a tool, for the themes and what became of those proposed: themes_list.
+
+(Needs the terminal's own credential, or an API token with the scope workflows:write.)
+
+As a tool, with the text of the file: theme_propose.
+
 ## A recap
 
 (Needs the terminal's own credential.)
@@ -290,7 +314,7 @@ A terminal marked "people only" is closed to every program, and a token reaches 
 
 ## What is your owner's alone
 
-No command and no tool of yours does these, and none of them is missing by mistake: making, listing or revoking credentials; reading the record of what credentials did; changing settings; stopping a program outside Aubergine; terminals that are not on a canvas; accepting, sending back or discarding a draft; accepting a workflow kept in a repository; saving a workflow into a repository; marking a terminal "people only", or opening it again; keeping a link that was only seen in a terminal, or putting what an agent suggested in place of the owner's own words; making or removing the demo; reading how an agent is set up; asking an agent for a recap; the list of what changed while the owner was away; an agent's past conversations; deciding which terminals may message each other, and pausing or stopping a thread; retiring a saved step or bringing it back, and taking a newer version of one into a workflow; adding, removing or refreshing a library source, accepting an install or an update, and removing what was installed; approving a run that waits for a person, or sending it back; removing or discarding a working copy; accepting, declining, reordering or starting tasks, and changing how many run at once; writing or removing a rule; making, changing, switching, removing or running a schedule; opening a terminal in a window of the owner's own terminal application; making, changing, archiving or removing a project, and moving a canvas to another project; saying what is shared between projects; pairing another device with this server, and revoking one; reading the theme files again.
+No command and no tool of yours does these, and none of them is missing by mistake: making, listing or revoking credentials; reading the record of what credentials did; changing settings; stopping a program outside Aubergine; terminals that are not on a canvas; accepting, sending back or discarding a draft; accepting a workflow kept in a repository; saving a workflow into a repository; marking a terminal "people only", or opening it again; keeping a link that was only seen in a terminal, or putting what an agent suggested in place of the owner's own words; making or removing the demo; reading how an agent is set up; asking an agent for a recap; the list of what changed while the owner was away; an agent's past conversations; deciding which terminals may message each other, and pausing or stopping a thread; retiring a saved step or bringing it back, and taking a newer version of one into a workflow; adding, removing or refreshing a library source, accepting an install or an update, and removing what was installed; approving a run that waits for a person, or sending it back; removing or discarding a working copy; accepting, declining, reordering or starting tasks, and changing how many run at once; writing or removing a rule; making, changing, switching, removing or running a schedule; opening a terminal in a window of the owner's own terminal application; making, changing, archiving or removing a project, and moving a canvas to another project; saying what is shared between projects; pairing another device with this server, and revoking one; accepting or declining a proposed color theme, and reading the theme files again.
 
 (Needs an Aubergine terminal.)
 

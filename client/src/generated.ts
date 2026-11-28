@@ -5069,6 +5069,327 @@ export type RequestDraftResult = {
   line: string;
 };
 
+export interface ListThemesQuery {
+  /**
+   * Which project: its ID, or `all`. Left out: the first project the caller reaches. A request that names a thing of a project (a session, a canvas, a task) is about that project.
+   */
+  projectId?: string | "all";
+  /**
+   * How many items to return at most.
+   */
+  limit?: number;
+  /**
+   * The `nextCursor` of the page before. Opaque: do not build or change it.
+   */
+  cursor?: string;
+}
+
+export type ListThemesResult = {
+  items: {
+    /** What a setting, a menu and a request call it. */
+    id: string;
+    /** What Settings calls it. */
+    name: string;
+    /** Whether it is drawn as the light page or the dark one. */
+    kind: "light" | "dark";
+    /** The built-in theme it is laid over: itself, for a built-in one. */
+    base: "light" | "high-contrast-light" | "solarized-light" | "gruvbox-light" | "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula";
+    /** True for a theme file of the owner’s; false for one that comes with Aubergine. */
+    own: boolean;
+  }[];
+  nextCursor: string | null;
+};
+
+export interface ListThemeProposalsQuery {
+  /**
+   * Which project: its ID, or `all`. Left out: the first project the caller reaches. A request that names a thing of a project (a session, a canvas, a task) is about that project.
+   */
+  projectId?: string | "all";
+  /**
+   * How many items to return at most.
+   */
+  limit?: number;
+  /**
+   * The `nextCursor` of the page before. Opaque: do not build or change it.
+   */
+  cursor?: string;
+}
+
+export type ListThemeProposalsResult = {
+  items: {
+    id: string;
+    themeId: string;
+    /** What the theme would be called. */
+    name: string;
+    /** Light or dark; null for one that was decided. */
+    kind: ("light" | "dark") | null;
+    /** The built-in theme it is laid over; null for one that was decided. */
+    base: ("light" | "high-contrast-light" | "solarized-light" | "gruvbox-light" | "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula") | null;
+    /** How many of its colors are its own (0 for one that was decided). */
+    colors: number;
+    /** What in the file was skipped. Empty for one that was decided. */
+    problems: string[];
+    /** Why it was proposed, in the words of whoever proposed it. */
+    why: string;
+    proposedBy: {
+      kind: "session";
+      sessionId: string;
+    } | {
+      kind: "token";
+      tokenId: string;
+      name: string;
+    } | {
+      kind: "person";
+    };
+    /** `waiting` for the owner; `accepted`: it is a theme file now; `declined`: it was not taken, and nothing of it is kept. */
+    state: "waiting" | "accepted" | "declined";
+    /** When it was proposed, or when it was decided. */
+    at: string;
+  }[];
+  nextCursor: string | null;
+};
+
+export type ProposeThemeBody = {
+  /** The ID it would have: the name of its file without `.json`. Not the ID of a theme that comes with Aubergine. */
+  id: string;
+  /** The theme file, as text: the same form as a file in `themes/` (docs/themes.md). It is read as it arrives; one that cannot be read is refused whole and nothing is kept. */
+  text: string;
+  /** Why it is proposed, in one line, for the owner to read. */
+  why?: string;
+};
+
+export type ProposeThemeResult = {
+  id: string;
+  themeId: string;
+  /** What the theme would be called. */
+  name: string;
+  /** Light or dark; null for one that was decided. */
+  kind: ("light" | "dark") | null;
+  /** The built-in theme it is laid over; null for one that was decided. */
+  base: ("light" | "high-contrast-light" | "solarized-light" | "gruvbox-light" | "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula") | null;
+  /** How many of its colors are its own (0 for one that was decided). */
+  colors: number;
+  /** What in the file was skipped. Empty for one that was decided. */
+  problems: string[];
+  /** Why it was proposed, in the words of whoever proposed it. */
+  why: string;
+  proposedBy: {
+    kind: "session";
+    sessionId: string;
+  } | {
+    kind: "token";
+    tokenId: string;
+    name: string;
+  } | {
+    kind: "person";
+  };
+  /** `waiting` for the owner; `accepted`: it is a theme file now; `declined`: it was not taken, and nothing of it is kept. */
+  state: "waiting" | "accepted" | "declined";
+  /** When it was proposed, or when it was decided. */
+  at: string;
+};
+
+export type AcceptThemeProposalBody = {
+  /** The digest of the proposal as it was shown. A proposal whose text is not that one is refused with 409. */
+  digest: string;
+};
+
+export type AcceptThemeProposalResult = {
+  theme: {
+    /** The name of its file, without `.json`. */
+    id: string;
+    /** What the theme is called: one line of plain text. */
+    name: string;
+    /** Whether it is drawn as the light page or the dark one. */
+    kind: "light" | "dark";
+    /** The built-in theme it is laid over, of the same kind. Its shadows, scrim and focus ring are the base’s. */
+    base: "light" | "high-contrast-light" | "solarized-light" | "gruvbox-light" | "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula";
+    /** Colors laid over the base theme, by the names of the page’s color tokens. What is not named is the base’s. */
+    colors: {
+      /** The page’s color token --bg, as #rrggbb. */
+      bg?: string;
+      /** The page’s color token --surface, as #rrggbb. */
+      surface?: string;
+      /** The page’s color token --surface-raised, as #rrggbb. */
+      "surface-raised"?: string;
+      /** The page’s color token --field, as #rrggbb. */
+      field?: string;
+      /** The page’s color token --surface-active, as #rrggbb. */
+      "surface-active"?: string;
+      /** The page’s color token --border, as #rrggbb. */
+      border?: string;
+      /** The page’s color token --border-strong, as #rrggbb. */
+      "border-strong"?: string;
+      /** The page’s color token --border-control, as #rrggbb. */
+      "border-control"?: string;
+      /** The page’s color token --text, as #rrggbb. */
+      text?: string;
+      /** The page’s color token --text-muted, as #rrggbb. */
+      "text-muted"?: string;
+      /** The page’s color token --accent, as #rrggbb. */
+      accent?: string;
+      /** The page’s color token --accent-soft, as #rrggbb. */
+      "accent-soft"?: string;
+      /** The page’s color token --accent-text, as #rrggbb. */
+      "accent-text"?: string;
+      /** The page’s color token --on-accent, as #rrggbb. */
+      "on-accent"?: string;
+      /** The page’s color token --accent-pressed, as #rrggbb. */
+      "accent-pressed"?: string;
+      /** The page’s color token --attention, as #rrggbb. */
+      attention?: string;
+      /** The page’s color token --attention-soft, as #rrggbb. */
+      "attention-soft"?: string;
+      /** The page’s color token --attention-text, as #rrggbb. */
+      "attention-text"?: string;
+      /** The page’s color token --on-attention, as #rrggbb. */
+      "on-attention"?: string;
+      /** The page’s color token --attention-pressed, as #rrggbb. */
+      "attention-pressed"?: string;
+      /** The page’s color token --working, as #rrggbb. */
+      working?: string;
+      /** The page’s color token --working-soft, as #rrggbb. */
+      "working-soft"?: string;
+      /** The page’s color token --working-text, as #rrggbb. */
+      "working-text"?: string;
+      /** The page’s color token --ok, as #rrggbb. */
+      ok?: string;
+      /** The page’s color token --ok-soft, as #rrggbb. */
+      "ok-soft"?: string;
+      /** The page’s color token --ok-text, as #rrggbb. */
+      "ok-text"?: string;
+      /** The page’s color token --danger, as #rrggbb. */
+      danger?: string;
+      /** The page’s color token --danger-soft, as #rrggbb. */
+      "danger-soft"?: string;
+      /** The page’s color token --danger-text, as #rrggbb. */
+      "danger-text"?: string;
+      /** The page’s color token --on-danger, as #rrggbb. */
+      "on-danger"?: string;
+      /** The page’s color token --danger-pressed, as #rrggbb. */
+      "danger-pressed"?: string;
+      /** The page’s color token --selection, as #rrggbb. */
+      selection?: string;
+      /** The page’s color token --terminal-bg, as #rrggbb. */
+      "terminal-bg"?: string;
+      /** The page’s color token --canvas-dot, as #rrggbb. */
+      "canvas-dot"?: string;
+      /** The page’s color token --minimap-node, as #rrggbb. */
+      "minimap-node"?: string;
+    };
+    /** A terminal’s own colors, over the base’s. Its ground is the theme’s terminal-bg. */
+    terminal: {
+      /** The color of a terminal’s words, as #rrggbb. */
+      foreground?: string;
+      /** The color of a terminal’s cursor, as #rrggbb. */
+      cursor?: string;
+      /** The color behind what is selected in a terminal, as #rrggbb. */
+      selection?: string;
+      /** The sixteen colors a program asks for by number, in order: black, red, green, yellow, blue, magenta, cyan, white, then the bright eight. Null, or left out at the end: the base’s. */
+      ansi?: (string | null)[];
+    };
+  };
+  /** The name of the file that was written, in `themes/`. */
+  file: string;
+  /** The themes of the owner’s own there are now. */
+  themes: {
+    /** The name of its file, without `.json`. */
+    id: string;
+    /** What the theme is called: one line of plain text. */
+    name: string;
+    /** Whether it is drawn as the light page or the dark one. */
+    kind: "light" | "dark";
+    /** The built-in theme it is laid over, of the same kind. Its shadows, scrim and focus ring are the base’s. */
+    base: "light" | "high-contrast-light" | "solarized-light" | "gruvbox-light" | "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula";
+    /** Colors laid over the base theme, by the names of the page’s color tokens. What is not named is the base’s. */
+    colors: {
+      /** The page’s color token --bg, as #rrggbb. */
+      bg?: string;
+      /** The page’s color token --surface, as #rrggbb. */
+      surface?: string;
+      /** The page’s color token --surface-raised, as #rrggbb. */
+      "surface-raised"?: string;
+      /** The page’s color token --field, as #rrggbb. */
+      field?: string;
+      /** The page’s color token --surface-active, as #rrggbb. */
+      "surface-active"?: string;
+      /** The page’s color token --border, as #rrggbb. */
+      border?: string;
+      /** The page’s color token --border-strong, as #rrggbb. */
+      "border-strong"?: string;
+      /** The page’s color token --border-control, as #rrggbb. */
+      "border-control"?: string;
+      /** The page’s color token --text, as #rrggbb. */
+      text?: string;
+      /** The page’s color token --text-muted, as #rrggbb. */
+      "text-muted"?: string;
+      /** The page’s color token --accent, as #rrggbb. */
+      accent?: string;
+      /** The page’s color token --accent-soft, as #rrggbb. */
+      "accent-soft"?: string;
+      /** The page’s color token --accent-text, as #rrggbb. */
+      "accent-text"?: string;
+      /** The page’s color token --on-accent, as #rrggbb. */
+      "on-accent"?: string;
+      /** The page’s color token --accent-pressed, as #rrggbb. */
+      "accent-pressed"?: string;
+      /** The page’s color token --attention, as #rrggbb. */
+      attention?: string;
+      /** The page’s color token --attention-soft, as #rrggbb. */
+      "attention-soft"?: string;
+      /** The page’s color token --attention-text, as #rrggbb. */
+      "attention-text"?: string;
+      /** The page’s color token --on-attention, as #rrggbb. */
+      "on-attention"?: string;
+      /** The page’s color token --attention-pressed, as #rrggbb. */
+      "attention-pressed"?: string;
+      /** The page’s color token --working, as #rrggbb. */
+      working?: string;
+      /** The page’s color token --working-soft, as #rrggbb. */
+      "working-soft"?: string;
+      /** The page’s color token --working-text, as #rrggbb. */
+      "working-text"?: string;
+      /** The page’s color token --ok, as #rrggbb. */
+      ok?: string;
+      /** The page’s color token --ok-soft, as #rrggbb. */
+      "ok-soft"?: string;
+      /** The page’s color token --ok-text, as #rrggbb. */
+      "ok-text"?: string;
+      /** The page’s color token --danger, as #rrggbb. */
+      danger?: string;
+      /** The page’s color token --danger-soft, as #rrggbb. */
+      "danger-soft"?: string;
+      /** The page’s color token --danger-text, as #rrggbb. */
+      "danger-text"?: string;
+      /** The page’s color token --on-danger, as #rrggbb. */
+      "on-danger"?: string;
+      /** The page’s color token --danger-pressed, as #rrggbb. */
+      "danger-pressed"?: string;
+      /** The page’s color token --selection, as #rrggbb. */
+      selection?: string;
+      /** The page’s color token --terminal-bg, as #rrggbb. */
+      "terminal-bg"?: string;
+      /** The page’s color token --canvas-dot, as #rrggbb. */
+      "canvas-dot"?: string;
+      /** The page’s color token --minimap-node, as #rrggbb. */
+      "minimap-node"?: string;
+    };
+    /** A terminal’s own colors, over the base’s. Its ground is the theme’s terminal-bg. */
+    terminal: {
+      /** The color of a terminal’s words, as #rrggbb. */
+      foreground?: string;
+      /** The color of a terminal’s cursor, as #rrggbb. */
+      cursor?: string;
+      /** The color behind what is selected in a terminal, as #rrggbb. */
+      selection?: string;
+      /** The sixteen colors a program asks for by number, in order: black, red, green, yellow, blue, magenta, cyan, white, then the bright eight. Null, or left out at the end: the base’s. */
+      ansi?: (string | null)[];
+    };
+  }[];
+  /** What in the theme files is not read now, or skipped. */
+  problems: string[];
+};
+
 export interface ListLibrarySourcesQuery {
   /**
    * Which project: its ID, or `all`. Left out: the first project the caller reaches. A request that names a thing of a project (a session, a canvas, a task) is about that project.
@@ -10669,6 +10990,126 @@ export type ProposeSessionDraftResult = {
   updatedAt: string;
 };
 
+export interface ListSessionThemesQuery {
+  /**
+   * Which project: its ID, or `all`. Left out: the first project the caller reaches. A request that names a thing of a project (a session, a canvas, a task) is about that project.
+   */
+  projectId?: string | "all";
+  /**
+   * How many items to return at most.
+   */
+  limit?: number;
+  /**
+   * The `nextCursor` of the page before. Opaque: do not build or change it.
+   */
+  cursor?: string;
+}
+
+export type ListSessionThemesResult = {
+  items: {
+    /** What a setting, a menu and a request call it. */
+    id: string;
+    /** What Settings calls it. */
+    name: string;
+    /** Whether it is drawn as the light page or the dark one. */
+    kind: "light" | "dark";
+    /** The built-in theme it is laid over: itself, for a built-in one. */
+    base: "light" | "high-contrast-light" | "solarized-light" | "gruvbox-light" | "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula";
+    /** True for a theme file of the owner’s; false for one that comes with Aubergine. */
+    own: boolean;
+  }[];
+  nextCursor: string | null;
+};
+
+export interface ListSessionThemeProposalsQuery {
+  /**
+   * Which project: its ID, or `all`. Left out: the first project the caller reaches. A request that names a thing of a project (a session, a canvas, a task) is about that project.
+   */
+  projectId?: string | "all";
+  /**
+   * How many items to return at most.
+   */
+  limit?: number;
+  /**
+   * The `nextCursor` of the page before. Opaque: do not build or change it.
+   */
+  cursor?: string;
+}
+
+export type ListSessionThemeProposalsResult = {
+  items: {
+    id: string;
+    themeId: string;
+    /** What the theme would be called. */
+    name: string;
+    /** Light or dark; null for one that was decided. */
+    kind: ("light" | "dark") | null;
+    /** The built-in theme it is laid over; null for one that was decided. */
+    base: ("light" | "high-contrast-light" | "solarized-light" | "gruvbox-light" | "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula") | null;
+    /** How many of its colors are its own (0 for one that was decided). */
+    colors: number;
+    /** What in the file was skipped. Empty for one that was decided. */
+    problems: string[];
+    /** Why it was proposed, in the words of whoever proposed it. */
+    why: string;
+    proposedBy: {
+      kind: "session";
+      sessionId: string;
+    } | {
+      kind: "token";
+      tokenId: string;
+      name: string;
+    } | {
+      kind: "person";
+    };
+    /** `waiting` for the owner; `accepted`: it is a theme file now; `declined`: it was not taken, and nothing of it is kept. */
+    state: "waiting" | "accepted" | "declined";
+    /** When it was proposed, or when it was decided. */
+    at: string;
+  }[];
+  nextCursor: string | null;
+};
+
+export type ProposeSessionThemeBody = {
+  /** The ID it would have: the name of its file without `.json`. Not the ID of a theme that comes with Aubergine. */
+  id: string;
+  /** The theme file, as text: the same form as a file in `themes/` (docs/themes.md). It is read as it arrives; one that cannot be read is refused whole and nothing is kept. */
+  text: string;
+  /** Why it is proposed, in one line, for the owner to read. */
+  why?: string;
+};
+
+export type ProposeSessionThemeResult = {
+  id: string;
+  themeId: string;
+  /** What the theme would be called. */
+  name: string;
+  /** Light or dark; null for one that was decided. */
+  kind: ("light" | "dark") | null;
+  /** The built-in theme it is laid over; null for one that was decided. */
+  base: ("light" | "high-contrast-light" | "solarized-light" | "gruvbox-light" | "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula") | null;
+  /** How many of its colors are its own (0 for one that was decided). */
+  colors: number;
+  /** What in the file was skipped. Empty for one that was decided. */
+  problems: string[];
+  /** Why it was proposed, in the words of whoever proposed it. */
+  why: string;
+  proposedBy: {
+    kind: "session";
+    sessionId: string;
+  } | {
+    kind: "token";
+    tokenId: string;
+    name: string;
+  } | {
+    kind: "person";
+  };
+  /** `waiting` for the owner; `accepted`: it is a theme file now; `declined`: it was not taken, and nothing of it is kept. */
+  state: "waiting" | "accepted" | "declined";
+  /** When it was proposed, or when it was decided. */
+  at: string;
+};
+
 export type GetSessionRepositoryWorkflowsResult = {
   root: string | null;
   folder: string | null;
@@ -10750,6 +11191,11 @@ export const OPERATIONS = {
   returnDraft: { method: 'POST', path: '/v1/drafts/{draftId}/return', params: ["draftId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
   listDraftRecords: { method: 'GET', path: '/v1/draft-records', params: [], hasBody: false, paged: true, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
   requestDraft: { method: 'POST', path: '/v1/draft-requests', params: [], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
+  listThemes: { method: 'GET', path: '/v1/themes', params: [], hasBody: false, paged: true, idempotent: false, stream: false, access: { who: 'token', scope: "read" } },
+  listThemeProposals: { method: 'GET', path: '/v1/themes/proposals', params: [], hasBody: false, paged: true, idempotent: false, stream: false, access: { who: 'token', scope: "read" } },
+  proposeTheme: { method: 'POST', path: '/v1/themes/proposals', params: [], hasBody: true, paged: false, idempotent: true, stream: false, access: { who: 'token', scope: "workflows:write" } },
+  acceptThemeProposal: { method: 'POST', path: '/v1/themes/proposals/{proposalId}/accept', params: ["proposalId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
+  declineThemeProposal: { method: 'DELETE', path: '/v1/themes/proposals/{proposalId}', params: ["proposalId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
   listLibrarySources: { method: 'GET', path: '/v1/library/sources', params: [], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'token', scope: "read" } },
   addLibrarySource: { method: 'POST', path: '/v1/library/sources', params: [], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
   removeLibrarySource: { method: 'DELETE', path: '/v1/library/sources/{sourceId}', params: ["sourceId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
@@ -10874,6 +11320,9 @@ export const OPERATIONS = {
   getSessionBrief: { method: 'GET', path: '/v1/sessions/{sessionId}/brief', params: ["sessionId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'session', scope: null } },
   listSessionDrafts: { method: 'GET', path: '/v1/sessions/{sessionId}/drafts', params: ["sessionId"], hasBody: false, paged: true, idempotent: false, stream: false, access: { who: 'session', scope: null } },
   proposeSessionDraft: { method: 'POST', path: '/v1/sessions/{sessionId}/drafts', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'session', scope: null } },
+  listSessionThemes: { method: 'GET', path: '/v1/sessions/{sessionId}/themes', params: ["sessionId"], hasBody: false, paged: true, idempotent: false, stream: false, access: { who: 'session', scope: null } },
+  listSessionThemeProposals: { method: 'GET', path: '/v1/sessions/{sessionId}/theme-proposals', params: ["sessionId"], hasBody: false, paged: true, idempotent: false, stream: false, access: { who: 'session', scope: null } },
+  proposeSessionTheme: { method: 'POST', path: '/v1/sessions/{sessionId}/theme-proposals', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'session', scope: null } },
   getSessionRepositoryWorkflows: { method: 'GET', path: '/v1/sessions/{sessionId}/repository-workflows', params: ["sessionId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'session', scope: "read" } },
   reportAgent: { method: 'PUT', path: '/v1/sessions/{sessionId}/agent', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'session', scope: null } },
 } as const satisfies Record<string, OperationInfo>;
@@ -11206,6 +11655,36 @@ export interface Client {
    * `POST /v1/draft-requests`. Signed-in browser only: no API token may call this.
    */
   requestDraft(args: { body: RequestDraftBody } & CallOptions): Promise<RequestDraftResult>;
+  /**
+   * List the color themes there are.
+   *
+   * `GET /v1/themes`. Scope: `read`.
+   */
+  listThemes(args?: { query?: ListThemesQuery } & CallOptions): Promise<ListThemesResult>;
+  /**
+   * List the color themes proposed, and what became of the latest.
+   *
+   * `GET /v1/themes/proposals`. Scope: `read`.
+   */
+  listThemeProposals(args?: { query?: ListThemeProposalsQuery } & CallOptions): Promise<ListThemeProposalsResult>;
+  /**
+   * Propose a color theme.
+   *
+   * `POST /v1/themes/proposals`. Scope: `workflows:write`.
+   */
+  proposeTheme(args: { body: ProposeThemeBody } & CallOptions): Promise<ProposeThemeResult>;
+  /**
+   * Accept a proposed color theme.
+   *
+   * `POST /v1/themes/proposals/{proposalId}/accept`. Signed-in browser only: no API token may call this.
+   */
+  acceptThemeProposal(args: { proposalId: string; body: AcceptThemeProposalBody } & CallOptions): Promise<AcceptThemeProposalResult>;
+  /**
+   * Decline a proposed color theme.
+   *
+   * `DELETE /v1/themes/proposals/{proposalId}`. Signed-in browser only: no API token may call this.
+   */
+  declineThemeProposal(args: { proposalId: string } & CallOptions): Promise<void>;
   /**
    * List the sources of the library.
    *
@@ -11951,6 +12430,24 @@ export interface Client {
    */
   proposeSessionDraft(args: { sessionId: string; body: ProposeSessionDraftBody } & CallOptions): Promise<ProposeSessionDraftResult>;
   /**
+   * The color themes there are.
+   *
+   * `GET /v1/sessions/{sessionId}/themes`. A session's own token.
+   */
+  listSessionThemes(args: { sessionId: string; query?: ListSessionThemesQuery } & CallOptions): Promise<ListSessionThemesResult>;
+  /**
+   * The color themes a session proposed, and what became of them.
+   *
+   * `GET /v1/sessions/{sessionId}/theme-proposals`. A session's own token.
+   */
+  listSessionThemeProposals(args: { sessionId: string; query?: ListSessionThemeProposalsQuery } & CallOptions): Promise<ListSessionThemeProposalsResult>;
+  /**
+   * Propose a color theme from a session.
+   *
+   * `POST /v1/sessions/{sessionId}/theme-proposals`. A session's own token.
+   */
+  proposeSessionTheme(args: { sessionId: string; body: ProposeSessionThemeBody } & CallOptions): Promise<ProposeSessionThemeResult>;
+  /**
    * The workflows the repository of a session offers.
    *
    * `GET /v1/sessions/{sessionId}/repository-workflows`. A session's own token, or an API token with `read`.
@@ -12001,6 +12498,14 @@ export interface Client {
      */
     listDraftRecords(args?: { query?: ListDraftRecordsQuery } & CallOptions): AsyncGenerator<ListDraftRecordsResult['items'][number], void, void>;
     /**
+     * Every item of `listThemes`, fetched a page at a time as they are asked for.
+     */
+    listThemes(args?: { query?: ListThemesQuery } & CallOptions): AsyncGenerator<ListThemesResult['items'][number], void, void>;
+    /**
+     * Every item of `listThemeProposals`, fetched a page at a time as they are asked for.
+     */
+    listThemeProposals(args?: { query?: ListThemeProposalsQuery } & CallOptions): AsyncGenerator<ListThemeProposalsResult['items'][number], void, void>;
+    /**
      * Every item of `listElements`, fetched a page at a time as they are asked for.
      */
     listElements(args?: { query?: ListElementsQuery } & CallOptions): AsyncGenerator<ListElementsResult['items'][number], void, void>;
@@ -12040,6 +12545,14 @@ export interface Client {
      * Every item of `listSessionDrafts`, fetched a page at a time as they are asked for.
      */
     listSessionDrafts(args?: { sessionId: string; query?: ListSessionDraftsQuery } & CallOptions): AsyncGenerator<ListSessionDraftsResult['items'][number], void, void>;
+    /**
+     * Every item of `listSessionThemes`, fetched a page at a time as they are asked for.
+     */
+    listSessionThemes(args?: { sessionId: string; query?: ListSessionThemesQuery } & CallOptions): AsyncGenerator<ListSessionThemesResult['items'][number], void, void>;
+    /**
+     * Every item of `listSessionThemeProposals`, fetched a page at a time as they are asked for.
+     */
+    listSessionThemeProposals(args?: { sessionId: string; query?: ListSessionThemeProposalsQuery } & CallOptions): AsyncGenerator<ListSessionThemeProposalsResult['items'][number], void, void>;
   };
 }
 

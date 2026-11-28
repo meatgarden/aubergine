@@ -126,7 +126,7 @@
         { "@type": "Question", "name": "Bisakah setiap terminal punya tema warna yang berbeda?", "acceptedAnswer": { "@type": "Answer", "text": "Bisa. Theme… di menu terminal menggambar badannya dengan salah satu dari sepuluh tema, apa pun tema halamannya. Yang lain mengikuti bawaan yang Anda atur untuk terminal, atau halaman." } },
         { "@type": "Question", "name": "Bisakah saya menambahkan CSS sendiri ke Aubergine?", "acceptedAnswer": { "@type": "Answer", "text": "Belum sekarang. Warna tunggal bisa diatur sendiri di berkas pengaturan; custom.css dengan kait yang terdokumentasi direncanakan, belum dibuat." } },
         { "@type": "Question", "name": "Di mana berkas pengaturan Aubergine?", "acceptedAnswer": { "@type": "Answer", "text": "Yaitu config.json di folder data Aubergine. aubergine settings path menampilkan letaknya, dan server menampilkannya saat dimulai." } },
-        { "@type": "Question", "name": "Bisakah agen mengubah tampilan Aubergine?", "acceptedAnswer": { "@type": "Answer", "text": "Bukan pengaturannya: itu hanya milik Anda. Agen bisa memberi nama dan menjelaskan terminalnya sendiri, dan program yang token API-nya mengizinkan bisa mengganti nama, menandai, dan memberi tema terminal serta menata kanvas." } }
+        { "@type": "Question", "name": "Bisakah agen mengubah tampilan Aubergine?", "acceptedAnswer": { "@type": "Answer", "text": "Bukan pengaturannya: itu hanya milik Anda. Agen bisa memberi nama dan menjelaskan terminalnya sendiri serta mengusulkan tema warna yang menunggu Anda baca dan terima; program yang token API-nya mengizinkan bisa mengganti nama, menandai, dan memberi tema terminal, menata kanvas, dan juga mengusulkan tema." } }
       ]
     }
   ]
@@ -203,7 +203,7 @@ aubergine settings schema</code></pre>
 
     <h2 id="programs-and-agents">Apa yang boleh diubah program atau agen, dan apa yang tetap milik Anda</h2>
     <p>Melalui <a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/api.md">API lokal</a>, program dengan token API boleh menata kanvas dengan <code>canvases:write</code>: memberi nama, warna, dan urutan, memindahkan, mengubah ukuran, dan mewarnai terminal di atasnya, serta menambah bingkai. Dengan <code>sessions:write</code> ia boleh mengganti nama dan menandai terminal, mengubah kolomnya, dan memberinya tema warna. Ia hanya menjangkau proyek yang dijangkau tokennya.</p>
-    <p>Agen di dalam terminal menjelaskan terminalnya sendiri dan tidak yang lain: nama, ringkasan untuk apa terminal itu, tautan, dan kolomnya, dengan <code>aubergine describe</code>, <code>aubergine link add</code>, dan <code>aubergine field set</code>. Di tempat Anda sendiri menulis nama, ringkasan, atau kolom, milik Anda tetap dipakai, dan yang dikirim agen disimpan di sampingnya sebagai saran.</p>
+    <p>Agen di dalam terminal menjelaskan terminalnya sendiri dan tidak yang lain: nama, ringkasan untuk apa terminal itu, tautan, dan kolomnya, dengan <code>aubergine describe</code>, <code>aubergine link add</code>, dan <code>aubergine field set</code>. Di tempat Anda sendiri menulis nama, ringkasan, atau kolom, milik Anda tetap dipakai, dan yang dikirim agen disimpan di sampingnya sebagai saran. Agen, atau program dengan <code>workflows:write</code>, juga bisa mengusulkan tema warna dengan <code>aubergine theme propose</code>: tema itu tidak digambar di mana pun sampai Anda membacanya di Review, melihatnya digambar, mencobanya di halaman, lalu menerimanya, dan menerimanya menulis berkasnya tanpa memilih apa pun.</p>
     <p>Pengaturan itu sendiri hanya milik Anda. Tidak ada token, terminal, atau agen yang bisa mengubahnya: <code>PUT /v1/settings/appearance</code> hanya menjawab peramban yang sudah masuk, dan <code>appearance.colors</code>, <code>shortcuts</code>, dan lainnya ditulis sendiri di berkas.</p>
 
     <h2 id="other-tools">Bagaimana alat lain memungkinkan Anda menyesuaikan antarmuka?</h2>
@@ -231,14 +231,14 @@ aubergine settings schema</code></pre>
     <p>Aubergine saat ini berada di ujung pengaturan: tema, warna, dan tombol ada di file yang menjelaskan dirinya sendiri, dan halaman yang menulis sebagian pengaturan. Ia tidak menjalankan kode Anda di halaman, tidak menerima style sheet Anda, dan tidak punya templat. Semua itu ada di <a href="../roadmap/#rm-yours">peta jalan</a>, dan belum dibuat.</p>
 
     <h2 id="planned">Yang direncanakan</h2>
-    <p>Tampilan untuk satu proyek atau tag, templat, <code>custom.css</code>, plugin, dan tema yang diusulkan agen lalu menunggu persetujuan Anda direncanakan dan belum dibuat: lihat <a href="../roadmap/#rm-yours">peta jalan</a>.</p>
+    <p>Tampilan untuk satu proyek atau tag, templat, <code>custom.css</code>, dan plugin direncanakan dan belum dibuat: lihat <a href="../roadmap/#rm-yours">peta jalan</a>.</p>
 
     <h2 id="faq">Pertanyaan</h2>
     <div class="questions">
       <details><summary>Bisakah setiap terminal punya tema warna yang berbeda?</summary><p>Bisa. Theme… di menu terminal menggambar badannya dengan salah satu dari sepuluh tema, apa pun tema halamannya. Yang lain mengikuti bawaan yang Anda atur untuk terminal, atau halaman.</p></details>
       <details><summary>Bisakah saya menambahkan CSS sendiri ke Aubergine?</summary><p>Belum sekarang. Warna tunggal bisa diatur sendiri di berkas pengaturan; <code>custom.css</code> dengan kait yang terdokumentasi direncanakan, belum dibuat.</p></details>
       <details><summary>Di mana berkas pengaturan Aubergine?</summary><p>Yaitu <code>config.json</code> di folder data Aubergine. <code>aubergine settings path</code> menampilkan letaknya, dan server menampilkannya saat dimulai.</p></details>
-      <details><summary>Bisakah agen mengubah tampilan Aubergine?</summary><p>Bukan pengaturannya: itu hanya milik Anda. Agen bisa memberi nama dan menjelaskan terminalnya sendiri, dan program yang token API-nya mengizinkan bisa mengganti nama, menandai, dan memberi tema terminal serta menata kanvas.</p></details>
+      <details><summary>Bisakah agen mengubah tampilan Aubergine?</summary><p>Bukan pengaturannya: itu hanya milik Anda. Agen bisa memberi nama dan menjelaskan terminalnya sendiri serta mengusulkan tema warna yang menunggu Anda baca dan terima; program yang token API-nya mengizinkan bisa mengganti nama, menandai, dan memberi tema terminal, menata kanvas, dan juga mengusulkan tema.</p></details>
     </div>
     <p>Terkait: <a href="../too-many-terminal-tabs/">Temukan terminal yang tepat</a> · <a href="../tmux-without-learning-tmux/">tmux tanpa belajar tmux</a> · <a href="../security/">Keamanan dan privasi</a> · <a href="../faq/">FAQ</a></p>
     <p>Aubergine tidak berafiliasi dengan alat mana pun yang disebut di halaman ini. Nama-nama itu adalah merek dagang pemiliknya masing-masing.</p>

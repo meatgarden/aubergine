@@ -5184,8 +5184,8 @@
     "from": "a0cf33b31432"
   },
   "custom.program.agent": {
-    "text": "El agente de una terminal describe su propia terminal y ninguna otra: un nombre, un resumen de para qué sirve, sus enlaces y sus campos, con <code>aubergine describe</code>, <code>aubergine link add</code> y <code>aubergine field set</code>. Donde tú escribiste un nombre, un resumen o un campo, el tuyo se queda, y lo que envió el agente se guarda al lado como sugerencia.",
-    "from": "b99f1d5ab90f"
+    "text": "El agente de una terminal describe su propia terminal y ninguna otra: un nombre, un resumen de para qué sirve, sus enlaces y sus campos, con <code>aubergine describe</code>, <code>aubergine link add</code> y <code>aubergine field set</code>. Donde tú escribiste un nombre, un resumen o un campo, el tuyo se queda, y lo que envió el agente se guarda al lado como sugerencia. Un agente, o un programa con <code>workflows:write</code>, también puede proponer un tema de color con <code>aubergine theme propose</code>: no se dibuja en ningún sitio hasta que lo hayas leído en Review, lo hayas visto dibujado y probado en la página, y lo hayas aceptado; aceptarlo escribe su archivo y no elige nada.",
+    "from": "5f84d264cd4d"
   },
   "custom.program.owner": {
     "text": "La configuración en sí es solo tuya. Ningún token, terminal ni agente puede cambiarla: <code>PUT /v1/settings/appearance</code> solo responde al navegador con sesión iniciada, y <code>appearance.colors</code>, <code>shortcuts</code> y lo demás se escriben a mano en el archivo.",
@@ -5444,8 +5444,8 @@
     "from": "e10eed0040ae"
   },
   "custom.plan.text": {
-    "text": "Un aspecto para un proyecto o una etiqueta, plantillas, un <code>custom.css</code>, complementos y un tema propuesto por un agente que espera tu aprobación están planeados y no construidos: consulta la <a href=\"/roadmap/#rm-yours\">hoja de ruta</a>.",
-    "from": "6d31705c7ce4"
+    "text": "Un aspecto para un proyecto o una etiqueta, plantillas, un <code>custom.css</code> y complementos están planeados y no construidos: consulta la <a href=\"/roadmap/#rm-yours\">hoja de ruta</a>.",
+    "from": "034f77f12f02"
   },
   "custom.q.terminal.q": {
     "text": "¿Puede cada terminal tener un tema de color distinto?",
@@ -5476,8 +5476,8 @@
     "from": "f2f43a3f85b7"
   },
   "custom.q.agent.a": {
-    "text": "La configuración no: es solo tuya. Un agente puede nombrar y describir su propia terminal, y un programa cuyo token de API lo permita puede renombrar, etiquetar y dar tema a terminales y organizar lienzos.",
-    "from": "283900c4f919"
+    "text": "La configuración no: es solo tuya. Un agente puede nombrar y describir su propia terminal y proponer un tema de color, que espera a que lo leas y lo aceptes; un programa cuyo token de API lo permita puede renombrar, etiquetar y dar tema a terminales, organizar lienzos y proponer también un tema.",
+    "from": "4fff2dbea759"
   },
   "custom.related": {
     "text": "Relacionado: <a href=\"/too-many-terminal-tabs/\">Encuentra la terminal correcta</a> · <a href=\"/tmux-without-learning-tmux/\">tmux sin aprender tmux</a> · <a href=\"/security/\">Seguridad y privacidad</a> · <a href=\"/faq/\">Preguntas frecuentes</a>",
@@ -5490,14 +5490,6 @@
   "roadmap.yours.sub": {
     "text": "Más de la página a tu manera, más allá de los temas, colores y teclas de hoy.",
     "from": "6fef807ba454"
-  },
-  "roadmap.yours.themes.name": {
-    "text": "Un tema propuesto por un agente",
-    "from": "9227cd56845e"
-  },
-  "roadmap.yours.themes.text": {
-    "text": "Un agente puede proponer un tema de colores, y espera tu aprobación antes de aparecer junto a los demás. Los archivos de tema que escribes tú ya están construidos.",
-    "from": "593bf89b9177"
   },
   "roadmap.yours.when.name": {
     "text": "Aspecto según condiciones",

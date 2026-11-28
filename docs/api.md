@@ -70,6 +70,11 @@ How to create a token, what the scopes mean, the limits and the activity log are
 | [`POST /v1/drafts/{draftId}/return`](#returndraft) | Send a draft back with a comment | browser only |
 | [`GET /v1/draft-records`](#listdraftrecords) | What became of drafts | browser only |
 | [`POST /v1/draft-requests`](#requestdraft) | Ask the agent in a session to write a workflow or a step | browser only |
+| [`GET /v1/themes`](#listthemes) | List the color themes there are | `read` |
+| [`GET /v1/themes/proposals`](#listthemeproposals) | List the color themes proposed, and what became of the latest | `read` |
+| [`POST /v1/themes/proposals`](#proposetheme) | Propose a color theme | `workflows:write` |
+| [`POST /v1/themes/proposals/{proposalId}/accept`](#acceptthemeproposal) | Accept a proposed color theme | browser only |
+| [`DELETE /v1/themes/proposals/{proposalId}`](#declinethemeproposal) | Decline a proposed color theme | browser only |
 | [`GET /v1/library/sources`](#listlibrarysources) | List the sources of the library | `read` |
 | [`POST /v1/library/sources`](#addlibrarysource) | Add a source | browser only |
 | [`DELETE /v1/library/sources/{sourceId}`](#removelibrarysource) | Remove a source | browser only |
@@ -194,6 +199,9 @@ How to create a token, what the scopes mean, the limits and the activity log are
 | [`GET /v1/sessions/{sessionId}/brief`](#getsessionbrief) | What a session was asked to write | session's own token |
 | [`GET /v1/sessions/{sessionId}/drafts`](#listsessiondrafts) | The drafts a session proposed or was asked for | session's own token |
 | [`POST /v1/sessions/{sessionId}/drafts`](#proposesessiondraft) | Hand in a draft from a session | session's own token |
+| [`GET /v1/sessions/{sessionId}/themes`](#listsessionthemes) | The color themes there are | session's own token |
+| [`GET /v1/sessions/{sessionId}/theme-proposals`](#listsessionthemeproposals) | The color themes a session proposed, and what became of them | session's own token |
+| [`POST /v1/sessions/{sessionId}/theme-proposals`](#proposesessiontheme) | Propose a color theme from a session | session's own token |
 | [`GET /v1/sessions/{sessionId}/repository-workflows`](#getsessionrepositoryworkflows) | The workflows the repository of a session offers | session's own token, or `read` |
 | [`PUT /v1/sessions/{sessionId}/agent`](#reportagent) | Say which agent runs in the session, and in which conversation | session's own token |
 
@@ -5870,6 +5878,411 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 ```
 
 **Errors:** 400, 401, 403, 404, 409, 413, 429.
+
+## Themes
+
+### listThemes
+
+`GET /v1/themes`: List the color themes there are.
+
+The ten that come with Aubergine, then the owner’s theme files, each with its ID, name, kind and the built-in theme it is laid over. No colors, and nothing about which is chosen.
+
+An API token needs the scope `read`.
+
+A list: it answers a page at a time, see `limit` and `cursor`.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `projectId` | query | `string \| "all"` | no | Which project: its ID, or `all`. Left out: the first project the caller reaches. A request that names a thing of a project (a session, a canvas, a task) is about that project. |
+| `limit` | query | `number` | no | How many items to return at most. |
+| `cursor` | query | `string` | no | The `nextCursor` of the page before. Opaque: do not build or change it. |
+
+**Answer** `200`:
+
+```ts
+{
+  items: {
+    /** What a setting, a menu and a request call it. */
+    id: string;
+    /** What Settings calls it. */
+    name: string;
+    /** Whether it is drawn as the light page or the dark one. */
+    kind: "light" | "dark";
+    /** The built-in theme it is laid over: itself, for a built-in one. */
+    base: "light" | "high-contrast-light" | "solarized-light" | "gruvbox-light" | "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula";
+    /** True for a theme file of the owner’s; false for one that comes with Aubergine. */
+    own: boolean;
+  }[];
+  nextCursor: string | null;
+}
+```
+
+**Errors:** 400, 401, 403, 413, 429.
+
+```sh
+curl -H "Authorization: Bearer $TOKEN" \
+     http://127.0.0.1:4600/v1/themes
+```
+
+### listThemeProposals
+
+`GET /v1/themes/proposals`: List the color themes proposed, and what became of the latest.
+
+Those that wait for the owner, oldest first, then the latest decisions, newest first. Never the text of a file.
+
+An API token needs the scope `read`.
+
+A list: it answers a page at a time, see `limit` and `cursor`.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `projectId` | query | `string \| "all"` | no | Which project: its ID, or `all`. Left out: the first project the caller reaches. A request that names a thing of a project (a session, a canvas, a task) is about that project. |
+| `limit` | query | `number` | no | How many items to return at most. |
+| `cursor` | query | `string` | no | The `nextCursor` of the page before. Opaque: do not build or change it. |
+
+**Answer** `200`:
+
+```ts
+{
+  items: {
+    id: string;
+    themeId: string;
+    /** What the theme would be called. */
+    name: string;
+    /** Light or dark; null for one that was decided. */
+    kind: ("light" | "dark") | null;
+    /** The built-in theme it is laid over; null for one that was decided. */
+    base: ("light" | "high-contrast-light" | "solarized-light" | "gruvbox-light" | "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula") | null;
+    /** How many of its colors are its own (0 for one that was decided). */
+    colors: number;
+    /** What in the file was skipped. Empty for one that was decided. */
+    problems: string[];
+    /** Why it was proposed, in the words of whoever proposed it. */
+    why: string;
+    proposedBy: {
+      kind: "session";
+      sessionId: string;
+    } | {
+      kind: "token";
+      tokenId: string;
+      name: string;
+    } | {
+      kind: "person";
+    };
+    /** `waiting` for the owner; `accepted`: it is a theme file now; `declined`: it was not taken, and nothing of it is kept. */
+    state: "waiting" | "accepted" | "declined";
+    /** When it was proposed, or when it was decided. */
+    at: string;
+  }[];
+  nextCursor: string | null;
+}
+```
+
+**Errors:** 400, 401, 403, 413, 429.
+
+```sh
+curl -H "Authorization: Bearer $TOKEN" \
+     http://127.0.0.1:4600/v1/themes/proposals
+```
+
+### proposeTheme
+
+`POST /v1/themes/proposals`: Propose a color theme.
+
+The text of a theme file, read as it arrives: one that cannot be read is refused whole (400) and nothing is kept; one with entries that are skipped is kept with what was skipped. It is drawn nowhere and written nowhere until the owner has read it and accepted it in the browser; accepting chooses nothing. At most 20 wait at once (409 beyond that), and a newer proposal of the same ID by the same proposer takes the place of the older.
+
+An API token needs the scope `workflows:write`.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `idempotency-key` | header | `string` | no | A key of your choosing (1 to 128 visible ASCII characters). Sending the same request again with the same key returns the first answer and creates nothing more. |
+
+**Body** (JSON):
+
+| Field | Type | Required | |
+|---|---|---|---|
+| `id` | `string` | yes | The ID it would have: the name of its file without `.json`. Not the ID of a theme that comes with Aubergine. |
+| `text` | `string` | yes | The theme file, as text: the same form as a file in `themes/` (docs/themes.md). It is read as it arrives; one that cannot be read is refused whole and nothing is kept. |
+| `why` | `string` | no | Why it is proposed, in one line, for the owner to read. |
+
+**Answer** `201`:
+
+```ts
+{
+  id: string;
+  themeId: string;
+  /** What the theme would be called. */
+  name: string;
+  /** Light or dark; null for one that was decided. */
+  kind: ("light" | "dark") | null;
+  /** The built-in theme it is laid over; null for one that was decided. */
+  base: ("light" | "high-contrast-light" | "solarized-light" | "gruvbox-light" | "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula") | null;
+  /** How many of its colors are its own (0 for one that was decided). */
+  colors: number;
+  /** What in the file was skipped. Empty for one that was decided. */
+  problems: string[];
+  /** Why it was proposed, in the words of whoever proposed it. */
+  why: string;
+  proposedBy: {
+    kind: "session";
+    sessionId: string;
+  } | {
+    kind: "token";
+    tokenId: string;
+    name: string;
+  } | {
+    kind: "person";
+  };
+  /** `waiting` for the owner; `accepted`: it is a theme file now; `declined`: it was not taken, and nothing of it is kept. */
+  state: "waiting" | "accepted" | "declined";
+  /** When it was proposed, or when it was decided. */
+  at: string;
+}
+```
+
+**Errors:** 400, 401, 403, 409, 413, 429.
+
+```sh
+curl -X POST -H "Authorization: Bearer $TOKEN" \
+     -H "Content-Type: application/json" -d '{"id":"text","text":"text"}' \
+     http://127.0.0.1:4600/v1/themes/proposals
+```
+
+### acceptThemeProposal
+
+`POST /v1/themes/proposals/{proposalId}/accept`: Accept a proposed color theme.
+
+For the owner only: no token and no session can do this, whatever its scopes. The digest names the text that was shown; another is refused with 409. The text that was kept is written as `themes/<id>.json` in the data folder, never through a link, and never over a file that is there (409: rename or remove that file first). It chooses nothing: the theme is then one the owner can choose.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `proposalId` | path | `string` | yes | An ID. |
+
+**Body** (JSON):
+
+| Field | Type | Required | |
+|---|---|---|---|
+| `digest` | `string` | yes | The digest of the proposal as it was shown. A proposal whose text is not that one is refused with 409. |
+
+**Answer** `200`:
+
+```ts
+{
+  theme: {
+    /** The name of its file, without `.json`. */
+    id: string;
+    /** What the theme is called: one line of plain text. */
+    name: string;
+    /** Whether it is drawn as the light page or the dark one. */
+    kind: "light" | "dark";
+    /** The built-in theme it is laid over, of the same kind. Its shadows, scrim and focus ring are the base’s. */
+    base: "light" | "high-contrast-light" | "solarized-light" | "gruvbox-light" | "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula";
+    /** Colors laid over the base theme, by the names of the page’s color tokens. What is not named is the base’s. */
+    colors: {
+      /** The page’s color token --bg, as #rrggbb. */
+      bg?: string;
+      /** The page’s color token --surface, as #rrggbb. */
+      surface?: string;
+      /** The page’s color token --surface-raised, as #rrggbb. */
+      "surface-raised"?: string;
+      /** The page’s color token --field, as #rrggbb. */
+      field?: string;
+      /** The page’s color token --surface-active, as #rrggbb. */
+      "surface-active"?: string;
+      /** The page’s color token --border, as #rrggbb. */
+      border?: string;
+      /** The page’s color token --border-strong, as #rrggbb. */
+      "border-strong"?: string;
+      /** The page’s color token --border-control, as #rrggbb. */
+      "border-control"?: string;
+      /** The page’s color token --text, as #rrggbb. */
+      text?: string;
+      /** The page’s color token --text-muted, as #rrggbb. */
+      "text-muted"?: string;
+      /** The page’s color token --accent, as #rrggbb. */
+      accent?: string;
+      /** The page’s color token --accent-soft, as #rrggbb. */
+      "accent-soft"?: string;
+      /** The page’s color token --accent-text, as #rrggbb. */
+      "accent-text"?: string;
+      /** The page’s color token --on-accent, as #rrggbb. */
+      "on-accent"?: string;
+      /** The page’s color token --accent-pressed, as #rrggbb. */
+      "accent-pressed"?: string;
+      /** The page’s color token --attention, as #rrggbb. */
+      attention?: string;
+      /** The page’s color token --attention-soft, as #rrggbb. */
+      "attention-soft"?: string;
+      /** The page’s color token --attention-text, as #rrggbb. */
+      "attention-text"?: string;
+      /** The page’s color token --on-attention, as #rrggbb. */
+      "on-attention"?: string;
+      /** The page’s color token --attention-pressed, as #rrggbb. */
+      "attention-pressed"?: string;
+      /** The page’s color token --working, as #rrggbb. */
+      working?: string;
+      /** The page’s color token --working-soft, as #rrggbb. */
+      "working-soft"?: string;
+      /** The page’s color token --working-text, as #rrggbb. */
+      "working-text"?: string;
+      /** The page’s color token --ok, as #rrggbb. */
+      ok?: string;
+      /** The page’s color token --ok-soft, as #rrggbb. */
+      "ok-soft"?: string;
+      /** The page’s color token --ok-text, as #rrggbb. */
+      "ok-text"?: string;
+      /** The page’s color token --danger, as #rrggbb. */
+      danger?: string;
+      /** The page’s color token --danger-soft, as #rrggbb. */
+      "danger-soft"?: string;
+      /** The page’s color token --danger-text, as #rrggbb. */
+      "danger-text"?: string;
+      /** The page’s color token --on-danger, as #rrggbb. */
+      "on-danger"?: string;
+      /** The page’s color token --danger-pressed, as #rrggbb. */
+      "danger-pressed"?: string;
+      /** The page’s color token --selection, as #rrggbb. */
+      selection?: string;
+      /** The page’s color token --terminal-bg, as #rrggbb. */
+      "terminal-bg"?: string;
+      /** The page’s color token --canvas-dot, as #rrggbb. */
+      "canvas-dot"?: string;
+      /** The page’s color token --minimap-node, as #rrggbb. */
+      "minimap-node"?: string;
+    };
+    /** A terminal’s own colors, over the base’s. Its ground is the theme’s terminal-bg. */
+    terminal: {
+      /** The color of a terminal’s words, as #rrggbb. */
+      foreground?: string;
+      /** The color of a terminal’s cursor, as #rrggbb. */
+      cursor?: string;
+      /** The color behind what is selected in a terminal, as #rrggbb. */
+      selection?: string;
+      /** The sixteen colors a program asks for by number, in order: black, red, green, yellow, blue, magenta, cyan, white, then the bright eight. Null, or left out at the end: the base’s. */
+      ansi?: (string | null)[];
+    };
+  };
+  /** The name of the file that was written, in `themes/`. */
+  file: string;
+  /** The themes of the owner’s own there are now. */
+  themes: {
+    /** The name of its file, without `.json`. */
+    id: string;
+    /** What the theme is called: one line of plain text. */
+    name: string;
+    /** Whether it is drawn as the light page or the dark one. */
+    kind: "light" | "dark";
+    /** The built-in theme it is laid over, of the same kind. Its shadows, scrim and focus ring are the base’s. */
+    base: "light" | "high-contrast-light" | "solarized-light" | "gruvbox-light" | "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula";
+    /** Colors laid over the base theme, by the names of the page’s color tokens. What is not named is the base’s. */
+    colors: {
+      /** The page’s color token --bg, as #rrggbb. */
+      bg?: string;
+      /** The page’s color token --surface, as #rrggbb. */
+      surface?: string;
+      /** The page’s color token --surface-raised, as #rrggbb. */
+      "surface-raised"?: string;
+      /** The page’s color token --field, as #rrggbb. */
+      field?: string;
+      /** The page’s color token --surface-active, as #rrggbb. */
+      "surface-active"?: string;
+      /** The page’s color token --border, as #rrggbb. */
+      border?: string;
+      /** The page’s color token --border-strong, as #rrggbb. */
+      "border-strong"?: string;
+      /** The page’s color token --border-control, as #rrggbb. */
+      "border-control"?: string;
+      /** The page’s color token --text, as #rrggbb. */
+      text?: string;
+      /** The page’s color token --text-muted, as #rrggbb. */
+      "text-muted"?: string;
+      /** The page’s color token --accent, as #rrggbb. */
+      accent?: string;
+      /** The page’s color token --accent-soft, as #rrggbb. */
+      "accent-soft"?: string;
+      /** The page’s color token --accent-text, as #rrggbb. */
+      "accent-text"?: string;
+      /** The page’s color token --on-accent, as #rrggbb. */
+      "on-accent"?: string;
+      /** The page’s color token --accent-pressed, as #rrggbb. */
+      "accent-pressed"?: string;
+      /** The page’s color token --attention, as #rrggbb. */
+      attention?: string;
+      /** The page’s color token --attention-soft, as #rrggbb. */
+      "attention-soft"?: string;
+      /** The page’s color token --attention-text, as #rrggbb. */
+      "attention-text"?: string;
+      /** The page’s color token --on-attention, as #rrggbb. */
+      "on-attention"?: string;
+      /** The page’s color token --attention-pressed, as #rrggbb. */
+      "attention-pressed"?: string;
+      /** The page’s color token --working, as #rrggbb. */
+      working?: string;
+      /** The page’s color token --working-soft, as #rrggbb. */
+      "working-soft"?: string;
+      /** The page’s color token --working-text, as #rrggbb. */
+      "working-text"?: string;
+      /** The page’s color token --ok, as #rrggbb. */
+      ok?: string;
+      /** The page’s color token --ok-soft, as #rrggbb. */
+      "ok-soft"?: string;
+      /** The page’s color token --ok-text, as #rrggbb. */
+      "ok-text"?: string;
+      /** The page’s color token --danger, as #rrggbb. */
+      danger?: string;
+      /** The page’s color token --danger-soft, as #rrggbb. */
+      "danger-soft"?: string;
+      /** The page’s color token --danger-text, as #rrggbb. */
+      "danger-text"?: string;
+      /** The page’s color token --on-danger, as #rrggbb. */
+      "on-danger"?: string;
+      /** The page’s color token --danger-pressed, as #rrggbb. */
+      "danger-pressed"?: string;
+      /** The page’s color token --selection, as #rrggbb. */
+      selection?: string;
+      /** The page’s color token --terminal-bg, as #rrggbb. */
+      "terminal-bg"?: string;
+      /** The page’s color token --canvas-dot, as #rrggbb. */
+      "canvas-dot"?: string;
+      /** The page’s color token --minimap-node, as #rrggbb. */
+      "minimap-node"?: string;
+    };
+    /** A terminal’s own colors, over the base’s. Its ground is the theme’s terminal-bg. */
+    terminal: {
+      /** The color of a terminal’s words, as #rrggbb. */
+      foreground?: string;
+      /** The color of a terminal’s cursor, as #rrggbb. */
+      cursor?: string;
+      /** The color behind what is selected in a terminal, as #rrggbb. */
+      selection?: string;
+      /** The sixteen colors a program asks for by number, in order: black, red, green, yellow, blue, magenta, cyan, white, then the bright eight. Null, or left out at the end: the base’s. */
+      ansi?: (string | null)[];
+    };
+  }[];
+  /** What in the theme files is not read now, or skipped. */
+  problems: string[];
+}
+```
+
+**Errors:** 400, 401, 403, 404, 409, 413, 429.
+
+### declineThemeProposal
+
+`DELETE /v1/themes/proposals/{proposalId}`: Decline a proposed color theme.
+
+For the owner only: no token and no session can do this, whatever its scopes. Nothing of it is kept but that it was declined.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `proposalId` | path | `string` | yes | An ID. |
+
+**Answer** `204`, with nothing in it.
+
+**Errors:** 400, 401, 403, 404, 413, 429.
 
 ## Library
 
@@ -13541,6 +13954,175 @@ For a session's own token, about that session. No API token may call this.
 curl -X POST -H "Authorization: Bearer $AUBERGINE_TOKEN" \
      -H "Content-Type: application/json" -d '{"workflow":{"name":"example","elements":[{"name":"example"}]}}' \
      $AUBERGINE_URL/v1/sessions/<sessionId>/drafts
+```
+
+### listSessionThemes
+
+`GET /v1/sessions/{sessionId}/themes`: The color themes there are.
+
+With that session's own token: the same list as `GET /v1/themes`, so that an agent knows which IDs are taken and which built-in theme it can lay one over.
+
+For a session's own token, about that session. No API token may call this.
+
+A list: it answers a page at a time, see `limit` and `cursor`.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `sessionId` | path | `string` | yes | An ID. |
+| `projectId` | query | `string \| "all"` | no | Which project: its ID, or `all`. Left out: the first project the caller reaches. A request that names a thing of a project (a session, a canvas, a task) is about that project. |
+| `limit` | query | `number` | no | How many items to return at most. |
+| `cursor` | query | `string` | no | The `nextCursor` of the page before. Opaque: do not build or change it. |
+
+**Answer** `200`:
+
+```ts
+{
+  items: {
+    /** What a setting, a menu and a request call it. */
+    id: string;
+    /** What Settings calls it. */
+    name: string;
+    /** Whether it is drawn as the light page or the dark one. */
+    kind: "light" | "dark";
+    /** The built-in theme it is laid over: itself, for a built-in one. */
+    base: "light" | "high-contrast-light" | "solarized-light" | "gruvbox-light" | "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula";
+    /** True for a theme file of the owner’s; false for one that comes with Aubergine. */
+    own: boolean;
+  }[];
+  nextCursor: string | null;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 413, 429.
+
+```sh
+curl -H "Authorization: Bearer $AUBERGINE_TOKEN" \
+     $AUBERGINE_URL/v1/sessions/<sessionId>/themes
+```
+
+### listSessionThemeProposals
+
+`GET /v1/sessions/{sessionId}/theme-proposals`: The color themes a session proposed, and what became of them.
+
+With that session's own token: its own proposals, waiting, accepted or declined, and no others.
+
+For a session's own token, about that session. No API token may call this.
+
+A list: it answers a page at a time, see `limit` and `cursor`.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `sessionId` | path | `string` | yes | An ID. |
+| `projectId` | query | `string \| "all"` | no | Which project: its ID, or `all`. Left out: the first project the caller reaches. A request that names a thing of a project (a session, a canvas, a task) is about that project. |
+| `limit` | query | `number` | no | How many items to return at most. |
+| `cursor` | query | `string` | no | The `nextCursor` of the page before. Opaque: do not build or change it. |
+
+**Answer** `200`:
+
+```ts
+{
+  items: {
+    id: string;
+    themeId: string;
+    /** What the theme would be called. */
+    name: string;
+    /** Light or dark; null for one that was decided. */
+    kind: ("light" | "dark") | null;
+    /** The built-in theme it is laid over; null for one that was decided. */
+    base: ("light" | "high-contrast-light" | "solarized-light" | "gruvbox-light" | "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula") | null;
+    /** How many of its colors are its own (0 for one that was decided). */
+    colors: number;
+    /** What in the file was skipped. Empty for one that was decided. */
+    problems: string[];
+    /** Why it was proposed, in the words of whoever proposed it. */
+    why: string;
+    proposedBy: {
+      kind: "session";
+      sessionId: string;
+    } | {
+      kind: "token";
+      tokenId: string;
+      name: string;
+    } | {
+      kind: "person";
+    };
+    /** `waiting` for the owner; `accepted`: it is a theme file now; `declined`: it was not taken, and nothing of it is kept. */
+    state: "waiting" | "accepted" | "declined";
+    /** When it was proposed, or when it was decided. */
+    at: string;
+  }[];
+  nextCursor: string | null;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 413, 429.
+
+```sh
+curl -H "Authorization: Bearer $AUBERGINE_TOKEN" \
+     $AUBERGINE_URL/v1/sessions/<sessionId>/theme-proposals
+```
+
+### proposeSessionTheme
+
+`POST /v1/sessions/{sessionId}/theme-proposals`: Propose a color theme from a session.
+
+With that session's own token. The same as `POST /v1/themes/proposals`, proposed as that session: nothing is drawn or written until the owner has read it and accepted it.
+
+For a session's own token, about that session. No API token may call this.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `sessionId` | path | `string` | yes | An ID. |
+
+**Body** (JSON):
+
+| Field | Type | Required | |
+|---|---|---|---|
+| `id` | `string` | yes | The ID it would have: the name of its file without `.json`. Not the ID of a theme that comes with Aubergine. |
+| `text` | `string` | yes | The theme file, as text: the same form as a file in `themes/` (docs/themes.md). It is read as it arrives; one that cannot be read is refused whole and nothing is kept. |
+| `why` | `string` | no | Why it is proposed, in one line, for the owner to read. |
+
+**Answer** `201`:
+
+```ts
+{
+  id: string;
+  themeId: string;
+  /** What the theme would be called. */
+  name: string;
+  /** Light or dark; null for one that was decided. */
+  kind: ("light" | "dark") | null;
+  /** The built-in theme it is laid over; null for one that was decided. */
+  base: ("light" | "high-contrast-light" | "solarized-light" | "gruvbox-light" | "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula") | null;
+  /** How many of its colors are its own (0 for one that was decided). */
+  colors: number;
+  /** What in the file was skipped. Empty for one that was decided. */
+  problems: string[];
+  /** Why it was proposed, in the words of whoever proposed it. */
+  why: string;
+  proposedBy: {
+    kind: "session";
+    sessionId: string;
+  } | {
+    kind: "token";
+    tokenId: string;
+    name: string;
+  } | {
+    kind: "person";
+  };
+  /** `waiting` for the owner; `accepted`: it is a theme file now; `declined`: it was not taken, and nothing of it is kept. */
+  state: "waiting" | "accepted" | "declined";
+  /** When it was proposed, or when it was decided. */
+  at: string;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 409, 413, 429.
+
+```sh
+curl -X POST -H "Authorization: Bearer $AUBERGINE_TOKEN" \
+     -H "Content-Type: application/json" -d '{"id":"text","text":"text"}' \
+     $AUBERGINE_URL/v1/sessions/<sessionId>/theme-proposals
 ```
 
 ### getSessionRepositoryWorkflows

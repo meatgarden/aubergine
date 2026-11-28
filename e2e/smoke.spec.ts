@@ -5414,6 +5414,107 @@ test('a theme of your own: a file in the data folder, read again from Settings, 
   }
 });
 
+test('a theme proposed: a program proposes one, For you counts it, the review shows who, why, the theme drawn and its text, Try on this page draws it until the review is left, Accept writes the file and chooses nothing, Use it draws it, and a declined one leaves nothing', async ({ page }) => {
+  const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
+  const configFile = path.join(e2e.dataDir, 'config.json');
+  const original = existsSync(configFile) ? readFileSync(configFile, 'utf8') : null;
+  const themesDir = path.join(e2e.dataDir, 'themes');
+  const hadThemes = existsSync(themesDir);
+  const harborFile = path.join(themesDir, 'harbor.json');
+  const duskFile = path.join(themesDir, 'dusk.json');
+  const HARBOR = `${JSON.stringify({ name: 'Harbor', kind: 'dark', base: 'nord', colors: { accent: '#5fb3b3', 'terminal-bg': '#0b1620', bg: 'teal' }, terminal: { foreground: '#d8dee9' } }, null, 2)}\n`;
+  await page.goto(`/auth?token=${token}`);
+  await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
+  const origin = new URL(page.url()).origin;
+  const html = page.locator('html');
+  const tokenOnPage = (name: string): Promise<string> => page.evaluate((n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim(), name);
+  const made = (await (await page.request.post('/v1/tokens', { headers: { origin }, data: { name: 'theme maker', scopes: ['workflows:write'] } })).json()) as { secret: string; token: { id: string } };
+  const asToken = { Authorization: `Bearer ${made.secret}` };
+  const review = page.getByTestId('review-screen');
+  const settings = page.getByTestId('settings-dialog');
+  try {
+    await expect(html).toHaveAttribute('data-color-theme-id', 'dark');
+    const accentBefore = await tokenOnPage('--accent');
+    const countBefore = Number((await page.getByTestId('for-you').getAttribute('data-count')) ?? '0');
+    const proposed = await page.request.post('/v1/themes/proposals', { headers: asToken, data: { id: 'harbor', text: HARBOR, why: 'Easier on the eyes at night <b>not markup</b>' } });
+    expect(proposed.status()).toBe(201);
+    await expect(page.getByTestId('for-you')).toHaveAttribute('data-count', String(countBefore + 1));
+    // Nothing is drawn or written yet.
+    expect(existsSync(harborFile)).toBe(false);
+    expect(await tokenOnPage('--accent')).toBe(accentBefore);
+
+    // From the owner's list: the row opens the review on that theme.
+    await page.getByTestId('for-you').click();
+    const row = page.locator('[data-testid="foryou-row"][data-kind="theme"]');
+    await expect(row.getByTestId('foryou-who')).toHaveText('The token “theme maker”');
+    await expect(row.getByTestId('foryou-what')).toHaveText('A color theme: Harbor');
+    await row.click();
+    await expect(review).toBeVisible();
+    await expect(review.getByTestId('review-title')).toHaveText('Harbor');
+    await expect(review.getByTestId('review-origin')).toHaveText('A dark color theme, from a program, with the token “theme maker”.');
+    await expect(review.getByTestId('theme-review-why')).toContainText('“Easier on the eyes at night <b>not markup</b>”');
+    await expect(review.getByTestId('theme-review-why').locator('b')).toHaveCount(0);
+    // The theme drawn on a sample, beside its base, with its colors and what was skipped.
+    const sample = review.getByTestId('theme-review-sample');
+    await expect(sample).toHaveAttribute('data-theme-preview', 'nord');
+    expect(await sample.locator('.theme-review-accent').evaluate((el) => getComputedStyle(el).backgroundColor)).toBe('rgb(95, 179, 179)');
+    await expect(review.getByTestId('theme-review-base')).toHaveAttribute('data-theme-preview', 'nord');
+    await expect(review.getByTestId('theme-review-colors')).toContainText('accent');
+    await expect(review.getByTestId('theme-review-colors')).toContainText('#5fb3b3');
+    await expect(review.getByTestId('theme-review-problems')).toContainText('"bg" is not a color written as #rrggbb');
+    await expect(review.getByTestId('review-text')).toHaveText(HARBOR.trimEnd());
+
+    // Tried on this page: the page's accent is the theme's, and leaving the review puts it back; nothing was saved.
+    await review.getByTestId('theme-review-try').click();
+    await expect.poll(() => tokenOnPage('--accent')).toBe('#5fb3b3');
+    await expect(html).toHaveAttribute('data-color-theme', 'nord');
+    expect(await page.evaluate(() => localStorage.getItem('aubergine.theme.dark.id'))).toBe('dark');
+    await review.getByTestId('review-close').click();
+    await expect(review).toHaveCount(0);
+    await expect.poll(() => tokenOnPage('--accent')).toBe(accentBefore);
+    await expect(html).toHaveAttribute('data-color-theme-id', 'dark');
+    expect(existsSync(harborFile)).toBe(false);
+
+    // Accepted: the file is exactly the text, it is one of the owner's themes, and nothing chose it; Use it draws it.
+    await page.getByTestId('runs-screen').getByTestId('review-open').click();
+    await review.getByTestId('review-row').filter({ hasText: 'Harbor' }).click();
+    await expect(review.getByTestId('review-title')).toHaveText('Harbor');
+    await review.getByTestId('review-accept').click();
+    await expect.poll(() => (existsSync(harborFile) ? readFileSync(harborFile, 'utf8') : null)).toBe(HARBOR);
+    await expect(html).toHaveAttribute('data-color-theme-id', 'dark');
+    await expect(page.getByTestId('toast')).toContainText('“Harbor” is one of your themes now');
+    await page.getByTestId('toast-undo').click();
+    await expect(html).toHaveAttribute('data-color-theme-id', 'harbor');
+    await expect.poll(() => tokenOnPage('--accent')).toBe('#5fb3b3');
+    await expect(review.getByTestId('review-row').filter({ hasText: 'Harbor' })).toHaveCount(0);
+    await review.getByTestId('review-close').click();
+    await toCanvas(page);
+    await page.getByTestId('toolbar-settings').click();
+    const part = settings.getByTestId('settings-appearance');
+    await expect(part.getByTestId('color-theme-harbor')).toHaveText('Harbor · yours');
+    await part.getByTestId('color-theme-dark').click();
+    await expect(html).toHaveAttribute('data-color-theme-id', 'dark');
+
+    // A second one, read from Settings and declined: no file, and Settings no longer says one waits.
+    expect((await page.request.post('/v1/themes/proposals', { headers: asToken, data: { id: 'dusk', text: JSON.stringify({ name: 'Dusk', kind: 'light', colors: { accent: '#aa5500' } }) } })).status()).toBe(201);
+    await expect(part.getByTestId('themes-proposed')).toHaveText(/One color theme was proposed by an agent or a program/);
+    await part.getByTestId('themes-proposed-read').click();
+    await expect(review.getByTestId('review-title')).toHaveText('Dusk');
+    await review.getByTestId('review-discard').click();
+    await expect(review.getByTestId('review-row').filter({ hasText: 'Dusk' })).toHaveCount(0);
+    expect(existsSync(duskFile)).toBe(false);
+    await review.getByTestId('review-close').click();
+    await expect(page.getByTestId('for-you')).toHaveAttribute('data-count', String(countBefore));
+  } finally {
+    await page.request.delete(`/v1/tokens/${made.token.id}`, { headers: { origin } });
+    rmSync(harborFile, { force: true });
+    rmSync(duskFile, { force: true });
+    if (!hadThemes) rmSync(themesDir, { recursive: true, force: true });
+    if (original === null) rmSync(configFile, { force: true });
+    else writeFileSync(configFile, original);
+  }
+});
+
 test('states: every piece draws hover, pressed, focus and disabled differently from rest in both themes, nothing moves under the pointer, and what opens travels only where motion is wanted', async ({ page }) => {
   const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
   await page.goto(`/auth?token=${token}`);

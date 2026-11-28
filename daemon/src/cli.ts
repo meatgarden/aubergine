@@ -707,7 +707,7 @@ async function main(): Promise<number> {
       return runSettingsCommand(parseSettingsCommand(command.words), { dataDir: config.dataDir, print: (text) => console.log(text), warn: (text) => console.error(text) });
 
     case 'theme':
-      return runThemeCommand(parseThemeCommand(command.words), { dataDir: config.dataDir, print: (text) => console.log(text), warn: (text) => console.error(text) });
+      return runThemeCommand(parseThemeCommand(command.words), { dataDir: config.dataDir, print: (text) => console.log(text), warn: (text) => console.error(text), env: process.env, owner: (work) => v1(config, work), cwd: process.cwd() });
 
     case 'copies':
       return runCopiesCommand(parseCopiesCommand(command.words), { owner: (work) => v1(config, work), print: (text) => console.log(text), ask });

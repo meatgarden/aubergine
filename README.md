@@ -31,7 +31,7 @@ Share Aubergine: [X](https://x.com/intent/post?text=Aubergine%3A%20mission%20con
 
 ### Color themes
 
-The page comes in ten color themes, four light and six dark, chosen in **Settings → Appearance**. Any terminal can also have a theme of its own (**Theme…** in its menu), and the others follow a default you set for terminals, or the page. Single colors can be set by hand in the [settings file](#settings), and a theme of your own is a file: one of the ten with your colors over it, listed beside them as yours ([docs/themes.md](docs/themes.md)).
+The page comes in ten color themes, four light and six dark, chosen in **Settings → Appearance**. Any terminal can also have a theme of its own (**Theme…** in its menu), and the others follow a default you set for terminals, or the page. Single colors can be set by hand in the [settings file](#settings), and a theme of your own is a file: one of the ten with your colors over it, listed beside them as yours ([docs/themes.md](docs/themes.md)). An agent or a program may propose one; it is drawn nowhere until you have read it under **Review** and accepted it.
 
 | | | |
 |---|---|---|
@@ -142,16 +142,17 @@ What you can change today:
 - **A theme for each terminal**: **Theme…** in a terminal's menu draws it in any of the ten, or a theme of your own, whatever the page is in; the others follow the default you set for terminals, or the page.
 - **Themes of your own, as files**: `themes/<name>.json` in the data folder names one of the ten as its base, its kind, and any of the 35 colors of the page over it, and a terminal's own colors (words, cursor, selection, the sixteen a program asks for). `aubergine theme new <name> --from nord` writes one to start from, `aubergine theme check` says what is wrong in one, and **Read themes again** in Settings picks up a change. Shadows and the focus ring are the base's, nothing in a file is run, and whether your colors can be read is yours to judge: Settings only says when text may be hard to read. See [docs/themes.md](docs/themes.md).
 - **A color for a terminal, a frame and a canvas's tab**: the dot in a title bar, one of thirteen colors or any color of your own. See [Canvas](#canvas) and [Canvases](#canvases).
+- **A theme an agent proposes**: an agent in a terminal (`aubergine theme propose <file>`, or the tool `theme_propose`) or a program with a token may propose a theme file. Nothing of it is drawn or written until you have read it under **Review**: who proposed it and why, the theme drawn beside its base, every color it sets, and the file's whole text. **Try on this page** draws it in this browser until you leave the review, and saves nothing. **Accept** writes `themes/<name>.json` with exactly that text, never over a file that is there, and chooses nothing; **Use it** then chooses it. See [docs/themes.md](docs/themes.md#proposed-by-an-agent-or-a-program).
 - **Single colors by hand**: 35 colors of the page under `appearance.colors` in the settings file, for every theme or for one (`"[nord]"`). A wrong entry is skipped and Settings says which.
 - **A terminal's text and cursor**: its font and size, the cursor's shape and whether it blinks.
 - **Every key**: `shortcuts` and `shortcutsInAppWindow` in the settings file; the shortcut sheet and the palette show what you set. See [Keyboard](#keyboard).
 - **A settings file that describes itself**: `config.schema.json` for an editor's completion, [docs/settings.md](docs/settings.md), `aubergine settings list | path | schema`, and **Settings → Every setting**, searchable, with **Copy** for a line written by hand.
 - **How this browser lays things out**: the canvases as tabs, one list or a column, where the bar over the canvas stands, the side panel and the map folded or open. See [Side panel and terminal list](#side-panel-and-terminal-list).
-- **What programs may change**: with an [API token](#api-tokens), a program may arrange canvases and rename, tag and theme terminals; the agent in a terminal describes its own terminal. The settings are yours alone.
+- **What programs may change**: with an [API token](#api-tokens), a program may arrange canvases and rename, tag and theme terminals; the agent in a terminal describes its own terminal; either may propose a color theme, which waits for you. The settings are yours alone.
 
 <img src="site/screenshots/terminal-theme-menu.png" width="560" alt="A terminal's Theme… menu open on the canvas: Same as the default, then the four light themes and the six dark ones, with Dracula ticked.">
 
-Your own CSS, plugins and templates are not built, and neither is a theme an agent proposes for you to accept; they are on the [roadmap](https://thirstyeggplant.com/roadmap/). How this compares with what VS Code, Zed, Obsidian, Hyper, WezTerm, tmux, kitty, Ghostty, Windows Terminal and iTerm2 let you change: [Customize terminal themes, colors, fonts and keys](https://thirstyeggplant.com/customize-terminal-themes/).
+Your own CSS, plugins and templates are not built; they are on the [roadmap](https://thirstyeggplant.com/roadmap/). How this compares with what VS Code, Zed, Obsidian, Hyper, WezTerm, tmux, kitty, Ghostty, Windows Terminal and iTerm2 let you change: [Customize terminal themes, colors, fonts and keys](https://thirstyeggplant.com/customize-terminal-themes/).
 
 ---
 
@@ -1537,6 +1538,8 @@ aubergine doctor               check everything Aubergine needs, one line per ch
 aubergine theme [list]         the color themes, those that come with Aubergine and your theme files, and what is wrong in a file
 aubergine theme new <name>     write themes/<name>.json to start a theme of your own from (--from <theme>, --name <words>)
 aubergine theme check <file>   say what is wrong with a theme file; theme path: where the theme files are
+aubergine theme proposals      the themes agents and programs proposed that wait for you (read them under Review)
+aubergine theme propose <file> inside a terminal: propose a theme file for its owner to read (--id <id>, --why "<one line>")
 aubergine uninstall            remove the command and an installed copy; data and terminals are kept (--yes: do not ask)
 aubergine list                 sessions with their state, command and folder
 aubergine new [name]           start a new terminal on a canvas
@@ -1818,11 +1821,11 @@ curl -X POST -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/jso
 
 | Scope | Allows |
 |---|---|
-| `read` | see canvases, terminals, layout and notes; follow changes |
+| `read` | see canvases, terminals, layout and notes; follow changes; see which color themes there are and which were proposed |
 | `canvases:write` | create, rename, reorder and close canvases; move and resize nodes; frames; show a canvas in the browser |
 | `sessions:write` | start, rename, tag, move, park, restore and end terminals; show a terminal in the browser. By itself it starts plain shells and runs nothing: starting a terminal **with a command** also needs `terminal:input` with a reach that covers the new terminal (its canvas, its tags), and is refused where new terminals start people only |
 | `notes:write` | change a terminal's pinned note and add entries to its note log |
-| `workflows:write` | propose workflows and steps as drafts for you to review, and ask for an item of the [library](#the-library) to be installed (the request waits for you; no token can accept it). With review switched off for the token: create, change, copy and remove workflows and saved steps directly |
+| `workflows:write` | propose workflows and steps as drafts for you to review, ask for an item of the [library](#the-library) to be installed, and propose a [color theme](docs/themes.md#proposed-by-an-agent-or-a-program) (each waits for you; no token can accept it, and a theme is drawn nowhere until you do). With review switched off for the token: create, change, copy and remove workflows and saved steps directly |
 | `runs:write` | start runs of workflows on terminals and report on them (done, blocked, go to, pause, resume, stop). By itself it types nothing into a terminal; with `terminal:input` on that terminal, the one fixed kickoff sentence is typed |
 | `tasks:write` | propose tasks for the queue and ask you for something in writing; withdraw what it proposed. Both wait for you and start nothing. With review switched off for the token, its tasks are queued without your yes. It cannot accept, reorder or start tasks |
 | `terminal:read`, `terminal:input` | read what terminals show, and type into them. Not implied by anything above, and each token says which terminals it may reach. **With `terminal:input` a token can run any command as you.** See [Terminal access](#terminal-access) before granting either |
@@ -2048,13 +2051,13 @@ It never reads your sign-in, and it has no tool for what only you may do: making
 
 | With | Tools |
 |---|---|
-| a terminal's own token | `workflow_status`, `workflow_done`, `workflow_blocked`, `workflow_goto`, `note_add`, `attention_set`, `draft_brief`, `draft_propose_element`, `draft_propose_workflow`, `messages_inbox`, `message_reply`, `message_send`, `repository_workflows`: its own work, on its own terminal only |
-| `read` | `queue_read`, `for_you_read`, `where_am_i`, `board`, `library_list`, `library_show`, `canvases_list`, `sessions_list`, `session_get`, `notes_read`, `workflows_list`, `runs_list`, `run_get`, `workflow_status`, `repository_workflows` |
+| a terminal's own token | `workflow_status`, `workflow_done`, `workflow_blocked`, `workflow_goto`, `note_add`, `attention_set`, `draft_brief`, `draft_propose_element`, `draft_propose_workflow`, `themes_list`, `theme_propose`, `messages_inbox`, `message_reply`, `message_send`, `repository_workflows`: its own work, on its own terminal only |
+| `read` | `queue_read`, `for_you_read`, `where_am_i`, `board`, `themes_list`, `library_list`, `library_show`, `canvases_list`, `sessions_list`, `session_get`, `notes_read`, `workflows_list`, `runs_list`, `run_get`, `workflow_status`, `repository_workflows` |
 | `sessions:write` | `session_start`, `session_move`, `session_park` |
 | `notes:write` | `note_add`, `note_write` |
 | `runs:write` | `workflow_run`, `element_run`, `workflow_done`, `workflow_blocked`, `workflow_goto` |
 | `tasks:write` | `task_propose`, `ask_owner` |
-| `workflows:write` | `library_request_install` (a request that waits for you), `draft_propose_element`, `draft_propose_workflow`: drafts for you to review, never a workflow that can run |
+| `workflows:write` | `library_request_install` (a request that waits for you), `draft_propose_element`, `draft_propose_workflow`: drafts for you to review, never a workflow that can run; `theme_propose`: a color theme for you to read, drawn nowhere until you accept it |
 | `terminal:read` | `terminal_screen`, `terminal_output`, `terminal_search` |
 | `terminal:input` | `terminal_send`, `terminal_keys`, `terminal_run` |
 | `messages:read` | `messages_inbox` |

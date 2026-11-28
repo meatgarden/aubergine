@@ -5184,8 +5184,8 @@
     "from": "a0cf33b31432"
   },
   "custom.program.agent": {
-    "text": "ターミナルの中のエージェントは、自分のターミナルだけを説明し、ほかのものは説明しません。名前、何のためのものかの要約、リンク、フィールドを、<code>aubergine describe</code>、<code>aubergine link add</code>、<code>aubergine field set</code> で決めます。あなたが自分で書いた名前、要約、フィールドはそのまま残り、エージェントが送ったものは提案として横に保存されます。",
-    "from": "b99f1d5ab90f"
+    "text": "ターミナルの中のエージェントは、自分のターミナルだけを説明し、ほかのものは説明しません。名前、何のためのものかの要約、リンク、フィールドを、<code>aubergine describe</code>、<code>aubergine link add</code>、<code>aubergine field set</code> で決めます。あなたが自分で書いた名前、要約、フィールドはそのまま残り、エージェントが送ったものは提案として横に保存されます。エージェントや <code>workflows:write</code> を持つプログラムは、<code>aubergine theme propose</code> でカラーテーマを提案することもできます。あなたが Review で読み、描かれた姿を見て、ページで試し、受け入れるまで、どこにも描かれません。受け入れるとそのファイルが書かれますが、何も選ばれません。",
+    "from": "5f84d264cd4d"
   },
   "custom.program.owner": {
     "text": "設定そのものはあなただけのものです。トークンも、ターミナルも、エージェントも変えられません。<code>PUT /v1/settings/appearance</code> はサインインしたブラウザーにしか応えず、<code>appearance.colors</code>、<code>shortcuts</code> などはファイルに手で書きます。",
@@ -5444,8 +5444,8 @@
     "from": "e10eed0040ae"
   },
   "custom.plan.text": {
-    "text": "プロジェクトやタグごとの見た目、テンプレート、<code>custom.css</code>、プラグイン、そしてエージェントが提案しあなたの承認を待つテーマは予定で、まだ作られていません。<a href=\"/roadmap/#rm-yours\">ロードマップ</a>をご覧ください。",
-    "from": "6d31705c7ce4"
+    "text": "プロジェクトやタグごとの見た目、テンプレート、<code>custom.css</code>、プラグインは予定で、まだ作られていません。<a href=\"/roadmap/#rm-yours\">ロードマップ</a>をご覧ください。",
+    "from": "034f77f12f02"
   },
   "custom.q.terminal.q": {
     "text": "ターミナルごとに違うカラーテーマにできますか？",
@@ -5476,8 +5476,8 @@
     "from": "f2f43a3f85b7"
   },
   "custom.q.agent.a": {
-    "text": "設定は変えられません。設定はあなただけのものです。エージェントは自分のターミナルに名前を付けて説明でき、API トークンが許すプログラムは、ターミナルの名前変更、タグ付け、テーマ指定、キャンバスの整理ができます。",
-    "from": "283900c4f919"
+    "text": "設定は変えられません。設定はあなただけのものです。エージェントは自分のターミナルに名前を付けて説明でき、あなたが読んで受け入れるのを待つカラーテーマを提案できます。API トークンが許すプログラムは、ターミナルの名前変更、タグ付け、テーマ指定、キャンバスの整理ができ、テーマの提案もできます。",
+    "from": "4fff2dbea759"
   },
   "custom.related": {
     "text": "関連：<a href=\"/too-many-terminal-tabs/\">目的のターミナルを見つける</a> · <a href=\"/tmux-without-learning-tmux/\">tmux を覚えずに tmux を使う</a> · <a href=\"/security/\">セキュリティとプライバシー</a> · <a href=\"/faq/\">よくある質問</a>",
@@ -5490,14 +5490,6 @@
   "roadmap.yours.sub": {
     "text": "今のテーマ、色、キーを超えて、ページをもっと自分の形に。",
     "from": "6fef807ba454"
-  },
-  "roadmap.yours.themes.name": {
-    "text": "エージェントが提案するテーマ",
-    "from": "9227cd56845e"
-  },
-  "roadmap.yours.themes.text": {
-    "text": "エージェントがカラーテーマを提案でき、あなたが承認するまで他のテーマと並んで表示されません。自分で書くテーマファイルはすでに作られています。",
-    "from": "593bf89b9177"
   },
   "roadmap.yours.when.name": {
     "text": "条件で変わる見た目",

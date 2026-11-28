@@ -42,6 +42,7 @@ import { tourSignal } from './tour/tour-store';
 import './review/drafts-source';
 import './review/library-source';
 import './review/project-file-source';
+import './review/theme-source';
 import './panel/sections/copies';
 import './panel/sections/for-you';
 import './workflows/output-views';
