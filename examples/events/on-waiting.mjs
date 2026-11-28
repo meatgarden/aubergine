@@ -98,7 +98,9 @@ async function main() {
   await follow(server, {
     signal: stop.signal,
     onNote: (sentence) => console.error(`on-waiting: ${sentence}`),
-    // What already waits when this starts did not start now. After a drop, what began to wait meanwhile did.
+    // What already waits when this starts did not start now. After a drop the server sends again what was
+    // missed, and those changes come through `onChange`. This is called again only when it cannot (it says
+    // `reset`): then the list is read, and what began to wait meanwhile is acted on once.
     onOpen: async () => {
       for (const id of tracker.seed(await listSessions(server, stop.signal), { report: connectedBefore })) act(id);
       connectedBefore = true;

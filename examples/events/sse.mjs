@@ -1,5 +1,6 @@
 // What the two examples beside this file share: reading server-sent events, following
-// `GET /v1/events` across drops, and telling "started waiting" from "is waiting".
+// `GET /v1/events` across drops without missing what the server can still say again,
+// and telling "started waiting" from "is waiting".
 // No dependencies: `fetch` and the standard library of Node 22.
 //
 // The token goes in the `Authorization` header and nowhere else: not into an address,
@@ -130,22 +131,45 @@ const wait = (ms, signal) =>
     signal?.addEventListener('abort', done, { once: true });
   });
 
+/** Why the server could not send again what was missed, in a few words. */
+function resetWords(reason) {
+  if (reason === 'restarted') return 'the server was started again';
+  if (reason === 'too-old') return 'more has changed than the server remembers';
+  if (reason === 'unreadable') return 'the server could not read where this stopped';
+  return 'the server could not go on from where this stopped';
+}
+
+/** An id as it may be sent back in a header: visible ASCII, not long. It is opaque: nothing here reads it. */
+const SENDABLE_ID = /^[\x21-\x7e]{1,200}$/;
+
 /**
- * Follows `GET /v1/events` until `signal` says stop, connecting again after a drop.
+ * Follows `GET /v1/events` until `signal` says stop, connecting again after a drop, and not
+ * missing what happened meanwhile where the server can still say it.
+ *
+ * Every event has an `id`. The last one taken is remembered and sent back (`Last-Event-ID`) when
+ * connecting again: the server then first sends the changes made since, in order, and they come
+ * through `onChange` like any other. The server remembers only its most recent changes, and only
+ * while it runs. When it cannot go on from there it says `reset`, and the state is to be read again.
  *
  * - `onChange(change)`: one parsed change, in the order the server sent them.
- * - `onOpen()`: called each time a connection is made, before any change of it is handed over.
- *   What it reads from the server then is at least as new as the connection, so nothing falls between.
+ * - `onOpen()`: called when what is known must be read from the server (again): on the first
+ *   connection, and whenever the server said `reset` (or is one that sends no ids). It is called
+ *   after the connection is made and before any later change is handed over, so nothing falls between.
+ *   It is not called on a connection that goes on where the last one stopped.
  * - `onNote(sentence)`: what happened to the connection, for whoever wants to print it.
+ * - `lastEventId`: where an earlier run of the program stopped, to go on from there.
  *
- * Throws `Refused` on 401 and 403. Changes made while it was not connected are not sent again:
- * the stream has no memory. Read the lists again in `onOpen` if that matters.
+ * Answers the id of the last event taken ('' when there was none) once `signal` says stop.
+ * Throws `Refused` on 401 and 403.
  */
-export async function follow(server, { onChange, onOpen, onNote = () => {}, signal, path = '/v1/events' }) {
+export async function follow(server, { onChange, onOpen, onNote = () => {}, signal, path = '/v1/events', lastEventId = '' }) {
+  if (lastEventId !== '' && !SENDABLE_ID.test(lastEventId)) throw new Error('That is not an id of an event: it holds a space or a character a header cannot carry.');
   let attempt = 0;
+  let lastId = lastEventId;
   while (!signal?.aborted) {
     try {
-      const answer = await ask(server, path, { headers: { accept: 'text/event-stream' }, signal });
+      const sent = lastId;
+      const answer = await ask(server, path, { headers: { accept: 'text/event-stream', ...(sent === '' ? {} : { 'last-event-id': sent }) }, signal });
       if (answer.status === 401 || answer.status === 403) {
         await answer.body?.cancel();
         throw new Refused(answer.status);
@@ -155,29 +179,56 @@ export async function follow(server, { onChange, onOpen, onNote = () => {}, sign
         throw new Error(`the server answered ${answer.status}`);
       }
       onNote(`connected to ${server.origin}`);
-      if (onOpen) await onOpen();
+      // Whether what is known was read from the server on this connection.
+      let read = false;
+      const readAgain = async () => {
+        read = true;
+        if (onOpen) await onOpen();
+      };
+      // With nothing to go on from, nothing will be sent again: read now.
+      if (sent === '') await readAgain();
       attempt = 0;
-      const parser = sseParser(({ data }) => {
+      const arrived = [];
+      const parser = sseParser((event) => arrived.push(event));
+      const take = async ({ event, data, id }) => {
         let change;
         try {
           change = JSON.parse(data);
         } catch {
           return;
         }
-        if (change !== null && typeof change === 'object' && typeof change.type === 'string') onChange(change);
-      });
+        if (change === null || typeof change !== 'object' || typeof change.type !== 'string') return;
+        if (event === 'reset') {
+          // What was missed cannot be sent again. Said before `hello` and without an id, so that
+          // a program cut off right here asks from the same place and is told the same.
+          onNote(`${resetWords(change.reason)}: what happened meanwhile is not sent again, reading the state again`);
+          await readAgain();
+        } else if (event === 'hello') {
+          if (sent !== '' && change.resumed === true) onNote('going on from where it stopped');
+          // Asked to go on, and neither that nor `reset` was said: do not guess.
+          else if (!read) await readAgain();
+        } else {
+          onChange(change);
+        }
+        // Only now: an event that was not handled is asked for again.
+        if (SENDABLE_ID.test(id)) lastId = id;
+      };
       const decoder = new TextDecoder();
-      for await (const chunk of answer.body) parser.feed(decoder.decode(chunk, { stream: true }));
+      for await (const chunk of answer.body) {
+        parser.feed(decoder.decode(chunk, { stream: true }));
+        for (const event of arrived.splice(0)) await take(event);
+      }
       throw new Error('the server closed the connection');
     } catch (error) {
       if (error instanceof Refused) throw error;
-      if (signal?.aborted) return;
+      if (signal?.aborted) return lastId;
       attempt += 1;
       const ms = delayFor(attempt);
       onNote(`not connected (${reasonOf(error)}); trying again in ${Math.round(ms / 1000)}s`);
       await wait(ms, signal);
     }
   }
+  return lastId;
 }
 
 /**
@@ -187,9 +238,11 @@ export async function follow(server, { onChange, onOpen, onNote = () => {}, sign
  * message changes. So the previous state of each terminal is kept, and `started` is true
  * exactly when a terminal's state becomes `waiting` from anything else.
  *
- * `seed` is for what a list says when a connection is made: the first time it only
- * remembers (a terminal that already waits did not start now); pass `{ report: true }` after
- * a reconnect to learn which terminals began to wait while nobody listened.
+ * `seed` is for what a list says when the state is read: the first time it only
+ * remembers (a terminal that already waits did not start now); pass `{ report: true }` when
+ * it is read again (the server said `reset`) to learn which terminals began to wait while
+ * nobody listened. Where the server sends again what was missed, those changes come through
+ * `change` like any other and the list is not needed.
  */
 export function waitingTracker() {
   const last = new Map();
