@@ -1,4 +1,4 @@
-import { CLOSE_DEVICE_REVOKED, PROJECT_HEADER, type LinkKind, type ThemeSetting, type ChangeAppearanceRequest } from '@aubergine/shared';
+import { CLOSE_DEVICE_REVOKED, PROJECT_HEADER, readSignInOffer, type LinkKind, type ThemeSetting, type ChangeAppearanceRequest } from '@aubergine/shared';
 import { z, type ZodType } from 'zod';
 import { createClient } from '@aubergine/client';
 import {
@@ -484,18 +484,28 @@ export async function pairWith(address: string, code: string): Promise<PairedPag
 /** How long a directory is waited for. */
 const DIRECTORY_WAIT_MS = 10_000;
 
+/** A directory answered that it asks who the person is: where its sign-in page is, or null where it did not say in a way this page knows. */
+export class DirectoryAsks extends Error {
+  constructor(readonly signIn: string | null) {
+    super('The directory asks who you are.');
+  }
+}
+
 /**
  * The text of a directory file, asked of the address it is kept at. A directory is not a server: nothing of this
- * browser is sent with the question (no cookie, no credential, no referrer), no redirect is followed, and no more
- * than `limit` characters are taken. Fails with an ApiError of status 0 where no answer could be read.
+ * browser is sent with the question (no cookie, no referrer), no redirect is followed, and no more than `limit`
+ * characters are taken. The one thing that may be sent is `token`, which that very directory's own sign-in window
+ * handed this page: as `Authorization: Bearer`, to that address alone. Fails with `DirectoryAsks` for a `401`, and
+ * with an ApiError of status 0 where no answer could be read.
  */
-export async function directoryTextAt(address: string, limit: number): Promise<string> {
+export async function directoryTextAt(address: string, limit: number, token: string | null = null): Promise<string> {
   let response: Response;
   try {
-    response = await fetch(address, { method: 'GET', headers: { accept: 'application/json' }, credentials: 'omit', redirect: 'error', mode: 'cors', referrerPolicy: 'no-referrer', cache: 'no-store', signal: AbortSignal.timeout(DIRECTORY_WAIT_MS) });
+    response = await fetch(address, { method: 'GET', headers: { accept: 'application/json', ...(token === null ? {} : { authorization: `Bearer ${token}` }) }, credentials: 'omit', redirect: 'error', mode: 'cors', referrerPolicy: 'no-referrer', cache: 'no-store', signal: AbortSignal.timeout(DIRECTORY_WAIT_MS) });
   } catch {
     throw new ApiError(0, 'network', 'No answer.');
   }
+  if (response.status === 401) throw new DirectoryAsks(readSignInOffer(await response.text().catch(() => ''), address));
   if (!response.ok) throw new ApiError(response.status, 'network', `HTTP ${response.status}`);
   const said = Number.parseInt(response.headers.get('content-length') ?? '', 10);
   if (Number.isFinite(said) && said > limit * 4) throw new ApiError(413, 'too_large', 'Too large.');

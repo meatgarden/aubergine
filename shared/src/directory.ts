@@ -134,3 +134,71 @@ export function byOrganization(directory: Directory): DirectoryGroup[] {
   }
   return [...groups.filter((g) => g.organization !== null), ...groups.filter((g) => g.organization === null)];
 }
+
+/* ---------- A directory that asks who you are ---------- */
+
+/**
+ * A directory may ask who the person is before it lists anything. It then answers `401` with where its own sign-in
+ * page is, the page opens that in a window of its own, the person signs in there, and that window hands the opening
+ * page a token with `postMessage`. The page sends the token as `Authorization: Bearer` when it reads that directory,
+ * and nowhere else.
+ *
+ * The three functions here are the whole contract: `readSignInOffer` (what a `401` says), `signInWindowAddress`
+ * (what the window is opened at) and `readSignedIn` (what the window hands back). A token says who reads the
+ * phone book. It is not a credential of any server, and holding one links nothing.
+ */
+
+/** How long a token may be, and what it is made of: printable ASCII with no space, so that it is a header's value as it is. */
+export const MAX_DIRECTORY_TOKEN = 4096;
+const DIRECTORY_TOKEN = /^[\x21-\x7e]+$/;
+/** The two things the page adds to the sign-in address, so that the window knows whom to hand the token to. */
+export const SIGN_IN_PAGE_PARAM = 'page';
+export const SIGN_IN_REQUEST_PARAM = 'request';
+/** What ties a window's message to the click that opened it: made by the page for each try. */
+const SIGN_IN_REQUEST = /^[a-z0-9]{16,64}$/;
+
+/**
+ * Where a directory says its sign-in page is, read from the body of its `401`:
+ * `{ "aubergineDirectory": 1, "signIn": "https://…/sign-in" }`. The address must be of the directory's own origin,
+ * with no user name, query or fragment. Null for anything else: the directory asks, and this page does not know how.
+ */
+export function readSignInOffer(text: unknown, directoryAddress: string): string | null {
+  if (typeof text !== 'string' || text.length > 4096) return null;
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(text);
+  } catch {
+    return null;
+  }
+  const offer = z.object({ aubergineDirectory: z.literal(DIRECTORY_FORMAT), signIn: z.string().max(500) }).safeParse(parsed);
+  if (!offer.success) return null;
+  const where = directoryAddressProblem(offer.data.signIn);
+  if (!where.ok) return null;
+  try {
+    return new URL(where.address).origin === new URL(directoryAddress).origin ? where.address : null;
+  } catch {
+    return null;
+  }
+}
+
+/** The address the sign-in window is opened at: the directory's, with the origin of the page that asks and the name of this try. Null where either is not what it must be. */
+export function signInWindowAddress(signIn: string, pageOrigin: string, request: string): string | null {
+  const where = directoryAddressProblem(signIn);
+  const page = accessProblem('pages', pageOrigin);
+  if (!where.ok || !page.ok || page.origin !== pageOrigin || !SIGN_IN_REQUEST.test(request)) return null;
+  const url = new URL(where.address);
+  url.searchParams.set(SIGN_IN_PAGE_PARAM, page.origin);
+  url.searchParams.set(SIGN_IN_REQUEST_PARAM, request);
+  return url.href;
+}
+
+/**
+ * What a sign-in window handed back, as the data of its message:
+ * `{ "aubergineDirectory": 1, "request": "<the name of the try>", "token": "<the token>" }`. The token, or null for
+ * anything else, a message for another try included. Whoever calls has already checked where the message came from.
+ */
+export function readSignedIn(data: unknown, request: string): string | null {
+  const message = z.object({ aubergineDirectory: z.literal(DIRECTORY_FORMAT), request: z.string().max(64), token: z.string().min(16).max(MAX_DIRECTORY_TOKEN).regex(DIRECTORY_TOKEN) }).safeParse(data);
+  if (!message.success || !SIGN_IN_REQUEST.test(request) || message.data.request !== request) return null;
+  return message.data.token;
+}
