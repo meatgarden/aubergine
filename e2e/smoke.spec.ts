@@ -3552,6 +3552,8 @@ test('one look: the canvas page and every screen use the two control heights (an
   await look('the Rules part of the queue', 'queue-rules', async () => {
     await openPage(page, 'queue');
     await page.getByTestId('queue-tab-rules').click();
+    // What a rule can hear is all in the one picker, what happens to a terminal included.
+    await expect(page.getByTestId('rule-event').locator('option')).toContainText(['a terminal starts waiting for you', 'an agent in a terminal finished', 'a command failed in a terminal']);
   });
   await look('Review', 'review-screen', () => command('Review drafts'));
   await look('the tags dialog', 'tag-dialog', () => command('Edit the tags'));

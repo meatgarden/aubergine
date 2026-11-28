@@ -983,12 +983,13 @@ From a line of a checklist an agent handed in, or from anything written on your 
 Under **Rules** on the same screen, or with `aubergine rule`. A rule is yours alone to write: no program and no agent can add or change one.
 
 - **When**: a task is done, a task failed, a task needs you, something is asked of you, a schedule fired, or a schedule could not run or was missed.
+- **When**, for a terminal: a terminal starts waiting for you, an agent in a terminal finished, or a command failed in a terminal (as its shell reports it: it ended with something other than 0). A rule hears the *change*: a terminal that keeps waiting is told once, and again only after it stopped waiting and began again. The rule is told which terminal and that it happened, in fixed words ("The terminal “Fix login” is waiting for you", "A command failed in the terminal “Tests”"): never the command, what it printed or what the agent said. "People only" makes no difference to this: the rule is yours.
 - A rule has a switch: one that is **off** is kept and does nothing. Rules that came in a project file arrive off.
 - **Then**, one of two things:
   - **Notify me**: a notification from the open Aubergine page. The browser asks your permission when you press **Allow notifications**, not before. Nothing leaves your computer.
   - **Run a step**: starts a run of one of your saved steps, on a terminal you name or a new one, with a short account of what happened as its task. This is how something outside gets called: write a step that says "put this in the calendar", and the agent does it with its own connectors. Aubergine holds no credential for any app and calls no address itself.
 
-A rule fires once for one event and at most six times a minute; what comes faster is dropped. Every firing is in the activity log, with which rule and how it ended, and without what the task said. What an agent does *because of* a run a rule started sets off no rule, so a rule cannot feed itself.
+A rule fires once for one event and at most six times a minute; what comes faster is dropped. Every firing is in the activity log, with which rule and how it ended, and without what the task said. What an agent does *because of* a run a rule started sets off no rule, so a rule cannot feed itself. The same holds for what happens to its terminal: a terminal on a run a rule started (or a schedule) is not heard, and stays unheard after that run until it has been given something new, so the end of that turn starts nothing. **Run a step** runs where the rule says, on the terminal you named or a new one, never on "the terminal it happened in".
 
 ### From the command line
 
@@ -1001,6 +1002,7 @@ aubergine task move "Fix the retry" --first
 aubergine todo                              # everything that waits on you
 aubergine todo add "Renew the certificate"
 aubergine rule add --when task.done --notify
+aubergine rule add --when terminal.waiting --notify   # also terminal.finished, command.failed
 ```
 
 Typed inside a terminal on a canvas, `task add` proposes and `ask` asks, with that terminal's own credential. What only you decide (accept, decline, start, move, rules, marking something done) does nothing there and says so. That is a sentence in an agent's way and not a lock: an agent runs as you, and can act as you from outside the canvas, which the activity log then shows as a call from a command line.
