@@ -1489,6 +1489,8 @@ To link one, the other server must already be reachable over HTTPS, or be on the
 2. Run `aubergine device add --page <that origin>` there. It prints a code.
 3. In this page, choose **Link a server…** at the foot of the project menu, and give the other Aubergine's address, a name for it here, and the code.
 
+Where a company has several, someone can keep a **directory**: a JSON file that lists them by organization. **Add a directory…** in the same dialog takes the file's address and lists its servers over the fields; pressing one fills in its address and name. A directory gives no access: each server is still linked with a code made there. The format is in [A directory of servers](docs/remote.md#a-directory-of-servers).
+
 **Unlink…**, in that server's part of the menu, forgets it in this browser and asks it to revoke this page's device. Everything else (what you see afterwards, what stays this page's own, what it does not do) is in [Two servers in one page](docs/remote.md#two-servers-in-one-page) in the guide.
 
 **The credential is kept in this browser's storage, for this page's address. Whoever is the owner on this computer is the owner on every server linked from it.** Unlinking revokes the credential on the other server.
