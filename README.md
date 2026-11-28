@@ -928,6 +928,8 @@ A terminal that runs an agent describes itself, so that many of them can be foll
 
 A link is never drawn as an address. It is a chip: two letters for its kind, and a short label ("PR 54", "ABC-123", "Canvas redesign"), with the whole address in the tooltip; press it to open it in a new tab. The kind and the label are told from the address alone. **Aubergine never fetches an address**: no request leaves your computer because a link was added or shown. The same chips stand in a terminal's title (at most three), in its note and in **For you**, wherever an address is written.
 
+Addresses of cloud consoles and delivery services are chips with words too, told from the address alone: the AWS console (the service, and the region where the host names it), the Google Cloud console (the product), the Azure portal, HCP Terraform (a workspace, a run), Pulumi Cloud (a stack, an update, a preview) and Datadog at its own hosts. What a page is about is mostly after a `?` or a `#`, which is not read, so a console's chip says the service and the region and no more; a console or sign-in page is never kept only because a terminal showed it.
+
 Everything about this, including exactly what is looked at and when, is in [docs/describing.md](docs/describing.md).
 
 ```sh
@@ -988,9 +990,10 @@ Under **Rules** on the same screen, or with `aubergine rule`. A rule is yours al
 - **When**: a task is done, a task failed, a task needs you, something is asked of you, a schedule fired, or a schedule could not run or was missed.
 - **When**, for a terminal: a terminal starts waiting for you, an agent in a terminal finished, or a command failed in a terminal (as its shell reports it: it ended with something other than 0). A rule hears the *change*: a terminal that keeps waiting is told once, and again only after it stopped waiting and began again. The rule is told which terminal and that it happened, in fixed words ("The terminal “Fix login” is waiting for you", "A command failed in the terminal “Tests”"): never the command, what it printed or what the agent said. "People only" makes no difference to this: the rule is yours.
 - A rule has a switch: one that is **off** is kept and does nothing. Rules that came in a project file arrive off.
-- **Then**, one of two things:
+- **Then**, one of three things:
   - **Notify me**: a notification from the open Aubergine page. The browser asks your permission when you press **Allow notifications**, not before. Nothing leaves your computer.
-  - **Run a step**: starts a run of one of your saved steps, on a terminal you name or a new one, with a short account of what happened as its task. This is how something outside gets called: write a step that says "put this in the calendar", and the agent does it with its own connectors. Aubergine holds no credential for any app and calls no address itself.
+  - **Run a step**: starts a run of one of your saved steps, on a terminal you name or a new one, with a short account of what happened as its task. This is how something outside gets called: write a step that says "put this in the calendar", and the agent does it with its own connectors. Aubergine holds no credential for any app.
+  - **Send a webhook**: one small signed message to an address you wrote into the settings file under a name (`webhooks` in `config.json`, read when the server starts); the rule names it by that name only, so nobody but you at that file says where a message goes. It says what happened, where and when (IDs, names and one line of fixed words, such as "The terminal “Fix login” is waiting for you") and never what a terminal showed, what the agent asked or what a task said. One attempt with 5 seconds, no redirect followed, never a second try; a rule whose webhook cannot be sent says so once on your list, and after five failures in a row it is not tried again until you switch the rule off and on or the server starts again. With no webhook written, the Rules tab says where they are written. How to write one, what is sent and how a receiver checks the signature: [docs/webhooks.md](docs/webhooks.md).
 
 A rule fires once for one event and at most six times a minute; what comes faster is dropped. Every firing is in the activity log, with which rule and how it ended, and without what the task said. What an agent does *because of* a run a rule started sets off no rule, so a rule cannot feed itself. The same holds for what happens to its terminal: a terminal on a run a rule started (or a schedule) is not heard, and stays unheard after that run until it has been given something new, so the end of that turn starts nothing. **Run a step** runs where the rule says, on the terminal you named or a new one, never on "the terminal it happened in".
 
@@ -1006,6 +1009,7 @@ aubergine todo                              # everything that waits on you
 aubergine todo add "Renew the certificate"
 aubergine rule add --when task.done --notify
 aubergine rule add --when terminal.waiting --notify   # also terminal.finished, command.failed
+aubergine rule add --when task.failed --webhook ops   # "ops" is a name under "webhooks" in config.json
 ```
 
 Typed inside a terminal on a canvas, `task add` proposes and `ask` asks, with that terminal's own credential. What only you decide (accept, decline, start, move, rules, marking something done) does nothing there and says so. That is a sentence in an agent's way and not a lock: an agent runs as you, and can act as you from outside the canvas, which the activity log then shows as a call from a command line.
@@ -1379,6 +1383,7 @@ Create `config.json` in the data folder (the server prints its location at start
   "desktop": { "app": null, "command": null, "openNew": false },
   "messages": { "perSenderPerMinute": 6, "perPairPerHour": 30, "pauseAfter": 6, "maxUnread": 20, "nudgeIntervalSeconds": 120, "keepDays": 30 },
   "access": { "addresses": [], "pages": [] },
+  "webhooks": [],
   "shortcuts": {},
   "shortcutsInAppWindow": {}
 }
@@ -1411,6 +1416,7 @@ Create `config.json` in the data folder (the server prints its location at start
 - `schedules.lateWithinHours`: a time of a [schedule](#schedules-at-these-times-run-this-there) that passed while the computer was asleep or the server stopped still runs, marked late, when it is at most this many hours old. Default 6; 0 means never. It applies from the next start of the server.
 - `messages`: the limits on [messages between terminals](#messages-between-terminals). They apply from the next start of the server.
 - `access.addresses`: the HTTPS addresses this server also answers under, for [another device](#from-another-device). Read when the server starts; written by hand only. `access.pages`: the origins of pages of another Aubergine that may [show this server](#letting-another-aubergines-page-show-this-server), read and written the same way. Both are explained in [Using Aubergine from elsewhere](docs/remote.md).
+- `webhooks`: the addresses a [rule](#rules-when-something-happens-do-something) may send a webhook to, each `{ "name", "address", "secret" }`: a short name, an `https` address (plain `http` only to this computer itself) and a secret of at least 32 characters. Read when the server starts; written by hand only, and neither the secret nor the rest of the address is shown anywhere else. A wrong entry is skipped, and `aubergine doctor` says why. See [docs/webhooks.md](docs/webhooks.md).
 - `shortcuts`, `shortcutsInAppWindow`: your own keys; see [Keyboard](#keyboard).
 
 Font, theme, appearance and keys apply when you reload the page (or at once, when changed in Settings); shell and folder apply to the next new terminal.
@@ -1658,7 +1664,7 @@ The **Library** (in the toolbar, or ⌘K, `Library…`) is a place to browse wor
 
 **Sources.** A source is a place with an index of items:
 
-- **Comes with Aubergine**: a small library inside the app (four steps and two workflows, written in plain language). It needs no network and is why Browse is not empty the first time.
+- **Comes with Aubergine**: a small library inside the app (six steps and three workflows, written in plain language). It needs no network and is why Browse is not empty the first time. For infrastructure as code it brings a workflow, **Plan, review, apply** (say the change, make the plan with the repository's own tool, stop for your yes, apply exactly that plan, check), and two steps, **Check for drift** (read-only, made for a schedule) and **Describe this stack**. The approval is a checkpoint for you, not a lock: the agent runs with your cloud access, so give it a read-only profile for planning and drift. None of the three was run against a real cloud account.
 - **A folder** on this computer.
 - **A Git repository**, by its address: `https://…`, `ssh://…`, `user@host:path` or `file://…`.
 
