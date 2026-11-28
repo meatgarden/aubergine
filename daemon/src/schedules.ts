@@ -186,7 +186,7 @@ export class Schedules {
   }
 
   private tell(event: RuleEvent, schedule: Schedule, last: ScheduleLast, sentence: string): void {
-    this.queue.happened({ id: `${event} ${schedule.id} ${last.due ?? last.at}`, event, sentence: sentence.slice(0, 500), taskId: last.taskId, askId: null, projectId: schedule.projectId });
+    this.queue.happened({ id: `${event} ${schedule.id} ${last.due ?? last.at}`, event, sentence: sentence.slice(0, 500), taskId: last.taskId, askId: null, scheduleId: schedule.id, projectId: schedule.projectId });
   }
 
   /** It did not run: the row says why. Where something it names is gone, the owner's list says so too, once, for as long as that lasts. */

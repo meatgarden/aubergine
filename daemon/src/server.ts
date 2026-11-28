@@ -1,5 +1,5 @@
 import { packageRoot } from './package-root';
-import { DEVICE_UNUSED_DAYS, LINKED_PAGE_HEADERS, PROJECT_HEADER, PairRequest, PairingCodeRequest, TICKET_PARAM, accessEntries, accessProblem, deviceStatus, isLocalHost, viewOfDevice, type ChangeAppearanceRequest, type DeviceList, type OpenedOnDesktop, type PairedPage, type PairingCodeAnswer, type RevokedDevice, type SocketTicket } from '@aubergine/shared';
+import { DEVICE_UNUSED_DAYS, LINKED_PAGE_HEADERS, PROJECT_HEADER, PairRequest, PairingCodeRequest, TICKET_PARAM, accessEntries, accessProblem, webhookEntries, webhooksShown, deviceStatus, isLocalHost, viewOfDevice, type ChangeAppearanceRequest, type DeviceList, type OpenedOnDesktop, type PairedPage, type PairingCodeAnswer, type RevokedDevice, type SocketTicket } from '@aubergine/shared';
 import { DeviceNotFoundError, Devices } from './devices';
 import { Pairing } from './pairing';
 import { SocketTickets } from './socket-tickets';
@@ -118,6 +118,7 @@ import { ProjectFiles } from './project-files';
 import { Projects } from './projects';
 import type { DesktopOpener } from './desktop/open';
 import { Queue } from './queue';
+import type { WebhookSender } from './webhooks/send';
 import { REAL_CLOCK, Schedules, ownZone, type ScheduleClock } from './schedules';
 import { MemoryTaskArchive, type TaskArchive } from './task-archive';
 import { FetchRefusal, type LibraryFetcher } from './library/git';
@@ -193,6 +194,8 @@ export interface ServerOptions {
   version?: string;
   /** Check every /v1 answer against the shape its route declares. On by default under the test runner. */
   validateResponses?: boolean;
+  /** What sends a rule's webhook. Left out: this server sends none, and a rule that would says so. A test passes a stand-in. */
+  webhookSender?: WebhookSender;
   /** The clock devices and pairing codes are judged by. A test passes its own, so that it never waits. */
   now?: () => number;
 }
@@ -316,7 +319,16 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
   const environments = new Environments(hub, { keptIn: options.copiesDir ?? null, defaultFolder: () => options.defaultFolder?.() ?? os.homedir(), onError: (error) => console.error('Could not read a working copy:', error) });
   sessions.usePlaces(environments);
   // The queue of tasks, the owner's list and the rules. A rule's notification goes to the pages that are open, and nowhere else.
-  const queue = new Queue(hub, sessions, workflows, drafts, environments, options.taskArchive ?? new MemoryTaskArchive(), { notify: (title, body) => viewers.notify(title, body), activity, onError: (error) => console.error('Could not start a task:', error) });
+  // The webhooks a rule may name: read once, when the server starts, like the outside addresses. A wrong entry was reported where the
+  // settings were read, and is skipped. Their addresses and secrets go to the queue, which hands them to the sender, and nowhere else.
+  const webhooks = webhookEntries((await options.settings()).webhooks).entries;
+  const queue = new Queue(hub, sessions, workflows, drafts, environments, options.taskArchive ?? new MemoryTaskArchive(), {
+    notify: (title, body) => viewers.notify(title, body),
+    activity,
+    onError: (error) => console.error('Could not start a task:', error),
+    webhooks,
+    ...(options.webhookSender ? { webhookSender: options.webhookSender } : {}),
+  });
   await queue.reconcile();
   // Projects: several in the one server, and what is shared between them. Changing any of it is the owner's alone.
   const projects = new Projects(hub, sessions);
@@ -857,7 +869,9 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     return {
       protocolVersion: PROTOCOL_VERSION,
       runtime: runtimeNow,
-      settings: settingsNow,
+      // The webhooks stay in the settings file: of each, the page is told its name and its address's host, as they were read at start.
+      settings: { ...settingsNow, webhooks: [] },
+      webhooks: webhooksShown(webhooks),
       // A browser has no use for the hashes of token secrets, so they stay here.
       state: { ...hub.state, tokens: hub.state.tokens.map((t) => ({ ...t, hash: '' })), devices: hub.state.devices.map((d) => ({ ...d, hash: '' })) },
       epoch: hub.epoch,

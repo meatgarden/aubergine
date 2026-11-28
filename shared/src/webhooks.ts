@@ -113,7 +113,7 @@ export const webhooksShown = (entries: readonly WebhookEntry[]): WebhookShown[] 
 
 /* ---------- What is sent ---------- */
 
-const Named = (what: string) => z.object({ id: Id.describe(`The ID of ${what}.`), name: z.string().max(120).describe(`The name of ${what}, as it was when this was sent. One line of plain text.`) });
+const Named = (what: string) => z.strictObject({ id: Id.describe(`The ID of ${what}.`), name: z.string().max(120).describe(`The name of ${what}, as it was when this was sent. One line of plain text.`) });
 
 /**
  * The message a webhook is sent: IDs, names, the event and the time. Nothing a terminal showed is in it: no command
@@ -126,9 +126,9 @@ export const WebhookBody = z.strictObject({
   text: z.string().max(300).describe('One line a person can read: fixed words and, for a terminal or a schedule, its name. It is there so that a chat tool’s incoming webhook shows something. Never what a terminal showed, a task said or an agent asked.'),
   project: Named('the project it happened in').describe('The project it happened in.'),
   terminal: Named('the terminal').optional().describe('For what happens to a terminal: that terminal. Its name may have been set by the agent in it.'),
-  task: z.object({ id: Id.describe('The ID of the task.') }).optional().describe('For what happens to a task, and for a schedule that fired: the task. Its ID only.'),
+  task: z.strictObject({ id: Id.describe('The ID of the task.') }).optional().describe('For what happens to a task, and for a schedule that fired: the task. Its ID only.'),
   schedule: Named('the schedule').optional().describe('For what happens to a schedule: that schedule.'),
-  rule: z.object({ id: Id.describe('The ID of the rule.') }).describe('The rule that sent this.'),
+  rule: z.strictObject({ id: Id.describe('The ID of the rule.') }).describe('The rule that sent this.'),
 });
 export type WebhookBody = z.infer<typeof WebhookBody>;
 

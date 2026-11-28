@@ -460,7 +460,7 @@ describe('rules', () => {
     const made = await asOwner('POST', '/v1/rules', { event: 'task.done', action: { kind: 'notify' } });
     expect(made.status, JSON.stringify(made.body)).toBe(201);
     expect(made.body.rules.map((r: { says: string }) => r.says)).toEqual(['When a task is done, notify me in the open page.']);
-    expect(made.body.actions.map((a: { kind: string }) => a.kind)).toEqual(['notify', 'run-element']);
+    expect(made.body.actions.map((a: { kind: string }) => a.kind)).toEqual(['notify', 'run-element', 'webhook']);
     const task = await add('Ship it');
     await startNext();
     expect(notified).toEqual([]);
@@ -874,7 +874,7 @@ describe('the commands', () => {
     expect(() => parseRuleCommand(['add', '--when', 'task.done', '--run', 'x'])).toThrow(/needs where/);
     // A wrong option, a wrong event, a stray word: each answer gives the right form and one that works.
     for (const wrong of [['add', '--when', 'task.done', '--notfy'], ['add', '--when', 'task.finished', '--notify'], ['add', '--notify'], ['add', '--when', 'task.done', '--notify', 'please'], ['add', '--on', 'task.done', '--notify']]) {
-      expect(() => parseRuleCommand(wrong), wrong.join(' ')).toThrow(/The form is:\n {2}aubergine rule add --when <event> \(--notify \| --run <shelf element> \(--on <terminal> \| --new <canvas>\)\)\nwhere <event> is one of: task\.done, .*\nFor example:\n {2}aubergine rule add --when task\.done --notify$/s);
+      expect(() => parseRuleCommand(wrong), wrong.join(' ')).toThrow(/The form is:\n {2}aubergine rule add --when <event> \(--notify \| --webhook <name> \| --run <shelf element> \(--on <terminal> \| --new <canvas>\)\)\nwhere <event> is one of: task\.done, .*\nFor example:\n {2}aubergine rule add --when task\.done --notify$/s);
     }
     expect(() => parseRuleCommand(['add', '--when', 'task.done', '--notfy'])).toThrow(/^rule add does not know --notfy\./);
     expect(USAGE).toContain('For example: aubergine rule add --when task.done --notify');

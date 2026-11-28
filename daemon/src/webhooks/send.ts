@@ -24,8 +24,8 @@ export interface WebhookDelivery {
 export type WebhookResult =
   /** The receiver answered. Only the status is known: the body was not read. A redirect is an answer, and was not followed. */
   | { kind: 'answered'; status: number }
-  /** Nothing was sent: the address or the message is not one this module sends. */
-  | { kind: 'refused'; why: 'address' | 'too-large' }
+  /** Nothing was sent: the address or the message is not one this module sends, or this server was given nothing to send with. */
+  | { kind: 'refused'; why: 'address' | 'too-large' | 'no-sender' }
   /** No answer within the time allowed. */
   | { kind: 'timed-out' }
   /** The request could not be made or was cut off: no such host, refused, a certificate that does not hold. */
@@ -36,7 +36,7 @@ export interface WebhookSender {
 }
 
 /** A server that was given no sender sends nothing, and says so. */
-export const NO_SENDER: WebhookSender = { send: async () => ({ kind: 'failed' }) };
+export const NO_SENDER: WebhookSender = { send: async () => ({ kind: 'refused', why: 'no-sender' }) };
 
 export interface FetchSenderOptions {
   timeoutMs?: number;

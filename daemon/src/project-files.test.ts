@@ -568,7 +568,7 @@ describe('nothing is made', () => {
   it('when the last part of making it fails: the step leaves nothing, and nobody hears of any of it', async () => {
     // As many rules as there may be are here already: a file that brings one more fails where its rules are made,
     // after its project, canvases, terminals and elements were.
-    for (let n = 0; n < RULES_MAX; n += 1) hub.emit({ type: 'rule.changed', rule: { id: newId(), projectId: state().projects[0]!.id, on: true, event: 'task.done', action: { kind: 'notify' }, createdAt: new Date().toISOString() } });
+    for (let n = 0; n < RULES_MAX; n += 1) hub.emit({ type: 'rule.changed', rule: { id: newId(), projectId: state().projects[0]!.id, on: true, problem: null, event: 'task.done', action: { kind: 'notify' }, createdAt: new Date().toISOString() } });
     await hub.flush();
     const before = holds();
     const saved = await readFile(path.join(dir, 'state.json'), 'utf8');

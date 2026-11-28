@@ -1,7 +1,7 @@
 import { mkdir, readFile, rename, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
-import { DEFAULT_SETTINGS, Settings, accessEntries, resolveColors, resolveShortcuts, type AppearanceAnswer, type ChangeAppearanceRequest, type Platform } from '@aubergine/shared';
+import { DEFAULT_SETTINGS, Settings, accessEntries, webhookEntries, webhooksShown, resolveColors, resolveShortcuts, type AppearanceAnswer, type ChangeAppearanceRequest, type Platform, type WebhookShown } from '@aubergine/shared';
 
 export const SETTINGS_FILE = 'config.json';
 
@@ -25,6 +25,7 @@ export async function loadSettings(dir: string, onWarning: (message: string) => 
     for (const problem of shortcutProblems(settings)) onWarning(`${file}: ${problem}`);
     for (const problem of accessProblems(raw, settings)) onWarning(`${file}: ${problem} It is skipped.`);
     for (const problem of colorProblems(raw)) onWarning(`${file}: ${problem}`);
+    for (const problem of webhookProblems(raw, settings)) onWarning(`${file}: ${problem} It is skipped.`);
     return settings;
   } catch (error) {
     const detail =
@@ -90,6 +91,29 @@ export function accessProblems(raw: unknown, settings: Settings): string[] {
     problems.push(...accessEntries(kind, settings.access[kind]).problems);
   }
   return problems;
+}
+
+/**
+ * What is wrong with `webhooks` in the settings: each entry that cannot be used, and a list that is not a list (which
+ * is then taken as empty). No sentence repeats an address or a secret.
+ */
+export function webhookProblems(raw: unknown, settings: Settings): string[] {
+  const list = isObject(raw) ? raw.webhooks : undefined;
+  const problems = list !== undefined && (!Array.isArray(list) || list.length > 20) ? ['webhooks: is not a list of at most 20 entries.'] : [];
+  return [...problems, ...webhookEntries(settings.webhooks).problems];
+}
+
+/** The webhooks the settings file names, as the server takes them at its start: each by its name and its address's host, and what is wrong with the rest. For `aubergine doctor`. */
+export async function webhookReport(dir: string): Promise<{ webhooks: WebhookShown[]; problems: string[] }> {
+  let raw: unknown;
+  try {
+    raw = JSON.parse(await readFile(path.join(dir, SETTINGS_FILE), 'utf8'));
+  } catch {
+    return { webhooks: [], problems: [] };
+  }
+  const settings = Settings.safeParse(raw);
+  if (!settings.success) return { webhooks: [], problems: [] };
+  return { webhooks: webhooksShown(webhookEntries(settings.data.webhooks).entries), problems: webhookProblems(raw, settings.data) };
 }
 
 /** The outside addresses and linked pages the settings file names, as the server takes them at its start, and what is wrong with `access`. For `aubergine doctor`. */

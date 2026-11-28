@@ -22,10 +22,10 @@ export type QueueCommand =
   | { action: 'todo-done'; query: string }
   | { action: 'ask'; text: string }
   | { action: 'rule-list' }
-  | { action: 'rule-add'; event: string; notify: boolean; run: string | null; on: string | null; onNew: string | null }
+  | { action: 'rule-add'; event: string; notify: boolean; run: string | null; on: string | null; onNew: string | null; webhook?: string | null }
   | { action: 'rule-remove'; query: string };
 
-export const RULE_ADD_FORM = 'aubergine rule add --when <event> (--notify | --run <shelf element> (--on <terminal> | --new <canvas>))';
+export const RULE_ADD_FORM = 'aubergine rule add --when <event> (--notify | --webhook <name> | --run <shelf element> (--on <terminal> | --new <canvas>))';
 export const RULE_ADD_EXAMPLE = 'aubergine rule add --when task.done --notify';
 
 const words = (rest: readonly string[], what: string, known: readonly string[] = []): string => {
@@ -121,7 +121,8 @@ export function parseRuleCommand(args: readonly string[]): QueueCommand {
   if (action === 'add') {
     const when = takeOption(rest, '--when');
     const run = takeOption(when.rest, '--run');
-    const on = takeOption(run.rest, '--on');
+    const webhook = takeOption(run.rest, '--webhook');
+    const on = takeOption(webhook.rest, '--on');
     const onNew = takeOption(on.rest, '--new');
     // Whatever is wrong, the answer says the right form and gives one that works.
     const wrong = (what: string): UsageError => new UsageError(`${what} The form is:\n  ${RULE_ADD_FORM}\nwhere <event> is one of: ${RuleEvent.options.join(', ')}\nFor example:\n  ${RULE_ADD_EXAMPLE}`);
@@ -130,9 +131,10 @@ export function parseRuleCommand(args: readonly string[]): QueueCommand {
     const notify = onNew.rest.includes('--notify');
     if (when.value === null) throw wrong('rule add needs --when <event>.');
     if (!RuleEvent.safeParse(when.value).success) throw wrong(`--when does not know "${when.value}".`);
-    if (notify === (run.value !== null)) throw wrong('rule add needs what to do: --notify, or --run <shelf element>.');
+    if ([notify, run.value !== null, webhook.value !== null].filter(Boolean).length !== 1) throw wrong('rule add needs what to do: one of --notify, --webhook <name>, or --run <shelf element>.');
+    if (webhook.value !== null && (on.value !== null || onNew.value !== null)) throw wrong('rule add --webhook takes no --on and no --new: where a webhook goes is written in the settings file.');
     if (run.value !== null && (on.value === null) === (onNew.value === null)) throw wrong('rule add --run needs where: --on <terminal>, or --new <canvas>.');
-    return { action: 'rule-add', event: when.value, notify, run: run.value, on: on.value, onNew: onNew.value };
+    return { action: 'rule-add', event: when.value, notify, run: run.value, on: on.value, onNew: onNew.value, webhook: webhook.value };
   }
   throw new UsageError(`rule does not know "${action}"`);
 }
@@ -285,7 +287,7 @@ export async function runQueueCommand(command: QueueCommand, deps: QueueCommandD
       case 'rule-list': {
         if (ownersOnly()) return 1;
         const { rules, actions } = await owner((client) => client.listRules());
-        print(rules.length === 0 ? 'No rules.' : showControl(rules.map((rule, index) => `${index + 1}. ${rule.says}  [${rule.id}]`).join('\n')));
+        print(rules.length === 0 ? 'No rules.' : showControl(rules.map((rule, index) => `${index + 1}. ${rule.says}  [${rule.id}]${rule.problem ? `\n   ${rule.problem}` : ''}`).join('\n')));
         print(showControl(`\nA rule is: when ${Object.values(RULE_EVENT_WORDS).join(' | ')}, then ${actions.map((action) => action.title.toLowerCase()).join(' | ')}.`));
         return 0;
       }
@@ -295,11 +297,14 @@ export async function runQueueCommand(command: QueueCommand, deps: QueueCommandD
         if (!event.success) throw new UsageError(`--when takes one of: ${RuleEvent.options.join(', ')}`);
         const list = await owner(async (client) => {
           if (command.notify) return client.addRule({ body: { event: event.data, action: { kind: 'notify' } } });
+          // The name and nothing else: where it goes is the settings file's, and the server says if there is none of that name.
+          if (command.webhook) return client.addRule({ body: { event: event.data, action: { kind: 'webhook', webhook: command.webhook } } });
           const element = pickBy(await collect(client.each.listElements()), command.run ?? '', (e) => e.element.name, 'saved step');
           const on = command.on !== null ? { kind: 'session', sessionId: pickBy(await collect(client.each.listSessions()), command.on, (s) => s.name, 'terminal').id } : { kind: 'new', canvasId: pickBy(await collect(client.each.listCanvases()), command.onNew ?? '', (c) => c.name, 'canvas').id };
           return client.addRule({ body: { event: event.data, action: { kind: 'run-element', elementId: element.id, on } } });
         });
         print(showControl(`Written: ${list.rules.at(-1)?.says ?? ''}`));
+        if (command.webhook) print('One signed message is sent each time, once, to the address that name has in the settings file. What it holds and how to check it: docs/webhooks.md');
         if (command.notify) print('A notification is shown by the open Aubergine page, once you allowed it there: Queue, then "Allow notifications".');
         return 0;
       }

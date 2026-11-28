@@ -8792,7 +8792,7 @@ An API token needs the scope `read`.
     from: string;
     /** Since when, when that is known. */
     at: string | null;
-    /** Where one acts on it: `run:<id>`, `session:<id>`, `task:<id>`, `ask:<id>`, `copy:<id>`, `schedule:<id>`, `review`. */
+    /** Where one acts on it: `run:<id>`, `session:<id>`, `task:<id>`, `ask:<id>`, `copy:<id>`, `schedule:<id>`, `rule:<id>`, `review`. */
     act: string;
     /** True for a terminal that waits for the owner: these are what the count in the toolbar counts. */
     waits: boolean;
@@ -8967,6 +8967,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
       [key: string]: unknown;
     };
     on: boolean;
+    problem: string | null;
     createdAt: string;
     /** The rule in a sentence. */
     says: string;
@@ -8996,7 +8997,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 |---|---|---|---|
 | `projectId` | `string` | no | The project the rule is of. Left out: the first project. |
 | `event` | `"task.done" \| "task.failed" \| "task.needs-owner" \| "ask.added" \| "s…` | yes | What sets it off. |
-| `action` | `{ kind: string; [key: string]: unknown; }` | yes | What it does: `{"kind":"notify"}`, or `{"kind":"run-element","elementId":"…","on":{"kind":"session","sessionId":"…"}}`. |
+| `action` | `{ kind: string; [key: string]: unknown; }` | yes | What it does: `{"kind":"notify"}`, `{"kind":"run-element","elementId":"…","on":{"kind":"session","sessionId":"…"}}`, or `{"kind":"webhook","webhook":"<name>"}`, where the name is one written under `webhooks` in the settings file. |
 
 **Answer** `201`:
 
@@ -9012,6 +9013,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
       [key: string]: unknown;
     };
     on: boolean;
+    problem: string | null;
     createdAt: string;
     /** The rule in a sentence. */
     says: string;
@@ -9059,6 +9061,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
       [key: string]: unknown;
     };
     on: boolean;
+    problem: string | null;
     createdAt: string;
     /** The rule in a sentence. */
     says: string;
@@ -11765,6 +11768,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
     chars: number | null;
     fingerprint: string | null;
     client: string | null;
+    webhook?: string | null;
     action: string;
     resource: {
       sessionId?: string;

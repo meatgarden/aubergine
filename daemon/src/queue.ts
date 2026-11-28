@@ -23,6 +23,12 @@ import {
   visibleIn,
   kickoffLine,
   newId,
+  sentName,
+  webhookText,
+  webhookSignatureHeader,
+  WEBHOOK_HEADERS,
+  WebhookBody,
+  type WebhookEntry,
   nextToStart,
   occasionOfTask,
   occasionOfTerminal,
@@ -65,7 +71,9 @@ import type { ActivityLog } from './activity';
 import type { Drafts } from './drafts';
 import type { Environments } from './environments';
 import { paginate } from './public-api';
-import { actionKind, actionKinds, ruleWords, type ActionContext } from './rules';
+import { actionKind, actionKinds, ruleWords, type ActionContext, type ActionDone, type ActionKnown } from './rules';
+import { webhookMissingWords } from './rules';
+import { NO_SENDER, type WebhookResult, type WebhookSender } from './webhooks/send';
 import { BadInputError, ConflictError, NotFoundError, type Sessions } from './sessions';
 import type { StateHub } from './state-hub';
 import type { TaskArchive } from './task-archive';
@@ -79,6 +87,23 @@ export interface QueueOptions {
   notify: (title: string, body: string) => number;
   activity: ActivityLog;
   onError?: (error: unknown) => void;
+  /** The webhooks of the settings file that can be used, as they were read when the server started. Left out: none. */
+  webhooks?: readonly WebhookEntry[];
+  /** What sends a webhook. Left out: nothing is sent, and the record says so. */
+  webhookSender?: WebhookSender;
+}
+
+/** How one attempt to send a webhook ended, for the record and for the owner: a status that stands for it, and words that never hold the address. */
+function webhookEnding(result: WebhookResult): { status: number; ok: boolean; says: string } {
+  if (result.kind === 'answered') {
+    // The class of the answer and no more: 200 for any 2xx, 300 for a redirect that was not followed, 400, 500.
+    const status = Math.floor(result.status / 100) * 100;
+    if (status === 200) return { status, ok: true, says: 'sent' };
+    return { status, ok: false, says: status === 300 ? 'the receiver answered with a redirect, which is not followed' : `the receiver answered with an error (${status / 100}xx)` };
+  }
+  if (result.kind === 'timed-out') return { status: 504, ok: false, says: 'the receiver did not answer in time' };
+  if (result.kind === 'refused') return { status: 422, ok: false, says: result.why === 'no-sender' ? 'this server was started without anything to send with' : result.why === 'too-large' ? 'the message was too large to send' : 'its address is not one that is sent to' };
+  return { status: 502, ok: false, says: 'the receiver could not be reached' };
 }
 
 /** Who asks, as far as the queue needs to know: the owner, or someone whose additions wait for the owner. */
@@ -118,6 +143,10 @@ export class Queue {
    */
   private readonly unheard = new Set<string>();
   private happenings = 0;
+  /** The webhooks of the settings file, by name. The address and the secret are here and in the sender's hands, nowhere else. */
+  private readonly webhooks: ReadonlyMap<string, WebhookEntry>;
+  /** Messages on their way to a receiver. They wait in no line: a slow receiver holds up nothing but its own message. */
+  private readonly outside = new Set<Promise<void>>();
 
   constructor(
     private readonly hub: StateHub,
@@ -129,6 +158,7 @@ export class Queue {
     private readonly options: QueueOptions,
   ) {
     this.terminals = new Map(hub.state.sessions.map((session) => [session.id, terminalBefore(session)]));
+    this.webhooks = new Map((options.webhooks ?? []).map((entry) => [entry.name, entry]));
     this.unsubscribe = hub.subscribe((event) => this.on(event));
   }
 
@@ -140,6 +170,12 @@ export class Queue {
   /** Everything that was started still to be finished, for a caller that is about to stop. */
   async settled(): Promise<void> {
     await this.dispatching.catch(() => {});
+    await Promise.all([...this.outside]);
+  }
+
+  /** What a rule's action may name that is not in the state. */
+  private get known(): ActionKnown {
+    return { webhooks: [...this.webhooks.keys()] };
   }
 
   private get queue() {
@@ -151,6 +187,15 @@ export class Queue {
    * ended while nobody was listening follows it now. Nothing is started here.
    */
   async reconcile(): Promise<void> {
+    // A rule that names something of the settings file that is not there says so from the start, once; one whose
+    // thing is there again no longer says so. What a rule could not send stays said until a message is sent.
+    for (const rule of [...this.queue.rules]) {
+      const kind = actionKind(rule.action.kind);
+      if (!kind?.missing) continue;
+      const missing = kind.missing(rule.action, this.known);
+      if (missing !== null) this.ruleProblem(rule.id, missing);
+      else if (rule.problem !== null && rule.problem === kind.missing(rule.action, { webhooks: [] })) this.ruleProblem(rule.id, null);
+    }
     for (const task of [...this.queue.tasks]) {
       if (task.state === 'taken') await this.apply(task, { type: 'fail', reason: 'The server stopped while it was being started.' }).catch(() => {});
       else if ((task.state === 'working' || task.state === 'needs-owner') && task.runId !== null) {
@@ -596,8 +641,10 @@ export class Queue {
     // What the action names is looked for in the rule's own project, and in what is shared with it.
     const problem = kind.problem(body.action, stateOf(this.hub.state, projectId));
     if (problem) throw new BadInputError(problem);
+    const missing = kind.missing?.(body.action, this.known) ?? null;
+    if (missing) throw new BadInputError(missing);
     if (this.queue.rules.length >= RULES_MAX) throw new ConflictError(`There are ${RULES_MAX} rules; remove one first.`);
-    const rule: Rule = { id: newId(), projectId, event: body.event, action: body.action, on: true, createdAt: new Date().toISOString() };
+    const rule: Rule = { id: newId(), projectId, event: body.event, action: body.action, on: true, problem: null, createdAt: new Date().toISOString() };
     this.hub.emit({ type: 'rule.changed', rule });
     return this.rules(projectId);
   }
@@ -606,7 +653,8 @@ export class Queue {
   switchRule(ruleId: string, on: boolean): RuleList {
     const rule = this.queue.rules.find((r) => r.id === ruleId);
     if (!rule) throw new NotFoundError(`No rule ${ruleId}`);
-    if (rule.on !== on) this.hub.emit({ type: 'rule.changed', rule: { ...rule, on } });
+    // A rule that is changed begins again: what it could not do is no longer said, unless what it names is still not there.
+    if (rule.on !== on) this.hub.emit({ type: 'rule.changed', rule: { ...rule, on, problem: actionKind(rule.action.kind)?.missing?.(rule.action, this.known) ?? null } });
     return this.rules(rule.projectId);
   }
 
@@ -615,8 +663,53 @@ export class Queue {
     this.hub.emit({ type: 'rule.removed', ruleId });
   }
 
-  private context(projectId: string): ActionContext {
+  /** Says, or no longer says, why a rule cannot do what it says. One change when it differs from what is said already; none otherwise. */
+  private ruleProblem(ruleId: string, problem: string | null): void {
+    if (this.closed) return;
+    const rule = this.queue.rules.find((r) => r.id === ruleId);
+    if (!rule || rule.problem === problem) return;
+    this.hub.emit({ type: 'rule.changed', rule: { ...rule, problem } });
+  }
+
+  /**
+   * Sends the webhook a rule names one message about what happened. The rule gives the name; where it goes and what
+   * signs it are the settings file's, and what it says is made here of IDs, names and fixed words, looked up now:
+   * nothing a terminal showed, nothing a task or a question said. One attempt.
+   */
+  private async sendWebhook(rule: Rule, name: string, occasion: Occasion): Promise<ActionDone> {
+    const entry = this.webhooks.get(name);
+    if (!entry) {
+      this.ruleProblem(rule.id, webhookMissingWords(name));
+      return { says: 'there is no webhook of that name', status: 404, outcome: 'error', webhook: name };
+    }
+    const state = this.hub.state;
+    const project = projectById(state, occasion.projectId);
+    const session = occasion.sessionId ? state.sessions.find((s) => s.id === occasion.sessionId && s.projectId === occasion.projectId) : undefined;
+    const schedule = occasion.scheduleId ? state.schedules.items.find((s) => s.id === occasion.scheduleId && s.projectId === occasion.projectId) : undefined;
+    const body: WebhookBody = WebhookBody.parse({
+      id: newId(),
+      event: occasion.event,
+      at: new Date().toISOString(),
+      text: webhookText(occasion.event, { terminal: session?.name, schedule: schedule?.name }),
+      project: { id: occasion.projectId, name: sentName(project?.name ?? '') },
+      ...(session ? { terminal: { id: session.id, name: sentName(session.name) } } : {}),
+      ...(occasion.taskId ? { task: { id: occasion.taskId } } : {}),
+      ...(schedule ? { schedule: { id: schedule.id, name: sentName(schedule.name) } } : {}),
+      rule: { id: rule.id },
+    });
+    const text = JSON.stringify(body);
+    const signature = await webhookSignatureHeader(entry.secret, Math.floor(Date.now() / 1000), text);
+    // Whatever the sender throws is not looked at: an error of the network may name the address.
+    const result = await (this.options.webhookSender ?? NO_SENDER).send({ address: entry.address, headers: { [WEBHOOK_HEADERS.event]: occasion.event, [WEBHOOK_HEADERS.delivery]: body.id, [WEBHOOK_HEADERS.signature]: signature }, body: text }).catch((): WebhookResult => ({ kind: 'failed' }));
+    const ending = webhookEnding(result);
+    this.ruleProblem(rule.id, ending.ok ? null : `The webhook “${name}” was not sent: ${ending.says}. Nothing is tried a second time; the next time its rule fires, it is sent again.`);
+    return { says: ending.says, status: ending.status, outcome: ending.ok ? 'ok' : 'error', webhook: name };
+  }
+
+  private context(rule: Rule): ActionContext {
+    const projectId = rule.projectId;
     return {
+      sendWebhook: (name, occasion) => this.sendWebhook(rule, name, occasion),
       // An action sees its own project, and what is shared with it.
       state: stateOf(this.hub.state, projectId),
       notify: this.options.notify,
@@ -659,8 +752,8 @@ export class Queue {
       if (this.fired.size > 5000) this.fired.delete(this.fired.values().next().value as string);
       const now = Date.now();
       const lately = (this.firedAt.get(rule.id) ?? []).filter((at) => at > now - 60_000);
-      const record = (status: number, outcome: 'ok' | 'limited' | 'error'): void =>
-        void this.options.activity.append({ at: new Date().toISOString(), caller: 'rule', tokenId: null, tokenName: `rule ${rule.id}`, action: `rule.${rule.action.kind}`, resource: occasion.sessionId ? { sessionId: occasion.sessionId } : {}, method: 'RULE', route: occasion.event, status, outcome });
+      const record = (status: number, outcome: 'ok' | 'limited' | 'error', webhook?: string): void =>
+        void this.options.activity.append({ at: new Date().toISOString(), caller: 'rule', tokenId: null, tokenName: `rule ${rule.id}`, action: `rule.${rule.action.kind}`, resource: occasion.sessionId ? { sessionId: occasion.sessionId } : {}, method: 'RULE', route: occasion.event, status, outcome, ...(webhook === undefined ? {} : { webhook }) });
       if (lately.length >= RULE_RATE_PER_MINUTE) {
         this.firedAt.set(rule.id, lately);
         record(429, 'limited');
@@ -672,15 +765,18 @@ export class Queue {
         record(500, 'error');
         continue;
       }
-      this.dispatching = this.dispatching
-        .then(() => kind.run(rule.action, occasion, this.context(rule.projectId)))
-        .then(
-          () => record(200, 'ok'),
-          (error: unknown) => {
-            record(500, 'error');
-            if (!(error instanceof NotFoundError || error instanceof ConflictError || error instanceof BadInputError)) this.options.onError?.(error);
-          },
-        );
+      const act = (): Promise<ActionDone> => kind.run(rule.action, occasion, this.context(rule));
+      const written = (done: ActionDone): void => (typeof done === 'string' ? record(200, 'ok') : record(done.status, done.outcome, done.webhook));
+      const failed = (error: unknown): void => {
+        record(500, 'error');
+        if (!(error instanceof NotFoundError || error instanceof ConflictError || error instanceof BadInputError)) this.options.onError?.(error);
+      };
+      if (kind.apart) {
+        // Not in the line: nothing waits for a receiver but this one message. The change that caused it is long told.
+        const going: Promise<void> = Promise.resolve().then(act).then(written, failed);
+        this.outside.add(going);
+        void going.finally(() => this.outside.delete(going));
+      } else this.dispatching = this.dispatching.then(act).then(written, failed);
     }
   }
 }

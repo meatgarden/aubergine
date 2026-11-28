@@ -200,6 +200,7 @@ export const USAGE = `Usage: aubergine <command>
   ask <text>                 Inside a session: ask your owner for something only a person can do
   rule list                  The rules: when something happens, do something. Only you write rules
   rule add --when <event> --notify
+  rule add --when <event> --webhook <name>   Send one signed message to an address written in the settings file
   rule add --when <event> --run <shelf element> (--on <terminal> | --new <canvas>)
                              For example: aubergine rule add --when task.done --notify
   rule remove <rule>

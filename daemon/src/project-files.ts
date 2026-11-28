@@ -186,6 +186,8 @@ export class ProjectFiles {
     const rules: FileRule[] = [];
     for (const rule of state.queue.rules.filter((r) => r.projectId === projectId)) {
       if (rule.action.kind === 'notify') rules.push({ event: rule.event, action: { kind: 'notify' } });
+      // A webhook is a setting of one computer: its name means nothing on another, so such a rule stays here.
+      else if (rule.action.kind === 'webhook') leftOut.push('A rule that sends a webhook is not in the file: a webhook is written in the settings file of one computer.');
       else {
         const action = rule.action as { elementId?: string; on?: { kind: 'session'; sessionId: string } | { kind: 'new'; canvasId: string } };
         const element = typeof action.elementId === 'string' ? needElement(action.elementId) : null;
@@ -409,7 +411,7 @@ export class ProjectFiles {
           const action = rule.action.kind === 'notify' ? { kind: 'notify' } : { kind: 'run-element', elementId: elementIds.get(rule.action.element) as string, on: on(rule.action.on) };
           if (!actionKind(action.kind)) throw new BadInputError(`A rule in this file does something this version does not know (${action.kind}). Nothing was made.`);
           // Switched off: it is the owner here who says when it begins to do anything.
-          this.hub.emit({ type: 'rule.changed', rule: { id: newId(), projectId, event: rule.event, action, on: false, createdAt: now } });
+          this.hub.emit({ type: 'rule.changed', rule: { id: newId(), projectId, event: rule.event, action, on: false, problem: null, createdAt: now } });
         }
         if (this.state.schedules.items.length + file.schedules.length > SCHEDULES_MAX) throw new ConflictError(`With this file there would be more than ${SCHEDULES_MAX} schedules. Nothing was made.`);
         for (const schedule of file.schedules) {

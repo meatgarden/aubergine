@@ -7262,7 +7262,7 @@ export type GetForYouResult = {
     from: string;
     /** Since when, when that is known. */
     at: string | null;
-    /** Where one acts on it: `run:<id>`, `session:<id>`, `task:<id>`, `ask:<id>`, `copy:<id>`, `schedule:<id>`, `review`. */
+    /** Where one acts on it: `run:<id>`, `session:<id>`, `task:<id>`, `ask:<id>`, `copy:<id>`, `schedule:<id>`, `rule:<id>`, `review`. */
     act: string;
     /** True for a terminal that waits for the owner: these are what the count in the toolbar counts. */
     waits: boolean;
@@ -7364,6 +7364,7 @@ export type ListRulesResult = {
       [key: string]: unknown;
     };
     on: boolean;
+    problem: string | null;
     createdAt: string;
     /** The rule in a sentence. */
     says: string;
@@ -7381,7 +7382,7 @@ export type AddRuleBody = {
   projectId?: string;
   /** What sets it off. */
   event: "task.done" | "task.failed" | "task.needs-owner" | "ask.added" | "schedule.fired" | "schedule.failed" | "terminal.waiting" | "terminal.finished" | "command.failed";
-  /** What it does: `{"kind":"notify"}`, or `{"kind":"run-element","elementId":"…","on":{"kind":"session","sessionId":"…"}}`. */
+  /** What it does: `{"kind":"notify"}`, `{"kind":"run-element","elementId":"…","on":{"kind":"session","sessionId":"…"}}`, or `{"kind":"webhook","webhook":"<name>"}`, where the name is one written under `webhooks` in the settings file. */
   action: {
     kind: string;
     [key: string]: unknown;
@@ -7399,6 +7400,7 @@ export type AddRuleResult = {
       [key: string]: unknown;
     };
     on: boolean;
+    problem: string | null;
     createdAt: string;
     /** The rule in a sentence. */
     says: string;
@@ -7426,6 +7428,7 @@ export type SwitchRuleResult = {
       [key: string]: unknown;
     };
     on: boolean;
+    problem: string | null;
     createdAt: string;
     /** The rule in a sentence. */
     says: string;
@@ -9362,6 +9365,7 @@ export type ListActivityResult = {
     chars: number | null;
     fingerprint: string | null;
     client: string | null;
+    webhook?: string | null;
     action: string;
     resource: {
       sessionId?: string;

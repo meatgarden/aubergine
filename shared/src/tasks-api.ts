@@ -84,7 +84,7 @@ export const OwnQueue = z.object({
 });
 export type OwnQueue = z.infer<typeof OwnQueue>;
 
-export const AddRuleRequest = z.object({ projectId: Id.optional().describe('The project the rule is of. Left out: the first project.'), event: RuleEvent.describe('What sets it off.'), action: RuleAction.describe('What it does: `{"kind":"notify"}`, or `{"kind":"run-element","elementId":"…","on":{"kind":"session","sessionId":"…"}}`.') });
+export const AddRuleRequest = z.object({ projectId: Id.optional().describe('The project the rule is of. Left out: the first project.'), event: RuleEvent.describe('What sets it off.'), action: RuleAction.describe('What it does: `{"kind":"notify"}`, `{"kind":"run-element","elementId":"…","on":{"kind":"session","sessionId":"…"}}`, or `{"kind":"webhook","webhook":"<name>"}`, where the name is one written under `webhooks` in the settings file.') });
 export type AddRuleRequest = z.infer<typeof AddRuleRequest>;
 export const RuleList = z.object({ rules: z.array(Rule.extend({ says: z.string().describe('The rule in a sentence.') })), actions: z.array(z.object({ kind: z.string(), title: z.string(), says: z.string() })).describe('The kinds of action there are.') });
 export type RuleList = z.infer<typeof RuleList>;

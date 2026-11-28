@@ -138,6 +138,9 @@ export function readProjectFile(text: string): ReadProjectFile {
   if (raw === null || typeof raw !== 'object' || (raw as { aubergine?: unknown }).aubergine !== 'project') return no('This is not an Aubergine project file.');
   const format = (raw as { format?: unknown }).format;
   if (typeof format === 'number' && format > PROJECT_FILE_FORMAT) return no(`This file is in format ${format}, and this version reads format ${PROJECT_FILE_FORMAT}. Update Aubergine to read it.`);
+  // A webhook is a setting of one computer, named there: a file cannot say that this computer is to call one.
+  const rulesAsWritten: unknown = (raw as { rules?: unknown }).rules;
+  if (Array.isArray(rulesAsWritten) && rulesAsWritten.some((rule) => (rule as { action?: { kind?: unknown } } | null)?.action?.kind === 'webhook')) return no('A rule in this file sends a webhook. A project file cannot hold such a rule: a webhook is written in the settings file of one computer, and a rule that sends one is written there by its owner.');
   const parsed = ProjectFile.safeParse(raw);
   if (!parsed.success) {
     const issue = parsed.error.issues[0];
