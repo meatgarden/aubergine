@@ -31,6 +31,13 @@ export type DeviceKind = z.infer<typeof DeviceKind>;
 
 export const DeviceName = PlainName.max(80);
 
+/**
+ * The person a device was made for: a name, written by whoever made its code. Where several people use one server,
+ * it says whose device did something. It is a word about the device and no more: it gives and takes no right, every
+ * device is the owner whoever it is for, and nothing is decided by it.
+ */
+export const PersonName = PlainName.max(80);
+
 /** A device as it is stored. `hash` is the SHA-256 of the secret; the secret itself is never stored. */
 export const Device = z.object({
   id: Id,
@@ -39,6 +46,8 @@ export const Device = z.object({
   /** For a page: the origin it was paired from. Null for a browser. */
   origin: z.string().max(300).nullable().default(null),
   hash: z.string(),
+  /** Who it was made for, as written when its code was made. Null: nobody was named. Set once, by the server, from the code. */
+  person: PersonName.nullable().default(null),
   createdAt: Timestamp,
   /** Recorded at most about once a minute, not on every request. */
   lastUsedAt: Timestamp.nullable().default(null),
@@ -82,11 +91,13 @@ export const PairingCodeRequest = z.discriminatedUnion('kind', [
   z.object({
     name: DeviceName.describe('What the device will be called: "Phone".'),
     kind: z.literal('browser').describe('A browser at an outside address.'),
+    person: PersonName.optional().describe('Who the device is for: "Ada". Left out: nobody is named.'),
   }),
   z.object({
     name: DeviceName.describe('What the linked page will be called: "Laptop".'),
     kind: z.literal('page').describe('The page of another Aubergine, which shows this server.'),
     origin: z.string().max(300).describe('The origin of that page, exactly as written in access.pages.'),
+    person: PersonName.optional().describe('Who the linked page is for: "Ada". Left out: nobody is named.'),
   }),
 ]);
 export type PairingCodeRequest = z.infer<typeof PairingCodeRequest>;

@@ -39,6 +39,15 @@ describe('parsing the device commands', () => {
     expect(parseDeviceCommand(['revoke', 'phone', '--yes'])).toEqual({ action: 'revoke', query: 'phone', yes: true });
   });
 
+  it('reads who a device is for', () => {
+    expect(parseDeviceCommand(['add', '--name', 'Phone', '--person', 'Ada Example'])).toEqual({ action: 'add', name: 'Phone', person: 'Ada Example' });
+    expect(parseDeviceCommand(['add', '--person=Ada', '--page', 'http://127.0.0.1:4600'])).toEqual({ action: 'add', name: DEFAULT_PAGE_NAME, page: 'http://127.0.0.1:4600', person: 'Ada' });
+    expect(() => parseDeviceCommand(['add', '--person'])).toThrow(/--person needs the name/);
+    expect(() => parseDeviceCommand(['add', '--person', '--name', 'Phone'])).toThrow(/--person needs the name/);
+    expect(() => parseDeviceCommand(['add', '--person', 'two\u0007bells'])).toThrow(/--person needs the name/);
+    expect(() => parseDeviceCommand(['add', '--person', 'a'.repeat(81)])).toThrow(/--person needs the name/);
+  });
+
   it('says what is wrong', () => {
     expect(() => parseDeviceCommand(['add', '--name'])).toThrow(/--name needs a name/);
     expect(() => parseDeviceCommand(['add', 'phone'])).toThrow(/does not know phone/);
@@ -50,9 +59,9 @@ describe('parsing the device commands', () => {
 
   it('finds a device by name or ID, refuses a name that two have, and lists them', () => {
     const devices = [
-      { id: '01900000-0000-7000-8000-0000000000a1', name: 'Phone', kind: 'browser' as const, origin: null, createdAt: '2026-03-01T09:00:00.000Z', lastUsedAt: '2026-03-02T09:00:00.000Z', revokedAt: null, status: 'active' as const, current: false },
-      { id: '01900000-0000-7000-8000-0000000000b2', name: 'Tablet', kind: 'browser' as const, origin: null, createdAt: '2026-03-01T09:00:00.000Z', lastUsedAt: null, revokedAt: null, status: 'unused' as const, current: true },
-      { id: '01900000-0000-7000-8000-0000000000c3', name: 'Tablet', kind: 'browser' as const, origin: null, createdAt: '2026-03-01T09:00:00.000Z', lastUsedAt: null, revokedAt: null, status: 'active' as const, current: false },
+      { id: '01900000-0000-7000-8000-0000000000a1', name: 'Phone', kind: 'browser' as const, origin: null, person: null, createdAt: '2026-03-01T09:00:00.000Z', lastUsedAt: '2026-03-02T09:00:00.000Z', revokedAt: null, status: 'active' as const, current: false },
+      { id: '01900000-0000-7000-8000-0000000000b2', name: 'Tablet', kind: 'browser' as const, origin: null, person: null, createdAt: '2026-03-01T09:00:00.000Z', lastUsedAt: null, revokedAt: null, status: 'unused' as const, current: true },
+      { id: '01900000-0000-7000-8000-0000000000c3', name: 'Tablet', kind: 'browser' as const, origin: null, person: null, createdAt: '2026-03-01T09:00:00.000Z', lastUsedAt: null, revokedAt: null, status: 'active' as const, current: false },
     ];
     expect(resolveDevice(devices, 'phone')).toBe(devices[0]);
     expect(resolveDevice(devices, devices[2]!.id)).toBe(devices[2]);
@@ -65,6 +74,12 @@ describe('parsing the device commands', () => {
     expect(table[2]).toMatch(/^Tablet \(this one\) +browser +unused 90 days +2026-03-01 +never /);
     const page = { ...devices[0]!, name: 'Laptop', kind: 'page' as const, origin: 'http://127.0.0.1:4600' };
     expect(formatDevices([page]).split('\n')[1]).toMatch(/^Laptop +page http:\/\/127\.0\.0\.1:4600 +active /);
+    // Who a device is for is a column only where some device is for someone; a name is shown with its control characters.
+    const theirs = formatDevices([{ ...devices[0]!, person: 'Ada' }, { ...devices[2]!, person: null }, { ...devices[1]!, person: 'Bell \u0007' }]).split('\n');
+    expect(theirs[0]).toMatch(/^NAME +FOR +KIND +STATE +ADDED +LAST USED +ID$/);
+    expect(theirs[1]).toMatch(/^Phone +Ada +browser +active /);
+    expect(theirs[2]).toMatch(/^Tablet +- +browser +active /);
+    expect(theirs[3]).not.toContain('\u0007');
     expect(formatDevices([])).toContain('aubergine device add');
     expect(pairingLink(OUTSIDE, 'ABCDE-FGHJK')).toBe('https://aubergine.example.test/#pair=ABCDE-FGHJK');
   });

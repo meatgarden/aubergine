@@ -18,6 +18,8 @@ const device = (change: Partial<Parameters<typeof deviceWords>[0]> = {}): Parame
 describe('the words of a device', () => {
   it('says when it was added and when it was last used, or that it never was', () => {
     expect(deviceWords(device(), NOW, false)).toEqual({ name: 'Phone', known: ['added 3 days ago', 'never used'], chip: null, thisDevice: false });
+    expect(deviceWords(device({ person: 'Ada' }), NOW, false).known).toEqual(['for Ada', 'added 3 days ago', 'never used']);
+    expect(deviceWords(device({ person: null }), NOW, false).known).toEqual(['added 3 days ago', 'never used']);
     expect(deviceWords(device({ lastUsedAt: at(5 * MIN) }), NOW, true)).toEqual({ name: 'Phone', known: ['added 3 days ago', 'last used 5 min ago'], chip: null, thisDevice: true });
   });
 
@@ -79,6 +81,14 @@ describe('who an activity line is by', () => {
     expect(callerWords(line('device', { byDeviceId: 'gone' }), deviceName, sessionName)).toBe('A device');
     expect(callerWords(line('device'), deviceName, sessionName)).toBe('A device');
     expect(callerWords(line('pairing'), deviceName, sessionName)).toBe('Sign-in with a code');
+  });
+
+  it('says who a device was made for, where its line says so', () => {
+    expect(callerWords(line('device', { byDeviceId: 'd1', byPerson: 'Ada' }), deviceName, sessionName)).toBe('Ada, on Phone');
+    expect(callerWords(line('device', { byDeviceId: 'gone', byPerson: 'Ada' }), deviceName, sessionName)).toBe('Ada, on a device');
+    expect(callerWords(line('device', { byDeviceId: 'd1', byPerson: null }), deviceName, sessionName)).toBe('Owner, on Phone');
+    // A name on a line that was not by a device says nothing.
+    expect(callerWords(line('owner', { byPerson: 'Ada' }), deviceName, sessionName)).toBe('Owner');
   });
 
   it('says what it said before for a token and the command line', () => {

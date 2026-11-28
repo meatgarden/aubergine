@@ -1,5 +1,5 @@
 import qrcode from 'qrcode';
-import { DeviceList, DeviceName, ErrorResponse, PairingCodeAnswer, RevokedDevice, paths, showControl, type DeviceView } from '@aubergine/shared';
+import { DeviceList, DeviceName, ErrorResponse, PairingCodeAnswer, PersonName, RevokedDevice, paths, showControl, type DeviceView } from '@aubergine/shared';
 import { UsageError } from './commands';
 
 /**
@@ -9,7 +9,7 @@ import { UsageError } from './commands';
  * and kept nowhere: the server holds it, as a hash, for three minutes.
  */
 
-export type DeviceCommand = { action: 'add'; name: string; page?: string } | { action: 'list' } | { action: 'revoke'; query: string; yes: boolean };
+export type DeviceCommand = { action: 'add'; name: string; page?: string; person?: string } | { action: 'list' } | { action: 'revoke'; query: string; yes: boolean };
 
 /** What a new device is called when no name is given. */
 export const DEFAULT_DEVICE_NAME = 'Another device';
@@ -25,12 +25,20 @@ export function parseDeviceCommand(words: readonly string[]): DeviceCommand {
   if (action === 'add' || action === 'pair') {
     let name: string | null = null;
     let page: string | null = null;
+    let person: string | null = null;
     for (let index = 0; index < rest.length; index += 1) {
       const word = rest[index] as string;
       if (word === '--page' || word.startsWith('--page=')) {
         const origin = word === '--page' ? rest[(index += 1)] : word.slice('--page='.length);
         if (origin === undefined || origin.trim() === '' || origin.startsWith('--')) throw new UsageError('--page needs the origin of the page, like http://127.0.0.1:4600');
         page = origin;
+        continue;
+      }
+      if (word === '--person' || word.startsWith('--person=')) {
+        const who = word === '--person' ? rest[(index += 1)] : word.slice('--person='.length);
+        const named = PersonName.safeParse(who === undefined || who.startsWith('--') ? '' : who);
+        if (!named.success) throw new UsageError('--person needs the name of who the device is for: one line of plain text, at most 80 characters.');
+        person = named.data;
         continue;
       }
       const given = word === '--name' ? rest[(index += 1)] : word.startsWith('--name=') ? word.slice('--name='.length) : null;
@@ -40,7 +48,7 @@ export function parseDeviceCommand(words: readonly string[]): DeviceCommand {
     }
     const checked = DeviceName.safeParse(name ?? (page === null ? DEFAULT_DEVICE_NAME : DEFAULT_PAGE_NAME));
     if (!checked.success) throw new UsageError('A device’s name is one line of plain text, at most 80 characters.');
-    return page === null ? { action: 'add', name: checked.data } : { action: 'add', name: checked.data, page };
+    return { action: 'add', name: checked.data, ...(page === null ? {} : { page }), ...(person === null ? {} : { person }) };
   }
   if (action === 'revoke' || action === 'remove') {
     const unknown = rest.find((word) => word.startsWith('--') && word !== '--yes');
@@ -49,7 +57,7 @@ export function parseDeviceCommand(words: readonly string[]): DeviceCommand {
     if (query === '') throw new UsageError('device revoke needs the name or the ID of one device (see: aubergine device list)');
     return { action: 'revoke', query, yes: rest.includes('--yes') };
   }
-  throw new UsageError('device needs "add [--name <name>] [--page <origin>]", "list" or "revoke <name|id>"');
+  throw new UsageError('device needs "add [--name <name>] [--person <who>] [--page <origin>]", "list" or "revoke <name|id>"');
 }
 
 export interface DeviceCommandDeps {
@@ -86,7 +94,10 @@ export function formatDevices(devices: readonly DeviceView[]): string {
   if (devices.length === 0) return 'No devices. Pair one with: aubergine device add --name <name>';
   // A page's origin was checked against the settings when it was paired; shown through showControl all the same.
   const kindOf = (device: DeviceView): string => (device.kind === 'page' ? `page ${showControl(device.origin ?? '?')}` : device.kind);
-  const rows = [['NAME', 'KIND', 'STATE', 'ADDED', 'LAST USED', 'ID'], ...devices.map((device) => [showControl(device.name) + (device.current ? ' (this one)' : ''), kindOf(device), device.status === 'unused' ? 'unused 90 days' : device.status, day(device.createdAt), day(device.lastUsedAt), device.id])];
+  // Who each was made for, where any was made for someone: a word written by whoever made its code.
+  const people = devices.some((device) => device.person !== null);
+  const who = (device: DeviceView): string[] => (people ? [device.person === null ? '-' : showControl(device.person)] : []);
+  const rows = [['NAME', ...(people ? ['FOR'] : []), 'KIND', 'STATE', 'ADDED', 'LAST USED', 'ID'], ...devices.map((device) => [showControl(device.name) + (device.current ? ' (this one)' : ''), ...who(device), kindOf(device), device.status === 'unused' ? 'unused 90 days' : device.status, day(device.createdAt), day(device.lastUsedAt), device.id])];
   const widths = rows[0]!.map((_, column) => Math.max(...rows.map((row) => (row[column] ?? '').length)));
   return rows.map((row) => row.map((cell, column) => (column === row.length - 1 ? cell : cell.padEnd(widths[column] ?? 0))).join('  ')).join('\n');
 }
@@ -102,7 +113,7 @@ async function qrOf(text: string, interactive: boolean): Promise<string> {
 export async function runDeviceCommand(command: DeviceCommand, deps: DeviceCommandDeps): Promise<number> {
   const { request, print } = deps;
   if (command.action === 'add' && command.page !== undefined) {
-    const answer = await request('POST', paths.pairingCodes, { name: command.name, kind: 'page', origin: command.page });
+    const answer = await request('POST', paths.pairingCodes, { name: command.name, kind: 'page', origin: command.page, ...(command.person === undefined ? {} : { person: command.person }) });
     if (answer.status === 409) {
       print(refusal(answer));
       print('For example, in config.json in the data folder:\n  "access": { "pages": ["http://127.0.0.1:4600"] }\nSee "Letting another Aubergine\u2019s page show this server" in the README.');
@@ -113,11 +124,12 @@ export async function runDeviceCommand(command: DeviceCommand, deps: DeviceComma
     const until = new Date(made.expiresAt);
     print(`Pairing code for the page "${showControl(command.name)}": ${made.code}`);
     print(`It works once, for three minutes (until ${until.toTimeString().slice(0, 5)}). Whoever has it can sign in as you, with a shell on this computer.`);
+    if (command.person !== undefined) print(`The device will be listed as ${showControl(command.person)}’s. That is a word about the device: it can do everything you can.`);
     print(`\nIn the page at ${showControl(command.page)}, choose "Link a server\u2026" and type this code there.`);
     return 0;
   }
   if (command.action === 'add') {
-    const answer = await request('POST', paths.pairingCodes, { name: command.name, kind: 'browser' });
+    const answer = await request('POST', paths.pairingCodes, { name: command.name, kind: 'browser', ...(command.person === undefined ? {} : { person: command.person }) });
     if (answer.status === 409) {
       print(refusal(answer));
       print('For example, in config.json in the data folder:\n  "access": { "addresses": ["https://aubergine.example.net"] }\nThe address is one that something on this computer carries HTTPS for, to this server. See "From another device" in the README.');
@@ -128,6 +140,7 @@ export async function runDeviceCommand(command: DeviceCommand, deps: DeviceComma
     const until = new Date(made.expiresAt);
     print(`Pairing code for "${showControl(command.name)}": ${made.code}`);
     print(`It works once, for three minutes (until ${until.toTimeString().slice(0, 5)}). Whoever has it can sign in as you, with a shell on this computer.`);
+    if (command.person !== undefined) print(`The device will be listed as ${showControl(command.person)}’s. That is a word about the device: it can do everything you can.`);
     for (const address of made.addresses) {
       const link = pairingLink(address, made.code);
       print(`\nOn the other device, open:\n  ${link}`);

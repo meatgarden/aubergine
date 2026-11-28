@@ -5491,6 +5491,10 @@ test('devices: Settings → Devices from the keyboard and the mouse, empty with 
   const name = dialog.getByTestId('add-device-name');
   await expect(name).toHaveValue('Phone');
   await expect(name).toBeFocused();
+  // Who it is for: empty, so nobody is named, and a sentence that a name limits nothing.
+  await expect(dialog.getByTestId('add-device-person')).toHaveValue('');
+  await expect(dialog).toContainText('It limits nothing');
+  expect(await measureLook(page)).toEqual([]);
   expect(await page.evaluate(() => [...document.querySelectorAll('[data-testid="add-device-dialog"] button.primary')].length)).toBe(1);
   await page.keyboard.press('Enter');
   const code = dialog.getByTestId('device-code');
