@@ -753,12 +753,14 @@ describe('a file compared with a project', () => {
   };
   const files = new Map<string, string>();
   let remembered: string | null = null;
+  /** How the command line itself hands on what the server refused: as an error of its own making. Null: as the client threw it. */
+  let refusal: ((message: string) => Error) | null = null;
   const typedHere = async (words: string[], inside?: Session): Promise<{ code: number; out: string }> => {
     const printed: string[] = [];
     const owner = createClient({ baseUrl: origin, headers: { origin, cookie: `${cookieName(port)}=${ownerToken}` } });
     const env = inside ? { [SESSION_ENV.url]: origin, [SESSION_ENV.sessionId]: inside.id, [SESSION_ENV.token]: sessionToken(ownerToken, inside.id) } : {};
     const code = await runProjectCommand(parseProjectCommand(words), {
-      owner: (work) => work(owner),
+      owner: (work) => work(owner).catch((error: unknown) => Promise.reject(refusal && error instanceof Error ? refusal(error.message) : error)),
       env,
       print: (text) => printed.push(text),
       remember: async () => {},
@@ -779,6 +781,7 @@ describe('a file compared with a project', () => {
   beforeEach(() => {
     files.clear();
     remembered = null;
+    refusal = null;
   });
 
   it('written out and compared with itself there is no difference; one change at a time is exactly one more line', async () => {
@@ -955,6 +958,12 @@ describe('a file compared with a project', () => {
     const bad = await typedHere(['diff', 'bad.json', '--project', 'Garden site']);
     expect([bad.code, bad.out]).toEqual([2, 'This is not a project file: it is not JSON. Nothing was compared.']);
     expect(await typedHere(['diff', 'missing.json'])).toEqual({ code: 2, out: 'Cannot read the file missing.json. Nothing was compared.' });
+    // The command line words a refusal in an error of its own, and a server that is not there in another: both are 2.
+    refusal = (message) => new Error(message);
+    expect(await typedHere(['diff', 'bad.json', '--project', 'Garden site'])).toEqual({ code: 2, out: 'This is not a project file: it is not JSON. Nothing was compared.' });
+    refusal = () => new Error('The Aubergine server is not answering on http://127.0.0.1:1. Is it running?');
+    expect(await typedHere(['diff', 'bad.json'])).toEqual({ code: 2, out: 'The Aubergine server is not answering on http://127.0.0.1:1. Is it running? Nothing was compared.' });
+    refusal = null;
     const nowhere = await typedHere(['diff', 'garden.json', '--project', 'No such project']);
     expect([nowhere.code, nowhere.out]).toEqual([2, 'No project matches "No such project". See: aubergine project list. Nothing was compared.']);
     const inside = await typedHere(['diff', 'garden.json'], agent('worker'));

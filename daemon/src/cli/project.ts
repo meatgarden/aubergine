@@ -338,8 +338,11 @@ async function compare(command: Extract<ProjectCommand, { action: 'diff' }>, dep
     }
     return comparison.matches ? DIFF_EXIT.matches : DIFF_EXIT.differs;
   } catch (error) {
-    if (!(error instanceof AubergineError) && !(error instanceof UsageError)) throw error;
-    print(showControl(`${error instanceof AubergineError && error.code === 'network' ? 'The Aubergine server is not answering.' : error.message}${error.message.endsWith('.') ? '' : '.'} Nothing was compared.`));
+    // Whatever kept the comparison from being made, and however whoever calls the server words a refusal, it is said
+    // and the command ends with the code for "nothing was compared": never with the one that means they differ.
+    if (!(error instanceof Error)) throw error;
+    const said = error instanceof AubergineError && error.code === 'network' ? 'The Aubergine server is not answering.' : error.message;
+    print(showControl(`${said}${/[.?!]$/.test(said) ? '' : '.'} Nothing was compared.`));
     return DIFF_EXIT.notCompared;
   }
 }

@@ -794,7 +794,7 @@ describe('the commands', () => {
     expect(() => parseProjectCommand(['new', 'x', '--color', 'no-such-color'])).toThrow(/--color takes a named color/);
     expect(() => parseProjectCommand(['archive', 'x', '--park', '--end'])).toThrow(/not both/);
     expect(() => parseProjectCommand(['move-canvas', 'Main'])).toThrow(/needs a canvas and where it goes/);
-    expect(() => parseProjectCommand(['delete', 'x'])).toThrow(/It knows: list, new, rename, use, archive, reopen, remove, move-canvas, export, import, templates/);
+    expect(() => parseProjectCommand(['delete', 'x'])).toThrow(/It knows: list, new, rename, use, archive, reopen, remove, move-canvas, export, import, diff, templates/);
     expect(parseProjectCommand(['archive', 'Garden', 'site', '--end'])).toEqual({ action: 'archive', query: 'Garden site', sessions: 'end' });
     expect(USAGE).toContain(`For example: ${PROJECT_NEW_EXAMPLE}`);
     expect(INSIDE_ITS_OWN).toContain('no option changes it');

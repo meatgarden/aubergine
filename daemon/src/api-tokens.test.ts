@@ -392,6 +392,7 @@ describe('every route has a rule', () => {
     'PATCH /v1/rules/:ruleId',
     'GET /v1/projects/:projectId/file',
     'POST /v1/project-files/read',
+    'POST /v1/projects/:projectId/file/compare',
     'POST /v1/project-files/import',
     'GET /v1/project-templates',
     'GET /v1/project-templates/:templateId',
