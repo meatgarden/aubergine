@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import type { Session } from './entities';
 import { EnvironmentKindName } from './environment';
 import { Id } from './ids';
 import { PlainName, type Run } from './workflows';
@@ -298,7 +299,7 @@ export type Ask = z.infer<typeof Ask>;
 
 /* ---------- Rules: when something happens, do something ---------- */
 
-export const RuleEvent = z.enum(['task.done', 'task.failed', 'task.needs-owner', 'ask.added', 'schedule.fired', 'schedule.failed']);
+export const RuleEvent = z.enum(['task.done', 'task.failed', 'task.needs-owner', 'ask.added', 'schedule.fired', 'schedule.failed', 'terminal.waiting', 'terminal.finished', 'command.failed']);
 export type RuleEvent = z.infer<typeof RuleEvent>;
 export const RULE_EVENT_WORDS: Record<RuleEvent, string> = {
   'task.done': 'a task is done',
@@ -307,6 +308,9 @@ export const RULE_EVENT_WORDS: Record<RuleEvent, string> = {
   'ask.added': 'something is asked of you',
   'schedule.fired': 'a schedule fired',
   'schedule.failed': 'a schedule could not run or was missed',
+  'terminal.waiting': 'a terminal starts waiting for you',
+  'terminal.finished': 'an agent in a terminal finished',
+  'command.failed': 'a command failed in a terminal',
 };
 export const RULES_MAX = 50;
 /** How often one rule may fire in a minute. What comes after that is dropped, and said in the activity log. */
@@ -336,6 +340,8 @@ export interface Occasion {
   sentence: string;
   taskId: string | null;
   askId: string | null;
+  /** The terminal it happened in, for what happens to a terminal. */
+  sessionId?: string | null;
   /** The project it happened in. A rule hears only what happens in its own. */
   projectId: string;
 }
@@ -344,6 +350,21 @@ export interface Occasion {
 export function occasionOfTask(task: Task, event: 'task.done' | 'task.failed' | 'task.needs-owner'): Occasion {
   const what = event === 'task.done' ? 'is done' : event === 'task.failed' ? `failed${task.reason ? `: ${task.reason}` : ''}` : `needs you${task.reason ? `: ${task.reason}` : ''}`;
   return { id: `${event} ${task.id} ${task.updatedAt}`, event, sentence: `The task “${task.title}” ${what}`.slice(0, 500), taskId: task.id, askId: null, projectId: task.projectId };
+}
+
+/** What happens to a terminal that a rule can hear. */
+export type TerminalRuleEvent = 'terminal.waiting' | 'terminal.finished' | 'command.failed';
+
+/**
+ * The sentence for something that happened to a terminal: fixed words and the terminal's name, nothing else. Not what
+ * its agent said, not the command that failed, not what it printed: those are what the terminal showed. `nth` tells
+ * one happening from the next of the same kind in the same terminal.
+ */
+export function occasionOfTerminal(session: Pick<Session, 'id' | 'name' | 'projectId'>, event: TerminalRuleEvent, nth: number): Occasion {
+  // A name is one line of plain text by its schema; what an older file may still hold is taken out here.
+  const name = session.name.replace(/[\p{Cc}\u202a-\u202e\u2066-\u2069]/gu, '').slice(0, 120);
+  const sentence = event === 'terminal.waiting' ? `The terminal “${name}” is waiting for you` : event === 'terminal.finished' ? `The terminal “${name}” finished` : `A command failed in the terminal “${name}”`;
+  return { id: `${event} ${session.id} ${nth}`, event, sentence, taskId: null, askId: null, sessionId: session.id, projectId: session.projectId };
 }
 
 /* ---------- The queue, as the state keeps it ---------- */

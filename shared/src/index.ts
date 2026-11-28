@@ -38,6 +38,7 @@ export * from './environment-api';
 export * from './projects';
 export * from './project-file';
 export * from './tasks';
+export * from './terminal-happenings';
 export * from './for-you';
 export * from './tasks-api';
 export * from './schedules';

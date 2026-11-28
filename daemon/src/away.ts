@@ -1,4 +1,4 @@
-import { awayDigest, type AppState, type AwayDigest, type ChangeEvent, type Moment } from '@aubergine/shared';
+import { awayDigest, terminalBefore, terminalHappening, type AppState, type AwayDigest, type ChangeEvent, type Moment, type TerminalBefore } from '@aubergine/shared';
 import type { StateHub } from './state-hub';
 
 /**
@@ -12,16 +12,14 @@ const MAX_MOMENTS = 2000;
 
 /** What is remembered about each terminal and run, to tell a change from a repeat. */
 export interface AwayMemory {
-  waiting: Map<string, boolean>;
-  finishedAt: Map<string, string | null>;
+  terminals: Map<string, TerminalBefore>;
   drafts: Set<string>;
   element: Map<string, string | null>;
 }
 
 export function memoryOf(state: Pick<AppState, 'sessions' | 'drafts' | 'runs'>): AwayMemory {
   return {
-    waiting: new Map(state.sessions.map((s) => [s.id, s.attention.state === 'waiting'])),
-    finishedAt: new Map(state.sessions.map((s) => [s.id, s.status.lastFinishedAt])),
+    terminals: new Map(state.sessions.map((s) => [s.id, terminalBefore(s)])),
     drafts: new Set(state.drafts.filter((d) => d.status === 'waiting').map((d) => d.id)),
     element: new Map(state.runs.map((r) => [r.id, r.currentElementId])),
   };
@@ -33,25 +31,21 @@ export function memoryOf(state: Pick<AppState, 'sessions' | 'drafts' | 'runs'>):
  * this updates.
  */
 export function momentOf(event: ChangeEvent, memory: AwayMemory, at: string, workflowName: (workflowId: string) => string): Moment | null {
+  // What an event means for a terminal is told in one place, which the rules ask too.
+  const terminal = terminalHappening((id) => memory.terminals.get(id), event);
+  if (terminal) {
+    memory.terminals.set(terminal.sessionId, terminal.after);
+    if (event.type === 'session.attention') {
+      if (terminal.waiting === 'began') return { at, kind: 'waiting', sessionId: event.sessionId, runId: null, detail: `started waiting for you${event.attention.message ? `: ${event.attention.message}` : '.'}` };
+      if (terminal.finished !== null) return { at, kind: 'agent-finished', sessionId: event.sessionId, runId: null, detail: `says it has finished${event.attention.message ? `: ${event.attention.message}` : '.'}` };
+      if (terminal.waiting === 'ended') return { at, kind: 'no-longer-waiting', sessionId: event.sessionId, runId: null, detail: 'is no longer waiting.' };
+      return null;
+    }
+    // A command that has just ended, and not well. The command itself is not said: it is what the terminal showed.
+    if (terminal.failedWith !== null) return { at, kind: 'command-failed', sessionId: terminal.sessionId, runId: null, detail: `had a command fail (exit ${terminal.failedWith}).` };
+    return null;
+  }
   switch (event.type) {
-    case 'session.attention': {
-      const was = memory.waiting.get(event.sessionId) ?? false;
-      const now = event.attention.state === 'waiting';
-      memory.waiting.set(event.sessionId, now);
-      if (now && !was) return { at, kind: 'waiting', sessionId: event.sessionId, runId: null, detail: `started waiting for you${event.attention.message ? `: ${event.attention.message}` : '.'}` };
-      if (event.attention.state === 'done') return { at, kind: 'agent-finished', sessionId: event.sessionId, runId: null, detail: `says it has finished${event.attention.message ? `: ${event.attention.message}` : '.'}` };
-      if (was && !now) return { at, kind: 'no-longer-waiting', sessionId: event.sessionId, runId: null, detail: 'is no longer waiting.' };
-      return null;
-    }
-    case 'session.status': {
-      const before = memory.finishedAt.get(event.sessionId) ?? null;
-      memory.finishedAt.set(event.sessionId, event.status.lastFinishedAt);
-      // A command that has just ended, and not well. The command itself is not said: it is what the terminal showed.
-      if (event.status.lastFinishedAt !== null && event.status.lastFinishedAt !== before && event.status.lastExit !== null && event.status.lastExit !== 0) {
-        return { at, kind: 'command-failed', sessionId: event.sessionId, runId: null, detail: `had a command fail (exit ${event.status.lastExit}).` };
-      }
-      return null;
-    }
     case 'run.moved': {
       const before = memory.element.get(event.run.id);
       memory.element.set(event.run.id, event.run.currentElementId);
