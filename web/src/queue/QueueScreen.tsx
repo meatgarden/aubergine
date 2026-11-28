@@ -126,10 +126,12 @@ export function Rules() {
             <span>
               {rule.says}
               {rule.problem && (
-                <span className="rule-problem" data-testid="rule-problem">
-                  {' '}
-                  {rule.problem}
-                </span>
+                <>
+                  <br />
+                  <span className="dialog-error" data-testid="rule-problem">
+                    {rule.problem}
+                  </span>
+                </>
               )}
             </span>
             <label title="A rule that is off is kept and does nothing. A rule that came in a project file arrives off.">
