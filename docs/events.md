@@ -16,7 +16,70 @@ curl -N -H "Authorization: Bearer $TOKEN" http://127.0.0.1:4600/v1/events
 
 These are the same changes the page in your browser follows. They are the server's own vocabulary, so there are many of them (a terminal's node being dragged is one), and a new version of Aubergine adds more: a program should act on the types it knows and pass over the rest.
 
-**The stream has no memory.** A change is sent to whoever is connected at that moment. Nothing is numbered, nothing is sent again, and a program that connects later, or again after a drop, is not told what it missed. A program that must not miss a state reads the lists when it connects (`GET /v1/sessions`, `/v1/runs`, `/v1/tasks`) and follows the stream from there. `on-waiting.mjs` does this for terminals.
+**The stream has a short memory.** A program that connects for the first time is told what happens from then on, and nothing from before: it reads the lists when it connects (`GET /v1/sessions`, `/v1/runs`, `/v1/tasks`) and follows the stream from there. A program that was cut off and comes back with the `id` of the last event it took is sent what it missed, as long as the server still remembers it: the last 2,000 changes, in the server's memory only, gone when the server is started again. When the server cannot send what was missed it says so with one event, `reset`, and the lists are read again. `on-waiting.mjs` does all of this for terminals.
+
+## Not missing anything
+
+**Every event has an `id`.** It is the line before `data:`:
+
+```
+id: 01a21f7a-5e66-70dd-85e5-a6a169683cba.1287
+data: {"type":"session.attention","sessionId":"…","attention":{…}}
+```
+
+The `id` is opaque. Keep the one of the last event you handled, and send it back exactly as it was given; do not take it apart, compare two of them or count with them. In particular **do not look for gaps**: a token is sent only what is within its reach (its projects, and never changes to tokens or devices), so the ids it sees skip the changes it is not told of. Nothing is missing when they do.
+
+**`hello` comes first.** Every connection begins with one event that is not a change:
+
+```
+event: hello
+id: 01a21f7a-5e66-70dd-85e5-a6a169683cba.1287
+data: {"type":"hello","epoch":"01a21f7a-5e66-70dd-85e5-a6a169683cba","revision":1287,"version":"0.3.0","resumed":false}
+```
+
+`epoch` names this run of the server: another value than last time means it was started again. `revision` is the number of its last change, so what you read from the lists after `hello` is not older than that. `resumed` says whether the server goes on from the `id` you sent. The `id` of `hello` is where you stand once you have read it, so a program that is cut off before any change arrives still has an `id` to come back with.
+
+**Coming back.** Send the last `id` in the header `Last-Event-ID`, which is the name the standard gives it:
+
+```sh
+curl -N -H "Authorization: Bearer $TOKEN" \
+     -H "Last-Event-ID: 01a21f7a-5e66-70dd-85e5-a6a169683cba.1287" \
+     http://127.0.0.1:4600/v1/events
+```
+
+The server answers `hello` with `"resumed":true`, then every change made since that event which the token may see, in the order they were made, each once, and then goes on with new changes as they happen. Nothing falls between the two and nothing comes twice.
+
+What is sent again is judged by **what the token may see now**, not by what it might have seen when the change was made. A change to a terminal whose canvas was moved to a project the token does not reach is not sent again; the command line of a terminal that has become people only since is sent as `null`. So coming back never shows a token more than listening all along would have, and sometimes less.
+
+**When it cannot go on, it says `reset`.** The memory is the server's last 2,000 changes of every kind (also the ones your token is never told of, so a narrow token on a busy server reaches the limit sooner), and it is memory only: not written to disk, and empty after a restart. When the `id` you sent cannot be gone on from, the first event of the connection is:
+
+```
+event: reset
+data: {"type":"reset","reason":"restarted"}
+```
+
+followed by `hello` with `"resumed":false`, and then changes as they happen. `reason` is one of:
+
+| `reason` | What happened |
+|---|---|
+| `restarted` | The `id` is of an earlier run of the server: it was stopped and started since |
+| `too-old` | More than 2,000 changes were made since that event |
+| `unreadable` | The header did not hold an `id` this stream gave |
+
+Whatever the reason, the meaning is one: **what you knew may be stale; read the lists again** (`GET /v1/sessions`, `/v1/runs`, `/v1/tasks`), as on a first connection. The server sends `reset` rather than a part of what was missed. A first connection, without the header, gets no `reset` and nothing sent again.
+
+`reset` has no `id`, and comes before `hello`, on purpose: a program that is cut off after `reset` and before it has read the lists again comes back with the `id` it had, and is told `reset` again.
+
+So a program that must not lose a change does four things, and `follow` in [`examples/events/sse.mjs`](../examples/events/sse.mjs) is them:
+
+1. On the first connection, read the lists, then take changes from the stream.
+2. After each event it has handled, keep that event's `id`. After, not before: an event that was read and not handled is then asked for again.
+3. When connecting again, send the `id` in `Last-Event-ID`.
+4. On `reset`, read the lists again before taking anything further.
+
+Handling a change twice must do no harm: a program that is stopped between handling an event and keeping its `id` is sent that event again. A change carries the whole of what changed, so applying it twice gives the same state; a notification sent for it would be sent twice (see ["Started" is not "is"](#started-is-not-is)).
+
+What this does not give: the memory is 2,000 changes and one run of the server long. A listener that is away for longer, or across a restart, learns the state as it is now and not each step that led to it.
 
 ## A token for it
 
@@ -105,6 +168,7 @@ read -rs AUBERGINE_TOKEN && export AUBERGINE_TOKEN      # paste the secret, pres
 node examples/events/listen.mjs
 node examples/events/listen.mjs --only session.      # only types that begin with this
 node examples/events/listen.mjs --json               # each change whole, as one line of JSON
+node examples/events/listen.mjs --after <id>         # go on from where an earlier run stopped
 ```
 
 ```
@@ -164,4 +228,3 @@ Tried on 2026-11-28, on Linux (x86_64, Node.js 22.23, tmux, zsh), against a thro
 - The parser and the tracker have tests (`pnpm examples:test`): events cut at every position, comments, several `data:` lines, CRLF.
 
 Not tried: a real agent setting a terminal waiting (the `aubergine attention` command was typed in a shell instead); a real chat tool or any address outside this computer; HTTPS; a server reached from another computer; a listener left running for days; macOS and Windows; a people-only terminal; `?canvasId=`; many terminals at once; any Node.js other than 22.
-node examples/events/listen.mjs --after <id>         # go on from where an earlier run stopped

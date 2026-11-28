@@ -11642,11 +11642,26 @@ An API token needs the scope `read`.
 | Parameter | In | Type | Required | |
 |---|---|---|---|---|
 | `canvasId` | query | `string` | no | Only changes that concern this canvas. |
+| `Last-Event-ID` | header | `string` | no | The `id` of the last event taken from this stream, exactly as it was given. The changes made since are sent first; an event `reset` says when they cannot be. |
 
 **Answer** `200`, a stream; each `data:` line is
 
 ```ts
 {
+  type: "hello";
+  /** Names this run of the server. Another value than last time means the server was started again. */
+  epoch: string;
+  /** The number of the last change the server made in this run. What is read from the lists after this event is not older than it. */
+  revision: number;
+  /** The server's version. */
+  version: string;
+  /** True when `Last-Event-ID` was taken: the changes made since that event follow, then new ones. False on a first connection, and after a `reset`. */
+  resumed: boolean;
+} | {
+  type: "reset";
+  /** `restarted`: the server was started again since that event. `too-old`: more changes were made since than the server remembers. `unreadable`: the header did not hold an `id` of this stream. */
+  reason: "restarted" | "too-old" | "unreadable";
+} | {
   type: string;
   [key: string]: unknown;
 }
@@ -11723,26 +11738,11 @@ The answer holds the secret. It is sent this once and cannot be had again.
 For the signed-in browser only. No API token may call this, whatever its scopes.
 
 **Body** (JSON):
-| `Last-Event-ID` | header | `string` | no | The `id` of the last event taken from this stream, exactly as it was given. The changes made since are sent first; an event `reset` says when they cannot be. |
 
 | Field | Type | Required | |
 |---|---|---|---|
 | `name` | `string` | yes | What will use it. |
 | `scopes` | `("read" \| "canvases:write" \| "sessions:write" \| "notes:write" \| "wo…` | yes | What it may do. At least one. |
-  type: "hello";
-  /** Names this run of the server. Another value than last time means the server was started again. */
-  epoch: string;
-  /** The number of the last change the server made in this run. What is read from the lists after this event is not older than it. */
-  revision: number;
-  /** The server's version. */
-  version: string;
-  /** True when `Last-Event-ID` was taken: the changes made since that event follow, then new ones. False on a first connection, and after a `reset`. */
-  resumed: boolean;
-} | {
-  type: "reset";
-  /** `restarted`: the server was started again since that event. `too-old`: more changes were made since than the server remembers. `unreadable`: the header did not hold an `id` of this stream. */
-  reason: "restarted" | "too-old" | "unreadable";
-} | {
 | `expiresAt` | `string` | no | When it stops working. Never, when neither this nor `expiresInDays` is given. |
 | `expiresInDays` | `number` | no | In how many days it stops working. |
 | `reviewWorkflowChanges` | `boolean` | no | Changes to workflows need your review: with `workflows:write` the token may propose drafts, and may not create or change workflows directly. On unless you switch it off. |

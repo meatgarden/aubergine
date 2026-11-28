@@ -679,12 +679,12 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
 
     // Server-sent events: one `data:` line of JSON per change. It needs nothing but an HTTP client,
     // and a bearer token goes in a header as on every other route.
-    streamEvents: ({ query, request, reply, principal }) => {
     //
     // Each change has an `id`: the hub's own numbers, its epoch and the change's revision. A caller that sends the
     // last one it took (`Last-Event-ID`) is first sent what the hub still remembers of the changes since, through
     // the very filters a live change goes through, asked now: what it may see now, not what it might have seen then.
     // Where that cannot be done it is told `reset`, never left to guess.
+    streamEvents: ({ query, request, reply, principal }) => {
       const { canvasId } = query;
       if (canvasId !== undefined) sessions.getCanvas(canvasId);
       deps.recordNow(request);
@@ -758,9 +758,9 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
         const lines = linesOf(whole, revision);
         if (lines !== null) out.write(lines);
       });
-      const beat = setInterval(() => out.write(': still here\n\n'), 25_000);
       // One piece, handed to the socket: nothing here waits for the caller to read it, and no change waits for this.
       out.write(first.join(''));
+      const beat = setInterval(() => out.write(': still here\n\n'), 25_000);
       const release = deps.holdOpen(request, () => {
         end();
         out.end();
