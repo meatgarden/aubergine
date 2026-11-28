@@ -198,6 +198,21 @@ describe('how the page looks', () => {
 });
 
 describe('webhooks in the settings', () => {
+  it('says that a file is not JSON without quoting it: beside the mistake may stand a secret', async () => {
+    const secret = 'MADEUPSECRET0123456789MADEUPSECRET';
+    const pad = 'x'.repeat(200);
+    // Three mistakes; for the second the parser itself would quote the text around it.
+    for (const text of [`{"webhooks":[{"name":"ops","secret":"${secret}",}]}`, `{"p":"${pad}","webhooks":[{"name":"ops","address":"https://hooks.example.test/in/PATHKEY","secret": ${secret}}],"q":"${pad}"}`, `{"secret":"${secret}`]) {
+      await writeFile(path.join(dir, SETTINGS_FILE), text);
+      const warnings: string[] = [];
+      expect(await loadSettings(dir, (message) => warnings.push(message))).toEqual(DEFAULT_SETTINGS);
+      expect(warnings).toHaveLength(1);
+      expect(warnings[0]).toMatch(/^Ignoring .*: it is not valid JSON.*\. Using default settings\.$/);
+      for (const never of ['MADEUP', 'SECRET', 'PATHKEY', 'hooks.example']) expect(warnings[0], never).not.toContain(never);
+      expect(await webhookReport(dir)).toEqual({ webhooks: [], problems: [] });
+    }
+  });
+
   it('reports a wrong entry once, in words that repeat neither its address nor its secret, skips it, and never fails the file; the page\'s own writes leave them as they were', async () => {
     const webhooks = [
       { name: 'ops', address: 'https://hooks.example.test/in/PATHKEY-31?key=QUERYKEY-32', secret: 'made-up-secret-0123456789-abcdefghij' },

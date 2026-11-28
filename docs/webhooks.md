@@ -169,6 +169,8 @@ Many chat tools give a channel an "incoming webhook": an address that shows what
 - **Such a tool cannot check the signature.** It shows whatever is posted to its address, by anyone who has the address. The address is the secret there, which is why Aubergine never shows more of it than its host.
 - **Tools differ.** Some take only a shape of their own, refuse a body with fields they do not know, or want another field than `text`. For one of those, put a few lines of your own in between: a receiver like the example that checks the signature and posts what the tool wants.
 
+- **A name can hold what a chat tool reads as more than text.** `text` carries a terminal's name, and an agent can name its terminal. Aubergine takes control characters out of a name and nothing else, because every tool has markup of its own: a name such as `@here` or one with an address in it is shown by the tool as it shows any message. Where a channel must not be pinged by what an agent wrote, give your terminals names yourself (a name you wrote is never replaced by an agent's), or put a receiver in between that posts only `event` and the IDs.
+
 No real chat tool was tried.
 
 ## What was tried, and what was not

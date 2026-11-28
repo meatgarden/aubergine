@@ -30,13 +30,22 @@ export async function loadSettings(dir: string, onWarning: (message: string) => 
   } catch (error) {
     const detail =
       error instanceof SyntaxError
-        ? error.message
+        ? jsonProblem(error)
         : ((error as { issues?: { path: PropertyKey[]; message: string }[] }).issues ?? [])
             .map((issue) => `${issue.path.join('.') || '(file)'}: ${issue.message}`)
             .join('; ');
     onWarning(`Ignoring ${file}: ${detail}. Using default settings.`);
     return DEFAULT_SETTINGS;
   }
+}
+
+/**
+ * Why the file is not JSON, in words of our own. What the parser says is not passed on: for some mistakes it quotes
+ * the text around them, and beside a mistake may stand a webhook's secret or the rest of its address.
+ */
+export function jsonProblem(error: SyntaxError): string {
+  const where = /\(line (\d+) column (\d+)\)/.exec(error.message);
+  return where ? `it is not valid JSON at line ${where[1]}, column ${where[2]}` : 'it is not valid JSON: something stands where a value, a comma or a quote was expected';
 }
 
 /**
