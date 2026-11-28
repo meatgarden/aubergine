@@ -7735,6 +7735,67 @@ export type ExportProjectResult = {
   leftOut: string[];
 };
 
+export type CompareProjectFileBody = {
+  /** The text of the file. */
+  text: string;
+};
+
+export type CompareProjectFileResult = {
+  /** True when nothing that was compared differs. */
+  matches: boolean;
+  counts: {
+    /** Things the file has that the project does not. */
+    onlyInFile: number;
+    /** Things the project has that the file does not. */
+    onlyHere: number;
+    /** Things both have, differently. */
+    differ: number;
+    /** Names that could not be matched. */
+    cannotTell: number;
+  };
+  /** Every difference, in the order of the groups. */
+  differences: {
+    /** What kind of thing it is about. */
+    group: "project" | "places" | "canvases" | "terminals" | "frames" | "rules" | "schedules" | "workflows" | "steps";
+    /** `only-in-file`: the file has it and the project does not. `only-here`: the project has it and the file does not. `differs`: both have it, differently. `cannot-tell`: a name is on a side more than once and the things of that name are not the same on both sides, so they were not matched. */
+    kind: "only-in-file" | "only-here" | "differs" | "cannot-tell";
+    /** The name of the thing: a canvas by its name, a terminal by its name, a frame by its label, a place, a schedule, a workflow, a saved step. A rule has no name: it is said in words. For the project itself, its name here. */
+    name: string;
+    /** For a terminal and a frame: the name of its canvas. Null otherwise. */
+    canvas: string | null;
+    /** How many things the line is about. 1, except for several rules that say the same. */
+    count: number;
+    /** How many things of that name the file has. */
+    inFile: number;
+    /** How many things of that name the project has. */
+    here: number;
+    /** For `differs`: each thing that differs. */
+    what: {
+      /** What differs, in a word or two: `color`, `tags`, `summary`, `starts in`, `moved`, `resized`, `time`, `days`, `instructions`. */
+      field: string;
+      /** What the file has, where that is short enough to say in a line. Null for a text and for layout. */
+      file: string | null;
+      /** What the project has. Null for a text and for layout. */
+      here: string | null;
+    }[];
+    /** For `differs`: the texts that differ, in full on both sides. */
+    texts: {
+      /** Which text: the summary of a terminal, the task of a schedule, what an agent is told by a step or a workflow. */
+      title: string;
+      /** The text in the file. */
+      file: string;
+      /** The text in the project. */
+      here: string;
+    }[];
+  }[];
+  /** True when the terminals' summaries were compared. A template written without them does not say what they are, so then they are not. */
+  summaries: boolean;
+  /** How the comparison was made, each in a sentence. */
+  says: string[];
+  /** What a file does not hold, and so what this comparison says nothing about, in one sentence. */
+  notCompared: string;
+};
+
 export type ReadProjectFileBody = {
   /** The text of the file. */
   text: string;
@@ -10728,6 +10789,7 @@ export const OPERATIONS = {
   archiveProject: { method: 'POST', path: '/v1/projects/{projectId}/archive', params: ["projectId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
   reopenProject: { method: 'POST', path: '/v1/projects/{projectId}/reopen', params: ["projectId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
   exportProject: { method: 'GET', path: '/v1/projects/{projectId}/file', params: ["projectId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
+  compareProjectFile: { method: 'POST', path: '/v1/projects/{projectId}/file/compare', params: ["projectId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
   readProjectFile: { method: 'POST', path: '/v1/project-files/read', params: [], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
   importProjectFile: { method: 'POST', path: '/v1/project-files/import', params: [], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
   listProjectTemplates: { method: 'GET', path: '/v1/project-templates', params: [], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
@@ -11483,6 +11545,12 @@ export interface Client {
    * `GET /v1/projects/{projectId}/file`. Signed-in browser only: no API token may call this.
    */
   exportProject(args: { projectId: string; query?: ExportProjectQuery } & CallOptions): Promise<ExportProjectResult>;
+  /**
+   * Compare a project file with a project, and change nothing.
+   *
+   * `POST /v1/projects/{projectId}/file/compare`. Signed-in browser only: no API token may call this.
+   */
+  compareProjectFile(args: { projectId: string; body: CompareProjectFileBody } & CallOptions): Promise<CompareProjectFileResult>;
   /**
    * Read a project file, and make nothing.
    *

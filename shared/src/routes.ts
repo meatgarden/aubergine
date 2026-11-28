@@ -181,6 +181,7 @@ import { ElementId } from './workflows';
 import { Board, BoardFilters } from './board';
 import { ForYou } from './for-you';
 import { Ask, Task } from './tasks';
+import { ProjectComparison } from './project-diff';
 import { ExportProjectQuery, ExportedProject, ImportProjectFileRequest, ImportedProject, ProjectFileReading, ProjectTemplate, ProjectTemplateText, ProjectTemplates, ReadProjectFileRequest, SaveTemplateRequest } from './project-file';
 import { AddProjectRequest, ArchiveProjectRequest, ChangeProjectRequest, ChangeSharingRequest, MoveCanvasToProjectRequest, MoveSharedThingRequest, ProjectRow, SharingPage } from './projects';
 import { AddScheduleRequest, ChangeScheduleRequest, RanSchedule, ScheduleList, ScheduleRow, SchedulesQuery } from './schedules-api';
@@ -1628,6 +1629,19 @@ export const ROUTES = {
     params: z.object({ projectId: Id }),
     query: ExportProjectQuery,
     response: ExportedProject,
+    status: 200,
+    errors: [404, 409],
+  }),
+  compareProjectFile: route({
+    method: 'POST',
+    path: '/v1/projects/:projectId/file/compare',
+    tag: 'Projects',
+    summary: 'Compare a project file with a project, and change nothing',
+    description: 'For the owner only: no token and no session can do this, whatever its scopes. What the file has that the project lacks, what the project has that the file lacks, and what both have differently. The project is written out as a file is and the two are compared in that shape, so only what a file holds is compared. Things are matched by name, never by an ID or by their order; where a name is there more than once and the match is not certain, the answer says that they cannot be told apart. No path of this computer is in the answer: where a terminal starts is said as a place and a folder below it. Nothing is changed, made or started, and nothing applies a file to a project. A file that is wrong in any way is refused with a sentence.',
+    action: 'projects.manage',
+    params: z.object({ projectId: Id }),
+    body: ReadProjectFileRequest,
+    response: ProjectComparison,
     status: 200,
     errors: [404, 409],
   }),

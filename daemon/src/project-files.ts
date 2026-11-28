@@ -12,6 +12,7 @@ import {
   RULES_MAX,
   SCHEDULES_MAX,
   TemplateId,
+  diffProject,
   exportWorkflow,
   importWorkflow,
   isLocalHome,
@@ -29,6 +30,7 @@ import {
   type ImportProjectFileRequest,
   type ImportedProject,
   type Project,
+  type ProjectComparison,
   type ProjectFile,
   type ProjectFileReading,
   type ProjectTemplate,
@@ -229,6 +231,23 @@ export class ProjectFiles {
     const { file, leftOut } = this.file(projectId, options);
     const text = `${JSON.stringify(file, null, 2)}\n`;
     return { text, digest: digestOf(text), fileName: `${slug(file.name) || 'project'}.${options.template ? 'template' : 'project'}.json`, leftOut };
+  }
+
+  /* ---------- Comparing ---------- */
+
+  /**
+   * How a file differs from a project that is here. The file is read by the one reader; the project is written out by
+   * the code that writes files, read by the same reader, and the two are compared in the file's own shape. It reads
+   * and answers: no change, nothing made, nothing started, nothing written.
+   */
+  compare(projectId: string, text: string): ProjectComparison {
+    const read = readProjectFile(text);
+    if (!read.ok) throw new BadInputError(read.problem);
+    for (const { file } of read.file.workflows) this.contentOf(file);
+    // With its summaries: whether they are compared is decided where the two are compared, from what the file is.
+    const here = readProjectFile(this.export(projectId, { template: read.file.template, notes: true }).text);
+    if (!here.ok) throw new ConflictError(`This project cannot be written out as a file that can be read, so it cannot be compared with one: ${here.problem}`);
+    return diffProject(read.file, here.file);
   }
 
   /* ---------- Reading in ---------- */

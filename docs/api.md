@@ -130,6 +130,7 @@ How to create a token, what the scopes mean, the limits and the activity log are
 | [`POST /v1/projects/{projectId}/archive`](#archiveproject) | Archive a project | browser only |
 | [`POST /v1/projects/{projectId}/reopen`](#reopenproject) | Reopen an archived project | browser only |
 | [`GET /v1/projects/{projectId}/file`](#exportproject) | Write a project out as a file | browser only |
+| [`POST /v1/projects/{projectId}/file/compare`](#compareprojectfile) | Compare a project file with a project, and change nothing | browser only |
 | [`POST /v1/project-files/read`](#readprojectfile) | Read a project file, and make nothing | browser only |
 | [`POST /v1/project-files/import`](#importprojectfile) | Make a project from a file that was read | browser only |
 | [`GET /v1/project-templates`](#listprojecttemplates) | List the templates a project can be made from | browser only |
@@ -9533,6 +9534,86 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
   digest: string;
   fileName: string;
   leftOut: string[];
+}
+```
+
+**Errors:** 400, 401, 403, 404, 409, 413, 429.
+
+### compareProjectFile
+
+`POST /v1/projects/{projectId}/file/compare`: Compare a project file with a project, and change nothing.
+
+For the owner only: no token and no session can do this, whatever its scopes. What the file has that the project lacks, what the project has that the file lacks, and what both have differently. The project is written out as a file is and the two are compared in that shape, so only what a file holds is compared. Things are matched by name, never by an ID or by their order; where a name is there more than once and the match is not certain, the answer says that they cannot be told apart. No path of this computer is in the answer: where a terminal starts is said as a place and a folder below it. Nothing is changed, made or started, and nothing applies a file to a project. A file that is wrong in any way is refused with a sentence.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `projectId` | path | `string` | yes | An ID. |
+
+**Body** (JSON):
+
+| Field | Type | Required | |
+|---|---|---|---|
+| `text` | `string` | yes | The text of the file. |
+
+**Answer** `200`:
+
+```ts
+{
+  /** True when nothing that was compared differs. */
+  matches: boolean;
+  counts: {
+    /** Things the file has that the project does not. */
+    onlyInFile: number;
+    /** Things the project has that the file does not. */
+    onlyHere: number;
+    /** Things both have, differently. */
+    differ: number;
+    /** Names that could not be matched. */
+    cannotTell: number;
+  };
+  /** Every difference, in the order of the groups. */
+  differences: {
+    /** What kind of thing it is about. */
+    group: "project" | "places" | "canvases" | "terminals" | "frames" | "rules" | "schedules" | "workflows" | "steps";
+    /** `only-in-file`: the file has it and the project does not. `only-here`: the project has it and the file does not. `differs`: both have it, differently. `cannot-tell`: a name is on a side more than once and the things of that name are not the same on both sides, so they were not matched. */
+    kind: "only-in-file" | "only-here" | "differs" | "cannot-tell";
+    /** The name of the thing: a canvas by its name, a terminal by its name, a frame by its label, a place, a schedule, a workflow, a saved step. A rule has no name: it is said in words. For the project itself, its name here. */
+    name: string;
+    /** For a terminal and a frame: the name of its canvas. Null otherwise. */
+    canvas: string | null;
+    /** How many things the line is about. 1, except for several rules that say the same. */
+    count: number;
+    /** How many things of that name the file has. */
+    inFile: number;
+    /** How many things of that name the project has. */
+    here: number;
+    /** For `differs`: each thing that differs. */
+    what: {
+      /** What differs, in a word or two: `color`, `tags`, `summary`, `starts in`, `moved`, `resized`, `time`, `days`, `instructions`. */
+      field: string;
+      /** What the file has, where that is short enough to say in a line. Null for a text and for layout. */
+      file: string | null;
+      /** What the project has. Null for a text and for layout. */
+      here: string | null;
+    }[];
+    /** For `differs`: the texts that differ, in full on both sides. */
+    texts: {
+      /** Which text: the summary of a terminal, the task of a schedule, what an agent is told by a step or a workflow. */
+      title: string;
+      /** The text in the file. */
+      file: string;
+      /** The text in the project. */
+      here: string;
+    }[];
+  }[];
+  /** True when the terminals' summaries were compared. A template written without them does not say what they are, so then they are not. */
+  summaries: boolean;
+  /** How the comparison was made, each in a sentence. */
+  says: string[];
+  /** What a file does not hold, and so what this comparison says nothing about, in one sentence. */
+  notCompared: string;
 }
 ```
 

@@ -462,6 +462,7 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
     removeProject: ({ params }) => deps.projects.remove(params.projectId),
     // A project as a file, and templates. Writing out, reading and taking in are the owner's alone.
     exportProject: ({ params, query }) => deps.projectFiles.export(params.projectId, { template: query.template === 'true', ...(query.notes !== undefined ? { notes: query.notes === 'true' } : {}), ...(query.description !== undefined ? { description: query.description } : {}) }),
+    compareProjectFile: ({ params, body }) => deps.projectFiles.compare(params.projectId, body.text),
     readProjectFile: ({ body }) => deps.projectFiles.read(body.text),
     importProjectFile: ({ body }) => deps.projectFiles.import(body),
     listProjectTemplates: async () => ({ templates: await deps.projectFiles.templates() }),
