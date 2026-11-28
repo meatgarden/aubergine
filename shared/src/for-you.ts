@@ -31,7 +31,7 @@ export const ForYouItem = z.object({
   action: z.string().nullable().default(null).describe('The one thing to do with it, as the words of a button: `Go to terminal`, `Read`. Null where the item has buttons of its own (accept or decline, done or dismiss).'),
   from: z.string().describe('Where it came from: a terminal by name, a program, the library.'),
   at: z.iso.datetime().nullable().describe('Since when, when that is known.'),
-  act: z.string().describe('Where one acts on it: `run:<id>`, `session:<id>`, `task:<id>`, `ask:<id>`, `copy:<id>`, `schedule:<id>`, `review`.'),
+  act: z.string().describe('Where one acts on it: `run:<id>`, `session:<id>`, `task:<id>`, `ask:<id>`, `copy:<id>`, `schedule:<id>`, `rule:<id>`, `review`.'),
   waits: z.boolean().describe('True for a terminal that waits for the owner: these are what the count in the toolbar counts.'),
   written: z.boolean().describe('True for something written on the list, which the owner marks done. False for what is gathered: that goes when the thing is done.'),
   sessionId: z.string().nullable(),
@@ -280,6 +280,18 @@ registerForYouKind({
       .map((schedule) => ({ id: `schedule:${schedule.id}`, sentence: `The schedule “${schedule.name}” could not run: ${schedule.problem ?? ''}`, who: schedule.name, what: schedule.problem ?? 'It could not run.', from: 'a schedule', at: schedule.last?.at ?? schedule.updatedAt, act: `schedule:${schedule.id}` })),
 });
 
+registerForYouKind({
+  kind: 'rule',
+  title: 'A webhook was not sent',
+  action: 'See the rules',
+  order: 28,
+  // One item for a rule for as long as it cannot do what it says: not one for each time it fired.
+  items: ({ state }) =>
+    state.queue.rules
+      .filter((rule) => rule.on && rule.problem !== null)
+      .map((rule) => ({ id: `rule:${rule.id}`, sentence: rule.problem ?? '', who: 'A rule', what: rule.problem ?? 'It could not do what it says.', from: 'a rule', at: rule.createdAt, act: `rule:${rule.id}` })),
+});
+
 const capital = (words: string): string => words.replace(/^./, (c) => c.toUpperCase());
 
 function sessionName(state: AppState, sessionId: string | null): string | null {
@@ -298,6 +310,7 @@ export function forYou(whole: AppState, now: number, endedAll: readonly Archived
     (item.askId ? state.queue.asks.find((a) => a.id === item.askId)?.projectId : undefined) ??
     (item.environmentId ? state.environments.find((e) => e.id === item.environmentId)?.projectId : undefined) ??
     (item.act.startsWith('schedule:') ? state.schedules.items.find((s) => s.id === item.act.slice(9))?.projectId : undefined) ??
+    (item.act.startsWith('rule:') ? state.queue.rules.find((r) => r.id === item.act.slice(5))?.projectId : undefined) ??
     (item.runId ? (state.runs.find((r) => r.id === item.runId)?.projectId ?? ended.find((e) => e.run.id === item.runId)?.run.projectId) : undefined) ??
     null;
   const items: ForYouItem[] = [];
@@ -319,6 +332,7 @@ export function actWords(item: Pick<ForYouItem, 'act' | 'from'>): string {
   if (what === 'ask') return `aubergine todo done ${id ?? ''}`;
   if (what === 'copy') return 'aubergine copies';
   if (what === 'schedule') return 'aubergine schedule list';
+  if (what === 'rule') return 'aubergine rule list';
   return 'in the browser: Review';
 }
 

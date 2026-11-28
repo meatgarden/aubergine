@@ -27,6 +27,7 @@ import { CanvasChanges, ChangeEvent } from './events';
 import { Id } from './ids';
 import { FieldsInput } from './fields';
 import { Settings, ThemeSetting } from './settings';
+import { WebhookShown } from './webhooks';
 import { ColorThemeId, CursorStyle, DarkThemeId, LightThemeId } from './themes';
 
 /**
@@ -133,7 +134,10 @@ export type RuntimeStatus = z.infer<typeof RuntimeStatus>;
 export const StateResponse = z.object({
   protocolVersion: z.literal(PROTOCOL_VERSION),
   runtime: RuntimeStatus,
+  /** The settings, without `webhooks`: that list is empty here, and `webhooks` beside it says what may be shown of it. */
   settings: Settings,
+  /** The webhooks a rule may name: each by its name and its address's host. Never the rest of an address, never a secret. */
+  webhooks: z.array(WebhookShown).max(20).default([]),
   state: AppState,
   /** Which run of the server `revision` counts in. Left out by a server from before changes were numbered. */
   epoch: z.string().max(64).optional(),

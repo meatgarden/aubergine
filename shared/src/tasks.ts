@@ -2,6 +2,7 @@ import { z } from 'zod';
 import type { Session } from './entities';
 import { EnvironmentKindName } from './environment';
 import { Id } from './ids';
+import { terminalSentence } from './webhooks';
 import { PlainName, type Run } from './workflows';
 
 /**
@@ -328,6 +329,11 @@ export const Rule = z.object({
   action: RuleAction,
   /** False: it is kept and does nothing. A rule that came in a project file arrives so, until the owner switches it on. */
   on: z.boolean().default(true),
+  /**
+   * Why it cannot do what it says, while that lasts: the webhook it names is not in the settings, or could not be
+   * sent. Fixed words and that name; set by the server, never by a request. Null: nothing is known to be wrong.
+   */
+  problem: z.string().max(300).nullable().default(null),
   createdAt: Timestamp,
 });
 export type Rule = z.infer<typeof Rule>;
@@ -342,6 +348,8 @@ export interface Occasion {
   askId: string | null;
   /** The terminal it happened in, for what happens to a terminal. */
   sessionId?: string | null;
+  /** The schedule it is about, for what happens to a schedule. */
+  scheduleId?: string | null;
   /** The project it happened in. A rule hears only what happens in its own. */
   projectId: string;
 }
@@ -361,9 +369,8 @@ export type TerminalRuleEvent = 'terminal.waiting' | 'terminal.finished' | 'comm
  * one happening from the next of the same kind in the same terminal.
  */
 export function occasionOfTerminal(session: Pick<Session, 'id' | 'name' | 'projectId'>, event: TerminalRuleEvent, nth: number): Occasion {
-  // A name is one line of plain text by its schema; what an older file may still hold is taken out here.
-  const name = session.name.replace(/[\p{Cc}\u202a-\u202e\u2066-\u2069]/gu, '').slice(0, 120);
-  const sentence = event === 'terminal.waiting' ? `The terminal “${name}” is waiting for you` : event === 'terminal.finished' ? `The terminal “${name}” finished` : `A command failed in the terminal “${name}”`;
+  // A name is one line of plain text by its schema; what an older file may still hold is taken out there.
+  const sentence = terminalSentence(session.name, event);
   return { id: `${event} ${session.id} ${nth}`, event, sentence, taskId: null, askId: null, sessionId: session.id, projectId: session.projectId };
 }
 

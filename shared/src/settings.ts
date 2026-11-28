@@ -175,6 +175,13 @@ export const Settings = z.object({
     .catch({ addresses: [], pages: [] })
     .prefault({}),
   /**
+   * Addresses a rule may send a webhook to, each `{ "name", "address", "secret" }`. Written by hand and read when the
+   * server starts; no route, command or token writes them, and a rule names one by its name only. An entry that is
+   * wrong is reported and skipped (`webhookProblem`). The secret and the address stay in this file: neither is in
+   * the state, an answer, an event or a log.
+   */
+  webhooks: z.array(z.unknown()).max(20).catch([]).default([]),
+  /**
    * Keys: command name to a chord (`"Ctrl+Meta+J"`), a list of chords, or
    * `null` for no key. Entries that are wrong are reported and skipped.
    */
