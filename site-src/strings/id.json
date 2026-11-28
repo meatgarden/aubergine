@@ -5026,5 +5026,497 @@
   "site.share.copy": {
     "text": "Salin tautan",
     "from": "dbf362d4f210"
+  },
+  "site.foot.customize": {
+    "text": "Sesuaikan",
+    "from": "c5276e27afba"
+  },
+  "guides.customize.name": {
+    "text": "Sesuaikan tema, warna, fon, dan tombol",
+    "from": "0f78f8ed86a6"
+  },
+  "guides.customize.text": {
+    "text": "Sepuluh tema warna, satu tema untuk tiap terminal, warna yang diatur sendiri, fon dan kursor terminal, setiap tombol, dan cara alat lain memungkinkan Anda menyesuaikan milik mereka.",
+    "from": "fc827f9b51fc"
+  },
+  "home.themes.more": {
+    "text": "Semua yang bisa Anda ubah, dan cara alat lain melakukannya",
+    "from": "b9eb2267d0a5"
+  },
+  "faq.look.q": {
+    "text": "Bisakah saya mengubah tampilan Aubergine?",
+    "from": "25820b139d94"
+  },
+  "faq.look.a": {
+    "text": "Bisa: sepuluh tema warna, satu tema untuk tiap terminal, warna tunggal yang diatur sendiri, fon dan kursor terminal, dan setiap tombol. Lihat <a href=\"/customize-terminal-themes/\">Sesuaikan</a>.",
+    "from": "4d0f29e81927"
+  },
+  "custom.meta.title": {
+    "text": "Sesuaikan tema, warna, dan tombol terminal | Aubergine",
+    "from": "2cbdb7a66d89"
+  },
+  "custom.meta.description": {
+    "text": "Sepuluh tema warna, satu tema per terminal, warna diatur sendiri, fon, kursor, dan tombol, serta cara VS Code, kitty, tmux, dan lainnya diatur.",
+    "from": "a225c6e71a17"
+  },
+  "custom.crumb": {
+    "text": "Sesuaikan",
+    "from": "c5276e27afba"
+  },
+  "custom.title": {
+    "text": "Sesuaikan tema, warna, fon, dan tombol terminal",
+    "from": "c1d02d7228ca"
+  },
+  "custom.lead": {
+    "text": "Pilih warna halaman dari sepuluh tema, beri setiap terminal tema sendiri, dan atur warna tunggal, fon dan kursor terminal, serta setiap tombol, di Settings atau di satu berkas pengaturan yang menjelaskan dirinya sendiri.",
+    "from": "c7447ef1ebe0"
+  },
+  "custom.page.title": {
+    "text": "Sepuluh tema warna, terang dan gelap",
+    "from": "362e348c9513"
+  },
+  "custom.page.text": {
+    "text": "<strong>Settings → Appearance</strong> dimulai dengan tiga pilihan: <strong>Light</strong>, <strong>Dark</strong>, dan <strong>Match the system</strong>, yang menjadi awal pemasangan baru dan mengikuti sistem saat sistem berubah. Di bawahnya Anda memilih satu tema dari tiap jenis: Light, High contrast light, Solarized light, atau Gruvbox light; Dark, High contrast dark, Solarized dark, Gruvbox dark, Nord, atau Dracula. Masing-masing ditampilkan dengan gambar kecil warnanya.",
+    "from": "3c86ee10d844"
+  },
+  "custom.page.at": {
+    "text": "Perubahan langsung berlaku untuk halaman dan setiap terminal, tanpa memuat ulang, dan disimpan di berkas pengaturan, jadi setiap peramban tempat Anda membuka Aubergine akan sama. Palet juga punya hal yang sama sebagai perintah, misalnya <strong>Color theme: Nord</strong>.",
+    "from": "280d6d38a2b6"
+  },
+  "custom.own.title": {
+    "text": "Tema warna yang berbeda untuk tiap terminal",
+    "from": "f27bdf189165"
+  },
+  "custom.own.text": {
+    "text": "<strong>Theme…</strong> di menu terminal menggambar terminal itu dengan salah satu dari sepuluh tema, apa pun tema halamannya. Hanya badannya yang berubah: judul, catatan, dan detailnya tetap seperti halaman. Terminal tanpa tema sendiri mengikuti <strong>Terminal theme</strong> di Settings, yaitu bawaan untuk terminal, dan tanpa itu, mengikuti halaman.",
+    "from": "e29c52f9c1e8"
+  },
+  "custom.menu.alt": {
+    "text": "Menu Theme… sebuah terminal yang terbuka di kanvas: Same as the default, kini seperti halaman, Dark; lalu empat tema terang dan enam tema gelap, dengan Dracula dicentang.",
+    "from": "c8e8e678bb8b"
+  },
+  "custom.menu.caption": {
+    "text": "Theme… di menu terminal: bawaan, atau salah satu dari sepuluh.",
+    "from": "43c132516f7e"
+  },
+  "custom.own.where": {
+    "text": "Pilihan yang sama ada di menu baris terminal dalam daftar, di detailnya, dan di palet. Terminal dan bingkai juga bisa punya warna sendiri, salah satu dari tiga belas atau <strong>Your own…</strong> untuk warna apa saja, begitu pula tab kanvas; warna terminal juga menjadi warna barisnya di daftar.",
+    "from": "914fa5f4b003"
+  },
+  "custom.colors.title": {
+    "text": "Atur warna tunggal sendiri",
+    "from": "5ebf453dd41c"
+  },
+  "custom.colors.text": {
+    "text": "Selain tema, 35 warna halaman bisa diatur di berkas pengaturan, <code>config.json</code>, di bawah <code>appearance.colors</code>: nama warna dan nilai yang ditulis <code>#rrggbb</code>. Ditulis di bagian atas, warna berlaku di atas setiap tema; ditulis di bawah ID tema dalam kurung siku, seperti <code>\"[nord]\"</code>, warna berlaku di atas tema itu saja, dan menang.",
+    "from": "42f05c456f31"
+  },
+  "custom.colors.names": {
+    "text": "Namanya adalah token warna halaman, seperti <code>bg</code>, <code>text</code>, <code>accent</code>, dan <code>terminal-bg</code>; <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/design.md\">docs/design.md</a> mencantumkannya. Entri yang salah dilewati, dan sisa berkas tetap berlaku; <strong>Settings → Appearance</strong> memberi tahu mana yang dilewati. Warna yang Anda atur adalah milik Anda: tidak ada yang memeriksa apakah tulisan Anda bisa dibaca.",
+    "from": "86395864aac8"
+  },
+  "custom.text.title": {
+    "text": "Fon, kursor, dan pintasan keyboard",
+    "from": "a9eecef9b5f9"
+  },
+  "custom.text.font": {
+    "text": "<strong>Terminal text</strong> di Settings → Appearance mengatur ukuran teks terminal, dari 8 sampai 32 piksel, dan fonnya, sebagai daftar yang fon pertama yang ditemukan dipakai. <strong>Cursor</strong> mengatur bentuknya, blok, batang, atau garis bawah, dan apakah ia berkedip.",
+    "from": "dabcfd9344a6"
+  },
+  "custom.keys.text": {
+    "text": "Setiap tombol bisa diubah. Tambahkan <code>shortcuts</code> ke berkas pengaturan: nama perintah dengan satu kombinasi, daftar kombinasi, atau <code>null</code> untuk tanpa tombol. <code>shortcutsInAppWindow</code> menerima hal yang sama dan hanya berlaku di tempat Aubergine dipasang sebagai aplikasi dengan jendela sendiri. Muat ulang halaman, maka lembar pintasan (<strong>?</strong>), palet, dan tooltip menampilkan tombol seperti yang Anda atur.",
+    "from": "bf23fd932a40"
+  },
+  "custom.keys.check": {
+    "text": "Tombol yang diatur dua kali, atau yang tidak bisa dibaca, dilaporkan di atas lembar pintasan dan oleh server, dan sisa berkas tetap berlaku. Tombol tunggal, atau Ctrl atau Option dengan satu tombol, hanya bekerja selama tidak ada terminal yang memegang keyboard, agar setiap program di terminal tetap menerima tombol yang dibutuhkannya. Selengkapnya di <a href=\"https://github.com/thirstyeggplant/aubergine#keyboard\">Keyboard</a>, di README.",
+    "from": "fe03dd01e818"
+  },
+  "custom.file.title": {
+    "text": "Satu berkas pengaturan yang menjelaskan dirinya sendiri",
+    "from": "9d7e735d280e"
+  },
+  "custom.file.text": {
+    "text": "Semua ini disimpan di <code>config.json</code> di folder data Aubergine, dan <code>aubergine settings path</code> menampilkan letaknya. Setiap kunci boleh dihilangkan. Berkas yang tidak bisa dibaca berarti nilai bawaan, tidak pernah server yang gagal dimulai. Settings di halaman hanya menulis kunci yang diubahnya dan membiarkan sisa berkas seperti yang Anda tulis.",
+    "from": "332625c30531"
+  },
+  "custom.file.schema": {
+    "text": "Setiap kali dimulai, server menulis <code>config.schema.json</code> di samping berkas. Tambahkan satu baris, dan editor yang membaca JSON Schema akan menjelaskan dan melengkapi setiap kunci:",
+    "from": "f85b680c55e6"
+  },
+  "custom.file.cli": {
+    "text": "<code>aubergine settings list</code> menampilkan setiap kunci dengan nilainya sekarang, ditandai jika bukan bawaan, dan <code>aubergine settings schema</code> menampilkan skemanya. <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/settings.md\">docs/settings.md</a> menjelaskan setiap kunci, nilai bawaannya, dan apakah ditulis oleh Settings atau oleh Anda.",
+    "from": "255d97752978"
+  },
+  "custom.file.all": {
+    "text": "Di halaman, <strong>Settings → Every setting</strong> mencantumkan kunci yang sama beserta nilainya, dan menemukannya saat Anda mengetik. Kunci yang diubah Settings membawa Anda ke kontrolnya; kunci yang ditulis sendiri punya <strong>Copy</strong>, untuk baris yang ditambahkan ke berkas. Tidak ada pengaturan yang berubah di sana.",
+    "from": "3f848aa20a56"
+  },
+  "custom.all.alt": {
+    "text": "Settings, Every setting, terbuka, dengan “appearance” diketik di pencariannya: enam kunci, masing-masing dengan nilainya sekarang, artinya, dan bawaannya; lima bertuliskan Changed above, dan appearance.colors punya tombol Copy.",
+    "from": "3ff59f419a23"
+  },
+  "custom.all.caption": {
+    "text": "Every setting, dicari: arti tiap kunci, nilainya sekarang, dan bawaannya.",
+    "from": "44060f83bf0e"
+  },
+  "custom.file.browser": {
+    "text": "Beberapa pilihan milik peramban ini dan disimpan di sana: apakah kanvas tampil sebagai tab, satu daftar, atau satu kolom; di mana bilah di atas kanvas berada dan apakah tetap terbuka; apakah panel samping dan peta dilipat; lebar panel dan detail terminal; dan bagaimana daftar terminal disaring, dikelompokkan, dan diurutkan.",
+    "from": "8d660a5ed4ca"
+  },
+  "custom.program.title": {
+    "text": "Apa yang boleh diubah program atau agen, dan apa yang tetap milik Anda",
+    "from": "15b7cd56fd35"
+  },
+  "custom.program.text": {
+    "text": "Melalui <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/api.md\">API lokal</a>, program dengan token API boleh menata kanvas dengan <code>canvases:write</code>: memberi nama, warna, dan urutan, memindahkan, mengubah ukuran, dan mewarnai terminal di atasnya, serta menambah bingkai. Dengan <code>sessions:write</code> ia boleh mengganti nama dan menandai terminal, mengubah kolomnya, dan memberinya tema warna. Ia hanya menjangkau proyek yang dijangkau tokennya.",
+    "from": "a0cf33b31432"
+  },
+  "custom.program.agent": {
+    "text": "Agen di dalam terminal menjelaskan terminalnya sendiri dan tidak yang lain: nama, ringkasan untuk apa terminal itu, tautan, dan kolomnya, dengan <code>aubergine describe</code>, <code>aubergine link add</code>, dan <code>aubergine field set</code>. Di tempat Anda sendiri menulis nama, ringkasan, atau kolom, milik Anda tetap dipakai, dan yang dikirim agen disimpan di sampingnya sebagai saran.",
+    "from": "b99f1d5ab90f"
+  },
+  "custom.program.owner": {
+    "text": "Pengaturan itu sendiri hanya milik Anda. Tidak ada token, terminal, atau agen yang bisa mengubahnya: <code>PUT /v1/settings/appearance</code> hanya menjawab peramban yang sudah masuk, dan <code>appearance.colors</code>, <code>shortcuts</code>, dan lainnya ditulis sendiri di berkas.",
+    "from": "8120d56c7837"
+  },
+  "custom.cmp.title": {
+    "text": "Bagaimana alat lain memungkinkan Anda menyesuaikan antarmuka?",
+    "from": "66e3b8de628b"
+  },
+  "custom.cmp.how": {
+    "text": "<strong>Cara ini ditulis.</strong> Apa yang dikatakan tabel tentang tiap alat berasal dari dokumentasinya sendiri, dibaca pada 28 November 2026 dan ditautkan dari nama dan selnya. Kami tidak menjalankan alat-alat ini untuk ini. “Tidak ditemukan” berarti dokumentasi yang kami baca tidak menjelaskannya, bukan berarti alat itu tidak bisa. Jika ada yang salah atau usang, <a href=\"https://github.com/thirstyeggplant/aubergine/issues\">beri tahu kami</a>.",
+    "from": "6ef9a80f81b8"
+  },
+  "custom.cmp.tool": {
+    "text": "Alat",
+    "from": "2e53bdcd0740"
+  },
+  "custom.cmp.settings": {
+    "text": "Pengaturan",
+    "from": "74a883a037bc"
+  },
+  "custom.cmp.themes": {
+    "text": "Tema dan warna",
+    "from": "1483a0993975"
+  },
+  "custom.cmp.css": {
+    "text": "CSS Anda sendiri",
+    "from": "7551db76a705"
+  },
+  "custom.cmp.code": {
+    "text": "Kode Anda sendiri",
+    "from": "90cd41d7d612"
+  },
+  "custom.cmp.templates": {
+    "text": "Templat judul dan status",
+    "from": "0eb761541eb1"
+  },
+  "custom.cmp.kind.editor": {
+    "text": "Sebuah editor",
+    "from": "120815ad81ae"
+  },
+  "custom.cmp.kind.notes": {
+    "text": "Aplikasi catatan",
+    "from": "d4729aaa963c"
+  },
+  "custom.cmp.kind.terminal": {
+    "text": "Sebuah terminal",
+    "from": "2c2715f8c7d4"
+  },
+  "custom.cmp.kind.mux": {
+    "text": "Multiplekser terminal",
+    "from": "b643b9019461"
+  },
+  "custom.cmp.kind.aubergine": {
+    "text": "Terminal di atas kanvas",
+    "from": "ef37110351f3"
+  },
+  "custom.cmp.none": {
+    "text": "Tidak ditemukan",
+    "from": "66d2c65a4ede"
+  },
+  "custom.cmp.vscode.settings": {
+    "text": "<code>settings.json</code> atau editor Settings, berlapis dari pengguna ke ruang kerja, folder, dan bahasa",
+    "from": "6dbfbb0bf531"
+  },
+  "custom.cmp.vscode.themes": {
+    "text": "<a href=\"https://code.visualstudio.com/docs/configure/themes\">Berkas tema</a> dari ekstensi; <code>workbench.colorCustomizations</code>, untuk setiap tema atau satu",
+    "from": "a9721fe91937"
+  },
+  "custom.cmp.vscode.css": {
+    "text": "Tidak didukung, <a href=\"https://code.visualstudio.com/api/extension-capabilities/overview\">kata dokumentasinya</a>",
+    "from": "5356dd1be55f"
+  },
+  "custom.cmp.vscode.code": {
+    "text": "Ekstensi, dengan izin VS Code sendiri tetapi tanpa akses ke DOM antarmuka; webview untuk antarmuka sendiri",
+    "from": "cc389854306b"
+  },
+  "custom.cmp.vscode.templates": {
+    "text": "<code>window.title</code> dan judul tab terminal menerima variabel <code>${…}</code>",
+    "from": "9111f5a25682"
+  },
+  "custom.cmp.zed.settings": {
+    "text": "Settings Editor atau <code>settings.json</code> dengan komentar; pengguna, lalu proyek",
+    "from": "12431607ec58"
+  },
+  "custom.cmp.zed.themes": {
+    "text": "<a href=\"https://zed.dev/docs/themes\">Berkas tema JSON</a> dengan skema; <code>theme_overrides</code> untuk satu tema; terang, gelap, atau sistem",
+    "from": "e0b219720c50"
+  },
+  "custom.cmp.zed.code": {
+    "text": "Ekstensi dalam Rust yang dikompilasi ke WebAssembly, dengan <a href=\"https://zed.dev/docs/extensions/capabilities\">kapabilitas</a> yang bisa Anda batasi",
+    "from": "f9b83a4e3656"
+  },
+  "custom.cmp.obsidian.settings": {
+    "text": "Berkas di folder <code>.obsidian</code> tiap vault",
+    "from": "2a7acb83efb8"
+  },
+  "custom.cmp.obsidian.themes": {
+    "text": "<a href=\"https://docs.obsidian.md/Themes/App+themes/Build+a+theme\">Tema adalah CSS</a>, dengan variabel CSS yang terdokumentasi",
+    "from": "c6b43ef8f558"
+  },
+  "custom.cmp.obsidian.css": {
+    "text": "Cuplikan CSS, dinyalakan satu per satu",
+    "from": "71b027b4744c"
+  },
+  "custom.cmp.obsidian.code": {
+    "text": "<a href=\"https://help.obsidian.md/plugin-security\">Plugin</a> JavaScript dengan akses Obsidian sendiri; tidak ada yang berjalan sampai mode terbatas dimatikan",
+    "from": "ebe845afbaf3"
+  },
+  "custom.cmp.hyper.settings": {
+    "text": "Satu berkas: <code>.hyper.js</code> di rilis yang terdokumentasi, <code>hyper.json</code> di cabang pengembangan",
+    "from": "cc98e8ab46d3"
+  },
+  "custom.cmp.hyper.themes": {
+    "text": "Tema adalah plugin",
+    "from": "48e534e5d2ab"
+  },
+  "custom.cmp.hyper.css": {
+    "text": "<code>css</code> untuk jendela; <code>termCSS</code>, yang sejak versi 2 <a href=\"https://github.com/vercel/hyper/blob/canary/PLUGINS.md\">tidak lagi menata teks terminal</a>",
+    "from": "0792e3e69be1"
+  },
+  "custom.cmp.hyper.code": {
+    "text": "Plugin npm yang dimuat oleh Electron dan oleh renderer: membungkus komponen React-nya dan menambah middleware Redux",
+    "from": "7e3468ba9cdd"
+  },
+  "custom.cmp.wezterm.settings": {
+    "text": "Berkas Lua, <code>.wezterm.lua</code>",
+    "from": "e2d4cfe9b3ef"
+  },
+  "custom.cmp.wezterm.themes": {
+    "text": "<a href=\"https://wezterm.org/config/appearance.html\">Lebih dari 700 skema</a>; milik Anda dalam Lua atau TOML; <code>colors</code> untuk warna tunggal",
+    "from": "852065821910"
+  },
+  "custom.cmp.wezterm.code": {
+    "text": "Konfigurasinya adalah Lua; <a href=\"https://wezterm.org/config/plugins.html\">plugin</a> adalah Lua dari alamat Git",
+    "from": "3c87ef215bdb"
+  },
+  "custom.cmp.wezterm.templates": {
+    "text": "Fungsi Lua mengembalikan judul tab dan jendela (<a href=\"https://wezterm.org/config/lua/window-events/format-tab-title.html\"><code>format-tab-title</code></a>)",
+    "from": "7c7076a3a34d"
+  },
+  "custom.cmp.tmux.settings": {
+    "text": "Perintah tmux di dalam berkas; opsi per server, sesi, jendela, dan panel",
+    "from": "178293a2f902"
+  },
+  "custom.cmp.tmux.themes": {
+    "text": "Gaya seperti <code>status-style</code> dan <code>window-style</code>",
+    "from": "f43d8249a6c9"
+  },
+  "custom.cmp.tmux.code": {
+    "text": "Hook menjalankan perintah tmux; mode kontrol untuk program",
+    "from": "47e37dc0de8a"
+  },
+  "custom.cmp.tmux.templates": {
+    "text": "<a href=\"https://man.openbsd.org/tmux.1#FORMATS\">Format</a> dengan <code>#{…}</code> untuk baris status, daftar jendela, tepi panel, dan judul",
+    "from": "e06333c05625"
+  },
+  "custom.cmp.kitty.settings": {
+    "text": "<code>kitty.conf</code>, dengan include, dibaca ulang saat berubah",
+    "from": "60f6aaf0744e"
+  },
+  "custom.cmp.kitty.themes": {
+    "text": "Tema adalah berkas <code>.conf</code>; <a href=\"https://sw.kovidgoyal.net/kitty/kittens/themes/\"><code>kitten themes</code></a> memilih dari lebih dari 300, dan bisa diatur satu untuk gelap dan satu untuk terang",
+    "from": "1eac8df3e6f7"
+  },
+  "custom.cmp.kitty.code": {
+    "text": "<a href=\"https://sw.kovidgoyal.net/kitty/kittens/custom/\">Kitten</a> dalam Python dengan akses penuh ke bagian dalam kitty; watcher",
+    "from": "1aa5c56cc144"
+  },
+  "custom.cmp.kitty.templates": {
+    "text": "<code>tab_title_template</code>, tempat <code>{custom}</code> memanggil Python Anda sendiri",
+    "from": "72e78b0f5053"
+  },
+  "custom.cmp.ghostty.settings": {
+    "text": "Berkas <code>key = value</code>; <code>config-file</code> menambah yang lain",
+    "from": "0aed8a057084"
+  },
+  "custom.cmp.ghostty.themes": {
+    "text": "<a href=\"https://ghostty.org/docs/features/theme\">Tema adalah berkas konfigurasi</a>; satu untuk terang dan satu untuk gelap",
+    "from": "6e03a766b678"
+  },
+  "custom.cmp.ghostty.code": {
+    "text": "<a href=\"https://ghostty.org/docs/config/reference#custom-shader\">Shader GLSL</a> di atas terminal; AppleScript di macOS",
+    "from": "cde7e57ced35"
+  },
+  "custom.cmp.wt.settings": {
+    "text": "Layar Settings atau <code>settings.json</code>, dengan <a href=\"https://github.com/microsoft/terminal/blob/main/doc/cascadia/profiles.schema.json\">skema JSON</a>",
+    "from": "1d08016a0bea"
+  },
+  "custom.cmp.wt.themes": {
+    "text": "Skema warna per profil; <a href=\"https://learn.microsoft.com/windows/terminal/customize-settings/themes\">tema</a> untuk jendela dan tab, terang dan gelap, hanya di JSON",
+    "from": "74411fb1735c"
+  },
+  "custom.cmp.wt.code": {
+    "text": "Tidak ditemukan; aplikasi lain menambah profil dan skema warna sebagai fragmen JSON",
+    "from": "3ff970c2f46d"
+  },
+  "custom.cmp.wt.templates": {
+    "text": "Tidak ditemukan; profil mengatur <code>tabTitle</code> dan <code>tabColor</code>",
+    "from": "2578d12f8fda"
+  },
+  "custom.cmp.iterm2.settings": {
+    "text": "Profil di Settings; <a href=\"https://iterm2.com/documentation-dynamic-profiles.html\">Dynamic Profiles</a> sebagai berkas property list",
+    "from": "7c477caf4c27"
+  },
+  "custom.cmp.iterm2.themes": {
+    "text": "Profil yang dipilih menurut pengguna, host, folder, atau tugas, dengan Shell Integration",
+    "from": "654dec9e1e7a"
+  },
+  "custom.cmp.iterm2.code": {
+    "text": "<a href=\"https://iterm2.com/python-api/\">API Python</a>, komponen bilah status dalam Python, AppleScript",
+    "from": "081a02768b0a"
+  },
+  "custom.cmp.iterm2.templates": {
+    "text": "<a href=\"https://iterm2.com/documentation-scripting-fundamentals.html\">String terinterpolasi</a>, <code>\\(…)</code>, di nama sesi, lencana, dan bilah status",
+    "from": "d543c499cae1"
+  },
+  "custom.cmp.a.settings": {
+    "text": "<code>config.json</code> dan Settings, dengan JSON Schema untuk editor",
+    "from": "bd438e8036f3"
+  },
+  "custom.cmp.a.themes": {
+    "text": "Sepuluh tema, terang, gelap, atau mengikuti sistem; satu untuk tiap terminal; 35 warna diatur sendiri, untuk setiap tema atau satu",
+    "from": "fa76b50a8212"
+  },
+  "custom.cmp.a.css": {
+    "text": "Tidak. Direncanakan: <code>custom.css</code> dengan kait yang terdokumentasi",
+    "from": "4ac770687589"
+  },
+  "custom.cmp.a.code": {
+    "text": "Tidak. Direncanakan: plugin",
+    "from": "f89ee178c319"
+  },
+  "custom.cmp.a.templates": {
+    "text": "Tidak. Direncanakan: untuk judul terminal dan baris daftar",
+    "from": "fd37dcfee7f4"
+  },
+  "custom.cmp.p1": {
+    "text": "Setiap alat di sini menyimpan pengaturannya di sebuah berkas, dan VS Code, Zed, serta Windows Terminal juga punya layar yang menulisnya, seperti Aubergine. Di sebagian besar, tema juga berupa berkas: JSON di VS Code dan Zed, CSS di Obsidian, Lua atau TOML di WezTerm, berkas konfigurasi di kitty dan Ghostty. VS Code, Zed, dan WezTerm memungkinkan Anda mengubah warna tunggal di atas tema, seperti yang dilakukan <code>appearance.colors</code> di sini.",
+    "from": "b3a5c5fb431c"
+  },
+  "custom.cmp.p2": {
+    "text": "Perbedaan terbesar ada pada kode. Seluruh konfigurasi WezTerm adalah program Lua, kitty dan iTerm2 menjalankan Python Anda sendiri, dan plugin Hyper adalah JavaScript yang membungkus antarmukanya; Obsidian dan Hyper juga menerima CSS Anda sendiri. Ekstensi VS Code tidak punya akses ke DOM antarmukanya, dan ia tidak mendukung stylesheet milik Anda; Zed menjalankan ekstensi sebagai WebAssembly, dengan kapabilitas yang bisa Anda batasi. tmux, WezTerm, kitty, dan iTerm2 membangun judul dan baris status dari templat atau fungsi.",
+    "from": "9538078a7039"
+  },
+  "custom.cmp.p3": {
+    "text": "Aubergine saat ini berada di ujung pengaturan: tema, warna, dan tombol dalam satu berkas yang menjelaskan dirinya sendiri, dan halaman yang menulis sebagiannya. Ia tidak menjalankan kode Anda di halaman, tidak menerima stylesheet Anda, dan tidak punya templat. Semua itu ada di <a href=\"/roadmap/#rm-yours\">peta jalan</a>, dan belum dibuat.",
+    "from": "94f37707471f"
+  },
+  "custom.cmp.mark": {
+    "text": "Aubergine tidak berafiliasi dengan alat mana pun yang disebut di halaman ini. Nama-nama itu adalah merek dagang pemiliknya masing-masing.",
+    "from": "f011c5b28706"
+  },
+  "custom.plan.title": {
+    "text": "Yang direncanakan",
+    "from": "e10eed0040ae"
+  },
+  "custom.plan.text": {
+    "text": "Berkas tema sendiri, tampilan untuk proyek atau tag, templat, <code>custom.css</code>, dan plugin direncanakan dan belum dibuat: lihat <a href=\"/roadmap/#rm-yours\">peta jalan</a>.",
+    "from": "a392418737d9"
+  },
+  "custom.q.terminal.q": {
+    "text": "Bisakah setiap terminal punya tema warna yang berbeda?",
+    "from": "da02700eeeb8"
+  },
+  "custom.q.terminal.a": {
+    "text": "Bisa. Theme… di menu terminal menggambar badannya dengan salah satu dari sepuluh tema, apa pun tema halamannya. Yang lain mengikuti bawaan yang Anda atur untuk terminal, atau halaman.",
+    "from": "efb1c6b90003"
+  },
+  "custom.q.css.q": {
+    "text": "Bisakah saya menambahkan CSS sendiri ke Aubergine?",
+    "from": "e4f4bf19de27"
+  },
+  "custom.q.css.a": {
+    "text": "Belum sekarang. Warna tunggal bisa diatur sendiri di berkas pengaturan; <code>custom.css</code> dengan kait yang terdokumentasi direncanakan, belum dibuat.",
+    "from": "332c37400357"
+  },
+  "custom.q.file.q": {
+    "text": "Di mana berkas pengaturan Aubergine?",
+    "from": "4378f9f24f9d"
+  },
+  "custom.q.file.a": {
+    "text": "Yaitu <code>config.json</code> di folder data Aubergine. <code>aubergine settings path</code> menampilkan letaknya, dan server menampilkannya saat dimulai.",
+    "from": "c3247c2edfe9"
+  },
+  "custom.q.agent.q": {
+    "text": "Bisakah agen mengubah tampilan Aubergine?",
+    "from": "f2f43a3f85b7"
+  },
+  "custom.q.agent.a": {
+    "text": "Bukan pengaturannya: itu hanya milik Anda. Agen bisa memberi nama dan menjelaskan terminalnya sendiri, dan program yang token API-nya mengizinkan bisa mengganti nama, menandai, dan memberi tema terminal serta menata kanvas.",
+    "from": "283900c4f919"
+  },
+  "custom.related": {
+    "text": "Terkait: <a href=\"/too-many-terminal-tabs/\">Temukan terminal yang tepat</a> · <a href=\"/tmux-without-learning-tmux/\">tmux tanpa belajar tmux</a> · <a href=\"/security/\">Keamanan dan privasi</a> · <a href=\"/faq/\">FAQ</a>",
+    "from": "64333f8f5a0d"
+  },
+  "roadmap.yours.title": {
+    "text": "Jadikan milik Anda",
+    "from": "34ca8a4540f5"
+  },
+  "roadmap.yours.sub": {
+    "text": "Lebih banyak bagian halaman yang Anda bentuk, melampaui tema, warna, dan tombol hari ini.",
+    "from": "6fef807ba454"
+  },
+  "roadmap.yours.themes.name": {
+    "text": "Berkas tema sendiri",
+    "from": "ec9cabb5c1c9"
+  },
+  "roadmap.yours.themes.text": {
+    "text": "Tulis tema warna sebagai berkas dan pilih di samping sepuluh tema bawaan Aubergine. Agen bisa mengusulkan satu, dan usulan itu menunggu Anda menerimanya.",
+    "from": "c47421ed6549"
+  },
+  "roadmap.yours.when.name": {
+    "text": "Tampilan menurut kondisi",
+    "from": "c40ae539d4e8"
+  },
+  "roadmap.yours.when.text": {
+    "text": "Tema atau warna aksen untuk sebuah proyek, atau untuk terminal dengan tag tertentu, agar Anda tahu sekilas di mana Anda berada.",
+    "from": "be4953ead5e1"
+  },
+  "roadmap.yours.templates.name": {
+    "text": "Templat",
+    "from": "56b564b75c7f"
+  },
+  "roadmap.yours.templates.text": {
+    "text": "Pilih apa yang ditampilkan judul terminal dan baris daftar, dari templat buatan Anda sendiri.",
+    "from": "21523ce54129"
+  },
+  "roadmap.yours.css.name": {
+    "text": "Stylesheet sendiri",
+    "from": "2222b72214ec"
+  },
+  "roadmap.yours.css.text": {
+    "text": "Berkas <code>custom.css</code> yang dimuat ke halaman, dengan kait terdokumentasi yang dijaga tetap stabil.",
+    "from": "a48bd0baabda"
+  },
+  "roadmap.yours.plugins.name": {
+    "text": "Plugin",
+    "from": "9514b7ff4860"
+  },
+  "roadmap.yours.plugins.text": {
+    "text": "Kode Anda sendiri yang dimuat ke halaman dengan kendali penuh, melalui slot bernama maupun di luarnya. Mode terisolasi untuk kode orang lain mungkin hadir kemudian.",
+    "from": "e45f18abdc98"
   }
 }

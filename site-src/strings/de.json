@@ -5026,5 +5026,497 @@
   "site.share.copy": {
     "text": "Link kopieren",
     "from": "dbf362d4f210"
+  },
+  "site.foot.customize": {
+    "text": "Anpassen",
+    "from": "c5276e27afba"
+  },
+  "guides.customize.name": {
+    "text": "Themen, Farben, Schriften und Tasten anpassen",
+    "from": "0f78f8ed86a6"
+  },
+  "guides.customize.text": {
+    "text": "Zehn Farbthemen, ein Thema für jedes Terminal, Farben von Hand, Schrift und Cursor des Terminals, jede Taste, und wie andere Werkzeuge Sie ihre anpassen lassen.",
+    "from": "fc827f9b51fc"
+  },
+  "home.themes.more": {
+    "text": "Alles, was Sie ändern können, und wie andere Werkzeuge es machen",
+    "from": "b9eb2267d0a5"
+  },
+  "faq.look.q": {
+    "text": "Kann ich ändern, wie Aubergine aussieht?",
+    "from": "25820b139d94"
+  },
+  "faq.look.a": {
+    "text": "Ja: zehn Farbthemen, ein Thema für jedes Terminal, einzelne Farben von Hand, Schrift und Cursor eines Terminals und jede Taste. Siehe <a href=\"/customize-terminal-themes/\">Anpassen</a>.",
+    "from": "4d0f29e81927"
+  },
+  "custom.meta.title": {
+    "text": "Terminal-Themen, Farben und Tasten anpassen | Aubergine",
+    "from": "2cbdb7a66d89"
+  },
+  "custom.meta.description": {
+    "text": "Zehn Farbthemen, ein Thema je Terminal, Farben von Hand, Schrift, Cursor und Tasten, und wie VS Code, kitty, tmux und andere das Anpassen erlauben.",
+    "from": "a225c6e71a17"
+  },
+  "custom.crumb": {
+    "text": "Anpassen",
+    "from": "c5276e27afba"
+  },
+  "custom.title": {
+    "text": "Terminal-Themen, Farben, Schriften und Tasten anpassen",
+    "from": "c1d02d7228ca"
+  },
+  "custom.lead": {
+    "text": "Wählen Sie die Farben der Seite aus zehn Themen, geben Sie jedem Terminal ein eigenes Thema, und stellen Sie einzelne Farben, Schrift und Cursor des Terminals und jede Taste ein, in Settings oder in einer Einstellungsdatei, die sich selbst beschreibt.",
+    "from": "c7447ef1ebe0"
+  },
+  "custom.page.title": {
+    "text": "Zehn Farbthemen, hell und dunkel",
+    "from": "362e348c9513"
+  },
+  "custom.page.text": {
+    "text": "<strong>Settings → Appearance</strong> beginnt mit drei Möglichkeiten: <strong>Light</strong>, <strong>Dark</strong> und <strong>Match the system</strong>; mit Letzterem beginnt eine neue Installation, und es folgt dem System, wenn es wechselt. Darunter wählen Sie ein Thema jeder Art: Light, High contrast light, Solarized light oder Gruvbox light; Dark, High contrast dark, Solarized dark, Gruvbox dark, Nord oder Dracula. Jedes wird mit einem kleinen Bild seiner Farben gezeigt.",
+    "from": "3c86ee10d844"
+  },
+  "custom.page.at": {
+    "text": "Eine Änderung gilt sofort für die Seite und jedes Terminal, ohne Neuladen, und wird in der Einstellungsdatei gespeichert, sodass jeder Browser, in dem Sie Aubergine öffnen, übereinstimmt. Die Palette bietet dasselbe als Befehle, etwa <strong>Color theme: Nord</strong>.",
+    "from": "280d6d38a2b6"
+  },
+  "custom.own.title": {
+    "text": "Ein eigenes Farbthema für jedes Terminal",
+    "from": "f27bdf189165"
+  },
+  "custom.own.text": {
+    "text": "<strong>Theme…</strong> im Menü eines Terminals zeichnet dieses Terminal in einem der zehn Themen, gleich in welchem die Seite gezeichnet ist. Nur sein Inhalt ändert sich: Titel, Notiz und Details bleiben wie die Seite. Ein Terminal ohne eigenes Thema folgt <strong>Terminal theme</strong> in Settings, dem Standard für Terminals, und ohne diesen der Seite.",
+    "from": "e29c52f9c1e8"
+  },
+  "custom.menu.alt": {
+    "text": "Das Menü Theme… eines Terminals, geöffnet auf der Leinwand: Same as the default, derzeit wie die Seite, Dark; dann die vier hellen und die sechs dunklen Themen, Dracula angehakt.",
+    "from": "c8e8e678bb8b"
+  },
+  "custom.menu.caption": {
+    "text": "Theme… im Menü eines Terminals: der Standard oder eines der zehn.",
+    "from": "43c132516f7e"
+  },
+  "custom.own.where": {
+    "text": "Dieselbe Wahl gibt es im Menü der Zeile des Terminals in der Liste, in seinen Details und in der Palette. Ein Terminal und ein Rahmen können außerdem eine eigene Farbe haben, eine von dreizehn oder <strong>Your own…</strong> für jede Farbe, und der Reiter einer Leinwand ebenso; die Farbe eines Terminals ist auch die seiner Zeile in der Liste.",
+    "from": "914fa5f4b003"
+  },
+  "custom.colors.title": {
+    "text": "Einzelne Farben von Hand setzen",
+    "from": "5ebf453dd41c"
+  },
+  "custom.colors.text": {
+    "text": "Über die Themen hinaus lassen sich 35 Farben der Seite in der Einstellungsdatei <code>config.json</code> unter <code>appearance.colors</code> setzen: der Name einer Farbe und ein Wert in der Form <code>#rrggbb</code>. Oben eingetragen gilt eine Farbe über jedem Thema; unter der ID eines Themas in eckigen Klammern, etwa <code>\"[nord]\"</code>, gilt sie nur über diesem Thema und hat Vorrang.",
+    "from": "42f05c456f31"
+  },
+  "custom.colors.names": {
+    "text": "Die Namen sind die Farb-Tokens der Seite, etwa <code>bg</code>, <code>text</code>, <code>accent</code> und <code>terminal-bg</code>; <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/design.md\">docs/design.md</a> listet sie auf. Ein falscher Eintrag wird übersprungen, und der Rest der Datei gilt weiter; <strong>Settings → Appearance</strong> sagt, welcher. Selbst gesetzte Farben sind Ihre Sache: Nichts prüft, ob das Geschriebene lesbar ist.",
+    "from": "86395864aac8"
+  },
+  "custom.text.title": {
+    "text": "Schriften, Cursor und Tastenkürzel",
+    "from": "a9eecef9b5f9"
+  },
+  "custom.text.font": {
+    "text": "<strong>Terminal text</strong> in Settings → Appearance legt die Größe des Texts eines Terminals fest, von 8 bis 32 Pixeln, und seine Schrift, als Liste, aus der die erste gefundene Schrift genommen wird. <strong>Cursor</strong> legt seine Form fest, Block, Balken oder Unterstrich, und ob er blinkt.",
+    "from": "dabcfd9344a6"
+  },
+  "custom.keys.text": {
+    "text": "Jede Taste lässt sich ändern. Fügen Sie <code>shortcuts</code> in die Einstellungsdatei ein: den Namen eines Befehls mit einer Tastenkombination, einer Liste von Kombinationen oder <code>null</code> für keine Taste. <code>shortcutsInAppWindow</code> nimmt dasselbe und gilt nur, wo Aubergine als App mit eigenem Fenster installiert ist. Laden Sie die Seite neu, und die Tastenübersicht (<strong>?</strong>), die Palette und die Tooltips zeigen die Tasten so, wie Sie sie gesetzt haben.",
+    "from": "bf23fd932a40"
+  },
+  "custom.keys.check": {
+    "text": "Eine doppelt gesetzte Taste oder eine, die sich nicht lesen lässt, wird oben in der Tastenübersicht und vom Server gemeldet, und der Rest der Datei gilt weiter. Eine einzelne Taste, oder Ctrl oder Option mit einer Taste, wirkt nur, solange kein Terminal die Tastatur hat, damit jedes Programm in einem Terminal weiter die Tasten bekommt, die es braucht. Mehr unter <a href=\"https://github.com/thirstyeggplant/aubergine#keyboard\">Keyboard</a> im README.",
+    "from": "fe03dd01e818"
+  },
+  "custom.file.title": {
+    "text": "Eine Einstellungsdatei, die sich selbst beschreibt",
+    "from": "9d7e735d280e"
+  },
+  "custom.file.text": {
+    "text": "All das steht in <code>config.json</code> im Datenordner von Aubergine, und <code>aubergine settings path</code> zeigt, wo er liegt. Jeder Schlüssel darf fehlen. Eine Datei, die sich nicht lesen lässt, bedeutet die Standardwerte, nie einen Server, der nicht startet. Settings auf der Seite schreibt nur die Schlüssel, die es ändert, und lässt den Rest der Datei so, wie Sie ihn geschrieben haben.",
+    "from": "332625c30531"
+  },
+  "custom.file.schema": {
+    "text": "Bei jedem Start schreibt der Server <code>config.schema.json</code> neben die Datei. Fügen Sie eine Zeile hinzu, und ein Editor, der JSON Schema liest, beschreibt und vervollständigt jeden Schlüssel:",
+    "from": "f85b680c55e6"
+  },
+  "custom.file.cli": {
+    "text": "<code>aubergine settings list</code> zeigt jeden Schlüssel mit seinem jetzigen Wert, markiert, wo er nicht der Standard ist, und <code>aubergine settings schema</code> zeigt das Schema. <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/settings.md\">docs/settings.md</a> beschreibt jeden Schlüssel, seinen Standard und ob Settings ihn schreibt oder Sie.",
+    "from": "255d97752978"
+  },
+  "custom.file.all": {
+    "text": "Auf der Seite listet <strong>Settings → Every setting</strong> dieselben Schlüssel mit ihren Werten und findet sie, während Sie tippen. Ein Schlüssel, den Settings ändert, führt Sie zu seinem Bedienelement; ein von Hand geschriebener Schlüssel hat <strong>Copy</strong>, für die Zeile, die in die Datei gehört. Dort wird keine Einstellung geändert.",
+    "from": "3f848aa20a56"
+  },
+  "custom.all.alt": {
+    "text": "Settings, Every setting, geöffnet, mit „appearance“ in der Suche: sechs Schlüssel, jeder mit seinem jetzigen Wert, seiner Bedeutung und seinem Standard; fünf sagen Changed above, und appearance.colors hat eine Schaltfläche Copy.",
+    "from": "3ff59f419a23"
+  },
+  "custom.all.caption": {
+    "text": "Every setting, durchsucht: was jeder Schlüssel ist, sein jetziger Wert und sein Standard.",
+    "from": "44060f83bf0e"
+  },
+  "custom.file.browser": {
+    "text": "Manche Entscheidungen gehören diesem Browser und werden dort gespeichert: ob die Leinwände Reiter, eine Liste oder eine Spalte sind; wo die Leiste über der Leinwand steht und ob sie offen bleibt; ob die Seitenleiste und die Karte eingeklappt sind; die Breite der Seitenleiste und der Details eines Terminals; und wie die Liste der Terminals gefiltert, gruppiert und sortiert ist.",
+    "from": "8d660a5ed4ca"
+  },
+  "custom.program.title": {
+    "text": "Was ein Programm oder ein Agent ändern darf, und was Ihres bleibt",
+    "from": "15b7cd56fd35"
+  },
+  "custom.program.text": {
+    "text": "Über die <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/api.md\">lokale API</a> darf ein Programm mit einem API-Token mit <code>canvases:write</code> Leinwände ordnen: sie benennen, einfärben und sortieren, Terminals darauf verschieben, in der Größe ändern und einfärben und Rahmen hinzufügen. Mit <code>sessions:write</code> darf es ein Terminal umbenennen und taggen, seine Felder ändern und ihm ein Farbthema geben. Es erreicht nur die Projekte, die sein Token erreicht.",
+    "from": "a0cf33b31432"
+  },
+  "custom.program.agent": {
+    "text": "Der Agent in einem Terminal beschreibt sein eigenes Terminal und kein anderes: einen Namen, eine Zusammenfassung, wofür es da ist, seine Links und seine Felder, mit <code>aubergine describe</code>, <code>aubergine link add</code> und <code>aubergine field set</code>. Wo Sie selbst einen Namen, eine Zusammenfassung oder ein Feld geschrieben haben, bleibt Ihres, und was der Agent geschickt hat, wird daneben als Vorschlag aufbewahrt.",
+    "from": "b99f1d5ab90f"
+  },
+  "custom.program.owner": {
+    "text": "Die Einstellungen selbst gehören allein Ihnen. Kein Token, kein Terminal und kein Agent kann sie ändern: <code>PUT /v1/settings/appearance</code> antwortet nur dem angemeldeten Browser, und <code>appearance.colors</code>, <code>shortcuts</code> und der Rest werden von Hand in die Datei geschrieben.",
+    "from": "8120d56c7837"
+  },
+  "custom.cmp.title": {
+    "text": "Wie lassen andere Werkzeuge Sie die Oberfläche anpassen?",
+    "from": "66e3b8de628b"
+  },
+  "custom.cmp.how": {
+    "text": "<strong>Wie das geschrieben wurde.</strong> Was die Tabelle über jedes Werkzeug sagt, stammt aus dessen eigener Dokumentation, gelesen am 28. November 2026 und verlinkt von seinem Namen und seinen Zellen. Wir haben diese Werkzeuge dafür nicht ausgeführt. „Nichts gefunden“ heißt, dass die gelesene Dokumentation nichts davon beschreibt, nicht dass das Werkzeug es nicht kann. Wenn etwas falsch oder veraltet ist, <a href=\"https://github.com/thirstyeggplant/aubergine/issues\">sagen Sie es uns</a>.",
+    "from": "6ef9a80f81b8"
+  },
+  "custom.cmp.tool": {
+    "text": "Werkzeug",
+    "from": "2e53bdcd0740"
+  },
+  "custom.cmp.settings": {
+    "text": "Einstellungen",
+    "from": "74a883a037bc"
+  },
+  "custom.cmp.themes": {
+    "text": "Themen und Farben",
+    "from": "1483a0993975"
+  },
+  "custom.cmp.css": {
+    "text": "Eigenes CSS",
+    "from": "7551db76a705"
+  },
+  "custom.cmp.code": {
+    "text": "Eigener Code",
+    "from": "90cd41d7d612"
+  },
+  "custom.cmp.templates": {
+    "text": "Vorlagen für Titel und Statuszeilen",
+    "from": "0eb761541eb1"
+  },
+  "custom.cmp.kind.editor": {
+    "text": "Ein Editor",
+    "from": "120815ad81ae"
+  },
+  "custom.cmp.kind.notes": {
+    "text": "Eine Notiz-App",
+    "from": "d4729aaa963c"
+  },
+  "custom.cmp.kind.terminal": {
+    "text": "Ein Terminal",
+    "from": "2c2715f8c7d4"
+  },
+  "custom.cmp.kind.mux": {
+    "text": "Ein Terminal-Multiplexer",
+    "from": "b643b9019461"
+  },
+  "custom.cmp.kind.aubergine": {
+    "text": "Terminals auf einer Leinwand",
+    "from": "ef37110351f3"
+  },
+  "custom.cmp.none": {
+    "text": "Nichts gefunden",
+    "from": "66d2c65a4ede"
+  },
+  "custom.cmp.vscode.settings": {
+    "text": "<code>settings.json</code> oder der Settings-Editor, in Schichten vom Benutzer bis zu Arbeitsbereich, Ordner und Sprache",
+    "from": "6dbfbb0bf531"
+  },
+  "custom.cmp.vscode.themes": {
+    "text": "<a href=\"https://code.visualstudio.com/docs/configure/themes\">Themendateien</a> aus Erweiterungen; <code>workbench.colorCustomizations</code>, für jedes Thema oder für eines",
+    "from": "a9721fe91937"
+  },
+  "custom.cmp.vscode.css": {
+    "text": "Nicht unterstützt, <a href=\"https://code.visualstudio.com/api/extension-capabilities/overview\">sagt seine Dokumentation</a>",
+    "from": "5356dd1be55f"
+  },
+  "custom.cmp.vscode.code": {
+    "text": "Erweiterungen, mit den Rechten von VS Code, aber ohne Zugriff auf das DOM der Oberfläche; Webviews für eine eigene Oberfläche",
+    "from": "cc389854306b"
+  },
+  "custom.cmp.vscode.templates": {
+    "text": "<code>window.title</code> und die Titel von Terminal-Reitern nehmen <code>${…}</code>-Variablen",
+    "from": "9111f5a25682"
+  },
+  "custom.cmp.zed.settings": {
+    "text": "Settings Editor oder <code>settings.json</code> mit Kommentaren; Benutzer, dann Projekt",
+    "from": "12431607ec58"
+  },
+  "custom.cmp.zed.themes": {
+    "text": "<a href=\"https://zed.dev/docs/themes\">JSON-Themendateien</a> mit Schema; <code>theme_overrides</code> für ein Thema; hell, dunkel oder System",
+    "from": "e0b219720c50"
+  },
+  "custom.cmp.zed.code": {
+    "text": "Erweiterungen in Rust, zu WebAssembly kompiliert, mit <a href=\"https://zed.dev/docs/extensions/capabilities\">Fähigkeiten</a>, die Sie einschränken können",
+    "from": "f9b83a4e3656"
+  },
+  "custom.cmp.obsidian.settings": {
+    "text": "Dateien im Ordner <code>.obsidian</code> jedes Vaults",
+    "from": "2a7acb83efb8"
+  },
+  "custom.cmp.obsidian.themes": {
+    "text": "<a href=\"https://docs.obsidian.md/Themes/App+themes/Build+a+theme\">Themen sind CSS</a>, mit dokumentierten CSS-Variablen",
+    "from": "c6b43ef8f558"
+  },
+  "custom.cmp.obsidian.css": {
+    "text": "CSS-Snippets, einzeln eingeschaltet",
+    "from": "71b027b4744c"
+  },
+  "custom.cmp.obsidian.code": {
+    "text": "JavaScript-<a href=\"https://help.obsidian.md/plugin-security\">Plugins</a> mit Obsidians eigenen Rechten; keines läuft, bevor der eingeschränkte Modus ausgeschaltet ist",
+    "from": "ebe845afbaf3"
+  },
+  "custom.cmp.hyper.settings": {
+    "text": "Eine Datei: <code>.hyper.js</code> in den dokumentierten Versionen, <code>hyper.json</code> im Entwicklungszweig",
+    "from": "cc98e8ab46d3"
+  },
+  "custom.cmp.hyper.themes": {
+    "text": "Themen sind Plugins",
+    "from": "48e534e5d2ab"
+  },
+  "custom.cmp.hyper.css": {
+    "text": "<code>css</code> für das Fenster; <code>termCSS</code>, das seit Version 2 <a href=\"https://github.com/vercel/hyper/blob/canary/PLUGINS.md\">den Text des Terminals nicht mehr gestaltet</a>",
+    "from": "0792e3e69be1"
+  },
+  "custom.cmp.hyper.code": {
+    "text": "npm-Plugins, geladen von Electron und vom Renderer: Sie umhüllen seine React-Komponenten und fügen Redux-Middleware hinzu",
+    "from": "7e3468ba9cdd"
+  },
+  "custom.cmp.wezterm.settings": {
+    "text": "Eine Lua-Datei, <code>.wezterm.lua</code>",
+    "from": "e2d4cfe9b3ef"
+  },
+  "custom.cmp.wezterm.themes": {
+    "text": "<a href=\"https://wezterm.org/config/appearance.html\">Über 700 Farbschemata</a>; eigene in Lua oder TOML; <code>colors</code> für einzelne Farben",
+    "from": "852065821910"
+  },
+  "custom.cmp.wezterm.code": {
+    "text": "Die Konfiguration ist Lua; <a href=\"https://wezterm.org/config/plugins.html\">Plugins</a> sind Lua von einer Git-Adresse",
+    "from": "3c87ef215bdb"
+  },
+  "custom.cmp.wezterm.templates": {
+    "text": "Lua-Funktionen liefern Reiter- und Fenstertitel (<a href=\"https://wezterm.org/config/lua/window-events/format-tab-title.html\"><code>format-tab-title</code></a>)",
+    "from": "7c7076a3a34d"
+  },
+  "custom.cmp.tmux.settings": {
+    "text": "tmux-Befehle in einer Datei; Optionen je Server, Sitzung, Fenster und Bereich",
+    "from": "178293a2f902"
+  },
+  "custom.cmp.tmux.themes": {
+    "text": "Stile wie <code>status-style</code> und <code>window-style</code>",
+    "from": "f43d8249a6c9"
+  },
+  "custom.cmp.tmux.code": {
+    "text": "Hooks führen tmux-Befehle aus; Steuermodus für Programme",
+    "from": "47e37dc0de8a"
+  },
+  "custom.cmp.tmux.templates": {
+    "text": "<a href=\"https://man.openbsd.org/tmux.1#FORMATS\">Formate</a> mit <code>#{…}</code> für Statuszeile, Fensterliste, Bereichsränder und Titel",
+    "from": "e06333c05625"
+  },
+  "custom.cmp.kitty.settings": {
+    "text": "<code>kitty.conf</code>, mit Einbindungen, neu gelesen, wenn sie sich ändert",
+    "from": "60f6aaf0744e"
+  },
+  "custom.cmp.kitty.themes": {
+    "text": "Ein Thema ist eine <code>.conf</code>-Datei; <a href=\"https://sw.kovidgoyal.net/kitty/kittens/themes/\"><code>kitten themes</code></a> wählt aus über 300, und je eines für dunkel und hell lässt sich setzen",
+    "from": "1eac8df3e6f7"
+  },
+  "custom.cmp.kitty.code": {
+    "text": "<a href=\"https://sw.kovidgoyal.net/kitty/kittens/custom/\">Kittens</a> in Python mit vollem Zugriff auf kittys Interna; Watcher",
+    "from": "1aa5c56cc144"
+  },
+  "custom.cmp.kitty.templates": {
+    "text": "<code>tab_title_template</code>, wobei <code>{custom}</code> Ihr eigenes Python aufruft",
+    "from": "72e78b0f5053"
+  },
+  "custom.cmp.ghostty.settings": {
+    "text": "Eine <code>key = value</code>-Datei; <code>config-file</code> bindet weitere ein",
+    "from": "0aed8a057084"
+  },
+  "custom.cmp.ghostty.themes": {
+    "text": "<a href=\"https://ghostty.org/docs/features/theme\">Themen sind Konfigurationsdateien</a>; eines für hell und eines für dunkel",
+    "from": "6e03a766b678"
+  },
+  "custom.cmp.ghostty.code": {
+    "text": "<a href=\"https://ghostty.org/docs/config/reference#custom-shader\">GLSL-Shader</a> über dem Terminal; AppleScript unter macOS",
+    "from": "cde7e57ced35"
+  },
+  "custom.cmp.wt.settings": {
+    "text": "Settings-Ansicht oder <code>settings.json</code>, mit einem <a href=\"https://github.com/microsoft/terminal/blob/main/doc/cascadia/profiles.schema.json\">JSON-Schema</a>",
+    "from": "1d08016a0bea"
+  },
+  "custom.cmp.wt.themes": {
+    "text": "Farbschemata je Profil; <a href=\"https://learn.microsoft.com/windows/terminal/customize-settings/themes\">Themen</a> für Fenster und Reiter, hell und dunkel, nur im JSON",
+    "from": "74411fb1735c"
+  },
+  "custom.cmp.wt.code": {
+    "text": "Nichts gefunden; andere Anwendungen fügen Profile und Farbschemata als JSON-Fragmente hinzu",
+    "from": "3ff970c2f46d"
+  },
+  "custom.cmp.wt.templates": {
+    "text": "Nichts gefunden; ein Profil setzt <code>tabTitle</code> und <code>tabColor</code>",
+    "from": "2578d12f8fda"
+  },
+  "custom.cmp.iterm2.settings": {
+    "text": "Profile in Settings; <a href=\"https://iterm2.com/documentation-dynamic-profiles.html\">Dynamic Profiles</a> als Property-List-Dateien",
+    "from": "7c477caf4c27"
+  },
+  "custom.cmp.iterm2.themes": {
+    "text": "Ein Profil, gewählt nach Benutzer, Host, Ordner oder Job, mit Shell Integration",
+    "from": "654dec9e1e7a"
+  },
+  "custom.cmp.iterm2.code": {
+    "text": "Eine <a href=\"https://iterm2.com/python-api/\">Python-API</a>, Statusleisten-Komponenten in Python, AppleScript",
+    "from": "081a02768b0a"
+  },
+  "custom.cmp.iterm2.templates": {
+    "text": "<a href=\"https://iterm2.com/documentation-scripting-fundamentals.html\">Interpolierte Zeichenketten</a>, <code>\\(…)</code>, in Sitzungsnamen, Badges und der Statusleiste",
+    "from": "d543c499cae1"
+  },
+  "custom.cmp.a.settings": {
+    "text": "<code>config.json</code> und Settings, mit einem JSON Schema für Editoren",
+    "from": "bd438e8036f3"
+  },
+  "custom.cmp.a.themes": {
+    "text": "Zehn Themen, hell, dunkel oder wie das System; eines für jedes Terminal; 35 Farben von Hand, für jedes Thema oder eines",
+    "from": "fa76b50a8212"
+  },
+  "custom.cmp.a.css": {
+    "text": "Nein. Geplant: eine <code>custom.css</code> mit dokumentierten Ansatzpunkten",
+    "from": "4ac770687589"
+  },
+  "custom.cmp.a.code": {
+    "text": "Nein. Geplant: Plugins",
+    "from": "f89ee178c319"
+  },
+  "custom.cmp.a.templates": {
+    "text": "Nein. Geplant: für den Titel eines Terminals und eine Zeile der Liste",
+    "from": "fd37dcfee7f4"
+  },
+  "custom.cmp.p1": {
+    "text": "Jedes Werkzeug hier hält seine Einstellungen in einer Datei, und VS Code, Zed und Windows Terminal haben außerdem eine Ansicht, die sie schreibt, wie Aubergine. In den meisten ist auch ein Thema eine Datei: JSON in VS Code und Zed, CSS in Obsidian, Lua oder TOML in WezTerm, eine Konfigurationsdatei in kitty und Ghostty. VS Code, Zed und WezTerm lassen Sie einzelne Farben über einem Thema ändern, wie es hier <code>appearance.colors</code> tut.",
+    "from": "b3a5c5fb431c"
+  },
+  "custom.cmp.p2": {
+    "text": "Am meisten unterscheiden sie sich beim Code. Die ganze Konfiguration von WezTerm ist ein Lua-Programm, kitty und iTerm2 führen Ihr eigenes Python aus, und die Plugins von Hyper sind JavaScript, das seine Oberfläche umhüllt; Obsidian und Hyper nehmen auch Ihr eigenes CSS. Die Erweiterungen von VS Code haben keinen Zugriff auf das DOM seiner Oberfläche, und es unterstützt kein eigenes Stylesheet; Zed führt Erweiterungen als WebAssembly aus, mit Fähigkeiten, die Sie einschränken können. tmux, WezTerm, kitty und iTerm2 bauen Titel und Statuszeilen aus Vorlagen oder Funktionen.",
+    "from": "9538078a7039"
+  },
+  "custom.cmp.p3": {
+    "text": "Aubergine steht heute am Ende der Einstellungen: Themen, Farben und Tasten in einer Datei, die sich selbst beschreibt, und eine Seite, die einen Teil davon schreibt. Es führt keinen Code von Ihnen in der Seite aus, nimmt kein eigenes Stylesheet und hat keine Vorlagen. Das steht auf der <a href=\"/roadmap/#rm-yours\">Roadmap</a> und ist nicht gebaut.",
+    "from": "94f37707471f"
+  },
+  "custom.cmp.mark": {
+    "text": "Aubergine ist mit keinem der auf dieser Seite genannten Werkzeuge verbunden. Ihre Namen sind Marken ihrer Inhaber.",
+    "from": "f011c5b28706"
+  },
+  "custom.plan.title": {
+    "text": "Was geplant ist",
+    "from": "e10eed0040ae"
+  },
+  "custom.plan.text": {
+    "text": "Eigene Themendateien, ein Aussehen für ein Projekt oder einen Tag, Vorlagen, eine <code>custom.css</code> und Plugins sind geplant und nicht gebaut: siehe die <a href=\"/roadmap/#rm-yours\">Roadmap</a>.",
+    "from": "a392418737d9"
+  },
+  "custom.q.terminal.q": {
+    "text": "Kann jedes Terminal ein eigenes Farbthema haben?",
+    "from": "da02700eeeb8"
+  },
+  "custom.q.terminal.a": {
+    "text": "Ja. Theme… im Menü eines Terminals zeichnet seinen Inhalt in einem der zehn Themen, gleich in welchem die Seite gezeichnet ist. Die anderen folgen dem Standard, den Sie für Terminals setzen, oder der Seite.",
+    "from": "efb1c6b90003"
+  },
+  "custom.q.css.q": {
+    "text": "Kann ich Aubergine eigenes CSS hinzufügen?",
+    "from": "e4f4bf19de27"
+  },
+  "custom.q.css.a": {
+    "text": "Heute nicht. Einzelne Farben lassen sich von Hand in der Einstellungsdatei setzen; eine <code>custom.css</code> mit dokumentierten Ansatzpunkten ist geplant, nicht gebaut.",
+    "from": "332c37400357"
+  },
+  "custom.q.file.q": {
+    "text": "Wo liegt die Einstellungsdatei von Aubergine?",
+    "from": "4378f9f24f9d"
+  },
+  "custom.q.file.a": {
+    "text": "Es ist <code>config.json</code> im Datenordner von Aubergine. <code>aubergine settings path</code> zeigt, wo, und der Server zeigt es beim Start.",
+    "from": "c3247c2edfe9"
+  },
+  "custom.q.agent.q": {
+    "text": "Kann ein Agent ändern, wie Aubergine aussieht?",
+    "from": "f2f43a3f85b7"
+  },
+  "custom.q.agent.a": {
+    "text": "Nicht die Einstellungen: Die gehören allein Ihnen. Ein Agent kann sein eigenes Terminal benennen und beschreiben, und ein Programm, dessen API-Token es erlaubt, kann Terminals umbenennen, taggen und ihnen ein Thema geben und Leinwände ordnen.",
+    "from": "283900c4f919"
+  },
+  "custom.related": {
+    "text": "Siehe auch: <a href=\"/too-many-terminal-tabs/\">Das richtige Terminal finden</a> · <a href=\"/tmux-without-learning-tmux/\">tmux, ohne tmux zu lernen</a> · <a href=\"/security/\">Sicherheit und Datenschutz</a> · <a href=\"/faq/\">FAQ</a>",
+    "from": "64333f8f5a0d"
+  },
+  "roadmap.yours.title": {
+    "text": "Nach Ihrem Geschmack",
+    "from": "34ca8a4540f5"
+  },
+  "roadmap.yours.sub": {
+    "text": "Mehr von der Seite nach Ihren Vorstellungen, über die heutigen Themen, Farben und Tasten hinaus.",
+    "from": "6fef807ba454"
+  },
+  "roadmap.yours.themes.name": {
+    "text": "Eigene Themendateien",
+    "from": "ec9cabb5c1c9"
+  },
+  "roadmap.yours.themes.text": {
+    "text": "Ein Farbthema als Datei schreiben und neben den zehn wählen, die mit Aubergine kommen. Ein Agent kann eines vorschlagen, und es wartet, bis Sie es annehmen.",
+    "from": "c47421ed6549"
+  },
+  "roadmap.yours.when.name": {
+    "text": "Aussehen nach Bedingung",
+    "from": "c40ae539d4e8"
+  },
+  "roadmap.yours.when.text": {
+    "text": "Ein Thema oder eine Akzentfarbe für ein Projekt oder für die Terminals mit einem Tag, damit Sie auf einen Blick sehen, wo Sie sind.",
+    "from": "be4953ead5e1"
+  },
+  "roadmap.yours.templates.name": {
+    "text": "Vorlagen",
+    "from": "56b564b75c7f"
+  },
+  "roadmap.yours.templates.text": {
+    "text": "Bestimmen, was der Titel eines Terminals und eine Zeile der Liste zeigen, aus einer eigenen Vorlage.",
+    "from": "21523ce54129"
+  },
+  "roadmap.yours.css.name": {
+    "text": "Ein eigenes Stylesheet",
+    "from": "2222b72214ec"
+  },
+  "roadmap.yours.css.text": {
+    "text": "Eine Datei <code>custom.css</code>, in die Seite geladen, mit dokumentierten Ansatzpunkten, die stabil bleiben.",
+    "from": "a48bd0baabda"
+  },
+  "roadmap.yours.plugins.name": {
+    "text": "Plugins",
+    "from": "9514b7ff4860"
+  },
+  "roadmap.yours.plugins.text": {
+    "text": "Eigener Code in der Seite, mit voller Kontrolle, über benannte Stellen und darüber hinaus. Ein abgeschotteter Modus für Code anderer Leute kann später kommen.",
+    "from": "e45f18abdc98"
   }
 }

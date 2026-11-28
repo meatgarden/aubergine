@@ -120,6 +120,7 @@
         { "@type": "Question", "name": "Gibt es eine API?", "acceptedAnswer": { "@type": "Answer", "text": "Ja. Eine lokale HTTP-API mit Tokens mit Scopes, ein typisierter Client und ein MCP-Server, der nur die Tools auflistet, die ein Zugang nutzen darf." } },
         { "@type": "Question", "name": "Kann ich ein Terminal für sich öffnen?", "acceptedAnswer": { "@type": "Answer", "text": "Ja. Tab ↗ im Titel eines Terminals öffnet es in einem eigenen Browser-Tab, dasselbe Terminal und keine Kopie, mit seinen Details und seiner Notiz daneben, wenn du sie willst. Den Tab zu schließen beendet nichts." } },
         { "@type": "Question", "name": "Kann ich ein Ticket oder einen Verantwortlichen bei einem Terminal festhalten?", "acceptedAnswer": { "@type": "Answer", "text": "Ja. Ein Terminal hat Felder, Paare aus Bezeichnung und Wert, in seinen Details. Der Agent darin kann seine eigenen mit aubergine field set setzen; wo du dieselbe Bezeichnung gesetzt hast, bleibt deine." } },
+        { "@type": "Question", "name": "Kann ich ändern, wie Aubergine aussieht?", "acceptedAnswer": { "@type": "Answer", "text": "Ja: zehn Farbthemen, ein Thema für jedes Terminal, einzelne Farben von Hand, Schrift und Cursor eines Terminals und jede Taste. Siehe Anpassen." } },
         { "@type": "Question", "name": "Wird Aubergine mehrere Menschen oder Agenten in der Cloud unterstützen?", "acceptedAnswer": { "@type": "Answer", "text": "Beides ist geplant und keins davon gebaut. Siehe die Roadmap. Heute läuft alles auf einem Rechner." } },
         { "@type": "Question", "name": "Was ändert der Installer auf meinem Rechner?", "acceptedAnswer": { "@type": "Answer", "text": "Zwei Dinge: den Installationsordner (~/.aubergine) und einen Link namens aubergine. Er nutzt nie sudo, bearbeitet nie die Startdateien deiner Shell und installiert nie Node.js, pnpm oder tmux." } }
       ]
@@ -150,6 +151,7 @@
     <details><summary>Gibt es eine API?</summary><p>Ja. Eine lokale HTTP-API mit Tokens mit Scopes, ein typisierter Client und ein MCP-Server, der nur die Tools auflistet, die ein Zugang nutzen darf.</p></details>
     <details><summary>Kann ich ein Terminal für sich öffnen?</summary><p>Ja. <strong>Tab ↗</strong> im Titel eines Terminals öffnet es in einem eigenen Browser-Tab, dasselbe Terminal und keine Kopie, mit seinen Details und seiner Notiz daneben, wenn du sie willst. Den Tab zu schließen beendet nichts.</p></details>
     <details><summary>Kann ich ein Ticket oder einen Verantwortlichen bei einem Terminal festhalten?</summary><p>Ja. Ein Terminal hat Felder, Paare aus Bezeichnung und Wert, in seinen Details. Der Agent darin kann seine eigenen mit <code>aubergine field set</code> setzen; wo du dieselbe Bezeichnung gesetzt hast, bleibt deine.</p></details>
+    <details><summary>Kann ich ändern, wie Aubergine aussieht?</summary><p>Ja: zehn Farbthemen, ein Thema für jedes Terminal, einzelne Farben von Hand, Schrift und Cursor eines Terminals und jede Taste. Siehe <a href="../customize-terminal-themes/">Anpassen</a>.</p></details>
     <details><summary>Wird Aubergine mehrere Menschen oder Agenten in der Cloud unterstützen?</summary><p>Beides ist geplant und keins davon gebaut. Siehe die <a href="../roadmap/">Roadmap</a>. Heute läuft alles auf einem Rechner.</p></details>
     <details><summary>Was ändert der Installer auf meinem Rechner?</summary><p>Zwei Dinge: den Installationsordner (~/.aubergine) und einen Link namens aubergine. Er nutzt nie sudo, bearbeitet nie die Startdateien deiner Shell und installiert nie Node.js, pnpm oder tmux.</p></details>
   </div>
@@ -180,6 +182,7 @@
         <li><a href="../run-multiple-coding-agents/">Mehrere Agenten gleichzeitig</a></li>
         <li><a href="../working-copies/">Arbeitskopien</a></li>
         <li><a href="../queue-and-schedules/">Warteschlange und Zeitpläne</a></li>
+        <li><a href="../customize-terminal-themes/">Anpassen</a></li>
         <li><a href="../compare/">Vergleich</a></li>
         <li><a href="../security/">Sicherheit</a></li>
         <li><a href="../roadmap/">Roadmap</a></li>

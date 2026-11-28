@@ -1,4 +1,5 @@
-// The pictures of the color themes for the README and the site (site-src/screenshots/themes-*.png and the others below).
+// The pictures of the color themes for the README and the site (site-src/screenshots/themes-*.png and the others below,
+// and every-setting.png: Settings → Every setting with a search typed).
 //
 //   pnpm build && node scripts/theme-pictures.mjs [--out <folder>] [--only <name>,<name>…]
 //
@@ -379,6 +380,31 @@ async function main() {
       const head = await dialog.getByRole('heading', { name: 'Appearance', exact: true }).boundingBox();
       const end = await page.getByTestId('color-theme-says').boundingBox();
       await shoot('themes-settings.png', { clip: { x: box.x, y: head.y - 24, width: end.x - box.x + 520, height: end.y + end.height + 24 - (head.y - 24) } });
+    }
+
+    // 5. Settings → Every setting, opened, with a search typed: from its fold to the last row found. The line above
+    // the fold, which names the settings file of this run's made-up data folder, is left out.
+    if (wanted('every-setting')) {
+      for (const terminal of made) await call('PATCH', `/v1/sessions/${terminal.id}`, { theme: null });
+      await look({ theme: 'dark', dark: 'dark', light: 'light' });
+      await page.reload();
+      await settle();
+      await page.getByTestId('toolbar-settings').click();
+      const dialog = page.getByTestId('settings-dialog');
+      await dialog.waitFor();
+      const fold = page.getByTestId('settings-all-fold');
+      await fold.scrollIntoViewIfNeeded();
+      await fold.locator('summary').click();
+      const search = page.getByTestId('settings-all-search');
+      await search.fill('appearance');
+      await page.getByTestId('setting-appearance.colors').waitFor();
+      await fold.evaluate((element) => element.scrollIntoView({ block: 'start' }));
+      await page.mouse.move(4, 1196);
+      await page.waitForTimeout(600);
+      const box = await dialog.boundingBox();
+      const top = await fold.boundingBox();
+      const last = await page.getByTestId('setting-appearance.colors').boundingBox();
+      await shoot('every-setting.png', { clip: { x: box.x, y: top.y - 16, width: box.width, height: last.y + last.height + 16 - (top.y - 16) } });
     }
     await browser.close();
   } finally {

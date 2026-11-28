@@ -24,6 +24,7 @@
 - Cloud: Sandboxed agents in the cloud; A pool of agents; Ready-made environments; Long, multi-phase work; One-command cloud deploy; Work you can see; MCP over HTTP, for agents on other machines; Tested Linux support; Shell integration beyond zsh.
 - Control: Approval modes; Command policy and screening; Risk levels per repository; A full audit trail; Undo an agent's work; Admin controls; Model choice per terminal, task or schedule.
 - Quality: Quality gates; Pull request review; Browser-driven testing; Plan before build; Task recipes; Outcome metrics; Incident write-ups: an agent investigates and drafts a postmortem.
+- Make it yours: Theme files of your own, and themes an agent proposes for you to accept; A theme or an accent for a project, or for terminals with a tag; Templates for a terminal's title and a row of the list; Your own stylesheet (custom.css) with documented hooks; Plugins: your own code in the page, with a sandboxed mode for other people's code possibly later.
 - Everywhere: Published SDK; Editor extension; Desktop app; Windows support (on Windows itself, not through WSL).
 
 None of this exists today. Everything runs on one computer.

@@ -5026,5 +5026,497 @@
   "site.share.copy": {
     "text": "نسخ الرابط",
     "from": "dbf362d4f210"
+  },
+  "site.foot.customize": {
+    "text": "التخصيص",
+    "from": "c5276e27afba"
+  },
+  "guides.customize.name": {
+    "text": "خصّص السمات والألوان والخطوط والمفاتيح",
+    "from": "0f78f8ed86a6"
+  },
+  "guides.customize.text": {
+    "text": "عشر سمات ألوان، وسمة لكل طرفية، وألوان تضبطها بيدك، وخط الطرفية ومؤشرها، وكل مفتاح، وكيف تتيح لك أدوات أخرى تخصيص واجهاتها.",
+    "from": "fc827f9b51fc"
+  },
+  "home.themes.more": {
+    "text": "كل ما يمكنك تغييره، وكيف تفعل ذلك أدوات أخرى",
+    "from": "b9eb2267d0a5"
+  },
+  "faq.look.q": {
+    "text": "هل يمكنني تغيير مظهر Aubergine؟",
+    "from": "25820b139d94"
+  },
+  "faq.look.a": {
+    "text": "نعم: عشر سمات ألوان، وسمة لكل طرفية، وألوان مفردة تضبطها بيدك، وخط الطرفية ومؤشرها، وكل مفتاح. انظر <a href=\"/customize-terminal-themes/\">التخصيص</a>.",
+    "from": "4d0f29e81927"
+  },
+  "custom.meta.title": {
+    "text": "خصّص سمات الطرفية وألوانها ومفاتيحها | Aubergine",
+    "from": "2cbdb7a66d89"
+  },
+  "custom.meta.description": {
+    "text": "عشر سمات ألوان، وسمة لكل طرفية، وألوان تضبطها بيدك، وخطوط ومؤشر ومفاتيح، وكيف تتيح VS Code وkitty وtmux وغيرها التخصيص.",
+    "from": "a225c6e71a17"
+  },
+  "custom.crumb": {
+    "text": "التخصيص",
+    "from": "c5276e27afba"
+  },
+  "custom.title": {
+    "text": "خصّص سمات الطرفية وألوانها وخطوطها ومفاتيحها",
+    "from": "c1d02d7228ca"
+  },
+  "custom.lead": {
+    "text": "اختر ألوان الصفحة من عشر سمات، وأعطِ كل طرفية سمة خاصة بها، واضبط الألوان المفردة وخط الطرفية ومؤشرها وكل مفتاح، في Settings أو في ملف إعدادات واحد يصف نفسه.",
+    "from": "c7447ef1ebe0"
+  },
+  "custom.page.title": {
+    "text": "عشر سمات ألوان، فاتحة وداكنة",
+    "from": "362e348c9513"
+  },
+  "custom.page.text": {
+    "text": "يبدأ <strong>Settings → Appearance</strong> بثلاثة خيارات: <strong>Light</strong> و<strong>Dark</strong> و<strong>Match the system</strong>، وهو ما يبدأ به التثبيت الجديد ويتبع النظام حين يتغير. وتحتها تختار سمة من كل نوع: Light أو High contrast light أو Solarized light أو Gruvbox light؛ وDark أو High contrast dark أو Solarized dark أو Gruvbox dark أو Nord أو Dracula. وتظهر كل سمة مع صورة صغيرة لألوانها.",
+    "from": "3c86ee10d844"
+  },
+  "custom.page.at": {
+    "text": "يسري التغيير فورًا على الصفحة وعلى كل طرفية، دون إعادة تحميل، ويُحفظ في ملف الإعدادات، فتتفق كل المتصفحات التي تفتح فيها Aubergine. وفي لوحة الأوامر الشيء نفسه أوامرَ، مثل <strong>Color theme: Nord</strong>.",
+    "from": "280d6d38a2b6"
+  },
+  "custom.own.title": {
+    "text": "سمة ألوان مختلفة لكل طرفية",
+    "from": "f27bdf189165"
+  },
+  "custom.own.text": {
+    "text": "يرسم <strong>Theme…</strong> في قائمة الطرفية تلك الطرفية بأي سمة من السمات العشر، أيًّا كانت سمة الصفحة. يتغير جسمها وحده: يبقى عنوانها وملاحظتها وتفاصيلها كما الصفحة. والطرفية التي لا سمة خاصة لها تتبع <strong>Terminal theme</strong> في Settings، وهي السمة الافتراضية للطرفيات، وإن لم توجد فالصفحة.",
+    "from": "e29c52f9c1e8"
+  },
+  "custom.menu.alt": {
+    "text": "قائمة Theme… لطرفية مفتوحة على اللوحة: Same as the default، الآن كالصفحة، Dark؛ ثم السمات الفاتحة الأربع والداكنة الست، وعلامة اختيار على Dracula.",
+    "from": "c8e8e678bb8b"
+  },
+  "custom.menu.caption": {
+    "text": "Theme… في قائمة الطرفية: الافتراضية، أو أي واحدة من العشر.",
+    "from": "43c132516f7e"
+  },
+  "custom.own.where": {
+    "text": "الخيار نفسه موجود في قائمة صف الطرفية في القائمة، وفي تفاصيلها، وفي لوحة الأوامر. ويمكن أن يكون للطرفية وللإطار لون خاص أيضًا، واحد من ثلاثة عشر أو <strong>Your own…</strong> لأي لون، وكذلك لتبويب اللوحة؛ ولون الطرفية هو لون صفها في القائمة أيضًا.",
+    "from": "914fa5f4b003"
+  },
+  "custom.colors.title": {
+    "text": "اضبط ألوانًا مفردة بيدك",
+    "from": "5ebf453dd41c"
+  },
+  "custom.colors.text": {
+    "text": "إلى جانب السمات، يمكن ضبط 35 لونًا من ألوان الصفحة في ملف الإعدادات <code>config.json</code> تحت <code>appearance.colors</code>: اسم اللون وقيمة مكتوبة بالصيغة <code>#rrggbb</code>. إن كُتب في الأعلى سرى اللون فوق كل سمة؛ وإن كُتب تحت معرّف سمة بين قوسين مربعين، مثل <code>\"[nord]\"</code>، سرى فوق تلك السمة وحدها، وكانت له الغلبة.",
+    "from": "42f05c456f31"
+  },
+  "custom.colors.names": {
+    "text": "الأسماء هي رموز ألوان الصفحة، مثل <code>bg</code> و<code>text</code> و<code>accent</code> و<code>terminal-bg</code>؛ ويسردها <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/design.md\">docs/design.md</a>. يُتخطى الإدخال الخاطئ، ويبقى باقي الملف ساريًا؛ ويذكر <strong>Settings → Appearance</strong> ما تُخطي. الألوان التي تضبطها مسؤوليتك: لا شيء يتحقق من أن ما كتبته مقروء.",
+    "from": "86395864aac8"
+  },
+  "custom.text.title": {
+    "text": "الخطوط والمؤشر واختصارات لوحة المفاتيح",
+    "from": "a9eecef9b5f9"
+  },
+  "custom.text.font": {
+    "text": "يضبط <strong>Terminal text</strong> في Settings → Appearance حجم نص الطرفية، من 8 إلى 32 بكسل، وخطها، في صورة قائمة يُستخدم أول خط يوجد منها. ويضبط <strong>Cursor</strong> شكله، كتلة أو شريط أو خط سفلي، وهل يومض.",
+    "from": "dabcfd9344a6"
+  },
+  "custom.keys.text": {
+    "text": "يمكن تغيير كل مفتاح. أضف <code>shortcuts</code> إلى ملف الإعدادات: اسم أمر مع تركيبة مفاتيح، أو قائمة تركيبات، أو <code>null</code> لعدم وجود مفتاح. ويأخذ <code>shortcutsInAppWindow</code> الشكل نفسه ولا يسري إلا حيث ثُبّت Aubergine تطبيقًا بنافذة خاصة. أعد تحميل الصفحة، فتعرض صفحة الاختصارات (<strong>?</strong>) ولوحة الأوامر والتلميحات المفاتيح كما ضبطتها.",
+    "from": "bf23fd932a40"
+  },
+  "custom.keys.check": {
+    "text": "المفتاح المضبوط مرتين، أو الذي لا يمكن قراءته، يُبلَّغ عنه أعلى صفحة الاختصارات ومن الخادم، ويبقى باقي الملف ساريًا. والمفتاح المنفرد، أو Ctrl أو Option مع مفتاح، لا يعمل إلا ما دامت لوحة المفاتيح ليست مع أي طرفية، كي يظل كل برنامج في الطرفية يتلقى المفاتيح التي يحتاجها. المزيد في <a href=\"https://github.com/thirstyeggplant/aubergine#keyboard\">Keyboard</a> في README.",
+    "from": "fe03dd01e818"
+  },
+  "custom.file.title": {
+    "text": "ملف إعدادات واحد يصف نفسه",
+    "from": "9d7e735d280e"
+  },
+  "custom.file.text": {
+    "text": "يُحفظ كل هذا في <code>config.json</code> في مجلد بيانات Aubergine، ويعرض <code>aubergine settings path</code> مكانه. ويجوز حذف أي مفتاح. والملف الذي لا يُقرأ يعني القيم الافتراضية، ولا يعني أبدًا خادمًا لا يبدأ. ولا يكتب Settings في الصفحة إلا المفاتيح التي يغيّرها، ويترك باقي الملف كما كتبته.",
+    "from": "332625c30531"
+  },
+  "custom.file.schema": {
+    "text": "في كل مرة يبدأ فيها الخادم يكتب <code>config.schema.json</code> بجوار الملف. أضف سطرًا واحدًا، فيصف المحرر الذي يقرأ JSON Schema كل مفتاح ويكمله:",
+    "from": "f85b680c55e6"
+  },
+  "custom.file.cli": {
+    "text": "يعرض <code>aubergine settings list</code> كل مفتاح بقيمته الحالية، مع علامة حيث لا تكون القيمة الافتراضية، ويعرض <code>aubergine settings schema</code> المخطط. ويصف <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/settings.md\">docs/settings.md</a> كل مفتاح وقيمته الافتراضية، وهل يكتبه Settings أم أنت.",
+    "from": "255d97752978"
+  },
+  "custom.file.all": {
+    "text": "في الصفحة، يسرد <strong>Settings → Every setting</strong> المفاتيح نفسها بقيمها، ويجدها وأنت تكتب. المفتاح الذي يغيّره Settings ينقلك إلى عنصر التحكم الخاص به؛ والمفتاح المكتوب باليد له <strong>Copy</strong>، للسطر الذي يُضاف إلى الملف. لا يتغير هناك أي إعداد.",
+    "from": "3f848aa20a56"
+  },
+  "custom.all.alt": {
+    "text": "Settings، Every setting، مفتوحًا، وفي بحثه كلمة “appearance”: ستة مفاتيح، لكل منها قيمته الحالية ومعناه وقيمته الافتراضية؛ خمسة تقول Changed above، ولـ appearance.colors زر Copy.",
+    "from": "3ff59f419a23"
+  },
+  "custom.all.caption": {
+    "text": "Every setting بعد البحث: معنى كل مفتاح وقيمته الحالية وقيمته الافتراضية.",
+    "from": "44060f83bf0e"
+  },
+  "custom.file.browser": {
+    "text": "بعض الخيارات تخص هذا المتصفح وتُحفظ فيه: هل تظهر اللوحات تبويبات أم قائمة واحدة أم عمودًا؛ وأين يقف الشريط فوق اللوحة وهل يبقى مفتوحًا؛ وهل اللوحة الجانبية والخريطة مطويتان؛ وعرض اللوحة الجانبية وتفاصيل الطرفية؛ وكيف تُصفّى قائمة الطرفيات وتُجمّع وتُرتّب.",
+    "from": "8d660a5ed4ca"
+  },
+  "custom.program.title": {
+    "text": "ما يمكن لبرنامج أو وكيل تغييره، وما يبقى لك",
+    "from": "15b7cd56fd35"
+  },
+  "custom.program.text": {
+    "text": "عبر <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/api.md\">الواجهة البرمجية المحلية</a>، يمكن لبرنامج يحمل رمز API أن يرتب اللوحات بصلاحية <code>canvases:write</code>: يسميها ويلونها ويرتبها، وينقل الطرفيات عليها ويغيّر حجمها ويلونها، ويضيف إطارات. وبصلاحية <code>sessions:write</code> يمكنه إعادة تسمية طرفية ووسمها وتغيير حقولها ومنحها سمة ألوان. ولا يبلغ إلا المشاريع التي يبلغها رمزه.",
+    "from": "a0cf33b31432"
+  },
+  "custom.program.agent": {
+    "text": "الوكيل داخل الطرفية يصف طرفيته وحدها لا غيرها: اسمًا، وملخصًا لما هي له، وروابطها، وحقولها، باستخدام <code>aubergine describe</code> و<code>aubergine link add</code> و<code>aubergine field set</code>. وحيث كتبت أنت اسمًا أو ملخصًا أو حقلًا، يبقى ما كتبته، ويُحفظ ما أرسله الوكيل بجانبه اقتراحًا.",
+    "from": "b99f1d5ab90f"
+  },
+  "custom.program.owner": {
+    "text": "الإعدادات نفسها لك وحدك. لا يستطيع أي رمز أو طرفية أو وكيل تغييرها: لا يجيب <code>PUT /v1/settings/appearance</code> إلا المتصفح المسجَّل دخوله، و<code>appearance.colors</code> و<code>shortcuts</code> وغيرها تُكتب باليد في الملف.",
+    "from": "8120d56c7837"
+  },
+  "custom.cmp.title": {
+    "text": "كيف تتيح لك أدوات أخرى تخصيص الواجهة؟",
+    "from": "66e3b8de628b"
+  },
+  "custom.cmp.how": {
+    "text": "<strong>كيف كُتب هذا.</strong> ما يقوله الجدول عن كل أداة مأخوذ من توثيقها هي، كما قُرئ في 28 نوفمبر 2026، ومرتبط من اسمها وخلاياها. لم نشغّل هذه الأدوات لهذا الغرض. “لم يُعثر عليه” تعني أن التوثيق الذي قرأناه لا يصف ذلك، لا أن الأداة لا تستطيعه. إن كان شيء هنا خاطئًا أو قديمًا، <a href=\"https://github.com/thirstyeggplant/aubergine/issues\">أخبرنا</a>.",
+    "from": "6ef9a80f81b8"
+  },
+  "custom.cmp.tool": {
+    "text": "الأداة",
+    "from": "2e53bdcd0740"
+  },
+  "custom.cmp.settings": {
+    "text": "الإعدادات",
+    "from": "74a883a037bc"
+  },
+  "custom.cmp.themes": {
+    "text": "السمات والألوان",
+    "from": "1483a0993975"
+  },
+  "custom.cmp.css": {
+    "text": "CSS خاص بك",
+    "from": "7551db76a705"
+  },
+  "custom.cmp.code": {
+    "text": "شيفرة خاصة بك",
+    "from": "90cd41d7d612"
+  },
+  "custom.cmp.templates": {
+    "text": "قوالب للعناوين والحالة",
+    "from": "0eb761541eb1"
+  },
+  "custom.cmp.kind.editor": {
+    "text": "محرر",
+    "from": "120815ad81ae"
+  },
+  "custom.cmp.kind.notes": {
+    "text": "تطبيق ملاحظات",
+    "from": "d4729aaa963c"
+  },
+  "custom.cmp.kind.terminal": {
+    "text": "طرفية",
+    "from": "2c2715f8c7d4"
+  },
+  "custom.cmp.kind.mux": {
+    "text": "مُضاعِف طرفيات",
+    "from": "b643b9019461"
+  },
+  "custom.cmp.kind.aubergine": {
+    "text": "طرفيات على لوحة",
+    "from": "ef37110351f3"
+  },
+  "custom.cmp.none": {
+    "text": "لم يُعثر عليه",
+    "from": "66d2c65a4ede"
+  },
+  "custom.cmp.vscode.settings": {
+    "text": "<code>settings.json</code> أو محرر Settings، في طبقات من المستخدم إلى مساحة العمل والمجلد واللغة",
+    "from": "6dbfbb0bf531"
+  },
+  "custom.cmp.vscode.themes": {
+    "text": "<a href=\"https://code.visualstudio.com/docs/configure/themes\">ملفات سمات</a> من الإضافات؛ <code>workbench.colorCustomizations</code> لكل السمات أو لواحدة",
+    "from": "a9721fe91937"
+  },
+  "custom.cmp.vscode.css": {
+    "text": "غير مدعوم، <a href=\"https://code.visualstudio.com/api/extension-capabilities/overview\">كما يقول توثيقه</a>",
+    "from": "5356dd1be55f"
+  },
+  "custom.cmp.vscode.code": {
+    "text": "إضافات، بصلاحيات VS Code نفسه لكن دون وصول إلى DOM الواجهة؛ وعروض ويب لواجهة خاصة بها",
+    "from": "cc389854306b"
+  },
+  "custom.cmp.vscode.templates": {
+    "text": "يقبل <code>window.title</code> وعناوين تبويبات الطرفية متغيرات <code>${…}</code>",
+    "from": "9111f5a25682"
+  },
+  "custom.cmp.zed.settings": {
+    "text": "Settings Editor أو <code>settings.json</code> مع تعليقات؛ المستخدم ثم المشروع",
+    "from": "12431607ec58"
+  },
+  "custom.cmp.zed.themes": {
+    "text": "<a href=\"https://zed.dev/docs/themes\">ملفات سمات JSON</a> بمخطط؛ <code>theme_overrides</code> لسمة واحدة؛ فاتح أو داكن أو حسب النظام",
+    "from": "e0b219720c50"
+  },
+  "custom.cmp.zed.code": {
+    "text": "إضافات بلغة Rust مترجمة إلى WebAssembly، مع <a href=\"https://zed.dev/docs/extensions/capabilities\">قدرات</a> يمكنك تقييدها",
+    "from": "f9b83a4e3656"
+  },
+  "custom.cmp.obsidian.settings": {
+    "text": "ملفات في مجلد <code>.obsidian</code> لكل خزنة",
+    "from": "2a7acb83efb8"
+  },
+  "custom.cmp.obsidian.themes": {
+    "text": "<a href=\"https://docs.obsidian.md/Themes/App+themes/Build+a+theme\">السمات CSS</a>، بمتغيرات CSS موثقة",
+    "from": "c6b43ef8f558"
+  },
+  "custom.cmp.obsidian.css": {
+    "text": "مقتطفات CSS، تُفعَّل واحدًا واحدًا",
+    "from": "71b027b4744c"
+  },
+  "custom.cmp.obsidian.code": {
+    "text": "<a href=\"https://help.obsidian.md/plugin-security\">إضافات</a> JavaScript بصلاحيات Obsidian نفسه؛ لا يعمل أي منها حتى يُطفأ الوضع المقيَّد",
+    "from": "ebe845afbaf3"
+  },
+  "custom.cmp.hyper.settings": {
+    "text": "ملف واحد: <code>.hyper.js</code> في الإصدارات الموثقة، و<code>hyper.json</code> في فرع التطوير",
+    "from": "cc98e8ab46d3"
+  },
+  "custom.cmp.hyper.themes": {
+    "text": "السمات إضافات",
+    "from": "48e534e5d2ab"
+  },
+  "custom.cmp.hyper.css": {
+    "text": "<code>css</code> للنافذة؛ و<code>termCSS</code> الذي <a href=\"https://github.com/vercel/hyper/blob/canary/PLUGINS.md\">لم يعد ينسّق نص الطرفية</a> منذ الإصدار 2",
+    "from": "0792e3e69be1"
+  },
+  "custom.cmp.hyper.code": {
+    "text": "إضافات npm يحمّلها Electron والمُصيِّر: تغلّف مكوّنات React فيه وتضيف وسيطات Redux",
+    "from": "7e3468ba9cdd"
+  },
+  "custom.cmp.wezterm.settings": {
+    "text": "ملف Lua، <code>.wezterm.lua</code>",
+    "from": "e2d4cfe9b3ef"
+  },
+  "custom.cmp.wezterm.themes": {
+    "text": "<a href=\"https://wezterm.org/config/appearance.html\">أكثر من 700 مخطط ألوان</a>؛ وما تصنعه بلغة Lua أو TOML؛ و<code>colors</code> للألوان المفردة",
+    "from": "852065821910"
+  },
+  "custom.cmp.wezterm.code": {
+    "text": "الإعداد نفسه Lua؛ و<a href=\"https://wezterm.org/config/plugins.html\">الإضافات</a> Lua من عنوان Git",
+    "from": "3c87ef215bdb"
+  },
+  "custom.cmp.wezterm.templates": {
+    "text": "دوال Lua تعيد عناوين التبويبات والنوافذ (<a href=\"https://wezterm.org/config/lua/window-events/format-tab-title.html\"><code>format-tab-title</code></a>)",
+    "from": "7c7076a3a34d"
+  },
+  "custom.cmp.tmux.settings": {
+    "text": "أوامر tmux في ملف؛ خيارات لكل خادم وجلسة ونافذة ولوح",
+    "from": "178293a2f902"
+  },
+  "custom.cmp.tmux.themes": {
+    "text": "أنماط مثل <code>status-style</code> و<code>window-style</code>",
+    "from": "f43d8249a6c9"
+  },
+  "custom.cmp.tmux.code": {
+    "text": "خطافات تشغّل أوامر tmux؛ ووضع تحكم للبرامج",
+    "from": "47e37dc0de8a"
+  },
+  "custom.cmp.tmux.templates": {
+    "text": "<a href=\"https://man.openbsd.org/tmux.1#FORMATS\">صيغ</a> بـ <code>#{…}</code> لسطر الحالة وقائمة النوافذ وحدود الألواح والعناوين",
+    "from": "e06333c05625"
+  },
+  "custom.cmp.kitty.settings": {
+    "text": "<code>kitty.conf</code>، مع تضمين ملفات، ويُقرأ من جديد حين يتغير",
+    "from": "60f6aaf0744e"
+  },
+  "custom.cmp.kitty.themes": {
+    "text": "السمة ملف <code>.conf</code>؛ يختار <a href=\"https://sw.kovidgoyal.net/kitty/kittens/themes/\"><code>kitten themes</code></a> من أكثر من 300، ويمكن ضبط واحدة للداكن وأخرى للفاتح",
+    "from": "1eac8df3e6f7"
+  },
+  "custom.cmp.kitty.code": {
+    "text": "<a href=\"https://sw.kovidgoyal.net/kitty/kittens/custom/\">Kittens</a> بلغة Python بوصول كامل إلى دواخل kitty؛ ومراقِبات",
+    "from": "1aa5c56cc144"
+  },
+  "custom.cmp.kitty.templates": {
+    "text": "<code>tab_title_template</code>، حيث يستدعي <code>{custom}</code> شيفرة Python خاصة بك",
+    "from": "72e78b0f5053"
+  },
+  "custom.cmp.ghostty.settings": {
+    "text": "ملف <code>key = value</code>؛ ويضيف <code>config-file</code> ملفات أخرى",
+    "from": "0aed8a057084"
+  },
+  "custom.cmp.ghostty.themes": {
+    "text": "<a href=\"https://ghostty.org/docs/features/theme\">السمات ملفات إعداد</a>؛ واحدة للفاتح وأخرى للداكن",
+    "from": "6e03a766b678"
+  },
+  "custom.cmp.ghostty.code": {
+    "text": "<a href=\"https://ghostty.org/docs/config/reference#custom-shader\">مظلِّلات GLSL</a> فوق الطرفية؛ وAppleScript على macOS",
+    "from": "cde7e57ced35"
+  },
+  "custom.cmp.wt.settings": {
+    "text": "شاشة Settings أو <code>settings.json</code>، مع <a href=\"https://github.com/microsoft/terminal/blob/main/doc/cascadia/profiles.schema.json\">مخطط JSON</a>",
+    "from": "1d08016a0bea"
+  },
+  "custom.cmp.wt.themes": {
+    "text": "مخططات ألوان لكل ملف تعريف؛ و<a href=\"https://learn.microsoft.com/windows/terminal/customize-settings/themes\">سمات</a> للنافذة والتبويبات، فاتحة وداكنة، في JSON فقط",
+    "from": "74411fb1735c"
+  },
+  "custom.cmp.wt.code": {
+    "text": "لم يُعثر عليه؛ تضيف تطبيقات أخرى ملفات تعريف ومخططات ألوان في صورة أجزاء JSON",
+    "from": "3ff970c2f46d"
+  },
+  "custom.cmp.wt.templates": {
+    "text": "لم يُعثر عليه؛ يضبط ملف التعريف <code>tabTitle</code> و<code>tabColor</code>",
+    "from": "2578d12f8fda"
+  },
+  "custom.cmp.iterm2.settings": {
+    "text": "ملفات تعريف في Settings؛ و<a href=\"https://iterm2.com/documentation-dynamic-profiles.html\">Dynamic Profiles</a> في صورة ملفات قوائم خصائص",
+    "from": "7c477caf4c27"
+  },
+  "custom.cmp.iterm2.themes": {
+    "text": "ملف تعريف يُختار حسب المستخدم أو المضيف أو المجلد أو المهمة، مع Shell Integration",
+    "from": "654dec9e1e7a"
+  },
+  "custom.cmp.iterm2.code": {
+    "text": "<a href=\"https://iterm2.com/python-api/\">واجهة Python برمجية</a>، ومكوّنات لشريط الحالة بلغة Python، وAppleScript",
+    "from": "081a02768b0a"
+  },
+  "custom.cmp.iterm2.templates": {
+    "text": "<a href=\"https://iterm2.com/documentation-scripting-fundamentals.html\">سلاسل مُستكمَلة</a>، <code>\\(…)</code>، في أسماء الجلسات والشارات وشريط الحالة",
+    "from": "d543c499cae1"
+  },
+  "custom.cmp.a.settings": {
+    "text": "<code>config.json</code> وSettings، مع JSON Schema للمحررات",
+    "from": "bd438e8036f3"
+  },
+  "custom.cmp.a.themes": {
+    "text": "عشر سمات، فاتحة أو داكنة أو حسب النظام؛ واحدة لكل طرفية؛ 35 لونًا باليد، لكل السمات أو لواحدة",
+    "from": "fa76b50a8212"
+  },
+  "custom.cmp.a.css": {
+    "text": "لا. مخطط له: <code>custom.css</code> بنقاط ربط موثقة",
+    "from": "4ac770687589"
+  },
+  "custom.cmp.a.code": {
+    "text": "لا. مخطط له: إضافات",
+    "from": "f89ee178c319"
+  },
+  "custom.cmp.a.templates": {
+    "text": "لا. مخطط له: لعنوان الطرفية ولصف في القائمة",
+    "from": "fd37dcfee7f4"
+  },
+  "custom.cmp.p1": {
+    "text": "كل أداة هنا تحفظ إعداداتها في ملف، ولدى VS Code وZed وWindows Terminal أيضًا شاشة تكتبه، كما في Aubergine. وفي معظمها تكون السمة ملفًا أيضًا: JSON في VS Code وZed، وCSS في Obsidian، وLua أو TOML في WezTerm، وملف إعداد في kitty وGhostty. وتتيح لك VS Code وZed وWezTerm تغيير ألوان مفردة فوق سمة، كما يفعل هنا <code>appearance.colors</code>.",
+    "from": "b3a5c5fb431c"
+  },
+  "custom.cmp.p2": {
+    "text": "أكثر ما تختلف فيه هو الشيفرة. إعداد WezTerm كله برنامج Lua، وkitty وiTerm2 يشغّلان شيفرة Python خاصة بك، وإضافات Hyper شيفرة JavaScript تغلّف واجهته؛ ويقبل Obsidian وHyper أيضًا CSS خاصًا بك. لا تصل إضافات VS Code إلى DOM واجهته، ولا يدعم ورقة أنماط خاصة بك؛ ويشغّل Zed الإضافات بصيغة WebAssembly، بقدرات يمكنك تقييدها. ويبني tmux وWezTerm وkitty وiTerm2 العناوين وأسطر الحالة من قوالب أو دوال.",
+    "from": "9538078a7039"
+  },
+  "custom.cmp.p3": {
+    "text": "يقف Aubergine اليوم عند طرف الإعدادات: سمات وألوان ومفاتيح في ملف واحد يصف نفسه، وصفحة تكتب جزءًا منه. لا يشغّل أي شيفرة لك في الصفحة، ولا يقبل ورقة أنماط خاصة بك، وليست فيه قوالب. هذه كلها على <a href=\"/roadmap/#rm-yours\">خارطة الطريق</a>، ولم تُبنَ بعد.",
+    "from": "94f37707471f"
+  },
+  "custom.cmp.mark": {
+    "text": "لا ينتسب Aubergine إلى أي من الأدوات المذكورة في هذه الصفحة. أسماؤها علامات تجارية لأصحابها.",
+    "from": "f011c5b28706"
+  },
+  "custom.plan.title": {
+    "text": "ما هو مخطط له",
+    "from": "e10eed0040ae"
+  },
+  "custom.plan.text": {
+    "text": "ملفات سمات خاصة بك، ومظهر لمشروع أو وسم، وقوالب، و<code>custom.css</code>، وإضافات: كلها مخطط لها ولم تُبنَ بعد. انظر <a href=\"/roadmap/#rm-yours\">خارطة الطريق</a>.",
+    "from": "a392418737d9"
+  },
+  "custom.q.terminal.q": {
+    "text": "هل يمكن أن يكون لكل طرفية سمة ألوان مختلفة؟",
+    "from": "da02700eeeb8"
+  },
+  "custom.q.terminal.a": {
+    "text": "نعم. يرسم Theme… في قائمة الطرفية جسمها بأي سمة من العشر، أيًّا كانت سمة الصفحة. وتتبع الطرفيات الأخرى السمة الافتراضية التي تضبطها للطرفيات، أو الصفحة.",
+    "from": "efb1c6b90003"
+  },
+  "custom.q.css.q": {
+    "text": "هل يمكنني إضافة CSS خاص بي إلى Aubergine؟",
+    "from": "e4f4bf19de27"
+  },
+  "custom.q.css.a": {
+    "text": "ليس اليوم. يمكن ضبط الألوان المفردة باليد في ملف الإعدادات؛ و<code>custom.css</code> بنقاط ربط موثقة مخطط له ولم يُبنَ.",
+    "from": "332c37400357"
+  },
+  "custom.q.file.q": {
+    "text": "أين ملف إعدادات Aubergine؟",
+    "from": "4378f9f24f9d"
+  },
+  "custom.q.file.a": {
+    "text": "هو <code>config.json</code> في مجلد بيانات Aubergine. يعرض <code>aubergine settings path</code> مكانه، ويعرضه الخادم أيضًا عند بدئه.",
+    "from": "c3247c2edfe9"
+  },
+  "custom.q.agent.q": {
+    "text": "هل يستطيع وكيل تغيير مظهر Aubergine؟",
+    "from": "f2f43a3f85b7"
+  },
+  "custom.q.agent.a": {
+    "text": "ليس الإعدادات: فهي لك وحدك. يستطيع الوكيل تسمية طرفيته ووصفها، ويستطيع برنامج يسمح له رمز API الخاص به إعادة تسمية الطرفيات ووسمها ومنحها سمة وترتيب اللوحات.",
+    "from": "283900c4f919"
+  },
+  "custom.related": {
+    "text": "ذو صلة: <a href=\"/too-many-terminal-tabs/\">اعثر على الطرفية الصحيحة</a> · <a href=\"/tmux-without-learning-tmux/\">tmux دون تعلّم tmux</a> · <a href=\"/security/\">الأمان والخصوصية</a> · <a href=\"/faq/\">الأسئلة الشائعة</a>",
+    "from": "64333f8f5a0d"
+  },
+  "roadmap.yours.title": {
+    "text": "اجعله لك",
+    "from": "34ca8a4540f5"
+  },
+  "roadmap.yours.sub": {
+    "text": "مزيد من الصفحة يتشكل كما تريد، أبعد من سمات اليوم وألوانه ومفاتيحه.",
+    "from": "6fef807ba454"
+  },
+  "roadmap.yours.themes.name": {
+    "text": "ملفات سمات خاصة بك",
+    "from": "ec9cabb5c1c9"
+  },
+  "roadmap.yours.themes.text": {
+    "text": "اكتب سمة ألوان في ملف واخترها بجانب السمات العشر التي تأتي مع Aubergine. ويمكن لوكيل أن يقترح واحدة، فتنتظر قبولك.",
+    "from": "c47421ed6549"
+  },
+  "roadmap.yours.when.name": {
+    "text": "مظهر حسب الشرط",
+    "from": "c40ae539d4e8"
+  },
+  "roadmap.yours.when.text": {
+    "text": "سمة أو لون مميِّز لمشروع، أو للطرفيات التي تحمل وسمًا، لتعرف بنظرة واحدة أين أنت.",
+    "from": "be4953ead5e1"
+  },
+  "roadmap.yours.templates.name": {
+    "text": "قوالب",
+    "from": "56b564b75c7f"
+  },
+  "roadmap.yours.templates.text": {
+    "text": "اختر ما يعرضه عنوان الطرفية وصف القائمة، من قالب خاص بك.",
+    "from": "21523ce54129"
+  },
+  "roadmap.yours.css.name": {
+    "text": "ورقة أنماط خاصة بك",
+    "from": "2222b72214ec"
+  },
+  "roadmap.yours.css.text": {
+    "text": "ملف <code>custom.css</code> يُحمَّل في الصفحة، بنقاط ربط موثقة تبقى ثابتة.",
+    "from": "a48bd0baabda"
+  },
+  "roadmap.yours.plugins.name": {
+    "text": "إضافات",
+    "from": "9514b7ff4860"
+  },
+  "roadmap.yours.plugins.text": {
+    "text": "شيفرتك الخاصة محمّلة في الصفحة بتحكم كامل، عبر فتحات مسماة وأبعد منها. وقد يأتي لاحقًا وضع معزول لشيفرة الآخرين.",
+    "from": "e45f18abdc98"
   }
 }

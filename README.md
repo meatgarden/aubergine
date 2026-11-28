@@ -134,6 +134,26 @@ Already have terminals open elsewhere? Click **Open elsewhere** in the toolbar (
 
 ---
 
+## Make it yours
+
+What you can change today:
+
+- **The page's colors**: ten color themes, four light and six dark, and light, dark or as the system is, in **Settings → Appearance**. See [Color themes](#color-themes) and [Settings](#settings).
+- **A theme for each terminal**: **Theme…** in a terminal's menu draws it in any of the ten, whatever the page is in; the others follow the default you set for terminals, or the page.
+- **A color for a terminal, a frame and a canvas's tab**: the dot in a title bar, one of thirteen colors or any color of your own. See [Canvas](#canvas) and [Canvases](#canvases).
+- **Single colors by hand**: 35 colors of the page under `appearance.colors` in the settings file, for every theme or for one (`"[nord]"`). A wrong entry is skipped and Settings says which.
+- **A terminal's text and cursor**: its font and size, the cursor's shape and whether it blinks.
+- **Every key**: `shortcuts` and `shortcutsInAppWindow` in the settings file; the shortcut sheet and the palette show what you set. See [Keyboard](#keyboard).
+- **A settings file that describes itself**: `config.schema.json` for an editor's completion, [docs/settings.md](docs/settings.md), `aubergine settings list | path | schema`, and **Settings → Every setting**, searchable, with **Copy** for a line written by hand.
+- **How this browser lays things out**: the canvases as tabs, one list or a column, where the bar over the canvas stands, the side panel and the map folded or open. See [Side panel and terminal list](#side-panel-and-terminal-list).
+- **What programs may change**: with an [API token](#api-tokens), a program may arrange canvases and rename, tag and theme terminals; the agent in a terminal describes its own terminal. The settings are yours alone.
+
+<img src="site/screenshots/terminal-theme-menu.png" width="560" alt="A terminal's Theme… menu open on the canvas: Same as the default, then the four light themes and the six dark ones, with Dracula ticked.">
+
+Your own CSS, plugins and templates are not built; they are on the [roadmap](https://thirstyeggplant.com/roadmap/). How this compares with what VS Code, Zed, Obsidian, Hyper, WezTerm, tmux, kitty, Ghostty, Windows Terminal and iTerm2 let you change: [Customize terminal themes, colors, fonts and keys](https://thirstyeggplant.com/customize-terminal-themes/).
+
+---
+
 ## Commands you will use most
 
 Every command is listed under [Command line](#command-line). These are the everyday ones.

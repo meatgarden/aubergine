@@ -5026,5 +5026,497 @@
   "site.share.copy": {
     "text": "लिंक कॉपी करें",
     "from": "dbf362d4f210"
+  },
+  "site.foot.customize": {
+    "text": "अनुकूलित करें",
+    "from": "c5276e27afba"
+  },
+  "guides.customize.name": {
+    "text": "थीम, रंग, फ़ॉन्ट और कुंजियाँ अनुकूलित करें",
+    "from": "0f78f8ed86a6"
+  },
+  "guides.customize.text": {
+    "text": "दस रंग थीम, हर टर्मिनल के लिए एक थीम, हाथ से तय किए रंग, टर्मिनल का फ़ॉन्ट और कर्सर, हर कुंजी, और दूसरे टूल अपने को अनुकूलित कैसे करने देते हैं।",
+    "from": "fc827f9b51fc"
+  },
+  "home.themes.more": {
+    "text": "आप जो कुछ बदल सकते हैं, और दूसरे टूल यह कैसे करते हैं",
+    "from": "b9eb2267d0a5"
+  },
+  "faq.look.q": {
+    "text": "क्या मैं Aubergine का रूप बदल सकता हूँ?",
+    "from": "25820b139d94"
+  },
+  "faq.look.a": {
+    "text": "हाँ: दस रंग थीम, हर टर्मिनल के लिए एक थीम, हाथ से तय किए अलग-अलग रंग, टर्मिनल का फ़ॉन्ट और कर्सर, और हर कुंजी। देखें <a href=\"/customize-terminal-themes/\">अनुकूलित करें</a>।",
+    "from": "4d0f29e81927"
+  },
+  "custom.meta.title": {
+    "text": "टर्मिनल थीम, रंग और कुंजियाँ अनुकूलित करें | Aubergine",
+    "from": "2cbdb7a66d89"
+  },
+  "custom.meta.description": {
+    "text": "दस रंग थीम, हर टर्मिनल की अपनी थीम, हाथ से तय रंग, फ़ॉन्ट, कर्सर और कुंजियाँ, और VS Code, kitty, tmux व दूसरे टूल कैसे अनुकूलित होते हैं।",
+    "from": "a225c6e71a17"
+  },
+  "custom.crumb": {
+    "text": "अनुकूलित करें",
+    "from": "c5276e27afba"
+  },
+  "custom.title": {
+    "text": "टर्मिनल थीम, रंग, फ़ॉन्ट और कुंजियाँ अनुकूलित करें",
+    "from": "c1d02d7228ca"
+  },
+  "custom.lead": {
+    "text": "पेज के रंग दस थीम में से चुनें, हर टर्मिनल को उसकी अपनी थीम दें, और अलग-अलग रंग, टर्मिनल का फ़ॉन्ट और कर्सर, और हर कुंजी Settings में या एक ऐसी सेटिंग फ़ाइल में तय करें जो ख़ुद अपना वर्णन करती है।",
+    "from": "c7447ef1ebe0"
+  },
+  "custom.page.title": {
+    "text": "दस रंग थीम, हल्की और गहरी",
+    "from": "362e348c9513"
+  },
+  "custom.page.text": {
+    "text": "<strong>Settings → Appearance</strong> तीन विकल्पों से शुरू होता है: <strong>Light</strong>, <strong>Dark</strong> और <strong>Match the system</strong>; नया इंस्टॉल इसी से शुरू होता है और सिस्टम बदलने पर यह उसके साथ चलता है। उनके नीचे आप हर प्रकार की एक थीम चुनते हैं: Light, High contrast light, Solarized light या Gruvbox light; Dark, High contrast dark, Solarized dark, Gruvbox dark, Nord या Dracula। हर थीम उसके रंगों की एक छोटी तस्वीर के साथ दिखती है।",
+    "from": "3c86ee10d844"
+  },
+  "custom.page.at": {
+    "text": "बदलाव बिना रीलोड के तुरंत पेज और हर टर्मिनल पर लागू होता है, और सेटिंग फ़ाइल में रखा जाता है, इसलिए जिस भी ब्राउज़र में आप Aubergine खोलें, सब एक जैसे रहते हैं। पैलेट में यही कमांड के रूप में भी है, जैसे <strong>Color theme: Nord</strong>।",
+    "from": "280d6d38a2b6"
+  },
+  "custom.own.title": {
+    "text": "हर टर्मिनल के लिए अलग रंग थीम",
+    "from": "f27bdf189165"
+  },
+  "custom.own.text": {
+    "text": "टर्मिनल के मेनू में <strong>Theme…</strong> उस टर्मिनल को दस में से किसी भी थीम में बनाता है, पेज चाहे किसी भी थीम में हो। सिर्फ़ उसका भीतरी हिस्सा बदलता है: उसका शीर्षक, नोट और विवरण पेज जैसे ही रहते हैं। जिस टर्मिनल की अपनी थीम नहीं है, वह Settings में <strong>Terminal theme</strong> यानी टर्मिनलों के डिफ़ॉल्ट का पालन करता है, और वह भी न हो तो पेज का।",
+    "from": "e29c52f9c1e8"
+  },
+  "custom.menu.alt": {
+    "text": "कैनवस पर खुला एक टर्मिनल का Theme… मेनू: Same as the default, अभी पेज जैसा, Dark; फिर चार हल्की और छह गहरी थीम, Dracula पर सही का निशान।",
+    "from": "c8e8e678bb8b"
+  },
+  "custom.menu.caption": {
+    "text": "टर्मिनल के मेनू में Theme…: डिफ़ॉल्ट, या दस में से कोई भी।",
+    "from": "43c132516f7e"
+  },
+  "custom.own.where": {
+    "text": "यही विकल्प सूची में टर्मिनल की पंक्ति के मेनू, उसके विवरण और पैलेट में भी है। टर्मिनल और फ़्रेम का अपना रंग भी हो सकता है, तेरह में से एक या किसी भी रंग के लिए <strong>Your own…</strong>, और कैनवस के टैब का भी; टर्मिनल का रंग सूची में उसकी पंक्ति का रंग भी होता है।",
+    "from": "914fa5f4b003"
+  },
+  "custom.colors.title": {
+    "text": "अलग-अलग रंग हाथ से तय करें",
+    "from": "5ebf453dd41c"
+  },
+  "custom.colors.text": {
+    "text": "थीम के अलावा, पेज के 35 रंग सेटिंग फ़ाइल <code>config.json</code> में <code>appearance.colors</code> के नीचे तय किए जा सकते हैं: रंग का नाम और <code>#rrggbb</code> के रूप में लिखा मान। ऊपर लिखा रंग हर थीम पर लागू होता है; कोष्ठक में थीम की ID के नीचे लिखा, जैसे <code>\"[nord]\"</code>, सिर्फ़ उसी थीम पर लागू होता है, और वही मान्य रहता है।",
+    "from": "42f05c456f31"
+  },
+  "custom.colors.names": {
+    "text": "नाम पेज के रंग टोकन हैं, जैसे <code>bg</code>, <code>text</code>, <code>accent</code> और <code>terminal-bg</code>; <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/design.md\">docs/design.md</a> में इनकी सूची है। गलत प्रविष्टि छोड़ दी जाती है, और फ़ाइल का बाकी हिस्सा मान्य रहता है; <strong>Settings → Appearance</strong> बताता है कौन-सी छोड़ी गई। आपके तय किए रंग आपकी ज़िम्मेदारी हैं: कोई जाँच नहीं करता कि आपका लिखा पढ़ा जा सकता है या नहीं।",
+    "from": "86395864aac8"
+  },
+  "custom.text.title": {
+    "text": "फ़ॉन्ट, कर्सर और कीबोर्ड शॉर्टकट",
+    "from": "a9eecef9b5f9"
+  },
+  "custom.text.font": {
+    "text": "Settings → Appearance में <strong>Terminal text</strong> टर्मिनल के अक्षरों का आकार, 8 से 32 पिक्सेल, और उसका फ़ॉन्ट तय करता है; फ़ॉन्ट एक सूची है जिसमें से पहला मिला फ़ॉन्ट इस्तेमाल होता है। <strong>Cursor</strong> उसका आकार, ब्लॉक, बार या अंडरलाइन, और वह झपकता है या नहीं, तय करता है।",
+    "from": "dabcfd9344a6"
+  },
+  "custom.keys.text": {
+    "text": "हर कुंजी बदली जा सकती है। सेटिंग फ़ाइल में <code>shortcuts</code> जोड़ें: किसी कमांड का नाम और एक कुंजी-संयोजन, संयोजनों की सूची, या बिना कुंजी के लिए <code>null</code>। <code>shortcutsInAppWindow</code> यही लेता है और सिर्फ़ वहीं लागू होता है जहाँ Aubergine अपनी खिड़की वाले ऐप के रूप में इंस्टॉल है। पेज रीलोड करें, फिर शॉर्टकट शीट (<strong>?</strong>), पैलेट और टूलटिप कुंजियाँ वैसे ही दिखाते हैं जैसे आपने तय कीं।",
+    "from": "bf23fd932a40"
+  },
+  "custom.keys.check": {
+    "text": "दो बार तय की गई कुंजी, या जो पढ़ी न जा सके, शॉर्टकट शीट के ऊपर और सर्वर द्वारा बताई जाती है, और फ़ाइल का बाकी हिस्सा लागू रहता है। अकेली कुंजी, या Ctrl या Option के साथ कोई कुंजी, तभी काम करती है जब किसी टर्मिनल के पास कीबोर्ड न हो, ताकि टर्मिनल का हर प्रोग्राम अपनी ज़रूरत की कुंजियाँ पाता रहे। और जानकारी README में <a href=\"https://github.com/thirstyeggplant/aubergine#keyboard\">Keyboard</a> में।",
+    "from": "fe03dd01e818"
+  },
+  "custom.file.title": {
+    "text": "एक सेटिंग फ़ाइल जो ख़ुद अपना वर्णन करती है",
+    "from": "9d7e735d280e"
+  },
+  "custom.file.text": {
+    "text": "यह सब Aubergine के डेटा फ़ोल्डर में <code>config.json</code> में रखा जाता है, और <code>aubergine settings path</code> बताता है कि वह कहाँ है। हर कुंजी छोड़ी जा सकती है। जो फ़ाइल पढ़ी न जा सके उसका मतलब डिफ़ॉल्ट है, कभी ऐसा सर्वर नहीं जो शुरू न हो। पेज का Settings सिर्फ़ वही कुंजियाँ लिखता है जो वह बदलता है, और बाकी फ़ाइल वैसी ही छोड़ता है जैसी आपने लिखी।",
+    "from": "332625c30531"
+  },
+  "custom.file.schema": {
+    "text": "हर बार शुरू होने पर सर्वर फ़ाइल के पास <code>config.schema.json</code> लिखता है। एक पंक्ति जोड़ें, और JSON Schema पढ़ने वाला एडिटर हर कुंजी का वर्णन और स्वतः पूर्ति करता है:",
+    "from": "f85b680c55e6"
+  },
+  "custom.file.cli": {
+    "text": "<code>aubergine settings list</code> हर कुंजी को उसके मौजूदा मान के साथ दिखाता है, जहाँ वह डिफ़ॉल्ट नहीं है वहाँ निशान लगाकर, और <code>aubergine settings schema</code> स्कीमा दिखाता है। <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/settings.md\">docs/settings.md</a> हर कुंजी, उसका डिफ़ॉल्ट, और उसे Settings लिखता है या आप, यह बताता है।",
+    "from": "255d97752978"
+  },
+  "custom.file.all": {
+    "text": "पेज में <strong>Settings → Every setting</strong> वही कुंजियाँ उनके मानों के साथ दिखाता है, और टाइप करते ही उन्हें ढूँढता है। जिस कुंजी को Settings बदलता है, वह आपको उसके नियंत्रण तक ले जाती है; हाथ से लिखी कुंजी के पास <strong>Copy</strong> है, फ़ाइल में जोड़ने वाली पंक्ति के लिए। वहाँ कोई सेटिंग नहीं बदलती।",
+    "from": "3f848aa20a56"
+  },
+  "custom.all.alt": {
+    "text": "Settings, Every setting, खुला हुआ, खोज में “appearance” टाइप किया हुआ: छह कुंजियाँ, हर एक का मौजूदा मान, अर्थ और डिफ़ॉल्ट; पाँच पर Changed above लिखा है, और appearance.colors पर Copy बटन है।",
+    "from": "3ff59f419a23"
+  },
+  "custom.all.caption": {
+    "text": "खोजा गया Every setting: हर कुंजी क्या है, उसका मौजूदा मान और उसका डिफ़ॉल्ट।",
+    "from": "44060f83bf0e"
+  },
+  "custom.file.browser": {
+    "text": "कुछ विकल्प इस ब्राउज़र के हैं और वहीं रखे जाते हैं: कैनवस टैब हैं, एक सूची हैं या एक कॉलम; कैनवस के ऊपर वाली पट्टी कहाँ है और खुली रहती है या नहीं; साइड पैनल और नक्शा मुड़े हैं या नहीं; पैनल और टर्मिनल के विवरण की चौड़ाई; और टर्मिनलों की सूची कैसे छानी, समूहित और क्रमबद्ध की जाती है।",
+    "from": "8d660a5ed4ca"
+  },
+  "custom.program.title": {
+    "text": "कोई प्रोग्राम या एजेंट क्या बदल सकता है, और क्या आपका रहता है",
+    "from": "15b7cd56fd35"
+  },
+  "custom.program.text": {
+    "text": "<a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/api.md\">लोकल API</a> से, API टोकन वाला प्रोग्राम <code>canvases:write</code> के साथ कैनवस व्यवस्थित कर सकता है: उनका नाम, रंग और क्रम तय करना, उन पर टर्मिनल हिलाना, उनका आकार और रंग बदलना, और फ़्रेम जोड़ना। <code>sessions:write</code> के साथ वह टर्मिनल का नाम बदल सकता है, टैग लगा सकता है, उसके फ़ील्ड बदल सकता है और उसे रंग थीम दे सकता है। वह सिर्फ़ उन्हीं प्रोजेक्ट तक पहुँचता है जिन तक उसका टोकन पहुँचता है।",
+    "from": "a0cf33b31432"
+  },
+  "custom.program.agent": {
+    "text": "टर्मिनल के अंदर का एजेंट सिर्फ़ अपने टर्मिनल का वर्णन करता है, किसी और का नहीं: नाम, वह किस लिए है इसका सार, उसके लिंक और उसके फ़ील्ड, <code>aubergine describe</code>, <code>aubergine link add</code> और <code>aubergine field set</code> से। जहाँ आपने ख़ुद नाम, सार या फ़ील्ड लिखा है, वहाँ आपका रहता है, और एजेंट ने जो भेजा वह सुझाव के रूप में बगल में रखा जाता है।",
+    "from": "b99f1d5ab90f"
+  },
+  "custom.program.owner": {
+    "text": "सेटिंग अपने आप में सिर्फ़ आपकी हैं। कोई टोकन, टर्मिनल या एजेंट उन्हें नहीं बदल सकता: <code>PUT /v1/settings/appearance</code> सिर्फ़ साइन-इन किए ब्राउज़र को जवाब देता है, और <code>appearance.colors</code>, <code>shortcuts</code> और बाकी फ़ाइल में हाथ से लिखे जाते हैं।",
+    "from": "8120d56c7837"
+  },
+  "custom.cmp.title": {
+    "text": "दूसरे टूल इंटरफ़ेस को कैसे अनुकूलित करने देते हैं?",
+    "from": "66e3b8de628b"
+  },
+  "custom.cmp.how": {
+    "text": "<strong>यह कैसे लिखा गया।</strong> तालिका हर टूल के बारे में जो कहती है वह उसके अपने दस्तावेज़ से है, 28 नवंबर 2026 को पढ़ा गया, और उसके नाम और कक्षों से लिंक है। इसके लिए हमने ये टूल नहीं चलाए। “नहीं मिला” का मतलब है कि हमने जो दस्तावेज़ पढ़ा उसमें इसका वर्णन नहीं है, यह नहीं कि टूल यह नहीं कर सकता। अगर कुछ गलत या पुराना हो, तो <a href=\"https://github.com/thirstyeggplant/aubergine/issues\">हमें बताएँ</a>।",
+    "from": "6ef9a80f81b8"
+  },
+  "custom.cmp.tool": {
+    "text": "टूल",
+    "from": "2e53bdcd0740"
+  },
+  "custom.cmp.settings": {
+    "text": "सेटिंग",
+    "from": "74a883a037bc"
+  },
+  "custom.cmp.themes": {
+    "text": "थीम और रंग",
+    "from": "1483a0993975"
+  },
+  "custom.cmp.css": {
+    "text": "आपका अपना CSS",
+    "from": "7551db76a705"
+  },
+  "custom.cmp.code": {
+    "text": "आपका अपना कोड",
+    "from": "90cd41d7d612"
+  },
+  "custom.cmp.templates": {
+    "text": "शीर्षक और स्थिति के टेम्पलेट",
+    "from": "0eb761541eb1"
+  },
+  "custom.cmp.kind.editor": {
+    "text": "एक एडिटर",
+    "from": "120815ad81ae"
+  },
+  "custom.cmp.kind.notes": {
+    "text": "एक नोट्स ऐप",
+    "from": "d4729aaa963c"
+  },
+  "custom.cmp.kind.terminal": {
+    "text": "एक टर्मिनल",
+    "from": "2c2715f8c7d4"
+  },
+  "custom.cmp.kind.mux": {
+    "text": "एक टर्मिनल मल्टीप्लेक्सर",
+    "from": "b643b9019461"
+  },
+  "custom.cmp.kind.aubergine": {
+    "text": "कैनवस पर टर्मिनल",
+    "from": "ef37110351f3"
+  },
+  "custom.cmp.none": {
+    "text": "नहीं मिला",
+    "from": "66d2c65a4ede"
+  },
+  "custom.cmp.vscode.settings": {
+    "text": "<code>settings.json</code> या Settings एडिटर, उपयोगकर्ता से वर्कस्पेस, फ़ोल्डर और भाषा तक परतों में",
+    "from": "6dbfbb0bf531"
+  },
+  "custom.cmp.vscode.themes": {
+    "text": "एक्सटेंशन से <a href=\"https://code.visualstudio.com/docs/configure/themes\">थीम फ़ाइलें</a>; <code>workbench.colorCustomizations</code>, हर थीम या एक के लिए",
+    "from": "a9721fe91937"
+  },
+  "custom.cmp.vscode.css": {
+    "text": "समर्थित नहीं, <a href=\"https://code.visualstudio.com/api/extension-capabilities/overview\">उसका दस्तावेज़ कहता है</a>",
+    "from": "5356dd1be55f"
+  },
+  "custom.cmp.vscode.code": {
+    "text": "एक्सटेंशन, VS Code की अपनी अनुमतियों के साथ पर इंटरफ़ेस के DOM तक पहुँच के बिना; अपने इंटरफ़ेस के लिए webview",
+    "from": "cc389854306b"
+  },
+  "custom.cmp.vscode.templates": {
+    "text": "<code>window.title</code> और टर्मिनल टैब शीर्षक <code>${…}</code> वेरिएबल लेते हैं",
+    "from": "9111f5a25682"
+  },
+  "custom.cmp.zed.settings": {
+    "text": "Settings Editor या टिप्पणियों वाला <code>settings.json</code>; पहले उपयोगकर्ता, फिर प्रोजेक्ट",
+    "from": "12431607ec58"
+  },
+  "custom.cmp.zed.themes": {
+    "text": "स्कीमा वाली <a href=\"https://zed.dev/docs/themes\">JSON थीम फ़ाइलें</a>; एक थीम के लिए <code>theme_overrides</code>; हल्का, गहरा या सिस्टम",
+    "from": "e0b219720c50"
+  },
+  "custom.cmp.zed.code": {
+    "text": "Rust में लिखे और WebAssembly में कंपाइल किए एक्सटेंशन, ऐसी <a href=\"https://zed.dev/docs/extensions/capabilities\">क्षमताओं</a> के साथ जिन्हें आप सीमित कर सकते हैं",
+    "from": "f9b83a4e3656"
+  },
+  "custom.cmp.obsidian.settings": {
+    "text": "हर वॉल्ट के <code>.obsidian</code> फ़ोल्डर की फ़ाइलें",
+    "from": "2a7acb83efb8"
+  },
+  "custom.cmp.obsidian.themes": {
+    "text": "<a href=\"https://docs.obsidian.md/Themes/App+themes/Build+a+theme\">थीम CSS हैं</a>, प्रलेखित CSS वेरिएबल के साथ",
+    "from": "c6b43ef8f558"
+  },
+  "custom.cmp.obsidian.css": {
+    "text": "CSS स्निपेट, एक-एक करके चालू",
+    "from": "71b027b4744c"
+  },
+  "custom.cmp.obsidian.code": {
+    "text": "Obsidian जैसी ही पहुँच वाले JavaScript <a href=\"https://help.obsidian.md/plugin-security\">प्लगइन</a>; प्रतिबंधित मोड बंद होने तक कोई नहीं चलता",
+    "from": "ebe845afbaf3"
+  },
+  "custom.cmp.hyper.settings": {
+    "text": "एक फ़ाइल: प्रलेखित रिलीज़ में <code>.hyper.js</code>, विकास शाखा पर <code>hyper.json</code>",
+    "from": "cc98e8ab46d3"
+  },
+  "custom.cmp.hyper.themes": {
+    "text": "थीम प्लगइन हैं",
+    "from": "48e534e5d2ab"
+  },
+  "custom.cmp.hyper.css": {
+    "text": "खिड़की के लिए <code>css</code>; <code>termCSS</code>, जो संस्करण 2 से <a href=\"https://github.com/vercel/hyper/blob/canary/PLUGINS.md\">टर्मिनल के अक्षरों को सजाता नहीं</a>",
+    "from": "0792e3e69be1"
+  },
+  "custom.cmp.hyper.code": {
+    "text": "Electron और रेंडरर द्वारा लोड किए npm प्लगइन: उसके React कंपोनेंट लपेटते हैं और Redux मिडलवेयर जोड़ते हैं",
+    "from": "7e3468ba9cdd"
+  },
+  "custom.cmp.wezterm.settings": {
+    "text": "एक Lua फ़ाइल, <code>.wezterm.lua</code>",
+    "from": "e2d4cfe9b3ef"
+  },
+  "custom.cmp.wezterm.themes": {
+    "text": "<a href=\"https://wezterm.org/config/appearance.html\">700 से अधिक योजनाएँ</a>; आपकी अपनी Lua या TOML में; अलग रंगों के लिए <code>colors</code>",
+    "from": "852065821910"
+  },
+  "custom.cmp.wezterm.code": {
+    "text": "कॉन्फ़िगरेशन ही Lua है; <a href=\"https://wezterm.org/config/plugins.html\">प्लगइन</a> किसी Git पते से आया Lua हैं",
+    "from": "3c87ef215bdb"
+  },
+  "custom.cmp.wezterm.templates": {
+    "text": "Lua फ़ंक्शन टैब और खिड़की के शीर्षक लौटाते हैं (<a href=\"https://wezterm.org/config/lua/window-events/format-tab-title.html\"><code>format-tab-title</code></a>)",
+    "from": "7c7076a3a34d"
+  },
+  "custom.cmp.tmux.settings": {
+    "text": "फ़ाइल में tmux कमांड; सर्वर, सत्र, खिड़की और पेन के हिसाब से विकल्प",
+    "from": "178293a2f902"
+  },
+  "custom.cmp.tmux.themes": {
+    "text": "<code>status-style</code> और <code>window-style</code> जैसी शैलियाँ",
+    "from": "f43d8249a6c9"
+  },
+  "custom.cmp.tmux.code": {
+    "text": "हुक tmux कमांड चलाते हैं; प्रोग्रामों के लिए कंट्रोल मोड",
+    "from": "47e37dc0de8a"
+  },
+  "custom.cmp.tmux.templates": {
+    "text": "<code>#{…}</code> वाले <a href=\"https://man.openbsd.org/tmux.1#FORMATS\">फ़ॉर्मेट</a>, स्टेटस लाइन, खिड़की सूची, पेन किनारों और शीर्षकों के लिए",
+    "from": "e06333c05625"
+  },
+  "custom.cmp.kitty.settings": {
+    "text": "<code>kitty.conf</code>, include के साथ, बदलने पर दोबारा पढ़ा जाता है",
+    "from": "60f6aaf0744e"
+  },
+  "custom.cmp.kitty.themes": {
+    "text": "थीम एक <code>.conf</code> फ़ाइल है; <a href=\"https://sw.kovidgoyal.net/kitty/kittens/themes/\"><code>kitten themes</code></a> 300 से अधिक में से चुनता है, और गहरे व हल्के के लिए अलग-अलग तय हो सकती है",
+    "from": "1eac8df3e6f7"
+  },
+  "custom.cmp.kitty.code": {
+    "text": "kitty के भीतरी हिस्सों तक पूरी पहुँच वाले Python <a href=\"https://sw.kovidgoyal.net/kitty/kittens/custom/\">kitten</a>; watcher",
+    "from": "1aa5c56cc144"
+  },
+  "custom.cmp.kitty.templates": {
+    "text": "<code>tab_title_template</code>, जहाँ <code>{custom}</code> आपका अपना Python बुलाता है",
+    "from": "72e78b0f5053"
+  },
+  "custom.cmp.ghostty.settings": {
+    "text": "एक <code>key = value</code> फ़ाइल; <code>config-file</code> दूसरी जोड़ता है",
+    "from": "0aed8a057084"
+  },
+  "custom.cmp.ghostty.themes": {
+    "text": "<a href=\"https://ghostty.org/docs/features/theme\">थीम कॉन्फ़िगरेशन फ़ाइलें हैं</a>; एक हल्के के लिए और एक गहरे के लिए",
+    "from": "6e03a766b678"
+  },
+  "custom.cmp.ghostty.code": {
+    "text": "टर्मिनल के ऊपर <a href=\"https://ghostty.org/docs/config/reference#custom-shader\">GLSL शेडर</a>; macOS पर AppleScript",
+    "from": "cde7e57ced35"
+  },
+  "custom.cmp.wt.settings": {
+    "text": "Settings स्क्रीन या <code>settings.json</code>, एक <a href=\"https://github.com/microsoft/terminal/blob/main/doc/cascadia/profiles.schema.json\">JSON स्कीमा</a> के साथ",
+    "from": "1d08016a0bea"
+  },
+  "custom.cmp.wt.themes": {
+    "text": "हर प्रोफ़ाइल की रंग योजनाएँ; खिड़की और टैब के लिए <a href=\"https://learn.microsoft.com/windows/terminal/customize-settings/themes\">थीम</a>, हल्की और गहरी, सिर्फ़ JSON में",
+    "from": "74411fb1735c"
+  },
+  "custom.cmp.wt.code": {
+    "text": "नहीं मिला; दूसरे ऐप JSON टुकड़ों के रूप में प्रोफ़ाइल और रंग योजनाएँ जोड़ते हैं",
+    "from": "3ff970c2f46d"
+  },
+  "custom.cmp.wt.templates": {
+    "text": "नहीं मिला; प्रोफ़ाइल <code>tabTitle</code> और <code>tabColor</code> तय करती है",
+    "from": "2578d12f8fda"
+  },
+  "custom.cmp.iterm2.settings": {
+    "text": "Settings में प्रोफ़ाइल; प्रॉपर्टी-लिस्ट फ़ाइलों के रूप में <a href=\"https://iterm2.com/documentation-dynamic-profiles.html\">Dynamic Profiles</a>",
+    "from": "7c477caf4c27"
+  },
+  "custom.cmp.iterm2.themes": {
+    "text": "उपयोगकर्ता, होस्ट, फ़ोल्डर या जॉब के अनुसार चुनी प्रोफ़ाइल, Shell Integration के साथ",
+    "from": "654dec9e1e7a"
+  },
+  "custom.cmp.iterm2.code": {
+    "text": "एक <a href=\"https://iterm2.com/python-api/\">Python API</a>, Python में स्टेटस बार के हिस्से, AppleScript",
+    "from": "081a02768b0a"
+  },
+  "custom.cmp.iterm2.templates": {
+    "text": "सत्र के नामों, बैज और स्टेटस बार में <a href=\"https://iterm2.com/documentation-scripting-fundamentals.html\">इंटरपोलेटेड स्ट्रिंग</a>, <code>\\(…)</code>",
+    "from": "d543c499cae1"
+  },
+  "custom.cmp.a.settings": {
+    "text": "<code>config.json</code> और Settings, एडिटर के लिए JSON Schema के साथ",
+    "from": "bd438e8036f3"
+  },
+  "custom.cmp.a.themes": {
+    "text": "दस थीम, हल्की, गहरी या सिस्टम जैसी; हर टर्मिनल के लिए एक; हाथ से 35 रंग, हर थीम या एक के लिए",
+    "from": "fa76b50a8212"
+  },
+  "custom.cmp.a.css": {
+    "text": "नहीं। योजना: प्रलेखित हुक वाला <code>custom.css</code>",
+    "from": "4ac770687589"
+  },
+  "custom.cmp.a.code": {
+    "text": "नहीं। योजना: प्लगइन",
+    "from": "f89ee178c319"
+  },
+  "custom.cmp.a.templates": {
+    "text": "नहीं। योजना: टर्मिनल के शीर्षक और सूची की पंक्ति के लिए",
+    "from": "fd37dcfee7f4"
+  },
+  "custom.cmp.p1": {
+    "text": "यहाँ का हर टूल अपनी सेटिंग एक फ़ाइल में रखता है, और VS Code, Zed और Windows Terminal में Aubergine की तरह उसे लिखने वाली एक स्क्रीन भी है। ज़्यादातर में थीम भी एक फ़ाइल है: VS Code और Zed में JSON, Obsidian में CSS, WezTerm में Lua या TOML, kitty और Ghostty में कॉन्फ़िगरेशन फ़ाइल। VS Code, Zed और WezTerm आपको थीम के ऊपर अलग-अलग रंग बदलने देते हैं, जैसे यहाँ <code>appearance.colors</code> करता है।",
+    "from": "b3a5c5fb431c"
+  },
+  "custom.cmp.p2": {
+    "text": "सबसे बड़ा फ़र्क कोड में है। WezTerm का पूरा कॉन्फ़िगरेशन एक Lua प्रोग्राम है, kitty और iTerm2 आपका अपना Python चलाते हैं, और Hyper के प्लगइन उसके इंटरफ़ेस को लपेटने वाला JavaScript हैं; Obsidian और Hyper आपका अपना CSS भी लेते हैं। VS Code के एक्सटेंशन की उसके इंटरफ़ेस के DOM तक पहुँच नहीं है, और वह आपकी अपनी स्टाइलशीट का समर्थन नहीं करता; Zed एक्सटेंशन को WebAssembly के रूप में चलाता है, ऐसी क्षमताओं के साथ जिन्हें आप सीमित कर सकते हैं। tmux, WezTerm, kitty और iTerm2 टेम्पलेट या फ़ंक्शन से शीर्षक और स्टेटस लाइन बनाते हैं।",
+    "from": "9538078a7039"
+  },
+  "custom.cmp.p3": {
+    "text": "आज Aubergine सेटिंग वाले छोर पर है: थीम, रंग और कुंजियाँ एक ऐसी फ़ाइल में जो ख़ुद अपना वर्णन करती है, और एक पेज जो उसका कुछ हिस्सा लिखता है। यह पेज में आपका कोई कोड नहीं चलाता, आपकी स्टाइलशीट नहीं लेता और इसमें टेम्पलेट नहीं हैं। ये <a href=\"/roadmap/#rm-yours\">रोडमैप</a> पर हैं, और बने नहीं हैं।",
+    "from": "94f37707471f"
+  },
+  "custom.cmp.mark": {
+    "text": "Aubergine इस पेज पर नाम लिए गए किसी भी टूल से संबद्ध नहीं है। उनके नाम उनके मालिकों के ट्रेडमार्क हैं।",
+    "from": "f011c5b28706"
+  },
+  "custom.plan.title": {
+    "text": "क्या योजना में है",
+    "from": "e10eed0040ae"
+  },
+  "custom.plan.text": {
+    "text": "आपकी अपनी थीम फ़ाइलें, किसी प्रोजेक्ट या टैग के लिए रूप, टेम्पलेट, एक <code>custom.css</code> और प्लगइन योजना में हैं और बने नहीं हैं: <a href=\"/roadmap/#rm-yours\">रोडमैप</a> देखें।",
+    "from": "a392418737d9"
+  },
+  "custom.q.terminal.q": {
+    "text": "क्या हर टर्मिनल की अलग रंग थीम हो सकती है?",
+    "from": "da02700eeeb8"
+  },
+  "custom.q.terminal.a": {
+    "text": "हाँ। टर्मिनल के मेनू में Theme… उसके भीतरी हिस्से को दस में से किसी भी थीम में बनाता है, पेज चाहे किसी भी थीम में हो। बाकी टर्मिनल उस डिफ़ॉल्ट का पालन करते हैं जो आप टर्मिनलों के लिए तय करते हैं, या पेज का।",
+    "from": "efb1c6b90003"
+  },
+  "custom.q.css.q": {
+    "text": "क्या मैं Aubergine में अपना CSS जोड़ सकता हूँ?",
+    "from": "e4f4bf19de27"
+  },
+  "custom.q.css.a": {
+    "text": "अभी नहीं। अलग-अलग रंग सेटिंग फ़ाइल में हाथ से तय किए जा सकते हैं; प्रलेखित हुक वाला <code>custom.css</code> योजना में है, बना नहीं है।",
+    "from": "332c37400357"
+  },
+  "custom.q.file.q": {
+    "text": "Aubergine की सेटिंग फ़ाइल कहाँ है?",
+    "from": "4378f9f24f9d"
+  },
+  "custom.q.file.a": {
+    "text": "वह Aubergine के डेटा फ़ोल्डर में <code>config.json</code> है। <code>aubergine settings path</code> बताता है कहाँ, और सर्वर शुरू होते समय उसे दिखाता है।",
+    "from": "c3247c2edfe9"
+  },
+  "custom.q.agent.q": {
+    "text": "क्या कोई एजेंट Aubergine का रूप बदल सकता है?",
+    "from": "f2f43a3f85b7"
+  },
+  "custom.q.agent.a": {
+    "text": "सेटिंग नहीं: वे सिर्फ़ आपकी हैं। एजेंट अपने टर्मिनल का नाम रख सकता है और उसका वर्णन कर सकता है, और जिस प्रोग्राम का API टोकन अनुमति दे वह टर्मिनलों का नाम बदल सकता है, टैग लगा सकता है, थीम दे सकता है और कैनवस व्यवस्थित कर सकता है।",
+    "from": "283900c4f919"
+  },
+  "custom.related": {
+    "text": "संबंधित: <a href=\"/too-many-terminal-tabs/\">सही टर्मिनल ढूँढें</a> · <a href=\"/tmux-without-learning-tmux/\">tmux सीखे बिना tmux</a> · <a href=\"/security/\">सुरक्षा और निजता</a> · <a href=\"/faq/\">अक्सर पूछे जाने वाले प्रश्न</a>",
+    "from": "64333f8f5a0d"
+  },
+  "roadmap.yours.title": {
+    "text": "इसे अपना बनाएँ",
+    "from": "34ca8a4540f5"
+  },
+  "roadmap.yours.sub": {
+    "text": "आज की थीम, रंगों और कुंजियों से आगे, पेज का और हिस्सा आपके हिसाब से।",
+    "from": "6fef807ba454"
+  },
+  "roadmap.yours.themes.name": {
+    "text": "आपकी अपनी थीम फ़ाइलें",
+    "from": "ec9cabb5c1c9"
+  },
+  "roadmap.yours.themes.text": {
+    "text": "रंग थीम को एक फ़ाइल के रूप में लिखें और Aubergine के साथ आने वाली दस के बगल में चुनें। कोई एजेंट भी एक प्रस्तावित कर सकता है, और वह आपकी स्वीकृति का इंतज़ार करती है।",
+    "from": "c47421ed6549"
+  },
+  "roadmap.yours.when.name": {
+    "text": "शर्त के अनुसार रूप",
+    "from": "c40ae539d4e8"
+  },
+  "roadmap.yours.when.text": {
+    "text": "किसी प्रोजेक्ट के लिए, या किसी टैग वाले टर्मिनलों के लिए थीम या एक्सेंट, ताकि आप एक नज़र में जान सकें कि आप कहाँ हैं।",
+    "from": "be4953ead5e1"
+  },
+  "roadmap.yours.templates.name": {
+    "text": "टेम्पलेट",
+    "from": "56b564b75c7f"
+  },
+  "roadmap.yours.templates.text": {
+    "text": "अपने टेम्पलेट से तय करें कि टर्मिनल का शीर्षक और सूची की पंक्ति क्या दिखाए।",
+    "from": "21523ce54129"
+  },
+  "roadmap.yours.css.name": {
+    "text": "आपकी अपनी स्टाइलशीट",
+    "from": "2222b72214ec"
+  },
+  "roadmap.yours.css.text": {
+    "text": "पेज में लोड होने वाली एक <code>custom.css</code> फ़ाइल, प्रलेखित और स्थिर रखे गए हुक के साथ।",
+    "from": "a48bd0baabda"
+  },
+  "roadmap.yours.plugins.name": {
+    "text": "प्लगइन",
+    "from": "9514b7ff4860"
+  },
+  "roadmap.yours.plugins.text": {
+    "text": "आपका अपना कोड पूरे नियंत्रण के साथ पेज में लोड, नाम वाले स्लॉट से और उनसे आगे भी। दूसरों के कोड के लिए एक अलग-थलग मोड बाद में आ सकता है।",
+    "from": "e45f18abdc98"
   }
 }
