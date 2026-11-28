@@ -195,13 +195,13 @@ node examples/events/on-waiting.mjs --post https://example.org/hooks/mine
 
 IDs, a time and the terminal's name. Not what the agent asks, not what the terminal showed, not a folder. The address is the one you typed and is never made from anything the server said; a redirect is refused; the request is given 5 seconds and is not tried again; the Aubergine token is not sent there. Such an address is often a secret itself, so the script prints only its host.
 
-This is how you would reach a service of your own, or a chat tool's incoming webhook. A chat tool expects a body of its own shape (often a field named `text`), so for one of those change `bodyOf` in the script, or put a few lines of your own in between. That was not tried against a real chat tool.
+This is how you would reach a service of your own, or a chat tool's incoming webhook, with a body you decide. (For the fixed, signed message a rule sends without any program of yours running, see [Webhooks](webhooks.md).) A chat tool expects a body of its own shape (often a field named `text`), so for one of those change `bodyOf` in the script, or put a few lines of your own in between. That was not tried against a real chat tool.
 
 There is no option that runs a command. Starting a shell because of something an agent caused is a decision to make yourself, in your own program, knowing what is put on the command line.
 
 ## What this is not
 
-**Aubergine does not call anything.** The server sends nothing to an address by itself: no webhook, no e-mail, no chat message. Inside Aubergine, [rules](../README.md#rules-when-something-happens-do-something) can notify the browser or run a saved step when something happens. Reaching anything outside is a program of yours that listens, like the examples, so **the listener has to be running**: what happens while it is not is told later only to a listener that comes back with its last `id` soon enough ([Not missing anything](#not-missing-anything)), and otherwise not at all.
+**A rule can send a webhook; the stream itself calls nothing.** Inside Aubergine, [rules](../README.md#rules-when-something-happens-do-something) can notify the browser, run a saved step, or send one small signed message to an address you wrote into the settings file: [Webhooks](webhooks.md). That message holds IDs, names and fixed words, goes to an address written by hand, and needs no program of yours to be running. Anything more (another body, another address for each event, what an agent asked, e-mail, a chat message of your own wording) is a program of yours that listens, like the examples, so **the listener has to be running**: what happens while it is not is told later only to a listener that comes back with its last `id` soon enough ([Not missing anything](#not-missing-anything)), and otherwise not at all.
 
 **It is on the same computer.** The server listens on `127.0.0.1` only, so the listener runs on the computer Aubergine runs on, unless you have set up a way in from elsewhere: [Using Aubergine from elsewhere](remote.md). An API token is taken the same from there.
 
