@@ -15,6 +15,7 @@ import { Run, Workflow } from './workflows';
 import { TerminalFields } from './fields';
 import { ProjectThemes, ThemeId } from './themes';
 import { Tags } from './tags';
+import { GroupName } from './groups';
 
 import { Found, LINKS_MAX, SessionLink, Suggested, Written } from './links';
 
@@ -274,6 +275,8 @@ export const Session = z.object({
   fields: TerminalFields.default([]),
   /** The color theme its body is drawn in, whatever the page is drawn in. Null: the default for terminals (`terminalThemeOf`). */
   theme: ThemeId.nullable().default(null),
+  /** The name of the group it is in, or null. Terminals with the same name (within a project) are one group; there is no group of its own. Not terminal content, and not written into a project file. */
+  group: GroupName.nullable().default(null),
   /** For a parked session: the canvas it came from and where it sat there. */
   parkedFrom: ParkedPlace.nullable().default(null),
   /** "People only": no token may read this terminal or type into it, whatever its scopes. Only the owner changes this. */

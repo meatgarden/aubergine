@@ -395,6 +395,16 @@ button.list-chip,
   background: var(--accent-soft);
   border-color: var(--accent);
 }
+/* A group's name as a chip in its color: in the list's heading and where a group is chosen. */
+.ui-chip.group-chip {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--text);
+  font-weight: var(--weight-strong);
+  background: color-mix(in srgb, var(--swatch) 22%, var(--surface));
+  border-color: color-mix(in srgb, var(--swatch) 70%, transparent);
+}
 button.list-clear {
   background: transparent;
   border-color: transparent;

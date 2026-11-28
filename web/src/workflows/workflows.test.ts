@@ -42,7 +42,7 @@ const version = WorkflowVersion.parse({
 
 function session(name: string, extra: Partial<Session> = {}): Session {
   return { id: newId(), projectId: newId(), name, createdAt: at, state: 'open', cwd: null, command: 'zsh', note: '', status: NO_STATUS, attention: NO_ATTENTION, noteLog: [], agent: null, lastInputAt: null, lastOutputAt: null, tags: [], fields: [], parkedFrom: null, peopleOnly: false, typedBy: null,
-    recap: null, takesMessages: false, theme: null, untold: null, messages: { unread: 0, from: null, forOwner: 0, paused: 0, at: null }, links: [], written: {}, suggested: {}, found: null, ...extra };
+    recap: null, takesMessages: false, theme: null, group: null, untold: null, messages: { unread: 0, from: null, forOwner: 0, paused: 0, at: null }, links: [], written: {}, suggested: {}, found: null, ...extra };
 }
 
 /** A state with a workflow and `count` sessions on the first canvas. */

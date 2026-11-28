@@ -49,7 +49,7 @@ function session(name: string, extra: Partial<Session> = {}): Session {
     noteLog: [],
     agent: null,
     parkedFrom: null, peopleOnly: false, typedBy: null,
-    recap: null, takesMessages: false, theme: null, untold: null, messages: { unread: 0, from: null, forOwner: 0, paused: 0, at: null }, links: [], written: {}, suggested: {}, found: null,
+    recap: null, takesMessages: false, theme: null, group: null, untold: null, messages: { unread: 0, from: null, forOwner: 0, paused: 0, at: null }, links: [], written: {}, suggested: {}, found: null,
     lastInputAt: null,
     lastOutputAt: null,
     tags: [], fields: [],
@@ -220,7 +220,43 @@ describe('grouping and sorting', () => {
   const { app, main, deploys } = sample();
   const rows = createRowSelector()(app);
   const shape = (items: ReturnType<typeof buildItems>): string[] =>
-    items.map((i) => (i.kind === 'row' ? i.row.session.name : i.kind === 'group' ? `[${i.title} ${i.count}${i.waiting ? ` !${i.waiting}` : ''}${i.collapsed ? ' folded' : ''}]` : `(${i.title})`));
+    items.map((i) =>
+      i.kind === 'row'
+        ? i.row.session.name
+        : i.kind === 'group'
+          ? `[${i.title} ${i.count}${i.waiting ? ` !${i.waiting}` : ''}${i.collapsed ? ' folded' : ''}]`
+          : i.kind === 'set'
+            ? `{${i.name} ${i.count}${i.waiting ? ` !${i.waiting}` : ''}${i.collapsed ? ' folded' : ''}}`
+            : `(${i.title})`,
+    );
+
+  /** The sample with some of its terminals put into groups, by name. */
+  const grouped = (groups: Record<string, string>): Row[] => {
+    let next = app;
+    for (const s of app.sessions) if (groups[s.name]) next = applyEvent(next, { type: 'session.grouped', sessionId: s.id, group: groups[s.name] as string });
+    return createRowSelector()(next);
+  };
+
+  it('puts the terminals of a group together under its heading, where the first of them stands', () => {
+    const withGroup = grouped({ web: 'release', db: 'release' });
+    expect(shape(buildItems(withGroup, view()))).toEqual(['[Main 3 !1]', '(Backend)', 'api', '{release 2 !1}', 'db', 'web', '[Deploys 1]', 'builder', '[Parked 1]', 'old']);
+  });
+
+  it('folds a group: its heading stays and says what waits, its terminals are not listed or walked', () => {
+    const withGroup = grouped({ web: 'release', db: 'release' });
+    const folded = buildItems(withGroup, view({ collapsedGroups: ['set:release'] }));
+    expect(shape(folded)).toEqual(['[Main 3 !1]', '(Backend)', 'api', '{release 2 !1 folded}', '[Deploys 1]', 'builder', '[Parked 1]', 'old']);
+    expect(navigationOrder(folded).map((o) => app.sessions.find((s) => s.id === o.sessionId)?.name)).toEqual(['api', 'builder']);
+  });
+
+  it('by canvas, a group that spans canvases has a heading on each; by group it is whole, the rest last', () => {
+    const across = grouped({ api: 'release', builder: 'release', old: 'archive' });
+    expect(shape(buildItems(across, view()))).toEqual(['[Main 3 !1]', '{release 1}', 'api', '(Backend)', 'db', 'web', '[Deploys 1]', '{release 1}', 'builder', '[Parked 1]', '{archive 1}', 'old']);
+    expect(shape(buildItems(across, view({ grouping: 'group' })))).toEqual(['{archive 1}', 'old', '{release 2}', 'api', 'builder', '[In no group 2 !1]', 'db', 'web']);
+    expect(shape(buildItems(across, view({ grouping: 'group', collapsedGroups: ['set:release', 'no-group'] })))).toEqual(['{archive 1}', 'old', '{release 2 folded}', '[In no group 2 !1 folded]']);
+    // With no group at all, the list by group is the rows alone.
+    expect(shape(buildItems(rows, view({ grouping: 'group' })))).toEqual(['api', 'db', 'web', 'builder', 'old']);
+  });
 
   it('groups by canvas in tab order, frames as sub-headings, parked last', () => {
     expect(shape(buildItems(rows, view()))).toEqual(['[Main 3 !1]', '(Backend)', 'api', 'db', 'web', '[Deploys 1]', 'builder', '[Parked 1]', 'old']);
@@ -291,6 +327,7 @@ describe('how the list is laid out', () => {
   it('is by canvas, then the flat list in each order', () => {
     expect(LAYOUTS.map((l) => [l.id, l.label, l.grouping, l.sort])).toEqual([
       ['canvas', 'By canvas', 'canvas', undefined],
+      ['group', 'By group', 'group', undefined],
       ['flat-canvas', 'Flat, canvas order', 'flat', 'canvas'],
       ['flat-updated', 'Flat, last updated', 'flat', 'updated'],
       ['flat-typed', 'Flat, last typed in', 'flat', 'typed'],
@@ -301,6 +338,8 @@ describe('how the list is laid out', () => {
   it('says which one is chosen: by canvas whatever the order, else the flat list in its order', () => {
     expect(layoutOf(DEFAULT_VIEW)).toBe('canvas');
     expect(layoutOf({ grouping: 'canvas', sort: 'typed' })).toBe('canvas');
+    expect(layoutOf({ grouping: 'group', sort: 'typed' })).toBe('group');
+    expect(parseView({ grouping: 'group' }).grouping).toBe('group');
     expect(layoutOf({ grouping: 'flat', sort: 'canvas' })).toBe('flat-canvas');
     expect(layoutOf({ grouping: 'flat', sort: 'typed' })).toBe('flat-typed');
     expect(layoutOf({ grouping: 'flat', sort: 'name' })).toBe('flat-name');

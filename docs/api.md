@@ -28,7 +28,7 @@ How to create a token, what the scopes mean, the limits and the activity log are
 | [`POST /v1/canvases/{canvasId}/sessions`](#startsession) | Start a session on a canvas | `sessions:write` |
 | [`GET /v1/sessions`](#listsessions) | List every session | `read` |
 | [`GET /v1/sessions/{sessionId}`](#getsession) | One session | `read` |
-| [`PATCH /v1/sessions/{sessionId}`](#updatesession) | Rename or tag a session, change its fields or its color theme, or change its pinned note | `sessions:write` |
+| [`PATCH /v1/sessions/{sessionId}`](#updatesession) | Rename or tag a session, change its fields, its color theme or its group, or change its pinned note | `sessions:write` |
 | [`DELETE /v1/sessions/{sessionId}`](#endsession) | End a session | `sessions:write` |
 | [`POST /v1/sessions/{sessionId}/move`](#movesession) | Move a session to another canvas | `sessions:write` |
 | [`POST /v1/sessions/{sessionId}/park`](#parksession) | Park a session | `sessions:write` |
@@ -679,6 +679,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
       };
     }[];
     theme: string | null;
+    group: string | null;
     parkedFrom: {
       canvasId: string;
       rect: {
@@ -868,6 +869,7 @@ An API token needs the scope `sessions:write`. Sending `command` needs `terminal
       };
     }[];
     theme: string | null;
+    group: string | null;
     parkedFrom: {
       canvasId: string;
       rect: {
@@ -1060,6 +1062,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
       };
     }[];
     theme: string | null;
+    group: string | null;
     parkedFrom: {
       canvasId: string;
       rect: {
@@ -1234,6 +1237,7 @@ An API token needs the scope `read`.
     };
   }[];
   theme: string | null;
+  group: string | null;
   parkedFrom: {
     canvasId: string;
     rect: {
@@ -1333,9 +1337,9 @@ curl -H "Authorization: Bearer $TOKEN" \
 
 ### updateSession
 
-`PATCH /v1/sessions/{sessionId}`: Rename or tag a session, change its fields or its color theme, or change its pinned note.
+`PATCH /v1/sessions/{sessionId}`: Rename or tag a session, change its fields, its color theme or its group, or change its pinned note.
 
-Send any of `name`, `tags`, `fields`, `theme`, `note`. `tags` and `fields` each replace the whole list; `theme` null clears the terminal's own color theme; what is not sent stays as it was. The pinned note is a note, not a property of the session, so it needs the scope for notes.
+Send any of `name`, `tags`, `fields`, `theme`, `group`, `note`. `tags` and `fields` each replace the whole list; `theme` null clears the terminal's own color theme; `group` null takes the terminal out of its group; what is not sent stays as it was. The pinned note is a note, not a property of the session, so it needs the scope for notes.
 
 An API token needs the scope `sessions:write`. Sending `note` needs `notes:write` instead, or as well when other fields are sent.
 
@@ -1352,6 +1356,7 @@ An API token needs the scope `sessions:write`. Sending `note` needs `notes:write
 | `note` | `string` | no |  |
 | `fields` | `{ /** What the value is, in a few words: one line of plain text, wi…` | no | The fields of the terminal, in order: at most 12, each label once. Who set each is the server’s to say: what is sent is the owner’s, except a field sent exactly as it stood, which keeps who set it. |
 | `theme` | `string \| null` | no | The color theme the terminal's body is drawn in, whatever the page is drawn in: one of the IDs of the color themes, built-in or a theme file the server has read (another is refused with 400). `null` clears it: the terminal is then drawn in the default for terminals, or as the page is. |
+| `group` | `string \| null` | no | The name of the group the terminal is in: terminals with the same group name (within a project) are one group, on whatever canvas they are. `null` takes the terminal out of its group. |
 
 **Answer** `200`:
 
@@ -1418,6 +1423,7 @@ An API token needs the scope `sessions:write`. Sending `note` needs `notes:write
     };
   }[];
   theme: string | null;
+  group: string | null;
   parkedFrom: {
     canvasId: string;
     rect: {
@@ -1622,6 +1628,7 @@ An API token needs the scope `sessions:write`.
       };
     }[];
     theme: string | null;
+    group: string | null;
     parkedFrom: {
       canvasId: string;
       rect: {
@@ -1808,6 +1815,7 @@ An API token needs the scope `sessions:write`.
     };
   }[];
   theme: string | null;
+  group: string | null;
   parkedFrom: {
     canvasId: string;
     rect: {
@@ -1989,6 +1997,7 @@ An API token needs the scope `sessions:write`.
       };
     }[];
     theme: string | null;
+    group: string | null;
     parkedFrom: {
       canvasId: string;
       rect: {
@@ -12039,6 +12048,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
     };
   }[];
   theme: string | null;
+  group: string | null;
   parkedFrom: {
     canvasId: string;
     rect: {
@@ -12216,6 +12226,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
     };
   }[];
   theme: string | null;
+  group: string | null;
   parkedFrom: {
     canvasId: string;
     rect: {

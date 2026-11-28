@@ -310,6 +310,7 @@ export type ListCanvasSessionsResult = {
       };
     }[];
     theme: string | null;
+    group: string | null;
     parkedFrom: {
       canvasId: string;
       rect: {
@@ -484,6 +485,7 @@ export type StartSessionResult = {
       };
     }[];
     theme: string | null;
+    group: string | null;
     parkedFrom: {
       canvasId: string;
       rect: {
@@ -666,6 +668,7 @@ export type ListSessionsResult = {
       };
     }[];
     theme: string | null;
+    group: string | null;
     parkedFrom: {
       canvasId: string;
       rect: {
@@ -819,6 +822,7 @@ export type GetSessionResult = {
     };
   }[];
   theme: string | null;
+  group: string | null;
   parkedFrom: {
     canvasId: string;
     rect: {
@@ -921,6 +925,8 @@ export type UpdateSessionBody = {
   }[];
   /** The color theme the terminal's body is drawn in, whatever the page is drawn in: one of the IDs of the color themes, built-in or a theme file the server has read (another is refused with 400). `null` clears it: the terminal is then drawn in the default for terminals, or as the page is. */
   theme?: string | null;
+  /** The name of the group the terminal is in: terminals with the same group name (within a project) are one group, on whatever canvas they are. `null` takes the terminal out of its group. */
+  group?: string | null;
 };
 
 export type UpdateSessionResult = {
@@ -985,6 +991,7 @@ export type UpdateSessionResult = {
     };
   }[];
   theme: string | null;
+  group: string | null;
   parkedFrom: {
     canvasId: string;
     rect: {
@@ -1147,6 +1154,7 @@ export type MoveSessionResult = {
       };
     }[];
     theme: string | null;
+    group: string | null;
     parkedFrom: {
       canvasId: string;
       rect: {
@@ -1309,6 +1317,7 @@ export type ParkSessionResult = {
     };
   }[];
   theme: string | null;
+  group: string | null;
   parkedFrom: {
     canvasId: string;
     rect: {
@@ -1466,6 +1475,7 @@ export type RestoreSessionResult = {
       };
     }[];
     theme: string | null;
+    group: string | null;
     parkedFrom: {
       canvasId: string;
       rect: {
@@ -9562,6 +9572,7 @@ export type ProtectSessionResult = {
     };
   }[];
   theme: string | null;
+  group: string | null;
   parkedFrom: {
     canvasId: string;
     rect: {
@@ -9718,6 +9729,7 @@ export type SetTakesMessagesResult = {
     };
   }[];
   theme: string | null;
+  group: string | null;
   parkedFrom: {
     canvasId: string;
     rect: {
@@ -11615,7 +11627,7 @@ export interface Client {
    */
   getSession(args: { sessionId: string } & CallOptions): Promise<GetSessionResult>;
   /**
-   * Rename or tag a session, change its fields or its color theme, or change its pinned note.
+   * Rename or tag a session, change its fields, its color theme or its group, or change its pinned note.
    *
    * `PATCH /v1/sessions/{sessionId}`. Scope: `sessions:write`.
    */

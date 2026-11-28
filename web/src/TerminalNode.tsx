@@ -338,6 +338,20 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
                 <button
                   type="button"
                   role="menuitem"
+                  aria-label={`Group of ${name}`}
+                  title={hint('terminal.group', session?.group ? `In the group ${session.group}` : 'Put it into a group with other terminals')}
+                  data-testid="terminal-group"
+                  onClick={() => {
+                    actHere('terminal.group');
+                  }}
+                >
+                  Group…
+                </button>
+              )}
+              {draft === null && (
+                <button
+                  type="button"
+                  role="menuitem"
                   aria-label={`Theme of ${name}`}
                   title={hint('terminal.theme', 'The color theme its body is drawn in, whatever the page is drawn in')}
                   data-testid="terminal-theme"

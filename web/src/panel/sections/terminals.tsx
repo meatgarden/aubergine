@@ -6,6 +6,7 @@ import { SCOPE_FILTER, TAG_FILTER, TEXT_FILTER, filtersVersion, listFilters, sub
 import { listModel, listSource } from '../../list-model';
 import { recapTitle } from '../../Recap';
 import { colorClass, colorStyle } from '../../color';
+import { toggleGroupFold } from '../../group-actions';
 import { hint } from '../../shortcuts';
 import { atThisComputer, currentCanvas, useApp } from '../../store';
 import {
@@ -203,6 +204,8 @@ function TerminalsSection() {
 
   const toggleGroup = (id: string): void =>
     setView({ collapsedGroups: view.collapsedGroups.includes(id) ? view.collapsedGroups.filter((g) => g !== id) : [...view.collapsedGroups, id] });
+  /** A group of terminals folds in the list and on the canvas alike. */
+  const toggleSet = (name: string): void => toggleGroupFold(name);
 
   const scoped = view.filters.includes(SCOPE_FILTER);
   const whole = useApp((s) => s.whole);
@@ -405,6 +408,18 @@ function TerminalsSection() {
                   </button>
                 );
               }
+              if (item.kind === 'set') {
+                return (
+                  <button key={`s:${item.key}`} type="button" className={`list-group list-set${item.indented ? ' indented' : ''}`} style={style} aria-expanded={!item.collapsed} aria-label={`Group ${item.name}: ${item.count} ${item.count === 1 ? 'terminal' : 'terminals'}${item.collapsed ? ', folded' : ''}`} title={`${item.collapsed ? 'Show' : 'Hide'} the terminals of this group, here and on the canvas${item.waiting > 0 ? `. ${item.waiting} waiting for you` : ''}`} onClick={() => toggleSet(item.name)} data-testid="list-set" data-group={item.name}>
+                    <span className="list-chevron" aria-hidden="true">
+                      {item.collapsed ? '▸' : '▾'}
+                    </span>
+                    <span className={`ui-chip group-chip ${colorClass(item.color)}`}>{item.name}</span>
+                    <span className="list-count">{item.count}</span>
+                    {item.collapsed && item.waiting > 0 && <span className="list-set-waiting">{item.waiting} waiting</span>}
+                  </button>
+                );
+              }
               if (item.kind === 'frame') {
                 return (
                   <div key={`f:${item.id}`} className="list-heading" style={style} data-testid="list-heading">
@@ -482,6 +497,7 @@ export function terminalActions(session: Row['session'], where: { here: boolean;
     { key: 'details', label: 'Details' },
     { key: 'rename', label: 'Rename', command: 'terminal.rename' },
     { key: 'tags', label: 'Tags…', command: 'terminal.tags' },
+    { key: 'group', label: 'Group…', testid: 'row-group', command: 'terminal.group' },
     { key: 'theme', label: 'Theme…', testid: 'row-theme', command: 'terminal.theme' },
     ...(exited || !where.desktop ? [] : [{ key: 'desktop', label: 'Open on desktop', testid: 'row-open-desktop', command: 'terminal.openOnDesktop' as const }]),
     ...(exited ? [] : [{ key: 'tab', label: 'Open in new browser tab', testid: 'row-open-tab', command: 'terminal.openInNewTab' as const }]),

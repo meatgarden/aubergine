@@ -1044,6 +1044,75 @@ code {
   white-space: nowrap;
   font-weight: var(--weight-strong);
 }
+/* ---------- Groups of terminals ---------- */
+
+/* The outline round a group's terminals on the canvas. It is worked out from where they are; only its label takes the pointer. */
+.group-outline {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  border: 1px solid color-mix(in srgb, var(--swatch) 70%, transparent);
+  border-radius: var(--radius-surface);
+  pointer-events: none;
+}
+.group-outline.is-folded {
+  background: color-mix(in srgb, var(--swatch) 22%, var(--surface));
+}
+.group-title {
+  pointer-events: auto;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: var(--space-8);
+  max-width: 100%;
+  padding: 0 var(--space-1);
+  color: var(--text);
+  cursor: grab;
+  user-select: none;
+}
+.group-title:active {
+  cursor: grabbing;
+}
+.group-outline:not(.is-folded) .group-title {
+  width: max-content;
+  background: color-mix(in srgb, var(--swatch) 22%, var(--surface));
+  border-bottom: 1px solid color-mix(in srgb, var(--swatch) 70%, transparent);
+  border-right: 1px solid color-mix(in srgb, var(--swatch) 70%, transparent);
+  border-radius: var(--radius-surface) 0 var(--radius-control) 0;
+}
+.group-name {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: var(--weight-strong);
+}
+.group-count {
+  flex: none;
+  color: var(--text-muted);
+  font-size: var(--font-meta);
+  white-space: nowrap;
+}
+.group-title .ui-menu-button {
+  margin-left: auto;
+}
+.list-set {
+  border-top: none;
+  background: none;
+}
+.list-set.indented {
+  padding-left: var(--space-6);
+}
+.list-set .group-chip {
+  flex: 0 1 auto;
+  min-width: 0;
+}
+.list-set-waiting {
+  color: var(--attention-text);
+  font-size: var(--font-meta);
+}
 .react-flow__node-frame .react-flow__resize-control {
   pointer-events: auto;
 }

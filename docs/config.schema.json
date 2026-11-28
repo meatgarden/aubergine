@@ -3808,6 +3808,63 @@
             }
           ]
         },
+        "terminal.group": {
+          "description": "The key of terminal.group: a chord such as \"Ctrl+Meta+J\", a list of chords, or null for no key.",
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 100
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "maxLength": 100
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "group.fold": {
+          "description": "The key of group.fold: a chord such as \"Ctrl+Meta+J\", a list of chords, or null for no key.",
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 100
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "maxLength": 100
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "list.byGroup": {
+          "description": "The key of list.byGroup: a chord such as \"Ctrl+Meta+J\", a list of chords, or null for no key.",
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 100
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "maxLength": 100
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
         "panel.toggle": {
           "description": "The key of panel.toggle: a chord such as \"Ctrl+Meta+J\", a list of chords, or null for no key.",
           "anyOf": [
@@ -6022,6 +6079,63 @@
         },
         "terminal.theme": {
           "description": "The key of terminal.theme: a chord such as \"Ctrl+Meta+J\", a list of chords, or null for no key.",
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 100
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "maxLength": 100
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "terminal.group": {
+          "description": "The key of terminal.group: a chord such as \"Ctrl+Meta+J\", a list of chords, or null for no key.",
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 100
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "maxLength": 100
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "group.fold": {
+          "description": "The key of group.fold: a chord such as \"Ctrl+Meta+J\", a list of chords, or null for no key.",
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 100
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "maxLength": 100
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "list.byGroup": {
+          "description": "The key of list.byGroup: a chord such as \"Ctrl+Meta+J\", a list of chords, or null for no key.",
           "anyOf": [
             {
               "type": "string",

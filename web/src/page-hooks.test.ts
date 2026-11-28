@@ -56,7 +56,7 @@ const session = (over: Partial<Session> = {}): Session => ({
   typedBy: null,
   recap: null,
   takesMessages: false,
-  theme: null,
+  theme: null, group: null,
   untold: null,
   messages: { unread: 0, from: null, forOwner: 0, paused: 0, at: null },
   links: [],

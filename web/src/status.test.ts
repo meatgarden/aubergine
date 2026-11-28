@@ -16,7 +16,7 @@ const base: Session = {
   noteLog: [],
   agent: null,
   parkedFrom: null, peopleOnly: false, typedBy: null,
-    recap: null, takesMessages: false, theme: null, untold: null, messages: { unread: 0, from: null, forOwner: 0, paused: 0, at: null }, links: [], written: {}, suggested: {}, found: null,
+    recap: null, takesMessages: false, theme: null, group: null, untold: null, messages: { unread: 0, from: null, forOwner: 0, paused: 0, at: null }, links: [], written: {}, suggested: {}, found: null,
     lastInputAt: null,
     lastOutputAt: null,
     tags: [], fields: [],
