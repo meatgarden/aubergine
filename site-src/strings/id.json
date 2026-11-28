@@ -3199,6 +3199,10 @@
     "text": "<strong>Layar tinjauan adalah kendali untuk item library.</strong> Sebuah item adalah instruksi yang akan diikuti agen dengan segala yang boleh dilakukan agen itu. Jangan menginstal apa yang belum Anda baca.",
     "from": "1972614790c0"
   },
+  "security.not.plugins": {
+    "text": "<strong>Plugin berjalan sebagai Anda.</strong> Plugin adalah kode Anda sendiri yang dimuat halaman setelah Anda menyalakannya di Settings → Plugins. Ia dapat membaca setiap terminal, mengetik ke terminal mana pun, dan melakukan apa saja yang bisa dilakukan halaman; ia tidak berada dalam sandbox. Ia hanya berjalan seperti berkasnya saat Anda menyalakannya, jadi kode yang berubah tidak berjalan tanpa diketahui, tetapi agen di terminal juga berjalan sebagai Anda dan bisa menulis plugin serta pengaturan yang menyalakannya. Sakelar itu catatan, bukan kunci.",
+    "from": "934e6eb6cc73"
+  },
   "security.not.guide": {
     "text": "<strong>Panduan untuk agen adalah saran</strong>, bukan kunci.",
     "from": "79f0576917ce"
@@ -5191,6 +5195,26 @@
     "text": "Jika sebuah aturan merusak halaman, buka dengan <code>?plain</code> setelah alamatnya: halaman dikirim tanpa stylesheet Anda. Tidak ada yang disebut stylesheet yang diambil dari alamat lain: gambar, font, atau stylesheet datang dari server ini atau dari data sebaris, sehingga potongan yang ditempel tidak bisa mengirim isi halaman Anda ke tempat lain. Itu pengaman untuk berkas yang Anda tulis atau tempel, bukan sandbox. Baru dicoba di Chromium saja.",
     "from": "7cec576ea647"
   },
+  "custom.plugin.title": {
+    "text": "Kode Anda sendiri: plugin",
+    "from": "a35c5d0a8022"
+  },
+  "custom.plugin.text": {
+    "text": "Melampaui pengaturan dan stylesheet, tulis kode: plugin adalah modul JavaScript milik Anda di <code>plugins/&lt;id&gt;/</code> dalam folder data, dengan <code>plugin.json</code> yang menamainya. Halaman mengimpornya apa adanya, tanpa langkah build, dan memberinya satu objek, <code>aubergine</code>: bagian panel samping, filter daftar, placeholder untuk judul atau baris, perintah di palet, cara melihat sebuah run, status dan setiap perubahan saat terjadi, serta setiap panggilan yang dilakukan halaman. <code>aubergine plugin new &lt;id&gt;</code> menulis satu untuk memulai.",
+    "from": "b196c36fa6d5"
+  },
+  "custom.plugin.asyou": {
+    "text": "<strong>Plugin berjalan di halaman sebagai Anda, dan tidak ada yang memisahkannya.</strong> Ia dapat membaca setiap terminal, mengetik ke terminal mana pun, dan mengubah apa pun di halaman. Ia tidak berada dalam sandbox. Ia hanya berjalan setelah Anda menyalakannya di <strong>Settings → Plugins</strong>, dan hanya seperti berkasnya saat itu: berkas yang berubah tidak dimuat sampai Anda melihatnya lagi. Itu mencegah kode berjalan tanpa sengaja; itu bukan kunci, karena agen di terminal juga berjalan sebagai Anda dan bisa menulis berkas pengaturan. Nyalakan hanya yang Anda tulis atau sudah Anda baca.",
+    "from": "16f443abcf24"
+  },
+  "custom.plugin.api": {
+    "text": "Anggota <code>aubergine</code> tercantum di <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/plugins.md\">docs/plugins.md</a> dan dari satu rilis ke rilis berikutnya hanya ditambah; apa pun yang dijangkau plugin di luar itu bisa berubah. Satu perintah di palet, dalam beberapa baris:",
+    "from": "ce92bb9a9099"
+  },
+  "custom.plugin.out": {
+    "text": "Jika plugin merusak halaman, buka dengan <code>?plain</code> setelah alamatnya: tidak ada plugin yang dimuat, dan stylesheet Anda ditinggalkan. Plugin yang gagal disebutkan di Settings, dan halaman serta plugin lain tetap berjalan. Saat dimatikan, semua yang ditambahkannya lewat <code>aubergine</code> langsung hilang; yang dilakukannya di luar itu hilang dengan memuat ulang. Baru dicoba di Chromium saja.",
+    "from": "6b1c8303252c"
+  },
   "custom.file.title": {
     "text": "Satu berkas pengaturan yang menjelaskan dirinya sendiri",
     "from": "9d7e735d280e"
@@ -5464,8 +5488,8 @@
     "from": "7db23532c40d"
   },
   "custom.cmp.a.code": {
-    "text": "Tidak. Direncanakan: plugin",
-    "from": "f89ee178c319"
+    "text": "Ya: plugin, modul JavaScript yang berjalan di halaman sebagai Anda, lewat API yang terdokumentasi dan di luarnya. Tanpa sandbox",
+    "from": "96c911a66f1f"
   },
   "custom.cmp.a.templates": {
     "text": "Dua, untuk judul terminal dan baris daftar: teks dengan placeholder seperti <code>{state}</code> dan <code>{field:Ticket}</code>",
@@ -5480,8 +5504,8 @@
     "from": "9538078a7039"
   },
   "custom.cmp.p3": {
-    "text": "Aubergine saat ini berada di sisi pengaturan, dan selangkah lebih jauh: tema, warna, dan tombol dalam file yang menjelaskan dirinya sendiri, halaman yang menulis sebagian pengaturan, templat untuk apa yang dikatakan judul terminal dan barisnya, dan stylesheet Anda sendiri dengan kait yang dijaga tetap stabil. Ia tidak menjalankan kode Anda di halaman: plugin ada di <a href=\"/roadmap/#rm-yours\">roadmap</a>, dan belum dibuat.",
-    "from": "4315d5e6e417"
+    "text": "Aubergine kini menjangkau dari sisi pengaturan sampai ke kode: tema, warna, dan tombol dalam berkas yang menjelaskan dirinya sendiri, halaman yang menulis sebagian pengaturan, templat untuk apa yang dikatakan judul terminal dan barisnya, stylesheet milik Anda dengan kait yang dijaga stabil, dan plugin, JavaScript Anda sendiri di halaman dengan API yang hanya bertambah. Plugin berjalan dengan semua yang bisa dilakukan halaman; mode sandbox untuk plugin orang lain ada di <a href=\"/roadmap/#rm-yours\">peta jalan</a>, dan belum dibangun.",
+    "from": "35e798f5a422"
   },
   "custom.cmp.mark": {
     "text": "Aubergine tidak berafiliasi dengan alat mana pun yang disebut di halaman ini. Nama-nama itu adalah merek dagang pemiliknya masing-masing.",
@@ -5492,8 +5516,8 @@
     "from": "e10eed0040ae"
   },
   "custom.plan.text": {
-    "text": "Plugin, kode Anda sendiri di halaman, direncanakan dan belum dibuat: lihat <a href=\"/roadmap/#rm-yours\">roadmap</a>.",
-    "from": "5889d38036ea"
+    "text": "Cara menjalankan plugin tulisan orang lain dalam sandbox, dan memasangnya lewat layar tinjauan, direncanakan dan belum dibangun: lihat <a href=\"/roadmap/#rm-yours\">peta jalan</a>.",
+    "from": "3d1b428010be"
   },
   "custom.q.terminal.q": {
     "text": "Bisakah setiap terminal punya tema warna yang berbeda?",
@@ -5510,6 +5534,14 @@
   "custom.q.css.a": {
     "text": "Bisa: <code>custom.css</code> di folder data (<code>aubergine css new</code> menulis satu untuk memulai). Ia ditautkan paling akhir di halaman, sejak gambar pertama, dan kait yang bisa diandalkannya tercantum di docs/hooks.md. Tambahkan <code>?plain</code> ke alamat halaman untuk melihatnya tanpa itu.",
     "from": "8ebf56535e5d"
+  },
+  "custom.q.code.q": {
+    "text": "Bisakah saya menulis plugin sendiri untuk Aubergine?",
+    "from": "d5b081c290fa"
+  },
+  "custom.q.code.a": {
+    "text": "Bisa: modul JavaScript di <code>plugins/&lt;id&gt;/</code> dalam folder data (<code>aubergine plugin new &lt;id&gt;</code> menulis satu untuk memulai), dinyalakan di Settings → Plugins. Ia berjalan di halaman sebagai Anda, dengan semua yang bisa dilakukan halaman; ia tidak berada dalam sandbox.",
+    "from": "2cdaf7e15ca1"
   },
   "custom.q.file.q": {
     "text": "Di mana berkas pengaturan Aubergine?",
@@ -5536,15 +5568,15 @@
     "from": "34ca8a4540f5"
   },
   "roadmap.yours.sub": {
-    "text": "Lebih banyak bagian halaman yang Anda bentuk, melampaui tema, warna, tombol, templat, dan stylesheet Anda sendiri hari ini.",
-    "from": "903ac9c0326e"
+    "text": "Lebih banyak bagian halaman yang Anda bentuk, melampaui tema, warna, tombol, templat, stylesheet Anda sendiri, dan plugin Anda sendiri saat ini.",
+    "from": "f6ef69a6539a"
   },
   "roadmap.yours.plugins.name": {
-    "text": "Plugin",
-    "from": "9514b7ff4860"
+    "text": "Plugin orang lain",
+    "from": "eea2e52b2e70"
   },
   "roadmap.yours.plugins.text": {
-    "text": "Kode Anda sendiri yang dimuat ke halaman dengan kendali penuh, melalui slot bernama maupun di luarnya. Mode terisolasi untuk kode orang lain mungkin hadir kemudian.",
-    "from": "e45f18abdc98"
+    "text": "Mode sandbox untuk plugin yang ditulis orang lain, dengan kurang dari segalanya, dan memasangnya lewat layar tinjauan. Plugin Anda sendiri, yang berjalan di halaman sebagai Anda dengan kendali penuh, sudah dibangun.",
+    "from": "08c850bebd87"
   }
 }

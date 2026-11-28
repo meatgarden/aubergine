@@ -7,7 +7,7 @@ describe('every setting, as data', () => {
     const groups = everySetting(DEFAULT_SETTINGS);
     expect(groups.flatMap((group) => group.rows.map((row) => row.key))).toEqual(settingRows().map((row) => row.key));
     expect(groups.flatMap((group) => group.rows).filter((row) => row.differs)).toEqual([]);
-    expect(groups.filter((group) => group.pageOwn).map((group) => group.key)).toEqual(['font', 'theme', 'appearance', 'shortcuts', 'shortcutsInAppWindow']);
+    expect(groups.filter((group) => group.pageOwn).map((group) => group.key)).toEqual(['font', 'theme', 'appearance', 'shortcuts', 'shortcutsInAppWindow', 'plugins']);
   });
 
   it('says a value now, its default where it differs, a list by its count, and the line to add with the value now', () => {

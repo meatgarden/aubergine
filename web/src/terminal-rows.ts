@@ -257,7 +257,11 @@ export function activeFilters(view: ListView): string[] {
 /** One removable chip per thing that narrows the list. */
 export function filterChips(view: ListView): { key: string; label: string; remove: Partial<ListView> }[] {
   return [
-    ...view.filters.map((id) => ({ key: id, label: filterById(id)?.label ?? id, remove: { filters: view.filters.filter((f) => f !== id) } })),
+    // A filter that is not registered (a plugin's that is not loaded) narrows nothing, so it has no chip.
+    ...view.filters.flatMap((id) => {
+      const filter = filterById(id);
+      return filter ? [{ key: id, label: filter.label, remove: { filters: view.filters.filter((f) => f !== id) } }] : [];
+    }),
     ...(view.text.trim() ? [{ key: TEXT_FILTER, label: `“${view.text.trim()}”`, remove: { text: '' } }] : []),
     ...view.tags.map((tag) => ({ key: `${TAG_FILTER}:${tag}`, label: `#${tag}`, remove: { tags: view.tags.filter((t) => t !== tag) } })),
   ];

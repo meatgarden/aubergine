@@ -986,6 +986,14 @@ export const COMMANDS: readonly Command[] = [
     available: always,
     run: (state) => state.showSettings('stylesheet'),
   },
+  {
+    id: 'plugins.show',
+    title: 'Plugins',
+    description: 'Opens Settings at Plugins: your own code that runs in this page as you, which of it is switched on, what failed, and switching one on or off.',
+    group: 'View',
+    available: always,
+    run: (state) => state.showSettings('plugins'),
+  },
   ...COLOR_THEMES.map((theme): Command => ({
     id: `theme.use.${theme.id}` as const,
     title: `Color theme: ${theme.name}`,

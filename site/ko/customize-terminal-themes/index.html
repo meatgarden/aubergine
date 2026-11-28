@@ -125,6 +125,7 @@
       "mainEntity": [
         { "@type": "Question", "name": "터미널마다 다른 색 테마를 쓸 수 있나요?", "acceptedAnswer": { "@type": "Answer", "text": "예. 터미널 메뉴의 Theme…로 페이지의 테마와 상관없이 본문을 열 가지 테마 중 어느 것으로든 그릴 수 있습니다. 태그가 있는 터미널은 Settings에서 그 태그로 테마를 받을 수 있고, 나머지는 터미널 기본값이나 페이지를 따릅니다." } },
         { "@type": "Question", "name": "Aubergine에 내 CSS를 넣을 수 있나요?", "acceptedAnswer": { "@type": "Answer", "text": "네. 데이터 폴더의 custom.css입니다(aubergine css new가 시작할 파일을 써 줍니다). 첫 그리기부터 페이지의 마지막에 연결되며, 기댈 수 있는 훅은 docs/hooks.md에 있습니다. 페이지 주소에 ?plain을 붙이면 그것 없이 볼 수 있습니다." } },
+        { "@type": "Question", "name": "Aubergine 용 플러그인을 직접 쓸 수 있나요?", "acceptedAnswer": { "@type": "Answer", "text": "네. 데이터 폴더의 plugins/\u003cid\u003e/ 에 JavaScript 모듈을 두고(aubergine plugin new \u003cid\u003e 가 시작할 것을 써 줍니다) Settings → Plugins 에서 켭니다. 페이지 안에서 당신으로, 페이지가 할 수 있는 모든 것을 가지고 실행됩니다. 샌드박스가 아닙니다." } },
         { "@type": "Question", "name": "Aubergine의 설정 파일은 어디에 있나요?", "acceptedAnswer": { "@type": "Answer", "text": "Aubergine 데이터 폴더의 config.json입니다. aubergine settings path가 위치를 알려 주고, 서버도 시작할 때 보여 줍니다." } },
         { "@type": "Question", "name": "에이전트가 Aubergine의 모양을 바꿀 수 있나요?", "acceptedAnswer": { "@type": "Answer", "text": "설정은 아닙니다. 설정은 오직 여러분의 것입니다. 에이전트는 자기 터미널의 이름을 정하고 설명할 수 있으며, 여러분이 읽고 받아들이기를 기다리는 색상 테마를 제안할 수 있습니다. API 토큰이 허락하는 프로그램은 터미널의 이름을 바꾸고 태그를 달고 테마를 주고 캔버스를 정리할 수 있으며, 테마를 제안할 수도 있습니다." } }
       ]
@@ -228,6 +229,20 @@
 }</code></pre>
     <p>규칙 때문에 페이지가 깨지면 주소 뒤에 <code>?plain</code>을 붙여 여세요. 스타일시트 없이 전송됩니다. 스타일시트가 가리키는 것은 다른 주소에서 가져오지 않습니다. 그림, 글꼴, 스타일시트는 이 서버나 인라인 데이터에서만 오므로, 붙여 넣은 코드 조각이 페이지의 내용을 다른 곳으로 보낼 수 없습니다. 이는 직접 쓰거나 붙여 넣은 파일을 위한 보호 장치이지 샌드박스가 아닙니다. Chromium에서만 시험했습니다.</p>
 
+    <h2 id="plugins">내 코드: 플러그인</h2>
+    <p>설정과 스타일시트를 넘어서면 코드를 씁니다. 플러그인은 데이터 폴더의 <code>plugins/&lt;id&gt;/</code> 에 있는 나만의 JavaScript 모듈이며, 이름을 적은 <code>plugin.json</code> 이 함께 있습니다. 페이지는 빌드 단계 없이 그대로 가져와 객체 하나, <code>aubergine</code> 을 건넵니다. 사이드 패널의 섹션, 목록의 필터, 제목이나 행의 자리표시자, 팔레트의 명령, 실행을 보는 방식, 상태와 일어나는 대로의 모든 변경, 그리고 페이지가 하는 모든 호출입니다. <code>aubergine plugin new &lt;id&gt;</code> 가 시작할 것을 하나 써 줍니다.</p>
+    <p class="note"><strong>플러그인은 페이지 안에서 당신으로 실행되며, 무엇도 그것을 떼어 놓지 않습니다.</strong> 모든 터미널을 읽고, 어느 터미널에든 입력하고, 페이지의 무엇이든 바꿀 수 있습니다. 샌드박스가 아닙니다. <strong>Settings → Plugins</strong> 에서 켠 뒤에만, 그리고 켰을 때의 파일 그대로만 실행됩니다. 바뀐 파일은 다시 볼 때까지 불러오지 않습니다. 이것은 코드가 실수로 실행되는 것을 막지만 잠금은 아닙니다. 터미널의 에이전트도 당신으로 실행되어 설정 파일을 쓸 수 있기 때문입니다. 직접 썼거나 읽은 것만 켜세요.</p>
+    <p><code>aubergine</code> 의 멤버는 <a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/plugins.md">docs/plugins.md</a> 에 있고 릴리스마다 추가되기만 합니다. 플러그인이 그 너머에서 닿는 것은 바뀔 수 있습니다. 팔레트의 명령 하나는 몇 줄이면 됩니다.</p>
+    <pre><code>// plugins/hello/index.js
+export function activate(aubergine) {
+  aubergine.commands.add({
+    id: 'hello',
+    title: 'Say hello',
+    run: () =&gt; aubergine.say('Hello from my plugin'),
+  });
+}</code></pre>
+    <p>플러그인이 페이지를 망가뜨리면 주소 뒤에 <code>?plain</code> 을 붙여 여세요. 어떤 플러그인도 불러오지 않고, 스타일시트도 빠집니다. 실패한 플러그인은 Settings 에 표시되고, 페이지와 다른 플러그인은 계속 동작합니다. 끄면 <code>aubergine</code> 으로 더한 것은 바로 사라지고, 그 너머에서 한 일은 새로고침으로 사라집니다. Chromium 에서만 시험했습니다.</p>
+
     <h2 id="settings-file">스스로를 설명하는 설정 파일 하나</h2>
     <p>이 모든 것은 Aubergine 데이터 폴더의 <code>config.json</code>에 저장되며, 위치는 <code>aubergine settings path</code>가 알려 줍니다. 어떤 키든 빼도 됩니다. 읽을 수 없는 파일은 기본값을 뜻할 뿐, 서버가 시작되지 않는 일은 없습니다. 페이지의 Settings는 바꾼 키만 쓰고, 파일의 나머지는 쓴 그대로 둡니다.</p>
     <p>서버는 시작할 때마다 파일 옆에 <code>config.schema.json</code>을 씁니다. 한 줄만 더하면 JSON Schema를 읽는 편집기가 모든 키를 설명하고 자동 완성합니다.</p>
@@ -261,21 +276,22 @@ aubergine settings schema</code></pre>
           <tr><td><a href="https://ghostty.org/docs/config">Ghostty</a><br>터미널</td><td data-label="설정"><code>key = value</code> 파일; <code>config-file</code>로 다른 파일 추가</td><td data-label="테마와 색"><a href="https://ghostty.org/docs/features/theme">테마는 설정 파일</a>; 밝을 때 하나, 어두울 때 하나</td><td data-label="내 CSS">찾지 못함</td><td data-label="내 코드">터미널 위에 덧입히는 <a href="https://ghostty.org/docs/config/reference#custom-shader">GLSL 셰이더</a>; macOS에서는 AppleScript</td><td data-label="제목과 상태 표시 템플릿">찾지 못함</td></tr>
           <tr><td><a href="https://learn.microsoft.com/windows/terminal/customize-settings/color-schemes">Windows Terminal</a><br>터미널</td><td data-label="설정">Settings 화면 또는 <code>settings.json</code>, <a href="https://github.com/microsoft/terminal/blob/main/doc/cascadia/profiles.schema.json">JSON 스키마</a> 있음</td><td data-label="테마와 색">프로필별 색 구성; 창과 탭의 <a href="https://learn.microsoft.com/windows/terminal/customize-settings/themes">테마</a>는 밝게와 어둡게, JSON에서만</td><td data-label="내 CSS">찾지 못함</td><td data-label="내 코드">찾지 못함; 다른 앱이 JSON 조각으로 프로필과 색 구성을 추가</td><td data-label="제목과 상태 표시 템플릿">찾지 못함; 프로필이 <code>tabTitle</code>과 <code>tabColor</code>를 정함</td></tr>
           <tr><td><a href="https://iterm2.com/documentation-automatic-profile-switching.html">iTerm2</a><br>터미널</td><td data-label="설정">Settings의 프로필; 속성 목록 파일인 <a href="https://iterm2.com/documentation-dynamic-profiles.html">Dynamic Profiles</a></td><td data-label="테마와 색">사용자, 호스트, 폴더, 작업에 따라 고르는 프로필(Shell Integration 필요)</td><td data-label="내 CSS">찾지 못함</td><td data-label="내 코드"><a href="https://iterm2.com/python-api/">Python API</a>, Python으로 만드는 상태 막대 구성 요소, AppleScript</td><td data-label="제목과 상태 표시 템플릿">세션 이름, 배지, 상태 막대의 <a href="https://iterm2.com/documentation-scripting-fundamentals.html">보간 문자열</a> <code>\(…)</code></td></tr>
-          <tr><td>Aubergine<br>캔버스 위의 터미널</td><td data-label="설정"><code>config.json</code>과 Settings, 편집기용 JSON Schema 포함</td><td data-label="테마와 색">열 가지 테마, 라이트·다크·시스템 따라; 그중 하나 위에 얹는 나만의 JSON 파일; 프로젝트, 태그가 있는 터미널, 터미널마다 하나; 35가지 색을 직접, 모든 테마나 하나에</td><td data-label="내 CSS">있음: 데이터 폴더의 <code>custom.css</code>, 문서화된 훅 포함</td><td data-label="내 코드">없음. 계획: 플러그인</td><td data-label="제목과 상태 표시 템플릿">두 개. 터미널의 제목과 목록의 행을 위한 것으로, <code>{state}</code>와 <code>{field:Ticket}</code> 같은 자리 표시자가 들어 있는 텍스트</td></tr>
+          <tr><td>Aubergine<br>캔버스 위의 터미널</td><td data-label="설정"><code>config.json</code>과 Settings, 편집기용 JSON Schema 포함</td><td data-label="테마와 색">열 가지 테마, 라이트·다크·시스템 따라; 그중 하나 위에 얹는 나만의 JSON 파일; 프로젝트, 태그가 있는 터미널, 터미널마다 하나; 35가지 색을 직접, 모든 테마나 하나에</td><td data-label="내 CSS">있음: 데이터 폴더의 <code>custom.css</code>, 문서화된 훅 포함</td><td data-label="내 코드">있음: 플러그인. 페이지 안에서 당신으로 실행되는 JavaScript 모듈로, 문서화된 API를 통해, 또 그 너머로. 샌드박스 없음</td><td data-label="제목과 상태 표시 템플릿">두 개. 터미널의 제목과 목록의 행을 위한 것으로, <code>{state}</code>와 <code>{field:Ticket}</code> 같은 자리 표시자가 들어 있는 텍스트</td></tr>
         </tbody>
       </table>
     </div>
     <p>여기 있는 모든 도구는 설정을 파일에 두며, VS Code, Zed, Windows Terminal에는 Aubergine처럼 그 파일을 쓰는 화면도 있습니다. 대부분에서 테마도 파일입니다. VS Code와 Zed에서는 JSON, Obsidian에서는 CSS, WezTerm에서는 Lua나 TOML, kitty와 Ghostty에서는 설정 파일입니다. VS Code, Zed, WezTerm에서는 여기의 <code>appearance.colors</code>처럼 테마 위에 개별 색을 바꿀 수 있습니다.</p>
     <p>가장 크게 다른 것은 코드입니다. WezTerm의 설정은 통째로 Lua 프로그램이고, kitty와 iTerm2는 내 Python을 실행하며, Hyper의 플러그인은 인터페이스를 감싸는 JavaScript입니다. Obsidian과 Hyper는 내 CSS도 받습니다. VS Code의 확장은 인터페이스의 DOM에 접근하지 못하고, VS Code는 내 스타일시트를 지원하지 않습니다. Zed는 확장을 WebAssembly로, 제한할 수 있는 권한과 함께 실행합니다. tmux, WezTerm, kitty, iTerm2는 템플릿이나 함수로 제목과 상태 줄을 만듭니다.</p>
-    <p>오늘의 Aubergine은 설정 쪽 끝에 있고, 거기서 한 걸음 더 나아갔습니다. 스스로를 설명하는 파일에 담긴 테마, 색, 키, 설정의 일부를 쓰는 페이지, 터미널 제목과 행에 표시할 내용을 위한 템플릿, 그리고 안정적으로 유지되는 훅이 있는 여러분의 스타일시트입니다. 페이지에서 여러분의 코드를 실행하지는 않습니다. 플러그인은 <a href="../roadmap/#rm-yours">로드맵</a>에 있으며 아직 만들어지지 않았습니다.</p>
+    <p>오늘의 Aubergine은 설정 쪽에서 코드까지 닿습니다. 스스로를 설명하는 파일에 담긴 테마·색·키, 설정 일부를 쓰는 페이지, 터미널 제목과 행이 말하는 것의 템플릿, 안정적으로 유지되는 훅이 있는 나만의 스타일시트, 그리고 플러그인, 추가되기만 하는 API를 가진 페이지 속 나만의 JavaScript입니다. 플러그인은 페이지가 할 수 있는 모든 것을 가지고 실행됩니다. 다른 사람의 플러그인을 위한 샌드박스 모드는 <a href="../roadmap/#rm-yours">로드맵</a>에 있으며 아직 만들어지지 않았습니다.</p>
 
     <h2 id="planned">계획된 것</h2>
-    <p>플러그인, 즉 페이지에서 실행되는 여러분의 코드는 계획되어 있지만 아직 만들어지지 않았습니다. <a href="../roadmap/#rm-yours">로드맵</a>을 보세요.</p>
+    <p>다른 사람이 쓴 플러그인을 샌드박스에서 실행하는 방식과 검토 화면을 통한 설치는 계획되어 있으며 아직 만들어지지 않았습니다. <a href="../roadmap/#rm-yours">로드맵</a>을 보세요.</p>
 
     <h2 id="faq">질문</h2>
     <div class="questions">
       <details><summary>터미널마다 다른 색 테마를 쓸 수 있나요?</summary><p>예. 터미널 메뉴의 Theme…로 페이지의 테마와 상관없이 본문을 열 가지 테마 중 어느 것으로든 그릴 수 있습니다. 태그가 있는 터미널은 Settings에서 그 태그로 테마를 받을 수 있고, 나머지는 터미널 기본값이나 페이지를 따릅니다.</p></details>
       <details><summary>Aubergine에 내 CSS를 넣을 수 있나요?</summary><p>네. 데이터 폴더의 <code>custom.css</code>입니다(<code>aubergine css new</code>가 시작할 파일을 써 줍니다). 첫 그리기부터 페이지의 마지막에 연결되며, 기댈 수 있는 훅은 docs/hooks.md에 있습니다. 페이지 주소에 <code>?plain</code>을 붙이면 그것 없이 볼 수 있습니다.</p></details>
+      <details><summary>Aubergine 용 플러그인을 직접 쓸 수 있나요?</summary><p>네. 데이터 폴더의 <code>plugins/&lt;id&gt;/</code> 에 JavaScript 모듈을 두고(<code>aubergine plugin new &lt;id&gt;</code> 가 시작할 것을 써 줍니다) Settings → Plugins 에서 켭니다. 페이지 안에서 당신으로, 페이지가 할 수 있는 모든 것을 가지고 실행됩니다. 샌드박스가 아닙니다.</p></details>
       <details><summary>Aubergine의 설정 파일은 어디에 있나요?</summary><p>Aubergine 데이터 폴더의 <code>config.json</code>입니다. <code>aubergine settings path</code>가 위치를 알려 주고, 서버도 시작할 때 보여 줍니다.</p></details>
       <details><summary>에이전트가 Aubergine의 모양을 바꿀 수 있나요?</summary><p>설정은 아닙니다. 설정은 오직 여러분의 것입니다. 에이전트는 자기 터미널의 이름을 정하고 설명할 수 있으며, 여러분이 읽고 받아들이기를 기다리는 색상 테마를 제안할 수 있습니다. API 토큰이 허락하는 프로그램은 터미널의 이름을 바꾸고 태그를 달고 테마를 주고 캔버스를 정리할 수 있으며, 테마를 제안할 수도 있습니다.</p></details>
     </div>

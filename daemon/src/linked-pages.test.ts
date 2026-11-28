@@ -20,6 +20,8 @@ import {
   SocketTicket,
   StateResponse,
   CUSTOM_CSS_PATH,
+  NO_PLUGINS_ANSWER,
+  pluginFileHref,
   newId,
   paths,
   publicPaths,
@@ -27,6 +29,7 @@ import {
 } from '@aubergine/shared';
 import { ACTIVITY_FILE, FileActivityLog } from './activity';
 import { StylesheetFile } from './custom-css';
+import { PluginFolder } from './plugins';
 import { sessionToken } from './auth';
 import type { DesktopOpener } from './desktop/open';
 import { TRIES_PER_MINUTE, WRONG_CODES_ALLOWED } from './pairing';
@@ -78,6 +81,10 @@ async function start(addresses: string[] = [OUTSIDE], pages: string[] = [PAGE, O
   await writeFile(path.join(web, 'assets', 'app.js'), 'console.log("the page");\n');
   // The owner's own stylesheet is there, so that the walks reach its route with a file to give.
   await writeFile(path.join(dir, 'custom.css'), '[data-part="map"] { display: none; }\n');
+  // And a plugin, switched on to follow changes, so that they reach its files with a plugin to give.
+  await mkdir(path.join(dir, 'plugins', 'tickets'), { recursive: true });
+  await writeFile(path.join(dir, 'plugins', 'tickets', 'plugin.json'), JSON.stringify({ name: 'Tickets', version: '1', runs: 'page', main: 'index.js', api: 1 }));
+  await writeFile(path.join(dir, 'plugins', 'tickets', 'index.js'), 'export function activate() {}\n');
   const opener: DesktopOpener = {
     open: async (sessionId) => {
       opened.push(sessionId);
@@ -90,13 +97,14 @@ async function start(addresses: string[] = [OUTSIDE], pages: string[] = [PAGE, O
     hub,
     sessions,
     runtime,
-    settings: async () => Settings.parse({ access: { addresses, pages } }),
+    settings: async () => Settings.parse({ access: { addresses, pages }, plugins: { on: { tickets: 'follow' } } }),
     token,
     devOrigin: null,
     webDist: web,
     activity: new FileActivityLog(dir, 1024 * 1024),
     desktop: opener,
     stylesheet: new StylesheetFile(dir),
+    plugins: new PluginFolder(dir),
     now: () => now,
   });
   await app.listen({ host: '127.0.0.1', port: 0 });
@@ -641,7 +649,7 @@ describe('a stranger from a linked page’s origin', () => {
   it('gets nothing from any route but the preflight, and a refusal from the one for a code', async () => {
     const filled = (url: string): string => url.replace('/*', '/assets/app.js').replace(/:[A-Za-z]+/g, () => newId());
     const routes = everyRouteOf(app);
-    for (const wanted of ['GET /api/v1/state', 'POST /api/v1/sessions', 'GET /ws/v1/events', 'GET /v1/canvases', 'POST /auth/pair', 'GET /auth', 'GET /', 'GET /*', 'POST /api/v1/socket-tickets', 'DELETE /api/v1/devices/:deviceId', 'GET /api/v1/custom.css']) {
+    for (const wanted of ['GET /api/v1/state', 'POST /api/v1/sessions', 'GET /ws/v1/events', 'GET /v1/canvases', 'POST /auth/pair', 'GET /auth', 'GET /', 'GET /*', 'POST /api/v1/socket-tickets', 'DELETE /api/v1/devices/:deviceId', 'GET /api/v1/custom.css', 'GET /api/v1/plugins/:pluginId/:digest/:file', 'PUT /v1/settings/plugins', 'POST /v1/settings/plugins/read']) {
       expect(routes.map((r) => `${r.method} ${r.url}`)).toContain(wanted);
     }
     const everything = await makeToken([...GRANTABLE_SCOPES]);
@@ -739,5 +747,26 @@ describe('the owner’s own stylesheet', () => {
     // The owner at this computer has it.
     expect((await asOwnerHere('GET', CUSTOM_CSS_PATH)).status).toBe(200);
     expect(StateResponse.parse((await asOwnerHere('GET', paths.state)).json).customCss?.bytes).toBeGreaterThan(0);
+  });
+});
+
+describe('the owner’s plugins', () => {
+  it('are the own page’s: a linked page with a good credential is given nothing of them, and switches none', async () => {
+    const { credential } = await pairPage();
+    const owner = await asOwnerHere('GET', paths.state);
+    const digest = (owner.json as { plugins: { plugins: { digest: string }[] } }).plugins.plugins[0]!.digest;
+    const href = pluginFileHref('tickets', digest, 'index.js');
+    expect((await asOwnerHere('GET', href)).status).toBe(200);
+    const file = await fromPage('GET', href, { authorization: bearer(credential) });
+    expect(file.status).toBe(404);
+    expect(file.body).not.toContain('activate');
+    expectCorsAnswer(file);
+    const state = await fromPage('GET', paths.state, { authorization: bearer(credential) });
+    expect('plugins' in state.json).toBe(false);
+    const read = await fromPage('POST', '/v1/settings/plugins/read', { authorization: bearer(credential) }, {});
+    expect(read.status).toBe(200);
+    expect(read.json).toEqual(NO_PLUGINS_ANSWER);
+    const change = await fromPage('PUT', '/v1/settings/plugins', { authorization: bearer(credential) }, { id: 'tickets', on: null });
+    expect(change.status).toBe(403);
   });
 });

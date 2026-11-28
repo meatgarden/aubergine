@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
 import { sortedCanvases, type Canvas, type SearchHit } from '@aubergine/shared';
 import { api } from './api';
 import { COMMANDS, commandById, offeredHere, type Command } from './commands';
@@ -7,6 +7,7 @@ import { canvasLabel, searchSessions, shortFolder, type SessionMatch } from './s
 import { keysOf } from './shortcuts';
 import { useApp } from './store';
 import { tourSignal } from './tour/tour-store';
+import { pluginCommands, runPluginCommand, subscribeToPluginCommands, type PluginCommand } from './plugins/commands';
 
 const HISTORY_DELAY_MS = 250;
 const HISTORY_MIN_LENGTH = 2;
@@ -17,9 +18,14 @@ type Row =
   | { kind: 'session'; match: SessionMatch }
   | { kind: 'canvas'; canvas: Canvas; number: number }
   | { kind: 'command'; command: Command; available: boolean }
+  /** A plugin's command: listed after the page's own, under its plugin's name. */
+  | { kind: 'plugin'; command: PluginCommand }
   | { kind: 'output'; hit: SearchHit };
 
-const SECTION: Record<Row['kind'], string> = { session: 'Terminals', canvas: 'Canvases', command: 'Commands', output: 'Terminal output' };
+const SECTION: Record<Exclude<Row['kind'], 'plugin'>, string> = { session: 'Terminals', canvas: 'Canvases', command: 'Commands', output: 'Terminal output' };
+/** The heading a row is listed under: a plugin's commands under the plugin's name. */
+const headingOf = (row: Row): { key: string; text: string } =>
+  row.kind === 'plugin' ? { key: `plugin:${row.command.pluginId}`, text: `Plugin: ${row.command.pluginName}` } : { key: row.kind, text: SECTION[row.kind] };
 
 /**
  * The palette: type to find sessions (names, folders, commands, notes, and
@@ -34,6 +40,8 @@ export function Picker() {
   const app = useApp((s) => s.app);
   const canvasId = useApp((s) => s.canvasId);
   const settings = useApp((s) => s.settings);
+  // A plugin's commands come and go while the page runs.
+  const fromPlugins = useSyncExternalStore(subscribeToPluginCommands, pluginCommands, pluginCommands);
   const [query, setQuery] = useState('');
   const [index, setIndex] = useState(0);
   const [history, setHistory] = useState<{ query: string; hits: SearchHit[]; truncated: boolean } | null>(null);
@@ -110,6 +118,7 @@ export function Picker() {
     ...matches.map((match): Row => ({ kind: 'session', match })),
     ...(commandsOnly ? [] : searchCanvases(canvases, wanted)).map((canvas): Row => ({ kind: 'canvas', canvas, number: canvases.indexOf(canvas) + 1 })),
     ...searchCommands(COMMANDS.filter((command) => offeredHere(command, state)), wanted).map((command): Row => ({ kind: 'command', command, available: command.available(state) })),
+    ...searchCommands(fromPlugins, wanted).map((command): Row => ({ kind: 'plugin', command })),
     ...hits.map((hit): Row => ({ kind: 'output', hit })),
   ];
   const selected = Math.min(index, Math.max(0, rows.length - 1));
@@ -121,6 +130,11 @@ export function Picker() {
       // Run it against the page as it is once the palette has closed.
       const now = useApp.getState();
       if (row.command.available(now)) row.command.run(now);
+      return;
+    }
+    if (row.kind === 'plugin') {
+      setPicker(false);
+      runPluginCommand(row.command.id, (message) => useApp.getState().setNotice(message));
       return;
     }
     setPicker(false);
@@ -195,6 +209,15 @@ export function Picker() {
         </div>
       );
     }
+    if (row.kind === 'plugin') {
+      return (
+        <div key={`p:${row.command.id}`} {...common} className={`picker-row command${chosen}`} data-testid="picker-command-row" data-command={row.command.id} title={row.command.description}>
+          <span className="picker-name">{row.command.title}</span>
+          <span className="picker-detail" />
+          <span className="picker-keys" />
+        </div>
+      );
+    }
     const session = byId.get(row.hit.sessionId);
     const canvas = canvasLabel(app, row.hit.sessionId, canvasId);
     return (
@@ -252,12 +275,14 @@ export function Picker() {
         <div className="picker-results" role="listbox" ref={list}>
           {rows.length === 0 && !searching && <div className="picker-empty">Nothing matches.</div>}
           {rows.map((row, i) => {
-            const first = i === 0 || rows[i - 1]?.kind !== row.kind;
+            const heading = headingOf(row);
+            const before = rows[i - 1];
+            const first = i === 0 || !before || headingOf(before).key !== heading.key;
             // The output section has its own heading below, shown even while it is empty.
             return [
               first && row.kind !== 'output' && (
-                <div key={`h:${row.kind}`} className="picker-section" data-testid={`picker-section-${row.kind}`}>
-                  {SECTION[row.kind]}
+                <div key={`h:${heading.key}`} className="picker-section" data-testid={`picker-section-${row.kind}`}>
+                  {heading.text}
                 </div>
               ),
               row.kind !== 'output' && renderRow(row, i),

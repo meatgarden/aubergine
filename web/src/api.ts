@@ -1,4 +1,4 @@
-import { CLOSE_DEVICE_REVOKED, PROJECT_HEADER, type LinkKind, type ThemeSetting, type ChangeAppearanceRequest } from '@aubergine/shared';
+import { CLOSE_DEVICE_REVOKED, PROJECT_HEADER, type LinkKind, type ThemeSetting, type ChangeAppearanceRequest, type ChangePluginRequest } from '@aubergine/shared';
 import { z, type ZodType } from 'zod';
 import { createClient } from '@aubergine/client';
 import {
@@ -433,6 +433,10 @@ export const ownApi = {
   readThemes: () => ownV1.readThemes(),
   /** The owner's own stylesheet, read again by the own server: it is the page's own, as the theme files are. */
   readStylesheet: () => ownV1.readStylesheet(),
+  /** The owner's plugins, read again by the own server: code of the page, so the own server's whatever is shown. */
+  readPlugins: () => ownV1.readPlugins(),
+  /** Switches one plugin on (by the digest just read, or `follow`) or off (null), on the own server. */
+  changePlugin: (change: ChangePluginRequest) => ownV1.changePlugin({ body: change }),
   projects: async () => z.array(ProjectRow).parse((await ownV1.listProjects({ query: { limit: 200 } })).items),
 };
 

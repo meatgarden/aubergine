@@ -16,6 +16,8 @@ import {
   type Settings,
   type ThemesAnswer,
   type CustomCssAnswer,
+  type PluginsAnswer,
+  NO_PLUGINS_ANSWER,
   firstProject,
   stateOf,
 } from '@aubergine/shared';
@@ -26,6 +28,7 @@ import { canvasIdFromPath, chooseCanvas, linkFromPath, openedHere, pageFromPath,
 import { announcement, notificationsWanted } from './attention';
 import { clampDrawerWidth, clampPanelWidth, loadPanelPrefs, savePanelPrefs, type PanelPrefs } from './panel/registry';
 import { loadView, saveView, type ListView } from './terminal-rows';
+import { tellChange } from './change-listeners';
 
 export type Phase =
   | 'loading'
@@ -72,6 +75,12 @@ export interface AppStore {
    */
   customCss: CustomCssAnswer;
   setCustomCss: (customCss: CustomCssAnswer) => void;
+  /**
+   * The owner's plugins as the own server found them, and what its settings switch on: code of the page, as the
+   * stylesheet is, so the own server's whatever is shown. Loaded by `web/src/plugins/loader.ts`, never by the store.
+   */
+  plugins: PluginsAnswer;
+  setPlugins: (plugins: PluginsAnswer) => void;
   /** Where the settings file of the server shown is, as it said with its state; null where it did not say. */
   settingsFile: string | null;
   /** The dialog that links a server is open. */
@@ -121,9 +130,9 @@ export interface AppStore {
   /** Whether the dialog that adds a device is open. What it shows (the code) is the dialog's own, and nobody else's. */
   addingDevice: boolean;
   /** The part of Settings to bring into view when it opens; used once. */
-  settingsAt: 'devices' | 'appearance' | 'titles' | 'stylesheet' | 'all' | null;
+  settingsAt: 'devices' | 'appearance' | 'titles' | 'stylesheet' | 'plugins' | 'all' | null;
   addDevice: (open: boolean) => void;
-  showSettings: (at: 'devices' | 'appearance' | 'titles' | 'stylesheet' | 'all' | null) => void;
+  showSettings: (at: 'devices' | 'appearance' | 'titles' | 'stylesheet' | 'plugins' | 'all' | null) => void;
   /**
    * The page that is shown in place of the canvas, if any: Queue, Board, Workflows or Library. The canvas stays as it
    * was underneath, and a panel or a dialog opens over a page as it does over the canvas. Its name is in the address.
@@ -259,6 +268,8 @@ export const useApp = create<AppStore>((set, get) => ({
   setThemes: (themes) => set({ themes }),
   customCss: { stylesheet: null, problem: null },
   setCustomCss: (customCss) => set({ customCss }),
+  plugins: NO_PLUGINS_ANSWER,
+  setPlugins: (plugins) => set({ plugins }),
   settingsFile: null,
   linking: false,
   linkServer: (linking) => set({ linking }),
@@ -329,19 +340,21 @@ export const useApp = create<AppStore>((set, get) => ({
         let ownFile: string | null;
         let ownThemes: ThemesAnswer;
         let ownCss: CustomCssAnswer;
+        let ownPlugins: PluginsAnswer;
         try {
           const ownState = await ownApi.getState();
           own = ownState.settings;
           ownFile = ownState.settingsFile ?? null;
           ownThemes = { themes: ownState.themes ?? [], problems: ownState.themeProblems ?? [] };
           ownCss = { stylesheet: ownState.customCss ?? null, problem: ownState.customCssProblem ?? null };
+          ownPlugins = ownState.plugins ?? NO_PLUGINS_ANSWER;
         } catch {
           // The own server is not there or does not take this page: that is said as it always is, by showing it.
           if (get().server === server) get().showServer(null);
           return;
         }
         if (get().server !== server) return;
-        set({ ownSettings: own, ownSettingsFile: ownFile, themes: ownThemes, customCss: ownCss });
+        set({ ownSettings: own, ownSettingsFile: ownFile, themes: ownThemes, customCss: ownCss, plugins: ownPlugins });
       }
       const response = await api.getState();
       // Taken unless it is older than what the stream has already brought; what the stream brought before it is applied after it.
@@ -356,7 +369,9 @@ export const useApp = create<AppStore>((set, get) => ({
       const themes = server === null ? { themes: response.themes ?? [], problems: response.themeProblems ?? [] } : get().themes;
       // And so is the owner's own stylesheet.
       const customCss = server === null ? { stylesheet: response.customCss ?? null, problem: response.customCssProblem ?? null } : get().customCss;
-      set({ phase: 'ready', themes, customCss, runtime: response.runtime, settings: withPageSettings(response.settings, ownSettings), ownSettings, settingsFile, ownSettingsFile, here: response.here, following, whole: everything, app: viewOf(everything, current, get().app) });
+      // And so are the plugins.
+      const plugins = server === null ? (response.plugins ?? NO_PLUGINS_ANSWER) : get().plugins;
+      set({ phase: 'ready', themes, customCss, plugins, runtime: response.runtime, settings: withPageSettings(response.settings, ownSettings), ownSettings, settingsFile, ownSettingsFile, here: response.here, following, whole: everything, app: viewOf(everything, current, get().app) });
       // A tab that shows one terminal by itself looks at no canvas, and keeps its own address.
       if (terminalPage !== null) return;
       // Keep looking at the same canvas. On opening the page, or if that canvas is gone: the one asked for on
@@ -431,6 +446,8 @@ export const useApp = create<AppStore>((set, get) => ({
     }
     if (event.type === 'session.restored') next.parkedHere = get().parkedHere.filter((id) => id !== event.sessionId);
     set(next);
+    // Told to whatever listens (a plugin) once the page has it.
+    tellChange(event);
     if (event.type === 'canvas.removed' && get().canvasId === event.canvasId) {
       // The canvas this page was showing is gone: show the first of what is left.
       // The first of what is left in the project being looked at; of everything, when that project went with it.

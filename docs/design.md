@@ -199,6 +199,7 @@ Lowest first: `--z-canvas`, `--z-panel`, `--z-menu`, `--z-screen`, `--z-tour`, `
 - The colors a person picks.
 - The owner's own stylesheet (`custom.css` in the data folder, [custom-css.md](custom-css.md)). It is loaded after the system, in no layer, as the last thing in the page's head, so it wins over a piece of the same specificity; nothing here is tested against it, and the measuring tests run without one.
 - What is pressed as a whole (a row, a card, a line of a menu, a step of a run): it is as tall as what it holds.
+- What a plugin draws ([plugins.md](plugins.md)). It is the owner's code, and nothing here is tested against it; the measuring tests run without one. A plugin's surfaces should use the pieces (`aubergine.ui`: the same `Button`, `Row`, `Badge` and the rest, from the page's own React) and the tokens (`var(--text)`, `var(--space-2)`), so that they look like the page in every theme: the starter does. What a plugin adds through the API is drawn inside an element with `data-plugin="<id>"`, and its stylesheet is linked after the system and before `custom.css`.
 
 ## The hooks
 

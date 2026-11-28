@@ -6,6 +6,7 @@ import { keepBarOpen, useBarKeptOpen } from './bar-open';
 import { BAR_PLACES, BAR_PLACE_WORDS, placeBar, placeFrom, useBarPlace } from './bar-place';
 import { setOpenNew } from './desktop';
 import { DevicesPart } from './devices/Devices';
+import { PluginsPart } from './plugins/PluginsPart';
 import { EverySettingPart } from './EverySetting';
 import { atThisComputer, useApp } from './store';
 import { findServer, hostOf, loadServers } from './servers';
@@ -61,7 +62,7 @@ export function SettingsDialog() {
         <ScreenHead title="Settings" onClose={close} closeTestid="settings-close" />
         {shownServer && (
           <p data-testid="settings-server">
-            The appearance, the bar and notifications are this page’s own. Everything else here is about “{shownServer.label}” at {hostOf(shownServer)}, the server shown.
+            The appearance, the bar, notifications and plugins are this page’s own. Everything else here is about “{shownServer.label}” at {hostOf(shownServer)}, the server shown.
           </p>
         )}
         <AppearancePart />
@@ -125,6 +126,7 @@ export function SettingsDialog() {
             <NotifySwitch />
           </p>
         </section>
+        <PluginsPart />
         <DevicesPart />
         <EverySettingPart />
       </div>

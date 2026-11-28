@@ -30,7 +30,7 @@ In `pnpm dev` the page is served by Vite, not by the server, so no stylesheet of
 
 ## When it breaks the page
 
-Open the page with `?plain` after its address, for example `http://127.0.0.1:4600/?plain`: the server sends it without your stylesheet (and, when there are other things of yours on the page later, without those too). Nothing keeps it: the next page you open is drawn with your stylesheet again. **Settings → Appearance → Your stylesheet** has the address as a link, **Open without your stylesheet**, and a switch, **Draw the page with it** (`appearance.customCss` in the settings, on unless you switch it off), that takes it off the page at once and keeps it off.
+Open the page with `?plain` after its address, for example `http://127.0.0.1:4600/?plain`: the server sends it without your stylesheet, and the page loads none of your [plugins](plugins.md). Nothing keeps it: the next page you open is drawn with your stylesheet again. **Settings → Appearance → Your stylesheet** has the address as a link, **Open without your stylesheet**, and a switch, **Draw the page with it** (`appearance.customCss` in the settings, on unless you switch it off), that takes it off the page at once and keeps it off.
 
 ## What a stylesheet may fetch
 

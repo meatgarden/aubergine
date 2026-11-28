@@ -3560,6 +3560,7 @@ test('one look: the canvas page and every screen use the two control heights (an
   await look('API activity', 'activity-screen', () => command('API activity'));
   await look('adding a device', 'add-device-dialog', () => command('Add a device'));
   await look('every setting', 'settings-all-search', () => command('Settings: every setting'));
+  await look('plugins in Settings', 'settings-plugins', () => command('Plugins'));
   await look('linking a server', 'link-server-dialog', () => command('Link a server'));
   await look('past conversations', 'history-panel', () => command('Past conversations'));
   // The detail drawer beside the panel, and the menu of the less used parts.
@@ -8134,4 +8135,225 @@ test('the hooks: every part in the list is drawn on the canvas, its list, a page
   await expect(html).toHaveAttribute('data-page', 'terminal');
   await look();
   expect([...seen].sort()).toEqual([...PART_NAMES].sort());
+});
+
+test('plugins: one written into the data folder is off and asked for by nothing, switched on through its dialog with the keyboard it adds a section, a command, a placeholder and a filter and reaches past the API, a changed file is not loaded until it is switched on again or followed, one that throws is said and the other runs, ?plain loads none, switched off its registrations go at once, and no token or session reaches it', async ({ page, playwright }) => {
+  const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
+  const origin = `http://127.0.0.1:${e2e.port}`;
+  const configFile = path.join(e2e.dataDir, 'config.json');
+  const original = existsSync(configFile) ? readFileSync(configFile, 'utf8') : null;
+  const plugins = path.join(e2e.dataDir, 'plugins');
+  const manifest = (name: string): string => JSON.stringify({ name, version: '0.1.0', runs: 'page', main: 'index.js', style: 'style.css', api: 1 });
+  const module = (marker: string): string =>
+    [
+      'export function activate(aubergine) {',
+      '  const h = aubergine.ui.React.createElement;',
+      "  const ticket = (s) => s.fields.find((f) => f.label === 'Ticket')?.value ?? null;",
+      "  aubergine.panel.addSection({ id: 'tickets', title: 'Tickets', says: 'Terminals with a ticket.', icon: 'T', Component: () => h('p', { 'data-testid': 'plugin-section-body' }, `Tickets: ${(aubergine.state.use()?.sessions ?? []).filter(ticket).length}`) });",
+      "  aubergine.commands.add({ id: 'hello', title: 'Say hello from the plugin', description: 'Says hello.', run: () => aubergine.say('Hello from the plugin') });",
+      "  aubergine.templates.addPart({ name: 'ticket', says: 'Its ticket.', say: ticket });",
+      "  aubergine.list.addFilter({ id: 'has-ticket', label: 'Has a ticket', test: (s) => ticket(s) !== null });",
+      // Past the API: an element of its own in the top bar, which the page cannot take away.
+      "  const mark = document.createElement('span');",
+      "  mark.setAttribute('data-testid', 'plugin-past-api');",
+      `  mark.textContent = '${marker}';`,
+      "  document.querySelector('[data-part=\"top-bar\"]')?.append(mark);",
+      '}',
+      '',
+    ].join('\n');
+  const write = (id: string, files: Record<string, string>): void => {
+    mkdirSync(path.join(plugins, id), { recursive: true });
+    for (const [name, text] of Object.entries(files)) writeFileSync(path.join(plugins, id, name), text);
+  };
+  const asked: string[] = [];
+  page.on('request', (request) => request.url().includes('/api/v1/plugins/') && asked.push(new URL(request.url()).pathname));
+  try {
+    write('tickets', { 'plugin.json': manifest('Tickets'), 'index.js': module('first'), 'style.css': '[data-plugin="tickets"] { outline: 0; }\n' });
+    write('broken', { 'plugin.json': manifest('Broken'), 'index.js': "export function activate() { throw new Error('broken on purpose'); }\n", 'style.css': '' });
+    await page.goto(`/auth?token=${token}`);
+    await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
+    const before = page.url();
+    await page.getByRole('button', { name: 'New canvas' }).click();
+    await expect(page).not.toHaveURL(before);
+    await page.getByTestId('toolbar-new-terminal').click();
+    const node = page.getByTestId('terminal-node');
+    await expect(node).toHaveCount(1);
+    const sessionId = (await node.getAttribute('data-session')) ?? '';
+    expect((await page.request.patch(`/v1/sessions/${sessionId}`, { headers: { origin }, data: { fields: [{ label: 'Ticket', value: 'ABC-123' }] } })).status()).toBe(200);
+
+    const reload = async (): Promise<void> => {
+      await page.reload();
+      await expect(node.locator('.xterm-rows')).toContainText(/[$%#>]/, { timeout: 20_000 });
+    };
+    const mac = await page.evaluate(() => navigator.platform.toLowerCase().includes('mac'));
+    const palette = async (words: string): Promise<void> => {
+      await page.keyboard.press(mac ? 'Meta+k' : 'Control+Shift+K');
+      await page.keyboard.type(`>${words}`);
+      await expect(page.getByTestId('picker-command-row').first()).toBeVisible();
+    };
+    const part = page.getByTestId('settings-plugins');
+    const row = (id: string): Locator => part.locator(`[data-testid="plugin-row"][data-plugin-id="${id}"]`);
+    const openPlugins = async (): Promise<void> => {
+      await palette('Plugins');
+      await page.keyboard.press('Enter');
+      await expect(part).toBeVisible();
+      // Opened by its command, its first button has the keyboard.
+      await expect(part.locator('button').first()).toBeFocused();
+    };
+    const sectionLine = page.getByTestId('panel-menu').locator('[data-section="plugin.tickets.tickets"]');
+    const sectionThere = async (): Promise<boolean> => {
+      await page.getByTestId('panel-switcher').click();
+      await expect(page.getByTestId('panel-menu')).toBeVisible();
+      const there = (await sectionLine.count()) > 0;
+      await page.keyboard.press('Escape');
+      return there;
+    };
+    const switchOn = async (id: string): Promise<void> => {
+      // From the keyboard: the row's button, then the dialog's.
+      await row(id).getByTestId('plugin-switch-on').focus();
+      await page.keyboard.press('Enter');
+      const dialog = page.getByTestId('plugin-dialog');
+      await expect(dialog).toBeVisible();
+      await expect(dialog.getByTestId('plugin-dialog-warning')).toContainText('It can read and type into every terminal');
+      await expect(dialog.getByTestId('plugin-files')).toContainText('index.js');
+      await expect(dialog.getByTestId('plugin-files')).toContainText('plugin.json');
+      await expect(dialog.getByTestId('plugin-dialog-confirm')).toBeFocused();
+      expect(await measureLook(page), 'the dialog that switches a plugin on').toEqual([]);
+      await page.keyboard.press('Enter');
+      await expect(dialog).toHaveCount(0);
+    };
+
+    // Off: listed, and nothing of it is on the page or asked for.
+    await openPlugins();
+    await expect(part.getByTestId('plugins-warning')).toHaveText('A plugin is code that runs in this page as you. It can read and type into every terminal. Switch on only what you wrote or have read.');
+    await expect(row('tickets').getByTestId('plugin-state')).toHaveText('off');
+    await expect(row('broken').getByTestId('plugin-state')).toHaveText('off');
+    await expect(part.getByTestId('plugins-where')).toContainText(plugins);
+    await expect(part.getByTestId('plugins-plain')).toHaveAttribute('href', /\?plain$/);
+    expect(await measureLook(page), 'Settings → Plugins').toEqual([]);
+    expect(asked).toEqual([]);
+    await expect(page.getByTestId('plugin-past-api')).toHaveCount(0);
+
+    // Switched on through the dialog: it runs at once, its stylesheet before the owner's own.
+    await switchOn('tickets');
+    await expect(row('tickets').getByTestId('plugin-state')).toHaveText('on');
+    await expect(page.getByTestId('plugin-past-api')).toHaveText('first');
+    expect(asked.some((p) => /^\/api\/v1\/plugins\/tickets\/[0-9a-f]{64}\/index\.js$/.test(p))).toBe(true);
+    await expect(page.locator('link[data-plugin-style="tickets"]')).toHaveCount(1);
+    const digest = /[0-9a-f]{64}/.exec(asked[0] ?? '')?.[0] ?? '';
+    expect((JSON.parse(readFileSync(configFile, 'utf8')) as { plugins: { on: Record<string, string> } }).plugins.on).toEqual({ tickets: digest });
+    await page.keyboard.press('Escape');
+    await expect(part).toHaveCount(0);
+    // The section, in the panel's menu, and drawn.
+    expect(await sectionThere()).toBe(true);
+    await showSection(page, 'plugin.tickets.tickets');
+    await expect(page.locator('[data-plugin="tickets"] [data-testid="plugin-section-body"]')).toHaveText(/^Tickets: [1-9]\d*$/);
+    await showSection(page, 'terminals');
+    // The command, in the palette under the plugin's name, and run.
+    await palette('Say hello');
+    await expect(page.getByTestId('picker-section-plugin')).toHaveText('Plugin: Tickets');
+    await page.keyboard.press('Enter');
+    await expect(page.getByTestId('toast')).toContainText('Hello from the plugin');
+    // The filter, a line of the list's Filter menu.
+    await page.getByTestId('list-more').click();
+    await expect(page.locator('[data-filter="plugin.tickets.has-ticket"]')).toHaveText('Has a ticket');
+    await page.keyboard.press('Escape');
+    // The placeholder, in a row's template.
+    expect((await page.request.put('/v1/settings/appearance', { headers: { origin }, data: { rowFormat: '{ticket} {time}' } })).status()).toBe(200);
+    await reload();
+    const listRow = page.locator(`[data-testid="list-row"][data-session="${sessionId}"]`);
+    await expect(listRow.locator('[data-plugin="tickets"]')).toHaveText('ABC-123');
+    await expect(page.getByTestId('plugin-past-api')).toHaveText('first');
+
+    // A file changed: after a reload it is not loaded, and Settings says why.
+    writeFileSync(path.join(plugins, 'tickets', 'index.js'), module('second'));
+    await reload();
+    await openPlugins();
+    await expect(row('tickets').getByTestId('plugin-state')).toHaveText('changed since you switched it on: not loaded');
+    await expect(page.getByTestId('plugin-past-api')).toHaveCount(0);
+    await expect(listRow.locator('[data-plugin="tickets"]')).toHaveCount(0);
+    // Switched on again: what is there now runs.
+    await switchOn('tickets');
+    await expect(page.getByTestId('plugin-past-api')).toHaveText('second');
+    // Following changes: a change runs after a reload, without switching it on again.
+    await row('tickets').getByTestId('plugin-follow').click();
+    await expect(row('tickets').getByTestId('plugin-follow')).toBeChecked();
+    await expect(row('tickets').getByTestId('plugin-state')).toHaveText('on, following changes');
+    writeFileSync(path.join(plugins, 'tickets', 'index.js'), module('third'));
+    await reload();
+    await expect(page.getByTestId('plugin-past-api')).toHaveText('third');
+
+    // One that throws is said, and the other still runs.
+    await openPlugins();
+    await switchOn('broken');
+    await expect(row('broken').getByTestId('plugin-state')).toHaveText('failed: broken on purpose');
+    await expect(row('tickets').getByTestId('plugin-state')).toHaveText('on, following changes');
+    await page.keyboard.press('Escape');
+    await palette('Say hello');
+    await expect(page.getByTestId('picker-command-row').filter({ hasText: 'Say hello from the plugin' })).toHaveCount(1);
+    await page.keyboard.press('Escape');
+
+    // ?plain: none is loaded, and nothing of them is asked for.
+    const asking = asked.length;
+    await page.goto(`${page.url()}?plain`);
+    await expect(node.locator('.xterm-rows')).toContainText(/[$%#>]/, { timeout: 20_000 });
+    await openPlugins();
+    await expect(row('tickets').getByTestId('plugin-state')).toContainText('left out of this page');
+    await expect(page.getByTestId('plugin-past-api')).toHaveCount(0);
+    await page.keyboard.press('Escape');
+    await expect(part).toHaveCount(0);
+    expect(await sectionThere()).toBe(false);
+    expect(asked.length).toBe(asking);
+    await page.goto(page.url().replace(/\?plain$/, ''));
+    await expect(page.getByTestId('plugin-past-api')).toHaveText('third');
+
+    // Switched off: what it added through the API is gone at once; what it did past it stays until a reload, as it says.
+    await openPlugins();
+    await row('broken').getByTestId('plugin-switch-off').click();
+    await row('tickets').getByTestId('plugin-switch-off').click();
+    await expect(row('tickets').getByTestId('plugin-state')).toHaveText('off. Reload the page to be sure it is gone');
+    await expect(part.getByTestId('plugins-reload')).toContainText('Reload the page to be sure it is gone');
+    await expect(page.locator('link[data-plugin-style="tickets"]')).toHaveCount(0);
+    await page.keyboard.press('Escape');
+    expect(await sectionThere()).toBe(false);
+    await palette('Settings');
+    await page.keyboard.press('Control+a');
+    await page.keyboard.type('>Say hello');
+    await expect(page.locator('.picker-empty')).toHaveText('Nothing matches.');
+    await expect(page.getByTestId('picker-command-row').filter({ hasText: 'Say hello from the plugin' })).toHaveCount(0);
+    await page.keyboard.press('Escape');
+    await expect(listRow.locator('[data-plugin="tickets"]')).toHaveCount(0);
+    await expect(page.getByTestId('plugin-past-api')).toHaveCount(1);
+    await reload();
+    await expect(page.getByTestId('terminal-node')).toHaveCount(1);
+    await expect(page.getByTestId('plugin-past-api')).toHaveCount(0);
+
+    // No token and no session's own credential gets a file or switches one: switched on to follow, so that there is a file to give.
+    expect((await page.request.put('/v1/settings/plugins', { headers: { origin }, data: { id: 'tickets', on: 'follow' } })).status()).toBe(200);
+    const now = ((await (await page.request.post('/v1/settings/plugins/read', { headers: { origin }, data: {} })).json()) as { plugins: { id: string; digest: string }[] }).plugins.find((p) => p.id === 'tickets')?.digest ?? '';
+    const file = `/api/v1/plugins/tickets/${now}/index.js`;
+    expect((await page.request.get(file)).status()).toBe(200);
+    const made = (await (await page.request.post('/v1/tokens', { headers: { origin }, data: { name: 'tries plugins', scopes: ['read', 'sessions:write', 'terminal:read', 'terminal:input', 'workflows:write'], reach: { kind: 'all' } } })).json()) as { secret: string };
+    const own = `aub1.${sessionId}.${createHmac('sha256', token).update(`session:${sessionId}`).digest('hex')}`;
+    // A program holds its credential and not the owner's cookie: asked from a context of its own, with no cookie.
+    const program = await playwright.request.newContext({ baseURL: origin });
+    try {
+      for (const secret of [made.secret, own]) {
+        const authorization = `Bearer ${secret}`;
+        const sent = await program.get(file, { headers: { authorization } });
+        expect(sent.status()).toBe(401);
+        expect(await sent.text()).not.toContain('activate');
+        expect((await program.put('/v1/settings/plugins', { headers: { authorization }, data: { id: 'tickets', on: null } })).status()).toBe(403);
+        expect((await program.post('/v1/settings/plugins/read', { headers: { authorization }, data: {} })).status()).toBe(403);
+      }
+      expect((await program.get(file)).status()).toBe(401);
+    } finally {
+      await program.dispose();
+    }
+    expect((JSON.parse(readFileSync(configFile, 'utf8')) as { plugins: { on: Record<string, string> } }).plugins.on).toEqual({ tickets: 'follow' });
+  } finally {
+    rmSync(plugins, { recursive: true, force: true });
+    if (original === null) rmSync(configFile, { force: true });
+    else writeFileSync(configFile, original);
+  }
 });

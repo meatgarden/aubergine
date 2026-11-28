@@ -3959,4 +3959,13 @@ tr[data-status='expired'] strong {
   fill: var(--qr-dark);
 }
 
+/* Settings → Plugins: the rows are the devices' rows; a plugin's files in the question before it is switched on, one to a line. */
+.plugin-files {
+  margin: var(--space-2) 0 var(--space-3);
+  padding-left: var(--space-4);
+}
+.plugin-problems {
+  margin: var(--space-2) 0 0;
+  padding-left: var(--space-4);
+}
 }

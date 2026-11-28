@@ -120,9 +120,10 @@ export async function readPluginsFolder(pluginsFolder: string): Promise<{ plugin
     // A file a system leaves in every folder (.DS_Store) is no plugin and not worth a sentence.
     if (entry.name.startsWith('.')) continue;
     const wrong = pluginIdProblem(entry.name);
-    if (wrong) problems.push(`${PLUGINS_FOLDER}/${plain(entry.name)}: ${wrong} It is skipped.`);
-    else if (entry.isSymbolicLink() || entry.isDirectory()) ids.push(entry.name);
-    else problems.push(`${PLUGINS_FOLDER}/${plain(entry.name)}: it is not a folder; a plugin is a folder with a ${PLUGIN_MANIFEST} in it. It is skipped.`);
+    if (!entry.isSymbolicLink() && !entry.isDirectory()) problems.push(`${PLUGINS_FOLDER}/${plain(entry.name)}: it is not a folder; a plugin is a folder with a ${PLUGIN_MANIFEST} in it. It is skipped.`);
+    else if (wrong) problems.push(`${PLUGINS_FOLDER}/${plain(entry.name)}: ${wrong} It is skipped.`);
+    // A link is listed, and read as one that is not followed: so that it is said, not left out.
+    else ids.push(entry.name);
   }
   if (ids.length > PLUGINS_MAX) problems.push(`${PLUGINS_FOLDER}: there are ${ids.length} plugins; the first ${PLUGINS_MAX} by name are read, and the rest are not.`);
   const plugins: PluginReading[] = [];

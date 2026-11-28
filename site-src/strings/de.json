@@ -3199,6 +3199,10 @@
     "text": "<strong>Der Prüfbildschirm ist die Kontrolle für Bibliothekseinträge.</strong> Ein Eintrag besteht aus Anweisungen, denen ein Agent mit allem folgt, was dieser Agent darf. Installiere nichts, was du nicht gelesen hast.",
     "from": "1972614790c0"
   },
+  "security.not.plugins": {
+    "text": "<strong>Ein Plugin läuft als Sie.</strong> Ein Plugin ist Ihr eigener Code, den die Seite lädt, sobald Sie ihn in Settings → Plugins einschalten. Es kann jedes Terminal lesen, in jedes tippen und alles tun, was die Seite kann; es läuft in keiner Sandbox. Es läuft nur so, wie seine Dateien beim Einschalten waren, damit geänderter Code nicht unbemerkt läuft, aber ein Agent in einem Terminal läuft ebenfalls als Sie und könnte ein Plugin und die Einstellungen schreiben, die es einschalten. Der Schalter ist ein Nachweis, kein Schloss.",
+    "from": "934e6eb6cc73"
+  },
   "security.not.guide": {
     "text": "<strong>Die Anleitung für Agenten ist ein Rat</strong>, kein Schloss.",
     "from": "79f0576917ce"
@@ -5191,6 +5195,26 @@
     "text": "Wenn eine Regel die Seite kaputt macht, öffnen Sie sie mit <code>?plain</code> hinter ihrer Adresse: Sie wird ohne Ihr Stylesheet gesendet. Nichts, was ein Stylesheet nennt, wird von einer anderen Adresse geladen: Ein Bild, eine Schrift oder ein Stylesheet kommt von diesem Server oder aus eingebetteten Daten, sodass ein eingefügtes Snippet nicht anderswohin senden kann, was auf Ihrer Seite steht. Das ist ein Schutz für eine Datei, die Sie geschrieben oder eingefügt haben, keine Sandbox. Es wurde nur in Chromium ausprobiert.",
     "from": "7cec576ea647"
   },
+  "custom.plugin.title": {
+    "text": "Ihr eigener Code: Plugins",
+    "from": "a35c5d0a8022"
+  },
+  "custom.plugin.text": {
+    "text": "Über die Einstellungen und das Stylesheet hinaus schreiben Sie Code: Ein Plugin ist ein eigenes JavaScript-Modul in <code>plugins/&lt;id&gt;/</code> im Datenordner, mit einer <code>plugin.json</code>, die es benennt. Die Seite importiert es, wie es ist, ohne Build-Schritt, und gibt ihm ein Objekt, <code>aubergine</code>: einen Bereich der Seitenleiste, einen Filter der Liste, einen Platzhalter für einen Titel oder eine Zeile, einen Befehl in der Palette, eine Ansicht eines Laufs, den Zustand und jede Änderung, sobald sie geschieht, und jeden Aufruf, den die Seite macht. <code>aubergine plugin new &lt;id&gt;</code> schreibt eines zum Anfangen.",
+    "from": "b196c36fa6d5"
+  },
+  "custom.plugin.asyou": {
+    "text": "<strong>Ein Plugin läuft in der Seite als Sie, und nichts hält es fern.</strong> Es kann jedes Terminal lesen, in jedes tippen und alles auf der Seite ändern. Es läuft in keiner Sandbox. Es läuft erst, wenn Sie es in <strong>Settings → Plugins</strong> einschalten, und nur so, wie seine Dateien damals waren: Eine geänderte Datei wird nicht geladen, bis Sie wieder hingesehen haben. Das verhindert, dass Code versehentlich läuft; es ist kein Schloss, denn ein Agent in einem Terminal läuft ebenfalls als Sie und könnte die Einstellungsdatei schreiben. Schalten Sie nur ein, was Sie geschrieben oder gelesen haben.",
+    "from": "16f443abcf24"
+  },
+  "custom.plugin.api": {
+    "text": "Die Mitglieder von <code>aubergine</code> stehen in <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/plugins.md\">docs/plugins.md</a> und kommen von einer Version zur nächsten nur hinzu; was ein Plugin darüber hinaus erreicht, kann sich ändern. Ein Befehl in der Palette, in wenigen Zeilen:",
+    "from": "ce92bb9a9099"
+  },
+  "custom.plugin.out": {
+    "text": "Wenn ein Plugin die Seite kaputt macht, öffnen Sie sie mit <code>?plain</code> hinter der Adresse: Kein Plugin wird geladen, und Ihr Stylesheet bleibt weg. Ein Plugin, das fehlschlägt, wird in Settings genannt, und die Seite und die anderen Plugins laufen weiter. Ausgeschaltet verschwindet alles, was es über <code>aubergine</code> hinzugefügt hat, sofort; was es darüber hinaus getan hat, mit einem Neuladen. Es wurde nur in Chromium ausprobiert.",
+    "from": "6b1c8303252c"
+  },
   "custom.file.title": {
     "text": "Eine Einstellungsdatei, die sich selbst beschreibt",
     "from": "9d7e735d280e"
@@ -5464,8 +5488,8 @@
     "from": "7db23532c40d"
   },
   "custom.cmp.a.code": {
-    "text": "Nein. Geplant: Plugins",
-    "from": "f89ee178c319"
+    "text": "Ja: Plugins, JavaScript-Module, die in der Seite als Sie laufen, über eine dokumentierte API und darüber hinaus. Keine Sandbox",
+    "from": "96c911a66f1f"
   },
   "custom.cmp.a.templates": {
     "text": "Zwei, für den Titel eines Terminals und eine Zeile der Liste: Text mit Platzhaltern wie <code>{state}</code> und <code>{field:Ticket}</code>",
@@ -5480,8 +5504,8 @@
     "from": "9538078a7039"
   },
   "custom.cmp.p3": {
-    "text": "Aubergine steht heute am Ende der Einstellungen und einen Schritt darüber hinaus: Themes, Farben und Tasten in Dateien, die sich selbst beschreiben, eine Seite, die einen Teil der Einstellungen schreibt, Vorlagen dafür, was der Titel eines Terminals und seine Zeile sagen, und ein eigenes Stylesheet mit Ansatzpunkten, die stabil bleiben. Es führt keinen Code von Ihnen in der Seite aus: Plugins stehen auf der <a href=\"/roadmap/#rm-yours\">Roadmap</a> und sind nicht gebaut.",
-    "from": "4315d5e6e417"
+    "text": "Aubergine reicht heute vom Ende der Einstellungen bis zum Code: Themes, Farben und Tasten in Dateien, die sich selbst beschreiben, eine Seite, die einen Teil der Einstellungen schreibt, Vorlagen für das, was der Titel eines Terminals und seine Zeile sagen, ein eigenes Stylesheet mit stabil gehaltenen Ankerpunkten, und Plugins, Ihr eigenes JavaScript in der Seite mit einer API, die nur wächst. Ein Plugin läuft mit allem, was die Seite kann; ein Sandbox-Modus für Plugins anderer steht auf der <a href=\"/roadmap/#rm-yours\">Roadmap</a> und ist nicht gebaut.",
+    "from": "35e798f5a422"
   },
   "custom.cmp.mark": {
     "text": "Aubergine ist mit keinem der auf dieser Seite genannten Werkzeuge verbunden. Ihre Namen sind Marken ihrer Inhaber.",
@@ -5492,8 +5516,8 @@
     "from": "e10eed0040ae"
   },
   "custom.plan.text": {
-    "text": "Plugins, Ihr eigener Code in der Seite, sind geplant und nicht gebaut: siehe die <a href=\"/roadmap/#rm-yours\">Roadmap</a>.",
-    "from": "5889d38036ea"
+    "text": "Ein Sandbox-Weg, ein Plugin auszuführen, das jemand anderes geschrieben hat, und eines über den Prüfbildschirm zu installieren, sind geplant und nicht gebaut: siehe die <a href=\"/roadmap/#rm-yours\">Roadmap</a>.",
+    "from": "3d1b428010be"
   },
   "custom.q.terminal.q": {
     "text": "Kann jedes Terminal ein eigenes Farbthema haben?",
@@ -5510,6 +5534,14 @@
   "custom.q.css.a": {
     "text": "Ja: <code>custom.css</code> im Datenordner (<code>aubergine css new</code> schreibt eine zum Anfangen). Sie wird als Letztes auf der Seite eingebunden, ab dem ersten Zeichnen, und die Ansatzpunkte, auf die sie sich verlassen kann, stehen in docs/hooks.md. Hängen Sie <code>?plain</code> an die Adresse der Seite, um sie ohne zu sehen.",
     "from": "8ebf56535e5d"
+  },
+  "custom.q.code.q": {
+    "text": "Kann ich eigene Plugins für Aubergine schreiben?",
+    "from": "d5b081c290fa"
+  },
+  "custom.q.code.a": {
+    "text": "Ja: ein JavaScript-Modul in <code>plugins/&lt;id&gt;/</code> im Datenordner (<code>aubergine plugin new &lt;id&gt;</code> schreibt eines zum Anfangen), eingeschaltet in Settings → Plugins. Es läuft in der Seite als Sie, mit allem, was die Seite kann; es läuft in keiner Sandbox.",
+    "from": "2cdaf7e15ca1"
   },
   "custom.q.file.q": {
     "text": "Wo liegt die Einstellungsdatei von Aubergine?",
@@ -5536,15 +5568,15 @@
     "from": "34ca8a4540f5"
   },
   "roadmap.yours.sub": {
-    "text": "Mehr von der Seite nach Ihren Wünschen, über die heutigen Themes, Farben, Tasten, Vorlagen und Ihr eigenes Stylesheet hinaus.",
-    "from": "903ac9c0326e"
+    "text": "Mehr von der Seite nach Ihren Vorstellungen, über die heutigen Themes, Farben, Tasten, Vorlagen, Ihr eigenes Stylesheet und Ihre eigenen Plugins hinaus.",
+    "from": "f6ef69a6539a"
   },
   "roadmap.yours.plugins.name": {
-    "text": "Plugins",
-    "from": "9514b7ff4860"
+    "text": "Plugins anderer",
+    "from": "eea2e52b2e70"
   },
   "roadmap.yours.plugins.text": {
-    "text": "Eigener Code in der Seite, mit voller Kontrolle, über benannte Stellen und darüber hinaus. Ein abgeschotteter Modus für Code anderer Leute kann später kommen.",
-    "from": "e45f18abdc98"
+    "text": "Ein Sandbox-Modus für ein Plugin, das jemand anderes geschrieben hat, mit weniger als allem, und die Installation eines Plugins über den Prüfbildschirm. Ihre eigenen Plugins, die in der Seite als Sie mit voller Kontrolle laufen, sind gebaut.",
+    "from": "08c850bebd87"
   }
 }

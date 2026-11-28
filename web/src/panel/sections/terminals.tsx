@@ -51,7 +51,7 @@ function useModel() {
   const view = useApp((s) => s.listView);
   const canvasId = useApp((s) => s.canvasId);
   // A filter added or taken away after the page was drawn (a plugin's) works the list out again.
-  const filters = useSyncExternalStore(subscribeToFilters, filtersVersion);
+  const filters = useSyncExternalStore(subscribeToFilters, filtersVersion, filtersVersion);
   return useMemo(() => listModel(app, view, canvasId), [app, view, canvasId, filters]); // eslint-disable-line react-hooks/exhaustive-deps -- `filters` is what the registry was when the list was worked out
 }
 

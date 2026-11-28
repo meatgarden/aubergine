@@ -4340,6 +4340,25 @@
             }
           ]
         },
+        "plugins.show": {
+          "description": "The key of plugins.show: a chord such as \"Ctrl+Meta+J\", a list of chords, or null for no key.",
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 100
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "maxLength": 100
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
         "theme.use.light": {
           "description": "The key of theme.use.light: a chord such as \"Ctrl+Meta+J\", a list of chords, or null for no key.",
           "anyOf": [
@@ -6552,6 +6571,25 @@
             }
           ]
         },
+        "plugins.show": {
+          "description": "The key of plugins.show: a chord such as \"Ctrl+Meta+J\", a list of chords, or null for no key.",
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 100
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "maxLength": 100
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
         "theme.use.light": {
           "description": "The key of theme.use.light: a chord such as \"Ctrl+Meta+J\", a list of chords, or null for no key.",
           "anyOf": [
@@ -7121,6 +7159,33 @@
               "type": "null"
             }
           ]
+        }
+      }
+    },
+    "plugins": {
+      "description": "Plugins: code of your own that runs in the page as you, with everything the page can do. Nothing keeps it apart; see docs/plugins.md.",
+      "default": {},
+      "type": "object",
+      "properties": {
+        "on": {
+          "default": {},
+          "description": "Which plugins (folders in plugins/ in the data folder) run in the page, as you: a plugin’s ID to the digest it had when you switched it on, or \"follow\" to run whatever is in its folder. A plugin whose files changed since is not loaded until it is switched on again. A wrong entry is reported and skipped.",
+          "type": "object",
+          "additionalProperties": false,
+          "patternProperties": {
+            "^[a-z][a-z0-9-]{0,39}$": {
+              "description": "The digest the plugin had when it was switched on, or \"follow\".",
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                },
+                {
+                  "const": "follow"
+                }
+              ]
+            }
+          }
         }
       }
     }

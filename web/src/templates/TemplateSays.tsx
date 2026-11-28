@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState, type ReactNode } from 'react';
+import { Fragment, useEffect, useState, useSyncExternalStore, type ReactNode } from 'react';
 import {
   DEFAULT_FORMAT,
   TITLE_LINKS,
@@ -12,6 +12,8 @@ import {
   sortedLinks,
   templatePart,
   templateParts,
+  templatePartsVersion,
+  onTemplateParts,
   themeOf,
   untoldWords,
   type ParsedTemplate,
@@ -43,9 +45,12 @@ import { handedInBy, runsBySession } from '../workflows/run-model';
  */
 
 const parsed = new Map<string, ParsedTemplate>();
-/** A template, read once for each text it has had and each place: not once per row. */
+/**
+ * A template, read once for each text it has had and each place: not once per row. Read again once the placeholders
+ * there are change (a plugin's added or taken away), since what is a placeholder is what was registered.
+ */
 export function templateOf(text: string, where: TemplateWhere): ParsedTemplate {
-  const key = `${where}\u0000${text}`;
+  const key = `${templatePartsVersion()}\u0000${where}\u0000${text}`;
   let known = parsed.get(key);
   if (!known) {
     known = parseTemplate(text, where);
@@ -58,6 +63,8 @@ export function templateOf(text: string, where: TemplateWhere): ParsedTemplate {
 /** The template of a place as the settings have it now. */
 export function useTemplate(where: TemplateWhere): ParsedTemplate {
   const text = useApp((s) => (where === 'title' ? s.settings.appearance.titleFormat : s.settings.appearance.rowFormat)) ?? DEFAULT_FORMAT[where];
+  // A placeholder added or taken away while the page runs: the template is read again.
+  useSyncExternalStore(onTemplateParts, templatePartsVersion, templatePartsVersion);
   return templateOf(text, where);
 }
 
@@ -331,8 +338,49 @@ const DRAW: Record<string, Draw> = {
   },
 };
 
+/**
+ * Placeholders added while the page runs (a plugin's), with what they say of a terminal: plain words, drawn as a
+ * `words` placeholder is, or (`field`) a value whose addresses are chips. What they say is text, whatever it holds.
+ * A `say` that throws says nothing, and is reported once through `onFailure`.
+ */
+export interface AddedDrawing {
+  kind: 'words' | 'field';
+  say: (session: Session, where: TemplateWhere) => string | null | undefined;
+  /** Where the drawing comes from, put on what is drawn (`data-plugin`), so that its own stylesheet can reach it. */
+  plugin: string;
+  onFailure: (error: unknown) => void;
+}
+const added = new Map<string, AddedDrawing>();
+/** Draws a placeholder registered in `shared/` while the page runs. Returns what takes the drawing away again. */
+export function addPartDrawing(name: string, drawing: AddedDrawing): () => void {
+  added.set(name, drawing);
+  return () => {
+    if (added.get(name) === drawing) added.delete(name);
+  };
+}
+function drawAdded(drawing: AddedDrawing, context: SaysContext): ReactNode {
+  let said: string | null | undefined;
+  try {
+    said = drawing.say(context.session, context.where);
+  } catch (error) {
+    drawing.onFailure(error);
+    return null;
+  }
+  if (typeof said !== 'string' || said.trim() === '') return null;
+  const text = showControl(said);
+  return (
+    <span className={WORDS_CLASS[context.where]} title={text} data-testid="template-words" data-plugin={drawing.plugin}>
+      {drawing.kind === 'field' ? <WithLinks text={text} /> : text}
+    </span>
+  );
+}
+const drawOf = (name: string): Draw | undefined => {
+  const drawing = added.get(name);
+  return drawing ? (context) => drawAdded(drawing, context) : DRAW[name];
+};
+
 /** Which placeholders have a drawing here: every one registered, as a test checks. */
-export const drawnParts = (): string[] => templateParts().map((part) => part.name).filter((name) => DRAW[name] !== undefined);
+export const drawnParts = (): string[] => templateParts().map((part) => part.name).filter((name) => drawOf(name) !== undefined);
 
 /** The name of the theme a terminal's body is drawn in. */
 function ThemeName({ sessionId, className }: { sessionId: string; className: string }) {
@@ -349,7 +397,7 @@ function ThemeName({ sessionId, className }: { sessionId: string; className: str
 export function drawTemplate(template: ParsedTemplate, context: SaysContext, only?: (kind: TemplateKind) => boolean): ReactNode {
   const pieces = only ? template.pieces.filter((piece) => 'part' in piece && only(templatePart(piece.part)?.kind ?? 'words')) : template.pieces;
   const drawn = renderTemplate(pieces, (piece) => {
-    const node = DRAW[piece.part]?.(context, piece.label);
+    const node = drawOf(piece.part)?.(context, piece.label);
     return node === null || node === undefined || node === false ? null : node;
   });
   // Each piece is keyed by what it is, so that a piece that comes or goes is drawn anew and another is not patched into its place.

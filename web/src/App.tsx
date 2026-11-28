@@ -19,6 +19,7 @@ import { useTrying } from './appearance/trying';
 import { Pages, Screens } from './Screens';
 import { SignIn } from './devices/SignIn';
 import { useOwnStylesheet } from './custom-css';
+import { usePlugins } from './plugins/loader';
 import { useRootHooks } from './page-hooks';
 
 export function App() {
@@ -52,6 +53,8 @@ export function App() {
   // The owner's own stylesheet, and the hooks on the root that a stylesheet may rely on.
   useOwnStylesheet();
   useRootHooks();
+  // The owner's plugins: once signed in and drawn, never on the sign-in screen, none with ?plain.
+  usePlugins();
 
   if (phase === 'loading') return <Message title="Loading…" />;
 

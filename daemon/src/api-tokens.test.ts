@@ -414,6 +414,8 @@ describe('every route has a rule', () => {
     'PUT /v1/settings/appearance',
     'POST /v1/settings/themes/read',
     'POST /v1/settings/stylesheet/read',
+    'POST /v1/settings/plugins/read',
+    'PUT /v1/settings/plugins',
     // Accepting or declining a proposed theme.
     'POST /v1/themes/proposals/:proposalId/accept',
     'DELETE /v1/themes/proposals/:proposalId',

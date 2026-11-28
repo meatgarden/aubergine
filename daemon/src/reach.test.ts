@@ -584,7 +584,7 @@ describe('a stranger from outside', () => {
     const filled = (url: string): string => url.replace('/*', '/assets/app.js').replace(/:[A-Za-z]+/g, () => newId());
     const routes = everyRouteOf(app);
     // Every kind of route is there to be tried: a walk of nothing would pass.
-    for (const wanted of ['GET /api/v1/state', 'POST /api/v1/sessions', 'GET /ws/v1/events', 'GET /v1/canvases', 'POST /auth/pair', 'GET /auth', 'GET /', 'GET /*', 'GET /api/v1/devices', 'POST /api/v1/pairing-codes', 'DELETE /api/v1/devices/:deviceId', 'GET /api/v1/custom.css']) {
+    for (const wanted of ['GET /api/v1/state', 'POST /api/v1/sessions', 'GET /ws/v1/events', 'GET /v1/canvases', 'POST /auth/pair', 'GET /auth', 'GET /', 'GET /*', 'GET /api/v1/devices', 'POST /api/v1/pairing-codes', 'DELETE /api/v1/devices/:deviceId', 'GET /api/v1/custom.css', 'GET /api/v1/plugins/:pluginId/:digest/:file', 'PUT /v1/settings/plugins', 'POST /v1/settings/plugins/read']) {
       expect(routes.map((r) => `${r.method} ${r.url}`)).toContain(wanted);
     }
     const answered: string[] = [];

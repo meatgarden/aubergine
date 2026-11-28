@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useSyncExternalStore } from 'react';
 import { kickoffLine, renderRun, type RunDetail } from '@aubergine/shared';
 import { api } from '../api';
 import { useApp } from '../store';
 import { reportRun } from './actions';
 import { ApprovalControls } from './ApprovalControls';
-import { runViewList } from './registries';
+import { runViewList, subscribeToViews, viewsVersion } from './registries';
 import { STATUS_MARK, STATUS_WORD, pictureOf, versionOfRun } from './run-model';
 
 /**
@@ -60,6 +60,9 @@ export function RunViewDialog() {
     return () => window.clearInterval(timer);
   }, [runId]);
 
+  // A view added or taken away after the page was drawn (a plugin's) is drawn at once.
+  useSyncExternalStore(subscribeToViews, viewsVersion, viewsVersion);
+
   if (!runId) return null;
   const close = (): void => useApp.getState().viewRun(null);
   const picture =
@@ -68,8 +71,6 @@ export function RunViewDialog() {
       : ended
         ? pictureOf(ended.run, ended, null, quietAfter)
         : null;
-  // A view added or taken away after the page was drawn (a plugin's) is drawn at once.
-  useSyncExternalStore(subscribeToViews, viewsVersion);
   const views = runViewList();
   const View = (views.find((v) => v.id === view) ?? views[0])?.Component;
   const run = picture?.run;

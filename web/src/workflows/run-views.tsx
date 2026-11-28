@@ -7,7 +7,7 @@ import { STATE_MARK, actorWord, took } from './run-model';
 function Pipeline({ picture, elements, live, now }: RunViewProps) {
   const { run } = picture;
   const [open, setOpen] = useState<string | null>(null);
-  useSyncExternalStore(subscribeToViews, viewsVersion);
+  useSyncExternalStore(subscribeToViews, viewsVersion, viewsVersion);
   return (
     <ol className="run-pipeline" data-testid="run-pipeline">
       {picture.segments.map((segment, index) => {

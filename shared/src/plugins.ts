@@ -86,7 +86,9 @@ export const PluginManifest = z.object({
 export type PluginManifest = z.infer<typeof PluginManifest>;
 
 /** The keys a manifest may hold. `$schema` is for an editor and is not read. */
-const MANIFEST_KEYS = new Set(['$schema', 'name', 'version', 'runs', 'main', 'style', 'api', 'description']);
+const MANIFEST_KEYS = new Set(['$schema', 'name', 'version', 'runs', 'main', 'style', 'api']);
+/** One line of plain text: no control characters, nothing that reverses the direction of text, no line or paragraph separator. */
+const oneLine = (text: string): boolean => PLAIN_LINE.test(text) && !/[\u2028\u2029]/.test(text);
 const isRecord = (value: unknown): value is Record<string, unknown> => value !== null && typeof value === 'object' && !Array.isArray(value);
 
 export type ManifestReading = { manifest: PluginManifest; problems: string[] } | { problem: string; name?: string };
@@ -114,10 +116,10 @@ export function readPluginManifest(id: string, text: string): ManifestReading {
   }
   if (!isRecord(raw)) return { problem: `${where}: it is not a JSON object with a name, a version, how it runs, its main file and its API version. It is not loaded.` };
   const name = typeof raw.name === 'string' ? raw.name.trim() : '';
-  if (name === '' || name.length > 120 || !PLAIN_LINE.test(name)) return { problem: `${where}: "name" is not a plain name of one line, at most 120 characters. It is not loaded.` };
+  if (name === '' || name.length > 120 || !oneLine(name)) return { problem: `${where}: "name" is not a plain name of one line, at most 120 characters. It is not loaded.` };
   const named = { name };
   const version = typeof raw.version === 'string' ? raw.version.trim() : null;
-  if (version === null || version === '' || version.length > 40 || !PLAIN_LINE.test(version)) return { ...named, problem: `${where}: "version" is not one line of at most 40 characters. It is not loaded.` };
+  if (version === null || version === '' || version.length > 40 || !oneLine(version)) return { ...named, problem: `${where}: "version" is not one line of at most 40 characters. It is not loaded.` };
   if (raw.runs === undefined) return { ...named, problem: `${where}: it does not say how it runs ("runs": "page"). It is not loaded.` };
   if (typeof raw.runs !== 'string' || !(PLUGIN_RUNS as readonly string[]).includes(raw.runs))
     return { ...named, problem: `${where}: not loaded: this Aubergine cannot run a plugin that way ("runs": ${typeof raw.runs === 'string' ? `"${plain(raw.runs)}"` : 'not a word'}; the one way there is, is "page").` };

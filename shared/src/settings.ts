@@ -166,7 +166,7 @@ export const Settings = z.object({
   plugins: z
     .object({
       on: z
-        .record(z.string().max(100), z.unknown())
+        .record(z.string(), z.unknown())
         .catch({})
         .default({})
         .describe('Which plugins (folders in plugins/ in the data folder) run in the page, as you: a plugin’s ID to the digest it had when you switched it on, or "follow" to run whatever is in its folder. A plugin whose files changed since is not loaded until it is switched on again. A wrong entry is reported and skipped.'),

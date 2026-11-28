@@ -1766,6 +1766,105 @@ export type ReadStylesheetResult = {
   problem: string | null;
 };
 
+export type ChangePluginBody = {
+  /** The plugin’s ID: its folder’s name. */
+  id: string;
+  /** The digest of the plugin as the server answered it just now (another is refused with 409: what is switched on is what was read), `follow` to run whatever is in its folder (for a plugin you are writing), or null to switch it off. */
+  on: (string | "follow") | null;
+};
+
+export type ChangePluginResult = {
+  /** Where the folder of plugins is, on the computer the server runs on; null where the server does not say. */
+  folder: string | null;
+  /** Every plugin found, in the order of their IDs. */
+  plugins: {
+    /** Its folder’s name. */
+    id: string;
+    /** What its manifest calls it, else its ID. */
+    name: string;
+    /** Its manifest, or null where it could not be read. */
+    manifest: {
+      /** What the plugin is called: one line of plain text. */
+      name: string;
+      /** Its version, as its author writes it: one line of at most 40 characters. */
+      version: string;
+      /** How it runs. `page`: in the page, as the owner, with nothing kept apart. */
+      runs: "page";
+      /** The module the page imports: a `.js` file directly in its folder. */
+      main: string;
+      /** A stylesheet the page links while it runs: a `.css` file directly in its folder, or null. */
+      style: string | null;
+      /** The version of the plugin API it was written for. */
+      api: number;
+    } | null;
+    /** The SHA-256 over its files’ names and contents, as read now; null where they could not all be read. */
+    digest: string | null;
+    /** The files read, by name. */
+    files: {
+      /** The file’s name, directly in the plugin’s folder. */
+      name: string;
+      /** Its size, in bytes. */
+      bytes: number;
+    }[];
+    /** Why it cannot be loaded, in a sentence; null where it can. */
+    notLoaded: string | null;
+    /** What was skipped in its folder, one sentence each: a link, a folder, a name a file cannot have, a key a manifest does not have. */
+    problems: string[];
+  }[];
+  /** What the settings switch on, by plugin ID: the digest that was switched on, or `follow`. */
+  on: {
+    [key: string]: string | "follow";
+  };
+  /** What was wrong with the folder of plugins or with `plugins.on`, one sentence each. */
+  problems: string[];
+};
+
+export type ReadPluginsResult = {
+  /** Where the folder of plugins is, on the computer the server runs on; null where the server does not say. */
+  folder: string | null;
+  /** Every plugin found, in the order of their IDs. */
+  plugins: {
+    /** Its folder’s name. */
+    id: string;
+    /** What its manifest calls it, else its ID. */
+    name: string;
+    /** Its manifest, or null where it could not be read. */
+    manifest: {
+      /** What the plugin is called: one line of plain text. */
+      name: string;
+      /** Its version, as its author writes it: one line of at most 40 characters. */
+      version: string;
+      /** How it runs. `page`: in the page, as the owner, with nothing kept apart. */
+      runs: "page";
+      /** The module the page imports: a `.js` file directly in its folder. */
+      main: string;
+      /** A stylesheet the page links while it runs: a `.css` file directly in its folder, or null. */
+      style: string | null;
+      /** The version of the plugin API it was written for. */
+      api: number;
+    } | null;
+    /** The SHA-256 over its files’ names and contents, as read now; null where they could not all be read. */
+    digest: string | null;
+    /** The files read, by name. */
+    files: {
+      /** The file’s name, directly in the plugin’s folder. */
+      name: string;
+      /** Its size, in bytes. */
+      bytes: number;
+    }[];
+    /** Why it cannot be loaded, in a sentence; null where it can. */
+    notLoaded: string | null;
+    /** What was skipped in its folder, one sentence each: a link, a folder, a name a file cannot have, a key a manifest does not have. */
+    problems: string[];
+  }[];
+  /** What the settings switch on, by plugin ID: the digest that was switched on, or `follow`. */
+  on: {
+    [key: string]: string | "follow";
+  };
+  /** What was wrong with the folder of plugins or with `plugins.on`, one sentence each. */
+  problems: string[];
+};
+
 export type AppendNoteBody = {
   text: string;
   kind?: "note" | "prompt" | "event";
@@ -11268,6 +11367,8 @@ export const OPERATIONS = {
   changeAppearance: { method: 'PUT', path: '/v1/settings/appearance', params: [], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
   readThemes: { method: 'POST', path: '/v1/settings/themes/read', params: [], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
   readStylesheet: { method: 'POST', path: '/v1/settings/stylesheet/read', params: [], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
+  changePlugin: { method: 'PUT', path: '/v1/settings/plugins', params: [], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
+  readPlugins: { method: 'POST', path: '/v1/settings/plugins/read', params: [], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
   appendNote: { method: 'POST', path: '/v1/sessions/{sessionId}/notes', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'session', scope: "notes:write" } },
   updateNode: { method: 'PATCH', path: '/v1/canvases/{canvasId}/nodes/{nodeId}', params: ["canvasId", "nodeId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'token', scope: "canvases:write" } },
   createFrame: { method: 'POST', path: '/v1/canvases/{canvasId}/frames', params: ["canvasId"], hasBody: true, paged: false, idempotent: true, stream: false, access: { who: 'token', scope: "canvases:write" } },
@@ -11578,6 +11679,18 @@ export interface Client {
    * `POST /v1/settings/stylesheet/read`. Signed-in browser only: no API token may call this.
    */
   readStylesheet(args?: CallOptions): Promise<ReadStylesheetResult>;
+  /**
+   * Switch a plugin on or off: code of your own that runs in the page as you.
+   *
+   * `PUT /v1/settings/plugins`. Signed-in browser only: no API token may call this.
+   */
+  changePlugin(args: { body: ChangePluginBody } & CallOptions): Promise<ChangePluginResult>;
+  /**
+   * Read the plugins again.
+   *
+   * `POST /v1/settings/plugins/read`. Signed-in browser only: no API token may call this.
+   */
+  readPlugins(args?: CallOptions): Promise<ReadPluginsResult>;
   /**
    * Add an entry to a session's note log.
    *

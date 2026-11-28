@@ -3199,6 +3199,10 @@
     "text": "<strong>L’écran de relecture est le contrôle des éléments de bibliothèque.</strong> Un élément, ce sont des instructions qu’un agent suivra avec tout ce que cet agent a le droit de faire. N’installez pas ce que vous n’avez pas lu.",
     "from": "1972614790c0"
   },
+  "security.not.plugins": {
+    "text": "<strong>Un plugin s’exécute en tant que vous.</strong> Un plugin est votre propre code que la page charge une fois que vous l’avez activé dans Settings → Plugins. Il peut lire chaque terminal, taper dans n’importe lequel et faire tout ce que la page peut faire ; il n’est pas dans un bac à sable. Il ne s’exécute que tel que ses fichiers étaient quand vous l’avez activé, donc du code modifié ne s’exécute pas sans que vous le remarquiez, mais un agent dans un terminal s’exécute aussi en tant que vous et pourrait écrire un plugin et les réglages qui l’activent. L’interrupteur est une trace, pas un verrou.",
+    "from": "934e6eb6cc73"
+  },
   "security.not.guide": {
     "text": "<strong>Le guide pour les agents est un conseil</strong>, pas un verrou.",
     "from": "79f0576917ce"
@@ -5191,6 +5195,26 @@
     "text": "Si une règle casse la page, ouvrez-la avec <code>?plain</code> après son adresse : elle est envoyée sans votre feuille de style. Rien de ce qu’une feuille de style nomme n’est chargé depuis une autre adresse : une image, une police ou une feuille de style vient de ce serveur ou de données en ligne, si bien qu’un extrait collé ne peut pas envoyer ailleurs ce qu’il y a sur votre page. C’est une protection pour un fichier que vous avez écrit ou collé, pas un bac à sable. Cela n’a été essayé que dans Chromium.",
     "from": "7cec576ea647"
   },
+  "custom.plugin.title": {
+    "text": "Votre propre code : les plugins",
+    "from": "a35c5d0a8022"
+  },
+  "custom.plugin.text": {
+    "text": "Au-delà des réglages et de la feuille de style, écrivez du code : un plugin est un module JavaScript à vous dans <code>plugins/&lt;id&gt;/</code> du dossier de données, avec un <code>plugin.json</code> qui le nomme. La page l’importe tel quel, sans étape de compilation, et lui donne un objet, <code>aubergine</code> : une section du panneau latéral, un filtre de la liste, un espace réservé pour un titre ou une ligne, une commande dans la palette, une façon de regarder une exécution, l’état et chaque changement au moment où il arrive, et chaque appel que fait la page. <code>aubergine plugin new &lt;id&gt;</code> en écrit un pour commencer.",
+    "from": "b196c36fa6d5"
+  },
+  "custom.plugin.asyou": {
+    "text": "<strong>Un plugin s’exécute dans la page en tant que vous, et rien ne le tient à l’écart.</strong> Il peut lire chaque terminal, taper dans n’importe lequel et changer n’importe quoi sur la page. Il n’est pas dans un bac à sable. Il ne s’exécute qu’une fois que vous l’activez dans <strong>Settings → Plugins</strong>, et seulement tel que ses fichiers étaient à ce moment-là : un fichier qui change n’est pas chargé tant que vous ne l’avez pas regardé à nouveau. Cela évite que du code s’exécute par accident ; ce n’est pas un verrou, puisqu’un agent dans un terminal s’exécute aussi en tant que vous et pourrait écrire le fichier de réglages. N’activez que ce que vous avez écrit ou lu.",
+    "from": "16f443abcf24"
+  },
+  "custom.plugin.api": {
+    "text": "Les membres de <code>aubergine</code> sont listés dans <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/plugins.md\">docs/plugins.md</a> et ne font que s’ajouter d’une version à l’autre ; ce qu’un plugin atteint au-delà peut changer. Une commande dans la palette, en quelques lignes :",
+    "from": "ce92bb9a9099"
+  },
+  "custom.plugin.out": {
+    "text": "Si un plugin casse la page, ouvrez-la avec <code>?plain</code> après son adresse : aucun plugin n’est chargé, et votre feuille de style est laissée de côté. Un plugin qui échoue est signalé dans Settings, et la page et les autres plugins continuent. Désactivé, tout ce qu’il a ajouté par <code>aubergine</code> disparaît aussitôt ; ce qu’il a fait au-delà disparaît avec un rechargement. Cela n’a été essayé que dans Chromium.",
+    "from": "6b1c8303252c"
+  },
   "custom.file.title": {
     "text": "Un fichier de réglages qui se décrit lui-même",
     "from": "9d7e735d280e"
@@ -5464,8 +5488,8 @@
     "from": "7db23532c40d"
   },
   "custom.cmp.a.code": {
-    "text": "Non. Prévu : des plugins",
-    "from": "f89ee178c319"
+    "text": "Oui : des plugins, des modules JavaScript qui s’exécutent dans la page en tant que vous, par une API documentée et au-delà. Pas de bac à sable",
+    "from": "96c911a66f1f"
   },
   "custom.cmp.a.templates": {
     "text": "Deux, pour le titre d’un terminal et une ligne de la liste : du texte avec des repères comme <code>{state}</code> et <code>{field:Ticket}</code>",
@@ -5480,8 +5504,8 @@
     "from": "9538078a7039"
   },
   "custom.cmp.p3": {
-    "text": "Aujourd’hui Aubergine est du côté des réglages, et un pas plus loin : thèmes, couleurs et touches dans des fichiers qui se décrivent eux-mêmes, une page qui écrit une partie des réglages, des modèles pour ce que disent le titre d’un terminal et sa ligne, et une feuille de style à vous avec des points d’accroche gardés stables. Il n’exécute aucun code à vous dans la page : les plugins sont sur la <a href=\"/roadmap/#rm-yours\">feuille de route</a>, et pas construits.",
-    "from": "4315d5e6e417"
+    "text": "Aujourd’hui Aubergine va du côté des réglages jusqu’au code : thèmes, couleurs et touches dans des fichiers qui se décrivent eux-mêmes, une page qui écrit une partie des réglages, des modèles pour ce que disent le titre d’un terminal et sa ligne, une feuille de style à vous avec des points d’accroche gardés stables, et des plugins, votre propre JavaScript dans la page avec une API qui ne fait que s’enrichir. Un plugin s’exécute avec tout ce que la page peut faire ; un mode isolé pour les plugins d’autres personnes est sur la <a href=\"/roadmap/#rm-yours\">feuille de route</a>, et pas construit.",
+    "from": "35e798f5a422"
   },
   "custom.cmp.mark": {
     "text": "Aubergine n’est affilié à aucun des outils nommés sur cette page. Leurs noms sont les marques de leurs propriétaires.",
@@ -5492,8 +5516,8 @@
     "from": "e10eed0040ae"
   },
   "custom.plan.text": {
-    "text": "Les plugins, votre propre code dans la page, sont prévus et non construits : voir la <a href=\"/roadmap/#rm-yours\">feuille de route</a>.",
-    "from": "5889d38036ea"
+    "text": "Une façon isolée d’exécuter un plugin écrit par quelqu’un d’autre, et l’installation d’un plugin par l’écran de relecture, sont prévues et non construites : voir la <a href=\"/roadmap/#rm-yours\">feuille de route</a>.",
+    "from": "3d1b428010be"
   },
   "custom.q.terminal.q": {
     "text": "Chaque terminal peut-il avoir un thème de couleurs différent ?",
@@ -5510,6 +5534,14 @@
   "custom.q.css.a": {
     "text": "Oui : <code>custom.css</code> dans le dossier de données (<code>aubergine css new</code> en écrit une pour commencer). Elle est liée en dernier sur la page, dès le premier affichage, et les points d’accroche sur lesquels elle peut compter sont listés dans docs/hooks.md. Ajoutez <code>?plain</code> à l’adresse de la page pour la voir sans.",
     "from": "8ebf56535e5d"
+  },
+  "custom.q.code.q": {
+    "text": "Puis-je écrire mes propres plugins pour Aubergine ?",
+    "from": "d5b081c290fa"
+  },
+  "custom.q.code.a": {
+    "text": "Oui : un module JavaScript dans <code>plugins/&lt;id&gt;/</code> du dossier de données (<code>aubergine plugin new &lt;id&gt;</code> en écrit un pour commencer), activé dans Settings → Plugins. Il s’exécute dans la page en tant que vous, avec tout ce que la page peut faire ; il n’est pas dans un bac à sable.",
+    "from": "2cdaf7e15ca1"
   },
   "custom.q.file.q": {
     "text": "Où est le fichier de réglages d’Aubergine ?",
@@ -5536,15 +5568,15 @@
     "from": "34ca8a4540f5"
   },
   "roadmap.yours.sub": {
-    "text": "Davantage de la page façonnée par vous, au-delà des thèmes, couleurs, touches, modèles et de votre propre feuille de style d’aujourd’hui.",
-    "from": "903ac9c0326e"
+    "text": "Davantage de la page façonnée par vous, au-delà des thèmes, couleurs, touches, modèles, de votre propre feuille de style et de vos propres plugins d’aujourd’hui.",
+    "from": "f6ef69a6539a"
   },
   "roadmap.yours.plugins.name": {
-    "text": "Plugins",
-    "from": "9514b7ff4860"
+    "text": "Les plugins d’autres personnes",
+    "from": "eea2e52b2e70"
   },
   "roadmap.yours.plugins.text": {
-    "text": "Votre propre code chargé dans la page avec un contrôle total, par des emplacements nommés et au-delà. Un mode isolé pour le code d’autres personnes pourrait venir plus tard.",
-    "from": "e45f18abdc98"
+    "text": "Un mode isolé pour un plugin écrit par quelqu’un d’autre, avec moins que tout, et l’installation d’un plugin par l’écran de relecture. Vos propres plugins, qui s’exécutent dans la page en tant que vous avec un contrôle total, sont construits.",
+    "from": "08c850bebd87"
   }
 }

@@ -39,6 +39,8 @@ How to create a token, what the scopes mean, the limits and the activity log are
 | [`PUT /v1/settings/appearance`](#changeappearance) | Choose how the page looks: light, dark or matching the system, each one's color theme, the default theme of terminals, a terminal's font and cursor | browser only |
 | [`POST /v1/settings/themes/read`](#readthemes) | Read the owner's theme files again | browser only |
 | [`POST /v1/settings/stylesheet/read`](#readstylesheet) | Read the owner's own stylesheet again | browser only |
+| [`PUT /v1/settings/plugins`](#changeplugin) | Switch a plugin on or off: code of your own that runs in the page as you | browser only |
+| [`POST /v1/settings/plugins/read`](#readplugins) | Read the plugins again | browser only |
 | [`POST /v1/sessions/{sessionId}/notes`](#appendnote) | Add an entry to a session's note log | session's own token, or `notes:write` |
 | [`PATCH /v1/canvases/{canvasId}/nodes/{nodeId}`](#updatenode) | Move, resize or color a node | `canvases:write` |
 | [`POST /v1/canvases/{canvasId}/frames`](#createframe) | Add a frame | `canvases:write` |
@@ -2374,6 +2376,133 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
   } | null;
   /** Why a file that is there was not read (a link, a folder, too large), in one sentence; null otherwise. */
   problem: string | null;
+}
+```
+
+**Errors:** 400, 401, 403, 413, 429.
+
+### changePlugin
+
+`PUT /v1/settings/plugins`: Switch a plugin on or off: code of your own that runs in the page as you.
+
+For the owner only: no token and no session can do this, whatever its scopes. It writes one entry of `plugins.on` in the settings file and leaves the rest of the file as it was: the plugin's digest, `follow`, or (with null) nothing, which switches it off. A digest that is not the plugin's digest as the server reads its folder now is refused with 409, so what is switched on is what was just read; a plugin that is not in the folder, or cannot be loaded, is refused with 404 or 409. It names code that runs in the page as the owner, never anything the server starts: the server runs nothing of a plugin. A switch is a record of what the owner chose, not a lock: anything that runs as the owner can write the settings file too. It answers the plugins as they are now.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+**Body** (JSON):
+
+| Field | Type | Required | |
+|---|---|---|---|
+| `id` | `string` | yes | The plugin’s ID: its folder’s name. |
+| `on` | `(string \| "follow") \| null` | yes | The digest of the plugin as the server answered it just now (another is refused with 409: what is switched on is what was read), `follow` to run whatever is in its folder (for a plugin you are writing), or null to switch it off. |
+
+**Answer** `200`:
+
+```ts
+{
+  /** Where the folder of plugins is, on the computer the server runs on; null where the server does not say. */
+  folder: string | null;
+  /** Every plugin found, in the order of their IDs. */
+  plugins: {
+    /** Its folder’s name. */
+    id: string;
+    /** What its manifest calls it, else its ID. */
+    name: string;
+    /** Its manifest, or null where it could not be read. */
+    manifest: {
+      /** What the plugin is called: one line of plain text. */
+      name: string;
+      /** Its version, as its author writes it: one line of at most 40 characters. */
+      version: string;
+      /** How it runs. `page`: in the page, as the owner, with nothing kept apart. */
+      runs: "page";
+      /** The module the page imports: a `.js` file directly in its folder. */
+      main: string;
+      /** A stylesheet the page links while it runs: a `.css` file directly in its folder, or null. */
+      style: string | null;
+      /** The version of the plugin API it was written for. */
+      api: number;
+    } | null;
+    /** The SHA-256 over its files’ names and contents, as read now; null where they could not all be read. */
+    digest: string | null;
+    /** The files read, by name. */
+    files: {
+      /** The file’s name, directly in the plugin’s folder. */
+      name: string;
+      /** Its size, in bytes. */
+      bytes: number;
+    }[];
+    /** Why it cannot be loaded, in a sentence; null where it can. */
+    notLoaded: string | null;
+    /** What was skipped in its folder, one sentence each: a link, a folder, a name a file cannot have, a key a manifest does not have. */
+    problems: string[];
+  }[];
+  /** What the settings switch on, by plugin ID: the digest that was switched on, or `follow`. */
+  on: {
+    [key: string]: string | "follow";
+  };
+  /** What was wrong with the folder of plugins or with `plugins.on`, one sentence each. */
+  problems: string[];
+}
+```
+
+**Errors:** 400, 401, 403, 404, 409, 413, 429.
+
+### readPlugins
+
+`POST /v1/settings/plugins/read`: Read the plugins again.
+
+For the owner only: no token and no session can do this, whatever its scopes. It reads the folder of plugins (`plugins/` in the data folder) again and answers every plugin there, with its manifest, its digest, its files and what is wrong, and what the settings switch on. It writes nothing and runs nothing of a plugin.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+**Answer** `200`:
+
+```ts
+{
+  /** Where the folder of plugins is, on the computer the server runs on; null where the server does not say. */
+  folder: string | null;
+  /** Every plugin found, in the order of their IDs. */
+  plugins: {
+    /** Its folder’s name. */
+    id: string;
+    /** What its manifest calls it, else its ID. */
+    name: string;
+    /** Its manifest, or null where it could not be read. */
+    manifest: {
+      /** What the plugin is called: one line of plain text. */
+      name: string;
+      /** Its version, as its author writes it: one line of at most 40 characters. */
+      version: string;
+      /** How it runs. `page`: in the page, as the owner, with nothing kept apart. */
+      runs: "page";
+      /** The module the page imports: a `.js` file directly in its folder. */
+      main: string;
+      /** A stylesheet the page links while it runs: a `.css` file directly in its folder, or null. */
+      style: string | null;
+      /** The version of the plugin API it was written for. */
+      api: number;
+    } | null;
+    /** The SHA-256 over its files’ names and contents, as read now; null where they could not all be read. */
+    digest: string | null;
+    /** The files read, by name. */
+    files: {
+      /** The file’s name, directly in the plugin’s folder. */
+      name: string;
+      /** Its size, in bytes. */
+      bytes: number;
+    }[];
+    /** Why it cannot be loaded, in a sentence; null where it can. */
+    notLoaded: string | null;
+    /** What was skipped in its folder, one sentence each: a link, a folder, a name a file cannot have, a key a manifest does not have. */
+    problems: string[];
+  }[];
+  /** What the settings switch on, by plugin ID: the digest that was switched on, or `follow`. */
+  on: {
+    [key: string]: string | "follow";
+  };
+  /** What was wrong with the folder of plugins or with `plugins.on`, one sentence each. */
+  problems: string[];
 }
 ```
 

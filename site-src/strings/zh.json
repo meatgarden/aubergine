@@ -3199,6 +3199,10 @@
     "text": "<strong>审阅界面是库条目的把关手段。</strong>一个条目就是一组指令，智能体会用它被允许做的一切去执行。没读过的东西不要安装。",
     "from": "1972614790c0"
   },
+  "security.not.plugins": {
+    "text": "<strong>插件以你的身份运行。</strong>插件是你自己的代码，在 Settings → Plugins 中打开后由页面加载。它能读取每个终端、向任何终端输入，并做页面能做的一切；它不在沙箱里。它只按打开时文件的样子运行，所以改变了的代码不会在你不知情时运行；但终端里的代理同样以你的身份运行，可能写出一个插件以及打开它的设置。开关是一份记录，不是锁。",
+    "from": "934e6eb6cc73"
+  },
   "security.not.guide": {
     "text": "<strong>给智能体的指南是建议</strong>，不是锁。",
     "from": "79f0576917ce"
@@ -5191,6 +5195,26 @@
     "text": "如果某条规则弄坏了页面，就在地址后面加上 <code>?plain</code> 打开它：页面会在没有你的样式表的情况下发送。样式表中提到的任何东西都不会从别的地址获取：图片、字体或样式表只来自这台服务器或内联数据，所以粘贴来的代码片段无法把你页面上的内容发到别处。这是对你自己编写或粘贴的文件的一道防护，而不是沙箱。目前只在 Chromium 中试过。",
     "from": "7cec576ea647"
   },
+  "custom.plugin.title": {
+    "text": "你自己的代码：插件",
+    "from": "a35c5d0a8022"
+  },
+  "custom.plugin.text": {
+    "text": "在设置和样式表之外，还可以写代码：插件是你自己的 JavaScript 模块，放在数据文件夹的 <code>plugins/&lt;id&gt;/</code> 里，带一个为它命名的 <code>plugin.json</code>。页面原样导入它，不需要构建步骤，并交给它一个对象 <code>aubergine</code>：侧边栏的一个分区、列表的一个筛选、标题或行的一个占位符、面板里的一个命令、查看一次运行的方式、状态以及每个刚发生的变化，以及页面发出的每一个调用。<code>aubergine plugin new &lt;id&gt;</code> 会写一个供你起步。",
+    "from": "b196c36fa6d5"
+  },
+  "custom.plugin.asyou": {
+    "text": "<strong>插件在页面中以你的身份运行，没有任何东西把它隔开。</strong>它能读取每个终端、向任何终端输入，并改动页面上的任何东西。它不在沙箱里。只有在 <strong>Settings → Plugins</strong> 中打开后它才会运行，而且只按打开时文件的样子运行：改变了的文件，在你再看一遍之前不会被加载。这能防止代码意外运行；但它不是锁，因为终端里的代理同样以你的身份运行，也能写设置文件。只打开你写过或读过的东西。",
+    "from": "16f443abcf24"
+  },
+  "custom.plugin.api": {
+    "text": "<code>aubergine</code> 的成员列在 <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/plugins.md\">docs/plugins.md</a> 中，从一个版本到下一个版本只会增加；插件越过它们去触及的东西可能会变。面板里的一个命令，只需几行：",
+    "from": "ce92bb9a9099"
+  },
+  "custom.plugin.out": {
+    "text": "如果插件弄坏了页面，就在地址后加上 <code>?plain</code> 打开：不加载任何插件，你的样式表也不用。失败的插件会在 Settings 中说明，页面和其他插件照常运行。关闭后，它通过 <code>aubergine</code> 加入的一切立即消失；它越过 API 所做的，要重新加载才会消失。只在 Chromium 中试过。",
+    "from": "6b1c8303252c"
+  },
   "custom.file.title": {
     "text": "一个自我描述的设置文件",
     "from": "9d7e735d280e"
@@ -5464,8 +5488,8 @@
     "from": "7db23532c40d"
   },
   "custom.cmp.a.code": {
-    "text": "没有。计划中：插件",
-    "from": "f89ee178c319"
+    "text": "有：插件，在页面中以你的身份运行的 JavaScript 模块，通过有文档的 API，也可越过它。没有沙箱",
+    "from": "96c911a66f1f"
   },
   "custom.cmp.a.templates": {
     "text": "两个，用于终端的标题和列表中的一行：带有 <code>{state}</code> 和 <code>{field:Ticket}</code> 等占位符的文本",
@@ -5480,8 +5504,8 @@
     "from": "9538078a7039"
   },
   "custom.cmp.p3": {
-    "text": "如今的 Aubergine 处在设置这一端，并且又往前走了一步：主题、颜色和按键存放在能自我说明的文件中，有一个会写入部分设置的页面，有用于终端标题和行所显示内容的模板，还有一个属于你的样式表，配有保持稳定的钩子。它不会在页面中运行你的代码：插件在<a href=\"/roadmap/#rm-yours\">路线图</a>上，尚未实现。",
-    "from": "4315d5e6e417"
+    "text": "如今的 Aubergine 从设置这一端一直延伸到代码：放在能自我描述的文件里的主题、颜色和按键，一个能写部分设置的页面，终端标题和行所显示内容的模板，带有保持稳定的挂钩的你自己的样式表，以及插件：页面中你自己的 JavaScript，配有只增不减的 API。插件拥有页面能做的一切；给他人插件用的沙箱模式在<a href=\"/roadmap/#rm-yours\">路线图</a>上，尚未构建。",
+    "from": "35e798f5a422"
   },
   "custom.cmp.mark": {
     "text": "Aubergine 与本页提到的任何工具均无关联。这些名称是其各自所有者的商标。",
@@ -5492,8 +5516,8 @@
     "from": "e10eed0040ae"
   },
   "custom.plan.text": {
-    "text": "插件，也就是在页面中运行你自己的代码，已在计划中但尚未实现：请参阅<a href=\"/roadmap/#rm-yours\">路线图</a>。",
-    "from": "5889d38036ea"
+    "text": "用沙箱运行他人所写插件的方式，以及通过审阅界面安装插件，都在计划中，尚未构建：见<a href=\"/roadmap/#rm-yours\">路线图</a>。",
+    "from": "3d1b428010be"
   },
   "custom.q.terminal.q": {
     "text": "每个终端可以用不同的配色主题吗？",
@@ -5510,6 +5534,14 @@
   "custom.q.css.a": {
     "text": "可以：数据文件夹中的 <code>custom.css</code>（<code>aubergine css new</code> 会写一个供你起步）。它从第一次绘制起就被链接在页面的最后，可依靠的钩子列在 docs/hooks.md 中。在页面地址后加上 <code>?plain</code>，即可看到没有它时的样子。",
     "from": "8ebf56535e5d"
+  },
+  "custom.q.code.q": {
+    "text": "我能为 Aubergine 写自己的插件吗？",
+    "from": "d5b081c290fa"
+  },
+  "custom.q.code.a": {
+    "text": "可以：在数据文件夹的 <code>plugins/&lt;id&gt;/</code> 中放一个 JavaScript 模块（<code>aubergine plugin new &lt;id&gt;</code> 会写一个供你起步），在 Settings → Plugins 中打开。它在页面中以你的身份运行，拥有页面能做的一切；它不在沙箱里。",
+    "from": "2cdaf7e15ca1"
   },
   "custom.q.file.q": {
     "text": "Aubergine 的设置文件在哪里？",
@@ -5536,15 +5568,15 @@
     "from": "34ca8a4540f5"
   },
   "roadmap.yours.sub": {
-    "text": "在今天的主题、颜色、按键、模板和自己的样式表之外，让页面更多地由你来塑造。",
-    "from": "903ac9c0326e"
+    "text": "让页面更多地由你塑造，超越今天的主题、颜色、按键、模板、你自己的样式表和你自己的插件。",
+    "from": "f6ef69a6539a"
   },
   "roadmap.yours.plugins.name": {
-    "text": "插件",
-    "from": "9514b7ff4860"
+    "text": "他人的插件",
+    "from": "eea2e52b2e70"
   },
   "roadmap.yours.plugins.text": {
-    "text": "把你自己的代码加载到页面中，拥有完全控制，既可通过命名插槽，也可越过它们。之后可能会为他人的代码提供隔离模式。",
-    "from": "e45f18abdc98"
+    "text": "为他人所写插件提供的沙箱模式（权限少于全部），以及通过审阅界面安装插件。你自己的插件，在页面中以你的身份完全掌控地运行，已经构建。",
+    "from": "08c850bebd87"
   }
 }
