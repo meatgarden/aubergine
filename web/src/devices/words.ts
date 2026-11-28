@@ -22,7 +22,7 @@ export function ago(iso: string, now: number): string {
 
 export interface DeviceWords {
   name: string;
-  /** What is known about it, each said apart: when it was added, when it was last used, where a page is. */
+  /** What is known about it, each said apart: who it was made for, when it was added, when it was last used, where a page is. */
   known: string[];
   /** Its state, only when it is not active. */
   chip: string | null;
@@ -41,12 +41,12 @@ function hostOf(origin: string | null): string | null {
 }
 
 /** The words of one row of the list of devices. */
-export function deviceWords(device: Pick<Device, 'name' | 'kind' | 'origin' | 'createdAt' | 'lastUsedAt' | 'revokedAt'>, now: number, thisDevice: boolean): DeviceWords {
+export function deviceWords(device: Pick<Device, 'name' | 'kind' | 'origin' | 'createdAt' | 'lastUsedAt' | 'revokedAt'> & { person?: string | null }, now: number, thisDevice: boolean): DeviceWords {
   const status = deviceStatus(device, now);
   const host = device.kind === 'page' ? hostOf(device.origin) : null;
   return {
     name: device.name,
-    known: [`added ${ago(device.createdAt, now)}`, device.lastUsedAt ? `last used ${ago(device.lastUsedAt, now)}` : 'never used', ...(host ? [host] : [])],
+    known: [...(device.person ? [`for ${device.person}`] : []), `added ${ago(device.createdAt, now)}`, device.lastUsedAt ? `last used ${ago(device.lastUsedAt, now)}` : 'never used', ...(host ? [host] : [])],
     chip: status === 'revoked' ? 'revoked' : status === 'unused' ? `unused for ${DEVICE_UNUSED_DAYS} days` : null,
     thisDevice,
   };
@@ -72,7 +72,7 @@ export const signInAddress = (address: string, code: string): string => `${addre
 
 /** What the activity screen says a line was done by. */
 export function callerWords(
-  entry: Pick<ActivityEntry, 'caller' | 'tokenName' | 'byDeviceId' | 'fromSessionId'>,
+  entry: Pick<ActivityEntry, 'caller' | 'tokenName' | 'byDeviceId' | 'fromSessionId'> & { byPerson?: string | null },
   deviceName: (id: string) => string | null,
   sessionName: (id: string) => string | null,
 ): string {
@@ -83,6 +83,8 @@ export function callerWords(
       return 'Owner';
     case 'device': {
       const name = entry.byDeviceId ? deviceName(entry.byDeviceId) : null;
+      // Who the device was made for, as written then: a word about the device, said as one.
+      if (entry.byPerson) return name ? `${entry.byPerson}, on ${name}` : `${entry.byPerson}, on a device`;
       return name ? `Owner, on ${name}` : 'A device';
     }
     case 'pairing':

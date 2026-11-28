@@ -270,6 +270,24 @@ It asks first, unless you add `--yes`. In the page, the same list is under **Set
 - A device that is not used for 90 days stops working.
 - **A device is the whole owner**: whoever has it has a shell on that machine as you.
 
+### Several people on one server
+
+Where several people use one server, say who each device is for when you make its code:
+
+```sh
+aubergine device add --name "Laptop" --person "Ada"
+```
+
+In the page it is the second field of **Add a device**, "Who it is for, if not you".
+
+- The list of devices then says "for Ada" on that device (`aubergine device list` has a column **FOR**).
+- **Activity** says "Ada, on Laptop" for what was done through that device: what only the owner may do (making a token, changing a setting, approving a run, accepting a draft and the like), typing into or reading a terminal through the API, and everything about devices and codes. What is done at the computer itself, in the page, is not written there, as before.
+- The name is written by whoever makes the code, and cannot be changed afterwards: revoke the device and add it again.
+
+**A name limits nothing.** Every device is the whole owner, whoever it is for: it can type into every terminal, make tokens, and add or revoke devices, its own name included. The name is a word about the device, not a checked identity, and anyone with a shell on the machine can read and change the server's files. It makes the ordinary case visible; it does not keep one person from another.
+
+Not built: a person who may do less than the owner, signing in with a company's own sign-in, and seeing who is looking at a canvas.
+
 ## Two servers in one page
 
 The page of one Aubergine (on your laptop, say) can also show the projects of another (on a cloud instance, or a second server on the same computer). The other one is a **linked server**.
@@ -301,6 +319,30 @@ The page of one Aubergine (on your laptop, say) can also show the projects of an
 5. Fill in the address of the other Aubergine (as you would open it, like `https://aubergine.example.net`), a name for it here, and the code. Press **Link**.
 
 The browser sends the code to that server itself and is answered with a credential. The other server is shown at once.
+
+### A directory of servers
+
+Where several Aubergines belong to one company, someone can keep a **directory**: one JSON file that lists them by organization, so that nobody is sent each address by hand.
+
+```json
+{
+  "aubergineDirectory": 1,
+  "name": "Example Works",
+  "servers": [
+    { "label": "Payments build", "address": "https://payments.example.net", "organization": "Payments", "note": "Ask the platform team for a code." },
+    { "label": "Search build", "address": "https://search.example.net", "organization": "Search" }
+  ]
+}
+```
+
+- `label` and `address` are needed for each server; `organization` and `note` (one line) may be left out. An address is written as the server is opened, with nothing after the name.
+- The file is put at an HTTPS address, and whatever serves it must let the page read it: the header `Access-Control-Allow-Origin` with the origin of the page that links (or `*`).
+- In **Link a server…**, choose **Add a directory…** and give the file's address. The servers are then listed by organization over the fields, each time the dialog opens. Pressing one writes its address and its name into the fields; the code is still made on that server and typed by you.
+- **A directory gives no access to anything.** It holds no code and no credential, and a file with anything wrong in it is refused whole, with a sentence. What it calls itself, a server or an organization is its own word: the dialog shows the host it was read from, and each server's host, beside the names.
+- This browser keeps only the directory's address (five at most). What the file says is read when the dialog opens and kept nowhere. The file is asked for with no cookie, no credential and no referrer, and neither this page's server nor a linked server is told of a directory.
+- A file of at most 256 KB and 500 servers is read. **Remove** beside a directory's name forgets its address.
+
+Not built: a directory that asks who you are (a company sign-in), and a server that puts itself into one.
 
 ### Afterwards
 

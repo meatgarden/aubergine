@@ -1469,6 +1469,8 @@ aubergine device revoke "Phone"  # signed out at once; what it has open is close
 
 A device that is not used for 90 days stops working. More in [Pairing a browser](docs/remote.md#pairing-a-browser).
 
+Where several people use one server, `aubergine device add --name "Laptop" --person "Ada"` (or "Who it is for" in **Add a device**) says whose device it is: the list of devices and **Activity** then say so. **The name limits nothing: every device is the whole owner.** See [Several people on one server](docs/remote.md#several-people-on-one-server).
+
 ### Letting another Aubergine's page show this server
 
 The page of another Aubergine (one on your laptop, say) can be allowed to show this server's projects: write that page's origin under `access.pages` in `config.json` here, start the server again, and make a code for that page:
@@ -1499,6 +1501,8 @@ To link one, the other server must already be reachable over HTTPS, or be on the
 1. On the other server, write this page's origin (the start of its address, for example `http://127.0.0.1:4600`; the dialog shows it) under `access.pages` in its `config.json`, and start it again.
 2. Run `aubergine device add --page <that origin>` there. It prints a code.
 3. In this page, choose **Link a server…** at the foot of the project menu, and give the other Aubergine's address, a name for it here, and the code.
+
+Where a company has several, someone can keep a **directory**: a JSON file that lists them by organization. **Add a directory…** in the same dialog takes the file's address and lists its servers over the fields; pressing one fills in its address and name. A directory gives no access: each server is still linked with a code made there. The format is in [A directory of servers](docs/remote.md#a-directory-of-servers).
 
 **Unlink…**, in that server's part of the menu, forgets it in this browser and asks it to revoke this page's device. Everything else (what you see afterwards, what stays this page's own, what it does not do) is in [Two servers in one page](docs/remote.md#two-servers-in-one-page) in the guide.
 

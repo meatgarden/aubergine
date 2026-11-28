@@ -11858,6 +11858,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
     at: string;
     caller: "token" | "owner-cli" | "rule" | "schedule" | "owner" | "device" | "pairing";
     byDeviceId?: string | null;
+    byPerson?: string | null;
     deviceId?: string | null;
     deviceName?: string | null;
     tokenId: string | null;

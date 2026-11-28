@@ -290,7 +290,7 @@ export const api = guardAll({
   pair: (code: string) => callAt(null, null, 'POST', paths.pair, { code }),
   // Devices paired from an outside address: the owner's alone.
   listDevices: () => call(DeviceList, 'GET', paths.devices),
-  makePairingCode: (name: string) => call(PairingCodeAnswer, 'POST', paths.pairingCodes, { name, kind: 'browser' }),
+  makePairingCode: (name: string, person: string | null = null) => call(PairingCodeAnswer, 'POST', paths.pairingCodes, { name, kind: 'browser', ...(person === null ? {} : { person }) }),
   revokeDevice: (deviceId: string) => call(RevokedDevice, 'DELETE', paths.device(deviceId)),
   // What follows goes through the public API, with the client generated from its description.
   createCanvas: (request: CreateCanvasRequest) => v1.createCanvas({ body: { ...here(), ...request } }),
@@ -479,6 +479,34 @@ export async function pairWith(address: string, code: string): Promise<PairedPag
   const read = PairedPage.safeParse(await response.json().catch(() => null));
   if (!read.success) throw new NotUnderstood();
   return read.data;
+}
+
+/** How long a directory is waited for. */
+const DIRECTORY_WAIT_MS = 10_000;
+
+/**
+ * The text of a directory file, asked of the address it is kept at. A directory is not a server: nothing of this
+ * browser is sent with the question (no cookie, no credential, no referrer), no redirect is followed, and no more
+ * than `limit` characters are taken. Fails with an ApiError of status 0 where no answer could be read.
+ */
+export async function directoryTextAt(address: string, limit: number): Promise<string> {
+  let response: Response;
+  try {
+    response = await fetch(address, { method: 'GET', headers: { accept: 'application/json' }, credentials: 'omit', redirect: 'error', mode: 'cors', referrerPolicy: 'no-referrer', cache: 'no-store', signal: AbortSignal.timeout(DIRECTORY_WAIT_MS) });
+  } catch {
+    throw new ApiError(0, 'network', 'No answer.');
+  }
+  if (!response.ok) throw new ApiError(response.status, 'network', `HTTP ${response.status}`);
+  const said = Number.parseInt(response.headers.get('content-length') ?? '', 10);
+  if (Number.isFinite(said) && said > limit * 4) throw new ApiError(413, 'too_large', 'Too large.');
+  let text: string;
+  try {
+    text = await response.text();
+  } catch {
+    throw new ApiError(0, 'network', 'No answer.');
+  }
+  if (text.length > limit) throw new ApiError(413, 'too_large', 'Too large.');
+  return text;
 }
 
 /* ---------- Sockets ---------- */

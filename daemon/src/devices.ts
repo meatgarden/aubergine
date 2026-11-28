@@ -37,7 +37,7 @@ export class Devices {
   }
 
   /** Makes a device. The secret in the answer exists nowhere else: it is not stored and cannot be shown again. */
-  create(input: { name: string; kind: DeviceKind; origin?: string | null }): { device: Device; secret: string } {
+  create(input: { name: string; kind: DeviceKind; origin?: string | null; person?: string | null }): { device: Device; secret: string } {
     const secret = newDeviceSecret();
     const device: Device = {
       id: newId(),
@@ -45,6 +45,7 @@ export class Devices {
       kind: input.kind,
       origin: input.origin ?? null,
       hash: hashSecret(secret),
+      person: input.person ?? null,
       createdAt: new Date(this.now()).toISOString(),
       lastUsedAt: null,
       revokedAt: null,

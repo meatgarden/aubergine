@@ -165,6 +165,8 @@ export const USAGE = `Usage: aubergine <command>
   token revoke <name|id>     Revoke a token: it stops working at once
   device add [--name <name>] Pair another device: prints a code that works once, for three minutes, with the
                              address to open on it (and a QR of it) for each outside address in the settings
+                             --person <who> says who the device is for, where several people use this server:
+                             shown in the list and in the activity log. It limits nothing: every device is the owner
   device add --page <origin> [--name <name>]
                              Let the page of another Aubergine at that origin (listed in access.pages) show this
                              server: prints a code to type into "Link a server…" in that page
