@@ -12,6 +12,7 @@ import { useCanvasView } from './canvas-view';
 import { SidePanel } from './panel/SidePanel';
 import { Away } from './Away';
 import { TagDialog } from './TagDialog';
+import { GroupDialog } from './GroupDialog';
 import { Tour } from './tour/Tour';
 import { Toast } from './Toast';
 import { applyTheme, useAppearanceShown, useProjectLook, useThemeShown, useUserThemes } from './theme';
@@ -127,6 +128,7 @@ export function App() {
       <Screens />
       <CloseCanvasDialog />
       <TagDialog />
+      <GroupDialog />
       <Tour />
       <Toast />
       <Away />

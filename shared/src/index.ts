@@ -9,6 +9,7 @@ export * from './history';
 export * from './outputs';
 export * from './workflows';
 export * from './fields';
+export * from './groups';
 export * from './drafts';
 export * from './repository';
 export * from './terminal';

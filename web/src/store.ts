@@ -247,7 +247,7 @@ const SETTLE_MS = 700;
 
 export type Panel = 'settings' | 'parked' | 'outside' | 'shortcuts' | 'tokens' | 'activity' | 'workflows' | 'review' | 'help' | 'library' | 'board' | 'queue' | 'projects' | 'sharing';
 export interface Ask {
-  kind: 'rename-session' | 'rename-canvas' | 'note' | 'move' | 'theme' | 'tags' | 'list-search' | 'new-project' | 'project-from-template';
+  kind: 'rename-session' | 'rename-canvas' | 'note' | 'move' | 'theme' | 'tags' | 'group' | 'list-search' | 'new-project' | 'project-from-template';
   /** The session or canvas it is about. */
   id: string;
   tick: number;

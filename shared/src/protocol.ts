@@ -28,6 +28,7 @@ import { Id } from './ids';
 import { FieldsInput } from './fields';
 import { Settings, ThemeSetting } from './settings';
 import { BY_TAG_MAX, CursorStyle, ThemeId, ThemesByTag, UserTheme } from './themes';
+import { GroupName } from './groups';
 import { TEMPLATE_MAX, TemplateText } from './templates';
 import { CustomCss } from './custom-css';
 import { PluginsAnswer } from './plugins';
@@ -267,9 +268,9 @@ export type CreateSessionResponse = z.infer<typeof CreateSessionResponse>;
 
 /** PATCH body: any of the fields the user can edit. */
 export const UpdateSessionRequest = z
-  .object({ name: SessionName, note: SessionNote, tags: Tags, fields: FieldsInput, theme: ThemeId.nullable() })
+  .object({ name: SessionName, note: SessionNote, tags: Tags, fields: FieldsInput, theme: ThemeId.nullable(), group: GroupName.nullable() })
   .partial()
-  .refine((body) => body.name !== undefined || body.note !== undefined || body.tags !== undefined || body.fields !== undefined || body.theme !== undefined, 'Nothing to update');
+  .refine((body) => body.name !== undefined || body.note !== undefined || body.tags !== undefined || body.fields !== undefined || body.theme !== undefined || body.group !== undefined, 'Nothing to update');
 export type UpdateSessionRequest = z.infer<typeof UpdateSessionRequest>;
 
 /** PUT body for a node: where it is, and optionally its color. */
@@ -718,7 +719,7 @@ export const StartSessionRequest = z.object({
 });
 export type StartSessionRequest = z.infer<typeof StartSessionRequest>;
 
-/** Body of changing a session: any of its name, its tags, its fields and its color theme. `tags` and `fields` each replace the whole list. */
+/** Body of changing a session: any of its name, its tags, its fields, its color theme and its group. `tags` and `fields` each replace the whole list. */
 export const PatchSessionRequest = z
   .object({
     name: SessionName,
@@ -726,9 +727,10 @@ export const PatchSessionRequest = z
     note: SessionNote,
     fields: FieldsInput,
     theme: ThemeId.nullable().describe("The color theme the terminal's body is drawn in, whatever the page is drawn in: one of the IDs of the color themes, built-in or a theme file the server has read (another is refused with 400). `null` clears it: the terminal is then drawn in the default for terminals, or as the page is."),
+    group: GroupName.nullable().describe('The name of the group the terminal is in: terminals with the same group name (within a project) are one group, on whatever canvas they are. `null` takes the terminal out of its group.'),
   })
   .partial()
-  .refine((body) => body.name !== undefined || body.tags !== undefined || body.note !== undefined || body.fields !== undefined || body.theme !== undefined, 'Nothing to update');
+  .refine((body) => body.name !== undefined || body.tags !== undefined || body.note !== undefined || body.fields !== undefined || body.theme !== undefined || body.group !== undefined, 'Nothing to update');
 export type PatchSessionRequest = z.infer<typeof PatchSessionRequest>;
 
 /** A session together with where it is. */

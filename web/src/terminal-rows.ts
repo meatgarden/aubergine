@@ -1,6 +1,7 @@
 import { needsUser, sortedCanvases, type AppState, type Canvas, type Layout, type Run, type Session } from '@aubergine/shared';
 import { SCOPE_FILTER, TAG_FILTER, TEXT_FILTER, filterById, type FilterContext } from './list-filters';
 import { listGroups } from './terminal-list';
+import { groupColor, groupFoldId } from './groups';
 
 /**
  * The terminal list as data: which rows there are, what state each is in,
@@ -164,7 +165,7 @@ export function createRowSelector(): (app: AppState) => Row[] {
 
 /* ---------- The view: what is filtered, how it is grouped and sorted ---------- */
 
-export type Grouping = 'canvas' | 'flat';
+export type Grouping = 'canvas' | 'group' | 'flat';
 export type Sort = 'canvas' | 'updated' | 'typed' | 'name';
 export type Density = 'comfortable' | 'compact';
 export const SORTS: readonly Sort[] = ['canvas', 'updated', 'typed', 'name'];
@@ -178,15 +179,16 @@ export interface ListLayout {
   sort?: Sort;
 }
 const FLAT_LABEL: Record<Sort, string> = { canvas: 'Flat, canvas order', updated: 'Flat, last updated', typed: 'Flat, last typed in', name: 'Flat, by name' };
-/** By canvas first, then the flat list in each order, in the order of `SORTS`. */
+/** By canvas first, then by group (whatever canvas a group's terminals are on), then the flat list in each order, in the order of `SORTS`. */
 export const LAYOUTS: readonly ListLayout[] = [
   { id: 'canvas', label: 'By canvas', grouping: 'canvas' },
+  { id: 'group', label: 'By group', grouping: 'group' },
   ...SORTS.map((sort): ListLayout => ({ id: `flat-${sort}`, label: FLAT_LABEL[sort], grouping: 'flat', sort })),
 ];
 
 /** The id of the layout that is chosen. */
 export function layoutOf(view: Pick<ListView, 'grouping' | 'sort'>): string {
-  return view.grouping === 'flat' ? `flat-${view.sort}` : 'canvas';
+  return view.grouping === 'flat' ? `flat-${view.sort}` : view.grouping;
 }
 
 /** What changes in the view when a layout is chosen; an unknown id changes nothing. */
@@ -225,7 +227,7 @@ export function parseView(saved: unknown): ListView {
     filters: (strings(v.filters) ?? DEFAULT_VIEW.filters).filter((id) => id !== TEXT_FILTER && id !== TAG_FILTER),
     text: typeof v.text === 'string' ? v.text.slice(0, 200) : '',
     tags: strings(v.tags) ?? [],
-    grouping: v.grouping === 'flat' ? 'flat' : 'canvas',
+    grouping: v.grouping === 'flat' ? 'flat' : v.grouping === 'group' ? 'group' : 'canvas',
     sort: SORTS.includes(v.sort as Sort) ? (v.sort as Sort) : 'canvas',
     collapsedGroups: strings(v.collapsedGroups) ?? [],
     density: v.density === 'compact' ? 'compact' : 'comfortable',
@@ -305,23 +307,58 @@ export function sortRows(rows: readonly Row[], sort: Sort): Row[] {
 export type Item =
   | { kind: 'group'; id: string; title: string; count: number; waiting: number; collapsed: boolean }
   | { kind: 'frame'; id: string; title: string }
+  /** A group of terminals: its name in its color, pressed to fold its terminals away or bring them back. `id` is what is folded. */
+  | { kind: 'set'; id: string; key: string; name: string; color: string; count: number; waiting: number; collapsed: boolean; indented: boolean }
   | { kind: 'row'; row: Row; indented: boolean };
 
 export const PARKED_GROUP = 'parked';
+/** The heading, in the list by group, of the terminals that are in none. */
+export const NO_GROUP = 'no-group';
 
 /**
  * Lays the filtered rows out as items. By canvas: each canvas with rows as a
  * heading that folds, its frames as sub-headings, parked sessions as the last
- * group. With only one canvas in scope its heading is left out. Flat: the
- * rows alone, in the chosen order.
+ * group. With only one canvas in scope its heading is left out. The terminals
+ * of a group stand together under the group's heading, which folds. By group:
+ * each group whole, whatever canvas its terminals are on. Flat: the rows
+ * alone, in the chosen order.
  */
 export function buildItems(rows: readonly Row[], view: ListView): Item[] {
   if (view.grouping === 'flat') return sortRows(rows, view.sort).map((row) => ({ kind: 'row', row, indented: false }));
 
   const items: Item[] = [];
+  const inOrder = [...rows].sort((a, b) => a.index - b.index);
+  /** A group's heading, and its rows unless it is folded. */
+  const addSet = (name: string, members: readonly Row[], key: string, indented: boolean): void => {
+    const id = groupFoldId(name);
+    const collapsed = view.collapsedGroups.includes(id);
+    items.push({ kind: 'set', id, key, name, color: groupColor(name), count: members.length, waiting: members.filter((row) => row.state === 'waiting').length, collapsed, indented });
+    if (!collapsed) for (const row of members) items.push({ kind: 'row', row, indented: true });
+  };
+
+  if (view.grouping === 'group') {
+    // Every group whole, whatever canvas its terminals are on; the terminals in no group last.
+    const sets = new Map<string, Row[]>();
+    const loose: Row[] = [];
+    for (const row of inOrder) {
+      const name = row.session.group ?? null;
+      if (name === null) loose.push(row);
+      else if (sets.has(name)) sets.get(name)?.push(row);
+      else sets.set(name, [row]);
+    }
+    const names = [...sets.keys()].sort((a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' }));
+    for (const name of names) addSet(name, sets.get(name) ?? [], name, false);
+    if (loose.length > 0) {
+      const collapsed = view.collapsedGroups.includes(NO_GROUP);
+      if (names.length > 0) items.push({ kind: 'group', id: NO_GROUP, title: 'In no group', count: loose.length, waiting: loose.filter((row) => row.state === 'waiting').length, collapsed });
+      if (names.length === 0 || !collapsed) for (const row of loose) items.push({ kind: 'row', row, indented: names.length > 0 });
+    }
+    return items;
+  }
+
   const oneCanvas = view.filters.includes(SCOPE_FILTER);
   const groups = new Map<string, Row[]>();
-  for (const row of [...rows].sort((a, b) => a.index - b.index)) {
+  for (const row of inOrder) {
     const id = row.canvasId ?? PARKED_GROUP;
     const group = groups.get(id);
     if (group) group.push(row);
@@ -343,7 +380,17 @@ export function buildItems(rows: readonly Row[], view: ListView): Item[] {
       if (collapsed) continue;
     }
     let frame: string | null = null;
+    const said = new Set<string>();
     for (const row of members) {
+      const name = row.session.group ?? null;
+      if (name !== null) {
+        // A group's terminals stand together, where the first of them stands, under the group's own heading.
+        if (said.has(name)) continue;
+        said.add(name);
+        addSet(name, members.filter((other) => other.session.group === name), `${id}:${name}`, heading);
+        frame = null;
+        continue;
+      }
       if (row.frame && row.frame.id !== frame) items.push({ kind: 'frame', id: `${id}:${row.frame.id}`, title: row.frame.label });
       frame = row.frame?.id ?? null;
       items.push({ kind: 'row', row, indented: heading || row.frame !== null });
@@ -381,7 +428,7 @@ export const GROUP_HEIGHT = 32;
 export const FRAME_HEIGHT = 24;
 
 export function itemHeight(item: Item, density: Density): number {
-  return item.kind === 'row' ? ROW_HEIGHT[density] : item.kind === 'group' ? GROUP_HEIGHT : FRAME_HEIGHT;
+  return item.kind === 'row' ? ROW_HEIGHT[density] : item.kind === 'frame' ? FRAME_HEIGHT : GROUP_HEIGHT;
 }
 
 /** Where each item starts, and the height of them all. */

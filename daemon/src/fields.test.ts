@@ -303,6 +303,50 @@ describe('the color theme of a terminal', () => {
   });
 });
 
+describe('the group of a terminal', () => {
+  const grouped = (): ChangeEvent[] => events.filter((e) => e.type === 'session.grouped');
+
+  it('starts as none, is set, taken out with null, and left as it was when not sent', async () => {
+    const session = await make();
+    expect(session.group).toBeNull();
+    const set = await asOwner('PATCH', publicPaths.session(session.id), { group: 'backend' });
+    expect(set.status, JSON.stringify(set.body)).toBe(200);
+    expect(set.body.group).toBe('backend');
+    expect(grouped()).toEqual([{ type: 'session.grouped', sessionId: session.id, group: 'backend' }]);
+    // The page's own route takes it the same way.
+    expect((await asOwner('PATCH', paths.session(session.id), { group: 'web' })).body.group).toBe('web');
+    // A change of something else leaves it as it was, and says nothing about it.
+    await asOwner('PATCH', publicPaths.session(session.id), { name: 'Renamed', tags: ['api'], theme: 'nord' });
+    expect(now(session.id).group).toBe('web');
+    expect(grouped()).toHaveLength(2);
+    // Null: out of its group. A group alone is something to update.
+    expect((await asOwner('PATCH', publicPaths.session(session.id), { group: null })).body.group).toBeNull();
+    expect(now(session.id).group).toBeNull();
+    expect(grouped().at(-1)).toEqual({ type: 'session.grouped', sessionId: session.id, group: null });
+  });
+
+  it('is refused with 400 for what is not a plain name, and nothing changes', async () => {
+    const session = await make();
+    await asOwner('PATCH', publicPaths.session(session.id), { group: 'web' });
+    for (const group of ['', 'two\nlines', 'x'.repeat(41), 12, { name: 'web' }])
+      for (const url of [publicPaths.session(session.id), paths.session(session.id)])
+        expect((await asOwner('PATCH', url, { group })).status, JSON.stringify(group)).toBe(400);
+    expect(now(session.id).group).toBe('web');
+    expect(grouped()).toHaveLength(1);
+  });
+
+  it('is changed by a token that may change sessions, and by no session, not even its own', async () => {
+    const session = await make();
+    const reader = await makeToken('reader', ['read']);
+    const writer = await makeToken('writer', ['read', 'sessions:write']);
+    expect((await call(reader, 'PATCH', publicPaths.session(session.id), { group: 'web' })).status).toBe(403);
+    expect((await call(sessionToken(ownerToken, session.id), 'PATCH', publicPaths.session(session.id), { group: 'web' })).status).toBe(403);
+    expect(grouped()).toEqual([]);
+    expect((await call(writer, 'PATCH', publicPaths.session(session.id), { group: 'web' })).status).toBe(200);
+    expect((await call(reader, 'GET', publicPaths.session(session.id))).body.group).toBe('web');
+  });
+});
+
 describe('fields an agent sets on its own terminal', () => {
   const own = (id: string): string => sessionToken(ownerToken, id);
   const fieldsUrl = (id: string): string => `/v1/sessions/${id}/fields`;

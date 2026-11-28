@@ -49,6 +49,8 @@ import './workflows/output-views';
 import './workflows/element-views';
 import './workflows/run-views';
 import { FrameNode, type FrameFlowNode } from './FrameNode';
+import { GroupNode, type GroupFlowNode } from './GroupNode';
+import { GROUP_FOLDED_WIDTH, GROUP_LABEL, groupFoldId, isGroupFolded, outlineOf, withGroupFolded } from './groups';
 import { TerminalNode, type TerminalFlowNode } from './TerminalNode';
 import { isFullZoom, loadViewport, saveViewport, useZoomToNode } from './viewport';
 import { READABLE_ZOOM } from './culling';
@@ -56,8 +58,11 @@ import { useBarKeptOpen } from './bar-open';
 import { opensUp, useBarPlace } from './bar-place';
 import { BarSettings } from './BarSettings';
 
-const nodeTypes = { terminal: TerminalNode, frame: FrameNode };
+const nodeTypes = { terminal: TerminalNode, frame: FrameNode, 'terminal-group': GroupNode };
 type CanvasNode = TerminalFlowNode | FrameFlowNode;
+/** What is drawn: the stored nodes, and an outline for each group with a terminal on this canvas, worked out from them. */
+type DrawnNode = CanvasNode | GroupFlowNode;
+const GROUP_NODE = 'group:';
 
 function toFlowNode(node: LayoutNode, previous: CanvasNode | undefined): TerminalFlowNode {
   return {
@@ -181,10 +186,65 @@ export function Canvas() {
     });
   }, [layout, frames]);
 
+  // A group's outline is not kept: it is worked out from its terminals, so a change the canvas reports about one is left out.
   const onNodesChange = useCallback(
-    (changes: NodeChange<CanvasNode>[]) => setNodes((current) => applyNodeChanges(changes, current)),
+    (changes: NodeChange<DrawnNode>[]) =>
+      setNodes((current) => applyNodeChanges(changes.filter((change) => !('id' in change && change.id.startsWith(GROUP_NODE))) as NodeChange<CanvasNode>[], current)),
     [],
   );
+
+  // The groups with a terminal on this canvas, each with an outline round those terminals where they are now (also
+  // while one is dragged). The terminals of a folded group are not drawn: their shells run on, without a viewer here.
+  const sessions = useApp((s) => s.app?.sessions);
+  const collapsed = useApp((s) => s.listView.collapsedGroups);
+  const drawn = useMemo((): DrawnNode[] => {
+    const groupOf = new Map<string, string>();
+    for (const session of sessions ?? []) if (session.group) groupOf.set(session.id, session.group);
+    if (groupOf.size === 0) return nodes;
+    const sets = new Map<string, TerminalFlowNode[]>();
+    for (const node of nodes) {
+      const name = node.type === 'terminal' ? groupOf.get(node.data.sessionId) : undefined;
+      if (name === undefined || node.type !== 'terminal') continue;
+      const set = sets.get(name);
+      if (set) set.push(node);
+      else sets.set(name, [node]);
+    }
+    if (sets.size === 0) return nodes;
+    const hidden = new Set<string>();
+    const outlines: GroupFlowNode[] = [];
+    for (const [name, members] of sets) {
+      const folded = collapsed.includes(groupFoldId(name));
+      const outline = outlineOf(members.map((n) => ({ x: n.position.x, y: n.position.y, width: n.width ?? NODE_DEFAULT_WIDTH, height: n.height ?? NODE_DEFAULT_HEIGHT })));
+      if (!outline) continue;
+      if (folded) for (const member of members) hidden.add(member.id);
+      outlines.push({
+        id: `${GROUP_NODE}${name}`,
+        type: 'terminal-group',
+        position: { x: outline.x, y: outline.y },
+        width: folded ? GROUP_FOLDED_WIDTH : outline.width,
+        height: folded ? GROUP_LABEL : outline.height,
+        data: { name, folded, here: members.length },
+        dragHandle: '.group-title',
+        selectable: false,
+        focusable: false,
+        // Over the terminals, the selected one included (the canvas raises that by 1000), so that the menu of its label
+        // is never under one. It is a line round them and a label: its inside is empty and lets the pointer through.
+        zIndex: 1001,
+        style: { pointerEvents: 'none' },
+      });
+    }
+    const [frameNodes, rest] = [nodes.filter((n) => n.type === 'frame'), nodes.filter((n) => n.type !== 'frame')];
+    return [...frameNodes, ...outlines, ...rest.map((n) => (hidden.has(n.id) ? { ...n, hidden: true } : n))];
+  }, [nodes, sessions, collapsed]);
+
+  // A terminal that is gone to, selected or given the keyboard is shown: its group opens if it was folded.
+  const inUse = useApp((s) => s.show?.sessionId ?? s.focus?.sessionId ?? s.selected);
+  useEffect(() => {
+    if (!inUse) return;
+    const state = useApp.getState();
+    const group = state.app?.sessions.find((session) => session.id === inUse)?.group;
+    if (group && isGroupFolded(state.listView.collapsedGroups, group)) state.setListView({ collapsedGroups: withGroupFolded(state.listView.collapsedGroups, group, false) });
+  }, [inUse]);
 
   // While a frame is dragged, the nodes inside it follow.
   const carried = useRef<{ frame: { x: number; y: number }; members: Map<string, { x: number; y: number }> } | null>(null);
@@ -192,6 +252,14 @@ export function Canvas() {
   const onNodeDragStart = useCallback(
     (_event: unknown, node: Node) => {
       carried.current = null;
+      if (node.type === 'terminal-group') {
+        // A group's label carries the group's terminals on this canvas, folded away or not.
+        const name = (node as GroupFlowNode).data.name;
+        const inGroup = new Set((useApp.getState().app?.sessions ?? []).filter((session) => session.group === name).map((session) => session.id));
+        const members = new Map(layout.filter((n) => inGroup.has(n.sessionId)).map((n) => [n.id, { x: n.x, y: n.y }]));
+        carried.current = { frame: { x: node.position.x, y: node.position.y }, members };
+        return;
+      }
       if (node.type !== 'frame') return;
       const frame = frames.find((f) => f.id === node.id);
       if (!frame) return;
@@ -215,6 +283,24 @@ export function Canvas() {
   }, []);
 
   const onNodeDragStop = useCallback((_event: unknown, node: Node) => {
+    if (node.type === 'terminal-group') {
+      // Each terminal of the group is saved where it was carried to.
+      const carry = carried.current;
+      carried.current = null;
+      if (!carry) return;
+      const dx = node.position.x - carry.frame.x;
+      const dy = node.position.y - carry.frame.y;
+      if (dx === 0 && dy === 0) return;
+      const canvas = useApp.getState().canvasId;
+      const moved = currentLayout(useApp.getState()).nodes.flatMap((member) => {
+        const start = carry.members.get(member.id);
+        return start ? [{ ...member, x: start.x + dx, y: start.y + dy }] : [];
+      });
+      // Said here first, all at once: otherwise each answer would put the others back where they were for a moment.
+      if (canvas) for (const node of moved) useApp.getState().apply({ type: 'node.updated', canvasId: canvas, node });
+      for (const node of moved) void api.updateNode(node.id, { x: node.x, y: node.y, width: node.width, height: node.height });
+      return;
+    }
     const width = node.width ?? node.measured?.width;
     const height = node.height ?? node.measured?.height;
     if (width === undefined || height === undefined) return;
@@ -462,8 +548,8 @@ export function Canvas() {
 
   return (
     <div className="canvas" data-part="canvas">
-      <ReactFlow<CanvasNode>
-        nodes={nodes}
+      <ReactFlow<DrawnNode>
+        nodes={drawn}
         nodeTypes={nodeTypes}
         onNodesChange={onNodesChange}
         onNodeDragStart={onNodeDragStart}

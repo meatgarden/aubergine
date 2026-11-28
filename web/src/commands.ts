@@ -12,6 +12,7 @@ import { atThisComputer, currentCanvas, currentLayout, useApp, type AppStore } f
 import { SCOPE_FILTER } from './list-filters';
 import { listModel, listSource } from './list-model';
 import { SORTS } from './terminal-rows';
+import { toggleGroupFold } from './group-actions';
 import { runOfSession } from './workflows/run-model';
 import { removeDemo, showMeAround } from './tour/actions';
 import { startPageTour } from './tour/page-steps';
@@ -565,6 +566,28 @@ export const COMMANDS: readonly Command[] = [
     },
   },
   {
+    id: 'terminal.group',
+    title: 'Group of the terminal…',
+    description: 'Puts the terminal into a group, or takes it out of one. Terminals in a group stand together in the list and inside one outline on the canvas, and fold away as one; a group may hold terminals of several canvases.',
+    group: 'Terminals',
+    available: hasTarget,
+    run: (state) => {
+      const session = targetSession(state);
+      if (session) state.request({ kind: 'group', id: session.id });
+    },
+  },
+  {
+    id: 'group.fold',
+    title: 'Fold or open the group of the terminal',
+    description: 'Folds the terminals of the group away, in the list and on the canvas, or brings them back. They keep running.',
+    group: 'Terminals',
+    available: (state) => Boolean(targetSession(state)?.group),
+    run: (state) => {
+      const group = targetSession(state)?.group;
+      if (group) toggleGroupFold(group);
+    },
+  },
+  {
     id: 'attention.next',
     title: 'Go to the next waiting terminal',
     description: 'Goes to the next terminal that is waiting for you, on whichever canvas it is.',
@@ -734,6 +757,14 @@ export const COMMANDS: readonly Command[] = [
     group: 'List',
     available: always,
     run: (state) => state.setListView({ grouping: state.listView.grouping === 'flat' ? 'canvas' : 'flat' }),
+  },
+  {
+    id: 'list.byGroup',
+    title: 'List: by group, over every canvas',
+    description: 'Lays the terminal list out by group and looks at every canvas, so that each group is whole wherever its terminals are.',
+    group: 'List',
+    available: always,
+    run: (state) => state.setListView({ grouping: 'group', filters: state.listView.filters.filter((id) => id !== SCOPE_FILTER) }),
   },
   {
     id: 'list.sort.cycle',

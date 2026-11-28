@@ -34,7 +34,7 @@ function withSession(state: AppState, name: string): AppState {
       noteLog: [],
       agent: null,
       parkedFrom: null, peopleOnly: false, typedBy: null,
-    recap: null, takesMessages: false, theme: null, untold: null, messages: { unread: 0, from: null, forOwner: 0, paused: 0, at: null }, links: [], written: {}, suggested: {}, found: null,
+    recap: null, takesMessages: false, theme: null, group: null, untold: null, messages: { unread: 0, from: null, forOwner: 0, paused: 0, at: null }, links: [], written: {}, suggested: {}, found: null,
     lastInputAt: null,
     lastOutputAt: null,
     tags: [], fields: [],
@@ -530,7 +530,9 @@ describe('JsonStore', () => {
     expect(state.sessions.map((session) => session.fields)).toEqual(before.sessions.map(() => []));
     // So did a terminal's own color theme: each terminal of the file has none, and is drawn in the default.
     expect(state.sessions.map((session) => session.theme)).toEqual(before.sessions.map(() => null));
-    const sessionsBefore = (before.sessions as object[]).map((session) => ({ ...session, fields: [], theme: null }));
+    // And a terminal's group: each terminal of the file is in none.
+    expect(state.sessions.map((session) => session.group)).toEqual(before.sessions.map(() => null));
+    const sessionsBefore = (before.sessions as object[]).map((session) => ({ ...session, fields: [], theme: null, group: null }));
     // And themes proposed by agents: none wait.
     expect(state.themeProposals).toEqual({ waiting: [], decided: [] });
     expect({ ...state, devices: undefined, themeProposals: undefined }).toEqual({ ...before, sessions: sessionsBefore, devices: undefined, themeProposals: undefined });

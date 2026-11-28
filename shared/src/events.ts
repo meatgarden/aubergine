@@ -4,6 +4,7 @@ import { SessionEnvironment } from './environment';
 import { z } from 'zod';
 import { Found, LINKS_MAX, SessionLink, Suggested, Written } from './links';
 import { ThemeId } from './themes';
+import { GroupName } from './groups';
 import {
   AgentInfo,
   Untold,
@@ -92,6 +93,8 @@ export const ChangeEvent = z.discriminatedUnion('type', [
   z.object({ type: z.literal('session.fields'), sessionId: Id, fields: TerminalFields }),
   /** The terminal's own color theme was chosen, or cleared (null: the default for terminals). */
   z.object({ type: z.literal('session.themed'), sessionId: Id, theme: ThemeId.nullable() }),
+  /** The terminal was put into a group, or taken out of one (null). */
+  z.object({ type: z.literal('session.grouped'), sessionId: Id, group: GroupName.nullable() }),
   /** "People only" was switched on or off. */
   z.object({ type: z.literal('session.protected'), sessionId: Id, peopleOnly: z.boolean() }),
   /** The owner changed whether the session takes messages from other terminals while it is "people only". */
@@ -290,6 +293,8 @@ export function applyEvent(state: AppState, event: ChangeEvent): AppState {
       return patchSession(state, event.sessionId, { fields: event.fields });
     case 'session.themed':
       return patchSession(state, event.sessionId, { theme: event.theme });
+    case 'session.grouped':
+      return patchSession(state, event.sessionId, { group: event.group });
     case 'session.untold':
       return patchSession(state, event.sessionId, { untold: event.untold });
     case 'session.takesMessages':

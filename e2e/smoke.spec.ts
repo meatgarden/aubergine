@@ -2048,6 +2048,7 @@ test('the side panel shows one section at a time with all of its height, says ho
   await expect(filterMenu.locator('select')).toHaveCount(0);
   expect(await filterMenu.locator('[data-testid^="layout-"]').evaluateAll((all) => all.map((el) => [(el as HTMLElement).dataset.testid, el.getAttribute('role'), el.textContent]))).toEqual([
     ['layout-canvas', 'menuitemradio', 'By canvas'],
+    ['layout-group', 'menuitemradio', 'By group'],
     ['layout-flat-canvas', 'menuitemradio', 'Flat, canvas order'],
     ['layout-flat-updated', 'menuitemradio', 'Flat, last updated'],
     ['layout-flat-typed', 'menuitemradio', 'Flat, last typed in'],
@@ -4638,7 +4639,7 @@ test('the drawer: what a terminal asks comes first, one thing to type into, besi
     await expect(drawer.locator('[data-fact="step"] dd')).toContainText('2 of 5');
     // The same menu as the row, without the line that opened this.
     await drawer.getByTestId('details-more').click();
-    await expect(page.getByTestId('details-menu').getByRole('menuitem')).toHaveText(['Rename', 'Tags…', 'Theme…', 'Open on desktop', 'Open in new browser tab', 'Move to canvas…', 'Park']);
+    await expect(page.getByTestId('details-menu').getByRole('menuitem')).toHaveText(['Rename', 'Tags…', 'Group…', 'Theme…', 'Open on desktop', 'Open in new browser tab', 'Move to canvas…', 'Park']);
     // It lies over everything, the side panel beside the drawer too, and is wholly in the window.
     expect(await onTop(page, 'details-menu')).toBe(true);
     expect(await page.getByTestId('details-menu').evaluate((el) => { const r = el.getBoundingClientRect(); return r.left >= 0 && r.right <= window.innerWidth && r.bottom <= window.innerHeight; })).toBe(true);
@@ -8486,4 +8487,147 @@ test('plugins: one written into the data folder is off and asked for by nothing,
     if (original === null) rmSync(configFile, { force: true });
     else writeFileSync(configFile, original);
   }
+});
+
+test('groups of terminals: a terminal is put into a group from its title with the keyboard, the group is an outline on the canvas and a heading in the list, it folds away and comes back in both and stays folded after a reload, its label carries its terminals, it holds terminals of another canvas and brings them here, and Ungroup ends it', async ({ page }) => {
+  const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
+  await page.goto(`/auth?token=${token}`);
+  await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
+  const before = page.url();
+  await page.getByRole('button', { name: 'New canvas' }).click();
+  await expect(page).not.toHaveURL(before);
+  const first = page.url();
+  await page.getByTestId('toolbar-new-terminal').click();
+  await expect(page.getByTestId('terminal-node')).toHaveCount(1);
+  await page.getByTestId('toolbar-new-terminal').click();
+  const nodes = page.getByTestId('terminal-node');
+  await expect(nodes).toHaveCount(2);
+  for (const n of [0, 1]) await expect(nodes.nth(n).locator('.xterm-rows')).toContainText(/[$%#>]/, { timeout: 20_000 });
+  await page.getByRole('button', { name: 'Fit', exact: true }).click();
+
+  const outline = page.getByTestId('group-outline');
+  const dialog = page.getByTestId('group-dialog');
+  const set = page.getByTestId('list-set');
+  /** Opens the group dialog of a terminal from its title's menu, with the keyboard. */
+  const askGroup = async (n: number): Promise<void> => {
+    await nodes.nth(n).getByTestId('node-more').focus();
+    await page.keyboard.press('Enter');
+    await nodes.nth(n).getByTestId('terminal-group').focus();
+    await page.keyboard.press('Enter');
+    await expect(dialog).toBeVisible();
+  };
+
+  // A new group is a name typed; nothing is drawn of a group before there is one.
+  await expect(outline).toHaveCount(0);
+  await askGroup(0);
+  await expect(dialog.getByTestId('group-name')).toBeFocused();
+  await page.keyboard.type('release');
+  await page.keyboard.press('Enter');
+  await expect(dialog).toHaveCount(0);
+  await expect(outline).toHaveCount(1);
+  await expect(outline.getByTestId('group-label')).toHaveText('release');
+  await expect(outline.getByTestId('group-count')).toHaveText('1');
+
+  // The second joins the group there is, by pressing its name.
+  await askGroup(1);
+  await dialog.getByTestId('group-choice').filter({ hasText: 'release' }).click();
+  await expect(dialog).toHaveCount(0);
+  await expect(outline.getByTestId('group-count')).toHaveText('2');
+  // The outline holds both terminals.
+  const box = async (locator: Locator): Promise<{ x: number; y: number; width: number; height: number }> => (await locator.boundingBox())!;
+  const around = await box(outline);
+  for (const n of [0, 1]) {
+    const inner = await box(nodes.nth(n));
+    expect(inner.x).toBeGreaterThanOrEqual(around.x);
+    expect(inner.y).toBeGreaterThanOrEqual(around.y);
+    expect(inner.x + inner.width).toBeLessThanOrEqual(around.x + around.width + 1);
+    expect(inner.y + inner.height).toBeLessThanOrEqual(around.y + around.height + 1);
+  }
+
+  // In the list the group is a heading over its terminals, pressed to fold them away: there and on the canvas.
+  await expect(set).toHaveCount(1);
+  await expect(set).toHaveAttribute('data-group', 'release');
+  await expect(set).toHaveAttribute('aria-expanded', 'true');
+  const rows = page.getByTestId('list-row');
+  const shownRows = await rows.count();
+  await set.focus();
+  await page.keyboard.press('Enter');
+  await expect(set).toHaveAttribute('aria-expanded', 'false');
+  await expect(rows).toHaveCount(shownRows - 2);
+  await expect(nodes).toHaveCount(0);
+  await expect(outline).toHaveClass(/is-folded/);
+  await expect(outline.getByTestId('group-count')).toHaveText('2 terminals');
+
+  // Folded is this browser's, and is kept.
+  await page.reload();
+  await expect(outline).toHaveClass(/is-folded/);
+  await expect(nodes).toHaveCount(0);
+  await expect(set).toHaveAttribute('aria-expanded', 'false');
+
+  // Opened again from the list: the terminals are back, and work.
+  await set.click();
+  await expect(nodes).toHaveCount(2);
+  await expect(set).toHaveAttribute('aria-expanded', 'true');
+  for (const n of [0, 1]) await expect(nodes.nth(n).locator('.xterm-rows')).toContainText(/[$%#>]/, { timeout: 20_000 });
+  await page.getByRole('button', { name: 'Fit', exact: true }).click();
+  await expect(outline.getByTestId('group-fold')).toBeInViewport();
+
+  // The same from the canvas: the group's own button folds it and opens it, and the list follows.
+  await outline.getByTestId('group-fold').click();
+  await expect(nodes).toHaveCount(0);
+  await expect(set).toHaveAttribute('aria-expanded', 'false');
+  await outline.getByTestId('group-fold').click();
+  await expect(nodes).toHaveCount(2);
+  await expect(set).toHaveAttribute('aria-expanded', 'true');
+
+  // The label carries the group's terminals together.
+  const starts = [await box(nodes.nth(0)), await box(nodes.nth(1))];
+  const label = await box(outline.getByTestId('group-label'));
+  await page.mouse.move(label.x + label.width / 2, label.y + label.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(label.x + label.width / 2 + 30, label.y + label.height / 2 + 20, { steps: 4 });
+  await page.mouse.move(label.x + label.width / 2 + 60, label.y + label.height / 2 + 40, { steps: 4 });
+  await page.mouse.up();
+  // Both went the same way by the same amount (a drag begins a few pixels in), and the outline went with them.
+  const moved = async (n: number): Promise<[number, number]> => {
+    const now = await box(nodes.nth(n));
+    return [Math.round(now.x - starts[n]!.x), Math.round(now.y - starts[n]!.y)];
+  };
+  await expect.poll(async () => (await moved(0))[0]).toBeGreaterThan(40);
+  expect((await moved(0))[1]).toBeGreaterThan(25);
+  expect(await moved(1)).toEqual(await moved(0));
+  const carried = await moved(0);
+  // Where they were carried to is kept.
+  await page.reload();
+  await expect(nodes).toHaveCount(2);
+  await expect(outline.getByTestId('group-count')).toHaveText('2');
+  expect(await moved(1)).toEqual(carried);
+
+  // A terminal of another canvas joins the same group: each canvas says how many are elsewhere, and the menu brings them here.
+  await page.getByRole('button', { name: 'New canvas' }).click();
+  await expect(page).not.toHaveURL(first);
+  await page.getByTestId('toolbar-new-terminal').click();
+  await expect(nodes).toHaveCount(1);
+  await expect(nodes.nth(0).locator('.xterm-rows')).toContainText(/[$%#>]/, { timeout: 20_000 });
+  await askGroup(0);
+  await dialog.getByTestId('group-choice').filter({ hasText: 'release' }).click();
+  await expect(outline.getByTestId('group-count')).toHaveText('1 · 2 elsewhere');
+  await outline.getByTestId('group-menu').focus();
+  await page.keyboard.press('Enter');
+  const lines = outline.getByTestId('group-menu-lines');
+  await expect(lines).toBeVisible();
+  await expect(lines.getByTestId('group-menu-go')).toHaveCount(1);
+  await lines.getByTestId('group-menu-gather').focus();
+  await page.keyboard.press('Enter');
+  await expect(nodes).toHaveCount(3);
+  await expect(outline.getByTestId('group-count')).toHaveText('3');
+
+  // Ungroup ends the group; the terminals stay.
+  await page.getByRole('button', { name: 'Fit', exact: true }).click();
+  await expect(outline.getByTestId('group-menu')).toBeInViewport();
+  await outline.getByTestId('group-menu').click();
+  await lines.getByTestId('group-menu-ungroup').click();
+  await expect(outline).toHaveCount(0);
+  await expect(set).toHaveCount(0);
+  await expect(nodes).toHaveCount(3);
 });

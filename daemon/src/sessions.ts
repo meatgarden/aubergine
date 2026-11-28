@@ -250,6 +250,7 @@ export class Sessions {
     if (changes.note !== undefined) this.hub.emit({ type: 'session.noted', sessionId, note: changes.note });
     if (changes.tags !== undefined) this.hub.emit({ type: 'session.tagged', sessionId, tags: changes.tags });
     if (changes.theme !== undefined) this.hub.emit({ type: 'session.themed', sessionId, theme: changes.theme });
+    if (changes.group !== undefined) this.hub.emit({ type: 'session.grouped', sessionId, group: changes.group });
     // What is sent is the owner's, except a field sent as it stood, which keeps who set it.
     if (changes.fields !== undefined) this.hub.emit({ type: 'session.fields', sessionId, fields: ownerSetFields(this.find(sessionId).fields, changes.fields) });
     return this.find(sessionId);
@@ -844,7 +845,7 @@ export class Sessions {
       noteLog: [],
       agent: null,
       parkedFrom: null, peopleOnly: false, typedBy: null,
-    recap: null, takesMessages: false, theme: null, untold: null, messages: { unread: 0, from: null, forOwner: 0, paused: 0, at: null }, links: [], written: {}, suggested: {}, found: null,
+    recap: null, takesMessages: false, theme: null, group: null, untold: null, messages: { unread: 0, from: null, forOwner: 0, paused: 0, at: null }, links: [], written: {}, suggested: {}, found: null,
       lastInputAt: null,
       lastOutputAt: null,
       tags, fields: [],
