@@ -116,7 +116,7 @@
       "@type": "FAQPage",
       "@id": "https://thirstyeggplant.com/customize-terminal-themes/#faq",
       "mainEntity": [
-        { "@type": "Question", "name": "Can each terminal have a different color theme?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Theme… in a terminal's menu draws its body in any of the ten themes, whatever the page is drawn in. The others follow the default you set for terminals, or the page." } },
+        { "@type": "Question", "name": "Can each terminal have a different color theme?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Theme… in a terminal's menu draws its body in any of the ten themes, whatever the page is drawn in. Terminals with a tag can be given a theme by that tag in Settings, and the others follow the default you set for terminals, or the page." } },
         { "@type": "Question", "name": "Can I add my own CSS to Aubergine?", "acceptedAnswer": { "@type": "Answer", "text": "Not today. Single colors can be set by hand in the settings file; a custom.css with documented hooks is planned, not built." } },
         { "@type": "Question", "name": "Where is Aubergine's settings file?", "acceptedAnswer": { "@type": "Answer", "text": "It is config.json in Aubergine's data folder. aubergine settings path prints where, and the server prints it when it starts." } },
         { "@type": "Question", "name": "Can an agent change how Aubergine looks?", "acceptedAnswer": { "@type": "Answer", "text": "Not the settings: they are yours alone. An agent can name and describe its own terminal and propose a color theme, which waits for you to read and accept it; a program whose API token allows it can rename, tag and theme terminals, arrange canvases and propose a theme too." } }
@@ -170,6 +170,19 @@
 }</code></pre>
     <p><code>aubergine theme new harbor --from nord</code> writes a file to start from, with every color of the theme it is from; <code>aubergine theme check</code> says what is wrong in one; <strong>Read themes again</strong> in Settings picks up a change. Whether your colors can be read is yours to judge: Settings only says when text may be hard to read. <a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/themes.md">docs/themes.md</a> has the format.</p>
 
+    <h2 id="by-condition">A theme for a project, and for terminals by tag</h2>
+    <p>A project can draw the page in a theme of its own while you look at it, so that a glance says where you are. In <strong>Projects…</strong>, <strong>When light</strong> and <strong>When dark</strong> beside a project choose one theme of each kind; <strong>As the page</strong> leaves it to Settings. In every other project the page is as you chose it, and a reload on that project's address is drawn in its theme from the first paint.</p>
+    <p><strong>By tag</strong>, under Terminal theme in Settings, gives the terminals with a tag a theme of their own: every terminal tagged <code>prod</code> in Dracula, for example, at once and whatever the page is drawn in. The first line whose tag a terminal has wins, and a terminal's own theme comes before all of them. In the settings file it is <code>appearance.byTag</code>:</p>
+    <pre><code>{
+  "appearance": {
+    "byTag": [
+      { "tag": "prod", "theme": "dracula" },
+      { "tag": "docs", "theme": "solarized-light" }
+    ]
+  }
+}</code></pre>
+    <p>Often a different accent is enough. <code>aubergine theme new teal --from nord --accent "#2f9e8f"</code> writes a theme file that changes only Nord's accent and the five colors that go with it, worked out so that they can still be read. Choose it for a project or a tag like any other theme.</p>
+
     <h2 id="fonts-and-keys">Fonts, cursor and keyboard shortcuts</h2>
     <p><strong>Terminal text</strong> in Settings → Appearance sets the size of a terminal's text, from 8 to 32 pixels, and its font, as a list of which the first font found is used. <strong>Cursor</strong> sets its shape, block, bar or underline, and whether it blinks.</p>
     <p>Every key can be changed. Add <code>shortcuts</code> to the settings file: a command's name with a chord, a list of chords, or <code>null</code> for no key. <code>shortcutsInAppWindow</code> takes the same and applies only where Aubergine is installed as an app with a window of its own. Reload the page, and the shortcut sheet (<strong>?</strong>), the palette and the tooltips show the keys as you set them.</p>
@@ -215,7 +228,7 @@ aubergine settings schema</code></pre>
           <tr><td><a href="https://ghostty.org/docs/config">Ghostty</a><br>A terminal</td><td data-label="Settings">A <code>key = value</code> file; <code>config-file</code> adds others</td><td data-label="Themes and colors"><a href="https://ghostty.org/docs/features/theme">Themes are configuration files</a>; one for light and one for dark</td><td data-label="Your own CSS">None found</td><td data-label="Your own code"><a href="https://ghostty.org/docs/config/reference#custom-shader">GLSL shaders</a> over the terminal; AppleScript on macOS</td><td data-label="Templates for titles and status">None found</td></tr>
           <tr><td><a href="https://learn.microsoft.com/windows/terminal/customize-settings/color-schemes">Windows Terminal</a><br>A terminal</td><td data-label="Settings">Settings screen or <code>settings.json</code>, with a <a href="https://github.com/microsoft/terminal/blob/main/doc/cascadia/profiles.schema.json">JSON schema</a></td><td data-label="Themes and colors">Color schemes per profile; <a href="https://learn.microsoft.com/windows/terminal/customize-settings/themes">themes</a> for the window and tabs, light and dark, in the JSON only</td><td data-label="Your own CSS">None found</td><td data-label="Your own code">None found; other applications add profiles and color schemes as JSON fragments</td><td data-label="Templates for titles and status">None found; a profile sets <code>tabTitle</code> and <code>tabColor</code></td></tr>
           <tr><td><a href="https://iterm2.com/documentation-automatic-profile-switching.html">iTerm2</a><br>A terminal</td><td data-label="Settings">Profiles in Settings; <a href="https://iterm2.com/documentation-dynamic-profiles.html">Dynamic Profiles</a> as property-list files</td><td data-label="Themes and colors">A profile chosen by user, host, folder or job, with Shell Integration</td><td data-label="Your own CSS">None found</td><td data-label="Your own code">A <a href="https://iterm2.com/python-api/">Python API</a>, status bar components in Python, AppleScript</td><td data-label="Templates for titles and status"><a href="https://iterm2.com/documentation-scripting-fundamentals.html">Interpolated strings</a>, <code>\(…)</code>, in session names, badges and the status bar</td></tr>
-          <tr><td>Aubergine<br>Terminals on a canvas</td><td data-label="Settings"><code>config.json</code> and Settings, with a JSON Schema for editors</td><td data-label="Themes and colors">Ten themes, light, dark or as the system; your own as JSON files over one of them; one for each terminal; 35 colors by hand, for every theme or one</td><td data-label="Your own CSS">No. Planned: a <code>custom.css</code> with documented hooks</td><td data-label="Your own code">No. Planned: plugins</td><td data-label="Templates for titles and status">No. Planned: for a terminal's title and a row of the list</td></tr>
+          <tr><td>Aubergine<br>Terminals on a canvas</td><td data-label="Settings"><code>config.json</code> and Settings, with a JSON Schema for editors</td><td data-label="Themes and colors">Ten themes, light, dark or as the system; your own as JSON files over one of them; one for a project, for the terminals with a tag and for each terminal; 35 colors by hand, for every theme or one</td><td data-label="Your own CSS">No. Planned: a <code>custom.css</code> with documented hooks</td><td data-label="Your own code">No. Planned: plugins</td><td data-label="Templates for titles and status">No. Planned: for a terminal's title and a row of the list</td></tr>
         </tbody>
       </table>
     </div>
@@ -224,11 +237,11 @@ aubergine settings schema</code></pre>
     <p>Aubergine today is at the settings end: themes, colors and keys in files that describe themselves, and a page that writes part of the settings. It runs none of your code in the page, takes no style sheet of yours and has no templates. Those are on the <a href="../roadmap/#rm-yours">roadmap</a>, and not built.</p>
 
     <h2 id="planned">What is planned</h2>
-    <p>A look for a project or a tag, templates, a <code>custom.css</code> and plugins are planned and not built: see the <a href="../roadmap/#rm-yours">roadmap</a>.</p>
+    <p>Templates, a <code>custom.css</code> and plugins are planned and not built: see the <a href="../roadmap/#rm-yours">roadmap</a>.</p>
 
     <h2 id="faq">Questions</h2>
     <div class="questions">
-      <details><summary>Can each terminal have a different color theme?</summary><p>Yes. Theme… in a terminal's menu draws its body in any of the ten themes, whatever the page is drawn in. The others follow the default you set for terminals, or the page.</p></details>
+      <details><summary>Can each terminal have a different color theme?</summary><p>Yes. Theme… in a terminal's menu draws its body in any of the ten themes, whatever the page is drawn in. Terminals with a tag can be given a theme by that tag in Settings, and the others follow the default you set for terminals, or the page.</p></details>
       <details><summary>Can I add my own CSS to Aubergine?</summary><p>Not today. Single colors can be set by hand in the settings file; a <code>custom.css</code> with documented hooks is planned, not built.</p></details>
       <details><summary>Where is Aubergine's settings file?</summary><p>It is <code>config.json</code> in Aubergine's data folder. <code>aubergine settings path</code> prints where, and the server prints it when it starts.</p></details>
       <details><summary>Can an agent change how Aubergine looks?</summary><p>Not the settings: they are yours alone. An agent can name and describe its own terminal and propose a color theme, which waits for you to read and accept it; a program whose API token allows it can rename, tag and theme terminals, arrange canvases and propose a theme too.</p></details>

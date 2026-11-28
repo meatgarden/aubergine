@@ -482,6 +482,7 @@ export const useApp = create<AppStore>((set, get) => ({
           ...(change.cursor !== undefined ? { cursor: change.cursor } : {}),
           ...(change.cursorBlink !== undefined ? { cursorBlink: change.cursorBlink } : {}),
           ...(change.terminal !== undefined ? { terminal: change.terminal } : {}),
+          ...(change.byTag !== undefined ? { byTag: change.byTag } : {}),
         },
       });
       return { settings: changed(state.settings), ...(state.ownSettings ? { ownSettings: changed(state.ownSettings) } : {}) };

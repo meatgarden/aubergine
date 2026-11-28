@@ -18,7 +18,9 @@ import {
 } from '@aubergine/shared';
 import { useEffect, useState, type CSSProperties } from 'react';
 import { useApp } from '../store';
-import { chooseColorTheme, chooseTheme, readThemesAgain, setCursor, setCursorBlink, setFontFamily, setFontSize, setTerminalFont, setTerminalTheme, useThemeShown } from '../theme';
+import { chooseColorTheme, chooseTheme, readThemesAgain, setCursor, setCursorBlink, setFontFamily, setFontSize, setTerminalFont, setTerminalTheme, usePageThemeFrom, useThemeShown } from '../theme';
+import { currentProjectId } from '../store';
+import { ByTag } from './ByTag';
 import { ThemeSelect } from '../TerminalTheme';
 import { Banner, Button, RadioRow, RadioRows, Segmented, TextField } from '../ui';
 
@@ -34,6 +36,11 @@ export function colorThemeSays(setting: (typeof THEMES)[number], light: string, 
   if (setting === 'system') return `${l} is used while the system is light, ${d} while it is dark.`;
   if (setting === 'light') return `The page is drawn in ${l}. ${d} is the theme of the dark page.`;
   return `The page is drawn in ${d}. ${l} is the theme of the light page.`;
+}
+
+/** What is said in Settings while the project looked at draws the page in a theme of its own, so that a choice here is not taken for having no effect. Pure. */
+export function projectThemeSays(project: string, theme: string, themes: readonly UserTheme[] = []): string {
+  return `While you look at ${project} the page is drawn in ${nameOf(theme, themes)}: that is the project’s. What you choose here is the page’s own, drawn everywhere else.`;
 }
 
 /** What is said in Settings while themes proposed by agents and programs wait to be read. Pure. */
@@ -97,6 +104,9 @@ export function AppearancePart() {
   const folder = themesFolderOf(settingsFile);
   // Themes proposed by agents and programs, of the page's own server: said here only while one waits.
   const proposed = useApp((s) => (s.server === null ? (s.whole?.themeProposals.waiting ?? NO_PROPOSALS) : NO_PROPOSALS));
+  // The project looked at may draw the page in a theme of its own: said, so that a choice here is not taken for having no effect.
+  const pageNow = usePageThemeFrom();
+  const projectName = useApp((s) => s.whole?.projects.find((project) => project.id === currentProjectId(s))?.name ?? null);
   return (
     <section data-testid="settings-appearance">
       <h3>Appearance</h3>
@@ -159,6 +169,11 @@ export function AppearancePart() {
         <p className="ui-meta" data-testid="color-theme-says">
           {colorThemeSays(theme, colorThemeShown(appearance, 'light', userThemes), colorThemeShown(appearance, 'dark', userThemes), userThemes)}
         </p>
+        {pageNow.from === 'project' && projectName !== null && (
+          <p className="ui-meta" data-testid="project-theme-says">
+            {projectThemeSays(projectName, pageNow.id, userThemes)}
+          </p>
+        )}
         {fallbacks.length > 0 && (
           <p className="ui-meta" role="status" data-testid="theme-fallbacks">
             {fallbacks.join(' ')}
@@ -219,8 +234,9 @@ export function AppearancePart() {
           <ThemeSelect id="appearance-terminal-theme" value={appearance.terminal} onChange={setTerminalTheme} none="Same as the page" aria-describedby="appearance-terminal-theme-says" data-testid="terminal-theme-default" />
         </div>
         <p className="ui-meta" id="appearance-terminal-theme-says" data-testid="terminal-theme-says">
-          {appearance.terminal && themeOf(appearance.terminal, userThemes) ? `Every terminal is drawn in ${nameOf(appearance.terminal, userThemes)}, whatever the page is drawn in.` : `Every terminal is drawn as the page is, now in ${nameOf(drawn, userThemes)}.`} A terminal can also have a theme of its own, from the menu in its title.
+          {appearance.terminal && themeOf(appearance.terminal, userThemes) ? `Every terminal is drawn in ${nameOf(appearance.terminal, userThemes)}, whatever the page is drawn in.` : `Every terminal is drawn as the page is, now in ${nameOf(pageNow.id, userThemes)}.`} A terminal can also have a theme of its own, from the menu in its title.
         </p>
+        <ByTag />
       </div>
 
       <TerminalText family={font.family} size={font.size} />

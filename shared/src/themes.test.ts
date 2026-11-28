@@ -7,7 +7,7 @@ import { applyEvent } from './events';
 import { PatchSessionRequest, UpdateSessionRequest } from './protocol';
 import { Session, createInitialState } from './entities';
 import { newId } from './ids';
-import { Appearance, COLOR_THEMES, DARK_THEME_IDS, LIGHT_THEME_IDS, THEME_COLORS, UserTheme, colorTheme, colorThemeShown, colorsOver, resolveColors, terminalThemeOf, themeChoices, themeFallbacks, themeOf } from './themes';
+import { Appearance, COLOR_THEMES, DARK_THEME_IDS, LIGHT_THEME_IDS, THEME_COLORS, UserTheme, colorTheme, colorThemeShown, byTagProblems, colorsOver, pageThemeFrom, pageThemeOf, resolveColors, terminalThemeFrom, terminalThemeOf, themeChoices, themeFallbacks, themeOf } from './themes';
 
 const harbor = UserTheme.parse({ id: 'harbor', name: 'Harbor', kind: 'dark', base: 'nord', colors: { bg: '#0e1a24', accent: '#5fb3b3' }, terminal: { foreground: '#d8dee9' } });
 const paper = UserTheme.parse({ id: 'paper', name: 'Paper', kind: 'light', base: 'light', colors: {}, terminal: {} });
@@ -181,14 +181,14 @@ describe('colors set by hand', () => {
 
 describe('the appearance in the settings', () => {
   it('has its defaults in a file without it', () => {
-    expect(Settings.parse({}).appearance).toEqual({ light: 'light', dark: 'dark', cursor: 'block', cursorBlink: true, terminal: null, colors: {} });
+    expect(Settings.parse({}).appearance).toEqual({ light: 'light', dark: 'dark', cursor: 'block', cursorBlink: true, terminal: null, byTag: [], colors: {} });
     expect(DEFAULT_SETTINGS.appearance).toEqual(Appearance.parse({}));
   });
 
   it('lets a wrong field fall back to its default by itself, and keeps the others', () => {
     // A theme's ID is kept whatever it names now: a theme file may be there, or come back. What is drawn falls back (`colorThemeShown`).
-    expect(Settings.parse({ appearance: { light: 'nord', dark: 'dracula', cursor: 'bar' } }).appearance).toEqual({ light: 'nord', dark: 'dracula', cursor: 'bar', cursorBlink: true, terminal: null, colors: {} });
-    expect(Settings.parse({ appearance: { light: 'solarized-light', dark: 'Not An Id', cursor: 'beam', cursorBlink: 'yes', terminal: 'sepia', colors: [1] } }).appearance).toEqual({ light: 'solarized-light', dark: 'dark', cursor: 'block', cursorBlink: true, terminal: 'sepia', colors: {} });
+    expect(Settings.parse({ appearance: { light: 'nord', dark: 'dracula', cursor: 'bar' } }).appearance).toEqual({ light: 'nord', dark: 'dracula', cursor: 'bar', cursorBlink: true, terminal: null, byTag: [], colors: {} });
+    expect(Settings.parse({ appearance: { light: 'solarized-light', dark: 'Not An Id', cursor: 'beam', cursorBlink: 'yes', terminal: 'sepia', colors: [1] } }).appearance).toEqual({ light: 'solarized-light', dark: 'dark', cursor: 'block', cursorBlink: true, terminal: 'sepia', byTag: [], colors: {} });
     expect(Settings.parse({ appearance: { dark: 'harbor', terminal: '9lives' } }).appearance).toMatchObject({ dark: 'harbor', terminal: null });
     // The default theme of terminals is any theme, of either kind.
     expect(Settings.parse({ theme: 'dark', appearance: { terminal: 'solarized-light' } }).appearance.terminal).toBe('solarized-light');
@@ -268,28 +268,121 @@ describe('a change of how the page looks', () => {
 });
 
 describe('the theme a terminal is drawn in', () => {
-  const appearance = (terminal: Appearance['terminal']) => ({ light: 'gruvbox-light', dark: 'nord', terminal });
+  const appearance = (terminal: Appearance['terminal'], byTag: Appearance['byTag'] = []) => ({ light: 'gruvbox-light', dark: 'nord', terminal, byTag });
+  const own = (theme: string | null | undefined, tags: string[] = []) => ({ theme, tags });
 
   it('is its own, else the default for terminals, else the theme the page is drawn in', () => {
-    expect(terminalThemeOf(null, appearance(null), 'dark', [])).toBe('nord');
-    expect(terminalThemeOf(null, appearance(null), 'light', [])).toBe('gruvbox-light');
-    expect(terminalThemeOf(undefined, appearance(null), 'light', [])).toBe('gruvbox-light');
-    expect(terminalThemeOf(null, appearance('dracula'), 'light', [])).toBe('dracula');
-    expect(terminalThemeOf(null, appearance('solarized-light'), 'dark', [])).toBe('solarized-light');
-    expect(terminalThemeOf('high-contrast-dark', appearance('dracula'), 'light', [])).toBe('high-contrast-dark');
-    expect(terminalThemeOf('light', appearance(null), 'dark', [])).toBe('light');
-    expect(terminalThemeOf('harbor', appearance(null), 'light', mine)).toBe('harbor');
-    expect(terminalThemeOf(null, appearance('paper'), 'dark', mine)).toBe('paper');
+    expect(terminalThemeOf(own(null), appearance(null), 'dark', [])).toBe('nord');
+    expect(terminalThemeOf(own(null), appearance(null), 'light', [])).toBe('gruvbox-light');
+    expect(terminalThemeOf(own(undefined), appearance(null), 'light', [])).toBe('gruvbox-light');
+    expect(terminalThemeOf({}, appearance(null), 'light', [])).toBe('gruvbox-light');
+    expect(terminalThemeOf(own(null), appearance('dracula'), 'light', [])).toBe('dracula');
+    expect(terminalThemeOf(own(null), appearance('solarized-light'), 'dark', [])).toBe('solarized-light');
+    expect(terminalThemeOf(own('high-contrast-dark'), appearance('dracula'), 'light', [])).toBe('high-contrast-dark');
+    expect(terminalThemeOf(own('light'), appearance(null), 'dark', [])).toBe('light');
+    expect(terminalThemeOf(own('harbor'), appearance(null), 'light', mine)).toBe('harbor');
+    expect(terminalThemeOf(own(null), appearance('paper'), 'dark', mine)).toBe('paper');
   });
 
   it('passes over a theme that is not there now for the next', () => {
-    expect(terminalThemeOf('harbor', appearance('dracula'), 'light', [])).toBe('dracula');
-    expect(terminalThemeOf('harbor', appearance('paper'), 'dark', [])).toBe('nord');
-    expect(terminalThemeOf('harbor', { light: 'gone', dark: 'gone', terminal: 'gone' }, 'dark', [])).toBe('dark');
+    expect(terminalThemeOf(own('harbor'), appearance('dracula'), 'light', [])).toBe('dracula');
+    expect(terminalThemeOf(own('harbor'), appearance('paper'), 'dark', [])).toBe('nord');
+    expect(terminalThemeOf(own('harbor'), { light: 'gone', dark: 'gone', terminal: 'gone' }, 'dark', [])).toBe('dark');
     // Every combination gives a theme that exists.
-    for (const own of [null, ...COLOR_THEMES.map((t) => t.id)])
+    for (const mark of [null, ...COLOR_THEMES.map((t) => t.id)])
       for (const terminal of [null, ...COLOR_THEMES.map((t) => t.id)])
-        for (const shown of ['light', 'dark'] as const) expect(colorTheme(terminalThemeOf(own, appearance(terminal), shown, []))).toBeDefined();
+        for (const shown of ['light', 'dark'] as const) expect(colorTheme(terminalThemeOf(own(mark), appearance(terminal), shown, []))).toBeDefined();
+  });
+
+  it('by tag: the first entry whose tag it has and whose theme is there, after its own and before the default for terminals', () => {
+    const byTag = [
+      { tag: 'gone', theme: 'harbor' },
+      { tag: 'prod', theme: 'dracula' },
+      { tag: 'docs', theme: 'paper' },
+      { tag: 'prod', theme: 'solarized-light' },
+    ];
+    // In the list's order, not the terminal's tags' order.
+    expect(terminalThemeFrom(own(null, ['docs', 'prod']), appearance('nord', byTag), 'dark', mine)).toEqual({ id: 'dracula', from: 'tag', tag: 'prod' });
+    // The capitals of a tag do not count; the tag is said as the terminal has it.
+    expect(terminalThemeFrom(own(null, ['PROD']), appearance(null, byTag), 'light', mine)).toEqual({ id: 'dracula', from: 'tag', tag: 'PROD' });
+    expect(terminalThemeFrom(own(null, ['docs']), appearance(null, byTag), 'dark', mine)).toEqual({ id: 'paper', from: 'tag', tag: 'docs' });
+    // A theme that is not there now passes to the next entry, then to the default for terminals.
+    expect(terminalThemeFrom(own(null, ['gone']), appearance(null, byTag), 'dark', [])).toEqual({ id: 'nord', from: 'page' });
+    expect(terminalThemeFrom(own(null, ['gone']), appearance('solarized-dark', byTag), 'dark', [])).toEqual({ id: 'solarized-dark', from: 'terminals' });
+    expect(terminalThemeFrom(own(null, ['gone', 'prod']), appearance(null, byTag), 'dark', [])).toEqual({ id: 'dracula', from: 'tag', tag: 'prod' });
+    expect(terminalThemeFrom(own(null, ['docs']), appearance(null, byTag), 'dark', [])).toEqual({ id: 'nord', from: 'page' });
+    // Its own wins; a tag it does not have does nothing.
+    expect(terminalThemeFrom(own('light', ['prod']), appearance(null, byTag), 'dark', mine)).toEqual({ id: 'light', from: 'own' });
+    expect(terminalThemeFrom(own(null, ['other']), appearance(null, byTag), 'dark', mine)).toEqual({ id: 'nord', from: 'page' });
+    // A wrong own theme passes to the tag.
+    expect(terminalThemeFrom(own('gone', ['prod']), appearance(null, byTag), 'dark', mine)).toEqual({ id: 'dracula', from: 'tag', tag: 'prod' });
+  });
+
+  it('last, the page’s: the project’s where it names a theme of the kind drawn', () => {
+    const project = { light: 'paper', dark: 'harbor' };
+    expect(terminalThemeFrom(own(null), appearance(null), 'dark', mine, project)).toEqual({ id: 'harbor', from: 'project' });
+    expect(terminalThemeFrom(own(null), appearance(null), 'light', mine, project)).toEqual({ id: 'paper', from: 'project' });
+    expect(terminalThemeFrom(own(null), appearance('dracula'), 'light', mine, project)).toEqual({ id: 'dracula', from: 'terminals' });
+    expect(terminalThemeFrom(own(null, ['prod']), appearance(null, [{ tag: 'prod', theme: 'light' }]), 'dark', mine, project)).toEqual({ id: 'light', from: 'tag', tag: 'prod' });
+    // Gone, the page's own.
+    expect(terminalThemeFrom(own(null), appearance(null), 'dark', [], project)).toEqual({ id: 'nord', from: 'page' });
+  });
+});
+
+describe('the theme the page is drawn in', () => {
+  const appearance = { light: 'gruvbox-light', dark: 'nord' };
+
+  it('is the project’s of the kind drawn where it names one there is now and of that kind, else the page’s own', () => {
+    expect(pageThemeFrom(appearance, 'dark', [], null)).toEqual({ id: 'nord', from: 'page' });
+    expect(pageThemeFrom(appearance, 'dark', [], undefined)).toEqual({ id: 'nord', from: 'page' });
+    expect(pageThemeFrom(appearance, 'dark', [], { light: null, dark: null })).toEqual({ id: 'nord', from: 'page' });
+    expect(pageThemeFrom(appearance, 'dark', [], { light: 'solarized-light', dark: 'dracula' })).toEqual({ id: 'dracula', from: 'project' });
+    expect(pageThemeFrom(appearance, 'light', [], { light: 'solarized-light', dark: 'dracula' })).toEqual({ id: 'solarized-light', from: 'project' });
+    // Only one kind set: the other is the page's own.
+    expect(pageThemeFrom(appearance, 'light', [], { light: null, dark: 'dracula' })).toEqual({ id: 'gruvbox-light', from: 'page' });
+    // A theme of the wrong kind, or one that is not there now: the page's own.
+    expect(pageThemeFrom(appearance, 'dark', [], { light: 'dracula', dark: 'light' })).toEqual({ id: 'nord', from: 'page' });
+    expect(pageThemeFrom(appearance, 'light', [], { light: 'dracula', dark: null })).toEqual({ id: 'gruvbox-light', from: 'page' });
+    expect(pageThemeFrom(appearance, 'dark', [], { light: null, dark: 'harbor' })).toEqual({ id: 'nord', from: 'page' });
+    // Theme files.
+    expect(pageThemeFrom(appearance, 'dark', mine, { light: 'paper', dark: 'harbor' })).toEqual({ id: 'harbor', from: 'project' });
+    expect(pageThemeFrom(appearance, 'light', mine, { light: 'harbor', dark: 'paper' })).toEqual({ id: 'gruvbox-light', from: 'page' });
+    // The page's own falls back as ever, under a project that names nothing.
+    expect(pageThemeOf({ light: 'gone', dark: 'gone' }, 'dark', [], null)).toBe('dark');
+    expect(pageThemeOf({ light: 'gone', dark: 'gone' }, 'dark', [], { light: null, dark: 'gruvbox-dark' })).toBe('gruvbox-dark');
+  });
+});
+
+describe('themes by tag in the settings', () => {
+  it('keep the entries that are right, in order, and drop the rest, and say each that is dropped', () => {
+    const raw = [{ tag: 'prod', theme: 'dracula' }, { tag: '', theme: 'nord' }, { tag: 'docs' }, 'x', { tag: ' qa ', theme: 'Not An ID' }, { tag: 'qa', theme: 'paper', extra: 1 }];
+    expect(Appearance.parse({ byTag: raw }).byTag).toEqual([
+      { tag: 'prod', theme: 'dracula' },
+      { tag: 'qa', theme: 'paper' },
+    ]);
+    expect(byTagProblems(raw)).toHaveLength(4);
+    expect(byTagProblems(raw)[0]).toContain('entry 2');
+    expect(Appearance.parse({ byTag: 'prod' }).byTag).toEqual([]);
+    expect(byTagProblems('prod')).toEqual(['appearance.byTag is not a list of a tag and a theme: it is left out.']);
+    expect(byTagProblems(undefined)).toEqual([]);
+    const many = Array.from({ length: 25 }, (_, i) => ({ tag: `t${i}`, theme: 'nord' }));
+    expect(Appearance.parse({ byTag: many }).byTag).toHaveLength(20);
+    expect(byTagProblems(many)).toEqual(['appearance.byTag has more than 20 entries. Those after the 20th are skipped.']);
+    // The other fields stay as they are.
+    expect(Appearance.parse({ byTag: raw, dark: 'dracula' }).dark).toBe('dracula');
+    expect(Appearance.parse({}).byTag).toEqual([]);
+  });
+
+  it('a theme that is not there now is said, as the other fallbacks are', () => {
+    expect(themeFallbacks({ light: 'light', dark: 'dark', terminal: null, byTag: [{ tag: 'prod', theme: 'gone' }] }, [])).toEqual(['The theme of terminals tagged prod, "gone", is not there now: they are drawn as if that line were not there.']);
+    expect(themeFallbacks({ light: 'light', dark: 'dark', terminal: null, byTag: [{ tag: 'prod', theme: 'harbor' }] }, mine)).toEqual([]);
+  });
+
+  it('are taken by the appearance route as a whole list, and only one that is right', () => {
+    expect(ChangeAppearanceRequest.safeParse({ byTag: [] }).success).toBe(true);
+    expect(ChangeAppearanceRequest.safeParse({ byTag: [{ tag: 'prod', theme: 'nord' }] }).success).toBe(true);
+    for (const byTag of [[{ tag: '', theme: 'nord' }], [{ tag: 'prod' }], [{ tag: 'x'.repeat(33), theme: 'nord' }], Array.from({ length: 21 }, () => ({ tag: 'a', theme: 'nord' })), 'prod'])
+      expect(ChangeAppearanceRequest.safeParse({ byTag }).success, JSON.stringify(byTag)).toBe(false);
   });
 });
 

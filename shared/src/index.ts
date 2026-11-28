@@ -27,6 +27,7 @@ export * from './themes';
 export * from './theme-files';
 export * from './theme-proposals';
 export * from './contrast';
+export * from './accent';
 export * from './chords';
 export * from './shortcuts';
 export * from './access';

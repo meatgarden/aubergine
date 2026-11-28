@@ -42,6 +42,7 @@ How the page looks beyond light or dark: the color theme of each, a terminal’s
 | `appearance.cursor` | The shape of a terminal’s cursor. One of `block`, `bar`, `underline`. | `"block"` | Settings |
 | `appearance.cursorBlink` | Whether a terminal’s cursor blinks. | `true` | Settings |
 | `appearance.terminal` | The color theme of every terminal that has none of its own, of either kind, built-in or of a theme file. Null: the theme the page is drawn in. One of `light`, `high-contrast-light`, `solarized-light`, `gruvbox-light`, `dark`, `high-contrast-dark`, `solarized-dark`, `gruvbox-dark`, `nord`, `dracula`. | `null` | Settings |
+| `appearance.byTag` | Color themes for terminals by tag, in order: a terminal that has no theme of its own is drawn in the theme of the first entry whose tag it has (whatever the capitals) and whose theme is there now. At most 20. A wrong entry is skipped and the rest still count. | no entries | Settings |
 | `appearance.colors` | Colors set by hand over the theme that is drawn: `"<color>": "#rrggbb"` for every theme, or `"[<theme id>]": { … }` for one theme alone (built-in or of a theme file), which wins. Written by hand only. | no entries | by hand |
 
 ## `shell`

@@ -13,7 +13,8 @@ import { AcceptedRepositoryWorkflow } from './repository';
 import { TypedBy } from './terminal';
 import { Run, Workflow } from './workflows';
 import { TerminalFields } from './fields';
-import { ThemeId } from './themes';
+import { ProjectThemes, ThemeId } from './themes';
+import { Tags } from './tags';
 
 import { Found, LINKS_MAX, SessionLink, Suggested, Written } from './links';
 
@@ -65,6 +66,8 @@ export const Project = z.object({
   defaultFolder: Folder.nullable().default(null).describe('One of its folders: where a new terminal starts when it names no folder. Null: where new terminals start anyway.'),
   home: ProjectHome.default(LOCAL_HOME).describe('Which server owns its record. Set by the server.'),
   state: z.enum(['open', 'archived']).default('open'),
+  /** The color themes the page is drawn in while this project is looked at, of each kind. Left out, or null: the page's own. The owner's alone to set. Not written into a project file. */
+  themes: ProjectThemes.optional().describe('The color themes the page is drawn in while this project is looked at: one for the light page and one for the dark. Null or left out: the page’s own.'),
   /** Fields of the file it was read from that this version does not know: written out again when it is written to a file. */
   fileExtra: z.record(z.string(), z.unknown()).optional(),
   createdAt: Timestamp,
@@ -201,28 +204,7 @@ export const AgentInfo = z.object({
 });
 export type AgentInfo = z.infer<typeof AgentInfo>;
 
-export const TAG_MAX_LENGTH = 32;
-export const TAGS_MAX = 12;
-
-/** Trims tags and drops empty ones and repeats. Capitals are kept, but `Api` and `api` are the same tag. */
-export function normaliseTags(tags: readonly string[]): string[] {
-  const seen = new Set<string>();
-  const result: string[] = [];
-  for (const raw of tags) {
-    const tag = raw.trim();
-    if (tag === '' || seen.has(tag.toLowerCase())) continue;
-    seen.add(tag.toLowerCase());
-    result.push(tag);
-  }
-  return result;
-}
-
-/** A session's tags: a short list of short strings, without repeats. */
-export const Tags = z
-  .array(z.string().trim().min(1).max(TAG_MAX_LENGTH))
-  .max(TAGS_MAX)
-  // `overwrite`, not `transform`: the value is tidied but its kind stays the same, so it can still be described.
-  .overwrite((tags) => normaliseTags(tags));
+export { TAG_MAX_LENGTH, TAGS_MAX, Tag, Tags, normaliseTags } from './tags';
 
 /** Which of the fixed sentences. */
 export const ToldKind = z.enum(['kickoff', 'brief', 'recap', 'inbox']);

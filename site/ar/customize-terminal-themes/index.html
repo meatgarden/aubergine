@@ -123,7 +123,7 @@
       "@type": "FAQPage",
       "@id": "https://thirstyeggplant.com/ar/customize-terminal-themes/#faq",
       "mainEntity": [
-        { "@type": "Question", "name": "هل يمكن أن يكون لكل طرفية سمة ألوان مختلفة؟", "acceptedAnswer": { "@type": "Answer", "text": "نعم. يرسم Theme… في قائمة الطرفية جسمها بأي سمة من العشر، أيًّا كانت سمة الصفحة. وتتبع الطرفيات الأخرى السمة الافتراضية التي تضبطها للطرفيات، أو الصفحة." } },
+        { "@type": "Question", "name": "هل يمكن أن يكون لكل طرفية سمة ألوان مختلفة؟", "acceptedAnswer": { "@type": "Answer", "text": "نعم. يرسم Theme… في قائمة الطرفية محتواها بأي من السمات العشر، أيًّا كانت سمة الصفحة. ويمكن إعطاء الطرفيات التي تحمل وسمًا سمة بهذا الوسم في Settings، والبقية تتبع الافتراضي الذي تحدده للطرفيات، أو الصفحة." } },
         { "@type": "Question", "name": "هل يمكنني إضافة CSS خاص بي إلى Aubergine؟", "acceptedAnswer": { "@type": "Answer", "text": "ليس اليوم. يمكن ضبط الألوان المفردة باليد في ملف الإعدادات؛ وcustom.css بنقاط ربط موثقة مخطط له ولم يُبنَ." } },
         { "@type": "Question", "name": "أين ملف إعدادات Aubergine؟", "acceptedAnswer": { "@type": "Answer", "text": "هو config.json في مجلد بيانات Aubergine. يعرض aubergine settings path مكانه، ويعرضه الخادم أيضًا عند بدئه." } },
         { "@type": "Question", "name": "هل يستطيع وكيل تغيير مظهر Aubergine؟", "acceptedAnswer": { "@type": "Answer", "text": "ليس الإعدادات: فهي لك وحدك. يستطيع الوكيل تسمية طرفيته ووصفها واقتراح سمة ألوان تنتظر أن تقرأها وتقبلها، ويستطيع برنامج يسمح له رمز API الخاص به إعادة تسمية الطرفيات ووسمها ومنحها سمة وترتيب اللوحات واقتراح سمة أيضًا." } }
@@ -177,6 +177,19 @@
 }</code></pre>
     <p>يكتب <code>aubergine theme new harbor --from nord</code> ملفًا للبدء منه، فيه كل لون من السمة التي بدأ منها؛ ويقول <code>aubergine theme check</code> ما الخطأ في ملف؛ ويقرأ <strong>Read themes again</strong> في Settings أي تغيير. أنت من يحكم إن كانت ألوانك مقروءة: لا يقول Settings إلا متى قد يصعب قراءة النص. يصف <a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/themes.md">docs/themes.md</a> الصيغة.</p>
 
+    <h2 id="by-condition">سمة لمشروع، وللطرفيات حسب الوسم</h2>
+    <p>يمكن لمشروع أن يرسم الصفحة بسمة خاصة به ما دمت تنظر إليه، فتعرف بنظرة واحدة أين أنت. في <strong>Projects…</strong>، يختار <strong>When light</strong> و<strong>When dark</strong> بجانب المشروع سمة لكل نوع؛ و<strong>As the page</strong> يترك الأمر لـ Settings. في أي مشروع آخر تبقى الصفحة كما اخترتها، وإعادة التحميل على عنوان ذلك المشروع ترسمها بسمته منذ أول رسم.</p>
+    <p>يمنح <strong>By tag</strong>، تحت Terminal theme في Settings، الطرفيات التي تحمل وسمًا سمة خاصة: مثلًا كل طرفية موسومة <code>prod</code> بسمة Dracula، فورًا وأيًّا كانت سمة الصفحة. يفوز أول سطر تحمل الطرفية وسمه، وسمة الطرفية الخاصة تسبق كل ذلك. وفي ملف الإعدادات هي <code>appearance.byTag</code>:</p>
+    <pre><code>{
+  "appearance": {
+    "byTag": [
+      { "tag": "prod", "theme": "dracula" },
+      { "tag": "docs", "theme": "solarized-light" }
+    ]
+  }
+}</code></pre>
+    <p>كثيرًا ما يكفي لون تمييز مختلف. يكتب <code>aubergine theme new teal --from nord --accent "#2f9e8f"</code> ملف سمة لا يغيّر إلا لون تمييز Nord والألوان الخمسة التي ترافقه، محسوبة لتبقى مقروءة. اخترها لمشروع أو وسم كأي سمة أخرى.</p>
+
     <h2 id="fonts-and-keys">الخطوط والمؤشر واختصارات لوحة المفاتيح</h2>
     <p>يضبط <strong>Terminal text</strong> في Settings → Appearance حجم نص الطرفية، من 8 إلى 32 بكسل، وخطها، في صورة قائمة يُستخدم أول خط يوجد منها. ويضبط <strong>Cursor</strong> شكله، كتلة أو شريط أو خط سفلي، وهل يومض.</p>
     <p>يمكن تغيير كل مفتاح. أضف <code>shortcuts</code> إلى ملف الإعدادات: اسم أمر مع تركيبة مفاتيح، أو قائمة تركيبات، أو <code>null</code> لعدم وجود مفتاح. ويأخذ <code>shortcutsInAppWindow</code> الشكل نفسه ولا يسري إلا حيث ثُبّت Aubergine تطبيقًا بنافذة خاصة. أعد تحميل الصفحة، فتعرض صفحة الاختصارات (<strong>?</strong>) ولوحة الأوامر والتلميحات المفاتيح كما ضبطتها.</p>
@@ -222,7 +235,7 @@ aubergine settings schema</code></pre>
           <tr><td><a href="https://ghostty.org/docs/config">Ghostty</a><br>طرفية</td><td data-label="الإعدادات">ملف <code>key = value</code>؛ ويضيف <code>config-file</code> ملفات أخرى</td><td data-label="السمات والألوان"><a href="https://ghostty.org/docs/features/theme">السمات ملفات إعداد</a>؛ واحدة للفاتح وأخرى للداكن</td><td data-label="CSS خاص بك">لم يُعثر عليه</td><td data-label="شيفرة خاصة بك"><a href="https://ghostty.org/docs/config/reference#custom-shader">مظلِّلات GLSL</a> فوق الطرفية؛ وAppleScript على macOS</td><td data-label="قوالب للعناوين والحالة">لم يُعثر عليه</td></tr>
           <tr><td><a href="https://learn.microsoft.com/windows/terminal/customize-settings/color-schemes">Windows Terminal</a><br>طرفية</td><td data-label="الإعدادات">شاشة Settings أو <code>settings.json</code>، مع <a href="https://github.com/microsoft/terminal/blob/main/doc/cascadia/profiles.schema.json">مخطط JSON</a></td><td data-label="السمات والألوان">مخططات ألوان لكل ملف تعريف؛ و<a href="https://learn.microsoft.com/windows/terminal/customize-settings/themes">سمات</a> للنافذة والتبويبات، فاتحة وداكنة، في JSON فقط</td><td data-label="CSS خاص بك">لم يُعثر عليه</td><td data-label="شيفرة خاصة بك">لم يُعثر عليه؛ تضيف تطبيقات أخرى ملفات تعريف ومخططات ألوان في صورة أجزاء JSON</td><td data-label="قوالب للعناوين والحالة">لم يُعثر عليه؛ يضبط ملف التعريف <code>tabTitle</code> و<code>tabColor</code></td></tr>
           <tr><td><a href="https://iterm2.com/documentation-automatic-profile-switching.html">iTerm2</a><br>طرفية</td><td data-label="الإعدادات">ملفات تعريف في Settings؛ و<a href="https://iterm2.com/documentation-dynamic-profiles.html">Dynamic Profiles</a> في صورة ملفات قوائم خصائص</td><td data-label="السمات والألوان">ملف تعريف يُختار حسب المستخدم أو المضيف أو المجلد أو المهمة، مع Shell Integration</td><td data-label="CSS خاص بك">لم يُعثر عليه</td><td data-label="شيفرة خاصة بك"><a href="https://iterm2.com/python-api/">واجهة Python برمجية</a>، ومكوّنات لشريط الحالة بلغة Python، وAppleScript</td><td data-label="قوالب للعناوين والحالة"><a href="https://iterm2.com/documentation-scripting-fundamentals.html">سلاسل مُستكمَلة</a>، <code>\(…)</code>، في أسماء الجلسات والشارات وشريط الحالة</td></tr>
-          <tr><td>Aubergine<br>طرفيات على لوحة</td><td data-label="الإعدادات"><code>config.json</code> وSettings، مع JSON Schema للمحررات</td><td data-label="السمات والألوان">عشر سمات، فاتحة أو داكنة أو كالنظام؛ سماتك أنت كملفات JSON فوق إحداها؛ واحدة لكل طرفية؛ 35 لونًا باليد، لكل السمات أو لواحدة</td><td data-label="CSS خاص بك">لا. مخطط له: <code>custom.css</code> بنقاط ربط موثقة</td><td data-label="شيفرة خاصة بك">لا. مخطط له: إضافات</td><td data-label="قوالب للعناوين والحالة">لا. مخطط له: لعنوان الطرفية ولصف في القائمة</td></tr>
+          <tr><td>Aubergine<br>طرفيات على لوحة</td><td data-label="الإعدادات"><code>config.json</code> وSettings، مع JSON Schema للمحررات</td><td data-label="السمات والألوان">عشر سمات، فاتحة أو داكنة أو كالنظام؛ سماتك الخاصة ملفات JSON فوق إحداها؛ واحدة لمشروع، وللطرفيات التي تحمل وسمًا، ولكل طرفية؛ 35 لونًا يدويًا، لكل السمات أو لواحدة</td><td data-label="CSS خاص بك">لا. مخطط له: <code>custom.css</code> بنقاط ربط موثقة</td><td data-label="شيفرة خاصة بك">لا. مخطط له: إضافات</td><td data-label="قوالب للعناوين والحالة">لا. مخطط له: لعنوان الطرفية ولصف في القائمة</td></tr>
         </tbody>
       </table>
     </div>
@@ -231,11 +244,11 @@ aubergine settings schema</code></pre>
     <p>يقف Aubergine اليوم عند طرف الإعدادات: السمات والألوان والمفاتيح في ملفات تصف نفسها، وصفحة تكتب جزءًا من الإعدادات. لا يشغّل أي شيفرة لك في الصفحة، ولا يأخذ ورقة أنماط منك، وليس فيه قوالب. هذه كلها على <a href="../roadmap/#rm-yours">خارطة الطريق</a>، ولم تُبنَ بعد.</p>
 
     <h2 id="planned">ما هو مخطط له</h2>
-    <p>مظهر لمشروع أو وسم، وقوالب، و<code>custom.css</code>، وإضافات: كلها مخطط لها ولم تُبنَ بعد. انظر <a href="../roadmap/#rm-yours">خارطة الطريق</a>.</p>
+    <p>القوالب و<code>custom.css</code> والإضافات مخطط لها ولم تُبنَ بعد: راجع <a href="../roadmap/#rm-yours">خارطة الطريق</a>.</p>
 
     <h2 id="faq">أسئلة</h2>
     <div class="questions">
-      <details><summary>هل يمكن أن يكون لكل طرفية سمة ألوان مختلفة؟</summary><p>نعم. يرسم Theme… في قائمة الطرفية جسمها بأي سمة من العشر، أيًّا كانت سمة الصفحة. وتتبع الطرفيات الأخرى السمة الافتراضية التي تضبطها للطرفيات، أو الصفحة.</p></details>
+      <details><summary>هل يمكن أن يكون لكل طرفية سمة ألوان مختلفة؟</summary><p>نعم. يرسم Theme… في قائمة الطرفية محتواها بأي من السمات العشر، أيًّا كانت سمة الصفحة. ويمكن إعطاء الطرفيات التي تحمل وسمًا سمة بهذا الوسم في Settings، والبقية تتبع الافتراضي الذي تحدده للطرفيات، أو الصفحة.</p></details>
       <details><summary>هل يمكنني إضافة CSS خاص بي إلى Aubergine؟</summary><p>ليس اليوم. يمكن ضبط الألوان المفردة باليد في ملف الإعدادات؛ و<code>custom.css</code> بنقاط ربط موثقة مخطط له ولم يُبنَ.</p></details>
       <details><summary>أين ملف إعدادات Aubergine؟</summary><p>هو <code>config.json</code> في مجلد بيانات Aubergine. يعرض <code>aubergine settings path</code> مكانه، ويعرضه الخادم أيضًا عند بدئه.</p></details>
       <details><summary>هل يستطيع وكيل تغيير مظهر Aubergine؟</summary><p>ليس الإعدادات: فهي لك وحدك. يستطيع الوكيل تسمية طرفيته ووصفها واقتراح سمة ألوان تنتظر أن تقرأها وتقبلها، ويستطيع برنامج يسمح له رمز API الخاص به إعادة تسمية الطرفيات ووسمها ومنحها سمة وترتيب اللوحات واقتراح سمة أيضًا.</p></details>

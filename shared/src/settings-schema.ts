@@ -17,6 +17,7 @@ export const PAGE_WRITTEN_SETTINGS = [
   'appearance.light',
   'appearance.dark',
   'appearance.terminal',
+  'appearance.byTag',
   'appearance.cursor',
   'appearance.cursorBlink',
   'font.family',

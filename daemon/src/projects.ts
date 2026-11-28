@@ -118,7 +118,18 @@ export class Projects {
         order = previous ? (previous.order + after.order) / 2 : after.order - 1;
       }
     }
-    const next: Project = { ...project, ...(body.name !== undefined ? { name: body.name } : {}), ...(body.color !== undefined ? { color: body.color } : {}), ...(body.labels !== undefined ? { labels: body.labels } : {}), folders, defaultFolder, order };
+    // Its themes: each kind that is sent replaces what was there (null: the page's own); one left out stays.
+    const themes = body.themes === undefined ? project.themes : { light: body.themes.light !== undefined ? body.themes.light : (project.themes?.light ?? null), dark: body.themes.dark !== undefined ? body.themes.dark : (project.themes?.dark ?? null) };
+    const next: Project = {
+      ...project,
+      ...(body.name !== undefined ? { name: body.name } : {}),
+      ...(body.color !== undefined ? { color: body.color } : {}),
+      ...(body.labels !== undefined ? { labels: body.labels } : {}),
+      ...(themes !== undefined ? { themes } : {}),
+      folders,
+      defaultFolder,
+      order,
+    };
     this.hub.emit({ type: 'project.changed', project: next });
     return this.row(next);
   }

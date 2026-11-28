@@ -271,6 +271,18 @@ code {
   flex: 1;
   min-width: 160px;
 }
+.project-item-themes {
+  display: flex;
+  flex-basis: 100%;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  align-items: center;
+}
+.project-item-theme {
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: center;
+}
 .project-item-actions {
   display: inline-flex;
   gap: var(--space-1);

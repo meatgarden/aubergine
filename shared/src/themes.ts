@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { PlainName } from './workflows';
+import { Tag } from './tags';
 
 /**
  * Color themes. A theme is light or dark (its `kind`) and gives every color token a value; nothing else differs
@@ -260,6 +261,52 @@ function resolveInto(entries: Record<string, unknown>, where: string, known: Set
 /** A name from a file, short and with nothing in it that is not plainly text, for a sentence. */
 export const plain = (name: string): string => name.replace(/[^\x20-\x7e]/g, '?').slice(0, 40);
 
+/** How many entries `appearance.byTag` may have. */
+export const BY_TAG_MAX = 20;
+
+/** One entry of `appearance.byTag`: terminals with this tag are drawn in this theme. */
+export const ThemeByTag = z.object({
+  tag: Tag.describe('A terminal’s tag, as tags are written: whatever the capitals, the same tag.'),
+  theme: ThemeId.describe('The color theme of the terminals with that tag, of either kind, built-in or of a theme file.'),
+});
+export type ThemeByTag = z.infer<typeof ThemeByTag>;
+/** A list of them, as a request sends it: every entry right, at most `BY_TAG_MAX`. */
+export const ThemesByTag = z.array(ThemeByTag).max(BY_TAG_MAX);
+/** What stands for an entry of a file that is not one, until it is dropped: no tag is empty. */
+const SKIPPED = { tag: '', theme: '' };
+/**
+ * The list as a settings file holds it: an entry that is wrong is dropped and the rest kept, in order, up to
+ * `BY_TAG_MAX` (and each dropped one is said by `byTagProblems`). `overwrite` and a fixed `catch`, so that it can still
+ * be described.
+ */
+const ThemesByTagInFile = z
+  .array(ThemeByTag.catch(SKIPPED))
+  .overwrite((list) => list.filter((entry) => entry.tag !== '').slice(0, BY_TAG_MAX))
+  .max(BY_TAG_MAX);
+
+/** What is wrong with `appearance.byTag` as written in the file, one sentence for each entry that is skipped. Pure. */
+export function byTagProblems(raw: unknown): string[] {
+  if (raw === undefined) return [];
+  if (!Array.isArray(raw)) return ['appearance.byTag is not a list of a tag and a theme: it is left out.'];
+  const problems: string[] = [];
+  raw.forEach((entry, at) => {
+    if (!ThemeByTag.safeParse(entry).success) problems.push(`appearance.byTag, entry ${at + 1}: it is not a tag and a theme's ID ({ "tag": "prod", "theme": "nord" }). It is skipped.`);
+  });
+  if (raw.length > BY_TAG_MAX) problems.push(`appearance.byTag has more than ${BY_TAG_MAX} entries. Those after the ${BY_TAG_MAX}th are skipped.`);
+  return problems;
+}
+
+/**
+ * The themes of one project: the theme of the light page and of the dark page while that project is looked at. Null:
+ * the page's own (`appearance.light`, `appearance.dark`). The IDs name the page's themes: those of the server that
+ * sent the page.
+ */
+export const ProjectThemes = z.object({
+  light: ThemeId.nullable().describe('The color theme of the light page while this project is looked at: a light one. Null: the page’s own.'),
+  dark: ThemeId.nullable().describe('The color theme of the dark page while this project is looked at: a dark one. Null: the page’s own.'),
+});
+export type ProjectThemes = z.infer<typeof ProjectThemes>;
+
 /**
  * How the page looks beyond light or dark: which theme each of the two is, a terminal's cursor, and colors set by
  * hand. Every field that is wrong in a file falls back to its default by itself; the rest of the file still counts.
@@ -270,6 +317,9 @@ export const Appearance = z.object({
   cursor: CursorStyle.default('block').catch('block').describe('The shape of a terminal’s cursor.'),
   cursorBlink: z.boolean().default(true).catch(true).describe('Whether a terminal’s cursor blinks.'),
   terminal: ThemeId.nullable().default(null).catch(null).describe('The color theme of every terminal that has none of its own, of either kind, built-in or of a theme file. Null: the theme the page is drawn in.'),
+  byTag: ThemesByTagInFile.default([])
+    .catch([])
+    .describe('Color themes for terminals by tag, in order: a terminal that has no theme of its own is drawn in the theme of the first entry whose tag it has (whatever the capitals) and whose theme is there now. At most 20. A wrong entry is skipped and the rest still count.'),
   /** Read by `resolveColors`. */
   colors: z
     .record(z.string(), z.unknown())
@@ -288,20 +338,79 @@ export function colorThemeShown(appearance: Pick<Appearance, 'light' | 'dark'>, 
   return theme && theme.kind === shown ? theme.id : shown;
 }
 
-/**
- * The theme a terminal is drawn in: its own where it has one; else the default for terminals (`appearance.terminal`)
- * where one is set; else the theme the page is drawn in. One that names no theme now is passed over for the next. Nothing
- * else decides it. Only the terminal's body is drawn in it; its title and its note are the page's.
- */
-export function terminalThemeOf(own: string | null | undefined, appearance: Pick<Appearance, 'light' | 'dark' | 'terminal'>, shown: ThemeKind, themes: readonly UserTheme[]): string {
-  return themeOf(own, themes)?.id ?? themeOf(appearance.terminal, themes)?.id ?? colorThemeShown(appearance, shown, themes);
+/** Where the theme the page is drawn in comes from: the project looked at, or the page's own choice. */
+export interface PageThemeFrom {
+  id: string;
+  from: 'project' | 'page';
 }
+
+/**
+ * The theme the page is drawn in while it looks at a project: the project's theme of the kind drawn, where it names one
+ * there is now and of that kind; else the page's own (`colorThemeShown`). The one function that decides it. Pure.
+ */
+export function pageThemeFrom(appearance: Pick<Appearance, 'light' | 'dark'>, shown: ThemeKind, themes: readonly UserTheme[], project?: Partial<ProjectThemes> | null): PageThemeFrom {
+  const theirs = themeOf(project?.[shown], themes);
+  if (theirs && theirs.kind === shown) return { id: theirs.id, from: 'project' };
+  return { id: colorThemeShown(appearance, shown, themes), from: 'page' };
+}
+
+/** The theme the page is drawn in while it looks at a project (`pageThemeFrom`), by its ID. */
+export const pageThemeOf = (appearance: Pick<Appearance, 'light' | 'dark'>, shown: ThemeKind, themes: readonly UserTheme[], project?: Partial<ProjectThemes> | null): string => pageThemeFrom(appearance, shown, themes, project).id;
+
+/** What of a terminal its theme depends on: its own theme and its tags. */
+export interface TerminalLook {
+  theme?: string | null | undefined;
+  tags?: readonly string[] | undefined;
+}
+
+/** Where the theme a terminal is drawn in comes from, and for a tag, which. */
+export interface TerminalThemeFrom {
+  id: string;
+  from: 'own' | 'tag' | 'terminals' | 'project' | 'page';
+  /** The tag whose entry of `appearance.byTag` it is, as the terminal has it. */
+  tag?: string;
+}
+
+/**
+ * The theme a terminal is drawn in, and where it comes from: its own where it has one; else the theme of the first
+ * entry of `appearance.byTag` whose tag it has; else the default for terminals (`appearance.terminal`); else the theme
+ * the page is drawn in, the project's included (`pageThemeFrom`). One that names no theme now is passed over for the
+ * next. Nothing else decides it. Only the terminal's body is drawn in it; its title and its note are the page's. Pure.
+ */
+export function terminalThemeFrom(
+  terminal: TerminalLook,
+  appearance: Pick<Appearance, 'light' | 'dark' | 'terminal'> & Partial<Pick<Appearance, 'byTag'>>,
+  shown: ThemeKind,
+  themes: readonly UserTheme[],
+  project?: Partial<ProjectThemes> | null,
+): TerminalThemeFrom {
+  const own = themeOf(terminal.theme, themes);
+  if (own) return { id: own.id, from: 'own' };
+  const tags = new Map((terminal.tags ?? []).map((tag) => [tag.trim().toLowerCase(), tag]));
+  for (const entry of appearance.byTag ?? []) {
+    const tag = tags.get(entry.tag.trim().toLowerCase());
+    const theme = tag === undefined ? undefined : themeOf(entry.theme, themes);
+    if (tag !== undefined && theme) return { id: theme.id, from: 'tag', tag };
+  }
+  const forTerminals = themeOf(appearance.terminal, themes);
+  if (forTerminals) return { id: forTerminals.id, from: 'terminals' };
+  return pageThemeFrom(appearance, shown, themes, project);
+}
+
+/** The theme a terminal is drawn in (`terminalThemeFrom`), by its ID. */
+export const terminalThemeOf = (
+  terminal: TerminalLook,
+  appearance: Pick<Appearance, 'light' | 'dark' | 'terminal'> & Partial<Pick<Appearance, 'byTag'>>,
+  shown: ThemeKind,
+  themes: readonly UserTheme[],
+  project?: Partial<ProjectThemes> | null,
+): string => terminalThemeFrom(terminal, appearance, shown, themes, project).id;
 
 /**
  * What of the appearance names a theme that is not drawn, each in one sentence: a theme of either kind that is not
  * there now, or one of the other kind. Empty when every one is drawn as chosen. Pure.
  */
-export function themeFallbacks(appearance: Pick<Appearance, 'light' | 'dark' | 'terminal'>, themes: readonly UserTheme[]): string[] {
+export function themeFallbacks(appearance: Pick<Appearance, 'light' | 'dark' | 'terminal'> & Partial<Pick<Appearance, 'byTag'>>, themes: readonly UserTheme[]): string[] {
   const says: string[] = [];
   for (const kind of ['light', 'dark'] as const) {
     const id = appearance[kind];
@@ -311,5 +420,6 @@ export function themeFallbacks(appearance: Pick<Appearance, 'light' | 'dark' | '
     else if (theme.kind !== kind) says.push(`The ${kind} theme chosen, ${theme.name}, is a ${theme.kind} theme: ${instead} is drawn in its place.`);
   }
   if (appearance.terminal && !themeOf(appearance.terminal, themes)) says.push(`The theme of terminals, "${plain(appearance.terminal)}", is not there now: terminals are drawn as the page is.`);
+  for (const entry of appearance.byTag ?? []) if (!themeOf(entry.theme, themes)) says.push(`The theme of terminals tagged ${plain(entry.tag)}, "${plain(entry.theme)}", is not there now: they are drawn as if that line were not there.`);
   return says;
 }

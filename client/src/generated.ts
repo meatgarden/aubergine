@@ -1604,6 +1604,13 @@ export type ChangeAppearanceBody = {
   cursorBlink?: boolean;
   /** The color theme every terminal is drawn in that has none of its own: one of the IDs of the color themes, of either kind, built-in or a theme file the server has read (another is refused with 400). `null`: the theme the page is drawn in. */
   terminal?: string | null;
+  /** The color themes of terminals by tag, in order, at most 20: the whole list, which replaces the one there was (an empty list removes them all). The first entry whose tag a terminal has wins; a terminal’s own theme comes before all of them. A theme the server has not read is refused with 400. */
+  byTag?: {
+    /** A terminal’s tag, as tags are written: whatever the capitals, the same tag. */
+    tag: string;
+    /** The color theme of the terminals with that tag, of either kind, built-in or of a theme file. */
+    theme: string;
+  }[];
 };
 
 export type ChangeAppearanceResult = {
@@ -1626,6 +1633,13 @@ export type ChangeAppearanceResult = {
   cursorBlink: boolean;
   /** The color theme of a terminal that has none of its own, built-in or of a theme file; `null`: the theme the page is drawn in. */
   terminal: string | null;
+  /** Color themes for terminals by tag, in order: a terminal without one of its own is drawn in the theme of the first entry whose tag it has. */
+  byTag: {
+    /** A terminal’s tag, as tags are written: whatever the capitals, the same tag. */
+    tag: string;
+    /** The color theme of the terminals with that tag, of either kind, built-in or of a theme file. */
+    theme: string;
+  }[];
 };
 
 export type ReadThemesResult = {
@@ -7896,6 +7910,13 @@ export type ListProjectsResult = {
       [key: string]: unknown;
     };
     state: "open" | "archived";
+    /** The color themes the page is drawn in while this project is looked at: one for the light page and one for the dark. Null or left out: the page’s own. */
+    themes?: {
+      /** The color theme of the light page while this project is looked at: a light one. Null: the page’s own. */
+      light: string | null;
+      /** The color theme of the dark page while this project is looked at: a dark one. Null: the page’s own. */
+      dark: string | null;
+    };
     fileExtra?: {
       [key: string]: unknown;
     };
@@ -7943,6 +7964,13 @@ export type AddProjectResult = {
     [key: string]: unknown;
   };
   state: "open" | "archived";
+  /** The color themes the page is drawn in while this project is looked at: one for the light page and one for the dark. Null or left out: the page’s own. */
+  themes?: {
+    /** The color theme of the light page while this project is looked at: a light one. Null: the page’s own. */
+    light: string | null;
+    /** The color theme of the dark page while this project is looked at: a dark one. Null: the page’s own. */
+    dark: string | null;
+  };
   fileExtra?: {
     [key: string]: unknown;
   };
@@ -7975,6 +8003,13 @@ export type GetProjectResult = {
     [key: string]: unknown;
   };
   state: "open" | "archived";
+  /** The color themes the page is drawn in while this project is looked at: one for the light page and one for the dark. Null or left out: the page’s own. */
+  themes?: {
+    /** The color theme of the light page while this project is looked at: a light one. Null: the page’s own. */
+    light: string | null;
+    /** The color theme of the dark page while this project is looked at: a dark one. Null: the page’s own. */
+    dark: string | null;
+  };
   fileExtra?: {
     [key: string]: unknown;
   };
@@ -7993,6 +8028,13 @@ export type ChangeProjectBody = {
   defaultFolder?: string | null;
   labels?: {
     [key: string]: string;
+  };
+  /** The color themes the page is drawn in while this project is looked at. Each that is left out stays as it was. */
+  themes?: {
+    /** The theme of the light page while this project is looked at: a light one, built-in or a theme file the server has read (another is refused with 400). Null: the page’s own. Left out: as it was. */
+    light?: string | null;
+    /** The theme of the dark page while this project is looked at: a dark one, built-in or a theme file the server has read (another is refused with 400). Null: the page’s own. Left out: as it was. */
+    dark?: string | null;
   };
   /** Put it before this project in the order; null puts it last. */
   before?: string | null;
@@ -8019,6 +8061,13 @@ export type ChangeProjectResult = {
     [key: string]: unknown;
   };
   state: "open" | "archived";
+  /** The color themes the page is drawn in while this project is looked at: one for the light page and one for the dark. Null or left out: the page’s own. */
+  themes?: {
+    /** The color theme of the light page while this project is looked at: a light one. Null: the page’s own. */
+    light: string | null;
+    /** The color theme of the dark page while this project is looked at: a dark one. Null: the page’s own. */
+    dark: string | null;
+  };
   fileExtra?: {
     [key: string]: unknown;
   };
@@ -8056,6 +8105,13 @@ export type MoveCanvasToProjectResult = {
     [key: string]: unknown;
   };
   state: "open" | "archived";
+  /** The color themes the page is drawn in while this project is looked at: one for the light page and one for the dark. Null or left out: the page’s own. */
+  themes?: {
+    /** The color theme of the light page while this project is looked at: a light one. Null: the page’s own. */
+    light: string | null;
+    /** The color theme of the dark page while this project is looked at: a dark one. Null: the page’s own. */
+    dark: string | null;
+  };
   fileExtra?: {
     [key: string]: unknown;
   };
@@ -8093,6 +8149,13 @@ export type ArchiveProjectResult = {
     [key: string]: unknown;
   };
   state: "open" | "archived";
+  /** The color themes the page is drawn in while this project is looked at: one for the light page and one for the dark. Null or left out: the page’s own. */
+  themes?: {
+    /** The color theme of the light page while this project is looked at: a light one. Null: the page’s own. */
+    light: string | null;
+    /** The color theme of the dark page while this project is looked at: a dark one. Null: the page’s own. */
+    dark: string | null;
+  };
   fileExtra?: {
     [key: string]: unknown;
   };
@@ -8125,6 +8188,13 @@ export type ReopenProjectResult = {
     [key: string]: unknown;
   };
   state: "open" | "archived";
+  /** The color themes the page is drawn in while this project is looked at: one for the light page and one for the dark. Null or left out: the page’s own. */
+  themes?: {
+    /** The color theme of the light page while this project is looked at: a light one. Null: the page’s own. */
+    light: string | null;
+    /** The color theme of the dark page while this project is looked at: a dark one. Null: the page’s own. */
+    dark: string | null;
+  };
   fileExtra?: {
     [key: string]: unknown;
   };
@@ -8242,6 +8312,13 @@ export type ImportProjectFileResult = {
       [key: string]: unknown;
     };
     state: "open" | "archived";
+    /** The color themes the page is drawn in while this project is looked at: one for the light page and one for the dark. Null or left out: the page’s own. */
+    themes?: {
+      /** The color theme of the light page while this project is looked at: a light one. Null: the page’s own. */
+      light: string | null;
+      /** The color theme of the dark page while this project is looked at: a dark one. Null: the page’s own. */
+      dark: string | null;
+    };
     fileExtra?: {
       [key: string]: unknown;
     };
@@ -8376,6 +8453,13 @@ export type GetSessionProjectResult = {
     [key: string]: unknown;
   };
   state: "open" | "archived";
+  /** The color themes the page is drawn in while this project is looked at: one for the light page and one for the dark. Null or left out: the page’s own. */
+  themes?: {
+    /** The color theme of the light page while this project is looked at: a light one. Null: the page’s own. */
+    light: string | null;
+    /** The color theme of the dark page while this project is looked at: a dark one. Null: the page’s own. */
+    dark: string | null;
+  };
   fileExtra?: {
     [key: string]: unknown;
   };
@@ -12016,7 +12100,7 @@ export interface Client {
    */
   getProject(args: { projectId: string } & CallOptions): Promise<GetProjectResult>;
   /**
-   * Change a project: its name, color, folders, or its place in the order.
+   * Change a project: its name, color, folders, color themes, or its place in the order.
    *
    * `PATCH /v1/projects/{projectId}`. Signed-in browser only: no API token may call this.
    */

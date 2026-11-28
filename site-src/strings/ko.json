@@ -5127,6 +5127,22 @@
     "text": "<code>aubergine theme new harbor --from nord</code>은 원래 테마의 모든 색이 담긴 시작용 파일을 씁니다. <code>aubergine theme check</code>는 파일에서 잘못된 점을 알려 줍니다. Settings의 <strong>Read themes again</strong>이 변경을 읽어 들입니다. 색이 읽기 좋은지는 여러분이 판단합니다. Settings는 글자가 읽기 어려울 수 있을 때만 알려 줍니다. 형식은 <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/themes.md\">docs/themes.md</a>에 있습니다.",
     "from": "fa449a724abf"
   },
+  "custom.when.title": {
+    "text": "프로젝트의 테마, 그리고 태그별 터미널 테마",
+    "from": "0629d684f9aa"
+  },
+  "custom.when.project": {
+    "text": "프로젝트는 보고 있는 동안 페이지를 자기 테마로 그릴 수 있어, 한눈에 어디에 있는지 알 수 있습니다. <strong>Projects…</strong>에서 프로젝트 옆의 <strong>When light</strong>와 <strong>When dark</strong>로 종류마다 테마를 하나씩 고릅니다. <strong>As the page</strong>는 Settings에 맡깁니다. 다른 프로젝트에서는 페이지가 고른 그대로이고, 그 프로젝트의 주소에서 새로 고치면 첫 그리기부터 그 테마로 그려집니다.",
+    "from": "8e3d89da8eae"
+  },
+  "custom.when.tag": {
+    "text": "Settings의 Terminal theme 아래 <strong>By tag</strong>는 태그가 있는 터미널에 테마를 줍니다. 예를 들어 <code>prod</code> 태그가 붙은 모든 터미널을 Dracula로, 페이지의 테마와 상관없이 바로. 터미널이 가진 태그 중 첫 번째 줄이 이기고, 터미널 자신의 테마가 그 모두보다 먼저입니다. 설정 파일에서는 <code>appearance.byTag</code>입니다:",
+    "from": "ad341f16eef8"
+  },
+  "custom.when.accent": {
+    "text": "강조 색만 바꿔도 충분할 때가 많습니다. <code>aubergine theme new teal --from nord --accent \"#2f9e8f\"</code>는 Nord의 강조 색과 그에 맞는 다섯 가지 색만, 읽을 수 있도록 계산해 바꾸는 테마 파일을 씁니다. 다른 테마처럼 프로젝트나 태그에 고를 수 있습니다.",
+    "from": "4ec0df11bd03"
+  },
   "custom.text.title": {
     "text": "글꼴, 커서, 키보드 단축키",
     "from": "a9eecef9b5f9"
@@ -5408,8 +5424,8 @@
     "from": "bd438e8036f3"
   },
   "custom.cmp.a.themes": {
-    "text": "테마 10개, 라이트·다크·시스템을 따름; 그중 하나 위에 얹는 나만의 JSON 파일; 터미널마다 하나; 35가지 색을 직접, 모든 테마 또는 하나에",
-    "from": "6d078567501b"
+    "text": "열 가지 테마, 라이트·다크·시스템 따라; 그중 하나 위에 얹는 나만의 JSON 파일; 프로젝트, 태그가 있는 터미널, 터미널마다 하나; 35가지 색을 직접, 모든 테마나 하나에",
+    "from": "5daef6eb6445"
   },
   "custom.cmp.a.css": {
     "text": "없음. 계획: 문서화된 훅이 있는 <code>custom.css</code>",
@@ -5444,16 +5460,16 @@
     "from": "e10eed0040ae"
   },
   "custom.plan.text": {
-    "text": "프로젝트나 태그별 모습, 템플릿, <code>custom.css</code>, 플러그인은 계획되어 있으며 아직 만들어지지 않았습니다. <a href=\"/roadmap/#rm-yours\">로드맵</a>을 보세요.",
-    "from": "034f77f12f02"
+    "text": "템플릿, <code>custom.css</code>, 플러그인은 계획되어 있으며 아직 만들어지지 않았습니다. <a href=\"/roadmap/#rm-yours\">로드맵</a>을 보세요.",
+    "from": "891be3228465"
   },
   "custom.q.terminal.q": {
     "text": "터미널마다 다른 색 테마를 쓸 수 있나요?",
     "from": "da02700eeeb8"
   },
   "custom.q.terminal.a": {
-    "text": "네. 터미널 메뉴의 Theme…는 페이지의 테마와 상관없이 그 본문을 열 가지 테마 중 어느 것으로든 그립니다. 나머지는 터미널에 정한 기본값이나 페이지를 따릅니다.",
-    "from": "efb1c6b90003"
+    "text": "예. 터미널 메뉴의 Theme…로 페이지의 테마와 상관없이 본문을 열 가지 테마 중 어느 것으로든 그릴 수 있습니다. 태그가 있는 터미널은 Settings에서 그 태그로 테마를 받을 수 있고, 나머지는 터미널 기본값이나 페이지를 따릅니다.",
+    "from": "0b2729c2862a"
   },
   "custom.q.css.q": {
     "text": "Aubergine에 내 CSS를 넣을 수 있나요?",
@@ -5490,14 +5506,6 @@
   "roadmap.yours.sub": {
     "text": "오늘의 테마, 색, 키를 넘어, 페이지를 더 내 뜻대로.",
     "from": "6fef807ba454"
-  },
-  "roadmap.yours.when.name": {
-    "text": "조건에 따른 모양",
-    "from": "c40ae539d4e8"
-  },
-  "roadmap.yours.when.text": {
-    "text": "프로젝트마다, 또는 태그가 붙은 터미널마다 다른 테마나 강조색. 지금 어디에 있는지 한눈에 알 수 있습니다.",
-    "from": "be4953ead5e1"
   },
   "roadmap.yours.templates.name": {
     "text": "템플릿",

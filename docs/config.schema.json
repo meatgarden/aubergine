@@ -124,6 +124,36 @@
             }
           ]
         },
+        "byTag": {
+          "default": [],
+          "description": "Color themes for terminals by tag, in order: a terminal that has no theme of its own is drawn in the theme of the first entry whose tag it has (whatever the capitals) and whose theme is there now. At most 20. A wrong entry is skipped and the rest still count.",
+          "maxItems": 20,
+          "type": "array",
+          "items": {
+            "default": {
+              "tag": "",
+              "theme": ""
+            },
+            "type": "object",
+            "properties": {
+              "tag": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 32,
+                "description": "A terminal’s tag, as tags are written: whatever the capitals, the same tag."
+              },
+              "theme": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9-]{0,39}$",
+                "description": "The color theme of the terminals with that tag, of either kind, built-in or of a theme file."
+              }
+            },
+            "required": [
+              "tag",
+              "theme"
+            ]
+          }
+        },
         "colors": {
           "default": {},
           "description": "Colors set by hand over the theme that is drawn: `\"<color>\": \"#rrggbb\"` for every theme, or `\"[<theme id>]\": { … }` for one theme alone (built-in or of a theme file), which wins. Written by hand only.",

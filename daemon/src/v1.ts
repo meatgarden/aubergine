@@ -92,8 +92,8 @@ export interface PublicRouteDeps {
   changeAppearance: (change: ChangeAppearanceRequest) => Promise<AppearanceAnswer>;
   /** Reads the owner's theme files again, and answers what they hold now. */
   readThemes: () => Promise<ThemesAnswer>;
-  /** Refuses, as bad input, a theme's ID that names no theme the server knows now. */
-  knowsTheme: (id: string) => Promise<void>;
+  /** Refuses, as bad input, a theme's ID that names no theme the server knows now, or (with `kind`) one of the other kind. */
+  knowsTheme: (id: string, kind?: 'light' | 'dark', field?: string) => Promise<void>;
   projects: Projects;
   projectFiles: ProjectFiles;
   activity: ActivityLog;
@@ -442,7 +442,12 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
     listProjects: ({ query, principal }) => paginate(deps.projects.list((projectId) => principal.kind !== 'token' || reachesProject(principal.projects, projectId)), (p) => p.id, query),
     getProject: ({ params }) => deps.projects.get(params.projectId),
     addProject: ({ body }) => deps.projects.add(body),
-    changeProject: ({ params, body }) => deps.projects.change(params.projectId, body),
+    changeProject: async ({ params, body }) => {
+      // A project's themes name themes the server knows now, each of its own kind.
+      if (typeof body.themes?.light === 'string') await deps.knowsTheme(body.themes.light, 'light', 'themes.light');
+      if (typeof body.themes?.dark === 'string') await deps.knowsTheme(body.themes.dark, 'dark', 'themes.dark');
+      return deps.projects.change(params.projectId, body);
+    },
     moveCanvasToProject: ({ params, body }) => deps.projects.moveCanvas(params.canvasId, body.projectId),
     archiveProject: ({ params, body }) => deps.projects.archive(params.projectId, body ?? {}),
     reopenProject: ({ params }) => deps.projects.reopen(params.projectId),

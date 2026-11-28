@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { CanvasName, NodeColor, PROJECT_FOLDERS_MAX, Project, type AppState, type Canvas, type Session } from './entities';
 import { Id } from './ids';
+import { ThemeId } from './themes';
 
 /**
  * Projects: what belongs to one, and what is shared.
@@ -95,6 +96,13 @@ export const ChangeProjectRequest = z.object({
   folders: z.array(Folder).max(PROJECT_FOLDERS_MAX).optional(),
   defaultFolder: Folder.nullable().optional(),
   labels: Project.shape.labels.unwrap().optional(),
+  themes: z
+    .object({
+      light: ThemeId.nullable().optional().describe('The theme of the light page while this project is looked at: a light one, built-in or a theme file the server has read (another is refused with 400). Null: the page’s own. Left out: as it was.'),
+      dark: ThemeId.nullable().optional().describe('The theme of the dark page while this project is looked at: a dark one, built-in or a theme file the server has read (another is refused with 400). Null: the page’s own. Left out: as it was.'),
+    })
+    .optional()
+    .describe('The color themes the page is drawn in while this project is looked at. Each that is left out stays as it was.'),
   before: Id.nullable().optional().describe('Put it before this project in the order; null puts it last.'),
 });
 export type ChangeProjectRequest = z.infer<typeof ChangeProjectRequest>;

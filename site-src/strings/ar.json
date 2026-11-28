@@ -5127,6 +5127,22 @@
     "text": "يكتب <code>aubergine theme new harbor --from nord</code> ملفًا للبدء منه، فيه كل لون من السمة التي بدأ منها؛ ويقول <code>aubergine theme check</code> ما الخطأ في ملف؛ ويقرأ <strong>Read themes again</strong> في Settings أي تغيير. أنت من يحكم إن كانت ألوانك مقروءة: لا يقول Settings إلا متى قد يصعب قراءة النص. يصف <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/themes.md\">docs/themes.md</a> الصيغة.",
     "from": "fa449a724abf"
   },
+  "custom.when.title": {
+    "text": "سمة لمشروع، وللطرفيات حسب الوسم",
+    "from": "0629d684f9aa"
+  },
+  "custom.when.project": {
+    "text": "يمكن لمشروع أن يرسم الصفحة بسمة خاصة به ما دمت تنظر إليه، فتعرف بنظرة واحدة أين أنت. في <strong>Projects…</strong>، يختار <strong>When light</strong> و<strong>When dark</strong> بجانب المشروع سمة لكل نوع؛ و<strong>As the page</strong> يترك الأمر لـ Settings. في أي مشروع آخر تبقى الصفحة كما اخترتها، وإعادة التحميل على عنوان ذلك المشروع ترسمها بسمته منذ أول رسم.",
+    "from": "8e3d89da8eae"
+  },
+  "custom.when.tag": {
+    "text": "يمنح <strong>By tag</strong>، تحت Terminal theme في Settings، الطرفيات التي تحمل وسمًا سمة خاصة: مثلًا كل طرفية موسومة <code>prod</code> بسمة Dracula، فورًا وأيًّا كانت سمة الصفحة. يفوز أول سطر تحمل الطرفية وسمه، وسمة الطرفية الخاصة تسبق كل ذلك. وفي ملف الإعدادات هي <code>appearance.byTag</code>:",
+    "from": "ad341f16eef8"
+  },
+  "custom.when.accent": {
+    "text": "كثيرًا ما يكفي لون تمييز مختلف. يكتب <code>aubergine theme new teal --from nord --accent \"#2f9e8f\"</code> ملف سمة لا يغيّر إلا لون تمييز Nord والألوان الخمسة التي ترافقه، محسوبة لتبقى مقروءة. اخترها لمشروع أو وسم كأي سمة أخرى.",
+    "from": "4ec0df11bd03"
+  },
   "custom.text.title": {
     "text": "الخطوط والمؤشر واختصارات لوحة المفاتيح",
     "from": "a9eecef9b5f9"
@@ -5408,8 +5424,8 @@
     "from": "bd438e8036f3"
   },
   "custom.cmp.a.themes": {
-    "text": "عشر سمات، فاتحة أو داكنة أو كالنظام؛ سماتك أنت كملفات JSON فوق إحداها؛ واحدة لكل طرفية؛ 35 لونًا باليد، لكل السمات أو لواحدة",
-    "from": "6d078567501b"
+    "text": "عشر سمات، فاتحة أو داكنة أو كالنظام؛ سماتك الخاصة ملفات JSON فوق إحداها؛ واحدة لمشروع، وللطرفيات التي تحمل وسمًا، ولكل طرفية؛ 35 لونًا يدويًا، لكل السمات أو لواحدة",
+    "from": "5daef6eb6445"
   },
   "custom.cmp.a.css": {
     "text": "لا. مخطط له: <code>custom.css</code> بنقاط ربط موثقة",
@@ -5444,16 +5460,16 @@
     "from": "e10eed0040ae"
   },
   "custom.plan.text": {
-    "text": "مظهر لمشروع أو وسم، وقوالب، و<code>custom.css</code>، وإضافات: كلها مخطط لها ولم تُبنَ بعد. انظر <a href=\"/roadmap/#rm-yours\">خارطة الطريق</a>.",
-    "from": "034f77f12f02"
+    "text": "القوالب و<code>custom.css</code> والإضافات مخطط لها ولم تُبنَ بعد: راجع <a href=\"/roadmap/#rm-yours\">خارطة الطريق</a>.",
+    "from": "891be3228465"
   },
   "custom.q.terminal.q": {
     "text": "هل يمكن أن يكون لكل طرفية سمة ألوان مختلفة؟",
     "from": "da02700eeeb8"
   },
   "custom.q.terminal.a": {
-    "text": "نعم. يرسم Theme… في قائمة الطرفية جسمها بأي سمة من العشر، أيًّا كانت سمة الصفحة. وتتبع الطرفيات الأخرى السمة الافتراضية التي تضبطها للطرفيات، أو الصفحة.",
-    "from": "efb1c6b90003"
+    "text": "نعم. يرسم Theme… في قائمة الطرفية محتواها بأي من السمات العشر، أيًّا كانت سمة الصفحة. ويمكن إعطاء الطرفيات التي تحمل وسمًا سمة بهذا الوسم في Settings، والبقية تتبع الافتراضي الذي تحدده للطرفيات، أو الصفحة.",
+    "from": "0b2729c2862a"
   },
   "custom.q.css.q": {
     "text": "هل يمكنني إضافة CSS خاص بي إلى Aubergine؟",
@@ -5490,14 +5506,6 @@
   "roadmap.yours.sub": {
     "text": "مزيد من الصفحة يتشكل كما تريد، أبعد من سمات اليوم وألوانه ومفاتيحه.",
     "from": "6fef807ba454"
-  },
-  "roadmap.yours.when.name": {
-    "text": "مظهر حسب الشرط",
-    "from": "c40ae539d4e8"
-  },
-  "roadmap.yours.when.text": {
-    "text": "سمة أو لون مميِّز لمشروع، أو للطرفيات التي تحمل وسمًا، لتعرف بنظرة واحدة أين أنت.",
-    "from": "be4953ead5e1"
   },
   "roadmap.yours.templates.name": {
     "text": "قوالب",

@@ -1,7 +1,7 @@
 import { mkdir, readFile, rename, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
-import { DEFAULT_SETTINGS, SETTINGS_SCHEMA_FILE, Settings, THEME_SCHEMA_FILE, accessEntries, settingsJsonSchema, resolveColors, resolveShortcuts, themeFileJsonSchema, type AppearanceAnswer, type ChangeAppearanceRequest, type Platform, type UserTheme } from '@aubergine/shared';
+import { DEFAULT_SETTINGS, SETTINGS_SCHEMA_FILE, Settings, THEME_SCHEMA_FILE, accessEntries, settingsJsonSchema, byTagProblems, resolveColors, resolveShortcuts, themeFileJsonSchema, type AppearanceAnswer, type ChangeAppearanceRequest, type Platform, type UserTheme } from '@aubergine/shared';
 
 export const SETTINGS_FILE = 'config.json';
 export { SETTINGS_SCHEMA_FILE };
@@ -95,7 +95,7 @@ export function shortcutProblems(settings: Settings, platform: Platform = proces
 export function colorProblems(raw: unknown, themes: readonly UserTheme[] = []): string[] {
   const appearance = isObject(raw) ? raw.appearance : undefined;
   if (!isObject(appearance)) return [];
-  return [...new Set(resolveColors(appearance.colors, 'dark', themes).problems)];
+  return [...new Set([...resolveColors(appearance.colors, 'dark', themes).problems, ...byTagProblems(appearance.byTag)])];
 }
 
 /** What the settings say about how the page looks, as the appearance route answers it. */
@@ -107,6 +107,7 @@ export const appearanceOf = (settings: Settings): AppearanceAnswer => ({
   cursor: settings.appearance.cursor,
   cursorBlink: settings.appearance.cursorBlink,
   terminal: settings.appearance.terminal,
+  byTag: settings.appearance.byTag,
 });
 
 const isObject = (value: unknown): value is Record<string, unknown> => value !== null && typeof value === 'object' && !Array.isArray(value);
@@ -221,7 +222,7 @@ export class SettingsFile {
   async setAppearance(change: ChangeAppearanceRequest): Promise<void> {
     const appearance: Record<string, unknown> = {};
     // `terminal` may be sent as null, which is written: the theme the page is drawn in.
-    for (const key of ['light', 'dark', 'cursor', 'cursorBlink', 'terminal'] as const) if (change[key] !== undefined) appearance[key] = change[key];
+    for (const key of ['light', 'dark', 'cursor', 'cursorBlink', 'terminal', 'byTag'] as const) if (change[key] !== undefined) appearance[key] = change[key];
     const font: Record<string, unknown> = {};
     if (change.fontFamily !== undefined) font.family = change.fontFamily;
     if (change.fontSize !== undefined) font.size = change.fontSize;

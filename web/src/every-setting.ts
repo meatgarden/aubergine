@@ -66,6 +66,7 @@ export const CONTROL_OF: Record<PageWrittenSetting, (settings: Settings) => stri
   'appearance.light': (s) => `color-theme-${s.appearance.light}`,
   'appearance.dark': (s) => `color-theme-${s.appearance.dark}`,
   'appearance.terminal': () => 'terminal-theme-default',
+  'appearance.byTag': () => 'by-tag-add',
   'appearance.cursor': (s) => `cursor-${s.appearance.cursor}`,
   'appearance.cursorBlink': () => 'cursor-blink',
   'font.family': () => 'font-family',

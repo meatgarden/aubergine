@@ -14,7 +14,7 @@ import { Away } from './Away';
 import { TagDialog } from './TagDialog';
 import { Tour } from './tour/Tour';
 import { Toast } from './Toast';
-import { applyTheme, useAppearanceShown, useThemeShown, useUserThemes } from './theme';
+import { applyTheme, useAppearanceShown, useProjectLook, useThemeShown, useUserThemes } from './theme';
 import { useTrying } from './appearance/trying';
 import { Pages, Screens } from './Screens';
 import { SignIn } from './devices/SignIn';
@@ -40,10 +40,12 @@ export function App() {
   const appearance = useAppearanceShown();
   const userThemes = useUserThemes();
   const trying = useTrying((s) => s.theme !== null);
+  // The project looked at may have a theme of its own of each kind: drawn while it is looked at.
+  const project = useProjectLook();
   useEffect(() => {
     // Until the settings have been read the page keeps what it was drawn with before first paint.
-    if (settled) applyTheme(setting, shown, appearance, userThemes, !trying);
-  }, [setting, shown, appearance, userThemes, settled, trying]);
+    if (settled) applyTheme(setting, shown, appearance, userThemes, !trying, project);
+  }, [setting, shown, appearance, userThemes, settled, trying, project]);
 
   if (phase === 'loading') return <Message title="Loading…" />;
 

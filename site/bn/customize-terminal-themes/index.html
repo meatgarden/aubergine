@@ -123,7 +123,7 @@
       "@type": "FAQPage",
       "@id": "https://thirstyeggplant.com/bn/customize-terminal-themes/#faq",
       "mainEntity": [
-        { "@type": "Question", "name": "প্রতিটি টার্মিনালের কি আলাদা রঙের থিম হতে পারে?", "acceptedAnswer": { "@type": "Answer", "text": "হ্যাঁ। টার্মিনালের মেনুর Theme… তার ভেতরের অংশ দশটি থিমের যেকোনোটিতে আঁকে, পেজ যে থিমেই থাকুক। বাকিরা আপনার ঠিক করা টার্মিনালের ডিফল্ট মানে, বা পেজকে।" } },
+        { "@type": "Question", "name": "প্রতিটি টার্মিনালের কি আলাদা রঙের থিম হতে পারে?", "acceptedAnswer": { "@type": "Answer", "text": "হ্যাঁ। টার্মিনালের মেনুতে Theme… তার মূল অংশ দশটি থিমের যেকোনোটিতে আঁকে, পেজের থিম যা-ই হোক। ট্যাগওয়ালা টার্মিনালকে Settings-এ সেই ট্যাগ দিয়ে থিম দেওয়া যায়, আর বাকিরা টার্মিনালের জন্য আপনার ঠিক করা ডিফল্ট বা পেজ অনুসরণ করে।" } },
         { "@type": "Question", "name": "Aubergine-এ কি নিজের CSS যোগ করতে পারি?", "acceptedAnswer": { "@type": "Answer", "text": "এখন নয়। আলাদা রং সেটিংস ফাইলে হাতে ঠিক করা যায়; নথিভুক্ত হুকসহ একটি custom.css পরিকল্পনায় আছে, তৈরি হয়নি।" } },
         { "@type": "Question", "name": "Aubergine-এর সেটিংস ফাইল কোথায়?", "acceptedAnswer": { "@type": "Answer", "text": "এটি Aubergine-এর ডেটা ফোল্ডারে config.json। aubergine settings path জানায় কোথায়, আর সার্ভার চালু হওয়ার সময় তা দেখায়।" } },
         { "@type": "Question", "name": "কোনো এজেন্ট কি Aubergine-এর চেহারা বদলাতে পারে?", "acceptedAnswer": { "@type": "Answer", "text": "সেটিংস নয়: সেগুলো শুধু আপনার। এজেন্ট নিজের টার্মিনালের নাম রাখতে ও বর্ণনা দিতে পারে, আর একটি রঙের থিম প্রস্তাব করতে পারে যা আপনার পড়া ও গ্রহণের অপেক্ষায় থাকে; যে প্রোগ্রামের API টোকেন অনুমতি দেয় সে টার্মিনালের নাম বদলাতে, ট্যাগ দিতে, থিম দিতে, ক্যানভাস সাজাতে আর থিম প্রস্তাবও করতে পারে।" } }
@@ -177,6 +177,19 @@
 }</code></pre>
     <p><code>aubergine theme new harbor --from nord</code> শুরু করার জন্য একটি ফাইল লেখে, মূল থিমের প্রতিটি রং সহ; <code>aubergine theme check</code> বলে একটি ফাইলে কী ভুল; Settings-এ <strong>Read themes again</strong> একটি পরিবর্তন পড়ে নেয়। আপনার রং পড়া যায় কি না তা আপনিই বিচার করবেন: Settings শুধু তখনই জানায় যখন লেখা পড়তে কঠিন হতে পারে। ফরম্যাট <a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/themes.md">docs/themes.md</a>-এ আছে।</p>
 
+    <h2 id="by-condition">একটি প্রজেক্টের থিম, আর ট্যাগ অনুযায়ী টার্মিনালের থিম</h2>
+    <p>আপনি যতক্ষণ একটি প্রজেক্ট দেখছেন, ততক্ষণ সেটি পেজটিকে নিজের থিমে আঁকতে পারে, যাতে এক নজরে বোঝা যায় আপনি কোথায়। <strong>Projects…</strong>-এ প্রজেক্টের পাশে <strong>When light</strong> আর <strong>When dark</strong> প্রতিটি ধরনের একটি করে থিম বেছে নেয়; <strong>As the page</strong> বিষয়টি Settings-এর ওপর ছেড়ে দেয়। অন্য যেকোনো প্রজেক্টে পেজ আপনার বেছে নেওয়া মতোই থাকে, আর সেই প্রজেক্টের ঠিকানায় রিলোড করলে প্রথম আঁকা থেকেই তার থিমে আঁকা হয়।</p>
+    <p>Settings-এ Terminal theme-এর নিচে <strong>By tag</strong> কোনো ট্যাগওয়ালা টার্মিনালগুলোকে নিজের থিম দেয়: যেমন <code>prod</code> ট্যাগওয়ালা প্রতিটি টার্মিনাল Dracula-তে, সঙ্গে সঙ্গে, পেজের থিম যা-ই হোক। টার্মিনালের যে ট্যাগের লাইন প্রথমে আসে সেটিই খাটে, আর টার্মিনালের নিজের থিম সবার আগে। সেটিংস ফাইলে এটি <code>appearance.byTag</code>:</p>
+    <pre><code>{
+  "appearance": {
+    "byTag": [
+      { "tag": "prod", "theme": "dracula" },
+      { "tag": "docs", "theme": "solarized-light" }
+    ]
+  }
+}</code></pre>
+    <p>প্রায়ই একটি আলাদা অ্যাকসেন্ট রংই যথেষ্ট। <code>aubergine theme new teal --from nord --accent "#2f9e8f"</code> এমন একটি থিম ফাইল লেখে যা শুধু Nord-এর অ্যাকসেন্ট আর তার সঙ্গের পাঁচটি রং বদলায়, এমনভাবে হিসাব করে যাতে সেগুলো পড়া যায়। অন্য যেকোনো থিমের মতো এটি একটি প্রজেক্ট বা ট্যাগের জন্য বেছে নিন।</p>
+
     <h2 id="fonts-and-keys">ফন্ট, কার্সর ও কিবোর্ড শর্টকাট</h2>
     <p>Settings → Appearance-এর <strong>Terminal text</strong> টার্মিনালের লেখার আকার, ৮ থেকে ৩২ পিক্সেল, আর ফন্ট ঠিক করে; ফন্ট একটি তালিকা, যার প্রথম পাওয়া ফন্টটি ব্যবহার হয়। <strong>Cursor</strong> তার আকার, ব্লক, বার বা আন্ডারলাইন, আর সেটি জ্বলে-নেভে কি না ঠিক করে।</p>
     <p>প্রতিটি কী বদলানো যায়। সেটিংস ফাইলে <code>shortcuts</code> যোগ করুন: কোনো কমান্ডের নাম আর একটি কী-সমন্বয়, সমন্বয়ের তালিকা, বা কোনো কী না রাখতে <code>null</code>। <code>shortcutsInAppWindow</code> একই জিনিস নেয় আর শুধু সেখানে খাটে যেখানে Aubergine নিজস্ব জানালার অ্যাপ হিসেবে ইনস্টল করা। পেজ রিলোড করুন, তারপর শর্টকাট শিট (<strong>?</strong>), প্যালেট আর টুলটিপ কীগুলো ঠিক আপনার দেওয়া মতো দেখায়।</p>
@@ -222,7 +235,7 @@ aubergine settings schema</code></pre>
           <tr><td><a href="https://ghostty.org/docs/config">Ghostty</a><br>একটি টার্মিনাল</td><td data-label="সেটিংস">একটি <code>key = value</code> ফাইল; <code>config-file</code> অন্যগুলো যোগ করে</td><td data-label="থিম ও রং"><a href="https://ghostty.org/docs/features/theme">থিম হলো কনফিগারেশন ফাইল</a>; হালকার জন্য একটি, গাঢ়র জন্য একটি</td><td data-label="আপনার নিজের CSS">পাওয়া যায়নি</td><td data-label="আপনার নিজের কোড">টার্মিনালের ওপর <a href="https://ghostty.org/docs/config/reference#custom-shader">GLSL শেডার</a>; macOS-এ AppleScript</td><td data-label="শিরোনাম ও স্ট্যাটাসের টেমপ্লেট">পাওয়া যায়নি</td></tr>
           <tr><td><a href="https://learn.microsoft.com/windows/terminal/customize-settings/color-schemes">Windows Terminal</a><br>একটি টার্মিনাল</td><td data-label="সেটিংস">Settings পর্দা বা <code>settings.json</code>, একটি <a href="https://github.com/microsoft/terminal/blob/main/doc/cascadia/profiles.schema.json">JSON স্কিমা</a>সহ</td><td data-label="থিম ও রং">প্রোফাইল অনুযায়ী রঙের স্কিম; জানালা ও ট্যাবের <a href="https://learn.microsoft.com/windows/terminal/customize-settings/themes">থিম</a>, হালকা ও গাঢ়, শুধু JSON-এ</td><td data-label="আপনার নিজের CSS">পাওয়া যায়নি</td><td data-label="আপনার নিজের কোড">পাওয়া যায়নি; অন্য অ্যাপ JSON টুকরো হিসেবে প্রোফাইল ও রঙের স্কিম যোগ করে</td><td data-label="শিরোনাম ও স্ট্যাটাসের টেমপ্লেট">পাওয়া যায়নি; প্রোফাইল <code>tabTitle</code> আর <code>tabColor</code> ঠিক করে</td></tr>
           <tr><td><a href="https://iterm2.com/documentation-automatic-profile-switching.html">iTerm2</a><br>একটি টার্মিনাল</td><td data-label="সেটিংস">Settings-এ প্রোফাইল; প্রপার্টি-লিস্ট ফাইল হিসেবে <a href="https://iterm2.com/documentation-dynamic-profiles.html">Dynamic Profiles</a></td><td data-label="থিম ও রং">ব্যবহারকারী, হোস্ট, ফোল্ডার বা জব অনুযায়ী বাছা প্রোফাইল, Shell Integration-সহ</td><td data-label="আপনার নিজের CSS">পাওয়া যায়নি</td><td data-label="আপনার নিজের কোড">একটি <a href="https://iterm2.com/python-api/">Python API</a>, Python-এ লেখা স্ট্যাটাস বারের অংশ, AppleScript</td><td data-label="শিরোনাম ও স্ট্যাটাসের টেমপ্লেট">সেশনের নাম, ব্যাজ আর স্ট্যাটাস বারে <a href="https://iterm2.com/documentation-scripting-fundamentals.html">ইন্টারপোলেটেড স্ট্রিং</a>, <code>\(…)</code></td></tr>
-          <tr><td>Aubergine<br>ক্যানভাসের ওপর টার্মিনাল</td><td data-label="সেটিংস"><code>config.json</code> আর Settings, এডিটরের জন্য JSON Schema-সহ</td><td data-label="থিম ও রং">দশটি থিম, লাইট, ডার্ক বা সিস্টেমের মতো; আপনার নিজের, সেগুলোর একটির ওপর JSON ফাইল হিসেবে; প্রতিটি টার্মিনালের জন্য একটি; ৩৫টি রং হাতে, সব থিম বা একটির জন্য</td><td data-label="আপনার নিজের CSS">না। পরিকল্পনা: নথিভুক্ত হুকসহ একটি <code>custom.css</code></td><td data-label="আপনার নিজের কোড">না। পরিকল্পনা: প্লাগইন</td><td data-label="শিরোনাম ও স্ট্যাটাসের টেমপ্লেট">না। পরিকল্পনা: টার্মিনালের শিরোনাম আর তালিকার সারির জন্য</td></tr>
+          <tr><td>Aubergine<br>ক্যানভাসের ওপর টার্মিনাল</td><td data-label="সেটিংস"><code>config.json</code> আর Settings, এডিটরের জন্য JSON Schema-সহ</td><td data-label="থিম ও রং">দশটি থিম, লাইট, ডার্ক বা সিস্টেমের মতো; এর যেকোনো একটির ওপর আপনার নিজের JSON ফাইল; একটি প্রজেক্টের জন্য, ট্যাগওয়ালা টার্মিনালের জন্য আর প্রতিটি টার্মিনালের জন্য একটি; ৩৫টি রং হাতে, সব থিম বা একটির জন্য</td><td data-label="আপনার নিজের CSS">না। পরিকল্পনা: নথিভুক্ত হুকসহ একটি <code>custom.css</code></td><td data-label="আপনার নিজের কোড">না। পরিকল্পনা: প্লাগইন</td><td data-label="শিরোনাম ও স্ট্যাটাসের টেমপ্লেট">না। পরিকল্পনা: টার্মিনালের শিরোনাম আর তালিকার সারির জন্য</td></tr>
         </tbody>
       </table>
     </div>
@@ -231,11 +244,11 @@ aubergine settings schema</code></pre>
     <p>আজ Aubergine সেটিংসের প্রান্তে: থিম, রং আর কী এমন ফাইলে যা নিজেকে বর্ণনা করে, আর একটি পেজ যা সেটিংসের একাংশ লেখে। এটি পেজে আপনার কোনো কোড চালায় না, আপনার কোনো স্টাইল শিট নেয় না এবং এতে টেমপ্লেট নেই। এগুলো <a href="../roadmap/#rm-yours">রোডম্যাপে</a> আছে, এবং তৈরি হয়নি।</p>
 
     <h2 id="planned">কী পরিকল্পনায় আছে</h2>
-    <p>কোনো প্রকল্প বা ট্যাগের জন্য চেহারা, টেমপ্লেট, <code>custom.css</code> আর প্লাগইন পরিকল্পিত এবং এখনো তৈরি হয়নি: <a href="../roadmap/#rm-yours">রোডম্যাপ</a> দেখুন।</p>
+    <p>টেমপ্লেট, একটি <code>custom.css</code> আর প্লাগইন পরিকল্পনায় আছে, এখনো তৈরি হয়নি: <a href="../roadmap/#rm-yours">রোডম্যাপ</a> দেখুন।</p>
 
     <h2 id="faq">প্রশ্ন</h2>
     <div class="questions">
-      <details><summary>প্রতিটি টার্মিনালের কি আলাদা রঙের থিম হতে পারে?</summary><p>হ্যাঁ। টার্মিনালের মেনুর Theme… তার ভেতরের অংশ দশটি থিমের যেকোনোটিতে আঁকে, পেজ যে থিমেই থাকুক। বাকিরা আপনার ঠিক করা টার্মিনালের ডিফল্ট মানে, বা পেজকে।</p></details>
+      <details><summary>প্রতিটি টার্মিনালের কি আলাদা রঙের থিম হতে পারে?</summary><p>হ্যাঁ। টার্মিনালের মেনুতে Theme… তার মূল অংশ দশটি থিমের যেকোনোটিতে আঁকে, পেজের থিম যা-ই হোক। ট্যাগওয়ালা টার্মিনালকে Settings-এ সেই ট্যাগ দিয়ে থিম দেওয়া যায়, আর বাকিরা টার্মিনালের জন্য আপনার ঠিক করা ডিফল্ট বা পেজ অনুসরণ করে।</p></details>
       <details><summary>Aubergine-এ কি নিজের CSS যোগ করতে পারি?</summary><p>এখন নয়। আলাদা রং সেটিংস ফাইলে হাতে ঠিক করা যায়; নথিভুক্ত হুকসহ একটি <code>custom.css</code> পরিকল্পনায় আছে, তৈরি হয়নি।</p></details>
       <details><summary>Aubergine-এর সেটিংস ফাইল কোথায়?</summary><p>এটি Aubergine-এর ডেটা ফোল্ডারে <code>config.json</code>। <code>aubergine settings path</code> জানায় কোথায়, আর সার্ভার চালু হওয়ার সময় তা দেখায়।</p></details>
       <details><summary>কোনো এজেন্ট কি Aubergine-এর চেহারা বদলাতে পারে?</summary><p>সেটিংস নয়: সেগুলো শুধু আপনার। এজেন্ট নিজের টার্মিনালের নাম রাখতে ও বর্ণনা দিতে পারে, আর একটি রঙের থিম প্রস্তাব করতে পারে যা আপনার পড়া ও গ্রহণের অপেক্ষায় থাকে; যে প্রোগ্রামের API টোকেন অনুমতি দেয় সে টার্মিনালের নাম বদলাতে, ট্যাগ দিতে, থিম দিতে, ক্যানভাস সাজাতে আর থিম প্রস্তাবও করতে পারে।</p></details>

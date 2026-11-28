@@ -1183,12 +1183,13 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     // sends none of them writes nothing.
     changeAppearance: async (change) => {
       const sent = Object.values(change).some((value) => value !== undefined);
-      if (change.light !== undefined || change.dark !== undefined || typeof change.terminal === 'string') {
+      if (change.light !== undefined || change.dark !== undefined || typeof change.terminal === 'string' || (change.byTag?.length ?? 0) > 0) {
         // What the folder holds now: a file may have been added or removed since the page last asked.
         await themes.reload();
         if (change.light !== undefined) knowsTheme(change.light, 'light', 'light');
         if (change.dark !== undefined) knowsTheme(change.dark, 'dark', 'dark');
         if (typeof change.terminal === 'string') knowsTheme(change.terminal, undefined, 'terminal');
+        for (const [at, entry] of (change.byTag ?? []).entries()) knowsTheme(entry.theme, undefined, `byTag[${at}].theme`);
       }
       if (sent) {
         if (!options.setAppearance) throw new ConflictError('This server has no settings file to write.');
@@ -1202,9 +1203,9 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
       return appearanceOf(await options.settings());
     },
     readThemes: async () => (await lookNow()).themes,
-    knowsTheme: async (id) => {
+    knowsTheme: async (id, kind, field) => {
       await themes.reload();
-      knowsTheme(id);
+      knowsTheme(id, kind, field);
     },
     projects,
     projectFiles,

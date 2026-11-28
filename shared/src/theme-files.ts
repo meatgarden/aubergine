@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { contrastRatio } from './contrast';
+import { accentColors, type AccentColors } from './accent';
 import { BUILT_IN_THEME_COLORS } from './theme-colors.generated';
 import { ANSI_NAMES, COLOR_THEMES, THEME_COLORS, THEME_ID, UserTheme, colorTheme, plain, type ColorThemeId, type ThemeColor, type ThemeKind, type ThemeOf, type ThemeTerminal } from './themes';
 import { PLAIN_LINE } from './workflows';
@@ -150,6 +151,19 @@ export function starterThemeFile(name: string, from: Pick<ThemeOf, 'base' | 'col
   const colors = themeColorValues(from);
   const file = { $schema: `../${THEME_SCHEMA_FILE}`, name, kind, base: from.base, colors: Object.fromEntries(THEME_COLORS.map((color) => [color, colors[color]])) };
   return `${JSON.stringify(file, null, 2)}\n`;
+}
+
+/**
+ * The text of a new theme file that changes only the accent of the theme it starts from: its base, the theme's own
+ * colors where it is a theme file, and over them the six colors `accentColors` works out from the accent and the
+ * colors of that theme. What else the file leaves out is the base's. `accent` is `#rrggbb`. Pure.
+ */
+export function accentThemeFile(name: string, from: Pick<ThemeOf, 'base' | 'colors'>, accent: string): { text: string } & AccentColors {
+  const kind: ThemeKind = colorTheme(from.base)?.kind ?? 'dark';
+  const worked = accentColors(accent, themeColorValues(from), kind, from.base.startsWith('high-contrast-'));
+  const colors = { ...from.colors, ...worked.colors };
+  const file = { $schema: `../${THEME_SCHEMA_FILE}`, name, kind, base: from.base, colors: Object.fromEntries(THEME_COLORS.filter((color) => colors[color] !== undefined).map((color) => [color, colors[color]])) };
+  return { text: `${JSON.stringify(file, null, 2)}\n`, ...worked };
 }
 
 const HEX_SCHEMA = { type: 'string', pattern: '^\\s*#[0-9A-Fa-f]{6}\\s*$' } as const;

@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
-import { themeChoices, themeOf, type Appearance, type UserTheme } from '@aubergine/shared';
+import { themeChoices, themeOf, type Appearance, type TerminalThemeFrom, type ThemeKind, type UserTheme } from '@aubergine/shared';
 import { api, isSuperseded } from './api';
 import { useApp } from './store';
 import { Select } from './ui';
+import { useTerminalThemeFrom } from './theme';
 
 /**
  * A terminal's own color theme: chosen from its title's menu or its details, cleared to go back to the default for
@@ -21,6 +22,18 @@ export function defaultThemeWords(appearance: Pick<Appearance, 'terminal'>, page
   return appearance.terminal && themeOf(appearance.terminal, themes) ? nameOf(appearance.terminal, themes) : `as the page: ${nameOf(page, themes)}`;
 }
 
+/**
+ * What a terminal without a theme of its own is drawn in now and where that comes from, in words: "Nord, by the tag
+ * prod", the default for terminals by its name, "as the page: Dark", or "as the page: Nord, the project’s". Pure.
+ */
+export function themeFromWords(from: TerminalThemeFrom, themes: readonly UserTheme[] = []): string {
+  const name = nameOf(from.id, themes);
+  if (from.from === 'tag') return `${name}, by the tag ${from.tag ?? ''}`;
+  if (from.from === 'project') return `as the page: ${name}, the project’s`;
+  if (from.from === 'page') return `as the page: ${name}`;
+  return name;
+}
+
 /** Gives the terminal its own theme, or (null) takes it away. The page follows the change event; a failure is said. */
 export function chooseTerminalTheme(sessionId: string, theme: string | null): void {
   const session = useApp.getState().whole?.sessions.find((s) => s.id === sessionId);
@@ -33,20 +46,38 @@ export function chooseTerminalTheme(sessionId: string, theme: string | null): vo
  * built-in ones first and the owner's after them. A theme chosen that is not there now is kept as a line of its own,
  * said so, so that the select still shows what is set.
  */
-export function ThemeSelect({ value, onChange, none, ...rest }: { value: string | null; onChange: (theme: string | null) => void; none: string; id?: string; 'aria-label'?: string; 'aria-describedby'?: string; 'data-testid'?: string }) {
+export function ThemeSelect({
+  value,
+  onChange,
+  none,
+  kind,
+  ...rest
+}: {
+  value: string | null;
+  onChange: (theme: string | null) => void;
+  /** The words of the first line, which is no theme; left out, there is no such line. */
+  none?: string;
+  /** Only the themes of one kind. */
+  kind?: ThemeKind;
+  id?: string;
+  className?: string;
+  'aria-label'?: string;
+  'aria-describedby'?: string;
+  'data-testid'?: string;
+}) {
   const themes = useApp((s) => s.themes.themes);
   const gone = value !== null && !themeOf(value, themes);
   return (
     <Select value={value ?? ''} onChange={(event) => onChange(event.target.value === '' ? null : (themeOf(event.target.value, themes)?.id ?? null))} {...rest}>
-      <option value="">{none}</option>
+      {none !== undefined && <option value="">{none}</option>}
       {gone && (
         <option value={value} disabled>
           {nameOf(value, themes)}
         </option>
       )}
-      {KINDS.map(({ kind, words }) => (
-        <optgroup key={kind} label={words}>
-          {themeChoices(themes, kind).map((one) => (
+      {KINDS.filter((one) => kind === undefined || one.kind === kind).map(({ kind: ofKind, words }) => (
+        <optgroup key={ofKind} label={words}>
+          {themeChoices(themes, ofKind).map((one) => (
             <option key={one.id} value={one.id}>
               {one.own ? `${one.name} (yours)` : one.name}
             </option>
@@ -62,10 +93,11 @@ export function ThemeSelect({ value, onChange, none, ...rest }: { value: string 
  * (`terminal.theme`). "Same as the default" first, then every theme under its kind's heading, the owner's after the
  * built-in ones; the one in use ticked.
  */
-export function TerminalThemeMenu({ sessionId, name, page }: { sessionId: string; name: string; page: string }) {
+export function TerminalThemeMenu({ sessionId, name }: { sessionId: string; name: string; page?: string }) {
   const own = useApp((s) => s.whole?.sessions.find((x) => x.id === sessionId)?.theme ?? null);
-  const appearance = useApp((s) => s.settings.appearance);
   const themes = useApp((s) => s.themes.themes);
+  // What it is drawn in without one of its own, and why: by a tag, the default for terminals, or the page's.
+  const without = useTerminalThemeFrom(sessionId, true);
   const [open, setOpen] = useState(false);
   const root = useRef<HTMLSpanElement>(null);
   const menu = useRef<HTMLSpanElement>(null);
@@ -131,7 +163,7 @@ export function TerminalThemeMenu({ sessionId, name, page }: { sessionId: string
         >
           <button type="button" role="menuitemradio" aria-checked={own === null} onClick={() => choose(null)} data-testid="terminal-theme-none">
             Same as the default
-            <small>Now {defaultThemeWords(appearance, page, themes)}</small>
+            <small>Now {themeFromWords(without, themes)}</small>
           </button>
           {KINDS.map(({ kind, words }) => [
             <span key={kind} className="ui-menu-label" role="presentation">

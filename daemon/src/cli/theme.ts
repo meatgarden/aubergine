@@ -10,6 +10,7 @@ import {
   type ThemeRow,
   THEMES_FOLDER,
   THEME_FILE_MAX_BYTES,
+  accentThemeFile,
   readThemeFile,
   showControl,
   starterThemeFile,
@@ -34,7 +35,7 @@ export type ThemeCommand =
   | { action: 'list' }
   | { action: 'path' }
   | { action: 'check'; file: string }
-  | { action: 'new'; id: string; from: string | null; name: string | null }
+  | { action: 'new'; id: string; from: string | null; name: string | null; accent: string | null }
   /** Sends a theme file's text, for the owner to read: from inside a terminal. */
   | { action: 'propose'; file: string; id: string | null; why: string | null }
   /** Inside a terminal: what became of its own proposals. For the owner: every one that waits. */
@@ -57,8 +58,10 @@ export function parseThemeCommand(words: readonly string[]): ThemeCommand {
   if (action === 'new') {
     const from = takeOption(rest, '--from');
     const name = takeOption(from.rest, '--name');
-    if (name.rest.length !== 1 || (name.rest[0] as string).startsWith('--')) throw new UsageError('theme new needs one ID: aubergine theme new <id> [--from <theme>] [--name <name>]');
-    return { action: 'new', id: name.rest[0] as string, from: from.value, name: name.value };
+    const accent = takeOption(name.rest, '--accent');
+    if (accent.rest.length !== 1 || (accent.rest[0] as string).startsWith('--')) throw new UsageError('theme new needs one ID: aubergine theme new <id> [--from <theme>] [--name <name>] [--accent "#rrggbb"]');
+    if (accent.value !== null && !/^#[0-9a-fA-F]{6}$/.test(accent.value.trim())) throw new UsageError('--accent is a color written #rrggbb, such as "#2f9e8f".');
+    return { action: 'new', id: accent.rest[0] as string, from: from.value, name: name.value, accent: accent.value === null ? null : accent.value.trim().toLowerCase() };
   }
   if (action === 'propose') {
     const id = takeOption(rest, '--id');
@@ -222,8 +225,10 @@ export async function runThemeCommand(command: ThemeCommand, deps: ThemeCommandD
         deps.warn(`There is already a file named ${command.id}.json in ${into}. Nothing was written: choose another ID, or change that file.`);
         return 1;
       }
-      // A theme file of the owner's to start from is copied whole: its base, and every color as it is drawn.
-      const text = starterThemeFile(name, from);
+      // A theme file of the owner's to start from is copied whole: its base, and every color as it is drawn. With an
+      // accent, only what an accent needs is written, over the theme it starts from.
+      const withAccent = command.accent === null ? null : accentThemeFile(name, from, command.accent);
+      const text = withAccent?.text ?? starterThemeFile(name, from);
       try {
         if (inside) await writeInside(into, `${command.id}.json`, text, false);
         else await writeInside(deps.dataDir, `${THEMES_FOLDER}/${command.id}.json`, text);
@@ -231,10 +236,13 @@ export async function runThemeCommand(command: ThemeCommand, deps: ThemeCommandD
         deps.warn(`Nothing was written: ${(error as Error).message}`);
         return 1;
       }
+      const wrote = withAccent
+        ? `Wrote ${target}: ${showControl(from.name)} with the accent ${withAccent.colors.accent}, and the five colors that go with it worked out so that they can be read${withAccent.moved ? ` (the accent ${command.accent} was ${from.kind === 'light' ? 'darkened' : 'lightened'} to ${withAccent.colors.accent} for that)` : ''}.`
+        : `Wrote ${target}: ${from.kind === 'light' ? 'a light' : 'a dark'} theme over ${from.base}, every color as ${showControl(from.name)} has it.`;
       if (inside) {
         deps.print(
           [
-            `Wrote ${target}: ${from.kind === 'light' ? 'a light' : 'a dark'} theme over ${from.base}, every color as ${showControl(from.name)} has it.`,
+            wrote,
             'Change the colors you want, and remove the ones you do not; what is left out is the base’s (docs/themes.md). Then:',
             `  aubergine theme check ${command.id}.json`,
             `  aubergine theme propose ${command.id}.json --why "<one line on why>"`,
@@ -245,7 +253,7 @@ export async function runThemeCommand(command: ThemeCommand, deps: ThemeCommandD
       }
       deps.print(
         [
-          `Wrote ${target}: ${from.kind === 'light' ? 'a light' : 'a dark'} theme over ${from.base}, every color as ${showControl(from.name)} has it.`,
+          wrote,
           'Change the colors you want, and remove the ones you do not; what is left out is the base’s. "terminal" sets a terminal’s own colors (docs/themes.md).',
           'Then press Read themes again in Settings → Appearance, or start the server again, and choose it there.',
         ].join('\n'),

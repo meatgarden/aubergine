@@ -149,6 +149,7 @@ describe('the appearance route', () => {
         cursor: expected.appearance.cursor,
         cursorBlink: expected.appearance.cursorBlink,
         terminal: ('terminal' in expected.appearance ? expected.appearance.terminal : null) ?? null,
+        byTag: [],
       });
     }
   });
@@ -173,7 +174,7 @@ describe('the appearance route', () => {
   it('answers an old caller that sends only the theme as before, with the rest beside it', async () => {
     const answered = await asOwner('PUT', '/v1/settings/appearance', { theme: 'light' });
     expect(answered.status).toBe(200);
-    expect(answered.body).toEqual({ theme: 'light', light: 'light', dark: 'dark', font: DEFAULT_SETTINGS.font, cursor: 'block', cursorBlink: true, terminal: null });
+    expect(answered.body).toEqual({ theme: 'light', light: 'light', dark: 'dark', font: DEFAULT_SETTINGS.font, cursor: 'block', cursorBlink: true, terminal: null, byTag: [] });
     // No file yet: one is made, holding that key alone.
     expect(await config()).toEqual({ theme: 'light' });
     expect((await asOwner('GET', '/api/v1/state')).body.settings.theme).toBe('light');
@@ -185,7 +186,7 @@ describe('the appearance route', () => {
     for (const body of [{}, { colors: { accent: '#000000' } }, { somethingElse: true }]) {
       const answered = await asOwner('PUT', '/v1/settings/appearance', body);
       expect(answered.status, JSON.stringify(body)).toBe(200);
-      expect(answered.body).toEqual({ theme: 'light', light: 'solarized-light', dark: 'nord', font: { family: 'Mono of mine', size: 15 }, cursor: 'bar', cursorBlink: false, terminal: null });
+      expect(answered.body).toEqual({ theme: 'light', light: 'solarized-light', dark: 'nord', font: { family: 'Mono of mine', size: 15 }, cursor: 'bar', cursorBlink: false, terminal: null, byTag: [] });
       expect(await configText()).toBe(before);
     }
   });
@@ -379,5 +380,98 @@ describe('themes of the owner\'s own', () => {
     const made = (await asOwner('POST', '/api/v1/sessions', {})).body.session as Session;
     const token = await asOwner('POST', '/v1/tokens', { name: 'everything', scopes: [...GRANTABLE_SCOPES], reviewWorkflowChanges: false, reach: { kind: 'all' } });
     for (const secret of [token.body.secret as string, sessionToken(ownerToken, made.id)]) expect((await call(secret, 'POST', '/v1/settings/themes/read')).status).toBe(403);
+  });
+});
+
+describe('themes of terminals by tag', () => {
+  const HARBOR = { name: 'Harbor', kind: 'dark', base: 'nord', colors: { accent: '#5fb3b3' } };
+
+  it('are written as a whole list by the appearance route, left as they are when not sent, and emptied with []', async () => {
+    await writeConfig(OWNERS);
+    const list = [
+      { tag: 'prod', theme: 'dracula' },
+      { tag: 'docs', theme: 'solarized-light' },
+    ];
+    const written = await asOwner('PUT', '/v1/settings/appearance', { byTag: list });
+    expect(written.status, JSON.stringify(written.body)).toBe(200);
+    expect(written.body.byTag).toEqual(list);
+    expect(await config()).toEqual({ ...OWNERS, appearance: { ...OWNERS.appearance, byTag: list } });
+    expect((await asOwner('GET', '/api/v1/state')).body.settings.appearance.byTag).toEqual(list);
+    // Left out: as it was.
+    expect((await asOwner('PUT', '/v1/settings/appearance', { cursor: 'block' })).body.byTag).toEqual(list);
+    // The whole list replaces the one there was.
+    expect((await asOwner('PUT', '/v1/settings/appearance', { byTag: [list[1]] })).body.byTag).toEqual([list[1]]);
+    expect((await asOwner('PUT', '/v1/settings/appearance', { byTag: [] })).body.byTag).toEqual([]);
+    expect(((await config()) as { appearance: { byTag: unknown } }).appearance.byTag).toEqual([]);
+  });
+
+  it('may name a theme file; a theme the server has not read, or a list that is not one, is refused with 400 and nothing is written', async () => {
+    await writeConfig(OWNERS);
+    await mkdir(path.join(dir, 'themes'), { recursive: true });
+    await writeFile(path.join(dir, 'themes', 'harbor.json'), JSON.stringify(HARBOR));
+    expect((await asOwner('PUT', '/v1/settings/appearance', { byTag: [{ tag: 'prod', theme: 'harbor' }] })).body.byTag).toEqual([{ tag: 'prod', theme: 'harbor' }]);
+    const before = await configText();
+    for (const byTag of [[{ tag: 'prod', theme: 'gone' }], [{ tag: 'a', theme: 'nord' }, { tag: 'b', theme: 'gone' }], [{ tag: '', theme: 'nord' }], [{ tag: 'prod' }], Array.from({ length: 21 }, (_, i) => ({ tag: `t${i}`, theme: 'nord' })), 'prod']) {
+      const refused = await asOwner('PUT', '/v1/settings/appearance', { byTag });
+      expect(refused.status, JSON.stringify(byTag)).toBe(400);
+    }
+    expect(await configText()).toBe(before);
+  });
+
+  it('in a file: a wrong entry is skipped and said, and the rest still count', async () => {
+    const warnings: string[] = [];
+    await writeConfig({ appearance: { dark: 'nord', byTag: [{ tag: 'prod', theme: 'dracula' }, { tag: 'docs' }, 7] } });
+    const settings = new SettingsFile(dir, (message) => warnings.push(message), () => []);
+    const read = await settings.reload();
+    expect(read.appearance.byTag).toEqual([{ tag: 'prod', theme: 'dracula' }]);
+    expect(read.appearance.dark).toBe('nord');
+    expect(warnings.filter((w) => w.includes('appearance.byTag'))).toHaveLength(2);
+  });
+});
+
+describe('a project’s themes', () => {
+  const HARBOR = { name: 'Harbor', kind: 'dark', base: 'nord', colors: { accent: '#5fb3b3' } };
+  const PAPER = { name: 'Paper', kind: 'light', colors: { text: '#101010' } };
+  const projectId = (): string => hub.state.projects[0]!.id;
+  const themesOf = (): unknown => hub.state.projects.find((p) => p.id === projectId())?.themes;
+
+  it('are set, each kind alone, left as they are when not sent, and cleared with null, by the owner', async () => {
+    expect(themesOf()).toBeUndefined();
+    const set = await asOwner('PATCH', `/v1/projects/${projectId()}`, { themes: { dark: 'dracula' } });
+    expect(set.status, JSON.stringify(set.body)).toBe(200);
+    expect(set.body.themes).toEqual({ light: null, dark: 'dracula' });
+    expect((await asOwner('PATCH', `/v1/projects/${projectId()}`, { themes: { light: 'solarized-light' } })).body.themes).toEqual({ light: 'solarized-light', dark: 'dracula' });
+    // Left out, or another field alone: as they were.
+    expect((await asOwner('PATCH', `/v1/projects/${projectId()}`, { name: 'Renamed' })).body.themes).toEqual({ light: 'solarized-light', dark: 'dracula' });
+    expect((await asOwner('PATCH', `/v1/projects/${projectId()}`, { themes: {} })).body.themes).toEqual({ light: 'solarized-light', dark: 'dracula' });
+    expect((await asOwner('PATCH', `/v1/projects/${projectId()}`, { themes: { dark: null } })).body.themes).toEqual({ light: 'solarized-light', dark: null });
+    expect((await asOwner('GET', '/api/v1/state')).body.state.projects[0].themes).toEqual({ light: 'solarized-light', dark: null });
+  });
+
+  it('may be theme files of their kind; a theme of the other kind or one the server has not read is refused with 400', async () => {
+    await mkdir(path.join(dir, 'themes'), { recursive: true });
+    await writeFile(path.join(dir, 'themes', 'harbor.json'), JSON.stringify(HARBOR));
+    await writeFile(path.join(dir, 'themes', 'paper.json'), JSON.stringify(PAPER));
+    expect((await asOwner('PATCH', `/v1/projects/${projectId()}`, { themes: { light: 'paper', dark: 'harbor' } })).body.themes).toEqual({ light: 'paper', dark: 'harbor' });
+    for (const themes of [{ light: 'nord' }, { dark: 'light' }, { dark: 'paper' }, { light: 'harbor' }, { dark: 'gone' }, { light: 'Not An ID' }, { light: 'light', dark: 'gone' }]) {
+      const refused = await asOwner('PATCH', `/v1/projects/${projectId()}`, { themes });
+      expect(refused.status, JSON.stringify(themes)).toBe(400);
+    }
+    expect(themesOf()).toEqual({ light: 'paper', dark: 'harbor' });
+  });
+
+  it('are the owner’s: no token of any scope and no session can set them', async () => {
+    const made = (await asOwner('POST', '/api/v1/sessions', {})).body.session as Session;
+    const token = await asOwner('POST', '/v1/tokens', { name: 'everything', scopes: [...GRANTABLE_SCOPES], reviewWorkflowChanges: false, reach: { kind: 'all' } });
+    for (const secret of [token.body.secret as string, sessionToken(ownerToken, made.id)]) expect((await call(secret, 'PATCH', `/v1/projects/${projectId()}`, { themes: { dark: 'dracula' } })).status).toBe(403);
+    expect(themesOf()).toBeUndefined();
+  });
+
+  it('are not written into a project file', async () => {
+    await asOwner('PATCH', `/v1/projects/${projectId()}`, { themes: { light: 'gruvbox-light', dark: 'dracula' } });
+    const file = await asOwner('GET', `/v1/projects/${projectId()}/file`);
+    expect(file.status, JSON.stringify(file.body)).toBe(200);
+    const text = JSON.stringify(file.body);
+    for (const word of ['dracula', 'gruvbox-light', 'themes']) expect(text, word).not.toContain(word);
   });
 });

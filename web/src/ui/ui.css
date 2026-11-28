@@ -2796,6 +2796,38 @@ div.every-setting-row {
   margin: 0 0 var(--space-1);
   color: inherit;
 }
+/* Themes of terminals by tag, under the terminal theme: a heading of the body size, a line on how they count, then a row each. */
+.appearance-by-tag {
+  margin-top: var(--space-4);
+}
+.appearance-by-tag > h5 {
+  margin: 0 0 var(--space-1);
+  font-size: var(--font-body);
+  font-weight: var(--weight-strong);
+}
+.appearance-by-tag > .ui-meta {
+  margin: 0 0 var(--space-2);
+  font-size: var(--font-body);
+}
+.appearance-by-tag-rows {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-2);
+  padding: 0;
+  list-style: none;
+}
+.appearance-by-tag-tag {
+  flex: 0 1 160px;
+  min-width: 0;
+}
+.appearance-by-tag-theme {
+  flex: 0 1 200px;
+  min-width: 0;
+}
+.appearance-by-tag > .appearance-by-tag-row {
+  margin-bottom: var(--space-2);
+}
 
 /*
  * A proposed theme in the review: no box of its own (it is read on the review's surface), then the theme drawn

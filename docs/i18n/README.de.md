@@ -31,7 +31,7 @@ Aubergine teilen: [X](https://x.com/intent/post?text=Aubergine%3A%20mission%20co
 
 ### Farbthemen
 
-Die Seite gibt es in zehn Farbthemen, vier hellen und sechs dunklen, gewählt unter **Settings → Appearance**. Jedes Terminal kann auch ein eigenes Thema haben (**Theme…** in seinem Menü), die anderen folgen dem Standard, den Sie für Terminals festlegen, oder der Seite. Einzelne Farben lassen sich in der [Einstellungsdatei](../../README.md#settings) von Hand setzen. Ein eigenes Thema ist eine Datei: eines der zehn mit Ihren Farben darüber, neben ihnen als Ihres aufgeführt ([docs/themes.md](../themes.md)).
+Die Seite gibt es in zehn Farbthemen, vier hellen und sechs dunklen, gewählt unter **Settings → Appearance**. Jedes Terminal kann auch ein eigenes Thema haben (**Theme…** in seinem Menü), die anderen folgen dem Standard, den Sie für Terminals festlegen, oder der Seite. Einzelne Farben lassen sich in der [Einstellungsdatei](../../README.md#settings) von Hand setzen. Ein eigenes Thema ist eine Datei: eines der zehn mit Ihren Farben darüber, neben ihnen als Ihres aufgeführt ([docs/themes.md](../themes.md)). Ein Projekt kann für jede Art ein eigenes Thema haben, das gezeichnet wird, solange Sie es ansehen, und Terminals mit einem Tag können über diesen Tag ein Thema bekommen ([docs/themes.md](../themes.md#while-you-look-at-a-project)).
 
 | | | |
 |---|---|---|

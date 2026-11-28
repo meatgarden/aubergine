@@ -1,12 +1,13 @@
 import { UserTheme } from '@aubergine/shared';
 import { describe, expect, it } from 'vitest';
 import page from '../index.html?raw';
-import { colorThemeSays, familyProblem, hardToReadSays, sizeProblem, themesFolderOf } from './appearance/AppearancePart';
+import { colorThemeSays, familyProblem, hardToReadSays, projectThemeSays, sizeProblem, themesFolderOf } from './appearance/AppearancePart';
+import { knownTags, movedEntry, tagOfText } from './appearance/ByTag';
 import { bodyThemeOf, colorsLine, pairsOf } from './theme';
-import { defaultThemeWords } from './TerminalTheme';
+import { defaultThemeWords, themeFromWords } from './TerminalTheme';
 
 /** The lines index.html runs before first paint, run against a stand-in page and storage. */
-function firstPaint({ attributes = {}, stored = {}, systemIsLight = false }: { attributes?: Record<string, string>; stored?: Record<string, string>; systemIsLight?: boolean }) {
+function firstPaint({ attributes = {}, stored = {}, systemIsLight = false, path = '/' }: { attributes?: Record<string, string>; stored?: Record<string, string>; systemIsLight?: boolean; path?: string }) {
   const script = /<script>([\s\S]*?)<\/script>/.exec(page)?.[1];
   if (!script) throw new Error('index.html has no script before first paint');
   // Plain ES5 without a module: nothing in it may be newer than what an old browser runs first.
@@ -20,7 +21,7 @@ function firstPaint({ attributes = {}, stored = {}, systemIsLight = false }: { a
     style: { setProperty: (name: string, value: string) => (style[name] = value) },
   };
   const storage = { getItem: (key: string) => stored[key] ?? null };
-  const window = { matchMedia: () => ({ matches: systemIsLight }) };
+  const window = { matchMedia: () => ({ matches: systemIsLight }), location: { pathname: path } };
   new Function('document', 'localStorage', 'window', script)({ documentElement: root }, storage, window);
   return { theme: set['data-theme'], colorTheme: set['data-color-theme'], style, id: set['data-color-theme-id'] };
 }
@@ -63,6 +64,37 @@ describe('the lines before first paint', () => {
     expect(firstPaint({ attributes: { ...attributes, 'data-theme-dark-id': 'x"><b>' } }).id).toBe('nord');
     // Where the server wrote the page, no copy of this browser is read.
     expect(firstPaint({ attributes: { 'data-theme-setting': 'dark', 'data-theme-dark': 'dark' }, stored }).id).toBe('dark');
+  });
+});
+
+describe('the lines before first paint, on the address of a project with a theme of its own', () => {
+  const project = '0190f5a2-1c3b-7d4e-8f60-123456789abc';
+  const canvas = '0190f5a2-1c3b-7d4e-8f60-cba987654321';
+  const page = { 'data-theme-setting': 'dark', 'data-theme-light': 'light', 'data-theme-dark': 'dark', 'data-theme-dark-id': 'dark' };
+  const stored = {
+    [`aubergine.project.${project}.theme.dark`]: 'nord',
+    [`aubergine.project.${project}.theme.dark.id`]: 'harbor',
+    [`aubergine.project.${project}.theme.dark.colors`]: 'accent:#5fb3b3',
+  };
+
+  it('draw what this browser last drew for that project, over what the server wrote', () => {
+    expect(firstPaint({ attributes: page, stored, path: `/p/${project}/c/${canvas}` })).toEqual({ theme: 'dark', colorTheme: 'nord', style: { '--accent': '#5fb3b3' }, id: 'harbor' });
+    // A page over its canvas, and a linked server's address.
+    expect(firstPaint({ attributes: page, stored, path: `/p/${project}/c/${canvas}/runs` }).id).toBe('harbor');
+    expect(firstPaint({ attributes: page, stored, path: `/s/ab12cd34/p/${project}/c/${canvas}` }).id).toBe('harbor');
+  });
+
+  it('draw the page’s own for another kind, another project, an address without a project, and a copy that is not an ID', () => {
+    expect(firstPaint({ attributes: { ...page, 'data-theme-setting': 'light' }, stored, path: `/p/${project}/c/${canvas}` }).colorTheme).toBe('light');
+    expect(firstPaint({ attributes: page, stored, path: `/p/${canvas}/c/${canvas}` })).toEqual({ theme: 'dark', colorTheme: 'dark', style: {}, id: 'dark' });
+    expect(firstPaint({ attributes: page, stored, path: `/c/${canvas}` }).id).toBe('dark');
+    expect(firstPaint({ attributes: page, stored, path: `/x/p/${project}/c/${canvas}` }).id).toBe('dark');
+    expect(firstPaint({ attributes: page, stored: { [`aubergine.project.${project}.theme.dark`]: 'x"><b>' }, path: `/p/${project}/c/${canvas}` }).colorTheme).toBe('dark');
+    // Its own ID and its colors are held to their shapes.
+    const wrong = { [`aubergine.project.${project}.theme.dark`]: 'dracula', [`aubergine.project.${project}.theme.dark.id`]: 'x"><b>', [`aubergine.project.${project}.theme.dark.colors`]: 'bg:red,accent:#112233' };
+    expect(firstPaint({ attributes: page, stored: wrong, path: `/p/${project}/c/${canvas}` })).toEqual({ theme: 'dark', colorTheme: 'dracula', style: { '--accent': '#112233' }, id: 'dracula' });
+    // A built-in theme of the project's: its colors are only those set by hand, and none of the page's own is carried over.
+    expect(firstPaint({ attributes: { ...page, 'data-colors-dark': 'accent:#000000' }, stored: { [`aubergine.project.${project}.theme.dark`]: 'dracula' }, path: `/p/${project}/c/${canvas}` })).toEqual({ theme: 'dark', colorTheme: 'dracula', style: {}, id: 'dracula' });
   });
 });
 
@@ -136,5 +168,38 @@ describe('the words for the default of terminals', () => {
     expect(defaultThemeWords({ terminal: 'harbor' }, 'nord', [harbor])).toBe('Harbor');
     // A default that is not there now is the page's, as it is drawn.
     expect(defaultThemeWords({ terminal: 'harbor' }, 'nord')).toBe('as the page: Nord');
+  });
+});
+
+describe('the words for where a terminal’s theme comes from', () => {
+  it('say the tag, the default for terminals, or the page’s and whether that is the project’s', () => {
+    expect(themeFromWords({ id: 'nord', from: 'tag', tag: 'prod' })).toBe('Nord, by the tag prod');
+    expect(themeFromWords({ id: 'gruvbox-dark', from: 'terminals' })).toBe('Gruvbox dark');
+    expect(themeFromWords({ id: 'dark', from: 'page' })).toBe('as the page: Dark');
+    expect(themeFromWords({ id: 'harbor', from: 'project' }, [harbor])).toBe('as the page: Harbor, the project’s');
+    expect(themeFromWords({ id: 'harbor', from: 'own' }, [harbor])).toBe('Harbor');
+  });
+
+  it('in Settings, say that the project looked at draws the page in its own', () => {
+    expect(projectThemeSays('Web shop', 'dracula')).toBe('While you look at Web shop the page is drawn in Dracula: that is the project’s. What you choose here is the page’s own, drawn everywhere else.');
+  });
+});
+
+describe('the rows of themes by tag', () => {
+  it('move one up or down, and not past either end', () => {
+    expect(movedEntry(['a', 'b', 'c'], 1, -1)).toEqual(['b', 'a', 'c']);
+    expect(movedEntry(['a', 'b', 'c'], 1, 1)).toEqual(['a', 'c', 'b']);
+    expect(movedEntry(['a', 'b', 'c'], 0, -1)).toEqual(['a', 'b', 'c']);
+    expect(movedEntry(['a', 'b', 'c'], 2, 1)).toEqual(['a', 'b', 'c']);
+  });
+
+  it('take a tag as it is written, trimmed, and nothing that cannot be one', () => {
+    expect(tagOfText('  prod ')).toBe('prod');
+    expect(tagOfText('   ')).toBeNull();
+    expect(tagOfText('x'.repeat(33))).toBeNull();
+  });
+
+  it('offer every tag there is once, whatever its capitals', () => {
+    expect(knownTags([{ tags: ['prod', 'api'] }, { tags: ['API', 'docs'] }, { tags: [] }])).toEqual(['api', 'docs', 'prod']);
   });
 });

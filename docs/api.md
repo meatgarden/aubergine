@@ -130,7 +130,7 @@ How to create a token, what the scopes mean, the limits and the activity log are
 | [`GET /v1/projects`](#listprojects) | List the projects | `read` |
 | [`POST /v1/projects`](#addproject) | Make a project | browser only |
 | [`GET /v1/projects/{projectId}`](#getproject) | One project | `read` |
-| [`PATCH /v1/projects/{projectId}`](#changeproject) | Change a project: its name, color, folders, or its place in the order | browser only |
+| [`PATCH /v1/projects/{projectId}`](#changeproject) | Change a project: its name, color, folders, color themes, or its place in the order | browser only |
 | [`DELETE /v1/projects/{projectId}`](#removeproject) | Remove a project for good | browser only |
 | [`POST /v1/canvases/{canvasId}/project`](#movecanvastoproject) | Move a canvas to another project | browser only |
 | [`POST /v1/projects/{projectId}/archive`](#archiveproject) | Archive a project | browser only |
@@ -2192,6 +2192,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 | `cursor` | `"block" \| "bar" \| "underline"` | no | The shape of a terminal's cursor: `block`, `bar` or `underline`. |
 | `cursorBlink` | `boolean` | no | Whether a terminal's cursor blinks. |
 | `terminal` | `string \| null` | no | The color theme every terminal is drawn in that has none of its own: one of the IDs of the color themes, of either kind, built-in or a theme file the server has read (another is refused with 400). `null`: the theme the page is drawn in. |
+| `byTag` | `{ /** A terminal’s tag, as tags are written: whatever the capitals,…` | no | The color themes of terminals by tag, in order, at most 20: the whole list, which replaces the one there was (an empty list removes them all). The first entry whose tag a terminal has wins; a terminal’s own theme comes before all of them. A theme the server has not read is refused with 400. |
 
 **Answer** `200`:
 
@@ -2216,6 +2217,13 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
   cursorBlink: boolean;
   /** The color theme of a terminal that has none of its own, built-in or of a theme file; `null`: the theme the page is drawn in. */
   terminal: string | null;
+  /** Color themes for terminals by tag, in order: a terminal without one of its own is drawn in the theme of the first entry whose tag it has. */
+  byTag: {
+    /** A terminal’s tag, as tags are written: whatever the capitals, the same tag. */
+    tag: string;
+    /** The color theme of the terminals with that tag, of either kind, built-in or of a theme file. */
+    theme: string;
+  }[];
 }
 ```
 
@@ -9661,6 +9669,13 @@ A list: it answers a page at a time, see `limit` and `cursor`.
       [key: string]: unknown;
     };
     state: "open" | "archived";
+    /** The color themes the page is drawn in while this project is looked at: one for the light page and one for the dark. Null or left out: the page’s own. */
+    themes?: {
+      /** The color theme of the light page while this project is looked at: a light one. Null: the page’s own. */
+      light: string | null;
+      /** The color theme of the dark page while this project is looked at: a dark one. Null: the page’s own. */
+      dark: string | null;
+    };
     fileExtra?: {
       [key: string]: unknown;
     };
@@ -9728,6 +9743,13 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
     [key: string]: unknown;
   };
   state: "open" | "archived";
+  /** The color themes the page is drawn in while this project is looked at: one for the light page and one for the dark. Null or left out: the page’s own. */
+  themes?: {
+    /** The color theme of the light page while this project is looked at: a light one. Null: the page’s own. */
+    light: string | null;
+    /** The color theme of the dark page while this project is looked at: a dark one. Null: the page’s own. */
+    dark: string | null;
+  };
   fileExtra?: {
     [key: string]: unknown;
   };
@@ -9776,6 +9798,13 @@ An API token needs the scope `read`.
     [key: string]: unknown;
   };
   state: "open" | "archived";
+  /** The color themes the page is drawn in while this project is looked at: one for the light page and one for the dark. Null or left out: the page’s own. */
+  themes?: {
+    /** The color theme of the light page while this project is looked at: a light one. Null: the page’s own. */
+    light: string | null;
+    /** The color theme of the dark page while this project is looked at: a dark one. Null: the page’s own. */
+    dark: string | null;
+  };
   fileExtra?: {
     [key: string]: unknown;
   };
@@ -9797,9 +9826,9 @@ curl -H "Authorization: Bearer $TOKEN" \
 
 ### changeProject
 
-`PATCH /v1/projects/{projectId}`: Change a project: its name, color, folders, or its place in the order.
+`PATCH /v1/projects/{projectId}`: Change a project: its name, color, folders, color themes, or its place in the order.
 
-For the owner only: no token and no session can do this, whatever its scopes. What is left out stays as it was.
+For the owner only: no token and no session can do this, whatever its scopes. What is left out stays as it was. A theme that names no theme the server has read now, or one of the other kind, is refused with 400; the IDs name the themes of the page this server sends.
 
 For the signed-in browser only. No API token may call this, whatever its scopes.
 
@@ -9816,6 +9845,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 | `folders` | `string[]` | no |  |
 | `defaultFolder` | `string \| null` | no |  |
 | `labels` | `{ [key: string]: string; }` | no |  |
+| `themes` | `{ /** The theme of the light page while this project is looked at: …` | no | The color themes the page is drawn in while this project is looked at. Each that is left out stays as it was. |
 | `before` | `string \| null` | no | Put it before this project in the order; null puts it last. |
 
 **Answer** `200`:
@@ -9842,6 +9872,13 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
     [key: string]: unknown;
   };
   state: "open" | "archived";
+  /** The color themes the page is drawn in while this project is looked at: one for the light page and one for the dark. Null or left out: the page’s own. */
+  themes?: {
+    /** The color theme of the light page while this project is looked at: a light one. Null: the page’s own. */
+    light: string | null;
+    /** The color theme of the dark page while this project is looked at: a dark one. Null: the page’s own. */
+    dark: string | null;
+  };
   fileExtra?: {
     [key: string]: unknown;
   };
@@ -9914,6 +9951,13 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
     [key: string]: unknown;
   };
   state: "open" | "archived";
+  /** The color themes the page is drawn in while this project is looked at: one for the light page and one for the dark. Null or left out: the page’s own. */
+  themes?: {
+    /** The color theme of the light page while this project is looked at: a light one. Null: the page’s own. */
+    light: string | null;
+    /** The color theme of the dark page while this project is looked at: a dark one. Null: the page’s own. */
+    dark: string | null;
+  };
   fileExtra?: {
     [key: string]: unknown;
   };
@@ -9970,6 +10014,13 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
     [key: string]: unknown;
   };
   state: "open" | "archived";
+  /** The color themes the page is drawn in while this project is looked at: one for the light page and one for the dark. Null or left out: the page’s own. */
+  themes?: {
+    /** The color theme of the light page while this project is looked at: a light one. Null: the page’s own. */
+    light: string | null;
+    /** The color theme of the dark page while this project is looked at: a dark one. Null: the page’s own. */
+    dark: string | null;
+  };
   fileExtra?: {
     [key: string]: unknown;
   };
@@ -10020,6 +10071,13 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
     [key: string]: unknown;
   };
   state: "open" | "archived";
+  /** The color themes the page is drawn in while this project is looked at: one for the light page and one for the dark. Null or left out: the page’s own. */
+  themes?: {
+    /** The color theme of the light page while this project is looked at: a light one. Null: the page’s own. */
+    light: string | null;
+    /** The color theme of the dark page while this project is looked at: a dark one. Null: the page’s own. */
+    dark: string | null;
+  };
   fileExtra?: {
     [key: string]: unknown;
   };
@@ -10173,6 +10231,13 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
       [key: string]: unknown;
     };
     state: "open" | "archived";
+    /** The color themes the page is drawn in while this project is looked at: one for the light page and one for the dark. Null or left out: the page’s own. */
+    themes?: {
+      /** The color theme of the light page while this project is looked at: a light one. Null: the page’s own. */
+      light: string | null;
+      /** The color theme of the dark page while this project is looked at: a dark one. Null: the page’s own. */
+      dark: string | null;
+    };
     fileExtra?: {
       [key: string]: unknown;
     };
@@ -10421,6 +10486,13 @@ For a session's own token, about that session. No API token may call this.
     [key: string]: unknown;
   };
   state: "open" | "archived";
+  /** The color themes the page is drawn in while this project is looked at: one for the light page and one for the dark. Null or left out: the page’s own. */
+  themes?: {
+    /** The color theme of the light page while this project is looked at: a light one. Null: the page’s own. */
+    light: string | null;
+    /** The color theme of the dark page while this project is looked at: a dark one. Null: the page’s own. */
+    dark: string | null;
+  };
   fileExtra?: {
     [key: string]: unknown;
   };

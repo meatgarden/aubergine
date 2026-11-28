@@ -2,7 +2,7 @@ import { mkdir, mkdtemp, readFile, readdir, rm, stat, writeFile } from 'node:fs/
 import os from 'node:os';
 import path from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { DEFAULT_SETTINGS, SCHEMA_LINE, Settings, THEME_SCHEMA_FILE, UserTheme, settingsJsonSchema, themeFileJsonSchema } from '@aubergine/shared';
+import { DEFAULT_SETTINGS, SCHEMA_LINE, Settings, THEME_SCHEMA_FILE, UserTheme, settingsJsonSchema, themeFileJsonSchema, type ChangeAppearanceRequest } from '@aubergine/shared';
 import { SETTINGS_FILE, SETTINGS_SCHEMA_FILE, SettingsFile, accessReport, appearanceOf, colorProblems, expandHome, loadSettings, shortcutProblems, writeSettingsSchema } from './settings';
 
 let dir: string;
@@ -143,19 +143,21 @@ describe('how the page looks', () => {
       [{ cursorBlink: true }, { appearance: { ...OWNERS.appearance, cursorBlink: true } }],
       [{ terminal: 'nord' }, { appearance: { ...OWNERS.appearance, terminal: 'nord' } }],
       [{ terminal: null }, { appearance: { ...OWNERS.appearance, terminal: null } }],
+      [{ byTag: [{ tag: 'prod', theme: 'dracula' }] }, { appearance: { ...OWNERS.appearance, byTag: [{ tag: 'prod', theme: 'dracula' }] } }],
+      [{ byTag: [] }, { appearance: { ...OWNERS.appearance, byTag: [] } }],
       [{ fontSize: 20 }, { font: { ...OWNERS.font, size: 20 } }],
       [{ fontFamily: 'Fira Code, monospace' }, { font: { ...OWNERS.font, family: 'Fira Code, monospace' } }],
     ] as const;
     for (const [change, differs] of changes) {
       await writeFile(path.join(dir, SETTINGS_FILE), JSON.stringify(OWNERS));
-      await file.setAppearance(change);
+      await file.setAppearance(change as ChangeAppearanceRequest);
       expect(await read(), JSON.stringify(change)).toEqual({ ...OWNERS, ...differs });
     }
     // Several at once, in one write.
     await writeFile(path.join(dir, SETTINGS_FILE), JSON.stringify(OWNERS));
     await file.setAppearance({ theme: 'system', dark: 'dark', fontSize: 9 });
     expect(await read()).toEqual({ ...OWNERS, theme: 'system', appearance: { ...OWNERS.appearance, dark: 'dark' }, font: { ...OWNERS.font, size: 9 } });
-    expect(appearanceOf(file.value)).toEqual({ theme: 'system', light: 'solarized-light', dark: 'dark', font: { family: 'Mono of mine', size: 9 }, cursor: 'bar', cursorBlink: false, terminal: null });
+    expect(appearanceOf(file.value)).toEqual({ theme: 'system', light: 'solarized-light', dark: 'dark', font: { family: 'Mono of mine', size: 9 }, cursor: 'bar', cursorBlink: false, terminal: null, byTag: [] });
   });
 
   it('makes only what it needs where there is no file or no such part, and writes nothing for a change of nothing', async () => {

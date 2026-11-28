@@ -5127,6 +5127,22 @@
     "text": "<code>aubergine theme new harbor --from nord</code> menulis file awal, dengan setiap warna dari tema asalnya; <code>aubergine theme check</code> memberi tahu apa yang salah di dalamnya; <strong>Read themes again</strong> di Settings memuat perubahan. Apakah warna Anda mudah dibaca, Anda yang menilai: Settings hanya memberi tahu bila teks mungkin sulit dibaca. <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/themes.md\">docs/themes.md</a> menjelaskan formatnya.",
     "from": "fa449a724abf"
   },
+  "custom.when.title": {
+    "text": "Tema untuk sebuah proyek, dan untuk terminal menurut tag",
+    "from": "0629d684f9aa"
+  },
+  "custom.when.project": {
+    "text": "Sebuah proyek dapat menggambar halaman dengan temanya sendiri selama Anda melihatnya, sehingga sekilas pandang menunjukkan di mana Anda berada. Di <strong>Projects…</strong>, <strong>When light</strong> dan <strong>When dark</strong> di samping sebuah proyek memilih satu tema untuk tiap jenis; <strong>As the page</strong> menyerahkannya ke Settings. Di proyek lain halaman tetap seperti pilihan Anda, dan memuat ulang di alamat proyek itu menggambarnya dengan temanya sejak gambar pertama.",
+    "from": "8e3d89da8eae"
+  },
+  "custom.when.tag": {
+    "text": "<strong>By tag</strong>, di bawah Terminal theme di Settings, memberi terminal yang punya sebuah tag tema sendiri: misalnya setiap terminal bertag <code>prod</code> dalam Dracula, seketika dan apa pun tema halamannya. Baris pertama yang tag-nya dimiliki terminal yang berlaku, dan tema milik terminal itu sendiri didahulukan dari semuanya. Di berkas pengaturan, ini adalah <code>appearance.byTag</code>:",
+    "from": "ad341f16eef8"
+  },
+  "custom.when.accent": {
+    "text": "Sering kali warna aksen lain sudah cukup. <code>aubergine theme new teal --from nord --accent \"#2f9e8f\"</code> menulis berkas tema yang hanya mengubah aksen Nord dan lima warna yang menyertainya, dihitung agar tetap terbaca. Pilih untuk proyek atau tag seperti tema lainnya.",
+    "from": "4ec0df11bd03"
+  },
   "custom.text.title": {
     "text": "Fon, kursor, dan pintasan keyboard",
     "from": "a9eecef9b5f9"
@@ -5408,8 +5424,8 @@
     "from": "bd438e8036f3"
   },
   "custom.cmp.a.themes": {
-    "text": "Sepuluh tema, terang, gelap, atau mengikuti sistem; tema Anda sendiri sebagai file JSON di atas salah satunya; satu untuk tiap terminal; 35 warna diatur manual, untuk semua tema atau satu",
-    "from": "6d078567501b"
+    "text": "Sepuluh tema, terang, gelap, atau mengikuti sistem; milik Anda sebagai berkas JSON di atas salah satunya; satu untuk proyek, untuk terminal bertag, dan untuk tiap terminal; 35 warna secara manual, untuk semua tema atau satu",
+    "from": "5daef6eb6445"
   },
   "custom.cmp.a.css": {
     "text": "Tidak. Direncanakan: <code>custom.css</code> dengan kait yang terdokumentasi",
@@ -5444,16 +5460,16 @@
     "from": "e10eed0040ae"
   },
   "custom.plan.text": {
-    "text": "Tampilan untuk satu proyek atau tag, templat, <code>custom.css</code>, dan plugin direncanakan dan belum dibuat: lihat <a href=\"/roadmap/#rm-yours\">peta jalan</a>.",
-    "from": "034f77f12f02"
+    "text": "Templat, sebuah <code>custom.css</code>, dan plugin direncanakan dan belum dibuat: lihat <a href=\"/roadmap/#rm-yours\">peta jalan</a>.",
+    "from": "891be3228465"
   },
   "custom.q.terminal.q": {
     "text": "Bisakah setiap terminal punya tema warna yang berbeda?",
     "from": "da02700eeeb8"
   },
   "custom.q.terminal.a": {
-    "text": "Bisa. Theme… di menu terminal menggambar badannya dengan salah satu dari sepuluh tema, apa pun tema halamannya. Yang lain mengikuti bawaan yang Anda atur untuk terminal, atau halaman.",
-    "from": "efb1c6b90003"
+    "text": "Ya. Theme… di menu terminal menggambar isinya dengan salah satu dari sepuluh tema, apa pun tema halamannya. Terminal yang punya tag bisa diberi tema menurut tag itu di Settings, dan yang lain mengikuti bawaan yang Anda atur untuk terminal, atau halaman.",
+    "from": "0b2729c2862a"
   },
   "custom.q.css.q": {
     "text": "Bisakah saya menambahkan CSS sendiri ke Aubergine?",
@@ -5490,14 +5506,6 @@
   "roadmap.yours.sub": {
     "text": "Lebih banyak bagian halaman yang Anda bentuk, melampaui tema, warna, dan tombol hari ini.",
     "from": "6fef807ba454"
-  },
-  "roadmap.yours.when.name": {
-    "text": "Tampilan menurut kondisi",
-    "from": "c40ae539d4e8"
-  },
-  "roadmap.yours.when.text": {
-    "text": "Tema atau warna aksen untuk sebuah proyek, atau untuk terminal dengan tag tertentu, agar Anda tahu sekilas di mana Anda berada.",
-    "from": "be4953ead5e1"
   },
   "roadmap.yours.templates.name": {
     "text": "Templat",

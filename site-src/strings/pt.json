@@ -5127,6 +5127,22 @@
     "text": "<code>aubergine theme new harbor --from nord</code> escreve um arquivo para começar, com cada cor do tema de origem; <code>aubergine theme check</code> diz o que está errado em um; <strong>Read themes again</strong> em Settings carrega uma mudança. Se as suas cores são legíveis é você quem julga: o Settings só avisa quando um texto pode ser difícil de ler. <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/themes.md\">docs/themes.md</a> descreve o formato.",
     "from": "fa449a724abf"
   },
+  "custom.when.title": {
+    "text": "Um tema para um projeto, e para terminais por etiqueta",
+    "from": "0629d684f9aa"
+  },
+  "custom.when.project": {
+    "text": "Um projeto pode desenhar a página num tema próprio enquanto você o olha, para que um relance diga onde você está. Em <strong>Projects…</strong>, <strong>When light</strong> e <strong>When dark</strong> ao lado de um projeto escolhem um tema de cada tipo; <strong>As the page</strong> deixa para Settings. Em qualquer outro projeto a página fica como você a escolheu, e recarregar no endereço desse projeto o desenha no seu tema desde a primeira pintura.",
+    "from": "8e3d89da8eae"
+  },
+  "custom.when.tag": {
+    "text": "<strong>By tag</strong>, em Terminal theme no Settings, dá um tema próprio aos terminais com uma etiqueta: por exemplo, todo terminal com a etiqueta <code>prod</code> em Dracula, na hora e seja qual for o tema da página. Vale a primeira linha cuja etiqueta o terminal tem, e o tema próprio de um terminal vem antes de todas. No arquivo de configurações é <code>appearance.byTag</code>:",
+    "from": "ad341f16eef8"
+  },
+  "custom.when.accent": {
+    "text": "Muitas vezes basta outra cor de destaque. <code>aubergine theme new teal --from nord --accent \"#2f9e8f\"</code> escreve um arquivo de tema que muda só o destaque do Nord e as cinco cores que o acompanham, calculadas para continuarem legíveis. Escolha-o para um projeto ou uma etiqueta como qualquer outro tema.",
+    "from": "4ec0df11bd03"
+  },
   "custom.text.title": {
     "text": "Fontes, cursor e atalhos de teclado",
     "from": "a9eecef9b5f9"
@@ -5408,8 +5424,8 @@
     "from": "bd438e8036f3"
   },
   "custom.cmp.a.themes": {
-    "text": "Dez temas, claro, escuro ou como o sistema; os seus como arquivos JSON sobre um deles; um para cada terminal; 35 cores à mão, para todos os temas ou para um",
-    "from": "6d078567501b"
+    "text": "Dez temas, claro, escuro ou como o sistema; os seus como arquivos JSON sobre um deles; um para um projeto, para os terminais com uma etiqueta e para cada terminal; 35 cores à mão, para todos os temas ou um",
+    "from": "5daef6eb6445"
   },
   "custom.cmp.a.css": {
     "text": "Não. Planejado: um <code>custom.css</code> com ganchos documentados",
@@ -5444,16 +5460,16 @@
     "from": "e10eed0040ae"
   },
   "custom.plan.text": {
-    "text": "Uma aparência para um projeto ou uma etiqueta, modelos, um <code>custom.css</code> e plugins estão planejados e não construídos: veja o <a href=\"/roadmap/#rm-yours\">roteiro</a>.",
-    "from": "034f77f12f02"
+    "text": "Modelos, um <code>custom.css</code> e plugins estão planejados e ainda não feitos: veja o <a href=\"/roadmap/#rm-yours\">roteiro</a>.",
+    "from": "891be3228465"
   },
   "custom.q.terminal.q": {
     "text": "Cada terminal pode ter um tema de cores diferente?",
     "from": "da02700eeeb8"
   },
   "custom.q.terminal.a": {
-    "text": "Sim. Theme… no menu de um terminal desenha o corpo dele em qualquer um dos dez temas, seja qual for o da página. Os outros seguem o padrão que você define para terminais, ou a página.",
-    "from": "efb1c6b90003"
+    "text": "Sim. Theme… no menu de um terminal desenha o seu conteúdo em qualquer um dos dez temas, seja qual for o da página. Terminais com uma etiqueta podem receber um tema por essa etiqueta no Settings, e os outros seguem o padrão que você define para terminais, ou a página.",
+    "from": "0b2729c2862a"
   },
   "custom.q.css.q": {
     "text": "Posso adicionar meu próprio CSS ao Aubergine?",
@@ -5490,14 +5506,6 @@
   "roadmap.yours.sub": {
     "text": "Mais da página moldada por você, além dos temas, cores e teclas de hoje.",
     "from": "6fef807ba454"
-  },
-  "roadmap.yours.when.name": {
-    "text": "Aparência por condição",
-    "from": "c40ae539d4e8"
-  },
-  "roadmap.yours.when.text": {
-    "text": "Um tema ou um destaque para um projeto, ou para os terminais com uma etiqueta, para saber de relance onde você está.",
-    "from": "be4953ead5e1"
   },
   "roadmap.yours.templates.name": {
     "text": "Modelos",

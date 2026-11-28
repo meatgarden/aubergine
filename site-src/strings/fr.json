@@ -5127,6 +5127,22 @@
     "text": "<code>aubergine theme new harbor --from nord</code> écrit un fichier de départ, avec chaque couleur du thème d’origine ; <code>aubergine theme check</code> dit ce qui ne va pas dans un fichier ; <strong>Read themes again</strong> dans Settings prend en compte un changement. C’est à vous de juger si vos couleurs se lisent : Settings dit seulement quand un texte risque d’être difficile à lire. <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/themes.md\">docs/themes.md</a> décrit le format.",
     "from": "fa449a724abf"
   },
+  "custom.when.title": {
+    "text": "Un thème pour un projet, et pour les terminaux par étiquette",
+    "from": "0629d684f9aa"
+  },
+  "custom.when.project": {
+    "text": "Un projet peut dessiner la page dans un thème à lui tant que vous le regardez, pour qu’un coup d’œil dise où vous êtes. Dans <strong>Projects…</strong>, <strong>When light</strong> et <strong>When dark</strong> à côté d’un projet choisissent un thème de chaque sorte ; <strong>As the page</strong> laisse Settings décider. Dans tout autre projet la page reste telle que vous l’avez choisie, et un rechargement sur l’adresse de ce projet est dessiné dans son thème dès le premier affichage.",
+    "from": "8e3d89da8eae"
+  },
+  "custom.when.tag": {
+    "text": "<strong>By tag</strong>, sous Terminal theme dans Settings, donne un thème aux terminaux qui portent une étiquette : par exemple tout terminal étiqueté <code>prod</code> en Dracula, aussitôt et quel que soit le thème de la page. La première ligne dont un terminal porte l’étiquette l’emporte, et le thème propre d’un terminal passe avant toutes. Dans le fichier de réglages, c’est <code>appearance.byTag</code> :",
+    "from": "ad341f16eef8"
+  },
+  "custom.when.accent": {
+    "text": "Souvent, une autre couleur d’accent suffit. <code>aubergine theme new teal --from nord --accent \"#2f9e8f\"</code> écrit un fichier de thème qui ne change que l’accent de Nord et les cinq couleurs qui vont avec, calculées pour rester lisibles. Choisissez-le pour un projet ou une étiquette comme tout autre thème.",
+    "from": "4ec0df11bd03"
+  },
   "custom.text.title": {
     "text": "Polices, curseur et raccourcis clavier",
     "from": "a9eecef9b5f9"
@@ -5408,8 +5424,8 @@
     "from": "bd438e8036f3"
   },
   "custom.cmp.a.themes": {
-    "text": "Dix thèmes, clair, sombre ou comme le système ; les vôtres en fichiers JSON par-dessus l’un d’eux ; un pour chaque terminal ; 35 couleurs à la main, pour chaque thème ou un seul",
-    "from": "6d078567501b"
+    "text": "Dix thèmes, clair, sombre ou comme le système ; les vôtres en fichiers JSON par-dessus l’un d’eux ; un pour un projet, pour les terminaux d’une étiquette et pour chaque terminal ; 35 couleurs à la main, pour tous les thèmes ou un seul",
+    "from": "5daef6eb6445"
   },
   "custom.cmp.a.css": {
     "text": "Non. Prévu : un <code>custom.css</code> avec des points d’accroche documentés",
@@ -5444,16 +5460,16 @@
     "from": "e10eed0040ae"
   },
   "custom.plan.text": {
-    "text": "Une apparence pour un projet ou une étiquette, des modèles, un <code>custom.css</code> et des extensions sont prévus et pas encore construits : voir la <a href=\"/roadmap/#rm-yours\">feuille de route</a>.",
-    "from": "034f77f12f02"
+    "text": "Les modèles, un <code>custom.css</code> et les extensions sont prévus et pas encore faits : voir la <a href=\"/roadmap/#rm-yours\">feuille de route</a>.",
+    "from": "891be3228465"
   },
   "custom.q.terminal.q": {
     "text": "Chaque terminal peut-il avoir un thème de couleurs différent ?",
     "from": "da02700eeeb8"
   },
   "custom.q.terminal.a": {
-    "text": "Oui. Theme… dans le menu d’un terminal dessine son corps dans l’un des dix thèmes, quel que soit celui de la page. Les autres suivent le thème par défaut que vous réglez pour les terminaux, ou la page.",
-    "from": "efb1c6b90003"
+    "text": "Oui. Theme… dans le menu d’un terminal dessine son contenu dans l’un des dix thèmes, quel que soit celui de la page. Les terminaux qui portent une étiquette peuvent recevoir un thème par cette étiquette dans Settings, et les autres suivent le thème par défaut des terminaux, ou la page.",
+    "from": "0b2729c2862a"
   },
   "custom.q.css.q": {
     "text": "Puis-je ajouter mon propre CSS à Aubergine ?",
@@ -5490,14 +5506,6 @@
   "roadmap.yours.sub": {
     "text": "Davantage de la page façonné par vous, au-delà des thèmes, couleurs et touches d’aujourd’hui.",
     "from": "6fef807ba454"
-  },
-  "roadmap.yours.when.name": {
-    "text": "Apparence selon le contexte",
-    "from": "c40ae539d4e8"
-  },
-  "roadmap.yours.when.text": {
-    "text": "Un thème ou un accent pour un projet, ou pour les terminaux portant une étiquette, pour voir d’un coup d’œil où vous êtes.",
-    "from": "be4953ead5e1"
   },
   "roadmap.yours.templates.name": {
     "text": "Modèles",

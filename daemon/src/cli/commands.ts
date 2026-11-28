@@ -134,9 +134,10 @@ export const USAGE = `Usage: aubergine <command>
                              config.schema.json, and "$schema": "./config.schema.json" in the file lets an editor use it
   theme [list]               The color themes: those that come with Aubergine and your own theme files, with what is
                              wrong in a file
-  theme new <id> [--from <theme>] [--name <name>]
+  theme new <id> [--from <theme>] [--name <name>] [--accent "#rrggbb"]
                              Write themes/<id>.json in the data folder to start a theme of your own from: every color
-                             of the theme it is from (default: dark), for you to change. Never over a file that is there
+                             of the theme it is from (default: dark), for you to change. Never over a file that is there.
+                             --accent: only the accent and the five colors that go with it, worked out to be readable
   theme check <file>         Say what is wrong with a theme file, as the server reads it
   theme path                 Where the theme files are (themes/ in the data folder)
   theme proposals            The color themes agents and programs proposed that wait for you (read them under Review)

@@ -7,10 +7,12 @@ import { readForReview, saveAs } from './file-store';
 import { goToProject, waitingIn } from './projects';
 import { colorClass, colorStyle } from '../color';
 import { MenuButton, MenuItem, ScreenHead } from '../ui';
+import { ThemeSelect } from '../TerminalTheme';
 
 /**
  * The projects there are: rename, colour, the folder new terminals start in,
- * order; archive, reopen, remove. And a new one. Everything here is drawn
+ * the color themes the page is drawn in while it is looked at, order;
+ * archive, reopen, remove. And a new one. Everything here is drawn
  * from the page's own state, which follows the change events.
  */
 export function ProjectsScreen() {
@@ -196,6 +198,23 @@ export function ProjectsScreen() {
                     </>
                   )}
                 </span>
+                {project.state === 'open' && (
+                  <span className="project-item-themes" data-testid="project-themes">
+                    {(['light', 'dark'] as const).map((kind) => (
+                      <span key={kind} className="project-item-theme">
+                        <label htmlFor={`project-theme-${kind}-${project.id}`}>{kind === 'light' ? 'When light' : 'When dark'}</label>
+                        <ThemeSelect
+                          id={`project-theme-${kind}-${project.id}`}
+                          kind={kind}
+                          value={project.themes?.[kind] ?? null}
+                          none="As the page"
+                          onChange={(theme) => (theme ?? null) !== (project.themes?.[kind] ?? null) && doing(api.changeProject(project.id, { themes: { [kind]: theme } }))}
+                          data-testid={`project-theme-${kind}`}
+                        />
+                      </span>
+                    ))}
+                  </span>
+                )}
                 {deciding === project.id && (
                   <p className="project-deciding" role="alert" data-testid="project-deciding">
                     This project still has terminals: say whether to park them or end them.{' '}

@@ -5515,6 +5515,146 @@ test('a theme proposed: a program proposes one, For you counts it, the review sh
   }
 });
 
+test('looks by condition: a project draws the page in its own theme only while it is looked at, from the first paint, and a tag gives a terminal its theme at once, after its own', async ({ page }) => {
+  const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
+  const configFile = path.join(e2e.dataDir, 'config.json');
+  const original = existsSync(configFile) ? readFileSync(configFile, 'utf8') : null;
+  await page.addInitScript(() => {
+    const seen: string[] = [];
+    (window as unknown as { looksSeen: string[] }).looksSeen = seen;
+    const note = (): void => {
+      const root = document.documentElement;
+      const now = `${root?.getAttribute('data-theme')}/${root?.getAttribute('data-color-theme')}`;
+      if (!now.includes('null') && seen.at(-1) !== now) seen.push(now);
+    };
+    new MutationObserver(note).observe(document, { attributes: true, subtree: true, attributeFilter: ['data-theme', 'data-color-theme'] });
+    document.addEventListener('DOMContentLoaded', note);
+  });
+  await page.goto(`/auth?token=${token}`);
+  await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
+  const origin = new URL(page.url()).origin;
+  const asOwner = { origin, 'sec-fetch-site': 'same-origin' };
+  const html = page.locator('html');
+  const rgb = (hex: string): string => `rgb(${[1, 3, 5].map((at) => Number.parseInt(hex.slice(at, at + 2), 16)).join(', ')})`;
+  const made = await page.request.post('/v1/projects', { headers: asOwner, data: { name: 'Looks test' } });
+  expect(made.status()).toBe(201);
+  const projectId = ((await made.json()) as { id: string }).id;
+  const switcher = page.getByTestId('project-switcher');
+  const goToProject = async (id: string | null): Promise<void> => {
+    await switcher.click();
+    const rows = page.getByTestId('project-menu').getByTestId('project-row');
+    await (id === null ? rows.first() : page.getByTestId('project-menu').locator(`[data-testid="project-row"][data-project="${id}"]`)).click();
+  };
+  const settings = page.getByTestId('settings-dialog');
+  const part = settings.getByTestId('settings-appearance');
+  let session = '';
+  try {
+    await expect(html).toHaveAttribute('data-color-theme', 'dark');
+    await goToProject(projectId);
+    await expect(page.getByTestId('project-name')).toHaveText('Looks test');
+    await expect(page).toHaveURL(new RegExp(`/p/${projectId}/c/`));
+    const address = page.url();
+
+    // Its own theme for the dark page, chosen where the project is changed: "As the page" first, then the dark themes only.
+    await switcher.click();
+    await page.getByTestId('projects-open').click();
+    const item = page.getByTestId('projects-screen').locator(`[data-testid="project-item"][data-project="${projectId}"]`);
+    const dark = item.getByTestId('project-theme-dark');
+    await expect(dark.locator('option').first()).toHaveText('As the page');
+    await expect(dark.locator('optgroup')).toHaveCount(1);
+    await expect(dark.locator('optgroup')).toHaveAttribute('label', 'Dark');
+    await expect(item.getByTestId('project-theme-light').locator('optgroup')).toHaveAttribute('label', 'Light');
+    await dark.selectOption('dracula');
+    await expect.poll(async () => ((await (await page.request.get(`/v1/projects/${projectId}`, { headers: asOwner })).json()) as { themes?: unknown }).themes).toEqual({ light: null, dark: 'dracula' });
+    await expect(html).toHaveAttribute('data-color-theme', 'dracula');
+    await page.keyboard.press('Escape');
+    await expect(page.getByTestId('projects-screen')).toHaveCount(0);
+
+    // Settings says why its own choice shows no effect here, and still lists the page's own as chosen.
+    await page.getByTestId('toolbar-settings').click();
+    await expect(part.getByTestId('project-theme-says')).toHaveText('While you look at Looks test the page is drawn in Dracula: that is the project’s. What you choose here is the page’s own, drawn everywhere else.');
+    await expect(part.getByTestId('color-theme-dark')).toHaveAttribute('aria-checked', 'true');
+    await page.keyboard.press('Escape');
+    await expect(settings).toHaveCount(0);
+
+    // Only while it is looked at.
+    await goToProject(null);
+    await expect(page.getByTestId('project-name')).not.toHaveText('Looks test');
+    await expect(html).toHaveAttribute('data-color-theme', 'dark');
+    await page.getByTestId('toolbar-settings').click();
+    await expect(part.getByTestId('project-theme-says')).toHaveCount(0);
+    await page.keyboard.press('Escape');
+    await goToProject(projectId);
+    await expect(html).toHaveAttribute('data-color-theme', 'dracula');
+
+    // A reload on its address: never another theme first.
+    await page.goto(address);
+    await expect(page.getByTestId('appbar')).toBeVisible();
+    await expect(html).toHaveAttribute('data-color-theme', 'dracula');
+    expect(await page.evaluate(() => (window as unknown as { looksSeen: string[] }).looksSeen)).toEqual(['dark/dracula']);
+
+    // A terminal there, drawn as the page.
+    await page.getByTestId('toolbar-new-terminal').click();
+    const node = page.getByTestId('terminal-node');
+    await expect(node).toHaveCount(1);
+    await expect(node.locator('.xterm-rows')).toContainText(/[$%#>]/, { timeout: 20_000 });
+    session = (await node.getAttribute('data-session')) ?? '';
+    const ground = (): Promise<string> => node.getByTestId('node-body').evaluate((el) => getComputedStyle(el).backgroundColor);
+    await expect.poll(ground).toBe(rgb('#282a36'));
+
+    // A rule by tag, made in Settings with the keyboard.
+    await page.getByTestId('toolbar-settings').click();
+    await expect(part.getByTestId('by-tag-says')).toContainText('The first line whose tag it has wins, and a terminal’s own theme comes before all of them.');
+    await part.getByTestId('by-tag-add').focus();
+    await page.keyboard.press('Enter');
+    await expect(part.getByTestId('by-tag-draft-tag')).toBeFocused();
+    await page.keyboard.type('looks-prod');
+    await page.keyboard.press('Tab');
+    await expect(part.getByTestId('by-tag-draft-theme')).toBeFocused();
+    await page.keyboard.type('Solarized l');
+    await expect(part.getByTestId('by-tag-draft-theme')).toHaveValue('solarized-light');
+    await page.keyboard.press('Shift+Tab');
+    await page.keyboard.press('Enter');
+    await expect(part.getByTestId('by-tag-row')).toHaveCount(1);
+    await expect(part.getByTestId('by-tag-row').getByTestId('by-tag-theme')).toHaveValue('solarized-light');
+    await expect.poll(() => (JSON.parse(readFileSync(configFile, 'utf8')) as { appearance?: { byTag?: unknown } }).appearance?.byTag).toEqual([{ tag: 'looks-prod', theme: 'solarized-light' }]);
+    await page.keyboard.press('Escape');
+    await expect(settings).toHaveCount(0);
+
+    // Tagged: its body is drawn in that theme at once; its title stays the page's. Untagged: back.
+    const tag = async (tags: string[], theme: string | null = null): Promise<void> => expect((await page.request.patch(`/v1/sessions/${session}`, { headers: asOwner, data: { tags, theme } })).status()).toBe(200);
+    await tag(['looks-prod']);
+    await expect.poll(ground).toBe(rgb('#fdf6e3'));
+    await expect(node.getByTestId('node-body')).toHaveAttribute('data-theme-preview', 'solarized-light');
+    await tag([]);
+    await expect.poll(ground).toBe(rgb('#282a36'));
+    await expect(node.getByTestId('node-body')).not.toHaveAttribute('data-theme-preview');
+    // Its menu says where the theme in effect comes from.
+    await tag(['looks-prod']);
+    await expect.poll(ground).toBe(rgb('#fdf6e3'));
+    await node.getByTestId('node-more').focus();
+    await page.keyboard.press('Enter');
+    await node.getByTestId('terminal-theme').focus();
+    await page.keyboard.press('Enter');
+    const menu = node.getByTestId('terminal-theme-menu');
+    await expect(menu.getByTestId('terminal-theme-none')).toHaveText('Same as the defaultNow Solarized light, by the tag looks-prod');
+    await page.keyboard.press('Escape');
+    await expect(menu).toHaveCount(0);
+    // A terminal's own theme still wins.
+    await tag(['looks-prod'], 'gruvbox-dark');
+    await expect.poll(ground).toBe(rgb('#282828'));
+    await tag(['looks-prod'], null);
+    await expect.poll(ground).toBe(rgb('#fdf6e3'));
+  } finally {
+    // Everything as it was: the terminal ended, the project gone, the settings file back.
+    if (session) await page.request.delete(`/v1/sessions/${session}`, { headers: asOwner });
+    await page.request.post(`/v1/projects/${projectId}/archive`, { headers: asOwner, data: { sessions: 'end' } });
+    await page.request.delete(`/v1/projects/${projectId}`, { headers: asOwner });
+    if (original === null) rmSync(configFile, { force: true });
+    else writeFileSync(configFile, original);
+  }
+});
+
 test('states: every piece draws hover, pressed, focus and disabled differently from rest in both themes, nothing moves under the pointer, and what opens travels only where motion is wanted', async ({ page }) => {
   const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
   await page.goto(`/auth?token=${token}`);

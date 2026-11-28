@@ -5127,6 +5127,22 @@
     "text": "<code>aubergine theme new harbor --from nord</code> 会写出一个起步文件，带有来源主题的每一种颜色；<code>aubergine theme check</code> 指出文件哪里有误；在 Settings 中按 <strong>Read themes again</strong> 即可载入改动。颜色是否易读由你判断：Settings 只在文字可能难以阅读时提醒。格式见 <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/themes.md\">docs/themes.md</a>。",
     "from": "fa449a724abf"
   },
+  "custom.when.title": {
+    "text": "为项目设主题，按标签为终端设主题",
+    "from": "0629d684f9aa"
+  },
+  "custom.when.project": {
+    "text": "项目可以在你查看它时用自己的主题绘制页面，一眼就知道身在何处。在 <strong>Projects…</strong> 中，项目旁边的 <strong>When light</strong> 和 <strong>When dark</strong> 为每种类型各选一个主题；<strong>As the page</strong> 则交给 Settings。在其他项目中，页面保持你的选择；在该项目的地址上重新加载，从第一次绘制起就是它的主题。",
+    "from": "8e3d89da8eae"
+  },
+  "custom.when.tag": {
+    "text": "Settings 中 Terminal theme 下方的 <strong>By tag</strong> 为带某个标签的终端设定主题：例如所有带 <code>prod</code> 标签的终端都用 Dracula，立即生效，无论页面是什么主题。终端拥有的标签中，排在最前的那一行生效；终端自己的主题优先于所有这些。在设置文件中，它是 <code>appearance.byTag</code>：",
+    "from": "ad341f16eef8"
+  },
+  "custom.when.accent": {
+    "text": "很多时候换一个强调色就够了。<code>aubergine theme new teal --from nord --accent \"#2f9e8f\"</code> 会写一个主题文件，只改变 Nord 的强调色和与之相配的五种颜色，并计算得仍然易读。像其他主题一样，可以为项目或标签选择它。",
+    "from": "4ec0df11bd03"
+  },
   "custom.text.title": {
     "text": "字体、光标和键盘快捷键",
     "from": "a9eecef9b5f9"
@@ -5408,8 +5424,8 @@
     "from": "bd438e8036f3"
   },
   "custom.cmp.a.themes": {
-    "text": "十个主题，浅色、深色或跟随系统；你自己的主题是叠在其中之一上的 JSON 文件；每个终端一个；35 种颜色手动设置，作用于所有主题或某一个",
-    "from": "6d078567501b"
+    "text": "十个主题，浅色、深色或跟随系统；你自己的 JSON 文件，叠加在其中之一上；可为项目、带标签的终端和每个终端各设一个；35 种颜色可手动设定，适用于所有主题或单个主题",
+    "from": "5daef6eb6445"
   },
   "custom.cmp.a.css": {
     "text": "没有。计划中：带文档化钩子的 <code>custom.css</code>",
@@ -5444,16 +5460,16 @@
     "from": "e10eed0040ae"
   },
   "custom.plan.text": {
-    "text": "按项目或标签的外观、模板、<code>custom.css</code> 和插件都在计划中，尚未构建：见<a href=\"/roadmap/#rm-yours\">路线图</a>。",
-    "from": "034f77f12f02"
+    "text": "模板、<code>custom.css</code> 和插件已在计划中，尚未构建：请参阅<a href=\"/roadmap/#rm-yours\">路线图</a>。",
+    "from": "891be3228465"
   },
   "custom.q.terminal.q": {
     "text": "每个终端可以用不同的配色主题吗？",
     "from": "da02700eeeb8"
   },
   "custom.q.terminal.a": {
-    "text": "可以。终端菜单里的 Theme… 可以用十个主题中的任意一个绘制其主体，与页面的主题无关。其他终端遵循你为终端设置的默认主题，或跟随页面。",
-    "from": "efb1c6b90003"
+    "text": "可以。终端菜单中的 Theme… 可将其主体用十个主题中的任意一个绘制，无论页面是什么主题。带标签的终端可以在 Settings 中按该标签获得主题，其他终端则跟随你为终端设定的默认主题，或跟随页面。",
+    "from": "0b2729c2862a"
   },
   "custom.q.css.q": {
     "text": "可以给 Aubergine 加上自己的 CSS 吗？",
@@ -5490,14 +5506,6 @@
   "roadmap.yours.sub": {
     "text": "在今天的主题、颜色和按键之外，让页面更多地由你塑造。",
     "from": "6fef807ba454"
-  },
-  "roadmap.yours.when.name": {
-    "text": "按条件变化的外观",
-    "from": "c40ae539d4e8"
-  },
-  "roadmap.yours.when.text": {
-    "text": "为某个项目或带某个标签的终端设置主题或强调色，一眼就能看出你在哪里。",
-    "from": "be4953ead5e1"
   },
   "roadmap.yours.templates.name": {
     "text": "模板",

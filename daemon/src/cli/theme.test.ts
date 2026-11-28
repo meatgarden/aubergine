@@ -3,7 +3,7 @@ import os from 'node:os';
 import path from 'node:path';
 import type { AddressInfo } from 'node:net';
 import { createClient, type Client } from '@aubergine/client';
-import { BUILT_IN_THEME_COLORS, COLOR_THEMES, NO_ATTENTION, NO_STATUS, SESSION_ENV, newId, readThemeFile, type Session } from '@aubergine/shared';
+import { BUILT_IN_THEME_COLORS, COLOR_THEMES, NO_ATTENTION, NO_STATUS, SESSION_ENV, contrastRatio, newId, readThemeFile, type Session } from '@aubergine/shared';
 import type { FastifyInstance } from 'fastify';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { sessionToken } from '../auth';
@@ -39,8 +39,8 @@ describe('parsing the theme commands', () => {
     expect(parseThemeCommand([])).toEqual({ action: 'list' });
     expect(parseThemeCommand(['path'])).toEqual({ action: 'path' });
     expect(parseThemeCommand(['check', 'a.json'])).toEqual({ action: 'check', file: 'a.json' });
-    expect(parseThemeCommand(['new', 'harbor'])).toEqual({ action: 'new', id: 'harbor', from: null, name: null });
-    expect(parseThemeCommand(['new', 'harbor', '--from', 'nord', '--name', 'Harbor night'])).toEqual({ action: 'new', id: 'harbor', from: 'nord', name: 'Harbor night' });
+    expect(parseThemeCommand(['new', 'harbor'])).toEqual({ action: 'new', id: 'harbor', from: null, name: null, accent: null });
+    expect(parseThemeCommand(['new', 'harbor', '--from', 'nord', '--name', 'Harbor night'])).toEqual({ action: 'new', id: 'harbor', from: 'nord', name: 'Harbor night', accent: null });
     expect(parseThemeCommand(['propose', 'harbor.json'])).toEqual({ action: 'propose', file: 'harbor.json', id: null, why: null });
     expect(parseThemeCommand(['propose', 'h.json', '--id', 'harbor', '--why', 'at night'])).toEqual({ action: 'propose', file: 'h.json', id: 'harbor', why: 'at night' });
     expect(parseThemeCommand(['proposals'])).toEqual({ action: 'proposals' });
@@ -70,7 +70,7 @@ describe('aubergine theme', () => {
   });
 
   it('writes a new file to start from with every color of the theme it is from, and never over one that is there', async () => {
-    const made = await run({ action: 'new', id: 'harbor', from: 'nord', name: null });
+    const made = await run({ action: 'new', id: 'harbor', from: 'nord', name: null, accent: null });
     expect(made.code, made.err).toBe(0);
     const file = path.join(dir, 'themes', 'harbor.json');
     expect(made.out).toContain(`Wrote ${file}`);
@@ -78,28 +78,50 @@ describe('aubergine theme', () => {
     expect(JSON.parse(text)).toMatchObject({ $schema: '../theme.schema.json', name: 'Harbor', kind: 'dark', base: 'nord', colors: BUILT_IN_THEME_COLORS.nord });
     expect(readThemeFile('harbor', text)).toMatchObject({ problems: [] });
 
-    const again = await run({ action: 'new', id: 'harbor', from: 'dracula', name: null });
+    const again = await run({ action: 'new', id: 'harbor', from: 'dracula', name: null, accent: null });
     expect(again.code).toBe(1);
     expect(again.err).toContain('There is already a file named harbor.json');
     expect(await readFile(file, 'utf8')).toBe(text);
 
     // From a theme of the owner's: its base, and its colors as it draws them.
     await writeFile(file, JSON.stringify({ name: 'Harbor', kind: 'dark', base: 'nord', colors: { accent: '#5fb3b3' } }));
-    expect((await run({ action: 'new', id: 'harbor-2', from: 'harbor', name: 'Second harbor' })).code).toBe(0);
+    expect((await run({ action: 'new', id: 'harbor-2', from: 'harbor', name: 'Second harbor', accent: null })).code).toBe(0);
     expect(JSON.parse(await readFile(path.join(dir, 'themes', 'harbor-2.json'), 'utf8'))).toMatchObject({ name: 'Second harbor', base: 'nord', colors: { ...BUILT_IN_THEME_COLORS.nord, accent: '#5fb3b3' } });
     // Left out, from Dark.
-    expect((await run({ action: 'new', id: 'mine', from: null, name: null })).code).toBe(0);
+    expect((await run({ action: 'new', id: 'mine', from: null, name: null, accent: null })).code).toBe(0);
     expect(JSON.parse(await readFile(path.join(dir, 'themes', 'mine.json'), 'utf8'))).toMatchObject({ kind: 'dark', base: 'dark' });
   });
 
+  it('with --accent, writes only the accent and the colors that go with it, over the theme it is from, readable', async () => {
+    expect(parseThemeCommand(['new', 'teal', '--from', 'nord', '--accent', '#2F9E8F'])).toEqual({ action: 'new', id: 'teal', from: 'nord', name: null, accent: '#2f9e8f' });
+    expect(() => parseThemeCommand(['new', 'teal', '--accent', 'teal'])).toThrow('--accent is a color written #rrggbb');
+    expect(() => parseThemeCommand(['new', 'teal', '--accent', '#abc'])).toThrow('--accent is a color written #rrggbb');
+    const made = await run({ action: 'new', id: 'teal', from: 'nord', name: null, accent: '#2f9e8f' });
+    expect(made.code, made.err).toBe(0);
+    expect(made.out).toContain('Nord with the accent');
+    const text = await readFile(path.join(dir, 'themes', 'teal.json'), 'utf8');
+    const read = readThemeFile('teal', text);
+    if ('problem' in read) throw new Error(read.problem);
+    expect(read.problems).toEqual([]);
+    expect(read.theme).toMatchObject({ name: 'Teal', kind: 'dark', base: 'nord' });
+    expect(Object.keys(read.theme.colors).sort()).toEqual(['accent', 'accent-pressed', 'accent-soft', 'accent-text', 'on-accent', 'selection']);
+    const colors = { ...BUILT_IN_THEME_COLORS.nord, ...read.theme.colors };
+    expect(contrastRatio(colors['accent-text'], colors.surface)).toBeGreaterThanOrEqual(4.5);
+    expect(contrastRatio(colors['on-accent'], colors.accent)).toBeGreaterThanOrEqual(4.5);
+    // An accent that cannot be read on a light page is darkened, and that is said.
+    const pale = await run({ action: 'new', id: 'pale', from: 'light', name: null, accent: '#ffee88' });
+    expect(pale.code, pale.err).toBe(0);
+    expect(pale.out).toMatch(/the accent #ffee88 was darkened to #[0-9a-f]{6}/);
+  });
+
   it('refuses an ID that cannot be one, a name that is not plain, a theme that is not there, and a link in the way', async () => {
-    for (const id of ['Harbor', 'nord', '../x', 'a b']) expect((await run({ action: 'new', id, from: null, name: null })).code, id).toBe(1);
-    expect((await run({ action: 'new', id: 'x', from: null, name: 'a\nb' })).code).toBe(1);
-    expect((await run({ action: 'new', id: 'x', from: 'sepia', name: null })).err).toContain('names no theme');
+    for (const id of ['Harbor', 'nord', '../x', 'a b']) expect((await run({ action: 'new', id, from: null, name: null, accent: null })).code, id).toBe(1);
+    expect((await run({ action: 'new', id: 'x', from: null, name: 'a\nb', accent: null })).code).toBe(1);
+    expect((await run({ action: 'new', id: 'x', from: 'sepia', name: null, accent: null })).err).toContain('names no theme');
     const outside = path.join(dir, 'outside');
     await mkdir(outside);
     await symlink(outside, path.join(dir, 'themes'));
-    const linked = await run({ action: 'new', id: 'x', from: null, name: null });
+    const linked = await run({ action: 'new', id: 'x', from: null, name: null, accent: null });
     expect(linked.code).toBe(1);
     expect(linked.err).toContain('Nothing was written');
     expect(await readdir(outside)).toEqual([]);
@@ -166,7 +188,7 @@ describe('aubergine theme, inside a terminal', () => {
     expect(listed.out).toMatch(/nord +comes with Aubergine +Nord/);
     expect(listed.out).toContain('aubergine theme propose <file>');
 
-    const made = await inside({ action: 'new', id: 'harbor', from: 'nord', name: null });
+    const made = await inside({ action: 'new', id: 'harbor', from: 'nord', name: null, accent: null });
     expect(made.code, made.err).toBe(0);
     expect(made.out).toContain(`Wrote ${path.join(work, 'harbor.json')}`);
     expect(await readdir(dir)).not.toContain('themes');
@@ -190,7 +212,7 @@ describe('aubergine theme, inside a terminal', () => {
     const outside = await run({ action: 'propose', file: path.join(work, 'x.json'), id: null, why: null });
     expect(outside.code).toBe(1);
     expect(outside.err).toContain('from inside an Aubergine terminal');
-    await inside({ action: 'new', id: 'harbor', from: null, name: null });
+    await inside({ action: 'new', id: 'harbor', from: null, name: null, accent: null });
     await inside({ action: 'propose', file: 'harbor.json', id: null, why: null });
     const out: string[] = [];
     const owner = <T>(call: (client: Client) => Promise<T>): Promise<T> => call(createClient({ baseUrl: origin, headers: { origin, cookie: `${cookieName(Number(new URL(origin).port))}=${ownerToken}` } }));
