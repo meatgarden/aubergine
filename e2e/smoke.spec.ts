@@ -7191,6 +7191,59 @@ test('two servers in one page: a server is linked with a code from its own comma
   expect(await measureLook(page)).toEqual([]);
   expect(await onTop(page, 'link-server-dialog')).toBe(true);
 
+  // A directory: a list of servers by organization, kept somewhere else. It is asked for from the browser alone.
+  const directoryAt = 'https://lists.example.test/aubergine-directory.json';
+  const directory = {
+    aubergineDirectory: 1,
+    name: 'Example Works',
+    servers: [
+      { label: 'Cloud', address: secondOrigin, organization: 'Payments', note: 'Ask the platform team for a code.' },
+      { label: 'This very one', address: origin, organization: 'Payments' },
+      { label: 'Search build', address: 'https://search.example.test', organization: 'Search' },
+    ],
+  };
+  await page.route(directoryAt, (route) => route.fulfill({ status: 200, contentType: 'application/json', headers: { 'access-control-allow-origin': origin }, body: JSON.stringify(directory) }));
+  await page.route('https://lists.example.test/not-one.json', (route) => route.fulfill({ status: 200, contentType: 'application/json', headers: { 'access-control-allow-origin': origin }, body: '{"servers":[]}' }));
+  const addDirectory = async (address: string): Promise<void> => {
+    await dialog.getByTestId('link-directory-add').click();
+    await dialog.getByTestId('link-directory-address').fill(address);
+    await dialog.getByTestId('link-directory-address').press('Enter');
+  };
+  // An address that is not one, and a file that is not a directory, are each refused with a sentence and not kept.
+  await addDirectory('lists.example.test');
+  await expect(dialog.getByTestId('link-directory-said')).toContainText('Write the address of the directory file');
+  await dialog.getByTestId('link-directory-address').fill('https://lists.example.test/not-one.json');
+  await dialog.getByTestId('link-directory-add-go').click();
+  await expect(dialog.getByTestId('link-directory-said')).toContainText('not a directory of Aubergine servers');
+  expect(await page.evaluate(() => localStorage.getItem('aubergine.directories'))).toBeNull();
+  await dialog.getByTestId('link-directory-address').fill(directoryAt);
+  await dialog.getByTestId('link-directory-add-go').click();
+  const listed = dialog.getByTestId('link-directory');
+  await expect(listed).toContainText('Example Works');
+  await expect(listed).toContainText('a directory at lists.example.test');
+  await expect(listed.getByRole('group').first()).toHaveAccessibleName('Payments');
+  await expect(listed.getByTestId('link-directory-server')).toHaveCount(3);
+  // The server this page came from is said, and cannot be picked.
+  await expect(listed.getByTestId('link-directory-server').nth(1)).toBeDisabled();
+  await expect(listed.getByTestId('link-directory-server').nth(1)).toContainText('this server');
+  expect(await page.evaluate(() => document.querySelectorAll('[data-testid="link-server-dialog"] button.primary').length)).toBe(1);
+  expect(await measureLook(page)).toEqual([]);
+  // Only its address is kept, in this browser.
+  expect(await page.evaluate(() => (JSON.parse(localStorage.getItem('aubergine.directories') ?? '[]') as { address: string }[]).map((d) => d.address))).toEqual([directoryAt]);
+  expect(await page.evaluate(() => localStorage.getItem('aubergine.directories'))).not.toContain('Cloud');
+  // Removed, and added again.
+  await listed.getByTestId('link-directory-remove').click();
+  await expect(dialog.getByTestId('link-directory')).toHaveCount(0);
+  expect(await page.evaluate(() => localStorage.getItem('aubergine.directories'))).toBeNull();
+  await addDirectory(directoryAt);
+  await expect(listed.getByTestId('link-directory-server')).toHaveCount(3);
+  // Pressing a server writes its address and name into the fields, puts the keyboard in Code, and links nothing.
+  await listed.getByTestId('link-directory-server').first().click();
+  await expect(dialog.getByTestId('link-server-address')).toHaveValue(secondOrigin);
+  await expect(dialog.getByTestId('link-server-label')).toHaveValue('Cloud');
+  await expect(dialog.getByTestId('link-server-code')).toBeFocused();
+  expect(await page.evaluate(() => localStorage.getItem('aubergine.servers'))).toBeNull();
+
   // A wrong code first: the other server's own sentence.
   await dialog.getByTestId('link-server-address').fill(secondOrigin);
   await dialog.getByTestId('link-server-label').fill('Cloud');
@@ -7314,6 +7367,16 @@ test('two servers in one page: a server is linked with a code from its own comma
     expect(request.headers.cookie, request.url).toBeUndefined();
     expect(request.url).not.toContain(credential);
   }
+  // The directory was asked for with nothing of this browser, and the own server was told nothing of it.
+  const toDirectory = requests.filter((r) => new URL(r.url).host === 'lists.example.test');
+  expect(toDirectory.length).toBeGreaterThan(0);
+  for (const request of toDirectory) {
+    expect(request.headers.cookie, request.url).toBeUndefined();
+    expect(request.headers.authorization, request.url).toBeUndefined();
+    expect(request.headers.referer, request.url).toBeUndefined();
+    expect(request.body).toBe('');
+  }
+  for (const request of toOwn) expect(`${request.url}\n${JSON.stringify(request.headers)}\n${request.body}`, request.url).not.toContain('lists.example.test');
   for (const url of sockets) {
     expect(url).not.toContain(credential);
     if (new URL(url).port === String(second.port)) expect(url).toContain('ticket=');

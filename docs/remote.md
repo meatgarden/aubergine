@@ -302,6 +302,30 @@ The page of one Aubergine (on your laptop, say) can also show the projects of an
 
 The browser sends the code to that server itself and is answered with a credential. The other server is shown at once.
 
+### A directory of servers
+
+Where several Aubergines belong to one company, someone can keep a **directory**: one JSON file that lists them by organization, so that nobody is sent each address by hand.
+
+```json
+{
+  "aubergineDirectory": 1,
+  "name": "Example Works",
+  "servers": [
+    { "label": "Payments build", "address": "https://payments.example.net", "organization": "Payments", "note": "Ask the platform team for a code." },
+    { "label": "Search build", "address": "https://search.example.net", "organization": "Search" }
+  ]
+}
+```
+
+- `label` and `address` are needed for each server; `organization` and `note` (one line) may be left out. An address is written as the server is opened, with nothing after the name.
+- The file is put at an HTTPS address, and whatever serves it must let the page read it: the header `Access-Control-Allow-Origin` with the origin of the page that links (or `*`).
+- In **Link a server…**, choose **Add a directory…** and give the file's address. The servers are then listed by organization over the fields, each time the dialog opens. Pressing one writes its address and its name into the fields; the code is still made on that server and typed by you.
+- **A directory gives no access to anything.** It holds no code and no credential, and a file with anything wrong in it is refused whole, with a sentence. What it calls itself, a server or an organization is its own word: the dialog shows the host it was read from, and each server's host, beside the names.
+- This browser keeps only the directory's address (five at most). What the file says is read when the dialog opens and kept nowhere. The file is asked for with no cookie, no credential and no referrer, and neither this page's server nor a linked server is told of a directory.
+- A file of at most 256 KB and 500 servers is read. **Remove** beside a directory's name forgets its address.
+
+Not built: a directory that asks who you are (a company sign-in), and a server that puts itself into one.
+
 ### Afterwards
 
 - The project menu lists the projects of the server shown first, then this page's own server and each linked server under its name and host, with their projects. Choosing one shows that server.

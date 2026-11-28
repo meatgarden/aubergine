@@ -481,6 +481,34 @@ export async function pairWith(address: string, code: string): Promise<PairedPag
   return read.data;
 }
 
+/** How long a directory is waited for. */
+const DIRECTORY_WAIT_MS = 10_000;
+
+/**
+ * The text of a directory file, asked of the address it is kept at. A directory is not a server: nothing of this
+ * browser is sent with the question (no cookie, no credential, no referrer), no redirect is followed, and no more
+ * than `limit` characters are taken. Fails with an ApiError of status 0 where no answer could be read.
+ */
+export async function directoryTextAt(address: string, limit: number): Promise<string> {
+  let response: Response;
+  try {
+    response = await fetch(address, { method: 'GET', headers: { accept: 'application/json' }, credentials: 'omit', redirect: 'error', mode: 'cors', referrerPolicy: 'no-referrer', cache: 'no-store', signal: AbortSignal.timeout(DIRECTORY_WAIT_MS) });
+  } catch {
+    throw new ApiError(0, 'network', 'No answer.');
+  }
+  if (!response.ok) throw new ApiError(response.status, 'network', `HTTP ${response.status}`);
+  const said = Number.parseInt(response.headers.get('content-length') ?? '', 10);
+  if (Number.isFinite(said) && said > limit * 4) throw new ApiError(413, 'too_large', 'Too large.');
+  let text: string;
+  try {
+    text = await response.text();
+  } catch {
+    throw new ApiError(0, 'network', 'No answer.');
+  }
+  if (text.length > limit) throw new ApiError(413, 'too_large', 'Too large.');
+  return text;
+}
+
 /* ---------- Sockets ---------- */
 
 /** The address of a socket at a linked server: its own origin, `ws` for plain http, with the ticket beside any query the path has. Pure. */
