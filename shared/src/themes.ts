@@ -161,18 +161,17 @@ const plain = (name: string): string => name.replace(/[^\x20-\x7e]/g, '?').slice
  * hand. Every field that is wrong in a file falls back to its default by itself; the rest of the file still counts.
  */
 export const Appearance = z.object({
-  /** The theme drawn when the page is light. */
-  light: LightThemeId.default('light').catch('light'),
-  /** The theme drawn when the page is dark. */
-  dark: DarkThemeId.default('dark').catch('dark'),
-  /** The shape of a terminal's cursor. */
-  cursor: CursorStyle.default('block').catch('block'),
-  /** Whether a terminal's cursor blinks. */
-  cursorBlink: z.boolean().default(true).catch(true),
-  /** The theme every terminal is drawn in that has none of its own. Null: the theme the page is drawn in. */
-  terminal: ColorThemeId.nullable().default(null).catch(null),
-  /** Colors set by hand over the theme that is drawn; read by `resolveColors`. Written by hand: no route writes them. */
-  colors: z.record(z.string(), z.unknown()).default({}).catch({}),
+  light: LightThemeId.default('light').catch('light').describe('The color theme drawn when the page is light.'),
+  dark: DarkThemeId.default('dark').catch('dark').describe('The color theme drawn when the page is dark.'),
+  cursor: CursorStyle.default('block').catch('block').describe('The shape of a terminal’s cursor.'),
+  cursorBlink: z.boolean().default(true).catch(true).describe('Whether a terminal’s cursor blinks.'),
+  terminal: ColorThemeId.nullable().default(null).catch(null).describe('The color theme of every terminal that has none of its own. Null: the theme the page is drawn in.'),
+  /** Read by `resolveColors`. */
+  colors: z
+    .record(z.string(), z.unknown())
+    .default({})
+    .catch({})
+    .describe('Colors set by hand over the theme that is drawn: `"<color>": "#rrggbb"` for every theme, or `"[<theme id>]": { … }` for one theme alone, which wins. Written by hand only.'),
 });
 export type Appearance = z.infer<typeof Appearance>;
 

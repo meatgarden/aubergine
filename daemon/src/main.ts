@@ -25,7 +25,7 @@ import { scanShells } from './migrate/shells';
 import { Sessions } from './sessions';
 import { Viewers } from './viewers';
 import { ZshIntegration } from './shell/integration';
-import { SettingsFile, expandHome } from './settings';
+import { SETTINGS_FILE, SettingsFile, expandHome, writeSettingsSchema } from './settings';
 import { pathWithCommand, writeCommandLauncher } from './command-path';
 import { FileDesktopOpener } from './desktop/open';
 import { FileDraftLog } from './draft-log';
@@ -50,6 +50,8 @@ async function main(): Promise<void> {
   );
   const settings = new SettingsFile(config.dataDir, (message) => console.warn(message));
   await settings.reload();
+  // Beside the settings file, for an editor that is pointed at it; never a reason not to start.
+  await writeSettingsSchema(config.dataDir, (message) => console.warn(message));
   const runtime = new TmuxRuntime({ socket: config.tmuxSocket, tmuxBin: config.tmuxBin });
   let listeningPort = config.port;
   const integration = new ZshIntegration(path.join(config.dataDir, 'shell'));
@@ -101,6 +103,7 @@ async function main(): Promise<void> {
     sessions,
     runtime,
     settings: () => settings.reload(),
+    settingsFile: path.join(config.dataDir, SETTINGS_FILE),
     token,
     devOrigin: config.devOrigin,
     webDist: config.webDist,

@@ -22,6 +22,7 @@ export * from './protocol';
 export * from './workflow-api';
 export * from './placement';
 export * from './settings';
+export * from './settings-schema';
 export * from './themes';
 export * from './chords';
 export * from './shortcuts';

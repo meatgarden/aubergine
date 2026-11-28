@@ -1,9 +1,9 @@
-import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
+import { mkdir, mkdtemp, readFile, readdir, rm, stat, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { DEFAULT_SETTINGS, Settings } from '@aubergine/shared';
-import { SETTINGS_FILE, SettingsFile, accessReport, appearanceOf, colorProblems, expandHome, loadSettings, shortcutProblems } from './settings';
+import { DEFAULT_SETTINGS, SCHEMA_LINE, Settings, settingsJsonSchema } from '@aubergine/shared';
+import { SETTINGS_FILE, SETTINGS_SCHEMA_FILE, SettingsFile, accessReport, appearanceOf, colorProblems, expandHome, loadSettings, shortcutProblems, writeSettingsSchema } from './settings';
 
 let dir: string;
 beforeEach(async () => {
@@ -221,5 +221,44 @@ describe('outside addresses in the settings', () => {
     expect(settings.access.addresses).toEqual([]);
     expect(warnings).toEqual([expect.stringMatching(/access\.addresses: is not a list/)]);
     expect(await accessReport(path.join(dir, 'nothing-here'))).toEqual({ addresses: [], pages: [], problems: [] });
+  });
+});
+
+describe('the schema of the settings file', () => {
+  it('is written beside the file, only when it differs, and the file is not touched', async () => {
+    const owners = `{ ${SCHEMA_LINE}, "theme": "dark" }`;
+    await writeFile(path.join(dir, SETTINGS_FILE), owners);
+    expect(await writeSettingsSchema(dir)).toBe('written');
+    const text = await readFile(path.join(dir, SETTINGS_SCHEMA_FILE), 'utf8');
+    expect(JSON.parse(text)).toEqual(settingsJsonSchema());
+    const first = (await stat(path.join(dir, SETTINGS_SCHEMA_FILE))).mtimeMs;
+    expect(await writeSettingsSchema(dir)).toBe('same');
+    expect((await stat(path.join(dir, SETTINGS_SCHEMA_FILE))).mtimeMs).toBe(first);
+    await writeFile(path.join(dir, SETTINGS_SCHEMA_FILE), '{}');
+    expect(await writeSettingsSchema(dir)).toBe('written');
+    expect(await readFile(path.join(dir, SETTINGS_SCHEMA_FILE), 'utf8')).toBe(text);
+    // Nothing is left behind, and the owner's file is as it was.
+    expect((await readdir(dir)).sort()).toEqual([SETTINGS_FILE, SETTINGS_SCHEMA_FILE].sort());
+    expect(await readFile(path.join(dir, SETTINGS_FILE), 'utf8')).toBe(owners);
+  });
+
+  it('says so when it cannot be written, and goes on', async () => {
+    const warnings: string[] = [];
+    // A folder where the file would be: it cannot be replaced.
+    await mkdir(path.join(dir, SETTINGS_SCHEMA_FILE));
+    expect(await writeSettingsSchema(dir, (message) => warnings.push(message))).toBe('failed');
+    expect(warnings).toEqual([expect.stringMatching(/Could not write .*config\.schema\.json/)]);
+  });
+
+  it('is turned on by a line in the file, which is read as before and kept when the page writes', async () => {
+    await writeFile(path.join(dir, SETTINGS_FILE), JSON.stringify({ $schema: `./${SETTINGS_SCHEMA_FILE}`, font: { size: 15 } }));
+    const warnings: string[] = [];
+    expect((await loadSettings(dir, (message) => warnings.push(message))).font.size).toBe(15);
+    expect(warnings).toEqual([]);
+    const file = new SettingsFile(dir);
+    await file.setAppearance({ theme: 'light' });
+    await file.setDesktopOpenNew(true);
+    await file.setDescribeRemind(false);
+    expect(JSON.parse(await readFile(path.join(dir, SETTINGS_FILE), 'utf8'))).toEqual({ $schema: `./${SETTINGS_SCHEMA_FILE}`, font: { size: 15 }, theme: 'light', desktop: { openNew: true }, describe: { remind: false } });
   });
 });

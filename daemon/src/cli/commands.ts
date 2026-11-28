@@ -14,6 +14,8 @@ export type Command =
   | { name: 'copies'; words: string[] }
   /** `device …`: its own words, parsed by the device commands. */
   | { name: 'device'; words: string[] }
+  /** `settings …`: where the settings file is, its schema, every key. Read from the file; the server is not needed. */
+  | { name: 'settings'; words: string[] }
   | { name: 'canvas-list' }
   | { name: 'canvas-new'; canvasName: string }
   | { name: 'attach'; query: string }
@@ -124,6 +126,10 @@ export const USAGE = `Usage: aubergine <command>
   update                     Bring this copy up to date: fetch, install, build
   version                    Version, commit, where this copy and your data are
   doctor                     Check that everything Aubergine needs is in place
+  settings [list]            Every key of the settings file with its value now, marked where it is not the default
+  settings path              Where the settings file is (config.json in the data folder)
+  settings schema            The JSON Schema of the settings file; the server also writes it beside the file as
+                             config.schema.json, and "$schema": "./config.schema.json" in the file lets an editor use it
   uninstall                  Remove the command and an installed copy. Your data and terminals are kept. (--yes: do not ask)
 
   demo                       Make a canvas named "Demo" with a small scene of stand-ins, and a tour of it in the browser.
@@ -507,6 +513,8 @@ export function parseCommand(argv: readonly string[]): Command {
     case 'device':
     case 'devices':
       return { name: 'device', words: rest };
+    case 'settings':
+      return { name: 'settings', words: rest };
     case 'board': {
       const canvas = takeOption(rest, '--canvas');
       const workflow = takeOption(canvas.rest, '--workflow');

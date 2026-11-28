@@ -56,6 +56,10 @@ export interface AppStore {
   showServer: (server: LinkedServer['id'] | null, then?: ShowWhere) => void;
   /** The settings of the own server: what is about the page itself (the theme, the fonts, the keys) is taken from these whatever is shown. */
   ownSettings: Settings | null;
+  /** Where the own server's settings file is, as it said with its state; null where it did not say. */
+  ownSettingsFile: string | null;
+  /** Where the settings file of the server shown is, as it said with its state; null where it did not say. */
+  settingsFile: string | null;
   /** The dialog that links a server is open. */
   linking: boolean;
   linkServer: (open: boolean) => void;
@@ -103,9 +107,9 @@ export interface AppStore {
   /** Whether the dialog that adds a device is open. What it shows (the code) is the dialog's own, and nobody else's. */
   addingDevice: boolean;
   /** The part of Settings to bring into view when it opens; used once. */
-  settingsAt: 'devices' | 'appearance' | null;
+  settingsAt: 'devices' | 'appearance' | 'all' | null;
   addDevice: (open: boolean) => void;
-  showSettings: (at: 'devices' | 'appearance' | null) => void;
+  showSettings: (at: 'devices' | 'appearance' | 'all' | null) => void;
   /**
    * The page that is shown in place of the canvas, if any: Queue, Board, Workflows or Library. The canvas stays as it
    * was underneath, and a panel or a dialog opens over a page as it does over the canvas. Its name is in the address.
@@ -236,6 +240,8 @@ export const useApp = create<AppStore>((set, get) => ({
   phase: 'loading',
   server: null,
   ownSettings: null,
+  ownSettingsFile: null,
+  settingsFile: null,
   linking: false,
   linkServer: (linking) => set({ linking }),
   unlinking: null,
@@ -302,15 +308,18 @@ export const useApp = create<AppStore>((set, get) => ({
       // A linked server shown from the start: what is about the page itself is the own server's, read first.
       if (server !== null && get().ownSettings === null) {
         let own: Settings;
+        let ownFile: string | null;
         try {
-          own = (await ownApi.getState()).settings;
+          const ownState = await ownApi.getState();
+          own = ownState.settings;
+          ownFile = ownState.settingsFile ?? null;
         } catch {
           // The own server is not there or does not take this page: that is said as it always is, by showing it.
           if (get().server === server) get().showServer(null);
           return;
         }
         if (get().server !== server) return;
-        set({ ownSettings: own });
+        set({ ownSettings: own, ownSettingsFile: ownFile });
       }
       const response = await api.getState();
       // Taken unless it is older than what the stream has already brought; what the stream brought before it is applied after it.
@@ -319,7 +328,9 @@ export const useApp = create<AppStore>((set, get) => ({
       const exists = (id: string): boolean => everything.canvases.some((c) => c.id === id);
       const current = get().canvasId;
       const ownSettings = server === null ? response.settings : get().ownSettings;
-      set({ phase: 'ready', runtime: response.runtime, settings: withPageSettings(response.settings, ownSettings), ownSettings, here: response.here, following, whole: everything, app: viewOf(everything, current, get().app) });
+      const settingsFile = response.settingsFile ?? null;
+      const ownSettingsFile = server === null ? settingsFile : get().ownSettingsFile;
+      set({ phase: 'ready', runtime: response.runtime, settings: withPageSettings(response.settings, ownSettings), ownSettings, settingsFile, ownSettingsFile, here: response.here, following, whole: everything, app: viewOf(everything, current, get().app) });
       // A tab that shows one terminal by itself looks at no canvas, and keeps its own address.
       if (terminalPage !== null) return;
       // Keep looking at the same canvas. On opening the page, or if that canvas is gone: the one asked for on
@@ -657,6 +668,7 @@ whenRefused(() => {
 /** What names something of the server shown, set back as it is before anything is read: nothing of one server is left for the next. */
 const NOTHING_OF_A_SERVER = {
   runtime: null,
+  settingsFile: null,
   whole: null,
   app: null,
   following: NOT_FOLLOWING,

@@ -143,6 +143,8 @@ export const StateResponse = z.object({
   defaultCanvasId: Id,
   /** True when the request came in under this computer's own name; false from an outside address, where nothing is opened on this computer's desktop. */
   here: z.boolean(),
+  /** The whole path of this server's settings file (`config.json` in its data folder), for the owner to open. Left out by an older server, and by one started without a data folder. */
+  settingsFile: z.string().max(4096).optional(),
 });
 export type StateResponse = z.infer<typeof StateResponse>;
 

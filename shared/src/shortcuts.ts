@@ -93,6 +93,7 @@ export const COMMAND_IDS = [
   'canvas.show',
   'settings.show',
   'devices.show',
+  'settings.all',
   'devices.add',
   'server.link',
   'server.unlink',

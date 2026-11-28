@@ -5,6 +5,8 @@
  *   client/src/generated.ts   the typed client
  *   docs/api.md               the reference
  *   docs/for-agents.md        the guide for agents, in full
+ *   docs/settings.md          the reference of the settings file
+ *   docs/config.schema.json   the schema of the settings file, for an editor
  *
  *   pnpm generate            write them
  *   pnpm generate --check    change nothing; fail if any is out of date

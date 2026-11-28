@@ -1356,7 +1356,7 @@ A reboot ends the shells. The next time the server starts, every terminal gets a
 
 ## Settings
 
-Create `config.json` in the data folder (the server prints its location at start). Every field is optional:
+Create `config.json` in the data folder (the server prints its location at start; `aubergine settings path` prints it too). Every field is optional:
 
 ```json
 {
@@ -1409,6 +1409,14 @@ Create `config.json` in the data folder (the server prints its location at start
 - `shortcuts`, `shortcutsInAppWindow`: your own keys; see [Keyboard](#keyboard).
 
 Font, theme, appearance and keys apply when you reload the page (or at once, when changed in Settings); shell and folder apply to the next new terminal.
+
+**Every key, described.** [docs/settings.md](docs/settings.md) lists every key with what it is, its default and whether Settings writes it or you do. The server writes the same as a JSON Schema, `config.schema.json`, beside `config.json` each time it starts; add one line to your file and an editor that reads JSON Schema describes and completes each key:
+
+```json
+{ "$schema": "./config.schema.json" }
+```
+
+`aubergine settings list` prints every key with its value now, marked where it is not the default; `aubergine settings schema` prints the schema. In the page, **Settings → Every setting** (or **Settings: every setting** in the palette) lists the same, searchable: a key Settings changes takes you to its control, and a key written by hand has **Copy**, for the line to add to the file. Nothing there changes a setting.
 
 ## Shell environment
 

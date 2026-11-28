@@ -134,6 +134,8 @@ export interface ServerOptions {
   outside?: Outside;
   /** Returns the current settings, re-reading the settings file. */
   settings: () => Promise<Settings>;
+  /** Where the settings file is, said to the owner in the state answer. Left out: not said. */
+  settingsFile?: string;
   token: string;
   devOrigin: string | null;
   webDist: string;
@@ -864,6 +866,7 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
       revision: hub.revision,
       defaultCanvasId: sessions.defaultCanvasId(),
       here: atThisComputer(request),
+      ...(options.settingsFile === undefined ? {} : { settingsFile: options.settingsFile }),
     };
   });
 

@@ -3558,6 +3558,7 @@ test('one look: the canvas page and every screen use the two control heights (an
   await look('API tokens', 'token-screen', () => command('API tokens'));
   await look('API activity', 'activity-screen', () => command('API activity'));
   await look('adding a device', 'add-device-dialog', () => command('Add a device'));
+  await look('every setting', 'settings-all-search', () => command('Settings: every setting'));
   await look('linking a server', 'link-server-dialog', () => command('Link a server'));
   await look('past conversations', 'history-panel', () => command('Past conversations'));
   // The detail drawer beside the panel, and the menu of the less used parts.
@@ -5523,6 +5524,67 @@ test('devices: Settings → Devices from the keyboard and the mouse, empty with 
   await expect(dialog).toHaveCount(0);
   await page.getByTestId('settings-close').click();
   expect(await devicesNow()).toBe(0);
+});
+
+test('every setting: opened by its command from the keyboard, the schema beside the settings file, a search that narrows it, Copy gives the line for the file, and a row the page writes gives its control the keyboard', async ({ page, context }) => {
+  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+  const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
+  await page.goto(`/auth?token=${token}`);
+  await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
+  const origin = new URL(page.url()).origin;
+  const mac = await page.evaluate(() => navigator.platform.toLowerCase().includes('mac'));
+
+  // The server wrote the schema beside the settings file when it started, and it is JSON Schema.
+  const schema = JSON.parse(readFileSync(path.join(e2e.dataDir, 'config.schema.json'), 'utf8')) as { title: string; properties: Record<string, unknown> };
+  expect(schema.title).toBe('Aubergine settings');
+  expect(Object.keys(schema.properties)).toEqual(expect.arrayContaining(['$schema', 'font', 'theme', 'appearance', 'shortcuts']));
+
+  // From the keyboard: the palette's command opens Settings on Every setting, with the keyboard in its search.
+  await page.keyboard.press(mac ? 'Meta+k' : 'Control+Shift+K');
+  await page.keyboard.type('>every setting');
+  await expect(page.getByTestId('picker-command-row').first()).toContainText('Settings: every setting');
+  await page.keyboard.press('Enter');
+  const part = page.getByTestId('settings-all');
+  await expect(part).toBeInViewport();
+  const search = part.getByTestId('settings-all-search');
+  await expect(search).toBeFocused();
+  // Where the file is: the test server's own data folder.
+  await expect(part.getByTestId('settings-file')).toHaveText(path.join(e2e.dataDir, 'config.json'));
+  const rows = part.locator('.every-setting-row');
+  const all = await rows.count();
+  expect(all).toBeGreaterThan(40);
+
+  // A search narrows it, by key or by what a key is; nothing found is one sentence.
+  await page.keyboard.type('claudeCommand');
+  await expect(rows).toHaveCount(1);
+  await search.fill('cursor blinks');
+  await expect(rows).toHaveCount(1);
+  await expect(rows.first()).toContainText('appearance.cursorBlink');
+  await search.fill('no such setting anywhere');
+  await expect(rows).toHaveCount(0);
+  await expect(part.getByTestId('settings-all-none')).toBeVisible();
+
+  // A key written by hand: Copy gives the line to add, in the shape of the file, with the value now.
+  await search.fill('claudeCommand');
+  const state = (await (await page.request.get('/api/v1/state', { headers: { origin } })).json()) as { settings: { agents: { claudeCommand: string } } };
+  await rows.first().getByTestId('setting-copy').click();
+  await expect.poll(() => page.evaluate(() => navigator.clipboard.readText())).toContain('"agents"');
+  const copied = await page.evaluate(() => navigator.clipboard.readText());
+  expect(JSON.parse(`{ ${copied} }`)).toEqual({ agents: { claudeCommand: state.settings.agents.claudeCommand } });
+
+  // A key the page writes is changed above: its row gives that control the keyboard, from the keyboard too.
+  await search.fill('font.size');
+  await expect(rows).toHaveCount(1);
+  await expect(rows.first()).toContainText('Changed above');
+  await search.focus();
+  await page.keyboard.press('Tab');
+  await expect(rows.first()).toBeFocused();
+  await page.keyboard.press('Enter');
+  await expect(page.getByTestId('font-size')).toBeFocused();
+  await expect(page.getByTestId('font-size')).toBeInViewport();
+
+  await page.keyboard.press('Escape');
+  await expect(page.getByTestId('settings-dialog')).toHaveCount(0);
 });
 
 test('signing in with a code: a browser with no cookie is asked for one, a wrong one is answered with the server\'s sentence, and a code in the address is taken out of it at once', async ({ page, browser }) => {

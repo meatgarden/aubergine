@@ -923,6 +923,14 @@ export const COMMANDS: readonly Command[] = [
     run: (state) => state.showSettings('devices'),
   },
   {
+    id: 'settings.all',
+    title: 'Settings: every setting',
+    description: 'Opens the list of every key of the settings file in Settings, with the keyboard in its search: what each is, its value now and its default, and the line to copy for those written by hand.',
+    group: 'Panels',
+    available: always,
+    run: (state) => state.showSettings('all'),
+  },
+  {
     id: 'devices.add',
     title: 'Add a device…',
     description: 'Makes a code that signs in a browser on another device, once, for a few minutes, with the address to open and its QR code.',

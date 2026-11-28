@@ -6,6 +6,7 @@ import { keepBarOpen, useBarKeptOpen } from './bar-open';
 import { BAR_PLACES, BAR_PLACE_WORDS, placeBar, placeFrom, useBarPlace } from './bar-place';
 import { setOpenNew } from './desktop';
 import { DevicesPart } from './devices/Devices';
+import { EverySettingPart } from './EverySetting';
 import { atThisComputer, useApp } from './store';
 import { findServer, hostOf, loadServers } from './servers';
 import { ScreenHead, Select } from './ui';
@@ -14,7 +15,8 @@ import { ScreenHead, Select } from './ui';
  * Settings: the one place for what a person changes about the page itself. How it looks (light or dark, the color
  * theme of each, a terminal's text and cursor), whether a new terminal
  * also opens on the desktop (only at the computer Aubergine runs on), whether the desktop is told when a terminal starts
- * waiting, and the devices signed in with a code. Everything else is written in the settings file by hand.
+ * waiting, and the devices signed in with a code. Everything else is written in the settings file by hand; the last part
+ * lists every key of that file, from its schema, and changes none of them.
  */
 export function SettingsDialog() {
   const open = useApp((s) => s.panel === 'settings');
@@ -27,7 +29,7 @@ export function SettingsDialog() {
   // A linked server shown: what is not about the page itself is about that server.
   const server = useApp((s) => s.server);
   const shownServer = server === null ? null : findServer(loadServers(), server);
-  // Asked to show a part (Devices or Appearance, from its command): brought into view once, and what is done there first has the keyboard.
+  // Asked to show a part (Devices, Appearance or Every setting, from its command): brought into view once, and what is done there first has the keyboard.
   useEffect(() => {
     if (!open || at === null) return;
     // A moment later: what opened Settings (the palette, a menu) gives the keyboard back as it closes.
@@ -124,6 +126,7 @@ export function SettingsDialog() {
           </p>
         </section>
         <DevicesPart />
+        <EverySettingPart />
       </div>
     </div>
   );

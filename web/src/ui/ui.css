@@ -2680,6 +2680,76 @@ button.foryou-act {
   margin: var(--space-2) 0 0;
   font-size: var(--font-body);
 }
+/*
+ * Settings → Every setting: a search, then each top-level key of the file as a heading over its rows, with a hairline
+ * between rows. A row: the key and its value now on the first line, what it is under them, its default last, and at the
+ * right what is done with it. A row the page writes is pressed as a whole; one written by hand lies as that row does.
+ */
+.every-setting-search {
+  width: 100%;
+  margin-bottom: var(--space-2);
+}
+.every-setting-group {
+  margin-top: var(--space-4);
+}
+.every-setting-group > h4 {
+  margin: 0 0 var(--space-1);
+}
+/* A key is told by its font; only a key inside a sentence has the ground of code. */
+.every-setting-group > h4 > code,
+.every-setting-key {
+  padding: 0;
+  background: none;
+}
+.every-setting-own {
+  font-weight: var(--weight-normal);
+  color: var(--text-muted);
+}
+.every-setting-list > .every-setting-row + .every-setting-row {
+  border-top: 1px solid var(--border);
+}
+.every-setting-list > .ui-row {
+  border-radius: 0;
+}
+div.every-setting-row {
+  box-sizing: border-box;
+  padding: var(--space-2) var(--space-3);
+  margin-left: calc(var(--space-3) * -1 - 1px);
+  width: calc(100% + var(--space-3) + 1px);
+}
+.every-setting-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: var(--space-3);
+  row-gap: var(--space-1);
+  width: 100%;
+  min-width: 0;
+}
+.every-setting-head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+  min-width: 0;
+}
+.every-setting-key {
+  flex: none;
+}
+/* A long value is cut where its room ends, with the whole in its tooltip. */
+.every-setting-value {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: clip;
+}
+.every-setting-action {
+  grid-column: 2;
+  grid-row: 1 / span 4;
+  align-self: center;
+}
+.every-setting-says,
+.every-setting-default {
+  grid-column: 1;
+}
 /* Appearance has parts of its own, each laid out as a part of Settings is: a heading, the control, one line under it. */
 .appearance-part {
   margin-top: var(--space-6);

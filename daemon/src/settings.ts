@@ -1,9 +1,35 @@
 import { mkdir, readFile, rename, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
-import { DEFAULT_SETTINGS, Settings, accessEntries, resolveColors, resolveShortcuts, type AppearanceAnswer, type ChangeAppearanceRequest, type Platform } from '@aubergine/shared';
+import { DEFAULT_SETTINGS, SETTINGS_SCHEMA_FILE, Settings, accessEntries, settingsJsonSchema, resolveColors, resolveShortcuts, type AppearanceAnswer, type ChangeAppearanceRequest, type Platform } from '@aubergine/shared';
 
 export const SETTINGS_FILE = 'config.json';
+export { SETTINGS_SCHEMA_FILE };
+
+/** The text of `config.schema.json`: the schema of the settings file, for an editor. */
+export const settingsSchemaText = (): string => `${JSON.stringify(settingsJsonSchema(), null, 2)}\n`;
+
+/**
+ * Writes the schema of the settings file as `config.schema.json` beside it, for an editor: only when what is there
+ * differs, and atomically. `config.json` is not touched: a person turns the schema on by writing
+ * `"$schema": "./config.schema.json"` in it. A failure is a warning, never a reason not to start.
+ */
+export async function writeSettingsSchema(dir: string, onWarning: (message: string) => void = () => {}): Promise<'written' | 'same' | 'failed'> {
+  const file = path.join(dir, SETTINGS_SCHEMA_FILE);
+  try {
+    const text = settingsSchemaText();
+    const current = await readFile(file, 'utf8').catch(() => null);
+    if (current === text) return 'same';
+    await mkdir(dir, { recursive: true });
+    const tmp = `${file}.${process.pid}.tmp`;
+    await writeFile(tmp, text, { mode: 0o644 });
+    await rename(tmp, file);
+    return 'written';
+  } catch (error) {
+    onWarning(`Could not write ${file}, the schema of the settings file for an editor: ${(error as Error).message}`);
+    return 'failed';
+  }
+}
 
 /**
  * Reads `config.json` from the data folder. A missing file means defaults.
