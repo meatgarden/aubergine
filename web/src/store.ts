@@ -114,9 +114,9 @@ export interface AppStore {
   /** Whether the dialog that adds a device is open. What it shows (the code) is the dialog's own, and nobody else's. */
   addingDevice: boolean;
   /** The part of Settings to bring into view when it opens; used once. */
-  settingsAt: 'devices' | 'appearance' | 'all' | null;
+  settingsAt: 'devices' | 'appearance' | 'titles' | 'all' | null;
   addDevice: (open: boolean) => void;
-  showSettings: (at: 'devices' | 'appearance' | 'all' | null) => void;
+  showSettings: (at: 'devices' | 'appearance' | 'titles' | 'all' | null) => void;
   /**
    * The page that is shown in place of the canvas, if any: Queue, Board, Workflows or Library. The canvas stays as it
    * was underneath, and a panel or a dialog opens over a page as it does over the canvas. Its name is in the address.
@@ -483,6 +483,8 @@ export const useApp = create<AppStore>((set, get) => ({
           ...(change.cursorBlink !== undefined ? { cursorBlink: change.cursorBlink } : {}),
           ...(change.terminal !== undefined ? { terminal: change.terminal } : {}),
           ...(change.byTag !== undefined ? { byTag: change.byTag } : {}),
+          ...(change.titleFormat !== undefined ? { titleFormat: change.titleFormat } : {}),
+          ...(change.rowFormat !== undefined ? { rowFormat: change.rowFormat } : {}),
         },
       });
       return { settings: changed(state.settings), ...(state.ownSettings ? { ownSettings: changed(state.ownSettings) } : {}) };

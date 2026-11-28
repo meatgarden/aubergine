@@ -2176,7 +2176,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 
 `PUT /v1/settings/appearance`: Choose how the page looks: light, dark or matching the system, each one's color theme, the default theme of terminals, a terminal's font and cursor.
 
-For the owner only: no token and no session can do this, whatever its scopes. It writes the keys that are sent, and only those: `theme`, `appearance.light`, `appearance.dark`, `appearance.terminal` (null: as the page is), `appearance.cursor`, `appearance.cursorBlink`, `font.family` and `font.size`; the rest of the settings file stays as it was, and a body that sends none of them changes nothing and answers what the file says. None of them names anything that is run. `appearance.colors`, colors set over a theme, is written by hand in the file and changed by no route. Every browser has the choice from its next load.
+For the owner only: no token and no session can do this, whatever its scopes. It writes the keys that are sent, and only those: `theme`, `appearance.light`, `appearance.dark`, `appearance.terminal` (null: as the page is), `appearance.byTag`, `appearance.cursor`, `appearance.cursorBlink`, `appearance.titleFormat` and `appearance.rowFormat` (what a terminal's title and its row say after its name: templates, see docs/templates.md), `font.family` and `font.size`; the rest of the settings file stays as it was, and a body that sends none of them changes nothing and answers what the file says. None of them names anything that is run. `appearance.colors`, colors set over a theme, is written by hand in the file and changed by no route. Every browser has the choice from its next load.
 
 For the signed-in browser only. No API token may call this, whatever its scopes.
 
@@ -2192,6 +2192,8 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 | `cursor` | `"block" \| "bar" \| "underline"` | no | The shape of a terminal's cursor: `block`, `bar` or `underline`. |
 | `cursorBlink` | `boolean` | no | Whether a terminal's cursor blinks. |
 | `terminal` | `string \| null` | no | The color theme every terminal is drawn in that has none of its own: one of the IDs of the color themes, of either kind, built-in or a theme file the server has read (another is refused with 400). `null`: the theme the page is drawn in. |
+| `titleFormat` | `string` | no | What a terminal’s title says after its name, on the canvas and at the head of a terminal in a browser tab of its own: a template, one line of at most 200 characters without control characters (another is refused with 400), with placeholders such as {state}, {folder} and {field:Ticket}. A placeholder that is not known is kept as written and skipped where it is drawn. |
+| `rowFormat` | `string` | no | What a terminal’s row in the list says on its second line: a template, as `titleFormat` is. |
 | `byTag` | `{ /** A terminal’s tag, as tags are written: whatever the capitals,…` | no | The color themes of terminals by tag, in order, at most 20: the whole list, which replaces the one there was (an empty list removes them all). The first entry whose tag a terminal has wins; a terminal’s own theme comes before all of them. A theme the server has not read is refused with 400. |
 
 **Answer** `200`:
@@ -2224,6 +2226,10 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
     /** The color theme of the terminals with that tag, of either kind, built-in or of a theme file. */
     theme: string;
   }[];
+  /** What a terminal’s title says after its name: a template with placeholders such as {state} and {folder}. */
+  titleFormat: string;
+  /** What a terminal’s row in the list says on its second line: a template with placeholders such as {state} and {time}. */
+  rowFormat: string;
 }
 ```
 

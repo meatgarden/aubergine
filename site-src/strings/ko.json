@@ -5159,6 +5159,18 @@
     "text": "두 번 정한 키나 읽을 수 없는 키는 단축키 표 맨 위와 서버가 알려 주고, 파일의 나머지는 그대로 적용됩니다. 키 하나만, 또는 Ctrl이나 Option과 키를 함께 쓰는 조합은 어떤 터미널도 키보드를 갖고 있지 않을 때만 동작합니다. 터미널 안의 모든 프로그램이 필요한 키를 계속 받도록 하기 위해서입니다. 자세한 내용은 README의 <a href=\"https://github.com/thirstyeggplant/aubergine#keyboard\">Keyboard</a>에 있습니다.",
     "from": "fe03dd01e818"
   },
+  "custom.tpl.title": {
+    "text": "제목과 행에 무엇을 표시할지 고르기",
+    "from": "4e7c78fba1f9"
+  },
+  "custom.tpl.text": {
+    "text": "터미널 이름 뒤에는, 그 제목과 목록의 행이 두 템플릿의 내용을 표시합니다. <code>{state}</code>, <code>{folder}</code>, <code>{time}</code>, <code>{field:Ticket}</code> 같은 자리 표시자가 들어 있는 텍스트입니다. <strong>Settings → Appearance → Titles and rows</strong>에서 바꿀 수 있고, 입력하는 동안 각 필드 아래에 실제 제목과 행이 그려집니다. 설정 파일에서도 바꿀 수 있습니다. 여기서 제목은 상태, 폴더, 필드 Ticket, 링크, 태그를, 행은 상태, 실행의 단계, 브랜치, 시간을 표시합니다:",
+    "from": "8cd1b3e6f3f9"
+  },
+  "custom.tpl.rule": {
+    "text": "표시할 것이 없는 자리 표시자는 그리로 이어지는 텍스트와 함께 빠집니다. 티켓도 링크도 태그도 없는 터미널에서는 이 제목이 상태와 폴더만 표시하고, 남는 점은 없습니다. 템플릿에는 텍스트와 자리 표시자만 들어가며 마크업도 스타일도 없습니다. 각각은 페이지가 다른 곳에서 그것을 그리는 방식 그대로 그려지며, 상태는 그 색으로, 링크는 칩으로 그려집니다. 잘못된 자리 표시자는 필드 아래에 알려지고 건너뛰며, <strong>Reset</strong>은 템플릿이 없을 때 그려지는 것을 정확히 되돌립니다. 모든 자리 표시자는 <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/templates.md\">docs/templates.md</a>에 있습니다.",
+    "from": "163ceba573e3"
+  },
   "custom.file.title": {
     "text": "스스로를 설명하는 설정 파일 하나",
     "from": "9d7e735d280e"
@@ -5436,8 +5448,8 @@
     "from": "f89ee178c319"
   },
   "custom.cmp.a.templates": {
-    "text": "없음. 계획: 터미널 제목과 목록 행에",
-    "from": "fd37dcfee7f4"
+    "text": "두 개. 터미널의 제목과 목록의 행을 위한 것으로, <code>{state}</code>와 <code>{field:Ticket}</code> 같은 자리 표시자가 들어 있는 텍스트",
+    "from": "8133a0a553fb"
   },
   "custom.cmp.p1": {
     "text": "여기 있는 모든 도구는 설정을 파일에 두며, VS Code, Zed, Windows Terminal에는 Aubergine처럼 그 파일을 쓰는 화면도 있습니다. 대부분에서 테마도 파일입니다. VS Code와 Zed에서는 JSON, Obsidian에서는 CSS, WezTerm에서는 Lua나 TOML, kitty와 Ghostty에서는 설정 파일입니다. VS Code, Zed, WezTerm에서는 여기의 <code>appearance.colors</code>처럼 테마 위에 개별 색을 바꿀 수 있습니다.",
@@ -5448,8 +5460,8 @@
     "from": "9538078a7039"
   },
   "custom.cmp.p3": {
-    "text": "오늘의 Aubergine은 설정 쪽에 있습니다. 테마, 색, 키는 스스로를 설명하는 파일에 있고, 페이지가 설정의 일부를 씁니다. 페이지에서 여러분의 코드를 실행하지 않고, 여러분의 스타일시트를 받지 않으며, 템플릿도 없습니다. 이것들은 <a href=\"/roadmap/#rm-yours\">로드맵</a>에 있고 아직 만들어지지 않았습니다.",
-    "from": "5018de362a41"
+    "text": "오늘의 Aubergine은 설정 쪽 끝에 있습니다. 스스로를 설명하는 파일에 담긴 테마, 색, 키, 설정의 일부를 쓰는 페이지, 그리고 터미널 제목과 행에 표시할 내용을 위한 템플릿입니다. 페이지에서 여러분의 코드를 실행하지 않고, 여러분의 스타일시트도 받지 않습니다. 이는 <a href=\"/roadmap/#rm-yours\">로드맵</a>에 있으며 아직 만들어지지 않았습니다.",
+    "from": "99bbc30b361c"
   },
   "custom.cmp.mark": {
     "text": "Aubergine은 이 페이지에 이름이 나온 어떤 도구와도 제휴하지 않았습니다. 각 이름은 해당 소유자의 상표입니다.",
@@ -5460,8 +5472,8 @@
     "from": "e10eed0040ae"
   },
   "custom.plan.text": {
-    "text": "템플릿, <code>custom.css</code>, 플러그인은 계획되어 있으며 아직 만들어지지 않았습니다. <a href=\"/roadmap/#rm-yours\">로드맵</a>을 보세요.",
-    "from": "891be3228465"
+    "text": "<code>custom.css</code>와 플러그인은 계획되어 있으며 아직 만들어지지 않았습니다. <a href=\"/roadmap/#rm-yours\">로드맵</a>을 보세요.",
+    "from": "a693849a5c84"
   },
   "custom.q.terminal.q": {
     "text": "터미널마다 다른 색 테마를 쓸 수 있나요?",
@@ -5504,16 +5516,8 @@
     "from": "34ca8a4540f5"
   },
   "roadmap.yours.sub": {
-    "text": "오늘의 테마, 색, 키를 넘어, 페이지를 더 내 뜻대로.",
-    "from": "6fef807ba454"
-  },
-  "roadmap.yours.templates.name": {
-    "text": "템플릿",
-    "from": "56b564b75c7f"
-  },
-  "roadmap.yours.templates.text": {
-    "text": "터미널 제목과 목록의 행에 무엇을 보일지 내 템플릿으로 정합니다.",
-    "from": "21523ce54129"
+    "text": "오늘의 테마, 색, 키, 템플릿을 넘어, 페이지를 더 여러분의 방식대로.",
+    "from": "930654eedc50"
   },
   "roadmap.yours.css.name": {
     "text": "내 스타일시트",

@@ -18,6 +18,8 @@ export const PAGE_WRITTEN_SETTINGS = [
   'appearance.dark',
   'appearance.terminal',
   'appearance.byTag',
+  'appearance.titleFormat',
+  'appearance.rowFormat',
   'appearance.cursor',
   'appearance.cursorBlink',
   'font.family',

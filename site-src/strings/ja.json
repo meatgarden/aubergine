@@ -5159,6 +5159,18 @@
     "text": "2 回決めたキーや読めないキーは、ショートカット一覧の上部とサーバーが知らせ、ファイルの残りはそのまま効きます。単独のキー、または Ctrl か Option とキーの組み合わせは、どのターミナルもキーボードを持っていないときだけ働きます。ターミナルのどのプログラムも、必要なキーを受け取り続けられるようにするためです。詳しくは README の <a href=\"https://github.com/thirstyeggplant/aubergine#keyboard\">Keyboard</a> へ。",
     "from": "fe03dd01e818"
   },
+  "custom.tpl.title": {
+    "text": "タイトルと行に表示する内容を選ぶ",
+    "from": "4e7c78fba1f9"
+  },
+  "custom.tpl.text": {
+    "text": "ターミナルの名前のあと、そのタイトルとリストの行には 2 つのテンプレートの内容が表示されます。<code>{state}</code>、<code>{folder}</code>、<code>{time}</code>、<code>{field:Ticket}</code> のようなプレースホルダーを含むテキストです。<strong>Settings → Appearance → Titles and rows</strong> で変更でき、入力するたびに各欄の下に実際のタイトルと行が描かれます。設定ファイルでも変更できます。この例では、タイトルは状態、フォルダー、フィールド Ticket、リンク、タグを、行は状態、実行のステップ、ブランチ、時刻を表示します:",
+    "from": "8cd1b3e6f3f9"
+  },
+  "custom.tpl.rule": {
+    "text": "表示するものがないプレースホルダーは、そこへ続くテキストと一緒に省かれます。チケットもリンクもタグもないターミナルでは、このタイトルは状態とフォルダーだけを表示し、余分な点は残りません。テンプレートに入るのはテキストとプレースホルダーだけで、マークアップもスタイルもありません。どれもページが他の場所で描くのと同じように描かれ、状態はその色で、リンクはチップになります。誤ったプレースホルダーは欄の下で知らされて飛ばされ、<strong>Reset</strong> はテンプレートがないときの表示を正確に戻します。すべてのプレースホルダーは <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/templates.md\">docs/templates.md</a> にあります。",
+    "from": "163ceba573e3"
+  },
   "custom.file.title": {
     "text": "自分自身を説明する 1 つの設定ファイル",
     "from": "9d7e735d280e"
@@ -5436,8 +5448,8 @@
     "from": "f89ee178c319"
   },
   "custom.cmp.a.templates": {
-    "text": "なし。予定：ターミナルのタイトルと一覧の行に",
-    "from": "fd37dcfee7f4"
+    "text": "2 つ。ターミナルのタイトルとリストの行のためのもので、<code>{state}</code> や <code>{field:Ticket}</code> のようなプレースホルダーを含むテキスト",
+    "from": "8133a0a553fb"
   },
   "custom.cmp.p1": {
     "text": "ここにあるどのツールも設定をファイルに保存し、VS Code、Zed、Windows Terminal には、Aubergine と同じく、それを書く画面もあります。ほとんどでテーマもファイルです。VS Code と Zed では JSON、Obsidian では CSS、WezTerm では Lua か TOML、kitty と Ghostty では設定ファイルです。VS Code、Zed、WezTerm では、ここでの <code>appearance.colors</code> のように、テーマの上に個々の色を変えられます。",
@@ -5448,8 +5460,8 @@
     "from": "9538078a7039"
   },
   "custom.cmp.p3": {
-    "text": "現在の Aubergine は設定の側にあります。テーマ、色、キーは自分自身を説明するファイルにあり、ページが設定の一部を書きます。ページであなたのコードは実行せず、あなたのスタイルシートも受け付けず、テンプレートもありません。それらは<a href=\"/roadmap/#rm-yours\">ロードマップ</a>にあり、まだ作られていません。",
-    "from": "5018de362a41"
+    "text": "現在の Aubergine は設定の側にあります。自分自身を説明するファイルにあるテーマ、色、キー、設定の一部を書き込むページ、そしてターミナルのタイトルと行に表示する内容のテンプレートです。ページであなたのコードを実行することはなく、あなたのスタイルシートも受け付けません。それらは <a href=\"/roadmap/#rm-yours\">ロードマップ</a>にあり、まだ作られていません。",
+    "from": "99bbc30b361c"
   },
   "custom.cmp.mark": {
     "text": "Aubergine は、このページで名前を挙げたどのツールとも提携していません。各名称はそれぞれの所有者の商標です。",
@@ -5460,8 +5472,8 @@
     "from": "e10eed0040ae"
   },
   "custom.plan.text": {
-    "text": "テンプレート、<code>custom.css</code>、プラグインは予定で、まだ作られていません。<a href=\"/roadmap/#rm-yours\">ロードマップ</a>をご覧ください。",
-    "from": "891be3228465"
+    "text": "<code>custom.css</code> とプラグインは計画中で、まだ作られていません。<a href=\"/roadmap/#rm-yours\">ロードマップ</a>を参照してください。",
+    "from": "a693849a5c84"
   },
   "custom.q.terminal.q": {
     "text": "ターミナルごとに違うカラーテーマにできますか？",
@@ -5504,16 +5516,8 @@
     "from": "34ca8a4540f5"
   },
   "roadmap.yours.sub": {
-    "text": "今のテーマ、色、キーを超えて、ページをもっと自分の形に。",
-    "from": "6fef807ba454"
-  },
-  "roadmap.yours.templates.name": {
-    "text": "テンプレート",
-    "from": "56b564b75c7f"
-  },
-  "roadmap.yours.templates.text": {
-    "text": "ターミナルのタイトルと一覧の行に何を表示するかを、自分のテンプレートで決める。",
-    "from": "21523ce54129"
+    "text": "今のテーマ、色、キー、テンプレートを超えて、ページをもっと自分好みに。",
+    "from": "930654eedc50"
   },
   "roadmap.yours.css.name": {
     "text": "自分のスタイルシート",

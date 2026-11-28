@@ -69,7 +69,7 @@ async function failure(call: Promise<unknown>): Promise<AubergineError> {
 describe('what is generated and kept in the repository', () => {
   it('is up to date: the client and the reference are what the declarations give now', async () => {
     const files = generatedFiles();
-    expect(Object.keys(files).sort()).toEqual(['client/src/generated.ts', 'docs/api.md', 'docs/config.schema.json', 'docs/element.md', 'docs/for-agents.md', 'docs/project-file.md', 'docs/settings.md', 'docs/theme.schema.json', 'shared/src/theme-colors.generated.ts']);
+    expect(Object.keys(files).sort()).toEqual(['client/src/generated.ts', 'docs/api.md', 'docs/config.schema.json', 'docs/element.md', 'docs/for-agents.md', 'docs/project-file.md', 'docs/settings.md', 'docs/templates.md', 'docs/theme.schema.json', 'shared/src/theme-colors.generated.ts']);
     for (const [file, text] of Object.entries(files)) {
       const committed = await readFile(path.join(repoRoot, file), 'utf8');
       // If this fails: a declaration, a schema or the guide for agents changed. Run `pnpm generate` and commit the result.

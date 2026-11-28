@@ -422,3 +422,44 @@ export function ago(iso: string | null, now: number): string {
   if (seconds < 86_400) return `${Math.floor(seconds / 3600)}h`;
   return `${Math.floor(seconds / 86_400)}d`;
 }
+
+/** How long ago, as a row says it: `just now`, `4m ago`. */
+export const saidAgo = (short: string): string => (short === 'now' ? 'just now' : `${short} ago`);
+
+/** The state of a row in words, where it is not the ordinary one: what the chip on its second line says. */
+export function chipOf(row: Pick<Row, 'session' | 'state'>): { text: string; tone: 'attention' | 'ok' | 'danger' } | null {
+  const { session, state } = row;
+  if (state === 'waiting') return session.attention.state === 'done' ? { text: 'finished', tone: 'ok' } : { text: 'waiting for you', tone: 'attention' };
+  if (state === 'failed') return { text: `exit ${session.status.lastExit}`, tone: 'danger' };
+  return null;
+}
+
+/**
+ * What a row has to say about its terminal beyond its name, as data: its state in words where that is not the
+ * ordinary one (`working` too), whether it is parked or ended, its one time, and the token that typed into it. The
+ * row's template says which of these are drawn and in what order; this says what each would say. Pure.
+ */
+export interface RowFacts {
+  state: { text: string; tone: 'attention' | 'ok' | 'danger' | 'working'; dot: DotTone; title?: string } | null;
+  standing: { text: string; meantFor: string | null } | null;
+  time: { text: string; title: string; typed: string; updated: string } | null;
+  typedBy: { text: string; title: string } | null;
+}
+
+export function rowFacts(row: Pick<Row, 'session' | 'state' | 'parked'>, now: number): RowFacts {
+  const { session, state } = row;
+  const chip = chipOf(row);
+  const dot = dotTone(session, row.parked);
+  const title = session.attention.message ?? session.status.commandLine ?? undefined;
+  const typed = ago(session.lastInputAt, now);
+  const updated = ago(session.lastOutputAt, now);
+  // The later of the two times is the one the row says.
+  const active = ago([session.lastInputAt, session.lastOutputAt].filter((t): t is string => typeof t === 'string').sort().at(-1) ?? null, now);
+  const standing = [session.state === 'exited' ? 'ended' : null, session.meantFor?.agent ? `was ${session.meantFor.agent}` : null, row.parked && session.state !== 'exited' ? 'parked' : null].filter(Boolean).join(' · ');
+  return {
+    state: chip ? { ...chip, dot, ...(title !== undefined ? { title } : {}) } : state === 'processing' ? { text: 'working', tone: 'working', dot } : null,
+    standing: standing ? { text: standing, meantFor: session.meantFor?.agent ?? null } : null,
+    time: active ? { text: saidAgo(active), title: [typed ? `You last typed here ${saidAgo(typed)}` : null, updated ? `It last printed ${saidAgo(updated)}` : null].filter(Boolean).join('. '), typed, updated } : null,
+    typedBy: session.typedBy ? { text: `typed by ${session.typedBy.name} ${saidAgo(ago(session.typedBy.at, now))}`, title: `An API token typed into this terminal: ${new Date(session.typedBy.at).toLocaleString()}` } : null,
+  };
+}

@@ -1,0 +1,54 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`the default templates > draw in a title what was drawn before templates 1`] = `
+{
+  "busy": "<span class="node-activity" title="sh &#x27;/work/made up/demo-agent.sh&#x27; --fast
+in /work/made-up/busy
+Running since 1m ago" data-testid="node-activity">sh demo-agent.sh</span>",
+  "done": "<span class="badge-attention is-done" title="It finished." data-testid="badge-attention">finished</span><span class="badge-exit" data-testid="badge-exit">exit 2</span><span class="badge-untold" title="The agent was not told that a workflow was started here: a shell has the keyboard there, and the sentence would be run as a command. Nothing was typed. It is told when the agent is seen in front again; or tell it yourself." data-testid="badge-untold">not told</span><button type="button" class="message-mark wants-you" title="1 message from this terminal for you. Click to read." data-testid="message-mark">✉ 1 for you</button><span class="node-activity" title="/work/made-up/done
+Last command finished just now with exit code 2" data-testid="node-activity">zsh · …/made-up/done</span>",
+  "ended": "<button type="button" class="ui-chip nodrag" title="Tags: x (#)" aria-label="Tags of ended: x" data-testid="node-tags">#x</button>",
+  "failed": "<span class="badge-exit" data-testid="badge-exit">exit 1</span><span class="node-activity" title="/work/made-up/failed
+Last command finished just now with exit code 1" data-testid="node-activity">zsh · …/made-up/failed</span><button type="button" class="ui-chip nodrag" title="Tags: one (#)" aria-label="Tags of failed: one" data-testid="node-tags">#one</button>",
+  "no-folder": "",
+  "parked": "<span class="node-activity" title="/work/made-up/parked" data-testid="node-activity">zsh · …/made-up/parked</span>",
+  "plain": "<span class="node-activity" title="/work/made-up/plain" data-testid="node-activity">zsh · …/made-up/plain</span>",
+  "typed": "<span class="node-activity" title="/work/made-up/typed
+Last command finished just now with exit code 0" data-testid="node-activity">zsh · …/made-up/typed</span><span class="badge-typed" title="The API token “robot” typed into this terminal at 11:59:50 AM" data-testid="badge-typed">typed by robot</span><span class="badge-desktop" title="Something outside this page is attached to this terminal and shows it too: most likely a window of your terminal application. Which program it is cannot be told from here. The two views share one size." data-testid="badge-desktop">also on desktop</span><button type="button" class="node-tool resume-agent nodrag" title="Start the agent again in the conversation it was last in" data-testid="resume-agent">Resume agent</button><span class="nodrag node-link"><a class="ui-chip link-chip is-mark" href="https://linear.app/acme/issue/AB-1" target="_blank" rel="noopener noreferrer" title="Ticket: AB-1
+https://linear.app/acme/issue/AB-1" aria-label="Ticket: AB-1" data-testid="node-link" data-kind="ticket"><span class="link-mark" aria-hidden="true">TK</span></a></span><span class="nodrag node-link"><a class="ui-chip link-chip is-mark" href="https://github.com/acme/app/pull/12" target="_blank" rel="noopener noreferrer" title="Pull request: PR 12
+https://github.com/acme/app/pull/12" aria-label="Pull request: PR 12" data-testid="node-link" data-kind="pull-request"><span class="link-mark" aria-hidden="true">PR</span></a></span><span class="nodrag node-link"><a class="ui-chip link-chip is-mark" href="https://example.com/a" target="_blank" rel="noopener noreferrer" title="Link: a
+https://example.com/a" aria-label="Link: a" data-testid="node-link" data-kind="link"><span class="link-mark" aria-hidden="true">LK</span></a></span>",
+  "waiting": "<span class="badge-attention is-waiting" title="May I push?" data-testid="badge-attention">waiting for you</span><span class="node-activity" title="/work/made-up/waiting" data-testid="node-activity">zsh · …/made-up/waiting</span><span class="ui-badge" title="People only: no API token may read this terminal or type into it. It is switched in the menu at the right." data-testid="badge-people-only">people only</span><button type="button" class="ui-chip nodrag" title="Tags: backend, api (#)" aria-label="Tags of waiting: backend, api" data-testid="node-tags">#backend +1</button>",
+  "working": "<span class="node-activity" title="/work/made-up/working" data-testid="node-activity">zsh · …/made-up/working</span>",
+}
+`;
+
+exports[`the default templates > draw on a compact row what was drawn before templates 1`] = `
+{
+  "busy": "<span class="list-said list-working" data-testid="list-working" data-tone="working">working</span>",
+  "done": "<span class="list-said is-ok list-badge" data-testid="list-badge" data-tone="finished" title="It finished.">finished</span>",
+  "ended": "",
+  "failed": "<span class="list-said is-danger list-badge" data-testid="list-badge" data-tone="failed">exit 1</span>",
+  "no-folder": "",
+  "parked": "",
+  "plain": "",
+  "typed": "",
+  "waiting": "<span class="list-said is-attention list-badge" data-testid="list-badge" data-tone="waiting" title="May I push?">waiting for you</span>",
+  "working": "<span class="list-said list-working" data-testid="list-working" data-tone="working">working</span>",
+}
+`;
+
+exports[`the default templates > draw on a row what was drawn before templates 1`] = `
+{
+  "busy": "<span class="list-said list-working" data-testid="list-working" data-tone="working">working</span><span class="list-active" title="It last printed just now" data-testid="list-active" data-updated="now">just now</span>",
+  "done": "<span class="list-said is-ok list-badge" data-testid="list-badge" data-tone="finished" title="It finished.">finished</span>",
+  "ended": "<span class="list-where">ended · was claude-code</span><span class="visually-hidden" data-testid="row-meant-for">was claude-code</span><span class="list-tags"><button type="button" class="list-tag" title="Show only terminals tagged x" data-testid="list-tag">#x</button></span>",
+  "failed": "<span class="list-said is-danger list-badge" data-testid="list-badge" data-tone="failed">exit 1</span><span class="list-tags"><button type="button" class="list-tag" title="Show only terminals tagged one" data-testid="list-tag">#one</button></span>",
+  "no-folder": "",
+  "parked": "<span class="list-where">parked</span><span class="list-time list-typed-by" title="An API token typed into this terminal: 3/1/2026, 11:56:40 AM" data-testid="list-typed-by">typed by robot 3m ago</span>",
+  "plain": "",
+  "typed": "<span class="list-active" title="You last typed here 10s ago" data-testid="list-active" data-typed="10s">10s ago</span><span class="list-time list-typed-by" title="An API token typed into this terminal: 3/1/2026, 11:59:50 AM" data-testid="list-typed-by">typed by robot 10s ago</span>",
+  "waiting": "<span class="list-said is-attention list-badge" data-testid="list-badge" data-tone="waiting" title="May I push?">waiting for you</span><span class="list-active" title="You last typed here 6m ago. It last printed 1m ago" data-testid="list-active" data-typed="6m" data-updated="1m">1m ago</span><span class="list-lock" title="People only: no API token may read this terminal or type into it" data-testid="row-people-only">people only</span><span class="list-tags"><button type="button" class="list-tag" title="Show only terminals tagged backend" data-testid="list-tag">#backend</button><button type="button" class="list-tag" title="Show only terminals tagged api" data-testid="list-tag">#api</button></span>",
+  "working": "<span class="list-said list-working" data-testid="list-working" data-tone="working">working</span>",
+}
+`;

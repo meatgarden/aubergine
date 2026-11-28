@@ -5159,6 +5159,18 @@
     "text": "Tombol yang diatur dua kali, atau yang tidak bisa dibaca, dilaporkan di atas lembar pintasan dan oleh server, dan sisa berkas tetap berlaku. Tombol tunggal, atau Ctrl atau Option dengan satu tombol, hanya bekerja selama tidak ada terminal yang memegang keyboard, agar setiap program di terminal tetap menerima tombol yang dibutuhkannya. Selengkapnya di <a href=\"https://github.com/thirstyeggplant/aubergine#keyboard\">Keyboard</a>, di README.",
     "from": "fe03dd01e818"
   },
+  "custom.tpl.title": {
+    "text": "Pilih apa yang dikatakan judul dan baris",
+    "from": "4e7c78fba1f9"
+  },
+  "custom.tpl.text": {
+    "text": "Setelah nama terminal, judulnya dan barisnya di daftar mengatakan apa yang dikatakan dua templat: teks dengan placeholder seperti <code>{state}</code>, <code>{folder}</code>, <code>{time}</code>, dan <code>{field:Ticket}</code>. Ubah di <strong>Settings → Appearance → Titles and rows</strong>, tempat judul dan baris yang sebenarnya digambar di bawah setiap kolom saat Anda mengetik, atau di file pengaturan. Di sini judul mengatakan status, folder, field Ticket, tautan, dan tag, dan baris mengatakan status, langkah sebuah run, branch, dan waktu:",
+    "from": "8cd1b3e6f3f9"
+  },
+  "custom.tpl.rule": {
+    "text": "Placeholder yang tidak punya apa-apa untuk dikatakan dihilangkan bersama teks yang mengarah ke sana: pada terminal tanpa tiket, tautan, atau tag, judul itu hanya mengatakan status dan foldernya, tanpa titik yang tersisa. Templat hanya berisi teks dan placeholder, tanpa markup dan tanpa gaya; masing-masing digambar seperti halaman menggambar hal itu di tempat lain, status dalam warnanya dan tautan sebagai chip. Placeholder yang salah disebutkan di bawah kolom dan dilewati, dan <strong>Reset</strong> mengembalikan persis apa yang digambar tanpa templat. Semua placeholder ada di <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/templates.md\">docs/templates.md</a>.",
+    "from": "163ceba573e3"
+  },
   "custom.file.title": {
     "text": "Satu berkas pengaturan yang menjelaskan dirinya sendiri",
     "from": "9d7e735d280e"
@@ -5436,8 +5448,8 @@
     "from": "f89ee178c319"
   },
   "custom.cmp.a.templates": {
-    "text": "Tidak. Direncanakan: untuk judul terminal dan baris daftar",
-    "from": "fd37dcfee7f4"
+    "text": "Dua, untuk judul terminal dan baris daftar: teks dengan placeholder seperti <code>{state}</code> dan <code>{field:Ticket}</code>",
+    "from": "8133a0a553fb"
   },
   "custom.cmp.p1": {
     "text": "Setiap alat di sini menyimpan pengaturannya di sebuah berkas, dan VS Code, Zed, serta Windows Terminal juga punya layar yang menulisnya, seperti Aubergine. Di sebagian besar, tema juga berupa berkas: JSON di VS Code dan Zed, CSS di Obsidian, Lua atau TOML di WezTerm, berkas konfigurasi di kitty dan Ghostty. VS Code, Zed, dan WezTerm memungkinkan Anda mengubah warna tunggal di atas tema, seperti yang dilakukan <code>appearance.colors</code> di sini.",
@@ -5448,8 +5460,8 @@
     "from": "9538078a7039"
   },
   "custom.cmp.p3": {
-    "text": "Aubergine saat ini berada di ujung pengaturan: tema, warna, dan tombol ada di file yang menjelaskan dirinya sendiri, dan halaman yang menulis sebagian pengaturan. Ia tidak menjalankan kode Anda di halaman, tidak menerima style sheet Anda, dan tidak punya templat. Semua itu ada di <a href=\"/roadmap/#rm-yours\">peta jalan</a>, dan belum dibuat.",
-    "from": "5018de362a41"
+    "text": "Aubergine saat ini berada di sisi pengaturan: tema, warna, dan tombol dalam file yang menjelaskan dirinya sendiri, halaman yang menulis sebagian pengaturan, dan templat untuk apa yang dikatakan judul terminal dan barisnya. Ia tidak menjalankan kode Anda di halaman dan tidak menerima style sheet Anda. Itu ada di <a href=\"/roadmap/#rm-yours\">roadmap</a>, dan belum dibuat.",
+    "from": "99bbc30b361c"
   },
   "custom.cmp.mark": {
     "text": "Aubergine tidak berafiliasi dengan alat mana pun yang disebut di halaman ini. Nama-nama itu adalah merek dagang pemiliknya masing-masing.",
@@ -5460,8 +5472,8 @@
     "from": "e10eed0040ae"
   },
   "custom.plan.text": {
-    "text": "Templat, sebuah <code>custom.css</code>, dan plugin direncanakan dan belum dibuat: lihat <a href=\"/roadmap/#rm-yours\">peta jalan</a>.",
-    "from": "891be3228465"
+    "text": "<code>custom.css</code> dan plugin direncanakan dan belum dibuat: lihat <a href=\"/roadmap/#rm-yours\">roadmap</a>.",
+    "from": "a693849a5c84"
   },
   "custom.q.terminal.q": {
     "text": "Bisakah setiap terminal punya tema warna yang berbeda?",
@@ -5504,16 +5516,8 @@
     "from": "34ca8a4540f5"
   },
   "roadmap.yours.sub": {
-    "text": "Lebih banyak bagian halaman yang Anda bentuk, melampaui tema, warna, dan tombol hari ini.",
-    "from": "6fef807ba454"
-  },
-  "roadmap.yours.templates.name": {
-    "text": "Templat",
-    "from": "56b564b75c7f"
-  },
-  "roadmap.yours.templates.text": {
-    "text": "Pilih apa yang ditampilkan judul terminal dan baris daftar, dari templat buatan Anda sendiri.",
-    "from": "21523ce54129"
+    "text": "Lebih banyak bagian halaman yang Anda bentuk, melampaui tema, warna, tombol, dan templat hari ini.",
+    "from": "930654eedc50"
   },
   "roadmap.yours.css.name": {
     "text": "Stylesheet sendiri",

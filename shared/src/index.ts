@@ -24,6 +24,7 @@ export * from './placement';
 export * from './settings';
 export * from './settings-schema';
 export * from './themes';
+export * from './templates';
 export * from './theme-files';
 export * from './theme-proposals';
 export * from './contrast';

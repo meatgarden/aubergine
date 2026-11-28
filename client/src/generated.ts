@@ -1604,6 +1604,10 @@ export type ChangeAppearanceBody = {
   cursorBlink?: boolean;
   /** The color theme every terminal is drawn in that has none of its own: one of the IDs of the color themes, of either kind, built-in or a theme file the server has read (another is refused with 400). `null`: the theme the page is drawn in. */
   terminal?: string | null;
+  /** What a terminal’s title says after its name, on the canvas and at the head of a terminal in a browser tab of its own: a template, one line of at most 200 characters without control characters (another is refused with 400), with placeholders such as {state}, {folder} and {field:Ticket}. A placeholder that is not known is kept as written and skipped where it is drawn. */
+  titleFormat?: string;
+  /** What a terminal’s row in the list says on its second line: a template, as `titleFormat` is. */
+  rowFormat?: string;
   /** The color themes of terminals by tag, in order, at most 20: the whole list, which replaces the one there was (an empty list removes them all). The first entry whose tag a terminal has wins; a terminal’s own theme comes before all of them. A theme the server has not read is refused with 400. */
   byTag?: {
     /** A terminal’s tag, as tags are written: whatever the capitals, the same tag. */
@@ -1640,6 +1644,10 @@ export type ChangeAppearanceResult = {
     /** The color theme of the terminals with that tag, of either kind, built-in or of a theme file. */
     theme: string;
   }[];
+  /** What a terminal’s title says after its name: a template with placeholders such as {state} and {folder}. */
+  titleFormat: string;
+  /** What a terminal’s row in the list says on its second line: a template with placeholders such as {state} and {time}. */
+  rowFormat: string;
 };
 
 export type ReadThemesResult = {

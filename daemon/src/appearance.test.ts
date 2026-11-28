@@ -2,7 +2,7 @@ import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import type { AddressInfo } from 'node:net';
 import os from 'node:os';
 import path from 'node:path';
-import { DEFAULT_SETTINGS, GRANTABLE_SCOPES, Settings, THEME_COLORS, type Session } from '@aubergine/shared';
+import { DEFAULT_ROW_FORMAT, DEFAULT_SETTINGS, DEFAULT_TITLE_FORMAT, GRANTABLE_SCOPES, Settings, THEME_COLORS, type Session } from '@aubergine/shared';
 import type { FastifyInstance } from 'fastify';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { sessionToken } from './auth';
@@ -134,6 +134,9 @@ describe('the appearance route', () => {
       [{ terminal: null }, { appearance: { ...OWNERS.appearance, terminal: null } }],
       [{ fontSize: 20 }, { font: { ...OWNERS.font, size: 20 } }],
       [{ fontFamily: ' Fira Code, "JetBrains Mono", monospace ' }, { font: { ...OWNERS.font, family: 'Fira Code, "JetBrains Mono", monospace' } }],
+      [{ titleFormat: '{state} · {folder} · {field:Ticket}' }, { appearance: { ...OWNERS.appearance, titleFormat: '{state} · {folder} · {field:Ticket}' } }],
+      [{ rowFormat: '{state} {nope} {time}' }, { appearance: { ...OWNERS.appearance, rowFormat: '{state} {nope} {time}' } }],
+      [{ rowFormat: '' }, { appearance: { ...OWNERS.appearance, rowFormat: '' } }],
     ] as const;
     for (const [body, differs] of cases) {
       await writeConfig(OWNERS);
@@ -150,8 +153,22 @@ describe('the appearance route', () => {
         cursorBlink: expected.appearance.cursorBlink,
         terminal: ('terminal' in expected.appearance ? expected.appearance.terminal : null) ?? null,
         byTag: [],
+        titleFormat: 'titleFormat' in expected.appearance ? expected.appearance.titleFormat : DEFAULT_TITLE_FORMAT,
+        rowFormat: 'rowFormat' in expected.appearance ? expected.appearance.rowFormat : DEFAULT_ROW_FORMAT,
       });
     }
+  });
+
+  it('writes what a title and a row say, leaves each as it was when it is left out, and reads a wrong one in the file as the default', async () => {
+    await writeConfig(OWNERS);
+    expect((await asOwner('PUT', '/v1/settings/appearance', { titleFormat: '{folder}' })).body).toMatchObject({ titleFormat: '{folder}', rowFormat: DEFAULT_ROW_FORMAT });
+    expect((await asOwner('PUT', '/v1/settings/appearance', { rowFormat: '{time}' })).body).toMatchObject({ titleFormat: '{folder}', rowFormat: '{time}' });
+    expect((await asOwner('PUT', '/v1/settings/appearance', { cursor: 'block' })).body).toMatchObject({ titleFormat: '{folder}', rowFormat: '{time}' });
+    expect((await asOwner('GET', '/api/v1/state')).body.settings.appearance).toMatchObject({ titleFormat: '{folder}', rowFormat: '{time}' });
+    // As many characters as may be, and no more.
+    expect((await asOwner('PUT', '/v1/settings/appearance', { titleFormat: '{folder} '.repeat(22).slice(0, 200) })).status).toBe(200);
+    await writeConfig({ ...OWNERS, appearance: { ...OWNERS.appearance, titleFormat: 'x'.repeat(500), rowFormat: ['{time}'] } });
+    expect((await asOwner('PUT', '/v1/settings/appearance', {})).body).toMatchObject({ titleFormat: DEFAULT_TITLE_FORMAT, rowFormat: DEFAULT_ROW_FORMAT, dark: 'nord' });
   });
 
   it('writes the default theme of terminals, of either kind, and clears it with null', async () => {
@@ -174,7 +191,7 @@ describe('the appearance route', () => {
   it('answers an old caller that sends only the theme as before, with the rest beside it', async () => {
     const answered = await asOwner('PUT', '/v1/settings/appearance', { theme: 'light' });
     expect(answered.status).toBe(200);
-    expect(answered.body).toEqual({ theme: 'light', light: 'light', dark: 'dark', font: DEFAULT_SETTINGS.font, cursor: 'block', cursorBlink: true, terminal: null, byTag: [] });
+    expect(answered.body).toEqual({ theme: 'light', light: 'light', dark: 'dark', font: DEFAULT_SETTINGS.font, cursor: 'block', cursorBlink: true, terminal: null, byTag: [], titleFormat: DEFAULT_TITLE_FORMAT, rowFormat: DEFAULT_ROW_FORMAT });
     // No file yet: one is made, holding that key alone.
     expect(await config()).toEqual({ theme: 'light' });
     expect((await asOwner('GET', '/api/v1/state')).body.settings.theme).toBe('light');
@@ -186,7 +203,7 @@ describe('the appearance route', () => {
     for (const body of [{}, { colors: { accent: '#000000' } }, { somethingElse: true }]) {
       const answered = await asOwner('PUT', '/v1/settings/appearance', body);
       expect(answered.status, JSON.stringify(body)).toBe(200);
-      expect(answered.body).toEqual({ theme: 'light', light: 'solarized-light', dark: 'nord', font: { family: 'Mono of mine', size: 15 }, cursor: 'bar', cursorBlink: false, terminal: null, byTag: [] });
+      expect(answered.body).toEqual({ theme: 'light', light: 'solarized-light', dark: 'nord', font: { family: 'Mono of mine', size: 15 }, cursor: 'bar', cursorBlink: false, terminal: null, byTag: [], titleFormat: DEFAULT_TITLE_FORMAT, rowFormat: DEFAULT_ROW_FORMAT });
       expect(await configText()).toBe(before);
     }
   });
@@ -213,6 +230,12 @@ describe('the appearance route', () => {
       { terminal: 'sepia' },
       { terminal: '' },
       { terminal: 12 },
+      { titleFormat: 'x'.repeat(201) },
+      { titleFormat: '{state}\n{folder}' },
+      { rowFormat: 'a\u0007bell' },
+      { rowFormat: 'a\u202ereversed' },
+      { rowFormat: 12 },
+      { titleFormat: null },
     ]) {
       const answered = await asOwner('PUT', '/v1/settings/appearance', body);
       expect(answered.status, JSON.stringify(body)).toBe(400);

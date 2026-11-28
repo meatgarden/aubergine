@@ -154,6 +154,20 @@
             ]
           }
         },
+        "titleFormat": {
+          "default": "{state} {exit} {untold} {messages} {activity} {copy} {list} {typed-by} {desktop} {resume} {people-only} {links} {tags}",
+          "description": "What a terminal’s title says after its name, on the canvas and at the head of a terminal in a browser tab of its own: a template, text with placeholders such as {state} and {folder} (see docs/templates.md). One line, at most 200 characters. A placeholder that is not known is skipped; a template that is wrong as a whole is the default.",
+          "type": "string",
+          "maxLength": 200,
+          "pattern": "^[^\\p{Cc}\\u2028\\u2029\\u202a-\\u202e\\u2066-\\u2069]*$"
+        },
+        "rowFormat": {
+          "default": "{state} {step} {standing} {time} {people-only} {typed-by} {tags}",
+          "description": "What a terminal’s row in the list says on its second line: a template, as `titleFormat` is (see docs/templates.md). Compact, a row has no second line and says its state alone. One line, at most 200 characters.",
+          "type": "string",
+          "maxLength": 200,
+          "pattern": "^[^\\p{Cc}\\u2028\\u2029\\u202a-\\u202e\\u2066-\\u2069]*$"
+        },
         "colors": {
           "default": {},
           "description": "Colors set by hand over the theme that is drawn: `\"<color>\": \"#rrggbb\"` for every theme, or `\"[<theme id>]\": { … }` for one theme alone (built-in or of a theme file), which wins. Written by hand only.",
@@ -4283,6 +4297,25 @@
             }
           ]
         },
+        "titles.format": {
+          "description": "The key of titles.format: a chord such as \"Ctrl+Meta+J\", a list of chords, or null for no key.",
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 100
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "maxLength": 100
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
         "theme.use.light": {
           "description": "The key of theme.use.light: a chord such as \"Ctrl+Meta+J\", a list of chords, or null for no key.",
           "anyOf": [
@@ -6440,6 +6473,25 @@
         },
         "theme.choose": {
           "description": "The key of theme.choose: a chord such as \"Ctrl+Meta+J\", a list of chords, or null for no key.",
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 100
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "maxLength": 100
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "titles.format": {
+          "description": "The key of titles.format: a chord such as \"Ctrl+Meta+J\", a list of chords, or null for no key.",
           "anyOf": [
             {
               "type": "string",

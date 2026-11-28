@@ -28,6 +28,7 @@ import { Id } from './ids';
 import { FieldsInput } from './fields';
 import { Settings, ThemeSetting } from './settings';
 import { BY_TAG_MAX, CursorStyle, ThemeId, ThemesByTag, UserTheme } from './themes';
+import { TEMPLATE_MAX, TemplateText } from './templates';
 
 /**
  * The wire protocol between the browser and the daemon. Bump the version and
@@ -178,6 +179,8 @@ export const AppearanceAnswer = z.object({
   cursorBlink: z.boolean().describe("Whether a terminal's cursor blinks."),
   terminal: ThemeId.nullable().describe('The color theme of a terminal that has none of its own, built-in or of a theme file; `null`: the theme the page is drawn in.'),
   byTag: ThemesByTag.describe('Color themes for terminals by tag, in order: a terminal without one of its own is drawn in the theme of the first entry whose tag it has.'),
+  titleFormat: TemplateText.describe('What a terminal’s title says after its name: a template with placeholders such as {state} and {folder}.'),
+  rowFormat: TemplateText.describe('What a terminal’s row in the list says on its second line: a template with placeholders such as {state} and {time}.'),
 });
 export type AppearanceAnswer = z.infer<typeof AppearanceAnswer>;
 /**
@@ -204,6 +207,8 @@ export const ChangeAppearanceRequest = z.object({
   cursor: CursorStyle.optional().describe("The shape of a terminal's cursor: `block`, `bar` or `underline`."),
   cursorBlink: z.boolean().optional().describe("Whether a terminal's cursor blinks."),
   terminal: ThemeId.nullable().optional().describe('The color theme every terminal is drawn in that has none of its own: one of the IDs of the color themes, of either kind, built-in or a theme file the server has read (another is refused with 400). `null`: the theme the page is drawn in.'),
+  titleFormat: TemplateText.optional().describe(`What a terminal’s title says after its name, on the canvas and at the head of a terminal in a browser tab of its own: a template, one line of at most ${TEMPLATE_MAX} characters without control characters (another is refused with 400), with placeholders such as {state}, {folder} and {field:Ticket}. A placeholder that is not known is kept as written and skipped where it is drawn.`),
+  rowFormat: TemplateText.optional().describe(`What a terminal’s row in the list says on its second line: a template, as \`titleFormat\` is.`),
   byTag: ThemesByTag.optional().describe(`The color themes of terminals by tag, in order, at most ${BY_TAG_MAX}: the whole list, which replaces the one there was (an empty list removes them all). The first entry whose tag a terminal has wins; a terminal’s own theme comes before all of them. A theme the server has not read is refused with 400.`),
 });
 export type ChangeAppearanceRequest = z.infer<typeof ChangeAppearanceRequest>;

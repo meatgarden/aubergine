@@ -21,6 +21,7 @@ import { useApp } from '../store';
 import { chooseColorTheme, chooseTheme, readThemesAgain, setCursor, setCursorBlink, setFontFamily, setFontSize, setTerminalFont, setTerminalTheme, usePageThemeFrom, useThemeShown } from '../theme';
 import { currentProjectId } from '../store';
 import { ByTag } from './ByTag';
+import { TitlesPart } from './TitlesPart';
 import { ThemeSelect } from '../TerminalTheme';
 import { Banner, Button, RadioRow, RadioRows, Segmented, TextField } from '../ui';
 
@@ -240,6 +241,8 @@ export function AppearancePart() {
       </div>
 
       <TerminalText family={font.family} size={font.size} />
+
+      <TitlesPart />
 
       <div className="appearance-part">
         <h4>Cursor</h4>

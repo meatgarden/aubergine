@@ -202,6 +202,16 @@
 }</code></pre>
     <p>设置了两次或无法读取的按键，会在快捷键表顶部和服务器中报告，文件其余部分照常生效。单个按键，或 Ctrl、Option 加一个键，只在没有终端占用键盘时起作用，这样终端里的每个程序仍能收到它需要的按键。详见 README 中的 <a href="https://github.com/thirstyeggplant/aubergine#keyboard">Keyboard</a>。</p>
 
+    <h2 id="titles-and-rows">选择标题和行显示的内容</h2>
+    <p>在终端名称之后，它的标题和它在列表中的行显示两个模板所写的内容：带有 <code>{state}</code>、<code>{folder}</code>、<code>{time}</code> 和 <code>{field:Ticket}</code> 等占位符的文本。可以在 <strong>Settings → Appearance → Titles and rows</strong> 中修改，你输入时每个字段下方都会画出真实的标题和行；也可以在设置文件中修改。这里标题显示状态、文件夹、字段 Ticket、链接和标签，行显示状态、运行的步骤、分支和时间：</p>
+    <pre><code>{
+  "appearance": {
+    "titleFormat": "{state} {folder} · {field:Ticket} {links} {tags}",
+    "rowFormat": "{state} {step} {branch} · {time}"
+  }
+}</code></pre>
+    <p>没有内容可显示的占位符会连同引向它的文本一起省略：在没有工单、链接或标签的终端上，这个标题只显示状态和文件夹，不会多出一个点。模板只包含文本和占位符，没有标记，也没有样式；每个占位符都按页面在其他地方画这类东西的方式来画，状态用它的颜色，链接是一个小标签。错误的占位符会在字段下方说明并被跳过，<strong>Reset</strong> 会准确恢复没有模板时画出的内容。所有占位符都在 <a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/templates.md">docs/templates.md</a> 中。</p>
+
     <h2 id="settings-file">一个自我描述的设置文件</h2>
     <p>这一切都保存在 Aubergine 数据文件夹中的 <code>config.json</code> 里，<code>aubergine settings path</code> 会显示它的位置。每个键都可以省略。无法读取的文件意味着使用默认值，绝不会导致服务器无法启动。页面中的 Settings 只写它更改的键，文件其余部分保持你写的样子。</p>
     <p>服务器每次启动时都会在文件旁写入 <code>config.schema.json</code>。加上一行，支持 JSON Schema 的编辑器就会为每个键提供说明和补全：</p>
@@ -235,16 +245,16 @@ aubergine settings schema</code></pre>
           <tr><td><a href="https://ghostty.org/docs/config">Ghostty</a><br>终端</td><td data-label="设置">一个 <code>key = value</code> 文件；<code>config-file</code> 引入其他文件</td><td data-label="主题与颜色"><a href="https://ghostty.org/docs/features/theme">主题是配置文件</a>；浅色、深色各一个</td><td data-label="自己的 CSS">未找到</td><td data-label="自己的代码">叠加在终端上的 <a href="https://ghostty.org/docs/config/reference#custom-shader">GLSL 着色器</a>；macOS 上的 AppleScript</td><td data-label="标题和状态模板">未找到</td></tr>
           <tr><td><a href="https://learn.microsoft.com/windows/terminal/customize-settings/color-schemes">Windows Terminal</a><br>终端</td><td data-label="设置">Settings 界面或 <code>settings.json</code>，有 <a href="https://github.com/microsoft/terminal/blob/main/doc/cascadia/profiles.schema.json">JSON schema</a></td><td data-label="主题与颜色">每个配置文件的配色方案；窗口和标签的<a href="https://learn.microsoft.com/windows/terminal/customize-settings/themes">主题</a>分浅色和深色，只能在 JSON 中编辑</td><td data-label="自己的 CSS">未找到</td><td data-label="自己的代码">未找到；其他应用以 JSON 片段添加配置文件和配色方案</td><td data-label="标题和状态模板">未找到；配置文件可设置 <code>tabTitle</code> 和 <code>tabColor</code></td></tr>
           <tr><td><a href="https://iterm2.com/documentation-automatic-profile-switching.html">iTerm2</a><br>终端</td><td data-label="设置">Settings 中的配置文件；属性列表格式的 <a href="https://iterm2.com/documentation-dynamic-profiles.html">Dynamic Profiles</a></td><td data-label="主题与颜色">按用户、主机、文件夹或任务选择配置文件，需要 Shell Integration</td><td data-label="自己的 CSS">未找到</td><td data-label="自己的代码"><a href="https://iterm2.com/python-api/">Python API</a>、用 Python 写的状态栏组件、AppleScript</td><td data-label="标题和状态模板">会话名、徽章和状态栏中的<a href="https://iterm2.com/documentation-scripting-fundamentals.html">插值字符串</a> <code>\(…)</code></td></tr>
-          <tr><td>Aubergine<br>画布上的终端</td><td data-label="设置"><code>config.json</code> 和 Settings，附带供编辑器使用的 JSON Schema</td><td data-label="主题与颜色">十个主题，浅色、深色或跟随系统；你自己的 JSON 文件，叠加在其中之一上；可为项目、带标签的终端和每个终端各设一个；35 种颜色可手动设定，适用于所有主题或单个主题</td><td data-label="自己的 CSS">没有。计划中：带文档化钩子的 <code>custom.css</code></td><td data-label="自己的代码">没有。计划中：插件</td><td data-label="标题和状态模板">没有。计划中：用于终端标题和列表行</td></tr>
+          <tr><td>Aubergine<br>画布上的终端</td><td data-label="设置"><code>config.json</code> 和 Settings，附带供编辑器使用的 JSON Schema</td><td data-label="主题与颜色">十个主题，浅色、深色或跟随系统；你自己的 JSON 文件，叠加在其中之一上；可为项目、带标签的终端和每个终端各设一个；35 种颜色可手动设定，适用于所有主题或单个主题</td><td data-label="自己的 CSS">没有。计划中：带文档化钩子的 <code>custom.css</code></td><td data-label="自己的代码">没有。计划中：插件</td><td data-label="标题和状态模板">两个，用于终端的标题和列表中的一行：带有 <code>{state}</code> 和 <code>{field:Ticket}</code> 等占位符的文本</td></tr>
         </tbody>
       </table>
     </div>
     <p>这里的每个工具都把设置保存在文件中，VS Code、Zed 和 Windows Terminal 还像 Aubergine 一样有一个写入该文件的界面。大多数工具中主题也是文件：VS Code 和 Zed 是 JSON，Obsidian 是 CSS，WezTerm 是 Lua 或 TOML，kitty 和 Ghostty 是配置文件。VS Code、Zed 和 WezTerm 允许在主题之上修改单个颜色，就像这里的 <code>appearance.colors</code>。</p>
     <p>差别最大的是代码。WezTerm 的整个配置是一个 Lua 程序，kitty 和 iTerm2 运行你自己的 Python，Hyper 的插件是包装其界面的 JavaScript；Obsidian 和 Hyper 还接受你自己的 CSS。VS Code 的扩展不能访问其界面的 DOM，它也不支持你自己的样式表；Zed 以 WebAssembly 运行扩展，并带有可由你限制的能力。tmux、WezTerm、kitty 和 iTerm2 用模板或函数生成标题和状态行。</p>
-    <p>如今的 Aubergine 处在设置这一端：主题、颜色和按键放在自我描述的文件里，页面写入其中一部分设置。它不在页面中运行你的代码，不接受你的样式表，也没有模板。这些都在<a href="../roadmap/#rm-yours">路线图</a>上，尚未构建。</p>
+    <p>如今的 Aubergine 处在设置这一端：主题、颜色和按键存放在能自我说明的文件中，有一个会写入部分设置的页面，还有用于终端标题和行所显示内容的模板。它不会在页面中运行你的代码，也不接受你的样式表。这些都在<a href="../roadmap/#rm-yours">路线图</a>上，尚未实现。</p>
 
     <h2 id="planned">计划中的内容</h2>
-    <p>模板、<code>custom.css</code> 和插件已在计划中，尚未构建：请参阅<a href="../roadmap/#rm-yours">路线图</a>。</p>
+    <p><code>custom.css</code> 和插件已在计划中，尚未实现：见<a href="../roadmap/#rm-yours">路线图</a>。</p>
 
     <h2 id="faq">常见问题</h2>
     <div class="questions">

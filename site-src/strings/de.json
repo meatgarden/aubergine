@@ -5159,6 +5159,18 @@
     "text": "Eine doppelt gesetzte Taste oder eine, die sich nicht lesen lässt, wird oben in der Tastenübersicht und vom Server gemeldet, und der Rest der Datei gilt weiter. Eine einzelne Taste, oder Ctrl oder Option mit einer Taste, wirkt nur, solange kein Terminal die Tastatur hat, damit jedes Programm in einem Terminal weiter die Tasten bekommt, die es braucht. Mehr unter <a href=\"https://github.com/thirstyeggplant/aubergine#keyboard\">Keyboard</a> im README.",
     "from": "fe03dd01e818"
   },
+  "custom.tpl.title": {
+    "text": "Wählen, was ein Titel und eine Zeile sagen",
+    "from": "4e7c78fba1f9"
+  },
+  "custom.tpl.text": {
+    "text": "Nach dem Namen eines Terminals sagen sein Titel und seine Zeile in der Liste, was zwei Vorlagen sagen: Text mit Platzhaltern wie <code>{state}</code>, <code>{folder}</code>, <code>{time}</code> und <code>{field:Ticket}</code>. Geändert werden sie unter <strong>Settings → Appearance → Titles and rows</strong>, wo unter jedem Feld der echte Titel und die echte Zeile gezeichnet werden, während Sie tippen, oder in der Einstellungsdatei. Hier sagt der Titel den Zustand, den Ordner, das Feld Ticket, die Links und die Tags, und die Zeile den Zustand, den Schritt eines Laufs, den Branch und die Zeit:",
+    "from": "8cd1b3e6f3f9"
+  },
+  "custom.tpl.rule": {
+    "text": "Ein Platzhalter, der nichts zu sagen hat, fällt mit dem Text weg, der zu ihm führt: Bei einem Terminal ohne Ticket, Links oder Tags sagt dieser Titel nur seinen Zustand und seinen Ordner, ohne übrig gebliebenen Punkt. Eine Vorlage enthält nur Text und Platzhalter, kein Markup und keinen Stil; jeder wird so gezeichnet, wie die Seite dieses Ding auch sonst zeichnet, der Zustand in seiner Farbe und ein Link als Chip. Ein falscher Platzhalter wird unter dem Feld genannt und übersprungen, und <strong>Reset</strong> stellt genau das wieder her, was ohne Vorlage gezeichnet wird. Alle Platzhalter stehen in <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/templates.md\">docs/templates.md</a>.",
+    "from": "163ceba573e3"
+  },
   "custom.file.title": {
     "text": "Eine Einstellungsdatei, die sich selbst beschreibt",
     "from": "9d7e735d280e"
@@ -5436,8 +5448,8 @@
     "from": "f89ee178c319"
   },
   "custom.cmp.a.templates": {
-    "text": "Nein. Geplant: für den Titel eines Terminals und eine Zeile der Liste",
-    "from": "fd37dcfee7f4"
+    "text": "Zwei, für den Titel eines Terminals und eine Zeile der Liste: Text mit Platzhaltern wie <code>{state}</code> und <code>{field:Ticket}</code>",
+    "from": "8133a0a553fb"
   },
   "custom.cmp.p1": {
     "text": "Jedes Werkzeug hier hält seine Einstellungen in einer Datei, und VS Code, Zed und Windows Terminal haben außerdem eine Ansicht, die sie schreibt, wie Aubergine. In den meisten ist auch ein Thema eine Datei: JSON in VS Code und Zed, CSS in Obsidian, Lua oder TOML in WezTerm, eine Konfigurationsdatei in kitty und Ghostty. VS Code, Zed und WezTerm lassen Sie einzelne Farben über einem Thema ändern, wie es hier <code>appearance.colors</code> tut.",
@@ -5448,8 +5460,8 @@
     "from": "9538078a7039"
   },
   "custom.cmp.p3": {
-    "text": "Aubergine steht heute am Einstellungs-Ende: Themen, Farben und Tasten in Dateien, die sich selbst beschreiben, und eine Seite, die einen Teil der Einstellungen schreibt. Sie führt keinen Code von Ihnen in der Seite aus, nimmt kein Stylesheet von Ihnen und hat keine Vorlagen. Das steht auf der <a href=\"/roadmap/#rm-yours\">Roadmap</a> und ist nicht gebaut.",
-    "from": "5018de362a41"
+    "text": "Aubergine steht heute am Ende der Einstellungen: Themes, Farben und Tasten in Dateien, die sich selbst beschreiben, eine Seite, die einen Teil der Einstellungen schreibt, und Vorlagen dafür, was der Titel eines Terminals und seine Zeile sagen. Es führt keinen Code von Ihnen in der Seite aus und nimmt kein Stylesheet von Ihnen. Das steht auf der <a href=\"/roadmap/#rm-yours\">Roadmap</a> und ist nicht gebaut.",
+    "from": "99bbc30b361c"
   },
   "custom.cmp.mark": {
     "text": "Aubergine ist mit keinem der auf dieser Seite genannten Werkzeuge verbunden. Ihre Namen sind Marken ihrer Inhaber.",
@@ -5460,8 +5472,8 @@
     "from": "e10eed0040ae"
   },
   "custom.plan.text": {
-    "text": "Vorlagen, eine <code>custom.css</code> und Plugins sind geplant und nicht gebaut: siehe die <a href=\"/roadmap/#rm-yours\">Roadmap</a>.",
-    "from": "891be3228465"
+    "text": "Eine <code>custom.css</code> und Plugins sind geplant und nicht gebaut: siehe die <a href=\"/roadmap/#rm-yours\">Roadmap</a>.",
+    "from": "a693849a5c84"
   },
   "custom.q.terminal.q": {
     "text": "Kann jedes Terminal ein eigenes Farbthema haben?",
@@ -5504,16 +5516,8 @@
     "from": "34ca8a4540f5"
   },
   "roadmap.yours.sub": {
-    "text": "Mehr von der Seite nach Ihren Vorstellungen, über die heutigen Themen, Farben und Tasten hinaus.",
-    "from": "6fef807ba454"
-  },
-  "roadmap.yours.templates.name": {
-    "text": "Vorlagen",
-    "from": "56b564b75c7f"
-  },
-  "roadmap.yours.templates.text": {
-    "text": "Bestimmen, was der Titel eines Terminals und eine Zeile der Liste zeigen, aus einer eigenen Vorlage.",
-    "from": "21523ce54129"
+    "text": "Mehr von der Seite nach Ihren Wünschen, über die heutigen Themes, Farben, Tasten und Vorlagen hinaus.",
+    "from": "930654eedc50"
   },
   "roadmap.yours.css.name": {
     "text": "Ein eigenes Stylesheet",

@@ -970,6 +970,14 @@ export const COMMANDS: readonly Command[] = [
     available: always,
     run: (state) => state.showSettings('appearance'),
   },
+  {
+    id: 'titles.format',
+    title: 'Titles and rows: what they show',
+    description: 'Opens Settings at Titles and rows, with the keyboard in the field of a terminal’s title: what a title and a row in the list say after the name, as a template such as {state} · {folder} · {time}.',
+    group: 'View',
+    available: always,
+    run: (state) => state.showSettings('titles'),
+  },
   ...COLOR_THEMES.map((theme): Command => ({
     id: `theme.use.${theme.id}` as const,
     title: `Color theme: ${theme.name}`,

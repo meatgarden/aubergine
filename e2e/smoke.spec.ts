@@ -7773,3 +7773,122 @@ test('two servers in one page: a server is linked with a code from its own comma
   expect(readFileSync(stateFile, 'utf8')).toBe(stateBefore);
   expect(ownCanvas).toContain(origin);
 });
+
+test('titles and rows: what a title and a row say after the name is a template, changed in Settings with the keyboard, drawn at once, said when wrong, put back exactly by Reset, and never wrapping', async ({ page, context }) => {
+  // The clock of the page stands still, so that a row's time says the same before and after: its markup is compared whole.
+  await page.clock.setFixedTime(new Date());
+  const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
+  await page.goto(`/auth?token=${token}`);
+  await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
+  const origin = new URL(page.url()).origin;
+  const asOwner = { headers: { origin, 'sec-fetch-site': 'same-origin' } };
+  const mac = await page.evaluate(() => navigator.platform.toLowerCase().includes('mac'));
+  const selectedTab = page.locator('[data-testid="tab"][aria-selected="true"]');
+  const before = (await selectedTab.getAttribute('data-canvas')) ?? '';
+  await page.getByRole('button', { name: 'New canvas' }).click();
+  await expect(selectedTab).not.toHaveAttribute('data-canvas', before);
+  const canvasId = (await selectedTab.getAttribute('data-canvas')) ?? '';
+  // A terminal in a folder of its own, with a field.
+  const folder = mkdtempSync(path.join(tmpdir(), 'aubergine-e2e-titles-'));
+  const made = (await (await page.request.post('/api/v1/sessions', { ...asOwner, data: { cwd: folder, canvasId, name: 'templated' } })).json()) as { session: { id: string } };
+  const id = made.session.id;
+  expect((await page.request.patch(`/v1/sessions/${id}`, { headers: { origin }, data: { fields: [{ label: 'Ticket', value: 'DEMO-7' }] } })).status()).toBe(200);
+  const row = page.locator(`[data-testid="list-row"][data-session="${id}"]`);
+  const node = page.locator(`[data-testid="terminal-node"][data-session="${id}"]`);
+  await expect(row).toBeVisible();
+  await expect(node.getByTestId('node-activity')).toBeVisible();
+  // Once the shell has settled: what the row and the title are now, with the default templates.
+  await expect.poll(async () => (await page.request.get('/api/v1/state', asOwner).then((r) => r.json()) as { state: { sessions: { id: string; status: { state: string | null } }[] } }).state.sessions.find((s) => s.id === id)?.status.state, { timeout: 15_000 }).toBe('idle');
+  await expect(row).not.toHaveAttribute('data-state', 'processing');
+  const rowBefore = await row.evaluate((el) => el.outerHTML);
+  const titleBefore = await node.locator('.node-title').evaluate((el) => el.outerHTML);
+  const rowHeight = (await row.boundingBox())!.height;
+  const titleHeight = (await node.locator('.node-title').boundingBox())!.height;
+  expect(await row.getByTestId('template-words').count()).toBe(0);
+
+  // From the keyboard: the palette's command opens Settings at Titles and rows, with the keyboard in the title's field.
+  await page.keyboard.press(mac ? 'Meta+k' : 'Control+Shift+K');
+  await page.keyboard.type('>titles and rows');
+  await expect(page.getByTestId('picker-command-row').first()).toContainText('Titles and rows: what they show');
+  await page.keyboard.press('Enter');
+  const part = page.getByTestId('settings-titles');
+  await expect(part).toBeInViewport();
+  const titleField = part.getByTestId('title-format');
+  const rowField = part.getByTestId('row-format');
+  await expect(titleField).toBeFocused();
+  await expect(part.getByTestId('title-format-reset')).toHaveCount(0);
+  // To the row's field, with Tab.
+  for (let i = 0; i < 12 && !(await rowField.evaluate((el) => el === document.activeElement)); i += 1) await page.keyboard.press('Tab');
+  await expect(rowField).toBeFocused();
+  await page.keyboard.press('ControlOrMeta+a');
+  await page.keyboard.type('{state} {folder} · {field:Ticket} {time}');
+  await page.keyboard.press('Enter');
+  // The row says them at once, without a reload: the folder, short, and the field.
+  const parts = folder.split('/').filter(Boolean);
+  const folderShort = parts.length <= 2 ? folder : `…/${parts.slice(-2).join('/')}`;
+  await expect(row.getByTestId('template-words')).toHaveText(folderShort);
+  await expect(row.getByTestId('template-field')).toHaveText('DEMO-7');
+  await expect(row.locator('.template-text')).toHaveText('·');
+  // The preview under the field draws it for the terminal selected, or one made up.
+  await expect(part.getByTestId('row-preview').getByTestId('template-field')).toHaveCount(1);
+  // A placeholder that is not one is said under the field, and the rest is still drawn.
+  await page.keyboard.press('ControlOrMeta+a');
+  await page.keyboard.type('{state} {nope} {folder}');
+  await page.keyboard.press('Enter');
+  await expect(part.getByTestId('row-format-says')).toContainText('{nope} is not a placeholder');
+  await expect(row.getByTestId('template-words')).toHaveText(folderShort);
+  await expect(row.getByTestId('template-field')).toHaveCount(0);
+  // A brace not closed is said and not saved.
+  await page.keyboard.type(' {time');
+  await page.keyboard.press('Enter');
+  await expect(part.getByTestId('row-format-says')).toContainText('It is not saved until the brace is closed.');
+  expect(((await (await page.request.get('/api/v1/state', asOwner)).json()) as { settings: { appearance: { rowFormat: string } } }).settings.appearance.rowFormat).toBe('{state} {nope} {folder}');
+  await page.keyboard.press('Escape');
+  await expect(rowField).toHaveValue('{state} {nope} {folder}');
+
+  // The title's template with the field: on the canvas and at the head of the terminal in a tab of its own.
+  await titleField.focus();
+  await page.keyboard.press('ControlOrMeta+a');
+  await page.keyboard.type('{state} {field:Ticket}');
+  await page.keyboard.press('Enter');
+  await expect(node.locator('.node-title').getByTestId('template-field')).toHaveText('DEMO-7');
+  const alone = await context.newPage();
+  await alone.goto(`/t/${id}`);
+  await expect(alone.getByTestId('terminal-page-says').getByTestId('template-field')).toHaveText('DEMO-7');
+  await alone.close();
+
+  // Reset puts back exactly the default: the row and the title are what they were, element for element.
+  await part.getByTestId('row-format-reset').click();
+  await part.getByTestId('title-format-reset').click();
+  await expect(part.getByTestId('row-format-reset')).toHaveCount(0);
+  await expect(part.getByTestId('title-format-reset')).toHaveCount(0);
+  await expect.poll(() => row.evaluate((el) => el.outerHTML)).toBe(rowBefore);
+  await expect.poll(() => node.locator('.node-title').evaluate((el) => el.outerHTML)).toBe(titleBefore);
+
+  // A template of 200 characters wraps neither the title nor the row's line, and makes neither taller.
+  const long = '{folder} · {field:Ticket} · {command} · {canvas} · {project} · '.repeat(4).slice(0, 200);
+  for (const field of [titleField, rowField]) {
+    await field.focus();
+    await page.keyboard.press('ControlOrMeta+a');
+    await page.keyboard.insertText(long);
+    await page.keyboard.press('Enter');
+  }
+  await expect(row.getByTestId('template-words').first()).toBeVisible();
+  await expect(node.locator('.node-title').getByTestId('template-field').first()).toHaveCount(1);
+  expect((await row.boundingBox())!.height).toBe(rowHeight);
+  expect((await node.locator('.node-title').boundingBox())!.height).toBe(titleHeight);
+  const lines = await row.locator('.list-detail').evaluate((el) => ({ scroll: el.scrollHeight, client: el.clientHeight }));
+  expect(lines.scroll).toBeLessThanOrEqual(lines.client);
+  // The tools at the end of the title stay inside the terminal's box, at its right end.
+  const nodeBox = (await node.boundingBox())!;
+  const more = (await node.getByTestId('node-more').boundingBox())!;
+  expect(more.x + more.width).toBeLessThanOrEqual(nodeBox.x + nodeBox.width + 1);
+  expect(more.y).toBeLessThan(nodeBox.y + titleHeight);
+  await part.getByTestId('row-format-reset').click();
+  await part.getByTestId('title-format-reset').click();
+  await expect.poll(() => row.evaluate((el) => el.outerHTML)).toBe(rowBefore);
+
+  await page.keyboard.press('Escape');
+  await expect(page.getByTestId('settings-dialog')).toHaveCount(0);
+  rmSync(folder, { recursive: true, force: true });
+});

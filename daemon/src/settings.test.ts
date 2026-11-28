@@ -2,7 +2,7 @@ import { mkdir, mkdtemp, readFile, readdir, rm, stat, writeFile } from 'node:fs/
 import os from 'node:os';
 import path from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { DEFAULT_SETTINGS, SCHEMA_LINE, Settings, THEME_SCHEMA_FILE, UserTheme, settingsJsonSchema, themeFileJsonSchema, type ChangeAppearanceRequest } from '@aubergine/shared';
+import { DEFAULT_ROW_FORMAT, DEFAULT_SETTINGS, DEFAULT_TITLE_FORMAT, SCHEMA_LINE, Settings, THEME_SCHEMA_FILE, UserTheme, settingsJsonSchema, themeFileJsonSchema, type ChangeAppearanceRequest } from '@aubergine/shared';
 import { SETTINGS_FILE, SETTINGS_SCHEMA_FILE, SettingsFile, accessReport, appearanceOf, colorProblems, expandHome, loadSettings, shortcutProblems, writeSettingsSchema } from './settings';
 
 let dir: string;
@@ -145,6 +145,8 @@ describe('how the page looks', () => {
       [{ terminal: null }, { appearance: { ...OWNERS.appearance, terminal: null } }],
       [{ byTag: [{ tag: 'prod', theme: 'dracula' }] }, { appearance: { ...OWNERS.appearance, byTag: [{ tag: 'prod', theme: 'dracula' }] } }],
       [{ byTag: [] }, { appearance: { ...OWNERS.appearance, byTag: [] } }],
+      [{ titleFormat: '{state} · {field:Ticket}' }, { appearance: { ...OWNERS.appearance, titleFormat: '{state} · {field:Ticket}' } }],
+      [{ rowFormat: '{folder} {time}' }, { appearance: { ...OWNERS.appearance, rowFormat: '{folder} {time}' } }],
       [{ fontSize: 20 }, { font: { ...OWNERS.font, size: 20 } }],
       [{ fontFamily: 'Fira Code, monospace' }, { font: { ...OWNERS.font, family: 'Fira Code, monospace' } }],
     ] as const;
@@ -157,7 +159,7 @@ describe('how the page looks', () => {
     await writeFile(path.join(dir, SETTINGS_FILE), JSON.stringify(OWNERS));
     await file.setAppearance({ theme: 'system', dark: 'dark', fontSize: 9 });
     expect(await read()).toEqual({ ...OWNERS, theme: 'system', appearance: { ...OWNERS.appearance, dark: 'dark' }, font: { ...OWNERS.font, size: 9 } });
-    expect(appearanceOf(file.value)).toEqual({ theme: 'system', light: 'solarized-light', dark: 'dark', font: { family: 'Mono of mine', size: 9 }, cursor: 'bar', cursorBlink: false, terminal: null, byTag: [] });
+    expect(appearanceOf(file.value)).toEqual({ theme: 'system', light: 'solarized-light', dark: 'dark', font: { family: 'Mono of mine', size: 9 }, cursor: 'bar', cursorBlink: false, terminal: null, byTag: [], titleFormat: DEFAULT_TITLE_FORMAT, rowFormat: DEFAULT_ROW_FORMAT });
   });
 
   it('makes only what it needs where there is no file or no such part, and writes nothing for a change of nothing', async () => {

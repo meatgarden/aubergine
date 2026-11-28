@@ -1670,6 +1670,46 @@ button.tab-more {
   flex: 1 1 0;
   min-width: 0;
 }
+/*
+ * What a template says after the name (docs/templates.md). Its plain words and the text written between placeholders
+ * are in the meta size and muted, on one line, and give way before a state chip or a mark does: cut where there is no
+ * room, with no "…". Whatever the template says, the tools at the end of a title stay at its right end.
+ */
+.node-words,
+.list-words,
+.template-text {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  font-size: var(--font-meta);
+  color: var(--text-muted);
+}
+.node-words {
+  flex-shrink: 100;
+}
+/* On a row, what does not fit is cut at the line's end rather than every piece cut to a letter. */
+.list-row .list-detail > .list-words,
+.list-row .list-detail > .template-text {
+  flex: none;
+}
+.node-title > .note-tool {
+  margin-left: auto;
+}
+.node-title button.run-strip.is-row,
+.terminal-page-says button.run-strip.is-row {
+  flex: none;
+  height: var(--chip);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: var(--font-meta);
+}
+.node-title button.run-strip.is-row:hover {
+  text-decoration: underline;
+  color: var(--text);
+}
 .node-note-new {
   margin-left: var(--space-1);
   font-size: var(--font-meta);
@@ -2786,6 +2826,42 @@ div.every-setting-row {
   flex: 1 1 240px;
   min-width: 0;
   max-width: 400px;
+}
+/* Titles and rows: a field for each template, a line under it, then the real title or row drawn as it is typed. */
+.titles-field {
+  margin-top: var(--space-3);
+}
+.titles-input {
+  flex: 1 1 320px;
+  min-width: 0;
+  font-family: var(--font-mono);
+}
+.titles-field > .ui-meta {
+  margin: var(--space-1) 0 var(--space-2);
+}
+.titles-preview-title {
+  position: relative;
+  max-width: 640px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+}
+.titles-preview-row {
+  position: relative;
+  width: 320px;
+  max-width: 100%;
+}
+.titles-parts {
+  margin: var(--space-2) 0 0;
+  padding: 0;
+  list-style: none;
+}
+.titles-parts > li {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+.titles-parts > li > button {
+  flex: none;
 }
 .appearance-problems {
   margin-top: var(--space-3);
@@ -3977,8 +4053,8 @@ div.note-summary-read {
   text-decoration: underline;
   color: var(--text);
 }
-/* Between the words of the second line, a quiet dot; tags are pressed apart and need none. */
-.list-row .list-detail > :not(:first-child, .visually-hidden, .list-tags, .list-tag)::before {
+/* Between the words of the second line, a quiet dot; tags are pressed apart and need none. Where the row's template writes text between two of them, that text stands there instead. */
+.list-row .list-detail > :not(:first-child, .visually-hidden, .list-tags, .list-tag, .template-text, .template-text + *)::before {
   content: '·';
   margin-right: var(--space-1);
   color: var(--text-muted);

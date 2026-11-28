@@ -513,7 +513,7 @@ code {
   height: 100vh;
   background: var(--terminal-bg);
 }
-/* One row at any width: the command gives way first, then the name is cut; the buttons keep their words. */
+/* One row at any width: what the title's template says gives way first, then the name is cut; the buttons keep their words. */
 .terminal-page-head {
   display: flex;
   flex-wrap: nowrap;
@@ -550,11 +550,14 @@ code {
   font-size: var(--font-body);
   font-weight: var(--weight-strong);
 }
-.terminal-page-command {
+/* What the title's template says, after the name: it gives way first, on the one row of the head. */
+.terminal-page-says {
   flex: 0 100000 auto;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
   min-width: 0;
   overflow: hidden;
-  text-overflow: ellipsis;
   white-space: nowrap;
   color: var(--text-muted);
   font-size: var(--font-meta);

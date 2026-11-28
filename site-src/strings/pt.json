@@ -5159,6 +5159,18 @@
     "text": "Uma tecla definida duas vezes, ou uma que não dá para ler, é apontada no topo da folha de atalhos e pelo servidor, e o resto do arquivo continua valendo. Uma tecla simples, ou Ctrl ou Option com uma tecla, só funciona enquanto nenhum terminal tem o teclado, para que todo programa em um terminal continue recebendo as teclas de que precisa. Mais em <a href=\"https://github.com/thirstyeggplant/aubergine#keyboard\">Keyboard</a>, no README.",
     "from": "fe03dd01e818"
   },
+  "custom.tpl.title": {
+    "text": "Escolha o que um título e uma linha dizem",
+    "from": "4e7c78fba1f9"
+  },
+  "custom.tpl.text": {
+    "text": "Depois do nome de um terminal, o título dele e a linha dele na lista dizem o que dois modelos dizem: texto com marcadores como <code>{state}</code>, <code>{folder}</code>, <code>{time}</code> e <code>{field:Ticket}</code>. Mude-os em <strong>Settings → Appearance → Titles and rows</strong>, onde o título e a linha reais são desenhados sob cada campo enquanto você digita, ou no arquivo de configurações. Aqui o título diz o estado, a pasta, o campo Ticket, os links e as tags, e a linha o estado, o passo de uma execução, o branch e a hora:",
+    "from": "8cd1b3e6f3f9"
+  },
+  "custom.tpl.rule": {
+    "text": "Um marcador sem nada a dizer é omitido junto com o texto que leva a ele: num terminal sem ticket, links nem tags, esse título diz só o estado e a pasta, sem nenhum ponto sobrando. Um modelo contém só texto e marcadores, sem marcação e sem estilo; cada um é desenhado como a página desenha essa coisa em outros lugares, o estado na sua cor e um link como um chip. Um marcador errado é indicado sob o campo e ignorado, e <strong>Reset</strong> devolve exatamente o que é desenhado sem modelo. Todos os marcadores estão em <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/templates.md\">docs/templates.md</a>.",
+    "from": "163ceba573e3"
+  },
   "custom.file.title": {
     "text": "Um arquivo de configurações que descreve a si mesmo",
     "from": "9d7e735d280e"
@@ -5436,8 +5448,8 @@
     "from": "f89ee178c319"
   },
   "custom.cmp.a.templates": {
-    "text": "Não. Planejado: para o título de um terminal e uma linha da lista",
-    "from": "fd37dcfee7f4"
+    "text": "Dois, para o título de um terminal e uma linha da lista: texto com marcadores como <code>{state}</code> e <code>{field:Ticket}</code>",
+    "from": "8133a0a553fb"
   },
   "custom.cmp.p1": {
     "text": "Todas estas ferramentas guardam as configurações em um arquivo, e VS Code, Zed e Windows Terminal também têm uma tela que o escreve, como o Aubergine. Na maioria, um tema também é um arquivo: JSON no VS Code e no Zed, CSS no Obsidian, Lua ou TOML no WezTerm, um arquivo de configuração no kitty e no Ghostty. VS Code, Zed e WezTerm deixam você mudar cores isoladas sobre um tema, como <code>appearance.colors</code> faz aqui.",
@@ -5448,8 +5460,8 @@
     "from": "9538078a7039"
   },
   "custom.cmp.p3": {
-    "text": "O Aubergine hoje está no lado das configurações: temas, cores e teclas em arquivos que se descrevem, e uma página que escreve parte das configurações. Ele não executa código seu na página, não aceita folha de estilo sua e não tem modelos. Isso está no <a href=\"/roadmap/#rm-yours\">roteiro</a>, e não construído.",
-    "from": "5018de362a41"
+    "text": "Hoje o Aubergine fica no extremo das configurações: temas, cores e teclas em arquivos que se descrevem, uma página que escreve parte das configurações e modelos para o que o título de um terminal e a linha dele dizem. Ele não executa código seu na página nem aceita uma folha de estilo sua. Isso está no <a href=\"/roadmap/#rm-yours\">roadmap</a>, e não foi construído.",
+    "from": "99bbc30b361c"
   },
   "custom.cmp.mark": {
     "text": "O Aubergine não tem vínculo com nenhuma das ferramentas citadas nesta página. Os nomes delas são marcas dos seus respectivos donos.",
@@ -5460,8 +5472,8 @@
     "from": "e10eed0040ae"
   },
   "custom.plan.text": {
-    "text": "Modelos, um <code>custom.css</code> e plugins estão planejados e ainda não feitos: veja o <a href=\"/roadmap/#rm-yours\">roteiro</a>.",
-    "from": "891be3228465"
+    "text": "Um <code>custom.css</code> e plugins estão planejados e não construídos: veja o <a href=\"/roadmap/#rm-yours\">roadmap</a>.",
+    "from": "a693849a5c84"
   },
   "custom.q.terminal.q": {
     "text": "Cada terminal pode ter um tema de cores diferente?",
@@ -5504,16 +5516,8 @@
     "from": "34ca8a4540f5"
   },
   "roadmap.yours.sub": {
-    "text": "Mais da página moldada por você, além dos temas, cores e teclas de hoje.",
-    "from": "6fef807ba454"
-  },
-  "roadmap.yours.templates.name": {
-    "text": "Modelos",
-    "from": "56b564b75c7f"
-  },
-  "roadmap.yours.templates.text": {
-    "text": "Escolha o que o título de um terminal e uma linha da lista mostram, a partir de um modelo seu.",
-    "from": "21523ce54129"
+    "text": "Mais da página moldada por você, além dos temas, cores, teclas e modelos de hoje.",
+    "from": "930654eedc50"
   },
   "roadmap.yours.css.name": {
     "text": "Sua própria folha de estilo",
