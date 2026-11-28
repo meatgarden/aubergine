@@ -732,6 +732,54 @@ export type ShownResponse = z.infer<typeof ShownResponse>;
 export const EventsQuery = z.object({ canvasId: Id.optional().describe('Only changes that concern this canvas.') });
 export type EventsQuery = z.infer<typeof EventsQuery>;
 
+/**
+ * The header a program sends to go on where it was: the `id` of the last event it took from the stream of changes,
+ * exactly as it was given. This is the name the standard for server-sent events gives it.
+ */
+export const LAST_EVENT_ID_HEADER = 'Last-Event-ID';
+
+/**
+ * The `id` of an event on the stream of changes: the run of the server (`epoch`) and the number of the change in it
+ * (`revision`), the numbers the server counts its changes with. To a program it is opaque: kept and sent back unread.
+ * The two are joined by a dot, which neither holds.
+ */
+export function streamEventId(epoch: string, revision: number): string {
+  return `${epoch}.${revision}`;
+}
+
+/** What an `id` says, or null for anything that is not one. */
+export function readStreamEventId(text: string): { epoch: string; revision: number } | null {
+  const match = /^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\.(0|[1-9][0-9]{0,14})$/.exec(text);
+  return match ? { epoch: match[1] as string, revision: Number(match[2]) } : null;
+}
+
+/** The first event of every connection to the stream of changes: where the server stands. */
+export const StreamHello = z
+  .object({
+    type: z.literal('hello'),
+    epoch: z.string().describe('Names this run of the server. Another value than last time means the server was started again.'),
+    revision: z.number().int().describe('The number of the last change the server made in this run. What is read from the lists after this event is not older than it.'),
+    version: z.string().describe("The server's version."),
+    resumed: z.boolean().describe('True when `Last-Event-ID` was taken: the changes made since that event follow, then new ones. False on a first connection, and after a `reset`.'),
+  })
+  .describe('Sent once, first, on every connection (as `event: hello`). Not a change.');
+export type StreamHello = z.infer<typeof StreamHello>;
+
+/** Why the stream could not go on from the `Last-Event-ID` it was given. */
+export const STREAM_RESET_REASONS = ['restarted', 'too-old', 'unreadable'] as const;
+export type StreamResetReason = (typeof STREAM_RESET_REASONS)[number];
+
+/** Said in place of the changes that cannot be sent again. */
+export const StreamReset = z
+  .object({
+    type: z.literal('reset'),
+    reason: z
+      .enum(STREAM_RESET_REASONS)
+      .describe('`restarted`: the server was started again since that event. `too-old`: more changes were made since than the server remembers. `unreadable`: the header did not hold an `id` of this stream.'),
+  })
+  .describe('Sent when `Last-Event-ID` could not be resumed from (as `event: reset`, before `hello`): changes may have been missed, so what was known may be stale. Read the lists again. Not a change.');
+export type StreamReset = z.infer<typeof StreamReset>;
+
 export const TokenList = pageOf(TokenView);
 export type TokenList = z.infer<typeof TokenList>;
 

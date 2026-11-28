@@ -30,7 +30,13 @@ import {
   type Canvas,
   type CanvasDetail,
   type CanvasSummary,
+  LAST_EVENT_ID_HEADER,
+  readStreamEventId,
+  streamEventId,
   type ChangeEvent,
+  type StreamHello,
+  type StreamReset,
+  type StreamResetReason,
   type ErrorCode,
   type OwnerCaller,
   type Frame,
@@ -46,7 +52,7 @@ import type { Principal, Resource } from './auth';
 import { IdempotencyStore, idempotencyKey, paginate, sendRemembered } from './public-api';
 import type { RateLimiter } from './rate-limit';
 import type { Sessions } from './sessions';
-import type { StateHub } from './state-hub';
+import type { StateHub, ToldChange } from './state-hub';
 import type { Tokens } from './tokens';
 import type { Viewers } from './viewers';
 import type { Drafts } from './drafts';
@@ -152,6 +158,22 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
   const writerOf = (principal: Principal): { source: 'owner' | 'agent'; by?: string } => (principal.kind === 'user' ? { source: 'owner' } : principal.kind === 'token' ? { source: 'agent', by: principal.name } : { source: 'agent' });
   const mayReadTerminal = (principal: Principal, sessionId: string): boolean => principal.kind === 'user' || deps.may(principal, 'terminal.read', deps.resourceOf(sessionId));
   const remembered = new IdempotencyStore();
+  /**
+   * Which project each ID was last of, for the streams of tokens limited to some projects: one memory for all of them,
+   * begun when the first such stream is, and kept up with every change from then on. One for all, and not one for
+   * each connection, so that a caller who comes back and is sent again a change that says only "this was removed" is
+   * still judged by what that thing was of. Memory only.
+   */
+  let ofProjects: ProjectMemory | null = null;
+  const projectMemory = (): ProjectMemory => {
+    if (ofProjects === null) {
+      const memory = new ProjectMemory(() => hub.state);
+      memory.note(hub.state);
+      hub.subscribe((event) => memory.note(event));
+      ofProjects = memory;
+    }
+    return ofProjects;
+  };
 
   const { messages, library, environments, queue, schedules } = deps;
   /** Who adds to one of the two lists. Only the owner, and a token the owner made with review switched off, add without waiting for a yes. */
@@ -657,6 +679,11 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
     // Server-sent events: one `data:` line of JSON per change. It needs nothing but an HTTP client,
     // and a bearer token goes in a header as on every other route.
     streamEvents: ({ query, request, reply, principal }) => {
+    //
+    // Each change has an `id`: the hub's own numbers, its epoch and the change's revision. A caller that sends the
+    // last one it took (`Last-Event-ID`) is first sent what the hub still remembers of the changes since, through
+    // the very filters a live change goes through, asked now: what it may see now, not what it might have seen then.
+    // Where that cannot be done it is told `reset`, never left to guess.
       const { canvasId } = query;
       if (canvasId !== undefined) sessions.getCanvas(canvasId);
       deps.recordNow(request);
@@ -671,31 +698,68 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
         }),
       );
       out.writeHead(200, { 'content-type': 'text/event-stream; charset=utf-8', 'cache-control': 'no-store', connection: 'keep-alive', 'x-accel-buffering': 'no', ...checked });
-      out.write(': connected\n\n');
-      // A token limited to some projects hears nothing of another. What each ID was of is remembered from the start,
+      // A token limited to some projects hears nothing of another. What each ID was of is remembered,
       // so that a change which only says "this was removed" can still be told apart.
       const limited = principal.kind === 'token' && principal.projects && principal.projects.kind !== 'all' ? principal.projects : null;
-      const memory = limited ? new ProjectMemory(() => hub.state) : null;
-      memory?.note(hub.state);
-      const unsubscribe = hub.subscribe((whole) => {
+      const memory = limited ? projectMemory() : null;
+      /** One change as the lines it is sent as, or null when it is not for this caller. Asked for a change as it happens and for one sent again alike. */
+      const linesOf = (whole: ChangeEvent, revision: number): string | null => {
         // Tokens, devices and what they did are the owner's business, not a stream's.
-        if (whole.type.startsWith('token.') || whole.type.startsWith('device.')) return;
+        if (whole.type.startsWith('token.') || whole.type.startsWith('device.')) return null;
         let event = whole;
         if (limited && memory) {
-          memory.note(whole);
           // Projects themselves, and what is shared, are not for a limited token to follow change by change.
-          if (whole.type.startsWith('project.') || whole.type.startsWith('sharing.') || whole.type === 'canvas.project') return;
+          if (whole.type.startsWith('project.') || whole.type.startsWith('sharing.') || whole.type === 'canvas.project') return null;
           const within = withinReach(whole, limited, (id) => memory.of(id));
-          if (within === null) return;
+          if (within === null) return null;
           event = within;
         }
-        if (canvasId !== undefined && !concerns(hub.state, event, canvasId)) return;
+        if (canvasId !== undefined && !concerns(hub.state, event, canvasId)) return null;
         // What a terminal shows is not for a caller that may not read that terminal.
         const about = 'sessionId' in event ? event.sessionId : 'session' in event ? event.session.id : null;
-        if (about !== null && !mayReadTerminal(principal, about) && isTerminalContentEvent(event)) return;
-        out.write(`data: ${JSON.stringify(withoutTerminalContent(event, (sessionId) => mayReadTerminal(principal, sessionId)))}\n\n`);
+        if (about !== null && !mayReadTerminal(principal, about) && isTerminalContentEvent(event)) return null;
+        return `id: ${streamEventId(hub.epoch, revision)}\ndata: ${JSON.stringify(withoutTerminalContent(event, (sessionId) => mayReadTerminal(principal, sessionId)))}\n\n`;
+      };
+
+      // Where to go on from, if the caller says and the hub still remembers. Read, answered and subscribed in one
+      // turn: no change can fall between what is sent again and what is sent as it happens.
+      const header = request.headers[LAST_EVENT_ID_HEADER.toLowerCase()];
+      const asked = header === undefined ? null : typeof header === 'string' ? readStreamEventId(header) : null;
+      let reset: StreamResetReason | null = null;
+      let again: ToldChange[] = [];
+      if (header !== undefined) {
+        if (asked === null) reset = 'unreadable';
+        else if (asked.epoch !== hub.epoch) reset = 'restarted';
+        // A number this run of the server has not reached is no `id` it gave.
+        else if (asked.revision > hub.toldRevision) reset = 'unreadable';
+        else {
+          const since = hub.since(asked.revision);
+          if (since === null) reset = 'too-old';
+          else again = since;
+        }
+      }
+      const resumed = header !== undefined && reset === null;
+      const first: string[] = [': connected\n\n'];
+      // Before `hello`, and with no `id`: a caller that got no further than this asks from the same place again.
+      if (reset !== null) first.push(`event: reset\ndata: ${JSON.stringify({ type: 'reset', reason: reset } satisfies StreamReset)}\n\n`);
+      // The `id` of `hello` is where the caller stands once it has read it: where it said it was when it goes on from
+      // there (what follows moves it forward), and the server's last change otherwise.
+      const hello: StreamHello = { type: 'hello', epoch: hub.epoch, revision: hub.toldRevision, version: deps.version, resumed };
+      first.push(`event: hello\nid: ${streamEventId(hub.epoch, resumed && asked ? asked.revision : hub.toldRevision)}\ndata: ${JSON.stringify(hello)}\n\n`);
+      for (const { event, revision } of again) {
+        const lines = linesOf(event, revision);
+        if (lines !== null) first.push(lines);
+      }
+      // Everything up to this number has been answered for above.
+      const from = hub.toldRevision;
+      const unsubscribe = hub.subscribe((whole, revision) => {
+        if (revision <= from) return;
+        const lines = linesOf(whole, revision);
+        if (lines !== null) out.write(lines);
       });
       const beat = setInterval(() => out.write(': still here\n\n'), 25_000);
+      // One piece, handed to the socket: nothing here waits for the caller to read it, and no change waits for this.
+      out.write(first.join(''));
       const release = deps.holdOpen(request, () => {
         end();
         out.end();

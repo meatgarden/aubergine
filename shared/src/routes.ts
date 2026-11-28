@@ -13,6 +13,8 @@ import {
   CreateCanvasRequest,
   CreateFrameBody,
   EventsQuery,
+  StreamHello,
+  StreamReset,
   MoveSessionRequest,
   PageQuery,
   ProjectAsked,
@@ -188,7 +190,9 @@ import { EnvironmentList, EnvironmentsQuery } from './environment-api';
 import { AcceptInstallRequest, AddSourceRequest, InstallRequest, InstallRequestDetail, InstallRequestList, InstalledItem, InstalledList, InstalledUsage, LibraryItemDetail, LibraryItemId, LibraryItemList, LibrarySource, LibrarySourceList, RequestInstallRequest } from './library';
 
 /** What the event stream sends: a change, as the reducer in `shared/` applies it. Described loosely on purpose: new kinds appear. */
-const StreamedEvent = z.looseObject({ type: z.string() }).describe('One change. `type` names it (for example `session.created`, `canvas.updated`); the other fields depend on the type.');
+const StreamedChange = z.looseObject({ type: z.string() }).describe('One change. `type` names it (for example `session.created`, `canvas.updated`); the other fields depend on the type.');
+/** Besides changes, the two things the stream says about itself. */
+const StreamedEvent = z.union([StreamHello, StreamReset, StreamedChange]);
 
 export const ROUTES = {
   /* ---------- The server itself ---------- */
@@ -2032,7 +2036,7 @@ export const ROUTES = {
     tag: 'Events',
     summary: 'Follow changes as they happen',
     description:
-      'A stream of server-sent events (`text/event-stream`) that does not end: one `data:` line of JSON per change, and a comment line now and then to keep the connection open. `canvasId` narrows it to what concerns one canvas. Changes to tokens are not sent.',
+      'A stream of server-sent events (`text/event-stream`) that does not end: one `data:` line of JSON per change, and a comment line now and then to keep the connection open. `canvasId` narrows it to what concerns one canvas. Changes to tokens and to paired devices are not sent.\n\nEvery connection begins with one event `hello` (`event: hello`): the `epoch` that names this run of the server, the `revision` of its last change, and its version. Every change has an `id:` line. The `id` is opaque: keep the last one and send it back unread, in the header `Last-Event-ID`, when connecting again. The server remembers its most recent changes (a bounded number, in memory only, gone when it is started again) and then first sends every change made since that event which the caller may see now, in order, and goes on with new ones with none missing and none twice. When it cannot (it was started again, the event is further back than it remembers, or the header cannot be read) it sends one event `reset` (`event: reset`) with the `reason` instead: read the lists again. A caller sees only what is within its reach, so the `id`s it sees do not count up by one: do not look for gaps.',
     action: 'events.read',
     query: EventsQuery,
     response: null,

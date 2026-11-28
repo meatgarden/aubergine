@@ -103,7 +103,7 @@ export function emitClient(document: OpenApiDocument): string {
     '// Generated from the description of the API (/v1/openapi.json). Do not edit by hand:',
     '// change the route declarations in shared/src/routes.ts and run `pnpm generate`.',
     '',
-    "import { everyItem, requester, type CallOptions, type ClientOptions, type OperationInfo } from './runtime';",
+    "import { everyItem, requester, type CallOptions, type ClientOptions, type OperationInfo, type StreamOptions } from './runtime';",
     '',
     '/** The one shape every error has. */',
     `export type ErrorBody = ${tsType(document.components.schemas.Error)};`,
@@ -150,8 +150,9 @@ export function emitClient(document: OpenApiDocument): string {
     const body = operation.requestBody;
     const fields = [...params, ...(hasQuery ? [`query${queryRequired ? '' : '?'}: ${name}Query`] : []), ...(body ? [`body${body.required ? '' : '?'}: ${name}Body`] : [])];
     const needsArgs = params.length > 0 || queryRequired || body?.required === true;
-    const args = `args${needsArgs ? '' : '?'}: ${fields.length > 0 ? `{ ${fields.join('; ')} } & CallOptions` : 'CallOptions'}`;
     const answer = answerSchema(operation);
+    const options = answer?.stream ? 'CallOptions & StreamOptions' : 'CallOptions';
+    const args = `args${needsArgs ? '' : '?'}: ${fields.length > 0 ? `{ ${fields.join('; ')} } & ${options}` : options}`;
     const access = operation['x-aubergine-access'];
     const who = access.who === 'any' ? 'Needs no scope.' : access.who === 'browser' ? 'Signed-in browser only: no API token may call this.' : access.who === 'session' ? `A session's own token${access.scope ? `, or an API token with \`${access.scope}\`` : ''}.` : `Scope: \`${access.scope}\`.`;
     out.push(comment([`${operation.summary}.`, '', `\`${method} ${path}\`. ${who}`], '  '));

@@ -1,7 +1,7 @@
 // Generated from the description of the API (/v1/openapi.json). Do not edit by hand:
 // change the route declarations in shared/src/routes.ts and run `pnpm generate`.
 
-import { everyItem, requester, type CallOptions, type ClientOptions, type OperationInfo } from './runtime';
+import { everyItem, requester, type CallOptions, type ClientOptions, type OperationInfo, type StreamOptions } from './runtime';
 
 /** The one shape every error has. */
 export type ErrorBody = {
@@ -9251,6 +9251,20 @@ export type CreateTokenBody = {
   expiresInDays?: number;
   /** Changes to workflows need your review: with `workflows:write` the token may propose drafts, and may not create or change workflows directly. On unless you switch it off. */
   reviewWorkflowChanges?: boolean;
+  type: "hello";
+  /** Names this run of the server. Another value than last time means the server was started again. */
+  epoch: string;
+  /** The number of the last change the server made in this run. What is read from the lists after this event is not older than it. */
+  revision: number;
+  /** The server's version. */
+  version: string;
+  /** True when `Last-Event-ID` was taken: the changes made since that event follow, then new ones. False on a first connection, and after a `reset`. */
+  resumed: boolean;
+} | {
+  type: "reset";
+  /** `restarted`: the server was started again since that event. `too-old`: more changes were made since than the server remembers. `unreadable`: the header did not hold an `id` of this stream. */
+  reason: "restarted" | "too-old" | "unreadable";
+} | {
   /** Which projects it reaches, for every scope, reading included: `{"kind":"all"}` (the default) or `{"kind":"projects","projectIds":[…]}`. Things shared with every project are seen either way. */
   projects?: {
     kind: "all";
@@ -11672,7 +11686,7 @@ export interface Client {
    *
    * `GET /v1/events`. Scope: `read`.
    */
-  streamEvents(args?: { query?: StreamEventsQuery } & CallOptions): AsyncGenerator<StreamEventsEvent, void, void>;
+  streamEvents(args?: { query?: StreamEventsQuery } & CallOptions & StreamOptions): AsyncGenerator<StreamEventsEvent, void, void>;
   /**
    * List API tokens.
    *

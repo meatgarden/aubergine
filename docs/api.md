@@ -11552,7 +11552,9 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 
 `GET /v1/events`: Follow changes as they happen.
 
-A stream of server-sent events (`text/event-stream`) that does not end: one `data:` line of JSON per change, and a comment line now and then to keep the connection open. `canvasId` narrows it to what concerns one canvas. Changes to tokens are not sent.
+A stream of server-sent events (`text/event-stream`) that does not end: one `data:` line of JSON per change, and a comment line now and then to keep the connection open. `canvasId` narrows it to what concerns one canvas. Changes to tokens and to paired devices are not sent.
+
+Every connection begins with one event `hello` (`event: hello`): the `epoch` that names this run of the server, the `revision` of its last change, and its version. Every change has an `id:` line. The `id` is opaque: keep the last one and send it back unread, in the header `Last-Event-ID`, when connecting again. The server remembers its most recent changes (a bounded number, in memory only, gone when it is started again) and then first sends every change made since that event which the caller may see now, in order, and goes on with new ones with none missing and none twice. When it cannot (it was started again, the event is further back than it remembers, or the header cannot be read) it sends one event `reset` (`event: reset`) with the `reason` instead: read the lists again. A caller sees only what is within its reach, so the `id`s it sees do not count up by one: do not look for gaps.
 
 An API token needs the scope `read`.
 
@@ -11640,11 +11642,26 @@ The answer holds the secret. It is sent this once and cannot be had again.
 For the signed-in browser only. No API token may call this, whatever its scopes.
 
 **Body** (JSON):
+| `Last-Event-ID` | header | `string` | no | The `id` of the last event taken from this stream, exactly as it was given. The changes made since are sent first; an event `reset` says when they cannot be. |
 
 | Field | Type | Required | |
 |---|---|---|---|
 | `name` | `string` | yes | What will use it. |
 | `scopes` | `("read" \| "canvases:write" \| "sessions:write" \| "notes:write" \| "wo…` | yes | What it may do. At least one. |
+  type: "hello";
+  /** Names this run of the server. Another value than last time means the server was started again. */
+  epoch: string;
+  /** The number of the last change the server made in this run. What is read from the lists after this event is not older than it. */
+  revision: number;
+  /** The server's version. */
+  version: string;
+  /** True when `Last-Event-ID` was taken: the changes made since that event follow, then new ones. False on a first connection, and after a `reset`. */
+  resumed: boolean;
+} | {
+  type: "reset";
+  /** `restarted`: the server was started again since that event. `too-old`: more changes were made since than the server remembers. `unreadable`: the header did not hold an `id` of this stream. */
+  reason: "restarted" | "too-old" | "unreadable";
+} | {
 | `expiresAt` | `string` | no | When it stops working. Never, when neither this nor `expiresInDays` is given. |
 | `expiresInDays` | `number` | no | In how many days it stops working. |
 | `reviewWorkflowChanges` | `boolean` | no | Changes to workflows need your review: with `workflows:write` the token may propose drafts, and may not create or change workflows directly. On unless you switch it off. |
