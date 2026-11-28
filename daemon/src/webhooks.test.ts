@@ -292,7 +292,7 @@ describe('a rule that sends a webhook', () => {
     for (const name of ['nowhere', 'plain', 'OPS']) {
       const refused = await asOwner('POST', '/v1/rules', { event: 'task.done', action: { kind: 'webhook', webhook: name } });
       expect(refused.status, name).toBe(400);
-      expect(refused.body.error.message).toBe(`There is no webhook named “${name}” in the settings file, so the rule that names it sends nothing. Webhooks are written by hand under "webhooks" in config.json and read when the server starts.`);
+      expect(refused.body.error.message).toBe(`There is no webhook named “${name}” that can be used, so the rule that names it sends nothing. Either none is written under "webhooks" in config.json, or its entry was refused when the server started: aubergine doctor says which.`);
     }
     // A rule cannot say where a message goes: a name that is an address, or no name, is not a webhook.
     for (const action of [{ kind: 'webhook' }, { kind: 'webhook', webhook: 'https://evil.example.test/' }, { kind: 'webhook', webhook: '../ops' }, { kind: 'webhook', webhook: ['ops'] }, { kind: 'webhook', address: 'https://evil.example.test/' }]) {
@@ -384,7 +384,7 @@ describe('a rule that sends a webhook', () => {
     await stop();
     await writeFile(path.join(dir, SETTINGS_FILE), JSON.stringify({ ...CONFIG, webhooks: [] }));
     await start();
-    const missing = 'There is no webhook named “ops” in the settings file, so the rule that names it sends nothing. Webhooks are written by hand under "webhooks" in config.json and read when the server starts.';
+    const missing = 'There is no webhook named “ops” that can be used, so the rule that names it sends nothing. Either none is written under "webhooks" in config.json, or its entry was refused when the server started: aubergine doctor says which.';
     expect(ruleNow(made.id).problem).toBe(missing);
     expect((await asOwner('GET', '/api/v1/state')).body.webhooks).toEqual([]);
     for (let n = 0; n < 3; n += 1) {
@@ -443,7 +443,7 @@ describe('a rule that sends a webhook', () => {
     await quiet();
     expect(sent).toHaveLength(RULE_RATE_PER_MINUTE);
     await until(async () => (await recorded()).filter((line) => line.action === 'rule.webhook').length === RULE_RATE_PER_MINUTE + 6);
-    expect((await recorded()).filter((line) => line.action === 'rule.webhook' && line.status === 429).map((line) => line.outcome)).toEqual(['limited', 'limited', 'limited', 'limited', 'limited', 'limited']);
+    expect((await recorded()).filter((line) => line.action === 'rule.webhook' && line.status === 429).map((line) => [line.outcome, line.webhook])).toEqual(Array.from({ length: 6 }, () => ['limited', 'ops']));
   });
 
   it('is not tried again after so many attempts in a row failed, until its rule is changed or the server starts again; one that was taken counts from nothing', async () => {

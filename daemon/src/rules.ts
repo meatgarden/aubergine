@@ -47,6 +47,8 @@ export interface ActionKind {
   problem(action: RuleAction, state: AppState): string | null;
   /** The action in words, as part of "When …, …". */
   words(action: RuleAction, state: AppState): string;
+  /** The name of what the action names outside the state (a webhook's name), for the record of a firing; undefined when it names nothing. */
+  named?(action: RuleAction): string | undefined;
   /** What the action names outside the state that is not there, in a sentence that stands by itself; null when nothing is missing. */
   missing?(action: RuleAction, known: ActionKnown): string | null;
   /**
@@ -122,8 +124,8 @@ registerActionKind({
 
 const Webhook = z.object({ kind: z.literal('webhook'), webhook: WebhookName });
 
-/** Why a rule's webhook cannot be sent because it is not there. Fixed words and the name the owner wrote. */
-export const webhookMissingWords = (name: string): string => `There is no webhook named “${name}” in the settings file, so the rule that names it sends nothing. Webhooks are written by hand under "webhooks" in config.json and read when the server starts.`;
+/** Why a rule's webhook cannot be sent because it is not among those the server took at its start. Fixed words and the name the owner wrote. */
+export const webhookMissingWords = (name: string): string => `There is no webhook named “${name}” that can be used, so the rule that names it sends nothing. Either none is written under "webhooks" in config.json, or its entry was refused when the server started: aubergine doctor says which.`;
 
 registerActionKind({
   kind: 'webhook',
@@ -134,6 +136,10 @@ registerActionKind({
   missing: (action, known) => {
     const parsed = Webhook.safeParse(action);
     return parsed.success && !known.webhooks.includes(parsed.data.webhook) ? webhookMissingWords(parsed.data.webhook) : null;
+  },
+  named: (action) => {
+    const parsed = Webhook.safeParse(action);
+    return parsed.success ? parsed.data.webhook : undefined;
   },
   words: (action) => {
     const parsed = Webhook.safeParse(action);

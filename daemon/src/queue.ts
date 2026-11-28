@@ -771,7 +771,8 @@ export class Queue {
       if (this.fired.size > 5000) this.fired.delete(this.fired.values().next().value as string);
       const now = Date.now();
       const lately = (this.firedAt.get(rule.id) ?? []).filter((at) => at > now - 60_000);
-      const record = (status: number, outcome: 'ok' | 'limited' | 'error', webhook?: string): void =>
+      // A firing that names a webhook is written down with that name, however it ended: dropped for coming too fast as well.
+      const record = (status: number, outcome: 'ok' | 'limited' | 'error', webhook: string | undefined = actionKind(rule.action.kind)?.named?.(rule.action)): void =>
         void this.options.activity.append({ at: new Date().toISOString(), caller: 'rule', tokenId: null, tokenName: `rule ${rule.id}`, action: `rule.${rule.action.kind}`, resource: occasion.sessionId ? { sessionId: occasion.sessionId } : {}, method: 'RULE', route: occasion.event, status, outcome, ...(webhook === undefined ? {} : { webhook }) });
       if (lately.length >= RULE_RATE_PER_MINUTE) {
         this.firedAt.set(rule.id, lately);
