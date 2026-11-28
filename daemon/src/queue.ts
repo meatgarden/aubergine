@@ -26,6 +26,7 @@ import {
   sentName,
   webhookText,
   webhookSignatureHeader,
+  WEBHOOK_FAILURES_MAX,
   WEBHOOK_HEADERS,
   WebhookBody,
   type WebhookEntry,
@@ -147,6 +148,12 @@ export class Queue {
   private readonly webhooks: ReadonlyMap<string, WebhookEntry>;
   /** Messages on their way to a receiver. They wait in no line: a slow receiver holds up nothing but its own message. */
   private readonly outside = new Set<Promise<void>>();
+  /**
+   * How many attempts of each rule's webhook in a row did not end with the receiver's yes. At `WEBHOOK_FAILURES_MAX`
+   * the rule's webhook is not tried again until the rule is changed or the server starts again. Memory: no timer
+   * counts it down.
+   */
+  private readonly failures = new Map<string, number>();
 
   constructor(
     private readonly hub: StateHub,
@@ -187,15 +194,10 @@ export class Queue {
    * ended while nobody was listening follows it now. Nothing is started here.
    */
   async reconcile(): Promise<void> {
-    // A rule that names something of the settings file that is not there says so from the start, once; one whose
-    // thing is there again no longer says so. What a rule could not send stays said until a message is sent.
-    for (const rule of [...this.queue.rules]) {
-      const kind = actionKind(rule.action.kind);
-      if (!kind?.missing) continue;
-      const missing = kind.missing(rule.action, this.known);
-      if (missing !== null) this.ruleProblem(rule.id, missing);
-      else if (rule.problem !== null && rule.problem === kind.missing(rule.action, { webhooks: [] })) this.ruleProblem(rule.id, null);
-    }
+    // A rule that names something of the settings file that is not there says so from the start, once. Everything
+    // else a rule said it could not do is from before this start: the settings were read again and the count of what
+    // failed in a row is memory, so the rule begins again and says nothing until an attempt of now fails.
+    for (const rule of [...this.queue.rules]) this.ruleProblem(rule.id, actionKind(rule.action.kind)?.missing?.(rule.action, this.known) ?? null);
     for (const task of [...this.queue.tasks]) {
       if (task.state === 'taken') await this.apply(task, { type: 'fail', reason: 'The server stopped while it was being started.' }).catch(() => {});
       else if ((task.state === 'working' || task.state === 'needs-owner') && task.runId !== null) {
@@ -653,13 +655,16 @@ export class Queue {
   switchRule(ruleId: string, on: boolean): RuleList {
     const rule = this.queue.rules.find((r) => r.id === ruleId);
     if (!rule) throw new NotFoundError(`No rule ${ruleId}`);
-    // A rule that is changed begins again: what it could not do is no longer said, unless what it names is still not there.
+    // A rule that is changed begins again: what it could not do is no longer said, unless what it names is still not
+    // there, and what failed in a row is counted from nothing.
+    if (rule.on !== on) this.failures.delete(ruleId);
     if (rule.on !== on) this.hub.emit({ type: 'rule.changed', rule: { ...rule, on, problem: actionKind(rule.action.kind)?.missing?.(rule.action, this.known) ?? null } });
     return this.rules(rule.projectId);
   }
 
   removeRule(ruleId: string): void {
     if (!this.queue.rules.some((rule) => rule.id === ruleId)) throw new NotFoundError(`No rule ${ruleId}`);
+    this.failures.delete(ruleId);
     this.hub.emit({ type: 'rule.removed', ruleId });
   }
 
@@ -682,6 +687,8 @@ export class Queue {
       this.ruleProblem(rule.id, webhookMissingWords(name));
       return { says: 'there is no webhook of that name', status: 404, outcome: 'error', webhook: name };
     }
+    // Too many in a row were not taken: nothing is sent, and the rule goes on saying so.
+    if ((this.failures.get(rule.id) ?? 0) >= WEBHOOK_FAILURES_MAX) return { says: 'not tried: too many attempts in a row failed', status: 503, outcome: 'error', webhook: name };
     const state = this.hub.state;
     const project = projectById(state, occasion.projectId);
     const session = occasion.sessionId ? state.sessions.find((s) => s.id === occasion.sessionId && s.projectId === occasion.projectId) : undefined;
@@ -702,7 +709,19 @@ export class Queue {
     // Whatever the sender throws is not looked at: an error of the network may name the address.
     const result = await (this.options.webhookSender ?? NO_SENDER).send({ address: entry.address, headers: { [WEBHOOK_HEADERS.event]: occasion.event, [WEBHOOK_HEADERS.delivery]: body.id, [WEBHOOK_HEADERS.signature]: signature }, body: text }).catch((): WebhookResult => ({ kind: 'failed' }));
     const ending = webhookEnding(result);
-    this.ruleProblem(rule.id, ending.ok ? null : `The webhook “${name}” was not sent: ${ending.says}. Nothing is tried a second time; the next time its rule fires, it is sent again.`);
+    // The rule was removed while the message was on its way: there is nothing left to count this attempt for.
+    if (!this.queue.rules.some((r) => r.id === rule.id)) return { says: ending.says, status: ending.status, outcome: ending.ok ? 'ok' : 'error', webhook: name };
+    if (ending.ok) this.failures.delete(rule.id);
+    else this.failures.set(rule.id, (this.failures.get(rule.id) ?? 0) + 1);
+    const stopped = (this.failures.get(rule.id) ?? 0) >= WEBHOOK_FAILURES_MAX;
+    this.ruleProblem(
+      rule.id,
+      ending.ok
+        ? null
+        : stopped
+          ? `The webhook “${name}” was not sent ${WEBHOOK_FAILURES_MAX} times in a row; the last time, ${ending.says}. It is not tried again until its rule is switched off and on, or the server starts again.`
+          : `The webhook “${name}” was not sent: ${ending.says}. Nothing is tried a second time; the next time its rule fires, it is sent again.`,
+    );
     return { says: ending.says, status: ending.status, outcome: ending.ok ? 'ok' : 'error', webhook: name };
   }
 

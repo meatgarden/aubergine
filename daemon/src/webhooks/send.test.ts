@@ -83,7 +83,10 @@ describe('the real sender', () => {
   it('gives up on a receiver that does not answer, in the time it has', async () => {
     respond = () => {};
     const began = Date.now();
-    expect(await new FetchWebhookSender({ timeoutMs: 300 }).send(delivery())).toEqual({ kind: 'timed-out' });
+    // Whoever asks is handed a promise at once: waiting for the receiver is the promise's, never the caller's.
+    const going = new FetchWebhookSender({ timeoutMs: 300 }).send(delivery());
+    expect(Date.now() - began).toBeLessThan(100);
+    expect(await going).toEqual({ kind: 'timed-out' });
     expect(Date.now() - began).toBeLessThan(3000);
     expect(got).toHaveLength(1);
   });

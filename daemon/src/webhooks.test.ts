@@ -1,11 +1,13 @@
 import { createHmac } from 'node:crypto';
+import http from 'node:http';
 import { mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promises';
 import type { AddressInfo } from 'node:net';
 import os from 'node:os';
 import path from 'node:path';
-import { GRANTABLE_SCOPES, NO_ATTENTION, NO_STATUS, RULE_RATE_PER_MINUTE, RuleEvent, WEBHOOK_HEADERS, WebhookBody, newId, readProjectFile, type ChangeEvent, type ForYou, type Rule, type Scope, type Session, type Task } from '@aubergine/shared';
+import { GRANTABLE_SCOPES, LAST_EVENT_ID_HEADER, NO_ATTENTION, NO_STATUS, RULE_RATE_PER_MINUTE, RuleEvent, WEBHOOK_FAILURES_MAX, WEBHOOK_HEADERS, WebhookBody, newId, paths, publicPaths, readProjectFile, type ChangeEvent, type ForYou, type Rule, type Scope, type Session, type Task } from '@aubergine/shared';
 import type { FastifyInstance } from 'fastify';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import WebSocket from 'ws';
 import { ACTIVITY_FILE, FileActivityLog } from './activity';
 import { sessionToken } from './auth';
 import { parseRuleCommand } from './cli/queue';
@@ -444,6 +446,87 @@ describe('a rule that sends a webhook', () => {
     expect((await recorded()).filter((line) => line.action === 'rule.webhook' && line.status === 429).map((line) => line.outcome)).toEqual(['limited', 'limited', 'limited', 'limited', 'limited', 'limited']);
   });
 
+  it('is not tried again after so many attempts in a row failed, until its rule is changed or the server starts again; one that was taken counts from nothing', async () => {
+    const login = agent('Fix login');
+    const made = await rule('terminal.waiting');
+    const other = await rule('terminal.finished');
+    let attempts = 0;
+    // Slower than the rate limit would notice: each wait is told from a time of its own.
+    const realNow = Date.now;
+    let clock = realNow();
+    Date.now = () => clock;
+    try {
+      const waitsAgain = async (): Promise<void> => {
+        clock += 61_000;
+        attempts += 1;
+        await says(login, 'working');
+        await says(login, 'waiting');
+        await until(async () => (await recorded()).filter((line) => line.route === 'terminal.waiting').length === attempts);
+      };
+      // Four fail, one is taken: the count begins again, and nothing is said.
+      answer = async () => ({ kind: 'answered', status: 500 });
+      for (let n = 0; n < WEBHOOK_FAILURES_MAX - 1; n += 1) await waitsAgain();
+      answer = async () => ({ kind: 'answered', status: 200 });
+      await waitsAgain();
+      expect(ruleNow(made.id).problem).toBeNull();
+      // As many in a row as are allowed: each was tried, and after the last the rule says that it is not tried again.
+      answer = async () => ({ kind: 'timed-out' });
+      for (let n = 0; n < WEBHOOK_FAILURES_MAX; n += 1) await waitsAgain();
+      expect(sent).toHaveLength(2 * WEBHOOK_FAILURES_MAX);
+      const stopped = `The webhook “ops” was not sent ${WEBHOOK_FAILURES_MAX} times in a row; the last time, the receiver did not answer in time. It is not tried again until its rule is switched off and on, or the server starts again.`;
+      expect(ruleNow(made.id).problem).toBe(stopped);
+      // It fires again and again: nothing is sent, each firing is one line of the record, and the owner's list holds the one item.
+      answer = async () => ({ kind: 'answered', status: 200 });
+      for (let n = 0; n < 3; n += 1) await waitsAgain();
+      expect(sent).toHaveLength(2 * WEBHOOK_FAILURES_MAX);
+      expect((await recorded()).slice(-3).map((line) => [line.action, line.status, line.outcome, line.webhook])).toEqual([['rule.webhook', 503, 'error', 'ops'], ['rule.webhook', 503, 'error', 'ops'], ['rule.webhook', 503, 'error', 'ops']]);
+      expect((await forYouNow()).items.filter((item) => item.kind === 'rule')).toMatchObject([{ id: `rule:${made.id}`, what: stopped }]);
+      expect(events.filter((event) => event.type === 'rule.changed' && event.rule.id === made.id && event.rule.problem === stopped)).toHaveLength(1);
+      // Another rule that names the same webhook counts for itself: it is still sent.
+      await says(login, 'done');
+      await until(() => sent.length === 2 * WEBHOOK_FAILURES_MAX + 1);
+      expect(bodyOf(sent.at(-1)!).rule.id).toBe(other.id);
+      // Switched off and on: the rule begins again, and the next happening is sent.
+      await asOwner('PATCH', `/v1/rules/${made.id}`, { on: false });
+      await asOwner('PATCH', `/v1/rules/${made.id}`, { on: true });
+      expect(ruleNow(made.id).problem).toBeNull();
+      await waitsAgain();
+      expect(sent).toHaveLength(2 * WEBHOOK_FAILURES_MAX + 2);
+      // Stopped once more, and the server starts again: it begins again too, and says nothing until an attempt of now fails.
+      answer = async () => ({ kind: 'failed' });
+      for (let n = 0; n < WEBHOOK_FAILURES_MAX; n += 1) await waitsAgain();
+      expect(ruleNow(made.id).problem).toContain('It is not tried again');
+      const before = sent.length;
+      await stop();
+      await start();
+      expect(ruleNow(made.id).problem).toBeNull();
+      answer = async () => ({ kind: 'answered', status: 204 });
+      await waitsAgain();
+      expect(sent).toHaveLength(before + 1);
+      expect(ruleNow(made.id).problem).toBeNull();
+    } finally {
+      Date.now = realNow;
+    }
+  });
+
+  it('sends nothing for an archived project, and again once it is open', async () => {
+    const made = await asOwner('POST', '/v1/projects', { name: 'Second' });
+    const second = made.body.id as string;
+    const canvasId = hub.state.canvases.find((c) => c.projectId === second)!.id;
+    const theirs: Session = { ...agent('mine'), id: newId(), name: 'theirs', projectId: second };
+    hub.emit({ type: 'session.created', session: theirs, canvasId, node: { id: newId(), sessionId: theirs.id, x: 0, y: 0, width: 640, height: 400, color: 'none' } });
+    await rule('terminal.waiting', 'ops', { projectId: second });
+    await says(theirs, 'waiting');
+    await until(() => sent.length === 1);
+    expect(bodyOf(sent[0]!).project).toEqual({ id: second, name: 'Second' });
+    expect((await asOwner('POST', `/v1/projects/${second}/archive`, { sessions: 'park' })).body.state).toBe('archived');
+    await says(theirs, 'working');
+    await says(theirs, 'waiting');
+    await quiet();
+    expect(sent).toHaveLength(1);
+    expect((await recorded()).length).toBe(1);
+  });
+
   it('is made by the owner alone: no token of any scope and no session makes one, changes one or sends anything through any route', async () => {
     const worker = agent('worker');
     const everything = await makeToken('everything', [...GRANTABLE_SCOPES], { reviewWorkflowChanges: false, reach: { kind: 'all' } });
@@ -488,10 +571,33 @@ describe('a rule that sends a webhook', () => {
 
   it('keeps the secret and the rest of the address in the settings file: in no answer, no event, nothing printed and no other file of the data folder', async () => {
     const printed: string[] = [];
+    const streamed: string[] = [];
+    const following: (() => void)[] = [];
     const original = { log: console.log, warn: console.warn, error: console.error };
     for (const level of ['log', 'warn', 'error'] as const) console[level] = (...args: unknown[]) => void printed.push(args.map(String).join(' '));
     try {
       const login = agent('Fix login');
+      // Both streams are followed from before anything happens: the page's, and the one for programs.
+      const everything = await makeToken('follower', [...GRANTABLE_SCOPES], { reach: { kind: 'all' } });
+      const follow = (lastEventId?: string): Promise<http.IncomingMessage> =>
+        new Promise((resolve, reject) => {
+          http.get({ host: '127.0.0.1', port, path: publicPaths.events, headers: { authorization: `Bearer ${everything}`, ...(lastEventId === undefined ? {} : { [LAST_EVENT_ID_HEADER]: lastEventId }) } }, (response) => {
+            response.setEncoding('utf8');
+            response.on('data', (chunk: string) => streamed.push(chunk));
+            response.on('error', () => {});
+            following.push(() => response.destroy());
+            resolve(response);
+          }).on('error', reject);
+        });
+      await follow();
+      await until(() => streamed.join('').includes('event: hello'));
+      const firstId = /^id: (.+)$/m.exec(streamed.join(''))?.[1] ?? '';
+      expect(firstId).not.toBe('');
+      const socket = new WebSocket(`ws://127.0.0.1:${port}${paths.events}`, { headers: { host: `127.0.0.1:${port}`, cookie: `${cookieName(port)}=${ownerToken}` }, origin });
+      socket.on('message', (data) => void streamed.push(String(data)));
+      socket.on('error', () => {});
+      following.push(() => socket.close());
+      await new Promise((resolve) => socket.once('open', resolve));
       const made = await rule('terminal.waiting');
       await rule('terminal.finished', 'second');
       // Sent, refused by the receiver, cut off with an error that names the address, and thrown by the sender itself.
@@ -516,6 +622,11 @@ describe('a rule that sends a webhook', () => {
       await asOwner('POST', '/v1/rules', { event: 'task.done', action: { kind: 'webhook', webhook: 'nowhere' } });
       await asOwner('DELETE', `/v1/rules/${made.id}`);
       await hub.flush();
+      // A program that comes back is sent again what it missed, from the server's memory of the changes.
+      const live = streamed.join('').length;
+      await follow(firstId);
+      await until(() => streamed.join('').slice(live).includes('rule.removed'));
+      expect(streamed.join('')).toContain('was not sent');
       // `doctor` says the names and the hosts, and what is wrong with an entry in words that do not repeat it.
       const report = await webhookReport(dir);
       expect(report).toEqual({ webhooks: [{ name: 'ops', host: 'hooks.example.test' }, { name: 'second', host: '127.0.0.1:9' }], problems: ['webhooks: “plain”: its address is plain http on a host that is not this computer’s own; a webhook elsewhere is https.'] });
@@ -523,6 +634,7 @@ describe('a rule that sends a webhook', () => {
     } finally {
       Object.assign(console, original);
     }
+    for (const end of following.splice(0)) end();
     const never = [SECRET, OTHER_SECRET, PATH_KEY, QUERY_KEY, '/services/', '?key='];
     const files = await everyFile(dir);
     expect(files.length).toBeGreaterThan(2);
@@ -533,7 +645,7 @@ describe('a rule that sends a webhook', () => {
       else for (const word of never) expect(text, `${word} in ${path.basename(file)}`).not.toContain(word);
     }
     expect(answers.length).toBeGreaterThan(30);
-    for (const [where, text] of [['an answer', answers.join('\n')], ['an event', JSON.stringify(events)], ['the state', JSON.stringify(hub.state)], ['what was printed', printed.join('\n')]] as const) for (const word of never) expect(text, `${word} in ${where}`).not.toContain(word);
+    for (const [where, text] of [['an answer', answers.join('\n')], ['an event', JSON.stringify(events)], ['the state', JSON.stringify(hub.state)], ['what was printed', printed.join('\n')], ['either stream', streamed.join('')]] as const) for (const word of never) expect(text, `${word} in ${where}`).not.toContain(word);
     // The host is said to the owner's page and nobody else.
     expect(answers.filter((text) => text.includes('hooks.example.test'))).toHaveLength(1);
   });
@@ -544,7 +656,15 @@ describe('a rule that sends a webhook', () => {
     const exported = (await asOwner('GET', `/v1/projects/${hub.state.projects[0]!.id}/file`)).body as { text: string; leftOut: string[] };
     expect(exported.leftOut).toContain('A rule that sends a webhook is not in the file: a webhook is written in the settings file of one computer.');
     expect((JSON.parse(exported.text) as { rules: unknown[] }).rules).toEqual([{ event: 'task.done', action: { kind: 'notify' } }]);
+    // Compared with the project it was written from, the file agrees: a rule a file does not carry is never a difference.
+    const compared = await asOwner('POST', `/v1/projects/${hub.state.projects[0]!.id}/file/compare`, { text: exported.text });
+    expect(compared.status, JSON.stringify(compared.body)).toBe(200);
+    expect(compared.body.differences).toEqual([]);
     const withOne = JSON.stringify({ ...(JSON.parse(exported.text) as object), rules: [{ event: 'task.done', action: { kind: 'webhook', webhook: 'ops' } }] });
+    // And a file that holds one is not compared either: it is refused with the same sentence.
+    const refused = await asOwner('POST', `/v1/projects/${hub.state.projects[0]!.id}/file/compare`, { text: withOne });
+    expect(refused.status).toBe(400);
+    expect(refused.body.error.message).toContain('A rule in this file sends a webhook.');
     expect(readProjectFile(withOne)).toEqual({ ok: false, problem: 'A rule in this file sends a webhook. A project file cannot hold such a rule: a webhook is written in the settings file of one computer, and a rule that sends one is written there by its owner.' });
   });
 });

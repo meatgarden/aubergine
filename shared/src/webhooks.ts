@@ -26,6 +26,12 @@ export const WEBHOOK_BODY_MAX_BYTES = 4096;
 /** How long the whole request may take before it is given up. */
 export const WEBHOOK_TIMEOUT_MS = 5000;
 
+/**
+ * After this many attempts of one rule in a row that did not end with the receiver's yes, the rule's webhook is not
+ * tried again until the rule is changed or the server starts again: a receiver that is gone is not knocked at for ever.
+ */
+export const WEBHOOK_FAILURES_MAX = 5;
+
 /** A webhook's name: a short word of letters, digits, dots, dashes and underscores. It is written on command lines and in sentences. */
 export const WEBHOOK_NAME = /^[A-Za-z0-9][A-Za-z0-9._-]{0,39}$/;
 export const WebhookName = z.string().regex(WEBHOOK_NAME, 'A webhook’s name is a short word: letters, digits, dots, dashes and underscores, at most 40.');
@@ -133,7 +139,12 @@ export const WebhookBody = z.strictObject({
 export type WebhookBody = z.infer<typeof WebhookBody>;
 
 /** A name as it is sent: one line, no control characters, nothing that reverses direction, not long. */
-export const sentName = (name: string): string => name.replace(/[\p{Cc}‪-‮⁦-⁩]/gu, '').slice(0, 120);
+export const sentName = (name: string): string =>
+  name
+    .replace(/[\p{Cc}\u2028\u2029\u202a-\u202e\u2066-\u2069]/gu, '')
+    .slice(0, 120)
+    // A character of two halves that the cut went through is left out whole.
+    .replace(/[\ud800-\udbff]$/, '');
 
 /** The fixed words for what happened to a terminal: the one place they are written, for a rule's sentence and for a webhook's `text` alike. */
 export function terminalSentence(name: string, event: 'terminal.waiting' | 'terminal.finished' | 'command.failed'): string {
