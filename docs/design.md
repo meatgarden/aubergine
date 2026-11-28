@@ -197,7 +197,16 @@ Lowest first: `--z-canvas`, `--z-panel`, `--z-menu`, `--z-screen`, `--z-tour`, `
 
 - A terminal's own text and theme.
 - The colors a person picks.
+- The owner's own stylesheet (`custom.css` in the data folder, [custom-css.md](custom-css.md)). It is loaded after the system, in no layer, as the last thing in the page's head, so it wins over a piece of the same specificity; nothing here is tested against it, and the measuring tests run without one.
 - What is pressed as a whole (a row, a card, a line of a menu, a step of a run): it is as tall as what it holds.
+
+## The hooks
+
+What a stylesheet of the owner's may rely on is a promise, and part of the system: the tokens above, a few attributes on the root (`data-theme`, `data-page`, `data-project`…), the parts (`data-part="<name>"` on the stable pieces: the top bar, a terminal and its title, body and note, a row of the list, the map, a dialog, a menu and the rest) and a terminal's own attributes (`data-session`, `data-state`, `data-tags`…, the same on its node, its row and its own browser tab). The list is `UI_HOOKS` in `shared/src/hooks.ts`; [hooks.md](hooks.md) is generated from it. Class names, test IDs and how elements are nested are not promised, so a screen may still change its own.
+
+- **A new piece that someone might restyle gets a `data-part` and a line in the list**, with one sentence of what it is. The browser test "the hooks" fails on a part that is drawn and not in the list, and on one in the list that is drawn nowhere.
+- **A hook is added, never renamed or removed.** A part that changes shape keeps its name; one that goes away leaves its name to the piece that took its place.
+- **A part's attributes come from what the page already holds**: a terminal's state is `rowState`'s word, its color its node's. Nothing is worked out for a hook alone, and a change to one terminal still redraws one row.
 
 ## Adding something
 

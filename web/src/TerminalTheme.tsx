@@ -145,7 +145,7 @@ export function TerminalThemeMenu({ sessionId, name }: { sessionId: string; name
       {open && (
         <span
           className="ui-menu terminal-theme-menu nowheel"
-          role="menu"
+          role="menu" data-part="menu"
           aria-label={`Theme of ${name}`}
           ref={menu}
           data-testid="terminal-theme-menu"

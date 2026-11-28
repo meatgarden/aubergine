@@ -40,6 +40,7 @@ import {
   type RouteSpec,
   type AppearanceAnswer,
   type ThemesAnswer,
+  type CustomCssAnswer,
   type ChangeAppearanceRequest,
 } from '@aubergine/shared';
 import type { ActivityLog } from './activity';
@@ -92,6 +93,8 @@ export interface PublicRouteDeps {
   changeAppearance: (change: ChangeAppearanceRequest) => Promise<AppearanceAnswer>;
   /** Reads the owner's theme files again, and answers what they hold now. */
   readThemes: () => Promise<ThemesAnswer>;
+  /** Reads the owner's own stylesheet again, and answers whether there is one to link: nothing of what it says. Nothing for a linked page. */
+  readStylesheet: (request: FastifyRequest) => Promise<CustomCssAnswer>;
   /** Refuses, as bad input, a theme's ID that names no theme the server knows now, or (with `kind`) one of the other kind. */
   knowsTheme: (id: string, kind?: 'light' | 'dark', field?: string) => Promise<void>;
   projects: Projects;
@@ -436,6 +439,7 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
     changeDesktopSettings: ({ body }) => deps.desktop.setOpenNew(body.openNew),
     changeAppearance: ({ body }) => deps.changeAppearance(body),
     readThemes: () => deps.readThemes(),
+    readStylesheet: ({ request }) => deps.readStylesheet(request),
     /* ---------- Projects, and what is shared between them ---------- */
 
     // Which projects there are: the ones the caller reaches. Everything that changes one is the owner's alone.

@@ -124,7 +124,7 @@
       "@id": "https://thirstyeggplant.com/ja/customize-terminal-themes/#faq",
       "mainEntity": [
         { "@type": "Question", "name": "ターミナルごとに違うカラーテーマにできますか？", "acceptedAnswer": { "@type": "Answer", "text": "はい。ターミナルのメニューの Theme… で、ページのテーマに関係なく、その本体を 10 のテーマのどれでも描けます。タグの付いたターミナルには Settings でそのタグによるテーマを与えられ、ほかのターミナルはターミナルの既定か、ページに従います。" } },
-        { "@type": "Question", "name": "Aubergine に自分の CSS を加えられますか？", "acceptedAnswer": { "@type": "Answer", "text": "今はできません。個々の色は設定ファイルで手で決められます。文書化されたフック付きの custom.css は予定で、まだ作られていません。" } },
+        { "@type": "Question", "name": "Aubergine に自分の CSS を加えられますか？", "acceptedAnswer": { "@type": "Answer", "text": "できます。データフォルダーの custom.css です（aubergine css new で始めるためのファイルが書かれます）。最初の描画からページの最後にリンクされ、頼れるフックは docs/hooks.md にあります。ページのアドレスに ?plain を付けると、それなしで見られます。" } },
         { "@type": "Question", "name": "Aubergine の設定ファイルはどこにありますか？", "acceptedAnswer": { "@type": "Answer", "text": "Aubergine のデータフォルダーにある config.json です。aubergine settings path が場所を表示し、サーバーも起動時に表示します。" } },
         { "@type": "Question", "name": "エージェントが Aubergine の見た目を変えられますか？", "acceptedAnswer": { "@type": "Answer", "text": "設定は変えられません。設定はあなただけのものです。エージェントは自分のターミナルに名前を付けて説明でき、あなたが読んで受け入れるのを待つカラーテーマを提案できます。API トークンが許すプログラムは、ターミナルの名前変更、タグ付け、テーマ指定、キャンバスの整理ができ、テーマの提案もできます。" } }
       ]
@@ -212,6 +212,22 @@
 }</code></pre>
     <p>表示するものがないプレースホルダーは、そこへ続くテキストと一緒に省かれます。チケットもリンクもタグもないターミナルでは、このタイトルは状態とフォルダーだけを表示し、余分な点は残りません。テンプレートに入るのはテキストとプレースホルダーだけで、マークアップもスタイルもありません。どれもページが他の場所で描くのと同じように描かれ、状態はその色で、リンクはチップになります。誤ったプレースホルダーは欄の下で知らされて飛ばされ、<strong>Reset</strong> はテンプレートがないときの表示を正確に戻します。すべてのプレースホルダーは <a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/templates.md">docs/templates.md</a> にあります。</p>
 
+    <h2 id="your-stylesheet">自分のスタイルシート</h2>
+    <p>設定で届かないところは、自分のスタイルシートを書きます。データフォルダーの <code>custom.css</code> です。サーバーはこれをページの head の最後にリンクするので、最初の描画からそこにあり、同じ詳細度ならアプリのルールよりあなたのルールが勝ちます。<code>!important</code> は要りません。<code>aubergine css new</code> で始めるためのファイルが書かれ、<strong>Settings → Appearance → Your stylesheet</strong> では見つかったかどうかがわかり、オフにでき、再読み込みなしで読み直せます。</p>
+    <p>頼るのはフックだけにしてください。すべてのトークン（<code>--accent</code>、<code>--radius-surface</code> など）、ページのルートの属性（<code>data-theme</code>、<code>data-page</code>）、<code>data-part</code> で印を付けた部分、そしてターミナル自身の属性（<code>data-tags</code>、<code>data-state</code>、<code>data-name</code>）です。属性はノード、行、そのターミナル専用のブラウザータブで同じです。一覧は <a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/hooks.md">docs/hooks.md</a> にあり、リリースをまたいで保たれます。クラス名は保たれません。この例では、タグ prod の付いたすべてのターミナルのタイトルが濃い赤になり、マップが消えます。</p>
+    <pre><code>[data-part="terminal"][data-tags~="prod"] [data-part="terminal-title"] {
+  background: #5c1f24;
+}
+[data-part="map"] {
+  display: none;
+}</code></pre>
+    <p>そして、2 つのトークンで、どこでも角をもっと丸く。</p>
+    <pre><code>:root {
+  --radius-surface: 16px;
+  --radius-control: 10px;
+}</code></pre>
+    <p>ルールでページが壊れたら、アドレスの後ろに <code>?plain</code> を付けて開いてください。スタイルシートなしで送られます。スタイルシートが指定するものは、ほかのアドレスからは取得されません。画像、フォント、スタイルシートはこのサーバーかインラインのデータから来るので、貼り付けたスニペットがページの内容をよそへ送ることはできません。これは自分で書いたり貼り付けたりしたファイルへの備えであって、サンドボックスではありません。試したのは Chromium だけです。</p>
+
     <h2 id="settings-file">自分自身を説明する 1 つの設定ファイル</h2>
     <p>これらはすべて Aubergine のデータフォルダーの <code>config.json</code> に保存され、その場所は <code>aubergine settings path</code> が表示します。どのキーも省略できます。読めないファイルは既定値を意味し、サーバーが起動しなくなることはありません。ページの Settings は変更したキーだけを書き、ファイルの残りは書いたままにします。</p>
     <p>サーバーは起動するたびに、ファイルの隣に <code>config.schema.json</code> を書きます。1 行加えるだけで、JSON Schema を読むエディターがすべてのキーを説明し、補完します。</p>
@@ -245,21 +261,21 @@ aubergine settings schema</code></pre>
           <tr><td><a href="https://ghostty.org/docs/config">Ghostty</a><br>ターミナル</td><td data-label="設定"><code>key = value</code> のファイル。<code>config-file</code> でほかを追加</td><td data-label="テーマと色"><a href="https://ghostty.org/docs/features/theme">テーマは設定ファイル</a>。ライト用とダーク用を 1 つずつ</td><td data-label="独自の CSS">見当たらず</td><td data-label="独自のコード">ターミナルに重ねる <a href="https://ghostty.org/docs/config/reference#custom-shader">GLSL シェーダー</a>。macOS では AppleScript</td><td data-label="タイトルとステータスのテンプレート">見当たらず</td></tr>
           <tr><td><a href="https://learn.microsoft.com/windows/terminal/customize-settings/color-schemes">Windows Terminal</a><br>ターミナル</td><td data-label="設定">Settings 画面か <code>settings.json</code>。<a href="https://github.com/microsoft/terminal/blob/main/doc/cascadia/profiles.schema.json">JSON スキーマ</a>あり</td><td data-label="テーマと色">プロファイルごとの配色。ウィンドウとタブの<a href="https://learn.microsoft.com/windows/terminal/customize-settings/themes">テーマ</a>はライトとダーク、JSON でのみ</td><td data-label="独自の CSS">見当たらず</td><td data-label="独自のコード">見当たらず。ほかのアプリが JSON フラグメントでプロファイルと配色を追加</td><td data-label="タイトルとステータスのテンプレート">見当たらず。プロファイルが <code>tabTitle</code> と <code>tabColor</code> を決める</td></tr>
           <tr><td><a href="https://iterm2.com/documentation-automatic-profile-switching.html">iTerm2</a><br>ターミナル</td><td data-label="設定">Settings のプロファイル。プロパティリスト形式の <a href="https://iterm2.com/documentation-dynamic-profiles.html">Dynamic Profiles</a></td><td data-label="テーマと色">ユーザー、ホスト、フォルダー、ジョブで選ばれるプロファイル（Shell Integration が必要）</td><td data-label="独自の CSS">見当たらず</td><td data-label="独自のコード"><a href="https://iterm2.com/python-api/">Python API</a>、Python で書くステータスバー部品、AppleScript</td><td data-label="タイトルとステータスのテンプレート">セッション名、バッジ、ステータスバーの<a href="https://iterm2.com/documentation-scripting-fundamentals.html">補間文字列</a> <code>\(…)</code></td></tr>
-          <tr><td>Aubergine<br>キャンバス上のターミナル</td><td data-label="設定"><code>config.json</code> と Settings。エディター向けの JSON Schema 付き</td><td data-label="テーマと色">10 のテーマ、ライト・ダーク・システムに合わせる。そのいずれかに重ねる自作の JSON ファイル。プロジェクトごと、タグの付いたターミナルごと、ターミナルごとに 1 つ。35 色を手で、すべてのテーマまたは 1 つに</td><td data-label="独自の CSS">なし。予定：文書化されたフック付きの <code>custom.css</code></td><td data-label="独自のコード">なし。予定：プラグイン</td><td data-label="タイトルとステータスのテンプレート">2 つ。ターミナルのタイトルとリストの行のためのもので、<code>{state}</code> や <code>{field:Ticket}</code> のようなプレースホルダーを含むテキスト</td></tr>
+          <tr><td>Aubergine<br>キャンバス上のターミナル</td><td data-label="設定"><code>config.json</code> と Settings。エディター向けの JSON Schema 付き</td><td data-label="テーマと色">10 のテーマ、ライト・ダーク・システムに合わせる。そのいずれかに重ねる自作の JSON ファイル。プロジェクトごと、タグの付いたターミナルごと、ターミナルごとに 1 つ。35 色を手で、すべてのテーマまたは 1 つに</td><td data-label="独自の CSS">あり：データフォルダーの <code>custom.css</code>、文書化されたフック付き</td><td data-label="独自のコード">なし。予定：プラグイン</td><td data-label="タイトルとステータスのテンプレート">2 つ。ターミナルのタイトルとリストの行のためのもので、<code>{state}</code> や <code>{field:Ticket}</code> のようなプレースホルダーを含むテキスト</td></tr>
         </tbody>
       </table>
     </div>
     <p>ここにあるどのツールも設定をファイルに保存し、VS Code、Zed、Windows Terminal には、Aubergine と同じく、それを書く画面もあります。ほとんどでテーマもファイルです。VS Code と Zed では JSON、Obsidian では CSS、WezTerm では Lua か TOML、kitty と Ghostty では設定ファイルです。VS Code、Zed、WezTerm では、ここでの <code>appearance.colors</code> のように、テーマの上に個々の色を変えられます。</p>
     <p>いちばん違うのはコードです。WezTerm の設定は全体が Lua のプログラムで、kitty と iTerm2 は自分の Python を動かし、Hyper のプラグインはインターフェースを包む JavaScript です。Obsidian と Hyper は自分の CSS も受け付けます。VS Code の拡張機能はインターフェースの DOM に触れられず、独自のスタイルシートにも対応していません。Zed は拡張機能を WebAssembly として、制限できるケイパビリティ付きで動かします。tmux、WezTerm、kitty、iTerm2 は、テンプレートや関数でタイトルとステータス行を組み立てます。</p>
-    <p>現在の Aubergine は設定の側にあります。自分自身を説明するファイルにあるテーマ、色、キー、設定の一部を書き込むページ、そしてターミナルのタイトルと行に表示する内容のテンプレートです。ページであなたのコードを実行することはなく、あなたのスタイルシートも受け付けません。それらは <a href="../roadmap/#rm-yours">ロードマップ</a>にあり、まだ作られていません。</p>
+    <p>現在の Aubergine は設定の側にあり、そこから一歩先にも進んでいます。自分自身を説明するファイルにあるテーマ、色、キー、設定の一部を書き込むページ、ターミナルのタイトルと行に表示する内容のテンプレート、そして安定に保たれるフック付きのあなたのスタイルシートです。ページであなたのコードを実行することはありません。プラグインは <a href="../roadmap/#rm-yours">ロードマップ</a>にあり、まだ作られていません。</p>
 
     <h2 id="planned">予定していること</h2>
-    <p><code>custom.css</code> とプラグインは計画中で、まだ作られていません。<a href="../roadmap/#rm-yours">ロードマップ</a>を参照してください。</p>
+    <p>プラグイン、つまりページで動くあなた自身のコードは予定で、まだ作られていません。<a href="../roadmap/#rm-yours">ロードマップ</a>をご覧ください。</p>
 
     <h2 id="faq">よくある質問</h2>
     <div class="questions">
       <details><summary>ターミナルごとに違うカラーテーマにできますか？</summary><p>はい。ターミナルのメニューの Theme… で、ページのテーマに関係なく、その本体を 10 のテーマのどれでも描けます。タグの付いたターミナルには Settings でそのタグによるテーマを与えられ、ほかのターミナルはターミナルの既定か、ページに従います。</p></details>
-      <details><summary>Aubergine に自分の CSS を加えられますか？</summary><p>今はできません。個々の色は設定ファイルで手で決められます。文書化されたフック付きの <code>custom.css</code> は予定で、まだ作られていません。</p></details>
+      <details><summary>Aubergine に自分の CSS を加えられますか？</summary><p>できます。データフォルダーの <code>custom.css</code> です（<code>aubergine css new</code> で始めるためのファイルが書かれます）。最初の描画からページの最後にリンクされ、頼れるフックは docs/hooks.md にあります。ページのアドレスに <code>?plain</code> を付けると、それなしで見られます。</p></details>
       <details><summary>Aubergine の設定ファイルはどこにありますか？</summary><p>Aubergine のデータフォルダーにある <code>config.json</code> です。<code>aubergine settings path</code> が場所を表示し、サーバーも起動時に表示します。</p></details>
       <details><summary>エージェントが Aubergine の見た目を変えられますか？</summary><p>設定は変えられません。設定はあなただけのものです。エージェントは自分のターミナルに名前を付けて説明でき、あなたが読んで受け入れるのを待つカラーテーマを提案できます。API トークンが許すプログラムは、ターミナルの名前変更、タグ付け、テーマ指定、キャンバスの整理ができ、テーマの提案もできます。</p></details>
     </div>

@@ -141,7 +141,7 @@ export function ReviewScreen() {
         }
       }}
     >
-      <div className="dialog sheet review-screen" role="dialog" aria-label="Review" data-testid="review-screen">
+      <div className="dialog sheet review-screen" role="dialog" data-part="dialog" aria-label="Review" data-testid="review-screen">
         <ScreenHead title="Review" onClose={close} closeTestid="review-close" />
         <p className="sheet-note">
           Agents wrote these for you, or they came from the Library or a file. Read each one, then accept it or discard it. Nothing here can run until you accept it.

@@ -5171,6 +5171,26 @@
     "text": "Un marcador que no tiene nada que decir se omite junto con el texto que lleva a él: en un terminal sin ticket, enlaces ni etiquetas, ese título dice solo su estado y su carpeta, sin ningún punto de sobra. Una plantilla contiene solo texto y marcadores, sin marcado ni estilo; cada uno se dibuja como la página dibuja esa cosa en otros lugares, el estado en su color y un enlace como una ficha. Un marcador erróneo se indica bajo el campo y se omite, y <strong>Reset</strong> devuelve exactamente lo que se dibuja sin plantilla. Todos los marcadores están en <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/templates.md\">docs/templates.md</a>.",
     "from": "163ceba573e3"
   },
+  "custom.css.title": {
+    "text": "Tu propia hoja de estilo",
+    "from": "2222b72214ec"
+  },
+  "custom.css.text": {
+    "text": "Para todo lo que los ajustes no alcanzan, escribe una hoja de estilo propia: <code>custom.css</code> en la carpeta de datos. El servidor la enlaza como lo último en la cabecera de la página, así que está ahí desde el primer dibujado, y una regla tuya gana a una de la aplicación igual de específica, sin <code>!important</code>. <code>aubergine css new</code> escribe una para empezar, y <strong>Settings → Appearance → Your stylesheet</strong> dice si se encuentra, la desactiva y la vuelve a leer sin recargar.",
+    "from": "c0183f3ec2e0"
+  },
+  "custom.css.hooks": {
+    "text": "Apóyate en los puntos de enganche y en nada más: cada token (<code>--accent</code>, <code>--radius-surface</code> y los demás), los atributos de la raíz de la página (<code>data-theme</code>, <code>data-page</code>), las partes marcadas con <code>data-part</code> y los atributos propios de un terminal (<code>data-tags</code>, <code>data-state</code>, <code>data-name</code>), los mismos en su nodo, su fila y su propia pestaña del navegador. Están en <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/hooks.md\">docs/hooks.md</a> y se mantienen de una versión a otra; los nombres de clase no. Aquí el título de cada terminal con la etiqueta prod es rojo oscuro, y el mapa ya no está:",
+    "from": "e6d9a53fa8bb"
+  },
+  "custom.css.tokens": {
+    "text": "Y esquinas más redondeadas en todas partes, con dos tokens:",
+    "from": "f2699b36aa09"
+  },
+  "custom.css.out": {
+    "text": "Si una regla rompe la página, ábrela con <code>?plain</code> tras su dirección: se envía sin tu hoja de estilo. Nada de lo que nombra una hoja de estilo se carga desde otra dirección: una imagen, una fuente o una hoja de estilo viene de este servidor o de datos en línea, así que un fragmento pegado no puede enviar a otra parte lo que hay en tu página. Es una protección para un archivo que escribiste o pegaste, no un entorno aislado. Solo se ha probado en Chromium.",
+    "from": "7cec576ea647"
+  },
   "custom.file.title": {
     "text": "Un archivo de configuración que se describe a sí mismo",
     "from": "9d7e735d280e"
@@ -5440,8 +5460,8 @@
     "from": "5daef6eb6445"
   },
   "custom.cmp.a.css": {
-    "text": "No. Previsto: un <code>custom.css</code> con puntos de enganche documentados",
-    "from": "4ac770687589"
+    "text": "Sí: <code>custom.css</code> en la carpeta de datos, con puntos de enganche documentados",
+    "from": "7db23532c40d"
   },
   "custom.cmp.a.code": {
     "text": "No. Previsto: plugins",
@@ -5460,8 +5480,8 @@
     "from": "9538078a7039"
   },
   "custom.cmp.p3": {
-    "text": "Hoy Aubergine está en el extremo de los ajustes: temas, colores y teclas en archivos que se describen a sí mismos, una página que escribe parte de los ajustes y plantillas para lo que dicen el título de un terminal y su fila. No ejecuta código tuyo en la página ni acepta una hoja de estilos tuya. Eso está en la <a href=\"/roadmap/#rm-yours\">hoja de ruta</a>, y no está construido.",
-    "from": "99bbc30b361c"
+    "text": "Hoy Aubergine está en el extremo de los ajustes, y un paso más allá: temas, colores y teclas en archivos que se describen a sí mismos, una página que escribe parte de los ajustes, plantillas para lo que dicen el título de un terminal y su fila, y una hoja de estilo tuya con puntos de enganche que se mantienen estables. No ejecuta código tuyo en la página: los plugins están en la <a href=\"/roadmap/#rm-yours\">hoja de ruta</a>, y no están construidos.",
+    "from": "4315d5e6e417"
   },
   "custom.cmp.mark": {
     "text": "Aubergine no está afiliado a ninguna de las herramientas nombradas en esta página. Sus nombres son marcas de sus respectivos dueños.",
@@ -5472,8 +5492,8 @@
     "from": "e10eed0040ae"
   },
   "custom.plan.text": {
-    "text": "Un <code>custom.css</code> y los plugins están planeados y no construidos: consulta la <a href=\"/roadmap/#rm-yours\">hoja de ruta</a>.",
-    "from": "a693849a5c84"
+    "text": "Los plugins, tu propio código en la página, están previstos y no construidos: consulta la <a href=\"/roadmap/#rm-yours\">hoja de ruta</a>.",
+    "from": "5889d38036ea"
   },
   "custom.q.terminal.q": {
     "text": "¿Puede cada terminal tener un tema de color distinto?",
@@ -5488,8 +5508,8 @@
     "from": "e4f4bf19de27"
   },
   "custom.q.css.a": {
-    "text": "Hoy no. Los colores sueltos se pueden ajustar a mano en el archivo de configuración; un <code>custom.css</code> con puntos de enganche documentados está previsto, no construido.",
-    "from": "332c37400357"
+    "text": "Sí: <code>custom.css</code> en la carpeta de datos (<code>aubergine css new</code> escribe uno para empezar). Se enlaza lo último en la página, desde el primer dibujado, y los puntos de enganche en los que puede apoyarse están en docs/hooks.md. Añade <code>?plain</code> a la dirección de la página para verla sin él.",
+    "from": "8ebf56535e5d"
   },
   "custom.q.file.q": {
     "text": "¿Dónde está el archivo de configuración de Aubergine?",
@@ -5516,16 +5536,8 @@
     "from": "34ca8a4540f5"
   },
   "roadmap.yours.sub": {
-    "text": "Más de la página a tu medida, más allá de los temas, colores, teclas y plantillas de hoy.",
-    "from": "930654eedc50"
-  },
-  "roadmap.yours.css.name": {
-    "text": "Tu propia hoja de estilo",
-    "from": "2222b72214ec"
-  },
-  "roadmap.yours.css.text": {
-    "text": "Un archivo <code>custom.css</code> cargado en la página, con puntos de enganche documentados que se mantienen estables.",
-    "from": "a48bd0baabda"
+    "text": "Más de la página a tu medida, más allá de los temas, colores, teclas, plantillas y tu propia hoja de estilo de hoy.",
+    "from": "903ac9c0326e"
   },
   "roadmap.yours.plugins.name": {
     "text": "Plugins",

@@ -128,7 +128,7 @@ export function TabBar() {
               ⋯
             </button>
             {menu?.id === canvas.id && (
-              <span className="toolbar-menu tab-menu" role="menu" style={{ left: menu.left, top: menu.top }} ref={menuRoot} data-testid="tab-menu">
+              <span className="toolbar-menu tab-menu" role="menu" data-part="menu" style={{ left: menu.left, top: menu.top }} ref={menuRoot} data-testid="tab-menu">
                 <button
                   type="button"
                   role="menuitem"
@@ -230,7 +230,7 @@ export function TabBar() {
   const column = view === 'column';
   if (column && columnFolded) return <FoldedColumn canvases={canvases} current={current} setCanvas={setCanvas} />;
   return (
-    <nav className={`tabbar is-${view}`} aria-label="Canvases" data-testid="tabbar" data-view={view}>
+    <nav className={`tabbar is-${view}`} aria-label="Canvases" data-part="canvas-tabs" data-testid="tabbar" data-view={view}>
       {column ? (
         // As a column, the button stands in a head of the column's own, with the word for what is under it.
         <div className="tabbar-head">
@@ -270,8 +270,10 @@ export function TabBar() {
             className={`tab ${colorClass(canvas.color)}${active ? ' active' : ''}${dragging === canvas.id ? ' dragging' : ''}`}
             role="tab"
             aria-selected={active}
+            data-part="canvas-tab"
             data-testid="tab"
             data-canvas={canvas.id}
+            data-current={active ? 'true' : undefined}
             draggable={renaming?.id !== canvas.id}
             onDragStart={(e) => {
               setDragging(canvas.id);
@@ -415,7 +417,7 @@ function NewCanvas() {
         ▾
       </button>
       {menu && (
-        <span className="toolbar-menu tabbar-new-menu" role="menu" style={{ left: menu.left, top: menu.top }} ref={list} data-testid="tabbar-new-menu">
+        <span className="toolbar-menu tabbar-new-menu" role="menu" data-part="menu" style={{ left: menu.left, top: menu.top }} ref={list} data-testid="tabbar-new-menu">
           {item('canvas.new', 'New canvas', 'Added here, and shown in this tab.', 'tabbar-new-here')}
           {item('canvas.newInNewTab', 'New canvas in a new browser tab', 'Added, and shown in a tab of its own. This one stays as it is.', 'tabbar-new-tab')}
         </span>
@@ -501,7 +503,7 @@ function ViewSwitch({ view }: { view: CanvasView }) {
         <ViewIcon view={view} />
       </IconButton>
       {menu && (
-        <span className="ui-menu ui-menu-fixed toolbar-menu tabbar-view-menu" role="menu" style={{ left: menu.left, top: menu.top }} data-testid="tabbar-view-menu">
+        <span className="ui-menu ui-menu-fixed toolbar-menu tabbar-view-menu" role="menu" data-part="menu" style={{ left: menu.left, top: menu.top }} data-testid="tabbar-view-menu">
           {CANVAS_VIEWS.map((way) => (
             <button
               key={way}
@@ -636,7 +638,7 @@ function FoldedColumn({ canvases, current, setCanvas }: { canvases: readonly Can
   const app = useApp((s) => s.app);
   if (!app) return null;
   return (
-    <nav className="tabbar is-column is-folded" aria-label="Canvases" data-testid="tabbar" data-view="column" data-folded="true">
+    <nav className="tabbar is-column is-folded" aria-label="Canvases" data-part="canvas-tabs" data-testid="tabbar" data-view="column" data-folded="true">
       <IconButton className="rail-open" label="Show the column of canvases" aria-expanded={false} title={hint('canvas.foldColumn', 'Show the column of canvases')} onClick={() => runCommand('canvas.foldColumn')} data-testid="tabbar-fold">
         ›
       </IconButton>
@@ -658,8 +660,10 @@ function FoldedColumn({ canvases, current, setCanvas }: { canvases: readonly Can
                 if (e.metaKey || e.ctrlKey || e.shiftKey) return openInNewTab(canvasHref(canvas.id, canvas.projectId));
                 if (!active) setCanvas(canvas.id);
               }}
+              data-part="canvas-tab"
               data-testid="tabbar-rail-canvas"
               data-canvas={canvas.id}
+              data-current={active ? 'true' : undefined}
             >
               <span className={`tabbar-list-color ${colorClass(canvas.color, 'swatch')}`} style={colorStyle(canvas.color)} aria-hidden="true" />
             </button>

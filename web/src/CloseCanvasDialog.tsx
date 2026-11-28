@@ -54,7 +54,7 @@ export function CloseCanvasDialog() {
         if (e.key === 'Escape') cancel();
       }}
     >
-      <div className="dialog" role="alertdialog" aria-modal="true" aria-labelledby="close-canvas-title">
+      <div className="dialog" role="alertdialog" data-part="dialog" aria-modal="true" aria-labelledby="close-canvas-title">
         <h2 id="close-canvas-title">Close “{canvas.name}”?</h2>
         <p>
           It has {count} terminal{count === 1 ? '' : 's'}. Closing a canvas never ends a shell: say what should happen to{' '}

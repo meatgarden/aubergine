@@ -431,6 +431,8 @@ export const ownApi = {
   setLook: (change: ChangeAppearanceRequest) => ownV1.changeAppearance({ body: change }),
   /** The owner's theme files, read again by the own server: they are about the page, as the theme is. */
   readThemes: () => ownV1.readThemes(),
+  /** The owner's own stylesheet, read again by the own server: it is the page's own, as the theme files are. */
+  readStylesheet: () => ownV1.readStylesheet(),
   projects: async () => z.array(ProjectRow).parse((await ownV1.listProjects({ query: { limit: 200 } })).items),
 };
 

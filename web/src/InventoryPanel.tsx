@@ -54,7 +54,7 @@ export function InventoryPanel() {
         }
       }}
     >
-      <div className="dialog sheet inventory-panel" role="dialog" aria-label="How this agent is set up" data-testid="inventory-panel">
+      <div className="dialog sheet inventory-panel" role="dialog" data-part="dialog" aria-label="How this agent is set up" data-testid="inventory-panel">
         <ScreenHead title={<>How “{name}” is set up</>} onClose={close} closeTestid="inventory-close" />
         <p data-testid="inventory-what">
           This is what the agent’s configuration files say, read just now. It is not a list of what the running agent has loaded, and no server was contacted: “configured” does

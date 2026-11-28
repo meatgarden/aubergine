@@ -158,6 +158,7 @@ export function NotePanel({
         if (useApp.getState().focus) useApp.getState().focusSession(null);
       }}
       aria-label={parts === 'summary' ? 'Summary' : undefined}
+      data-part={embedded ? undefined : 'terminal-note'}
       data-testid={!embedded ? 'note-panel' : parts === 'summary' ? 'details-summary' : 'note-drawer'}
     >
       {!embedded && (

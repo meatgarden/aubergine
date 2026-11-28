@@ -5171,6 +5171,26 @@
     "text": "没有内容可显示的占位符会连同引向它的文本一起省略：在没有工单、链接或标签的终端上，这个标题只显示状态和文件夹，不会多出一个点。模板只包含文本和占位符，没有标记，也没有样式；每个占位符都按页面在其他地方画这类东西的方式来画，状态用它的颜色，链接是一个小标签。错误的占位符会在字段下方说明并被跳过，<strong>Reset</strong> 会准确恢复没有模板时画出的内容。所有占位符都在 <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/templates.md\">docs/templates.md</a> 中。",
     "from": "163ceba573e3"
   },
+  "custom.css.title": {
+    "text": "自己的样式表",
+    "from": "2222b72214ec"
+  },
+  "custom.css.text": {
+    "text": "设置管不到的地方，就写一个自己的样式表：数据文件夹中的 <code>custom.css</code>。服务器把它链接为页面 head 中的最后一项，所以从第一次绘制起它就在，而且在同等特异性下，你的规则胜过应用自己的规则，无需 <code>!important</code>。<code>aubergine css new</code> 会写一个供你起步，<strong>Settings → Appearance → Your stylesheet</strong> 会说明是否找到了它，可以关闭它，并且无需重新加载就能重新读取。",
+    "from": "c0183f3ec2e0"
+  },
+  "custom.css.hooks": {
+    "text": "只依靠这些钩子，别的都不要依靠：每个令牌（<code>--accent</code>、<code>--radius-surface</code> 等等）、页面根元素上的属性（<code>data-theme</code>、<code>data-page</code>）、用 <code>data-part</code> 标记的部分，以及终端自己的属性（<code>data-tags</code>、<code>data-state</code>、<code>data-name</code>），它们在终端的节点、它的行和它自己的浏览器标签页上都一样。它们列在 <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/hooks.md\">docs/hooks.md</a> 中，并在各个版本之间保持不变；类名则不保证。下面的例子把每个带有标签 prod 的终端的标题变成深红色，并去掉了地图：",
+    "from": "e6d9a53fa8bb"
+  },
+  "custom.css.tokens": {
+    "text": "再通过两个令牌，让各处的圆角更圆：",
+    "from": "f2699b36aa09"
+  },
+  "custom.css.out": {
+    "text": "如果某条规则弄坏了页面，就在地址后面加上 <code>?plain</code> 打开它：页面会在没有你的样式表的情况下发送。样式表中提到的任何东西都不会从别的地址获取：图片、字体或样式表只来自这台服务器或内联数据，所以粘贴来的代码片段无法把你页面上的内容发到别处。这是对你自己编写或粘贴的文件的一道防护，而不是沙箱。目前只在 Chromium 中试过。",
+    "from": "7cec576ea647"
+  },
   "custom.file.title": {
     "text": "一个自我描述的设置文件",
     "from": "9d7e735d280e"
@@ -5440,8 +5460,8 @@
     "from": "5daef6eb6445"
   },
   "custom.cmp.a.css": {
-    "text": "没有。计划中：带文档化钩子的 <code>custom.css</code>",
-    "from": "4ac770687589"
+    "text": "有：数据文件夹中的 <code>custom.css</code>，带文档化的钩子",
+    "from": "7db23532c40d"
   },
   "custom.cmp.a.code": {
     "text": "没有。计划中：插件",
@@ -5460,8 +5480,8 @@
     "from": "9538078a7039"
   },
   "custom.cmp.p3": {
-    "text": "如今的 Aubergine 处在设置这一端：主题、颜色和按键存放在能自我说明的文件中，有一个会写入部分设置的页面，还有用于终端标题和行所显示内容的模板。它不会在页面中运行你的代码，也不接受你的样式表。这些都在<a href=\"/roadmap/#rm-yours\">路线图</a>上，尚未实现。",
-    "from": "99bbc30b361c"
+    "text": "如今的 Aubergine 处在设置这一端，并且又往前走了一步：主题、颜色和按键存放在能自我说明的文件中，有一个会写入部分设置的页面，有用于终端标题和行所显示内容的模板，还有一个属于你的样式表，配有保持稳定的钩子。它不会在页面中运行你的代码：插件在<a href=\"/roadmap/#rm-yours\">路线图</a>上，尚未实现。",
+    "from": "4315d5e6e417"
   },
   "custom.cmp.mark": {
     "text": "Aubergine 与本页提到的任何工具均无关联。这些名称是其各自所有者的商标。",
@@ -5472,8 +5492,8 @@
     "from": "e10eed0040ae"
   },
   "custom.plan.text": {
-    "text": "<code>custom.css</code> 和插件已在计划中，尚未实现：见<a href=\"/roadmap/#rm-yours\">路线图</a>。",
-    "from": "a693849a5c84"
+    "text": "插件，也就是在页面中运行你自己的代码，已在计划中但尚未实现：请参阅<a href=\"/roadmap/#rm-yours\">路线图</a>。",
+    "from": "5889d38036ea"
   },
   "custom.q.terminal.q": {
     "text": "每个终端可以用不同的配色主题吗？",
@@ -5488,8 +5508,8 @@
     "from": "e4f4bf19de27"
   },
   "custom.q.css.a": {
-    "text": "目前不行。单个颜色可以在设置文件中手动设置；带文档化钩子的 <code>custom.css</code> 在计划中，尚未构建。",
-    "from": "332c37400357"
+    "text": "可以：数据文件夹中的 <code>custom.css</code>（<code>aubergine css new</code> 会写一个供你起步）。它从第一次绘制起就被链接在页面的最后，可依靠的钩子列在 docs/hooks.md 中。在页面地址后加上 <code>?plain</code>，即可看到没有它时的样子。",
+    "from": "8ebf56535e5d"
   },
   "custom.q.file.q": {
     "text": "Aubergine 的设置文件在哪里？",
@@ -5516,16 +5536,8 @@
     "from": "34ca8a4540f5"
   },
   "roadmap.yours.sub": {
-    "text": "在今天的主题、颜色、按键和模板之外，让页面更多地由你来塑造。",
-    "from": "930654eedc50"
-  },
-  "roadmap.yours.css.name": {
-    "text": "自己的样式表",
-    "from": "2222b72214ec"
-  },
-  "roadmap.yours.css.text": {
-    "text": "加载到页面中的 <code>custom.css</code> 文件，带有文档化并保持稳定的钩子。",
-    "from": "a48bd0baabda"
+    "text": "在今天的主题、颜色、按键、模板和自己的样式表之外，让页面更多地由你来塑造。",
+    "from": "903ac9c0326e"
   },
   "roadmap.yours.plugins.name": {
     "text": "插件",

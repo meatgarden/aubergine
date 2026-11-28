@@ -978,6 +978,14 @@ export const COMMANDS: readonly Command[] = [
     available: always,
     run: (state) => state.showSettings('titles'),
   },
+  {
+    id: 'appearance.stylesheet',
+    title: 'Your stylesheet',
+    description: 'Opens Settings at Your stylesheet: where your own custom.css is, whether it is drawn, the switch, Read it again, and the address of this page without it.',
+    group: 'View',
+    available: always,
+    run: (state) => state.showSettings('stylesheet'),
+  },
   ...COLOR_THEMES.map((theme): Command => ({
     id: `theme.use.${theme.id}` as const,
     title: `Color theme: ${theme.name}`,

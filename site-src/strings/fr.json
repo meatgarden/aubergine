@@ -5171,6 +5171,26 @@
     "text": "Un repère qui n’a rien à dire est omis avec le texte qui y mène : sur un terminal sans ticket, ni liens, ni étiquettes, ce titre ne dit que son état et son dossier, sans point en trop. Un modèle ne contient que du texte et des repères, ni balisage ni style ; chacun est dessiné comme la page dessine cette chose ailleurs, l’état dans sa couleur et un lien comme une puce. Un repère erroné est signalé sous le champ et ignoré, et <strong>Reset</strong> remet exactement ce qui est dessiné sans modèle. Tous les repères sont dans <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/templates.md\">docs/templates.md</a>.",
     "from": "163ceba573e3"
   },
+  "custom.css.title": {
+    "text": "Votre propre feuille de style",
+    "from": "2222b72214ec"
+  },
+  "custom.css.text": {
+    "text": "Pour tout ce que les réglages n’atteignent pas, écrivez une feuille de style à vous : <code>custom.css</code> dans le dossier de données. Le serveur la lie en dernier dans l’en-tête de la page : elle est là dès le premier affichage, et une règle à vous l’emporte sur une règle de l’application aussi spécifique, sans <code>!important</code>. <code>aubergine css new</code> en écrit une pour commencer, et <strong>Settings → Appearance → Your stylesheet</strong> dit si elle est trouvée, la désactive et la relit sans recharger la page.",
+    "from": "c0183f3ec2e0"
+  },
+  "custom.css.hooks": {
+    "text": "Appuyez-vous sur les points d’accroche et sur rien d’autre : chaque jeton (<code>--accent</code>, <code>--radius-surface</code> et les autres), les attributs de la racine de la page (<code>data-theme</code>, <code>data-page</code>), les parties marquées <code>data-part</code>, et les attributs propres à un terminal (<code>data-tags</code>, <code>data-state</code>, <code>data-name</code>), les mêmes sur son nœud, sa ligne et son propre onglet du navigateur. Ils sont listés dans <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/hooks.md\">docs/hooks.md</a> et gardés d’une version à l’autre ; les noms de classes, non. Ici, le titre de chaque terminal étiqueté prod est rouge foncé, et la carte a disparu :",
+    "from": "e6d9a53fa8bb"
+  },
+  "custom.css.tokens": {
+    "text": "Et des coins plus arrondis partout, par deux jetons :",
+    "from": "f2699b36aa09"
+  },
+  "custom.css.out": {
+    "text": "Si une règle casse la page, ouvrez-la avec <code>?plain</code> après son adresse : elle est envoyée sans votre feuille de style. Rien de ce qu’une feuille de style nomme n’est chargé depuis une autre adresse : une image, une police ou une feuille de style vient de ce serveur ou de données en ligne, si bien qu’un extrait collé ne peut pas envoyer ailleurs ce qu’il y a sur votre page. C’est une protection pour un fichier que vous avez écrit ou collé, pas un bac à sable. Cela n’a été essayé que dans Chromium.",
+    "from": "7cec576ea647"
+  },
   "custom.file.title": {
     "text": "Un fichier de réglages qui se décrit lui-même",
     "from": "9d7e735d280e"
@@ -5440,8 +5460,8 @@
     "from": "5daef6eb6445"
   },
   "custom.cmp.a.css": {
-    "text": "Non. Prévu : un <code>custom.css</code> avec des points d’accroche documentés",
-    "from": "4ac770687589"
+    "text": "Oui : <code>custom.css</code> dans le dossier de données, avec des points d’accroche documentés",
+    "from": "7db23532c40d"
   },
   "custom.cmp.a.code": {
     "text": "Non. Prévu : des plugins",
@@ -5460,8 +5480,8 @@
     "from": "9538078a7039"
   },
   "custom.cmp.p3": {
-    "text": "Aujourd’hui Aubergine est du côté des réglages : thèmes, couleurs et touches dans des fichiers qui se décrivent eux-mêmes, une page qui écrit une partie des réglages, et des modèles pour ce que disent le titre d’un terminal et sa ligne. Il n’exécute aucun code à vous dans la page et ne prend aucune feuille de style à vous. C’est sur la <a href=\"/roadmap/#rm-yours\">feuille de route</a>, et pas construit.",
-    "from": "99bbc30b361c"
+    "text": "Aujourd’hui Aubergine est du côté des réglages, et un pas plus loin : thèmes, couleurs et touches dans des fichiers qui se décrivent eux-mêmes, une page qui écrit une partie des réglages, des modèles pour ce que disent le titre d’un terminal et sa ligne, et une feuille de style à vous avec des points d’accroche gardés stables. Il n’exécute aucun code à vous dans la page : les plugins sont sur la <a href=\"/roadmap/#rm-yours\">feuille de route</a>, et pas construits.",
+    "from": "4315d5e6e417"
   },
   "custom.cmp.mark": {
     "text": "Aubergine n’est affilié à aucun des outils nommés sur cette page. Leurs noms sont les marques de leurs propriétaires.",
@@ -5472,8 +5492,8 @@
     "from": "e10eed0040ae"
   },
   "custom.plan.text": {
-    "text": "Un <code>custom.css</code> et des plugins sont prévus et pas construits : voir la <a href=\"/roadmap/#rm-yours\">feuille de route</a>.",
-    "from": "a693849a5c84"
+    "text": "Les plugins, votre propre code dans la page, sont prévus et non construits : voir la <a href=\"/roadmap/#rm-yours\">feuille de route</a>.",
+    "from": "5889d38036ea"
   },
   "custom.q.terminal.q": {
     "text": "Chaque terminal peut-il avoir un thème de couleurs différent ?",
@@ -5488,8 +5508,8 @@
     "from": "e4f4bf19de27"
   },
   "custom.q.css.a": {
-    "text": "Pas aujourd’hui. Des couleurs isolées se règlent à la main dans le fichier de réglages ; un <code>custom.css</code> avec des points d’accroche documentés est prévu, non construit.",
-    "from": "332c37400357"
+    "text": "Oui : <code>custom.css</code> dans le dossier de données (<code>aubergine css new</code> en écrit une pour commencer). Elle est liée en dernier sur la page, dès le premier affichage, et les points d’accroche sur lesquels elle peut compter sont listés dans docs/hooks.md. Ajoutez <code>?plain</code> à l’adresse de la page pour la voir sans.",
+    "from": "8ebf56535e5d"
   },
   "custom.q.file.q": {
     "text": "Où est le fichier de réglages d’Aubergine ?",
@@ -5516,16 +5536,8 @@
     "from": "34ca8a4540f5"
   },
   "roadmap.yours.sub": {
-    "text": "Davantage de la page façonnée par vous, au-delà des thèmes, couleurs, touches et modèles d’aujourd’hui.",
-    "from": "930654eedc50"
-  },
-  "roadmap.yours.css.name": {
-    "text": "Votre propre feuille de style",
-    "from": "2222b72214ec"
-  },
-  "roadmap.yours.css.text": {
-    "text": "Un fichier <code>custom.css</code> chargé dans la page, avec des points d’accroche documentés et tenus stables.",
-    "from": "a48bd0baabda"
+    "text": "Davantage de la page façonnée par vous, au-delà des thèmes, couleurs, touches, modèles et de votre propre feuille de style d’aujourd’hui.",
+    "from": "903ac9c0326e"
   },
   "roadmap.yours.plugins.name": {
     "text": "Plugins",

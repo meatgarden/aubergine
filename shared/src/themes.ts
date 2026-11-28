@@ -323,6 +323,7 @@ export const Appearance = z.object({
     .describe('Color themes for terminals by tag, in order: a terminal that has no theme of its own is drawn in the theme of the first entry whose tag it has (whatever the capitals) and whose theme is there now. At most 20. A wrong entry is skipped and the rest still count.'),
   titleFormat: titleFormat.describe(`What a terminal’s title says after its name, on the canvas and at the head of a terminal in a browser tab of its own: a template, text with placeholders such as {state} and {folder} (see docs/templates.md). One line, at most ${TEMPLATE_MAX} characters. A placeholder that is not known is skipped; a template that is wrong as a whole is the default.`),
   rowFormat: rowFormat.describe(`What a terminal’s row in the list says on its second line: a template, as \`titleFormat\` is (see docs/templates.md). Compact, a row has no second line and says its state alone. One line, at most ${TEMPLATE_MAX} characters.`),
+  customCss: z.boolean().default(true).catch(true).describe('Whether your own stylesheet, `custom.css` in the data folder, is linked on the page when there is one (docs/custom-css.md). Off: the page is drawn without it, as with `?plain` after its address.'),
   /** Read by `resolveColors`. */
   colors: z
     .record(z.string(), z.unknown())

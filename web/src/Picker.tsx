@@ -216,7 +216,7 @@ export function Picker() {
         if (e.target === e.currentTarget) setPicker(false);
       }}
     >
-      <div className="picker" role="dialog" aria-label="Go to a terminal or canvas, or run a command">
+      <div className="picker" role="dialog" data-part="dialog" aria-label="Go to a terminal or canvas, or run a command">
         <input
           ref={input}
           className="picker-input"

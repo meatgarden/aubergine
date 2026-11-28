@@ -19,7 +19,7 @@ export function Toast() {
   }, [said]);
   if (!said) return null;
   return (
-    <div className="ui-toast" role="status" aria-live="polite" key={said.tick} data-testid="toast">
+    <div className="ui-toast" role="status" aria-live="polite" key={said.tick} data-part="toast" data-testid="toast">
       <span>{said.text}</span>
       {said.undo && (
         <button

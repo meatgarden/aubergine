@@ -15,6 +15,7 @@ import {
   type RuntimeStatus,
   type Settings,
   type ThemesAnswer,
+  type CustomCssAnswer,
   firstProject,
   stateOf,
 } from '@aubergine/shared';
@@ -65,6 +66,12 @@ export interface AppStore {
    */
   themes: ThemesAnswer;
   setThemes: (themes: ThemesAnswer) => void;
+  /**
+   * The owner's own stylesheet as the own server found it, by its version: null where there is none (or a server
+   * that does not say). A setting of the page, as the themes are, whatever server is shown.
+   */
+  customCss: CustomCssAnswer;
+  setCustomCss: (customCss: CustomCssAnswer) => void;
   /** Where the settings file of the server shown is, as it said with its state; null where it did not say. */
   settingsFile: string | null;
   /** The dialog that links a server is open. */
@@ -114,9 +121,9 @@ export interface AppStore {
   /** Whether the dialog that adds a device is open. What it shows (the code) is the dialog's own, and nobody else's. */
   addingDevice: boolean;
   /** The part of Settings to bring into view when it opens; used once. */
-  settingsAt: 'devices' | 'appearance' | 'titles' | 'all' | null;
+  settingsAt: 'devices' | 'appearance' | 'titles' | 'stylesheet' | 'all' | null;
   addDevice: (open: boolean) => void;
-  showSettings: (at: 'devices' | 'appearance' | 'titles' | 'all' | null) => void;
+  showSettings: (at: 'devices' | 'appearance' | 'titles' | 'stylesheet' | 'all' | null) => void;
   /**
    * The page that is shown in place of the canvas, if any: Queue, Board, Workflows or Library. The canvas stays as it
    * was underneath, and a panel or a dialog opens over a page as it does over the canvas. Its name is in the address.
@@ -250,6 +257,8 @@ export const useApp = create<AppStore>((set, get) => ({
   ownSettingsFile: null,
   themes: { themes: [], problems: [] },
   setThemes: (themes) => set({ themes }),
+  customCss: { stylesheet: null, problem: null },
+  setCustomCss: (customCss) => set({ customCss }),
   settingsFile: null,
   linking: false,
   linkServer: (linking) => set({ linking }),
@@ -319,18 +328,20 @@ export const useApp = create<AppStore>((set, get) => ({
         let own: Settings;
         let ownFile: string | null;
         let ownThemes: ThemesAnswer;
+        let ownCss: CustomCssAnswer;
         try {
           const ownState = await ownApi.getState();
           own = ownState.settings;
           ownFile = ownState.settingsFile ?? null;
           ownThemes = { themes: ownState.themes ?? [], problems: ownState.themeProblems ?? [] };
+          ownCss = { stylesheet: ownState.customCss ?? null, problem: ownState.customCssProblem ?? null };
         } catch {
           // The own server is not there or does not take this page: that is said as it always is, by showing it.
           if (get().server === server) get().showServer(null);
           return;
         }
         if (get().server !== server) return;
-        set({ ownSettings: own, ownSettingsFile: ownFile, themes: ownThemes });
+        set({ ownSettings: own, ownSettingsFile: ownFile, themes: ownThemes, customCss: ownCss });
       }
       const response = await api.getState();
       // Taken unless it is older than what the stream has already brought; what the stream brought before it is applied after it.
@@ -343,7 +354,9 @@ export const useApp = create<AppStore>((set, get) => ({
       const ownSettingsFile = server === null ? settingsFile : get().ownSettingsFile;
       // The themes of the owner's own are the page's: the own server's, whatever is shown.
       const themes = server === null ? { themes: response.themes ?? [], problems: response.themeProblems ?? [] } : get().themes;
-      set({ phase: 'ready', themes, runtime: response.runtime, settings: withPageSettings(response.settings, ownSettings), ownSettings, settingsFile, ownSettingsFile, here: response.here, following, whole: everything, app: viewOf(everything, current, get().app) });
+      // And so is the owner's own stylesheet.
+      const customCss = server === null ? { stylesheet: response.customCss ?? null, problem: response.customCssProblem ?? null } : get().customCss;
+      set({ phase: 'ready', themes, customCss, runtime: response.runtime, settings: withPageSettings(response.settings, ownSettings), ownSettings, settingsFile, ownSettingsFile, here: response.here, following, whole: everything, app: viewOf(everything, current, get().app) });
       // A tab that shows one terminal by itself looks at no canvas, and keeps its own address.
       if (terminalPage !== null) return;
       // Keep looking at the same canvas. On opening the page, or if that canvas is gone: the one asked for on
@@ -485,6 +498,7 @@ export const useApp = create<AppStore>((set, get) => ({
           ...(change.byTag !== undefined ? { byTag: change.byTag } : {}),
           ...(change.titleFormat !== undefined ? { titleFormat: change.titleFormat } : {}),
           ...(change.rowFormat !== undefined ? { rowFormat: change.rowFormat } : {}),
+          ...(change.customCss !== undefined ? { customCss: change.customCss } : {}),
         },
       });
       return { settings: changed(state.settings), ...(state.ownSettings ? { ownSettings: changed(state.ownSettings) } : {}) };

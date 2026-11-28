@@ -5171,6 +5171,26 @@
     "text": "Ein Platzhalter, der nichts zu sagen hat, fällt mit dem Text weg, der zu ihm führt: Bei einem Terminal ohne Ticket, Links oder Tags sagt dieser Titel nur seinen Zustand und seinen Ordner, ohne übrig gebliebenen Punkt. Eine Vorlage enthält nur Text und Platzhalter, kein Markup und keinen Stil; jeder wird so gezeichnet, wie die Seite dieses Ding auch sonst zeichnet, der Zustand in seiner Farbe und ein Link als Chip. Ein falscher Platzhalter wird unter dem Feld genannt und übersprungen, und <strong>Reset</strong> stellt genau das wieder her, was ohne Vorlage gezeichnet wird. Alle Platzhalter stehen in <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/templates.md\">docs/templates.md</a>.",
     "from": "163ceba573e3"
   },
+  "custom.css.title": {
+    "text": "Ein eigenes Stylesheet",
+    "from": "2222b72214ec"
+  },
+  "custom.css.text": {
+    "text": "Für alles, was die Einstellungen nicht erreichen, schreiben Sie ein eigenes Stylesheet: <code>custom.css</code> im Datenordner. Der Server bindet es als Letztes in den Kopf der Seite ein, daher ist es ab dem ersten Zeichnen da, und eine Regel von Ihnen gewinnt gegen eine gleich spezifische Regel der App, ohne <code>!important</code>. <code>aubergine css new</code> schreibt eines zum Anfangen, und <strong>Settings → Appearance → Your stylesheet</strong> sagt, ob es gefunden wurde, schaltet es aus und liest es ohne Neuladen erneut.",
+    "from": "c0183f3ec2e0"
+  },
+  "custom.css.hooks": {
+    "text": "Verlassen Sie sich auf die Ansatzpunkte und auf nichts anderes: jedes Token (<code>--accent</code>, <code>--radius-surface</code> und die übrigen), die Attribute an der Wurzel der Seite (<code>data-theme</code>, <code>data-page</code>), die mit <code>data-part</code> markierten Teile und die eigenen Attribute eines Terminals (<code>data-tags</code>, <code>data-state</code>, <code>data-name</code>), dieselben an seinem Knoten, seiner Zeile und seinem eigenen Browser-Tab. Sie stehen in <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/hooks.md\">docs/hooks.md</a> und bleiben von einer Version zur nächsten erhalten; Klassennamen nicht. Hier ist der Titel jedes Terminals mit dem Tag prod dunkelrot, und die Karte ist weg:",
+    "from": "e6d9a53fa8bb"
+  },
+  "custom.css.tokens": {
+    "text": "Und rundere Ecken überall, über zwei Tokens:",
+    "from": "f2699b36aa09"
+  },
+  "custom.css.out": {
+    "text": "Wenn eine Regel die Seite kaputt macht, öffnen Sie sie mit <code>?plain</code> hinter ihrer Adresse: Sie wird ohne Ihr Stylesheet gesendet. Nichts, was ein Stylesheet nennt, wird von einer anderen Adresse geladen: Ein Bild, eine Schrift oder ein Stylesheet kommt von diesem Server oder aus eingebetteten Daten, sodass ein eingefügtes Snippet nicht anderswohin senden kann, was auf Ihrer Seite steht. Das ist ein Schutz für eine Datei, die Sie geschrieben oder eingefügt haben, keine Sandbox. Es wurde nur in Chromium ausprobiert.",
+    "from": "7cec576ea647"
+  },
   "custom.file.title": {
     "text": "Eine Einstellungsdatei, die sich selbst beschreibt",
     "from": "9d7e735d280e"
@@ -5440,8 +5460,8 @@
     "from": "5daef6eb6445"
   },
   "custom.cmp.a.css": {
-    "text": "Nein. Geplant: eine <code>custom.css</code> mit dokumentierten Ansatzpunkten",
-    "from": "4ac770687589"
+    "text": "Ja: <code>custom.css</code> im Datenordner, mit dokumentierten Ansatzpunkten",
+    "from": "7db23532c40d"
   },
   "custom.cmp.a.code": {
     "text": "Nein. Geplant: Plugins",
@@ -5460,8 +5480,8 @@
     "from": "9538078a7039"
   },
   "custom.cmp.p3": {
-    "text": "Aubergine steht heute am Ende der Einstellungen: Themes, Farben und Tasten in Dateien, die sich selbst beschreiben, eine Seite, die einen Teil der Einstellungen schreibt, und Vorlagen dafür, was der Titel eines Terminals und seine Zeile sagen. Es führt keinen Code von Ihnen in der Seite aus und nimmt kein Stylesheet von Ihnen. Das steht auf der <a href=\"/roadmap/#rm-yours\">Roadmap</a> und ist nicht gebaut.",
-    "from": "99bbc30b361c"
+    "text": "Aubergine steht heute am Ende der Einstellungen und einen Schritt darüber hinaus: Themes, Farben und Tasten in Dateien, die sich selbst beschreiben, eine Seite, die einen Teil der Einstellungen schreibt, Vorlagen dafür, was der Titel eines Terminals und seine Zeile sagen, und ein eigenes Stylesheet mit Ansatzpunkten, die stabil bleiben. Es führt keinen Code von Ihnen in der Seite aus: Plugins stehen auf der <a href=\"/roadmap/#rm-yours\">Roadmap</a> und sind nicht gebaut.",
+    "from": "4315d5e6e417"
   },
   "custom.cmp.mark": {
     "text": "Aubergine ist mit keinem der auf dieser Seite genannten Werkzeuge verbunden. Ihre Namen sind Marken ihrer Inhaber.",
@@ -5472,8 +5492,8 @@
     "from": "e10eed0040ae"
   },
   "custom.plan.text": {
-    "text": "Eine <code>custom.css</code> und Plugins sind geplant und nicht gebaut: siehe die <a href=\"/roadmap/#rm-yours\">Roadmap</a>.",
-    "from": "a693849a5c84"
+    "text": "Plugins, Ihr eigener Code in der Seite, sind geplant und nicht gebaut: siehe die <a href=\"/roadmap/#rm-yours\">Roadmap</a>.",
+    "from": "5889d38036ea"
   },
   "custom.q.terminal.q": {
     "text": "Kann jedes Terminal ein eigenes Farbthema haben?",
@@ -5488,8 +5508,8 @@
     "from": "e4f4bf19de27"
   },
   "custom.q.css.a": {
-    "text": "Heute nicht. Einzelne Farben lassen sich von Hand in der Einstellungsdatei setzen; eine <code>custom.css</code> mit dokumentierten Ansatzpunkten ist geplant, nicht gebaut.",
-    "from": "332c37400357"
+    "text": "Ja: <code>custom.css</code> im Datenordner (<code>aubergine css new</code> schreibt eine zum Anfangen). Sie wird als Letztes auf der Seite eingebunden, ab dem ersten Zeichnen, und die Ansatzpunkte, auf die sie sich verlassen kann, stehen in docs/hooks.md. Hängen Sie <code>?plain</code> an die Adresse der Seite, um sie ohne zu sehen.",
+    "from": "8ebf56535e5d"
   },
   "custom.q.file.q": {
     "text": "Wo liegt die Einstellungsdatei von Aubergine?",
@@ -5516,16 +5536,8 @@
     "from": "34ca8a4540f5"
   },
   "roadmap.yours.sub": {
-    "text": "Mehr von der Seite nach Ihren Wünschen, über die heutigen Themes, Farben, Tasten und Vorlagen hinaus.",
-    "from": "930654eedc50"
-  },
-  "roadmap.yours.css.name": {
-    "text": "Ein eigenes Stylesheet",
-    "from": "2222b72214ec"
-  },
-  "roadmap.yours.css.text": {
-    "text": "Eine Datei <code>custom.css</code>, in die Seite geladen, mit dokumentierten Ansatzpunkten, die stabil bleiben.",
-    "from": "a48bd0baabda"
+    "text": "Mehr von der Seite nach Ihren Wünschen, über die heutigen Themes, Farben, Tasten, Vorlagen und Ihr eigenes Stylesheet hinaus.",
+    "from": "903ac9c0326e"
   },
   "roadmap.yours.plugins.name": {
     "text": "Plugins",

@@ -9,6 +9,7 @@ import { useBodyTheme } from './theme';
 import { colorClass, colorStyle } from './color';
 import { createRowSelector, DOT_WORD, dotTone } from './terminal-rows';
 import { Button, StateDot } from './ui';
+import { terminalHooks } from './page-hooks';
 
 /** The rows of the whole state: a terminal's color comes from where a list row's does, its node's or the place it was parked from. */
 const selectRows = createRowSelector();
@@ -64,7 +65,7 @@ export function TerminalPage({ sessionId }: { sessionId: string }) {
   const tone = dotTone(session, session.state === 'parked');
   return (
     <main className="terminal-page" data-testid="terminal-page" data-session={sessionId}>
-      <header className={`terminal-page-head ${colorClass(color)}`} style={colorStyle(color)} data-color={color} data-testid="terminal-page-head">
+      <header className={`terminal-page-head ${colorClass(color)}`} style={colorStyle(color)} data-part="focus-head" {...terminalHooks(session, color)} data-color={color} data-testid="terminal-page-head">
         {/* The app's name, as at the start of the top bar: a tab that shows one terminal still says what it is a tab of. */}
         <span className="brand" data-testid="brand">
           Aubergine
@@ -108,7 +109,7 @@ export function TerminalPage({ sessionId }: { sessionId: string }) {
       <div className="terminal-page-columns">
         {columns.canvases && <FocusCanvases sessionId={sessionId} />}
         {columns.details && <FocusDetails sessionId={sessionId} />}
-        <div className="terminal-page-body" data-testid="terminal-page-body" {...bodyTheme}>
+        <div className="terminal-page-body" data-part="focus-body" data-testid="terminal-page-body" {...bodyTheme}>
           {session.state === 'exited' ? (
             <p className="terminal-page-ended" data-testid="terminal-page-ended">
               This shell has ended.

@@ -19,7 +19,7 @@ function Dialog({ label, testid, close, children }: { label: string; testid: str
         }
       }}
     >
-      <div className="dialog sheet link-server" role="dialog" aria-label={label} data-testid={testid}>
+      <div className="dialog sheet link-server" role="dialog" data-part="dialog" aria-label={label} data-testid={testid}>
         {children}
       </div>
     </div>

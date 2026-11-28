@@ -111,7 +111,7 @@ export function TokenScreen() {
         }
       }}
     >
-      <div className="dialog sheet token-screen" role="dialog" aria-label="API tokens" data-testid="token-screen">
+      <div className="dialog sheet token-screen" role="dialog" data-part="dialog" aria-label="API tokens" data-testid="token-screen">
         <header className="sheet-head">
           <h2>API tokens</h2>
           <span>
@@ -362,7 +362,7 @@ export function ActivityScreen() {
         }
       }}
     >
-      <div className="dialog sheet token-screen" role="dialog" aria-label="API activity" data-testid="activity-screen">
+      <div className="dialog sheet token-screen" role="dialog" data-part="dialog" aria-label="API activity" data-testid="activity-screen">
         <header className="sheet-head">
           <h2>API activity</h2>
           <span>

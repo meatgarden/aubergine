@@ -182,14 +182,14 @@ describe('colors set by hand', () => {
 
 describe('the appearance in the settings', () => {
   it('has its defaults in a file without it', () => {
-    expect(Settings.parse({}).appearance).toEqual({ light: 'light', dark: 'dark', cursor: 'block', cursorBlink: true, terminal: null, byTag: [], titleFormat: DEFAULT_TITLE_FORMAT, rowFormat: DEFAULT_ROW_FORMAT, colors: {} });
+    expect(Settings.parse({}).appearance).toEqual({ light: 'light', dark: 'dark', cursor: 'block', cursorBlink: true, terminal: null, byTag: [], titleFormat: DEFAULT_TITLE_FORMAT, rowFormat: DEFAULT_ROW_FORMAT, customCss: true, colors: {} });
     expect(DEFAULT_SETTINGS.appearance).toEqual(Appearance.parse({}));
   });
 
   it('lets a wrong field fall back to its default by itself, and keeps the others', () => {
     // A theme's ID is kept whatever it names now: a theme file may be there, or come back. What is drawn falls back (`colorThemeShown`).
-    expect(Settings.parse({ appearance: { light: 'nord', dark: 'dracula', cursor: 'bar' } }).appearance).toEqual({ light: 'nord', dark: 'dracula', cursor: 'bar', cursorBlink: true, terminal: null, byTag: [], titleFormat: DEFAULT_TITLE_FORMAT, rowFormat: DEFAULT_ROW_FORMAT, colors: {} });
-    expect(Settings.parse({ appearance: { light: 'solarized-light', dark: 'Not An Id', cursor: 'beam', cursorBlink: 'yes', terminal: 'sepia', colors: [1] } }).appearance).toEqual({ light: 'solarized-light', dark: 'dark', cursor: 'block', cursorBlink: true, terminal: 'sepia', byTag: [], titleFormat: DEFAULT_TITLE_FORMAT, rowFormat: DEFAULT_ROW_FORMAT, colors: {} });
+    expect(Settings.parse({ appearance: { light: 'nord', dark: 'dracula', cursor: 'bar' } }).appearance).toEqual({ light: 'nord', dark: 'dracula', cursor: 'bar', cursorBlink: true, terminal: null, byTag: [], titleFormat: DEFAULT_TITLE_FORMAT, rowFormat: DEFAULT_ROW_FORMAT, customCss: true, colors: {} });
+    expect(Settings.parse({ appearance: { light: 'solarized-light', dark: 'Not An Id', cursor: 'beam', cursorBlink: 'yes', terminal: 'sepia', colors: [1] } }).appearance).toEqual({ light: 'solarized-light', dark: 'dark', cursor: 'block', cursorBlink: true, terminal: 'sepia', byTag: [], titleFormat: DEFAULT_TITLE_FORMAT, rowFormat: DEFAULT_ROW_FORMAT, customCss: true, colors: {} });
     expect(Settings.parse({ appearance: { dark: 'harbor', terminal: '9lives' } }).appearance).toMatchObject({ dark: 'harbor', terminal: null });
     // The default theme of terminals is any theme, of either kind.
     expect(Settings.parse({ theme: 'dark', appearance: { terminal: 'solarized-light' } }).appearance.terminal).toBe('solarized-light');

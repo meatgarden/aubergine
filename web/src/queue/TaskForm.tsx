@@ -64,7 +64,7 @@ export function TaskForm({ draft, onClose }: { draft: TaskDraft; onClose: () => 
         if (e.key === 'Escape') onClose();
       }}
     >
-      <div className="dialog agent-tools task-form" role="dialog" aria-modal="true" aria-label="To the queue" data-testid="task-form">
+      <div className="dialog agent-tools task-form" role="dialog" data-part="dialog" aria-modal="true" aria-label="To the queue" data-testid="task-form">
         <h2>{titles.length === 1 ? 'A task for the queue' : `${titles.length} tasks for the queue`}</h2>
         {titles.map((title, index) => (
           <label key={index} className="wf-field">

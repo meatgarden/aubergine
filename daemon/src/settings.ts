@@ -110,6 +110,7 @@ export const appearanceOf = (settings: Settings): AppearanceAnswer => ({
   byTag: settings.appearance.byTag,
   titleFormat: settings.appearance.titleFormat,
   rowFormat: settings.appearance.rowFormat,
+  customCss: settings.appearance.customCss,
 });
 
 const isObject = (value: unknown): value is Record<string, unknown> => value !== null && typeof value === 'object' && !Array.isArray(value);
@@ -217,14 +218,14 @@ export class SettingsFile {
 
   /**
    * Writes how the page looks: of `theme`, `appearance.light`, `appearance.dark`, `appearance.cursor`,
-   * `appearance.cursorBlink`, `appearance.terminal`, `appearance.byTag`, `appearance.titleFormat`, `appearance.rowFormat`, `font.family` and `font.size`, the ones that are sent, in one write. Every other key of
+   * `appearance.cursorBlink`, `appearance.terminal`, `appearance.byTag`, `appearance.titleFormat`, `appearance.rowFormat`, `appearance.customCss`, `font.family` and `font.size`, the ones that are sent, in one write. Every other key of
    * the file stays as it was, also the others inside `appearance` and `font`. None of them names anything that is run;
    * `appearance.colors` is written by hand only. A change that sends none of them does not write the file.
    */
   async setAppearance(change: ChangeAppearanceRequest): Promise<void> {
     const appearance: Record<string, unknown> = {};
     // `terminal` may be sent as null, which is written: the theme the page is drawn in.
-    for (const key of ['light', 'dark', 'cursor', 'cursorBlink', 'terminal', 'byTag', 'titleFormat', 'rowFormat'] as const) if (change[key] !== undefined) appearance[key] = change[key];
+    for (const key of ['light', 'dark', 'cursor', 'cursorBlink', 'terminal', 'byTag', 'titleFormat', 'rowFormat', 'customCss'] as const) if (change[key] !== undefined) appearance[key] = change[key];
     const font: Record<string, unknown> = {};
     if (change.fontFamily !== undefined) font.family = change.fontFamily;
     if (change.fontSize !== undefined) font.size = change.fontSize;

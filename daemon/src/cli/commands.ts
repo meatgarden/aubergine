@@ -16,6 +16,8 @@ export type Command =
   | { name: 'device'; words: string[] }
   /** `settings …`: where the settings file is, its schema, every key. Read from the file; the server is not needed. */
   | { name: 'settings'; words: string[] }
+  /** `css …`: where the owner's own stylesheet is, and a starter. Read and written in the data folder, the server not needed. */
+  | { name: 'css'; words: string[] }
   /** `theme …`: the color themes there are, the owner's theme files, a new one; inside a terminal, proposing one. For the owner read from the files, the server not needed; inside a terminal, through the server. */
   | { name: 'theme'; words: string[] }
   | { name: 'canvas-list' }
@@ -132,6 +134,9 @@ export const USAGE = `Usage: aubergine <command>
   settings path              Where the settings file is (config.json in the data folder)
   settings schema            The JSON Schema of the settings file; the server also writes it beside the file as
                              config.schema.json, and "$schema": "./config.schema.json" in the file lets an editor use it
+  css [path]                 Where your own stylesheet is (custom.css in the data folder), and whether there is one
+  css new                    Write a custom.css to start from: the hooks it may rely on (docs/hooks.md) and three
+                             examples, commented out. Never over a file that is there
   theme [list]               The color themes: those that come with Aubergine and your own theme files, with what is
                              wrong in a file
   theme new <id> [--from <theme>] [--name <name>] [--accent "#rrggbb"]
@@ -529,6 +534,8 @@ export function parseCommand(argv: readonly string[]): Command {
       return { name: 'device', words: rest };
     case 'settings':
       return { name: 'settings', words: rest };
+    case 'css':
+      return { name: 'css', words: rest };
     case 'theme':
     case 'themes':
       return { name: 'theme', words: rest };

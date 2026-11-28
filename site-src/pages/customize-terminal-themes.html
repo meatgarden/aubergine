@@ -1,4 +1,4 @@
-<!--page {"updated":"2026-11-28","order":6.97,"key":"custom","llms":{"name":"Customize terminal themes, colors, fonts and keys","about":"ten color themes for the page, themes of your own as JSON files and an accent of your own, a theme for a project and for the terminals with a tag, a theme for each terminal, 35 colors set by hand in the settings file, a terminal's font and cursor, every key rebound, a settings file with a JSON Schema and a searchable list in Settings; what a program or an agent may change, and a theme an agent proposes for you to accept; and how VS Code, Zed, Obsidian, Hyper, WezTerm, tmux, kitty, Ghostty, Windows Terminal and iTerm2 document their own, read on 28 November 2026. templates for what a terminal's title and its row say; your own CSS and plugins are planned, not built"}}-->
+<!--page {"updated":"2026-11-28","order":6.97,"key":"custom","llms":{"name":"Customize terminal themes, colors, fonts and keys","about":"ten color themes for the page, themes of your own as JSON files and an accent of your own, a theme for a project and for the terminals with a tag, a theme for each terminal, 35 colors set by hand in the settings file, a terminal's font and cursor, every key rebound, a settings file with a JSON Schema and a searchable list in Settings; what a program or an agent may change, and a theme an agent proposes for you to accept; and how VS Code, Zed, Obsidian, Hyper, WezTerm, tmux, kitty, Ghostty, Windows Terminal and iTerm2 document their own, read on 28 November 2026. templates for what a terminal's title and its row say; your own stylesheet (custom.css) with documented hooks; plugins are planned, not built"}}-->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -126,6 +126,22 @@
   }
 }</code></pre>
     <p>{{custom.tpl.rule}}</p>
+
+    <h2 id="your-stylesheet">{{custom.css.title}}</h2>
+    <p>{{custom.css.text}}</p>
+    <p>{{custom.css.hooks}}</p>
+    <pre><code>[data-part="terminal"][data-tags~="prod"] [data-part="terminal-title"] {
+  background: #5c1f24;
+}
+[data-part="map"] {
+  display: none;
+}</code></pre>
+    <p>{{custom.css.tokens}}</p>
+    <pre><code>:root {
+  --radius-surface: 16px;
+  --radius-control: 10px;
+}</code></pre>
+    <p>{{custom.css.out}}</p>
 
     <h2 id="settings-file">{{custom.file.title}}</h2>
     <p>{{custom.file.text}}</p>

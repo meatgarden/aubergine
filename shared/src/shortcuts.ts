@@ -102,6 +102,7 @@ export const COMMAND_IDS = [
   'theme.system',
   'theme.choose',
   'titles.format',
+  'appearance.stylesheet',
   'theme.use.light',
   'theme.use.high-contrast-light',
   'theme.use.solarized-light',

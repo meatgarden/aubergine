@@ -18,7 +18,7 @@ export function SidePanel() {
 
   if (!prefs.open) {
     return (
-      <aside className="side-panel collapsed" style={{ width: PANEL_STRIP_WIDTH }} aria-label="Side panel" data-testid="side-panel">
+      <aside className="side-panel collapsed" style={{ width: PANEL_STRIP_WIDTH }} aria-label="Side panel" data-part="side-panel" data-testid="side-panel">
         <IconButton className="rail-open" label="Show the side panel" aria-expanded={false} title={hint('panel.toggle', 'Show the side panel')} onClick={() => runCommand('panel.toggle')} data-testid="panel-fold">
           ›
         </IconButton>
@@ -44,7 +44,7 @@ export function SidePanel() {
 
   return (
     <>
-      <aside className="side-panel" style={{ width: prefs.width }} aria-label="Side panel" data-testid="side-panel">
+      <aside className="side-panel" style={{ width: prefs.width }} aria-label="Side panel" data-part="side-panel" data-testid="side-panel">
         <header className="panel-head">
           {active && (
             <Switcher
@@ -171,6 +171,7 @@ function Drawer() {
       aria-label="Details"
       tabIndex={-1}
       ref={root}
+      data-part="details"
       data-testid="panel-drawer"
       onKeyDown={(event) => {
         if (event.key === 'Escape' && !event.defaultPrevented) {

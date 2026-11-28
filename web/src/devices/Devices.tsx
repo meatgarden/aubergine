@@ -170,7 +170,7 @@ function AddDevice({ close }: { close: () => void }) {
         }
       }}
     >
-      <div className="dialog sheet add-device" role="dialog" aria-label="Add a device" tabIndex={-1} ref={box} data-testid="add-device-dialog">
+      <div className="dialog sheet add-device" role="dialog" data-part="dialog" aria-label="Add a device" tabIndex={-1} ref={box} data-testid="add-device-dialog">
         <ScreenHead title="Add a device" onClose={close} closeTestid="add-device-close" />
         {error ? (
           <p className="dialog-error" role="alert" data-testid="add-device-error">

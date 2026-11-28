@@ -5171,6 +5171,26 @@
     "text": "表示するものがないプレースホルダーは、そこへ続くテキストと一緒に省かれます。チケットもリンクもタグもないターミナルでは、このタイトルは状態とフォルダーだけを表示し、余分な点は残りません。テンプレートに入るのはテキストとプレースホルダーだけで、マークアップもスタイルもありません。どれもページが他の場所で描くのと同じように描かれ、状態はその色で、リンクはチップになります。誤ったプレースホルダーは欄の下で知らされて飛ばされ、<strong>Reset</strong> はテンプレートがないときの表示を正確に戻します。すべてのプレースホルダーは <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/templates.md\">docs/templates.md</a> にあります。",
     "from": "163ceba573e3"
   },
+  "custom.css.title": {
+    "text": "自分のスタイルシート",
+    "from": "2222b72214ec"
+  },
+  "custom.css.text": {
+    "text": "設定で届かないところは、自分のスタイルシートを書きます。データフォルダーの <code>custom.css</code> です。サーバーはこれをページの head の最後にリンクするので、最初の描画からそこにあり、同じ詳細度ならアプリのルールよりあなたのルールが勝ちます。<code>!important</code> は要りません。<code>aubergine css new</code> で始めるためのファイルが書かれ、<strong>Settings → Appearance → Your stylesheet</strong> では見つかったかどうかがわかり、オフにでき、再読み込みなしで読み直せます。",
+    "from": "c0183f3ec2e0"
+  },
+  "custom.css.hooks": {
+    "text": "頼るのはフックだけにしてください。すべてのトークン（<code>--accent</code>、<code>--radius-surface</code> など）、ページのルートの属性（<code>data-theme</code>、<code>data-page</code>）、<code>data-part</code> で印を付けた部分、そしてターミナル自身の属性（<code>data-tags</code>、<code>data-state</code>、<code>data-name</code>）です。属性はノード、行、そのターミナル専用のブラウザータブで同じです。一覧は <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/hooks.md\">docs/hooks.md</a> にあり、リリースをまたいで保たれます。クラス名は保たれません。この例では、タグ prod の付いたすべてのターミナルのタイトルが濃い赤になり、マップが消えます。",
+    "from": "e6d9a53fa8bb"
+  },
+  "custom.css.tokens": {
+    "text": "そして、2 つのトークンで、どこでも角をもっと丸く。",
+    "from": "f2699b36aa09"
+  },
+  "custom.css.out": {
+    "text": "ルールでページが壊れたら、アドレスの後ろに <code>?plain</code> を付けて開いてください。スタイルシートなしで送られます。スタイルシートが指定するものは、ほかのアドレスからは取得されません。画像、フォント、スタイルシートはこのサーバーかインラインのデータから来るので、貼り付けたスニペットがページの内容をよそへ送ることはできません。これは自分で書いたり貼り付けたりしたファイルへの備えであって、サンドボックスではありません。試したのは Chromium だけです。",
+    "from": "7cec576ea647"
+  },
   "custom.file.title": {
     "text": "自分自身を説明する 1 つの設定ファイル",
     "from": "9d7e735d280e"
@@ -5440,8 +5460,8 @@
     "from": "5daef6eb6445"
   },
   "custom.cmp.a.css": {
-    "text": "なし。予定：文書化されたフック付きの <code>custom.css</code>",
-    "from": "4ac770687589"
+    "text": "あり：データフォルダーの <code>custom.css</code>、文書化されたフック付き",
+    "from": "7db23532c40d"
   },
   "custom.cmp.a.code": {
     "text": "なし。予定：プラグイン",
@@ -5460,8 +5480,8 @@
     "from": "9538078a7039"
   },
   "custom.cmp.p3": {
-    "text": "現在の Aubergine は設定の側にあります。自分自身を説明するファイルにあるテーマ、色、キー、設定の一部を書き込むページ、そしてターミナルのタイトルと行に表示する内容のテンプレートです。ページであなたのコードを実行することはなく、あなたのスタイルシートも受け付けません。それらは <a href=\"/roadmap/#rm-yours\">ロードマップ</a>にあり、まだ作られていません。",
-    "from": "99bbc30b361c"
+    "text": "現在の Aubergine は設定の側にあり、そこから一歩先にも進んでいます。自分自身を説明するファイルにあるテーマ、色、キー、設定の一部を書き込むページ、ターミナルのタイトルと行に表示する内容のテンプレート、そして安定に保たれるフック付きのあなたのスタイルシートです。ページであなたのコードを実行することはありません。プラグインは <a href=\"/roadmap/#rm-yours\">ロードマップ</a>にあり、まだ作られていません。",
+    "from": "4315d5e6e417"
   },
   "custom.cmp.mark": {
     "text": "Aubergine は、このページで名前を挙げたどのツールとも提携していません。各名称はそれぞれの所有者の商標です。",
@@ -5472,8 +5492,8 @@
     "from": "e10eed0040ae"
   },
   "custom.plan.text": {
-    "text": "<code>custom.css</code> とプラグインは計画中で、まだ作られていません。<a href=\"/roadmap/#rm-yours\">ロードマップ</a>を参照してください。",
-    "from": "a693849a5c84"
+    "text": "プラグイン、つまりページで動くあなた自身のコードは予定で、まだ作られていません。<a href=\"/roadmap/#rm-yours\">ロードマップ</a>をご覧ください。",
+    "from": "5889d38036ea"
   },
   "custom.q.terminal.q": {
     "text": "ターミナルごとに違うカラーテーマにできますか？",
@@ -5488,8 +5508,8 @@
     "from": "e4f4bf19de27"
   },
   "custom.q.css.a": {
-    "text": "今はできません。個々の色は設定ファイルで手で決められます。文書化されたフック付きの <code>custom.css</code> は予定で、まだ作られていません。",
-    "from": "332c37400357"
+    "text": "できます。データフォルダーの <code>custom.css</code> です（<code>aubergine css new</code> で始めるためのファイルが書かれます）。最初の描画からページの最後にリンクされ、頼れるフックは docs/hooks.md にあります。ページのアドレスに <code>?plain</code> を付けると、それなしで見られます。",
+    "from": "8ebf56535e5d"
   },
   "custom.q.file.q": {
     "text": "Aubergine の設定ファイルはどこにありますか？",
@@ -5516,16 +5536,8 @@
     "from": "34ca8a4540f5"
   },
   "roadmap.yours.sub": {
-    "text": "今のテーマ、色、キー、テンプレートを超えて、ページをもっと自分好みに。",
-    "from": "930654eedc50"
-  },
-  "roadmap.yours.css.name": {
-    "text": "自分のスタイルシート",
-    "from": "2222b72214ec"
-  },
-  "roadmap.yours.css.text": {
-    "text": "ページに読み込む <code>custom.css</code> ファイル。文書化され、安定して保たれるフック付き。",
-    "from": "a48bd0baabda"
+    "text": "今のテーマ、色、キー、テンプレート、自分のスタイルシートを超えて、ページをもっと自分好みに。",
+    "from": "903ac9c0326e"
   },
   "roadmap.yours.plugins.name": {
     "text": "プラグイン",

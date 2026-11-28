@@ -60,7 +60,7 @@ export function TagDialog() {
         }
       }}
     >
-      <div className="dialog" role="dialog" aria-modal="true" aria-label={`Tags of ${session.name}`} data-testid="tag-dialog">
+      <div className="dialog" role="dialog" data-part="dialog" aria-modal="true" aria-label={`Tags of ${session.name}`} data-testid="tag-dialog">
         <h2>Tags of “{session.name}”</h2>
         <p>Short words of your own. The list on the left can show only the terminals with a tag.</p>
         <div className="tag-chips">

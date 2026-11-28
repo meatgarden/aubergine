@@ -5171,6 +5171,26 @@
     "text": "Um marcador sem nada a dizer é omitido junto com o texto que leva a ele: num terminal sem ticket, links nem tags, esse título diz só o estado e a pasta, sem nenhum ponto sobrando. Um modelo contém só texto e marcadores, sem marcação e sem estilo; cada um é desenhado como a página desenha essa coisa em outros lugares, o estado na sua cor e um link como um chip. Um marcador errado é indicado sob o campo e ignorado, e <strong>Reset</strong> devolve exatamente o que é desenhado sem modelo. Todos os marcadores estão em <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/templates.md\">docs/templates.md</a>.",
     "from": "163ceba573e3"
   },
+  "custom.css.title": {
+    "text": "Sua própria folha de estilo",
+    "from": "2222b72214ec"
+  },
+  "custom.css.text": {
+    "text": "Para tudo o que as configurações não alcançam, escreva uma folha de estilo sua: <code>custom.css</code> na pasta de dados. O servidor a vincula como a última coisa no cabeçalho da página, então ela está lá desde a primeira pintura, e uma regra sua vence uma regra do app tão específica quanto ela, sem <code>!important</code>. <code>aubergine css new</code> escreve uma para começar, e <strong>Settings → Appearance → Your stylesheet</strong> diz se ela foi encontrada, a desliga e a lê de novo sem recarregar.",
+    "from": "c0183f3ec2e0"
+  },
+  "custom.css.hooks": {
+    "text": "Conte com os ganchos e com nada mais: cada token (<code>--accent</code>, <code>--radius-surface</code> e os outros), os atributos na raiz da página (<code>data-theme</code>, <code>data-page</code>), as partes marcadas com <code>data-part</code> e os atributos próprios de um terminal (<code>data-tags</code>, <code>data-state</code>, <code>data-name</code>), os mesmos no nó dele, na linha dele e na aba do navegador só dele. Eles estão em <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/hooks.md\">docs/hooks.md</a> e são mantidos de uma versão para a outra; nomes de classe, não. Aqui o título de cada terminal com a tag prod fica vermelho-escuro, e o mapa some:",
+    "from": "e6d9a53fa8bb"
+  },
+  "custom.css.tokens": {
+    "text": "E cantos mais arredondados em todo lugar, por dois tokens:",
+    "from": "f2699b36aa09"
+  },
+  "custom.css.out": {
+    "text": "Se uma regra quebrar a página, abra-a com <code>?plain</code> depois do endereço: ela é enviada sem a sua folha de estilo. Nada do que uma folha de estilo cita é buscado em outro endereço: uma imagem, uma fonte ou uma folha de estilo vem deste servidor ou de dados embutidos, então um trecho colado não consegue enviar para outro lugar o que está na sua página. É uma proteção para um arquivo que você escreveu ou colou, não uma sandbox. Só foi testado no Chromium.",
+    "from": "7cec576ea647"
+  },
   "custom.file.title": {
     "text": "Um arquivo de configurações que descreve a si mesmo",
     "from": "9d7e735d280e"
@@ -5440,8 +5460,8 @@
     "from": "5daef6eb6445"
   },
   "custom.cmp.a.css": {
-    "text": "Não. Planejado: um <code>custom.css</code> com ganchos documentados",
-    "from": "4ac770687589"
+    "text": "Sim: <code>custom.css</code> na pasta de dados, com ganchos documentados",
+    "from": "7db23532c40d"
   },
   "custom.cmp.a.code": {
     "text": "Não. Planejado: plugins",
@@ -5460,8 +5480,8 @@
     "from": "9538078a7039"
   },
   "custom.cmp.p3": {
-    "text": "Hoje o Aubergine fica no extremo das configurações: temas, cores e teclas em arquivos que se descrevem, uma página que escreve parte das configurações e modelos para o que o título de um terminal e a linha dele dizem. Ele não executa código seu na página nem aceita uma folha de estilo sua. Isso está no <a href=\"/roadmap/#rm-yours\">roadmap</a>, e não foi construído.",
-    "from": "99bbc30b361c"
+    "text": "Hoje o Aubergine fica no extremo das configurações, e um passo além: temas, cores e teclas em arquivos que se descrevem, uma página que escreve parte das configurações, modelos para o que o título de um terminal e a linha dele dizem, e uma folha de estilo sua com ganchos mantidos estáveis. Ele não executa código seu na página: os plugins estão no <a href=\"/roadmap/#rm-yours\">roadmap</a>, e não foram construídos.",
+    "from": "4315d5e6e417"
   },
   "custom.cmp.mark": {
     "text": "O Aubergine não tem vínculo com nenhuma das ferramentas citadas nesta página. Os nomes delas são marcas dos seus respectivos donos.",
@@ -5472,8 +5492,8 @@
     "from": "e10eed0040ae"
   },
   "custom.plan.text": {
-    "text": "Um <code>custom.css</code> e plugins estão planejados e não construídos: veja o <a href=\"/roadmap/#rm-yours\">roadmap</a>.",
-    "from": "a693849a5c84"
+    "text": "Os plugins, seu próprio código na página, estão planejados e não foram construídos: veja o <a href=\"/roadmap/#rm-yours\">roadmap</a>.",
+    "from": "5889d38036ea"
   },
   "custom.q.terminal.q": {
     "text": "Cada terminal pode ter um tema de cores diferente?",
@@ -5488,8 +5508,8 @@
     "from": "e4f4bf19de27"
   },
   "custom.q.css.a": {
-    "text": "Hoje não. Cores isoladas podem ser definidas à mão no arquivo de configurações; um <code>custom.css</code> com ganchos documentados está planejado, não construído.",
-    "from": "332c37400357"
+    "text": "Sim: <code>custom.css</code> na pasta de dados (<code>aubergine css new</code> escreve um para começar). Ele é vinculado por último na página, desde a primeira pintura, e os ganchos com que pode contar estão em docs/hooks.md. Acrescente <code>?plain</code> ao endereço da página para vê-la sem ele.",
+    "from": "8ebf56535e5d"
   },
   "custom.q.file.q": {
     "text": "Onde fica o arquivo de configurações do Aubergine?",
@@ -5516,16 +5536,8 @@
     "from": "34ca8a4540f5"
   },
   "roadmap.yours.sub": {
-    "text": "Mais da página moldada por você, além dos temas, cores, teclas e modelos de hoje.",
-    "from": "930654eedc50"
-  },
-  "roadmap.yours.css.name": {
-    "text": "Sua própria folha de estilo",
-    "from": "2222b72214ec"
-  },
-  "roadmap.yours.css.text": {
-    "text": "Um arquivo <code>custom.css</code> carregado na página, com ganchos documentados que se mantêm estáveis.",
-    "from": "a48bd0baabda"
+    "text": "Mais da página moldada por você, além dos temas, cores, teclas, modelos e da sua própria folha de estilo de hoje.",
+    "from": "903ac9c0326e"
   },
   "roadmap.yours.plugins.name": {
     "text": "Plugins",

@@ -119,7 +119,7 @@ export function FirstSteps({ title, steps, action, testid }: { title: ReactNode;
 
 /** Lines to choose from. Each child is a button: a name and, where it helps, a `<small>` line saying what it is. */
 export function Menu({ className, ...rest }: HTMLAttributes<HTMLSpanElement>) {
-  return <span className={join('ui-menu toolbar-menu', className)} role="menu" {...rest} />;
+  return <span className={join('ui-menu toolbar-menu', className)} role="menu" data-part="menu" {...rest} />;
 }
 
 /** The head of a screen: its name, a line under it where one helps, and the way out at the right. */
@@ -157,7 +157,7 @@ export function Page({ name, title, summary, line, actions, flow, tabs, wide = f
     return () => void setTimeout(() => had?.isConnected && !document.querySelector('.ui-page') && had.focus(), 0);
   }, []);
   return (
-    <main className={join('ui-page', wide && 'is-wide', className)} aria-label={label} tabIndex={-1} ref={root} onKeyDown={onKeyDown} data-testid={testid} data-page={name}>
+    <main className={join('ui-page', wide && 'is-wide', className)} aria-label={label} tabIndex={-1} ref={root} onKeyDown={onKeyDown} data-part="page" data-testid={testid} data-page={name}>
       <header className="ui-page-head">
         <div className="ui-page-column ui-page-head-row">
           <div className="ui-page-name">
@@ -236,7 +236,7 @@ export function MenuButton({ label, children, kind = 'default', more = false, te
         {!more && <span aria-hidden="true">▾</span>}
       </button>
       {open && (
-        <span className={join('ui-menu toolbar-menu', againstWindow ? 'ui-menu-fixed' : 'ui-menu-under')} role="menu" style={againstWindow && at ? { left: at.left, top: at.top } : undefined} onClick={(event) => (event.target as HTMLElement).closest('[role^="menuitem"]') && setOpen(false)} data-testid={menuTestid}>
+        <span className={join('ui-menu toolbar-menu', againstWindow ? 'ui-menu-fixed' : 'ui-menu-under')} role="menu" data-part="menu" style={againstWindow && at ? { left: at.left, top: at.top } : undefined} onClick={(event) => (event.target as HTMLElement).closest('[role^="menuitem"]') && setOpen(false)} data-testid={menuTestid}>
           {children}
         </span>
       )}
@@ -301,7 +301,7 @@ export function Switcher({ label, name, extra, title, testid, nameTestid, menuTe
         </span>
       </button>
       {open && (
-        <span className="ui-menu toolbar-menu ui-switcher-menu" role="menu" style={{ left: at.left, top: at.top, minWidth: fill ? at.width : undefined }} onClick={(event) => (event.target as HTMLElement).closest('[role^="menuitem"]') && setOpen(false)} data-testid={menuTestid}>
+        <span className="ui-menu toolbar-menu ui-switcher-menu" role="menu" data-part="menu" style={{ left: at.left, top: at.top, minWidth: fill ? at.width : undefined }} onClick={(event) => (event.target as HTMLElement).closest('[role^="menuitem"]') && setOpen(false)} data-testid={menuTestid}>
           {children}
         </span>
       )}

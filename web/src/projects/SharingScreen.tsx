@@ -47,7 +47,7 @@ export function SharingScreen() {
         }
       }}
     >
-      <div className="dialog sheet sharing-screen" role="dialog" aria-label="Sharing" data-testid="sharing-screen">
+      <div className="dialog sheet sharing-screen" role="dialog" data-part="dialog" aria-label="Sharing" data-testid="sharing-screen">
         <ScreenHead title="Sharing" onClose={close} closeTestid="sharing-close" />
         <p className="sheet-note">
           What is listed here can be shared with every project or kept to one. Canvases, terminals, tasks, schedules and rules are always one project’s. Moving something here never stops a run that is going.

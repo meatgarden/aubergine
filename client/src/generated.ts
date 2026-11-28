@@ -1608,6 +1608,8 @@ export type ChangeAppearanceBody = {
   titleFormat?: string;
   /** What a terminal’s row in the list says on its second line: a template, as `titleFormat` is. */
   rowFormat?: string;
+  /** Whether the owner’s own stylesheet (`custom.css` in the data folder) is linked on the page. It names nothing that is run; what the file holds is written by hand. */
+  customCss?: boolean;
   /** The color themes of terminals by tag, in order, at most 20: the whole list, which replaces the one there was (an empty list removes them all). The first entry whose tag a terminal has wins; a terminal’s own theme comes before all of them. A theme the server has not read is refused with 400. */
   byTag?: {
     /** A terminal’s tag, as tags are written: whatever the capitals, the same tag. */
@@ -1648,6 +1650,8 @@ export type ChangeAppearanceResult = {
   titleFormat: string;
   /** What a terminal’s row in the list says on its second line: a template with placeholders such as {state} and {time}. */
   rowFormat: string;
+  /** Whether the owner’s own stylesheet (`custom.css` in the data folder) is linked on the page. */
+  customCss: boolean;
 };
 
 export type ReadThemesResult = {
@@ -1748,6 +1752,18 @@ export type ReadThemesResult = {
   }[];
   /** One sentence for each file that was not read, and each entry of a file that was skipped. */
   problems: string[];
+};
+
+export type ReadStylesheetResult = {
+  /** The stylesheet found now: null when there is none to link. */
+  stylesheet: {
+    /** A short hash of the file’s content: it changes when the content does, and is put in the address of the stylesheet so that a browser takes the new one. */
+    version: string;
+    /** The file’s size, in bytes. */
+    bytes: number;
+  } | null;
+  /** Why a file that is there was not read (a link, a folder, too large), in one sentence; null otherwise. */
+  problem: string | null;
 };
 
 export type AppendNoteBody = {
@@ -11251,6 +11267,7 @@ export const OPERATIONS = {
   changeDesktopSettings: { method: 'PUT', path: '/v1/settings/desktop', params: [], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
   changeAppearance: { method: 'PUT', path: '/v1/settings/appearance', params: [], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
   readThemes: { method: 'POST', path: '/v1/settings/themes/read', params: [], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
+  readStylesheet: { method: 'POST', path: '/v1/settings/stylesheet/read', params: [], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
   appendNote: { method: 'POST', path: '/v1/sessions/{sessionId}/notes', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'session', scope: "notes:write" } },
   updateNode: { method: 'PATCH', path: '/v1/canvases/{canvasId}/nodes/{nodeId}', params: ["canvasId", "nodeId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'token', scope: "canvases:write" } },
   createFrame: { method: 'POST', path: '/v1/canvases/{canvasId}/frames', params: ["canvasId"], hasBody: true, paged: false, idempotent: true, stream: false, access: { who: 'token', scope: "canvases:write" } },
@@ -11555,6 +11572,12 @@ export interface Client {
    * `POST /v1/settings/themes/read`. Signed-in browser only: no API token may call this.
    */
   readThemes(args?: CallOptions): Promise<ReadThemesResult>;
+  /**
+   * Read the owner's own stylesheet again.
+   *
+   * `POST /v1/settings/stylesheet/read`. Signed-in browser only: no API token may call this.
+   */
+  readStylesheet(args?: CallOptions): Promise<ReadStylesheetResult>;
   /**
    * Add an entry to a session's note log.
    *

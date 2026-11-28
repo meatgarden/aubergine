@@ -143,3 +143,7 @@ The ten themes are tested for contrast; a theme of yours is not. Settings says, 
 ## When a file is gone
 
 A theme that is chosen but whose file is no longer there is not an error. The page is drawn in Light or Dark in its place, a terminal in the next theme it would have (a tag's, the default for terminals, then the page's), and Settings says which theme is missing. Put the file back and press **Read themes again**, and it is drawn as before.
+
+## Beyond colors
+
+A theme file sets colors and nothing else. For anything more (a corner, a size, a part of the page hidden or drawn another way), write a stylesheet of your own: [custom-css.md](custom-css.md), and the hooks it may rely on in [hooks.md](hooks.md).

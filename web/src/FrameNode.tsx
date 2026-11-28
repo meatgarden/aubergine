@@ -22,7 +22,7 @@ export const FrameNode = memo(function FrameNode({ id, selected }: NodeProps<Fra
   };
 
   return (
-    <div style={colorStyle(frame.color)} className={`frame ${colorClass(frame.color)}${selected ? ' selected' : ''}`} data-testid="frame">
+    <div style={colorStyle(frame.color)} className={`frame ${colorClass(frame.color)}${selected ? ' selected' : ''}`} data-part="frame" data-testid="frame">
       <NodeResizer
         minWidth={FRAME_MIN_WIDTH}
         minHeight={FRAME_MIN_HEIGHT}

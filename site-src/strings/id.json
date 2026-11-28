@@ -5171,6 +5171,26 @@
     "text": "Placeholder yang tidak punya apa-apa untuk dikatakan dihilangkan bersama teks yang mengarah ke sana: pada terminal tanpa tiket, tautan, atau tag, judul itu hanya mengatakan status dan foldernya, tanpa titik yang tersisa. Templat hanya berisi teks dan placeholder, tanpa markup dan tanpa gaya; masing-masing digambar seperti halaman menggambar hal itu di tempat lain, status dalam warnanya dan tautan sebagai chip. Placeholder yang salah disebutkan di bawah kolom dan dilewati, dan <strong>Reset</strong> mengembalikan persis apa yang digambar tanpa templat. Semua placeholder ada di <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/templates.md\">docs/templates.md</a>.",
     "from": "163ceba573e3"
   },
+  "custom.css.title": {
+    "text": "Stylesheet sendiri",
+    "from": "2222b72214ec"
+  },
+  "custom.css.text": {
+    "text": "Untuk apa pun yang tidak terjangkau pengaturan, tulis stylesheet Anda sendiri: <code>custom.css</code> di folder data. Server menautkannya sebagai hal terakhir di head halaman, jadi ia ada sejak gambar pertama, dan aturan Anda mengalahkan aturan aplikasi yang sama spesifiknya, tanpa <code>!important</code>. <code>aubergine css new</code> menulis satu untuk memulai, dan <strong>Settings → Appearance → Your stylesheet</strong> memberi tahu apakah ia ditemukan, mematikannya, dan membacanya lagi tanpa memuat ulang.",
+    "from": "c0183f3ec2e0"
+  },
+  "custom.css.hooks": {
+    "text": "Andalkan kait-kaitnya dan tidak ada yang lain: setiap token (<code>--accent</code>, <code>--radius-surface</code>, dan lainnya), atribut di akar halaman (<code>data-theme</code>, <code>data-page</code>), bagian yang ditandai <code>data-part</code>, dan atribut milik terminal sendiri (<code>data-tags</code>, <code>data-state</code>, <code>data-name</code>), sama di simpulnya, barisnya, dan tab browser miliknya sendiri. Semuanya tercantum di <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/hooks.md\">docs/hooks.md</a> dan dipertahankan dari satu rilis ke rilis berikutnya; nama kelas tidak. Di sini judul setiap terminal bertag prod berwarna merah tua, dan petanya hilang:",
+    "from": "e6d9a53fa8bb"
+  },
+  "custom.css.tokens": {
+    "text": "Dan sudut yang lebih bulat di mana-mana, lewat dua token:",
+    "from": "f2699b36aa09"
+  },
+  "custom.css.out": {
+    "text": "Jika sebuah aturan merusak halaman, buka dengan <code>?plain</code> setelah alamatnya: halaman dikirim tanpa stylesheet Anda. Tidak ada yang disebut stylesheet yang diambil dari alamat lain: gambar, font, atau stylesheet datang dari server ini atau dari data sebaris, sehingga potongan yang ditempel tidak bisa mengirim isi halaman Anda ke tempat lain. Itu pengaman untuk berkas yang Anda tulis atau tempel, bukan sandbox. Baru dicoba di Chromium saja.",
+    "from": "7cec576ea647"
+  },
   "custom.file.title": {
     "text": "Satu berkas pengaturan yang menjelaskan dirinya sendiri",
     "from": "9d7e735d280e"
@@ -5440,8 +5460,8 @@
     "from": "5daef6eb6445"
   },
   "custom.cmp.a.css": {
-    "text": "Tidak. Direncanakan: <code>custom.css</code> dengan kait yang terdokumentasi",
-    "from": "4ac770687589"
+    "text": "Ya: <code>custom.css</code> di folder data, dengan kait yang terdokumentasi",
+    "from": "7db23532c40d"
   },
   "custom.cmp.a.code": {
     "text": "Tidak. Direncanakan: plugin",
@@ -5460,8 +5480,8 @@
     "from": "9538078a7039"
   },
   "custom.cmp.p3": {
-    "text": "Aubergine saat ini berada di sisi pengaturan: tema, warna, dan tombol dalam file yang menjelaskan dirinya sendiri, halaman yang menulis sebagian pengaturan, dan templat untuk apa yang dikatakan judul terminal dan barisnya. Ia tidak menjalankan kode Anda di halaman dan tidak menerima style sheet Anda. Itu ada di <a href=\"/roadmap/#rm-yours\">roadmap</a>, dan belum dibuat.",
-    "from": "99bbc30b361c"
+    "text": "Aubergine saat ini berada di sisi pengaturan, dan selangkah lebih jauh: tema, warna, dan tombol dalam file yang menjelaskan dirinya sendiri, halaman yang menulis sebagian pengaturan, templat untuk apa yang dikatakan judul terminal dan barisnya, dan stylesheet Anda sendiri dengan kait yang dijaga tetap stabil. Ia tidak menjalankan kode Anda di halaman: plugin ada di <a href=\"/roadmap/#rm-yours\">roadmap</a>, dan belum dibuat.",
+    "from": "4315d5e6e417"
   },
   "custom.cmp.mark": {
     "text": "Aubergine tidak berafiliasi dengan alat mana pun yang disebut di halaman ini. Nama-nama itu adalah merek dagang pemiliknya masing-masing.",
@@ -5472,8 +5492,8 @@
     "from": "e10eed0040ae"
   },
   "custom.plan.text": {
-    "text": "<code>custom.css</code> dan plugin direncanakan dan belum dibuat: lihat <a href=\"/roadmap/#rm-yours\">roadmap</a>.",
-    "from": "a693849a5c84"
+    "text": "Plugin, kode Anda sendiri di halaman, direncanakan dan belum dibuat: lihat <a href=\"/roadmap/#rm-yours\">roadmap</a>.",
+    "from": "5889d38036ea"
   },
   "custom.q.terminal.q": {
     "text": "Bisakah setiap terminal punya tema warna yang berbeda?",
@@ -5488,8 +5508,8 @@
     "from": "e4f4bf19de27"
   },
   "custom.q.css.a": {
-    "text": "Belum sekarang. Warna tunggal bisa diatur sendiri di berkas pengaturan; <code>custom.css</code> dengan kait yang terdokumentasi direncanakan, belum dibuat.",
-    "from": "332c37400357"
+    "text": "Bisa: <code>custom.css</code> di folder data (<code>aubergine css new</code> menulis satu untuk memulai). Ia ditautkan paling akhir di halaman, sejak gambar pertama, dan kait yang bisa diandalkannya tercantum di docs/hooks.md. Tambahkan <code>?plain</code> ke alamat halaman untuk melihatnya tanpa itu.",
+    "from": "8ebf56535e5d"
   },
   "custom.q.file.q": {
     "text": "Di mana berkas pengaturan Aubergine?",
@@ -5516,16 +5536,8 @@
     "from": "34ca8a4540f5"
   },
   "roadmap.yours.sub": {
-    "text": "Lebih banyak bagian halaman yang Anda bentuk, melampaui tema, warna, tombol, dan templat hari ini.",
-    "from": "930654eedc50"
-  },
-  "roadmap.yours.css.name": {
-    "text": "Stylesheet sendiri",
-    "from": "2222b72214ec"
-  },
-  "roadmap.yours.css.text": {
-    "text": "Berkas <code>custom.css</code> yang dimuat ke halaman, dengan kait terdokumentasi yang dijaga tetap stabil.",
-    "from": "a48bd0baabda"
+    "text": "Lebih banyak bagian halaman yang Anda bentuk, melampaui tema, warna, tombol, templat, dan stylesheet Anda sendiri hari ini.",
+    "from": "903ac9c0326e"
   },
   "roadmap.yours.plugins.name": {
     "text": "Plugin",

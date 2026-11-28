@@ -22,6 +22,7 @@ import { chooseColorTheme, chooseTheme, readThemesAgain, setCursor, setCursorBli
 import { currentProjectId } from '../store';
 import { ByTag } from './ByTag';
 import { TitlesPart } from './TitlesPart';
+import { StylesheetPart } from './StylesheetPart';
 import { ThemeSelect } from '../TerminalTheme';
 import { Banner, Button, RadioRow, RadioRows, Segmented, TextField } from '../ui';
 
@@ -279,6 +280,8 @@ export function AppearancePart() {
           </div>
         )}
       </div>
+
+      <StylesheetPart />
     </section>
   );
 }

@@ -71,6 +71,7 @@ export const CONTROL_OF: Record<PageWrittenSetting, (settings: Settings) => stri
   'appearance.rowFormat': () => 'row-format',
   'appearance.cursor': (s) => `cursor-${s.appearance.cursor}`,
   'appearance.cursorBlink': () => 'cursor-blink',
+  'appearance.customCss': () => 'custom-css-on',
   'font.family': () => 'font-family',
   'font.size': () => 'font-size',
   'desktop.openNew': () => 'settings-desktop-new',

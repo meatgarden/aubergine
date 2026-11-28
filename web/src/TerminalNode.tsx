@@ -21,6 +21,7 @@ import { tourSignal } from './tour/tour-store';
 import { RecapBlock } from './Recap';
 import { RunStrip } from './workflows/RunStrip';
 import { TitleSays } from './templates/TemplateSays';
+import { terminalHooks } from './page-hooks';
 
 export type TerminalFlowNode = Node<{ sessionId: string }, 'terminal'>;
 
@@ -145,7 +146,9 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
     <div
       style={colorStyle(color)}
       className={`terminal-node ${colorClass(color)}${selected ? ' selected' : ''}${isSelected && !focused ? ' is-selected' : ''}`}
+      data-part="terminal"
       data-testid="terminal-node"
+      {...(session ? terminalHooks(session, color) : {})}
       data-session={sessionId}
       data-selected={isSelected && !focused ? 'true' : undefined}
       data-focused={focused ? 'true' : undefined}
@@ -162,7 +165,7 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
           void api.updateNode(id, { x: rect.x, y: rect.y, width: rect.width, height: rect.height })
         }
       />
-      <header className="node-title" onDoubleClick={() => setDraft(name)}>
+      <header className="node-title" data-part="terminal-title" onDoubleClick={() => setDraft(name)}>
         {session && <TitleDot session={session} focused={focused} />}
         {draft === null ? (
           <span className="node-name" title={hint('terminal.rename', 'Double-click to rename')} data-testid="node-name">
@@ -240,7 +243,7 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
               ⋮
             </button>
             {/* Kept in the page while closed: what a key or the palette asks for (move, colour) is answered from here. */}
-            <span className="ui-menu toolbar-menu node-menu" role="menu" hidden={!more} onClick={(event) => (event.target as HTMLElement).closest('[role^="menuitem"]') && !(event.target as HTMLElement).closest('.move-to, .color-button') && setMore(false)} data-testid="node-menu">
+            <span className="ui-menu toolbar-menu node-menu" role="menu" data-part="menu" hidden={!more} onClick={(event) => (event.target as HTMLElement).closest('[role^="menuitem"]') && !(event.target as HTMLElement).closest('.move-to, .color-button') && setMore(false)} data-testid="node-menu">
               {draft === null && (
                 <button
                   type="button"
@@ -392,7 +395,7 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
       </header>
       {!exited && <RunStrip sessionId={sessionId} variant="node" />}
       {exited ? (
-        <div className="node-body node-ended nodrag" data-testid="node-ended">
+        <div className="node-body node-ended nodrag" data-part="terminal-body" data-testid="node-ended">
           {session?.meantFor ? (
             // Came in a project file: its shell was never started here. What it was is said; nothing is done because of it.
             <p data-testid="node-not-started">
@@ -418,7 +421,7 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
       ) : mode === 'live' ? (
         <LiveBody sessionId={sessionId} onFocusChange={onFocusChange} />
       ) : (
-        <div className="node-body nodrag nopan" data-testid="node-body" data-mode={mode} {...bodyTheme}>
+        <div className="node-body nodrag nopan" data-part="terminal-body" data-testid="node-body" data-mode={mode} {...bodyTheme}>
           <SnapshotView sessionId={sessionId} refreshing={mode === 'snapshot'} />
           <div className="node-shield zoomed-out" title="Too small to type in: click to zoom in" />
         </div>
@@ -450,6 +453,7 @@ function LiveBody({ sessionId, onFocusChange }: { sessionId: string; onFocusChan
       className={`node-body nodrag nopan${live ? ' nowheel' : ''}`}
       onFocus={() => change(true)}
       onBlur={() => change(false)}
+      data-part="terminal-body"
       data-testid="node-body"
       {...bodyTheme}
     >

@@ -29,6 +29,7 @@ import { FieldsInput } from './fields';
 import { Settings, ThemeSetting } from './settings';
 import { BY_TAG_MAX, CursorStyle, ThemeId, ThemesByTag, UserTheme } from './themes';
 import { TEMPLATE_MAX, TemplateText } from './templates';
+import { CustomCss } from './custom-css';
 
 /**
  * The wire protocol between the browser and the daemon. Bump the version and
@@ -150,6 +151,10 @@ export const StateResponse = z.object({
   themes: z.array(UserTheme).max(50).optional(),
   /** One sentence for each theme file that was not read, and each entry of one that was skipped. */
   themeProblems: z.array(z.string().max(1000)).max(500).optional(),
+  /** The owner's own stylesheet (`custom.css` in the data folder), as the page links it: null when there is none. Left out by an older server, and for a linked page: the file is the page's own. */
+  customCss: CustomCss.nullable().optional(),
+  /** Why a `custom.css` that is there was not read, in one sentence; left out or null otherwise. */
+  customCssProblem: z.string().max(1000).nullable().optional(),
 });
 export type StateResponse = z.infer<typeof StateResponse>;
 
@@ -181,6 +186,7 @@ export const AppearanceAnswer = z.object({
   byTag: ThemesByTag.describe('Color themes for terminals by tag, in order: a terminal without one of its own is drawn in the theme of the first entry whose tag it has.'),
   titleFormat: TemplateText.describe('What a terminal’s title says after its name: a template with placeholders such as {state} and {folder}.'),
   rowFormat: TemplateText.describe('What a terminal’s row in the list says on its second line: a template with placeholders such as {state} and {time}.'),
+  customCss: z.boolean().describe('Whether the owner’s own stylesheet (`custom.css` in the data folder) is linked on the page.'),
 });
 export type AppearanceAnswer = z.infer<typeof AppearanceAnswer>;
 /**
@@ -209,6 +215,7 @@ export const ChangeAppearanceRequest = z.object({
   terminal: ThemeId.nullable().optional().describe('The color theme every terminal is drawn in that has none of its own: one of the IDs of the color themes, of either kind, built-in or a theme file the server has read (another is refused with 400). `null`: the theme the page is drawn in.'),
   titleFormat: TemplateText.optional().describe(`What a terminal’s title says after its name, on the canvas and at the head of a terminal in a browser tab of its own: a template, one line of at most ${TEMPLATE_MAX} characters without control characters (another is refused with 400), with placeholders such as {state}, {folder} and {field:Ticket}. A placeholder that is not known is kept as written and skipped where it is drawn.`),
   rowFormat: TemplateText.optional().describe(`What a terminal’s row in the list says on its second line: a template, as \`titleFormat\` is.`),
+  customCss: z.boolean().optional().describe('Whether the owner’s own stylesheet (`custom.css` in the data folder) is linked on the page. It names nothing that is run; what the file holds is written by hand.'),
   byTag: ThemesByTag.optional().describe(`The color themes of terminals by tag, in order, at most ${BY_TAG_MAX}: the whole list, which replaces the one there was (an empty list removes them all). The first entry whose tag a terminal has wins; a terminal’s own theme comes before all of them. A theme the server has not read is refused with 400.`),
 });
 export type ChangeAppearanceRequest = z.infer<typeof ChangeAppearanceRequest>;

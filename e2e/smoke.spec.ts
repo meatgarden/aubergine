@@ -6,6 +6,7 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { expect, test, type Locator, type Page } from '@playwright/test';
 import { e2e, second } from '../playwright.config';
+import { ATTRIBUTE_HOOKS, PART_NAMES } from '../shared/src/hooks';
 
 const repoRoot = path.resolve(e2e.dataDir, '..');
 
@@ -7891,4 +7892,246 @@ test('titles and rows: what a title and a row say after the name is a template, 
   await page.keyboard.press('Escape');
   await expect(page.getByTestId('settings-dialog')).toHaveCount(0);
   rmSync(folder, { recursive: true, force: true });
+});
+
+test('your own stylesheet: custom.css in the data folder is linked last from the first paint and beats the app at equal specificity, what it names elsewhere is not fetched, ?plain and the switch in Settings leave it out, and Read it again takes a change', async ({ page }) => {
+  const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
+  const origin = `http://127.0.0.1:${e2e.port}`;
+  const configFile = path.join(e2e.dataDir, 'config.json');
+  const original = existsSync(configFile) ? readFileSync(configFile, 'utf8') : null;
+  const cssFile = path.join(e2e.dataDir, 'custom.css');
+  const elsewhere = 'http://pictures.example.invalid/spy.png';
+  const tinted = 'rgb(92, 31, 36)';
+  const retinted = 'rgb(20, 60, 90)';
+  const pageGround = 'rgb(1, 2, 3)';
+  const stylesheet = (title: string): string =>
+    [
+      `[data-part="terminal"][data-tags~="prod"] [data-part="terminal-title"] { background-color: ${title}; }`,
+      '[data-part="map"] { display: none; }',
+      // As specific as the app's own rule for a page (one class), and later: it wins without !important.
+      `[data-part="page"] { background: ${pageGround}; }`,
+      `[data-part="canvas"] { background-image: url("${elsewhere}"); }`,
+      '',
+    ].join('\n');
+  // What the title of a tagged terminal looks like the moment it is first drawn, and every address a stylesheet named that the page refused.
+  await page.addInitScript(() => {
+    const w = window as unknown as { firstTitle: string | null; refused: string[] };
+    w.firstTitle = null;
+    w.refused = [];
+    document.addEventListener('securitypolicyviolation', (event) => w.refused.push(`${event.violatedDirective} ${event.blockedURI}`));
+    new MutationObserver(() => {
+      if (w.firstTitle !== null) return;
+      const title = document.querySelector('[data-part="terminal"][data-tags~="prod"] [data-part="terminal-title"]');
+      if (title) w.firstTitle = getComputedStyle(title).backgroundColor;
+    }).observe(document, { childList: true, subtree: true, attributes: true, attributeFilter: ['data-tags'] });
+  });
+  // What the browser did with each address elsewhere: refused before it was sent, or answered.
+  const elsewhereEnded: string[] = [];
+  page.on('requestfailed', (request) => request.url().includes('example.invalid') && elsewhereEnded.push(`failed ${request.failure()?.errorText ?? ''}`));
+  page.on('response', (response) => response.url().includes('example.invalid') && elsewhereEnded.push(`answered ${response.status()}`));
+  await page.goto(`/auth?token=${token}`);
+  await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
+  const before = page.url();
+  await page.getByRole('button', { name: 'New canvas' }).click();
+  await expect(page).not.toHaveURL(before);
+  await page.getByTestId('toolbar-new-terminal').click();
+  const node = page.getByTestId('terminal-node');
+  await expect(node).toHaveCount(1);
+  await expect(node.locator('.xterm-rows')).toContainText(/[$%#>]/, { timeout: 20_000 });
+  const sessionId = (await node.getAttribute('data-session')) ?? '';
+  expect((await page.request.patch(`/v1/sessions/${sessionId}`, { headers: { origin }, data: { tags: ['Prod'] } })).status()).toBe(200);
+  await expect(node).toHaveAttribute('data-tags', 'prod');
+  const title = node.locator('[data-part="terminal-title"]');
+  const titleGround = (): Promise<string> => title.evaluate((el) => getComputedStyle(el).backgroundColor);
+  const appTitle = await titleGround();
+  expect(appTitle).not.toBe(tinted);
+  // The map is shown, as a terminal's title is drawn, before there is a stylesheet.
+  if ((await page.getByTestId('map-fold').getAttribute('aria-expanded')) === 'false') await page.getByTestId('map-fold').click();
+  // With no terminal in use the map is not asked to step aside: the canvas itself is pressed, away from everything on it.
+  const pane = (await page.locator('.react-flow__pane').boundingBox())!;
+  await page.mouse.click(pane.x + 40, pane.y + pane.height - 40);
+  await expect(page.getByTestId('terminal-node')).not.toHaveAttribute('data-selected');
+  await expect(page.locator('[data-part="map"]')).toBeVisible();
+  const settings = page.getByTestId('settings-dialog');
+  const part = settings.getByTestId('settings-stylesheet');
+  try {
+    writeFileSync(cssFile, stylesheet(tinted));
+    // Sent with the page: one link, the last thing in the head, after the app's own stylesheet.
+    const sent = await (await page.request.get(page.url())).text();
+    const head = sent.slice(0, sent.indexOf('</head>'));
+    expect(head.match(/data-custom-css/g)).toHaveLength(1);
+    expect(head.lastIndexOf('<link rel="stylesheet" href="/api/v1/custom.css?v=')).toBeGreaterThan(head.lastIndexOf('/assets/'));
+    expect(head.trimEnd().endsWith('data-custom-css>')).toBe(true);
+    expect(sent).not.toContain(tinted);
+
+    await page.reload();
+    await expect(node.locator('.xterm-rows')).toContainText(/[$%#>]/, { timeout: 20_000 });
+    // Tinted from the moment the title is there: the stylesheet was on the page before it was drawn.
+    expect(await page.evaluate(() => (window as unknown as { firstTitle: string | null }).firstTitle)).toBe(tinted);
+    expect(await titleGround()).toBe(tinted);
+    await expect(page.locator('[data-part="map"]')).toBeHidden();
+    // Equal specificity, and the owner's wins over the app's own piece.
+    await openPage(page, 'library');
+    await expect.poll(() => page.locator('[data-part="page"]').evaluate((el) => getComputedStyle(el).backgroundColor)).toBe(pageGround);
+    await toCanvas(page);
+    // What the stylesheet named at another address was refused by the page, never asked for.
+    await expect.poll(() => page.evaluate(() => (window as unknown as { refused: string[] }).refused)).toContain(`img-src ${elsewhere}`);
+    await expect.poll(() => elsewhereEnded.length).toBeGreaterThan(0);
+    expect([...new Set(elsewhereEnded)]).toEqual(['failed csp']);
+
+    // The way out: the same page with ?plain is drawn without it.
+    await page.goto(`${page.url()}?plain`);
+    await expect(node.locator('.xterm-rows')).toContainText(/[$%#>]/, { timeout: 20_000 });
+    await expect(page.locator('link[data-custom-css]')).toHaveCount(0);
+    expect(await titleGround()).toBe(appTitle);
+    await expect(page.locator('[data-part="map"]')).toBeVisible();
+    await page.getByTestId('toolbar-settings').click();
+    await expect(part.getByTestId('stylesheet-says')).toContainText('left out of this page');
+    await page.keyboard.press('Escape');
+
+    // The switch in Settings, from the command that opens it there: off and on again without a reload.
+    await page.goto(page.url().replace(/\?plain$/, ''));
+    await expect(node.locator('.xterm-rows')).toContainText(/[$%#>]/, { timeout: 20_000 });
+    await expect.poll(titleGround).toBe(tinted);
+    await page.getByRole('button', { name: 'Go to…' }).click();
+    await page.keyboard.type('Your stylesheet');
+    await page.keyboard.press('Enter');
+    await expect(part).toBeVisible();
+    await expect(part.getByTestId('stylesheet-where')).toContainText(cssFile);
+    await expect(part.getByTestId('stylesheet-says')).toContainText('drawn on this page');
+    await expect(part.getByTestId('stylesheet-plain')).toHaveAttribute('href', /\?plain$/);
+    const on = part.getByTestId('custom-css-on');
+    await expect(on).toBeFocused();
+    await expect(on).toBeChecked();
+    await page.keyboard.press('Space');
+    await expect(on).not.toBeChecked();
+    await expect(page.locator('link[data-custom-css]')).toHaveCount(0);
+    await expect.poll(titleGround).toBe(appTitle);
+    await expect.poll(() => (JSON.parse(readFileSync(configFile, 'utf8')) as { appearance?: { customCss?: boolean } }).appearance?.customCss).toBe(false);
+    expect(linkIn(await (await page.request.get(page.url())).text())).toBeNull();
+    await on.click();
+    await expect(on).toBeChecked();
+    await expect.poll(titleGround).toBe(tinted);
+
+    // Changed in the file and read again: linked at its new address, drawn at once.
+    const firstHref = await page.locator('link[data-custom-css]').getAttribute('href');
+    writeFileSync(cssFile, stylesheet(retinted));
+    await part.getByTestId('stylesheet-read-again').click();
+    await expect(page.getByTestId('toast')).toContainText('custom.css is read');
+    await expect.poll(() => page.locator('link[data-custom-css]').getAttribute('href')).not.toBe(firstHref);
+    await expect(page.locator('link[data-custom-css]')).toHaveCount(1);
+    await expect.poll(titleGround).toBe(retinted);
+    // Gone, and read again: nothing is linked.
+    rmSync(cssFile);
+    await part.getByTestId('stylesheet-read-again').click();
+    await expect(page.locator('link[data-custom-css]')).toHaveCount(0);
+    await expect(part.getByTestId('stylesheet-says')).toContainText('aubergine css new');
+    await expect.poll(titleGround).toBe(appTitle);
+    await page.keyboard.press('Escape');
+  } finally {
+    rmSync(cssFile, { force: true });
+    if (original === null) rmSync(configFile, { force: true });
+    else writeFileSync(configFile, original);
+  }
+});
+
+/** The address of the owner's stylesheet in a page as it was sent, or null. */
+function linkIn(html: string): string | null {
+  return /<link rel="stylesheet" href="([^"]+)" data-custom-css>/.exec(html)?.[1] ?? null;
+}
+
+test('the hooks: every part in the list is drawn on the canvas, its list, a page, a dialog, a menu and the focus view, none is drawn that is not in it, and a terminal says the same about itself everywhere', async ({ page }) => {
+  const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
+  const origin = `http://127.0.0.1:${e2e.port}`;
+  const seen = new Set<string>();
+  const look = async (): Promise<void> => {
+    for (const name of await page.evaluate(() => [...document.querySelectorAll('[data-part]')].map((el) => el.getAttribute('data-part') ?? ''))) seen.add(name);
+    const unknown = [...seen].filter((name) => !(PART_NAMES as readonly string[]).includes(name));
+    expect(unknown, `drawn with a data-part that is not in UI_HOOKS (shared/src/hooks.ts): ${unknown.join(', ')}. A part that is drawn is a promise: add it to the list, or take it away.`).toEqual([]);
+  };
+  await page.goto(`/auth?token=${token}`);
+  await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
+  const before = page.url();
+  await page.getByRole('button', { name: 'New canvas' }).click();
+  await expect(page).not.toHaveURL(before);
+  await page.getByTestId('toolbar-new-terminal').click();
+  const node = page.getByTestId('terminal-node');
+  await expect(node).toHaveCount(1);
+  await expect(node.locator('.xterm-rows')).toContainText(/[$%#>]/, { timeout: 20_000 });
+  const sessionId = (await node.getAttribute('data-session')) ?? '';
+  expect((await page.request.patch(`/v1/sessions/${sessionId}`, { headers: { origin }, data: { tags: ['Hooks', 'prod'], name: 'prod hooks' } })).status()).toBe(200);
+  await expect(node).toHaveAttribute('data-name', 'prod hooks');
+  await page.getByTestId('toolbar-new-more').click();
+  await page.getByTestId('toolbar-new-frame').click();
+  await expect(page.getByTestId('frame')).toHaveCount(1);
+  if ((await page.getByTestId('map-fold').getAttribute('aria-expanded')) === 'false') await page.getByTestId('map-fold').click();
+  // With no terminal in use the map is not asked to step aside: the canvas itself is pressed, away from everything on it.
+  const pane = (await page.locator('.react-flow__pane').boundingBox())!;
+  await page.mouse.click(pane.x + 40, pane.y + pane.height - 40);
+  await expect(page.getByTestId('terminal-node')).not.toHaveAttribute('data-selected');
+  await expect(page.locator('[data-part="map"]')).toBeVisible();
+  await expect(page.locator('[data-part="terminal-note"]')).toHaveCount(1);
+  await look();
+  // The root says where the page is.
+  const html = page.locator('html');
+  await expect(html).toHaveAttribute('data-page', 'canvas');
+  await expect(html).toHaveAttribute('data-server', 'own');
+  await expect(html).toHaveAttribute('data-here', '');
+  await expect(html).toHaveAttribute('data-project', /^[0-9a-f-]{36}$/);
+
+  // A terminal says the same about itself on the canvas and in the list.
+  const row = page.locator(`[data-part="terminal-row"][data-session="${sessionId}"]`);
+  await expect(row).toHaveCount(1);
+  for (const attribute of ATTRIBUTE_HOOKS.filter((hook) => (hook.on as readonly string[]).includes('terminal-row') && !['data-selected', 'data-focused', 'data-agent'].includes(hook.name))) {
+    const onNode = await node.getAttribute(attribute.name);
+    expect(onNode, attribute.name).not.toBeNull();
+    expect(await row.getAttribute(attribute.name), attribute.name).toBe(onNode);
+  }
+  await expect(node).toHaveAttribute('data-tags', 'hooks prod');
+  await expect(node).toHaveAttribute('data-state', /^(waiting|processing|unread|failed|idle|ended)$/);
+  await expect(node).not.toHaveAttribute('data-agent');
+  // An agent on record: said on both.
+  expect((await page.request.put(`/v1/sessions/${sessionId}/agent`, { headers: { origin }, data: { kind: 'claude-code', conversationId: null } })).status()).toBe(200);
+  await expect(node).toHaveAttribute('data-agent', 'claude-code');
+  await expect(row).toHaveAttribute('data-agent', 'claude-code');
+  // The terminal with the keyboard, and the one selected.
+  await node.getByTestId('node-shield').click();
+  await expect(node).toHaveAttribute('data-focused', 'true');
+  await expect(row).toHaveAttribute('data-focused', 'true');
+
+  // A menu, the details, a tab of the canvas, a dialog, a toast and a page.
+  await node.getByTestId('node-more').click();
+  await expect(node.locator('[data-part="menu"]')).toBeVisible();
+  await look();
+  await page.keyboard.press('Escape');
+  await node.getByTestId('node-details').click();
+  await expect(page.locator('[data-part="details"]')).toBeVisible();
+  await look();
+  await page.keyboard.press('Escape');
+  const tab = page.locator('[data-part="canvas-tab"][data-current="true"]');
+  await expect(tab).toHaveCount(1);
+  await expect(tab).toHaveAttribute('data-canvas', /^[0-9a-f-]{36}$/);
+  await page.getByTestId('toolbar-settings').click();
+  await expect(page.locator('[data-part="dialog"]')).toBeVisible();
+  await page.getByTestId('settings-dialog').getByTestId('themes-read-again').click();
+  await expect(page.locator('[data-part="toast"]')).toBeVisible();
+  await look();
+  await page.keyboard.press('Escape');
+  await openPage(page, 'workflows');
+  await expect(page.locator('[data-part="page"]')).toBeVisible();
+  await expect(html).toHaveAttribute('data-page', 'workflows');
+  await look();
+  await toCanvas(page);
+  await expect(html).toHaveAttribute('data-page', 'canvas');
+
+  // The focus view: its head says what the terminal's node says.
+  const nodeSays = Object.fromEntries(await Promise.all(['data-session', 'data-name', 'data-state', 'data-tags', 'data-agent', 'data-color'].map(async (name) => [name, await node.getAttribute(name)] as const)));
+  await page.goto(`/t/${sessionId}`);
+  const head = page.locator('[data-part="focus-head"]');
+  await expect(head).toBeVisible();
+  await expect(page.locator('[data-part="focus-body"]')).toBeVisible();
+  for (const [name, value] of Object.entries(nodeSays)) expect(await head.getAttribute(name), name).toBe(value);
+  await expect(html).toHaveAttribute('data-page', 'terminal');
+  await look();
+  expect([...seen].sort()).toEqual([...PART_NAMES].sort());
 });

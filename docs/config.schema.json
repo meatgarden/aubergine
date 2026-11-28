@@ -168,6 +168,11 @@
           "maxLength": 200,
           "pattern": "^[^\\p{Cc}\\u2028\\u2029\\u202a-\\u202e\\u2066-\\u2069]*$"
         },
+        "customCss": {
+          "default": true,
+          "description": "Whether your own stylesheet, `custom.css` in the data folder, is linked on the page when there is one (docs/custom-css.md). Off: the page is drawn without it, as with `?plain` after its address.",
+          "type": "boolean"
+        },
         "colors": {
           "default": {},
           "description": "Colors set by hand over the theme that is drawn: `\"<color>\": \"#rrggbb\"` for every theme, or `\"[<theme id>]\": { … }` for one theme alone (built-in or of a theme file), which wins. Written by hand only.",
@@ -4316,6 +4321,25 @@
             }
           ]
         },
+        "appearance.stylesheet": {
+          "description": "The key of appearance.stylesheet: a chord such as \"Ctrl+Meta+J\", a list of chords, or null for no key.",
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 100
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "maxLength": 100
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
         "theme.use.light": {
           "description": "The key of theme.use.light: a chord such as \"Ctrl+Meta+J\", a list of chords, or null for no key.",
           "anyOf": [
@@ -6492,6 +6516,25 @@
         },
         "titles.format": {
           "description": "The key of titles.format: a chord such as \"Ctrl+Meta+J\", a list of chords, or null for no key.",
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 100
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "maxLength": 100
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "appearance.stylesheet": {
+          "description": "The key of appearance.stylesheet: a chord such as \"Ctrl+Meta+J\", a list of chords, or null for no key.",
           "anyOf": [
             {
               "type": "string",

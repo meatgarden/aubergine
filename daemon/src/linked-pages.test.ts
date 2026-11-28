@@ -19,12 +19,14 @@ import {
   Settings,
   SocketTicket,
   StateResponse,
+  CUSTOM_CSS_PATH,
   newId,
   paths,
   publicPaths,
   type ActivityEntry,
 } from '@aubergine/shared';
 import { ACTIVITY_FILE, FileActivityLog } from './activity';
+import { StylesheetFile } from './custom-css';
 import { sessionToken } from './auth';
 import type { DesktopOpener } from './desktop/open';
 import { TRIES_PER_MINUTE, WRONG_CODES_ALLOWED } from './pairing';
@@ -74,6 +76,8 @@ async function start(addresses: string[] = [OUTSIDE], pages: string[] = [PAGE, O
   await mkdir(path.join(web, 'assets'), { recursive: true });
   await writeFile(path.join(web, 'index.html'), '<!doctype html><html lang="en"><head><title>Aubergine</title></head><body></body></html>\n');
   await writeFile(path.join(web, 'assets', 'app.js'), 'console.log("the page");\n');
+  // The owner's own stylesheet is there, so that the walks reach its route with a file to give.
+  await writeFile(path.join(dir, 'custom.css'), '[data-part="map"] { display: none; }\n');
   const opener: DesktopOpener = {
     open: async (sessionId) => {
       opened.push(sessionId);
@@ -92,6 +96,7 @@ async function start(addresses: string[] = [OUTSIDE], pages: string[] = [PAGE, O
     webDist: web,
     activity: new FileActivityLog(dir, 1024 * 1024),
     desktop: opener,
+    stylesheet: new StylesheetFile(dir),
     now: () => now,
   });
   await app.listen({ host: '127.0.0.1', port: 0 });
@@ -636,7 +641,7 @@ describe('a stranger from a linked page’s origin', () => {
   it('gets nothing from any route but the preflight, and a refusal from the one for a code', async () => {
     const filled = (url: string): string => url.replace('/*', '/assets/app.js').replace(/:[A-Za-z]+/g, () => newId());
     const routes = everyRouteOf(app);
-    for (const wanted of ['GET /api/v1/state', 'POST /api/v1/sessions', 'GET /ws/v1/events', 'GET /v1/canvases', 'POST /auth/pair', 'GET /auth', 'GET /', 'GET /*', 'POST /api/v1/socket-tickets', 'DELETE /api/v1/devices/:deviceId']) {
+    for (const wanted of ['GET /api/v1/state', 'POST /api/v1/sessions', 'GET /ws/v1/events', 'GET /v1/canvases', 'POST /auth/pair', 'GET /auth', 'GET /', 'GET /*', 'POST /api/v1/socket-tickets', 'DELETE /api/v1/devices/:deviceId', 'GET /api/v1/custom.css']) {
       expect(routes.map((r) => `${r.method} ${r.url}`)).toContain(wanted);
     }
     const everything = await makeToken([...GRANTABLE_SCOPES]);
@@ -714,5 +719,25 @@ describe('secrets and hashes', () => {
       expect(text).not.toContain(first.credential);
       expect(text).not.toContain(second.credential);
     }
+  });
+});
+
+describe('the owner’s own stylesheet', () => {
+  it('is the own page’s: a linked page with a good credential is given nothing of it', async () => {
+    const { credential } = await pairPage();
+    const file = await fromPage('GET', CUSTOM_CSS_PATH, { authorization: bearer(credential) });
+    expect(file.status).toBe(404);
+    expect(file.body).not.toContain('data-part');
+    expectCorsAnswer(file);
+    const state = await fromPage('GET', paths.state, { authorization: bearer(credential) });
+    expect(state.status).toBe(200);
+    expect(StateResponse.parse(state.json).customCss).toBeUndefined();
+    expect('customCssProblem' in state.json).toBe(false);
+    const read = await fromPage('POST', '/v1/settings/stylesheet/read', { authorization: bearer(credential) }, {});
+    expect(read.status).toBe(200);
+    expect(read.json).toEqual({ stylesheet: null, problem: null });
+    // The owner at this computer has it.
+    expect((await asOwnerHere('GET', CUSTOM_CSS_PATH)).status).toBe(200);
+    expect(StateResponse.parse((await asOwnerHere('GET', paths.state)).json).customCss?.bytes).toBeGreaterThan(0);
   });
 });

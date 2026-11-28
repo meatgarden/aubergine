@@ -204,7 +204,7 @@ export function TitlesPart() {
                 onMouseDown={(event) => event.preventDefault()}
                 onClick={() => inserters.current.insert[inserters.current.last]?.(partToWrite(part))}
                 data-testid="titles-part"
-                data-part={part.name}
+                data-placeholder={part.name}
               >
                 <code>{writtenPart(part)}</code>
               </button>

@@ -22,6 +22,7 @@ export const PAGE_WRITTEN_SETTINGS = [
   'appearance.rowFormat',
   'appearance.cursor',
   'appearance.cursorBlink',
+  'appearance.customCss',
   'font.family',
   'font.size',
   'desktop.openNew',

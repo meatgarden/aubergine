@@ -147,6 +147,7 @@ describe('how the page looks', () => {
       [{ byTag: [] }, { appearance: { ...OWNERS.appearance, byTag: [] } }],
       [{ titleFormat: '{state} · {field:Ticket}' }, { appearance: { ...OWNERS.appearance, titleFormat: '{state} · {field:Ticket}' } }],
       [{ rowFormat: '{folder} {time}' }, { appearance: { ...OWNERS.appearance, rowFormat: '{folder} {time}' } }],
+      [{ customCss: false }, { appearance: { ...OWNERS.appearance, customCss: false } }],
       [{ fontSize: 20 }, { font: { ...OWNERS.font, size: 20 } }],
       [{ fontFamily: 'Fira Code, monospace' }, { font: { ...OWNERS.font, family: 'Fira Code, monospace' } }],
     ] as const;
@@ -159,7 +160,7 @@ describe('how the page looks', () => {
     await writeFile(path.join(dir, SETTINGS_FILE), JSON.stringify(OWNERS));
     await file.setAppearance({ theme: 'system', dark: 'dark', fontSize: 9 });
     expect(await read()).toEqual({ ...OWNERS, theme: 'system', appearance: { ...OWNERS.appearance, dark: 'dark' }, font: { ...OWNERS.font, size: 9 } });
-    expect(appearanceOf(file.value)).toEqual({ theme: 'system', light: 'solarized-light', dark: 'dark', font: { family: 'Mono of mine', size: 9 }, cursor: 'bar', cursorBlink: false, terminal: null, byTag: [], titleFormat: DEFAULT_TITLE_FORMAT, rowFormat: DEFAULT_ROW_FORMAT });
+    expect(appearanceOf(file.value)).toEqual({ theme: 'system', light: 'solarized-light', dark: 'dark', font: { family: 'Mono of mine', size: 9 }, cursor: 'bar', cursorBlink: false, terminal: null, byTag: [], titleFormat: DEFAULT_TITLE_FORMAT, rowFormat: DEFAULT_ROW_FORMAT, customCss: true });
   });
 
   it('makes only what it needs where there is no file or no such part, and writes nothing for a change of nothing', async () => {

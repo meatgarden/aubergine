@@ -5171,6 +5171,26 @@
     "text": "표시할 것이 없는 자리 표시자는 그리로 이어지는 텍스트와 함께 빠집니다. 티켓도 링크도 태그도 없는 터미널에서는 이 제목이 상태와 폴더만 표시하고, 남는 점은 없습니다. 템플릿에는 텍스트와 자리 표시자만 들어가며 마크업도 스타일도 없습니다. 각각은 페이지가 다른 곳에서 그것을 그리는 방식 그대로 그려지며, 상태는 그 색으로, 링크는 칩으로 그려집니다. 잘못된 자리 표시자는 필드 아래에 알려지고 건너뛰며, <strong>Reset</strong>은 템플릿이 없을 때 그려지는 것을 정확히 되돌립니다. 모든 자리 표시자는 <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/templates.md\">docs/templates.md</a>에 있습니다.",
     "from": "163ceba573e3"
   },
+  "custom.css.title": {
+    "text": "내 스타일시트",
+    "from": "2222b72214ec"
+  },
+  "custom.css.text": {
+    "text": "설정이 닿지 않는 부분은 직접 스타일시트를 쓰면 됩니다. 데이터 폴더의 <code>custom.css</code>입니다. 서버가 이것을 페이지 head의 맨 마지막에 연결하므로 첫 그리기부터 적용되고, 같은 명시도라면 앱의 규칙보다 여러분의 규칙이 이깁니다. <code>!important</code>는 필요 없습니다. <code>aubergine css new</code>가 시작할 파일을 써 주고, <strong>Settings → Appearance → Your stylesheet</strong>에서 파일을 찾았는지 확인하고, 끄고, 새로고침 없이 다시 읽을 수 있습니다.",
+    "from": "c0183f3ec2e0"
+  },
+  "custom.css.hooks": {
+    "text": "훅에만 기대고 다른 것에는 기대지 마세요. 모든 토큰(<code>--accent</code>, <code>--radius-surface</code> 등), 페이지 루트의 속성(<code>data-theme</code>, <code>data-page</code>), <code>data-part</code>로 표시된 부분, 그리고 터미널 자체의 속성(<code>data-tags</code>, <code>data-state</code>, <code>data-name</code>)이며, 이 속성은 노드, 행, 그 터미널만의 브라우저 탭에서 같습니다. 목록은 <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/hooks.md\">docs/hooks.md</a>에 있고 릴리스가 바뀌어도 유지됩니다. 클래스 이름은 유지되지 않습니다. 이 예에서는 태그 prod가 붙은 모든 터미널의 제목이 짙은 빨간색이 되고 지도가 사라집니다.",
+    "from": "e6d9a53fa8bb"
+  },
+  "custom.css.tokens": {
+    "text": "그리고 토큰 두 개로 모든 곳의 모서리를 더 둥글게:",
+    "from": "f2699b36aa09"
+  },
+  "custom.css.out": {
+    "text": "규칙 때문에 페이지가 깨지면 주소 뒤에 <code>?plain</code>을 붙여 여세요. 스타일시트 없이 전송됩니다. 스타일시트가 가리키는 것은 다른 주소에서 가져오지 않습니다. 그림, 글꼴, 스타일시트는 이 서버나 인라인 데이터에서만 오므로, 붙여 넣은 코드 조각이 페이지의 내용을 다른 곳으로 보낼 수 없습니다. 이는 직접 쓰거나 붙여 넣은 파일을 위한 보호 장치이지 샌드박스가 아닙니다. Chromium에서만 시험했습니다.",
+    "from": "7cec576ea647"
+  },
   "custom.file.title": {
     "text": "스스로를 설명하는 설정 파일 하나",
     "from": "9d7e735d280e"
@@ -5440,8 +5460,8 @@
     "from": "5daef6eb6445"
   },
   "custom.cmp.a.css": {
-    "text": "없음. 계획: 문서화된 훅이 있는 <code>custom.css</code>",
-    "from": "4ac770687589"
+    "text": "있음: 데이터 폴더의 <code>custom.css</code>, 문서화된 훅 포함",
+    "from": "7db23532c40d"
   },
   "custom.cmp.a.code": {
     "text": "없음. 계획: 플러그인",
@@ -5460,8 +5480,8 @@
     "from": "9538078a7039"
   },
   "custom.cmp.p3": {
-    "text": "오늘의 Aubergine은 설정 쪽 끝에 있습니다. 스스로를 설명하는 파일에 담긴 테마, 색, 키, 설정의 일부를 쓰는 페이지, 그리고 터미널 제목과 행에 표시할 내용을 위한 템플릿입니다. 페이지에서 여러분의 코드를 실행하지 않고, 여러분의 스타일시트도 받지 않습니다. 이는 <a href=\"/roadmap/#rm-yours\">로드맵</a>에 있으며 아직 만들어지지 않았습니다.",
-    "from": "99bbc30b361c"
+    "text": "오늘의 Aubergine은 설정 쪽 끝에 있고, 거기서 한 걸음 더 나아갔습니다. 스스로를 설명하는 파일에 담긴 테마, 색, 키, 설정의 일부를 쓰는 페이지, 터미널 제목과 행에 표시할 내용을 위한 템플릿, 그리고 안정적으로 유지되는 훅이 있는 여러분의 스타일시트입니다. 페이지에서 여러분의 코드를 실행하지는 않습니다. 플러그인은 <a href=\"/roadmap/#rm-yours\">로드맵</a>에 있으며 아직 만들어지지 않았습니다.",
+    "from": "4315d5e6e417"
   },
   "custom.cmp.mark": {
     "text": "Aubergine은 이 페이지에 이름이 나온 어떤 도구와도 제휴하지 않았습니다. 각 이름은 해당 소유자의 상표입니다.",
@@ -5472,8 +5492,8 @@
     "from": "e10eed0040ae"
   },
   "custom.plan.text": {
-    "text": "<code>custom.css</code>와 플러그인은 계획되어 있으며 아직 만들어지지 않았습니다. <a href=\"/roadmap/#rm-yours\">로드맵</a>을 보세요.",
-    "from": "a693849a5c84"
+    "text": "플러그인, 즉 페이지에서 실행되는 여러분의 코드는 계획되어 있지만 아직 만들어지지 않았습니다. <a href=\"/roadmap/#rm-yours\">로드맵</a>을 보세요.",
+    "from": "5889d38036ea"
   },
   "custom.q.terminal.q": {
     "text": "터미널마다 다른 색 테마를 쓸 수 있나요?",
@@ -5488,8 +5508,8 @@
     "from": "e4f4bf19de27"
   },
   "custom.q.css.a": {
-    "text": "지금은 안 됩니다. 개별 색은 설정 파일에서 직접 정할 수 있고, 문서화된 훅이 있는 <code>custom.css</code>는 계획되어 있지만 아직 만들어지지 않았습니다.",
-    "from": "332c37400357"
+    "text": "네. 데이터 폴더의 <code>custom.css</code>입니다(<code>aubergine css new</code>가 시작할 파일을 써 줍니다). 첫 그리기부터 페이지의 마지막에 연결되며, 기댈 수 있는 훅은 docs/hooks.md에 있습니다. 페이지 주소에 <code>?plain</code>을 붙이면 그것 없이 볼 수 있습니다.",
+    "from": "8ebf56535e5d"
   },
   "custom.q.file.q": {
     "text": "Aubergine의 설정 파일은 어디에 있나요?",
@@ -5516,16 +5536,8 @@
     "from": "34ca8a4540f5"
   },
   "roadmap.yours.sub": {
-    "text": "오늘의 테마, 색, 키, 템플릿을 넘어, 페이지를 더 여러분의 방식대로.",
-    "from": "930654eedc50"
-  },
-  "roadmap.yours.css.name": {
-    "text": "내 스타일시트",
-    "from": "2222b72214ec"
-  },
-  "roadmap.yours.css.text": {
-    "text": "페이지에 불러오는 <code>custom.css</code> 파일, 문서화되고 안정적으로 유지되는 훅 포함.",
-    "from": "a48bd0baabda"
+    "text": "오늘의 테마, 색, 키, 템플릿, 내 스타일시트를 넘어, 페이지를 더 여러분의 방식대로.",
+    "from": "903ac9c0326e"
   },
   "roadmap.yours.plugins.name": {
     "text": "플러그인",

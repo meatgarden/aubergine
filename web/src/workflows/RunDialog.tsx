@@ -161,7 +161,7 @@ export function RunDialog() {
         }
       }}
     >
-      <div className="dialog sheet run-dialog" role="dialog" aria-label="Run a workflow" data-testid="run-dialog">
+      <div className="dialog sheet run-dialog" role="dialog" data-part="dialog" aria-label="Run a workflow" data-testid="run-dialog">
         <ScreenHead title={<>{alone ? `Run “${shelfItem?.element.name ?? 'a step'}” by itself${onNewAgent ? ' on a new Claude Code terminal' : ` on “${session?.name ?? 'this terminal'}”`}` : onNewAgent ? 'New Claude Code terminal on a workflow' : `Run a workflow on “${session?.name ?? 'this terminal'}”`}</>} onClose={close} />
 
         {!alone && list.length === 0 && offered.length === 0 ? (

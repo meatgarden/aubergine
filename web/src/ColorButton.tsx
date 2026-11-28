@@ -62,7 +62,7 @@ export function ColorButton({
         }}
       />
       {open && (
-        <span className="color-palette nowheel" role="menu" style={at ? { position: 'fixed', left: at.left, top: at.top, right: 'auto', zIndex: 60 } : undefined} data-testid="color-palette">
+        <span className="color-palette nowheel" role="menu" data-part="menu" style={at ? { position: 'fixed', left: at.left, top: at.top, right: 'auto', zIndex: 60 } : undefined} data-testid="color-palette">
           {NAMED_COLORS.map((color) => (
             <button
               key={color}

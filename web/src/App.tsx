@@ -18,6 +18,8 @@ import { applyTheme, useAppearanceShown, useProjectLook, useThemeShown, useUserT
 import { useTrying } from './appearance/trying';
 import { Pages, Screens } from './Screens';
 import { SignIn } from './devices/SignIn';
+import { useOwnStylesheet } from './custom-css';
+import { useRootHooks } from './page-hooks';
 
 export function App() {
   const phase = useApp((s) => s.phase);
@@ -46,6 +48,10 @@ export function App() {
     // Until the settings have been read the page keeps what it was drawn with before first paint.
     if (settled) applyTheme(setting, shown, appearance, userThemes, !trying, project);
   }, [setting, shown, appearance, userThemes, settled, trying, project]);
+
+  // The owner's own stylesheet, and the hooks on the root that a stylesheet may rely on.
+  useOwnStylesheet();
+  useRootHooks();
 
   if (phase === 'loading') return <Message title="Loading…" />;
 

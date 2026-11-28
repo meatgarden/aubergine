@@ -38,6 +38,7 @@ How to create a token, what the scopes mean, the limits and the activity log are
 | [`PUT /v1/settings/desktop`](#changedesktopsettings) | Say whether new terminals made in the page also open on the desktop | browser only |
 | [`PUT /v1/settings/appearance`](#changeappearance) | Choose how the page looks: light, dark or matching the system, each one's color theme, the default theme of terminals, a terminal's font and cursor | browser only |
 | [`POST /v1/settings/themes/read`](#readthemes) | Read the owner's theme files again | browser only |
+| [`POST /v1/settings/stylesheet/read`](#readstylesheet) | Read the owner's own stylesheet again | browser only |
 | [`POST /v1/sessions/{sessionId}/notes`](#appendnote) | Add an entry to a session's note log | session's own token, or `notes:write` |
 | [`PATCH /v1/canvases/{canvasId}/nodes/{nodeId}`](#updatenode) | Move, resize or color a node | `canvases:write` |
 | [`POST /v1/canvases/{canvasId}/frames`](#createframe) | Add a frame | `canvases:write` |
@@ -2176,7 +2177,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 
 `PUT /v1/settings/appearance`: Choose how the page looks: light, dark or matching the system, each one's color theme, the default theme of terminals, a terminal's font and cursor.
 
-For the owner only: no token and no session can do this, whatever its scopes. It writes the keys that are sent, and only those: `theme`, `appearance.light`, `appearance.dark`, `appearance.terminal` (null: as the page is), `appearance.byTag`, `appearance.cursor`, `appearance.cursorBlink`, `appearance.titleFormat` and `appearance.rowFormat` (what a terminal's title and its row say after its name: templates, see docs/templates.md), `font.family` and `font.size`; the rest of the settings file stays as it was, and a body that sends none of them changes nothing and answers what the file says. None of them names anything that is run. `appearance.colors`, colors set over a theme, is written by hand in the file and changed by no route. Every browser has the choice from its next load.
+For the owner only: no token and no session can do this, whatever its scopes. It writes the keys that are sent, and only those: `theme`, `appearance.light`, `appearance.dark`, `appearance.terminal` (null: as the page is), `appearance.byTag`, `appearance.cursor`, `appearance.cursorBlink`, `appearance.titleFormat` and `appearance.rowFormat` (what a terminal's title and its row say after its name: templates, see docs/templates.md), `appearance.customCss` (whether the owner's own stylesheet is linked on the page), `font.family` and `font.size`; the rest of the settings file stays as it was, and a body that sends none of them changes nothing and answers what the file says. None of them names anything that is run. `appearance.colors`, colors set over a theme, is written by hand in the file and changed by no route. Every browser has the choice from its next load.
 
 For the signed-in browser only. No API token may call this, whatever its scopes.
 
@@ -2194,6 +2195,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 | `terminal` | `string \| null` | no | The color theme every terminal is drawn in that has none of its own: one of the IDs of the color themes, of either kind, built-in or a theme file the server has read (another is refused with 400). `null`: the theme the page is drawn in. |
 | `titleFormat` | `string` | no | What a terminal’s title says after its name, on the canvas and at the head of a terminal in a browser tab of its own: a template, one line of at most 200 characters without control characters (another is refused with 400), with placeholders such as {state}, {folder} and {field:Ticket}. A placeholder that is not known is kept as written and skipped where it is drawn. |
 | `rowFormat` | `string` | no | What a terminal’s row in the list says on its second line: a template, as `titleFormat` is. |
+| `customCss` | `boolean` | no | Whether the owner’s own stylesheet (`custom.css` in the data folder) is linked on the page. It names nothing that is run; what the file holds is written by hand. |
 | `byTag` | `{ /** A terminal’s tag, as tags are written: whatever the capitals,…` | no | The color themes of terminals by tag, in order, at most 20: the whole list, which replaces the one there was (an empty list removes them all). The first entry whose tag a terminal has wins; a terminal’s own theme comes before all of them. A theme the server has not read is refused with 400. |
 
 **Answer** `200`:
@@ -2230,6 +2232,8 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
   titleFormat: string;
   /** What a terminal’s row in the list says on its second line: a template with placeholders such as {state} and {time}. */
   rowFormat: string;
+  /** Whether the owner’s own stylesheet (`custom.css` in the data folder) is linked on the page. */
+  customCss: boolean;
 }
 ```
 
@@ -2344,6 +2348,32 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
   }[];
   /** One sentence for each file that was not read, and each entry of a file that was skipped. */
   problems: string[];
+}
+```
+
+**Errors:** 400, 401, 403, 413, 429.
+
+### readStylesheet
+
+`POST /v1/settings/stylesheet/read`: Read the owner's own stylesheet again.
+
+For the owner only: no token and no session can do this, whatever its scopes. It reads `custom.css` in the data folder again and answers whether there is one to link on the page, by a short hash of its content and its size, or why a file that is there was not read. It answers nothing of what the file says, and writes nothing. The page links the stylesheet with that hash in its address, so that the new one is taken without a reload.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+**Answer** `200`:
+
+```ts
+{
+  /** The stylesheet found now: null when there is none to link. */
+  stylesheet: {
+    /** A short hash of the file’s content: it changes when the content does, and is put in the address of the stylesheet so that a browser takes the new one. */
+    version: string;
+    /** The file’s size, in bytes. */
+    bytes: number;
+  } | null;
+  /** Why a file that is there was not read (a link, a folder, too large), in one sentence; null otherwise. */
+  problem: string | null;
 }
 ```
 

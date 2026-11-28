@@ -50,7 +50,7 @@ export function Endings({ environment, onDone }: { environment: SessionEnvironme
   return (
     <div className="copy-endings" data-testid="copy-endings">
       {asking ? (
-        <div className="copy-ask-again" role="alertdialog" aria-label="Are you sure?" data-testid="copy-ask-again">
+        <div className="copy-ask-again" role="alertdialog" data-part="dialog" aria-label="Are you sure?" data-testid="copy-ask-again">
           <p>{asking.asksAgain}</p>
           <button type="button" className="danger" disabled={busy} onClick={() => void act(asking, true)} data-testid="copy-confirm">
             Yes: {asking.label.toLowerCase()}
@@ -171,7 +171,7 @@ export function EnvironmentPanel() {
         }
       }}
     >
-      <div className="dialog sheet copy-panel" role="dialog" aria-label="What changed" data-testid="copy-panel" tabIndex={-1} ref={panel}>
+      <div className="dialog sheet copy-panel" role="dialog" data-part="dialog" aria-label="What changed" data-testid="copy-panel" tabIndex={-1} ref={panel}>
         <header className="sheet-head">
           <h2>
             {environment ? environment.sessionName : 'Gone'}

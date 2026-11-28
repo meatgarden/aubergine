@@ -57,7 +57,7 @@ export function SettingsDialog() {
         }
       }}
     >
-      <div className="dialog sheet settings-dialog" role="dialog" aria-label="Settings" data-testid="settings-dialog">
+      <div className="dialog sheet settings-dialog" role="dialog" data-part="dialog" aria-label="Settings" data-testid="settings-dialog">
         <ScreenHead title="Settings" onClose={close} closeTestid="settings-close" />
         {shownServer && (
           <p data-testid="settings-server">

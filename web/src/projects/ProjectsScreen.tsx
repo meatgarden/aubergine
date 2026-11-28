@@ -82,7 +82,7 @@ export function ProjectsScreen() {
         }
       }}
     >
-      <div className="dialog sheet projects-screen" role="dialog" aria-label="Projects" data-testid="projects-screen">
+      <div className="dialog sheet projects-screen" role="dialog" data-part="dialog" aria-label="Projects" data-testid="projects-screen">
         <ScreenHead title="Projects" onClose={close} closeTestid="projects-close" />
         <p className="sheet-note">
           Each project has its own canvases, terminals, queue, schedules and rules. Workflows, saved steps and the library can be shared between them.{' '}

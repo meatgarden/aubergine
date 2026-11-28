@@ -45,7 +45,7 @@ function StartFields() {
         if (e.key === 'Escape') cancel();
       }}
     >
-      <div className="dialog agent-tools" role="dialog" aria-modal="true" aria-labelledby="start-title" data-testid="start-dialog">
+      <div className="dialog agent-tools" role="dialog" data-part="dialog" aria-modal="true" aria-labelledby="start-title" data-testid="start-dialog">
         <h2 id="start-title">New terminal</h2>
         <label className="wf-field">
           <span>Name (optional)</span>

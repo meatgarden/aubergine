@@ -73,7 +73,7 @@ export function CloseDialog() {
         if (e.key === 'Escape') cancel();
       }}
     >
-      <div className="dialog" role="alertdialog" aria-modal="true" aria-labelledby="close-title">
+      <div className="dialog" role="alertdialog" data-part="dialog" aria-modal="true" aria-labelledby="close-title">
         <h2 id="close-title">End “{session.name}”?</h2>
         <p>This ends the shell and anything still running in it. It cannot be undone.</p>
         {environment && (

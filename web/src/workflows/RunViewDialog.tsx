@@ -85,7 +85,7 @@ export function RunViewDialog() {
         }
       }}
     >
-      <div className="dialog sheet run-view" role="dialog" aria-label="Run" data-testid="run-view" data-status={run?.status}>
+      <div className="dialog sheet run-view" role="dialog" data-part="dialog" aria-label="Run" data-testid="run-view" data-status={run?.status}>
         {!picture || !run ? (
           <p>Loading…</p>
         ) : (

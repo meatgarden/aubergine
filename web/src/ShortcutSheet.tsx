@@ -25,7 +25,7 @@ export function ShortcutSheet() {
         if (e.target === e.currentTarget) close();
       }}
     >
-      <div className="dialog sheet" role="dialog" aria-label="Shortcuts" data-testid="shortcut-sheet">
+      <div className="dialog sheet" role="dialog" data-part="dialog" aria-label="Shortcuts" data-testid="shortcut-sheet">
         <ScreenHead title="Shortcuts" onClose={close} />
         <p className="sheet-note">
           Keys marked <span className="sheet-mark">●</span> work everywhere, inside a terminal too. The others work while no terminal or

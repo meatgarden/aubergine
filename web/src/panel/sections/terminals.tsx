@@ -28,6 +28,7 @@ import {
   type Row,
 } from '../../terminal-rows';
 import { registerSection } from '../registry';
+import { terminalHooks } from '../../page-hooks';
 import { NewTerminal } from '../../NewTerminal';
 import { Details, DetailsHead } from './terminal-details';
 import { Menu, StateDot } from '../../ui';
@@ -263,7 +264,7 @@ function TerminalsSection() {
   };
 
   return (
-    <div className={`terminal-list${view.tags.length > 0 ? ' by-tag' : ''}`} data-testid="terminal-list">
+    <div className={`terminal-list${view.tags.length > 0 ? ' by-tag' : ''}`} data-part="terminal-list" data-testid="terminal-list">
       <div className="list-bar" ref={bar}>
         <div className="list-find">
           <input
@@ -508,6 +509,8 @@ const RowView = memo(function RowView({ row, style, density, indented, current, 
       style={style}
       role="option"
       aria-selected={current}
+      data-part="terminal-row"
+      {...terminalHooks(session, row.color, { selected: current, focused })}
       data-testid="list-row"
       data-session={session.id}
       data-state={state}
@@ -556,7 +559,7 @@ const RowView = memo(function RowView({ row, style, density, indented, current, 
         ⋮
       </button>
       {menuOpen && (
-        <div className="list-menu" role="menu" aria-label={`Actions for ${session.name}`} onClick={(event) => event.stopPropagation()}>
+        <div className="list-menu" role="menu" data-part="menu" aria-label={`Actions for ${session.name}`} onClick={(event) => event.stopPropagation()}>
           {terminalActions(session, { here, parked: row.parked, canMove, hasNotes, desktop }).map((action) => (
             <button
               key={action.key}

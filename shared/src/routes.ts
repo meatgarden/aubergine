@@ -39,6 +39,7 @@ import {
 import { Capabilities, CreateTokenRequest, CreatedToken, TokenView } from './tokens';
 import { Draft, ShelfElement } from './drafts';
 import { ThemesAnswer } from './theme-files';
+import { CustomCssAnswer } from './custom-css';
 import { AcceptThemeRequest, AcceptedTheme, ProposeThemeRequest, ThemeProposalList, ThemeProposalRow, ThemeRowList } from './theme-proposals';
 import { WriteRecapRequest, WrittenRecap } from './recap';
 import { AddLinkRequest, ChangeLinkRequest, DescribeCheckAnswer, DescribeCheckRequest, DescribeRequest, DescribedAnswer, DescribingSettings, FoundAnswer, KeepSeenRequest, LinkAnswer, LinksAnswer, SeenLinksAnswer, UseSuggestionRequest } from './links-api';
@@ -454,7 +455,7 @@ export const ROUTES = {
     path: '/v1/settings/appearance',
     tag: 'Sessions',
     summary: "Choose how the page looks: light, dark or matching the system, each one's color theme, the default theme of terminals, a terminal's font and cursor",
-    description: "For the owner only: no token and no session can do this, whatever its scopes. It writes the keys that are sent, and only those: `theme`, `appearance.light`, `appearance.dark`, `appearance.terminal` (null: as the page is), `appearance.byTag`, `appearance.cursor`, `appearance.cursorBlink`, `appearance.titleFormat` and `appearance.rowFormat` (what a terminal's title and its row say after its name: templates, see docs/templates.md), `font.family` and `font.size`; the rest of the settings file stays as it was, and a body that sends none of them changes nothing and answers what the file says. None of them names anything that is run. `appearance.colors`, colors set over a theme, is written by hand in the file and changed by no route. Every browser has the choice from its next load.",
+    description: "For the owner only: no token and no session can do this, whatever its scopes. It writes the keys that are sent, and only those: `theme`, `appearance.light`, `appearance.dark`, `appearance.terminal` (null: as the page is), `appearance.byTag`, `appearance.cursor`, `appearance.cursorBlink`, `appearance.titleFormat` and `appearance.rowFormat` (what a terminal's title and its row say after its name: templates, see docs/templates.md), `appearance.customCss` (whether the owner's own stylesheet is linked on the page), `font.family` and `font.size`; the rest of the settings file stays as it was, and a body that sends none of them changes nothing and answers what the file says. None of them names anything that is run. `appearance.colors`, colors set over a theme, is written by hand in the file and changed by no route. Every browser has the choice from its next load.",
     action: 'settings.write',
     body: ChangeAppearanceRequest,
     response: AppearanceAnswer,
@@ -470,6 +471,17 @@ export const ROUTES = {
     description: "For the owner only: no token and no session can do this, whatever its scopes. It reads the theme files (`themes/<id>.json` in the data folder) again and answers which themes there are now and what in the files was wrong. It writes nothing, and nothing in a file is run: a theme file is a plain name and colors. The server also reads them when it starts and whenever it reads its settings file.",
     action: 'themes.manage',
     response: ThemesAnswer,
+    status: 200,
+  }),
+
+  readStylesheet: route({
+    method: 'POST',
+    path: '/v1/settings/stylesheet/read',
+    tag: 'Sessions',
+    summary: "Read the owner's own stylesheet again",
+    description: "For the owner only: no token and no session can do this, whatever its scopes. It reads `custom.css` in the data folder again and answers whether there is one to link on the page, by a short hash of its content and its size, or why a file that is there was not read. It answers nothing of what the file says, and writes nothing. The page links the stylesheet with that hash in its address, so that the new one is taken without a reload.",
+    action: 'stylesheet.read',
+    response: CustomCssAnswer,
     status: 200,
   }),
 

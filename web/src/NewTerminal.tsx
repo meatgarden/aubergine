@@ -101,7 +101,7 @@ export function NewTerminal({ compact = false }: { compact?: boolean }) {
         )}
       </button>
       {menu && (
-        <span className="toolbar-menu new-terminal-menu" role="menu" style={{ left: menu.left, top: menu.top }} data-testid="toolbar-new-menu">
+        <span className="toolbar-menu new-terminal-menu" role="menu" data-part="menu" style={{ left: menu.left, top: menu.top }} data-testid="toolbar-new-menu">
           {/* The first line is what the button does, with its key. */}
           {item('terminal.new', 'Shell', 'A plain terminal on this canvas.', 'toolbar-new-shell', true)}
           {item('terminal.newIn', 'Shell in a folder or a working copy…', 'Somewhere you choose, or kept apart on its own branch.', 'toolbar-new-in')}

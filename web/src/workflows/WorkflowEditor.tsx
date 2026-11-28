@@ -49,7 +49,7 @@ export function WorkflowEditor() {
   if (!workflow || !version || !draft) {
     return (
       <div className="dialog-backdrop">
-        <div className="dialog" role="dialog" aria-label="Workflow">
+        <div className="dialog" role="dialog" data-part="dialog" aria-label="Workflow">
           <p>Loading…</p>
           <div className="dialog-actions">
             <button type="button" className="quiet" onClick={close}>
@@ -125,7 +125,7 @@ export function WorkflowEditor() {
         }
       }}
     >
-      <div className="dialog sheet workflow-editor" role="dialog" aria-label={`Workflow ${workflow.name}`} data-testid="workflow-editor">
+      <div className="dialog sheet workflow-editor" role="dialog" data-part="dialog" aria-label={`Workflow ${workflow.name}`} data-testid="workflow-editor">
         <header className="sheet-head">
           <div>
             <h2>Edit workflow</h2>

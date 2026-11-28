@@ -11,6 +11,9 @@
  *   docs/theme.schema.json    the schema of a theme file, for an editor
  *   shared/src/theme-colors.generated.ts
  *                             the colors of the built-in themes, read from web/src/tokens.css and themes.css
+ *   shared/src/token-names.generated.ts
+ *                             the name of every token, read from web/src/tokens.css
+ *   docs/hooks.md             the hooks a stylesheet of the owner's own may rely on
  *
  *   pnpm generate            write them
  *   pnpm generate --check    change nothing; fail if any is out of date

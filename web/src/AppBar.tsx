@@ -54,7 +54,7 @@ export function AppBar() {
     </Button>
   );
   return (
-    <header className="appbar" data-testid="appbar">
+    <header className="appbar" data-part="top-bar" data-testid="appbar">
       <span className="brand" data-testid="brand">
         Aubergine
       </span>

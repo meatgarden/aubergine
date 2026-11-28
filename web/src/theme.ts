@@ -273,6 +273,7 @@ function lookNow(change: ChangeAppearanceRequest): ChangeAppearanceRequest {
   if (change.byTag !== undefined) was.byTag = settings.appearance.byTag;
   if (change.titleFormat !== undefined) was.titleFormat = settings.appearance.titleFormat;
   if (change.rowFormat !== undefined) was.rowFormat = settings.appearance.rowFormat;
+  if (change.customCss !== undefined) was.customCss = settings.appearance.customCss;
   return was;
 }
 
@@ -317,6 +318,8 @@ export const setTerminalTheme = (terminal: string | null): void => changeLook({ 
 export const setCursorBlink = (cursorBlink: boolean): void => changeLook({ cursorBlink }, 'The cursor');
 /** The themes of terminals by tag: the whole list, in order. */
 export const setThemesByTag = (byTag: ThemeByTag[]): void => changeLook({ byTag }, 'The themes by tag');
+/** Whether the owner's own stylesheet is linked on the page. */
+export const setCustomCssOn = (customCss: boolean): void => changeLook({ customCss }, 'Your stylesheet');
 /** What a terminal's title, or its row, says after its name: a template. */
 export const setFormat = (where: 'title' | 'row', format: string): void => changeLook(where === 'title' ? { titleFormat: format } : { rowFormat: format }, where === 'title' ? 'What a title says' : 'What a row says');
 
