@@ -25,7 +25,10 @@ import { scanShells } from './migrate/shells';
 import { Sessions } from './sessions';
 import { Viewers } from './viewers';
 import { ZshIntegration } from './shell/integration';
-import { SettingsFile, expandHome } from './settings';
+import { SETTINGS_FILE, SettingsFile, expandHome, writeSettingsSchema } from './settings';
+import { ThemeFolder } from './theme-files';
+import { StylesheetFile } from './custom-css';
+import { PluginFolder } from './plugins';
 import { pathWithCommand, writeCommandLauncher } from './command-path';
 import { FileDesktopOpener } from './desktop/open';
 import { FileDraftLog } from './draft-log';
@@ -48,8 +51,18 @@ async function main(): Promise<void> {
   const hub = new StateHub(await store.load(), store, (error) =>
     console.error('Could not save state:', error),
   );
-  const settings = new SettingsFile(config.dataDir, (message) => console.warn(message));
+  // The owner's theme files, read before the settings: colors set by hand may name one of them.
+  const themes = new ThemeFolder(config.dataDir, (message) => console.warn(message));
+  await themes.reload();
+  // The owner's own stylesheet: read when the page is sent, when it is served and when asked; a problem is said once.
+  const stylesheet = new StylesheetFile(config.dataDir, (message) => console.warn(message));
+  await stylesheet.reload();
+  // The owner's plugins: read for every answer and every file sent; a problem is said once. Nothing of them is run here.
+  const plugins = new PluginFolder(config.dataDir, (message) => console.warn(message));
+  const settings = new SettingsFile(config.dataDir, (message) => console.warn(message), () => themes.value.themes);
   await settings.reload();
+  // Beside the settings file, for an editor that is pointed at it (and the schema of a theme file); never a reason not to start.
+  await writeSettingsSchema(config.dataDir, (message) => console.warn(message));
   const runtime = new TmuxRuntime({ socket: config.tmuxSocket, tmuxBin: config.tmuxBin });
   let listeningPort = config.port;
   const integration = new ZshIntegration(path.join(config.dataDir, 'shell'));
@@ -101,6 +114,7 @@ async function main(): Promise<void> {
     sessions,
     runtime,
     settings: () => settings.reload(),
+    settingsFile: path.join(config.dataDir, SETTINGS_FILE),
     token,
     devOrigin: config.devOrigin,
     webDist: config.webDist,
@@ -136,6 +150,10 @@ async function main(): Promise<void> {
     setDesktopOpenNew: (value) => settings.setDesktopOpenNew(value),
     setAppearance: (change) => settings.setAppearance(change),
     setDescribeRemind: (value) => settings.setDescribeRemind(value),
+    themes,
+    stylesheet,
+    plugins,
+    setPluginSwitch: (id, on) => settings.setPluginSwitch(id, on),
     pullRequests: ghFinder(),
     runArchive: new FileRunArchive(config.dataDir, (error) => console.warn(`Could not write the archive of runs: ${String(error)}`)),
     version: versionInfo(installRoot(), config).version,

@@ -90,7 +90,7 @@ export function ShelfEditor() {
         }
       }}
     >
-      <div className="dialog sheet workflow-editor" role="dialog" aria-label="Element" data-testid="shelf-editor">
+      <div className="dialog sheet workflow-editor" role="dialog" data-part="dialog" aria-label="Element" data-testid="shelf-editor">
         <header className="sheet-head">
           <h2>
             {editing === 'new' ? 'New step' : 'Saved step'}

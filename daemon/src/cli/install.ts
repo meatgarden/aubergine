@@ -8,7 +8,7 @@ import os from 'node:os';
 import path from 'node:path';
 import type { Config } from '../config';
 import { parseTmuxVersion } from '../runtime/tmux-runtime';
-import { accessReport } from '../settings';
+import { SETTINGS_FILE, accessReport } from '../settings';
 
 /**
  * The commands that make a copy of Aubergine usable from anywhere: start,
@@ -361,6 +361,7 @@ export async function doctor(root: string, config: Config, env: NodeJS.ProcessEn
         : { ok: null, text: `the server is not running (start it with: aubergine start)` },
   );
   checks.push({ ok: null, text: `data folder: ${config.dataDir}` });
+  checks.push({ ok: null, text: `settings file: ${path.join(config.dataDir, SETTINGS_FILE)} (every key, and its value now: aubergine settings list)` });
   // Outside addresses, as the server takes them when it starts. Each wrong entry is one thing to fix.
   const access = await accessReport(config.dataDir);
   checks.push({ ok: null, text: access.addresses.length === 0 ? 'outside addresses: none (another device cannot reach this server)' : `outside addresses: ${access.addresses.join(', ')}` });

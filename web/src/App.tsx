@@ -14,9 +14,13 @@ import { Away } from './Away';
 import { TagDialog } from './TagDialog';
 import { Tour } from './tour/Tour';
 import { Toast } from './Toast';
-import { applyTheme, useThemeShown } from './theme';
+import { applyTheme, useAppearanceShown, useProjectLook, useThemeShown, useUserThemes } from './theme';
+import { useTrying } from './appearance/trying';
 import { Pages, Screens } from './Screens';
 import { SignIn } from './devices/SignIn';
+import { useOwnStylesheet } from './custom-css';
+import { usePlugins } from './plugins/loader';
+import { useRootHooks } from './page-hooks';
 
 export function App() {
   const phase = useApp((s) => s.phase);
@@ -35,11 +39,22 @@ export function App() {
   const setting = useApp((s) => s.settings.theme);
   const settled = useApp((s) => s.phase === 'ready');
   const shown = useThemeShown();
-  const appearance = useApp((s) => s.settings.appearance);
+  // While a proposed theme is tried on the page, it is what is drawn, and nothing of it is remembered.
+  const appearance = useAppearanceShown();
+  const userThemes = useUserThemes();
+  const trying = useTrying((s) => s.theme !== null);
+  // The project looked at may have a theme of its own of each kind: drawn while it is looked at.
+  const project = useProjectLook();
   useEffect(() => {
     // Until the settings have been read the page keeps what it was drawn with before first paint.
-    if (settled) applyTheme(setting, shown, appearance);
-  }, [setting, shown, appearance, settled]);
+    if (settled) applyTheme(setting, shown, appearance, userThemes, !trying, project);
+  }, [setting, shown, appearance, userThemes, settled, trying, project]);
+
+  // The owner's own stylesheet, and the hooks on the root that a stylesheet may rely on.
+  useOwnStylesheet();
+  useRootHooks();
+  // The owner's plugins: once signed in and drawn, never on the sign-in screen, none with ?plain.
+  usePlugins();
 
   if (phase === 'loading') return <Message title="Loading…" />;
 

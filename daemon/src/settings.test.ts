@@ -1,9 +1,9 @@
-import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
+import { mkdir, mkdtemp, readFile, readdir, rm, stat, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { DEFAULT_SETTINGS, Settings } from '@aubergine/shared';
-import { SETTINGS_FILE, SettingsFile, accessReport, appearanceOf, colorProblems, expandHome, loadSettings, shortcutProblems } from './settings';
+import { DEFAULT_ROW_FORMAT, DEFAULT_SETTINGS, DEFAULT_TITLE_FORMAT, SCHEMA_LINE, Settings, THEME_SCHEMA_FILE, UserTheme, settingsJsonSchema, themeFileJsonSchema, type ChangeAppearanceRequest } from '@aubergine/shared';
+import { SETTINGS_FILE, SETTINGS_SCHEMA_FILE, SettingsFile, accessReport, appearanceOf, colorProblems, expandHome, loadSettings, shortcutProblems, writeSettingsSchema } from './settings';
 
 let dir: string;
 beforeEach(async () => {
@@ -143,19 +143,24 @@ describe('how the page looks', () => {
       [{ cursorBlink: true }, { appearance: { ...OWNERS.appearance, cursorBlink: true } }],
       [{ terminal: 'nord' }, { appearance: { ...OWNERS.appearance, terminal: 'nord' } }],
       [{ terminal: null }, { appearance: { ...OWNERS.appearance, terminal: null } }],
+      [{ byTag: [{ tag: 'prod', theme: 'dracula' }] }, { appearance: { ...OWNERS.appearance, byTag: [{ tag: 'prod', theme: 'dracula' }] } }],
+      [{ byTag: [] }, { appearance: { ...OWNERS.appearance, byTag: [] } }],
+      [{ titleFormat: '{state} · {field:Ticket}' }, { appearance: { ...OWNERS.appearance, titleFormat: '{state} · {field:Ticket}' } }],
+      [{ rowFormat: '{folder} {time}' }, { appearance: { ...OWNERS.appearance, rowFormat: '{folder} {time}' } }],
+      [{ customCss: false }, { appearance: { ...OWNERS.appearance, customCss: false } }],
       [{ fontSize: 20 }, { font: { ...OWNERS.font, size: 20 } }],
       [{ fontFamily: 'Fira Code, monospace' }, { font: { ...OWNERS.font, family: 'Fira Code, monospace' } }],
     ] as const;
     for (const [change, differs] of changes) {
       await writeFile(path.join(dir, SETTINGS_FILE), JSON.stringify(OWNERS));
-      await file.setAppearance(change);
+      await file.setAppearance(change as ChangeAppearanceRequest);
       expect(await read(), JSON.stringify(change)).toEqual({ ...OWNERS, ...differs });
     }
     // Several at once, in one write.
     await writeFile(path.join(dir, SETTINGS_FILE), JSON.stringify(OWNERS));
     await file.setAppearance({ theme: 'system', dark: 'dark', fontSize: 9 });
     expect(await read()).toEqual({ ...OWNERS, theme: 'system', appearance: { ...OWNERS.appearance, dark: 'dark' }, font: { ...OWNERS.font, size: 9 } });
-    expect(appearanceOf(file.value)).toEqual({ theme: 'system', light: 'solarized-light', dark: 'dark', font: { family: 'Mono of mine', size: 9 }, cursor: 'bar', cursorBlink: false, terminal: null });
+    expect(appearanceOf(file.value)).toEqual({ theme: 'system', light: 'solarized-light', dark: 'dark', font: { family: 'Mono of mine', size: 9 }, cursor: 'bar', cursorBlink: false, terminal: null, byTag: [], titleFormat: DEFAULT_TITLE_FORMAT, rowFormat: DEFAULT_ROW_FORMAT, customCss: true });
   });
 
   it('makes only what it needs where there is no file or no such part, and writes nothing for a change of nothing', async () => {
@@ -195,6 +200,18 @@ describe('how the page looks', () => {
     expect(colorProblems({ appearance: 'x' })).toEqual([]);
     expect(colorProblems({ appearance: { colors: [1] } })).toEqual(['appearance.colors is not a list of colors by name: it is left out.']);
   });
+
+  it('takes colors set by hand for a theme of the owner\'s, where that theme was read', async () => {
+    const harbor = UserTheme.parse({ id: 'harbor', name: 'Harbor', kind: 'dark', base: 'nord', colors: {}, terminal: {} });
+    const raw = { appearance: { dark: 'harbor', colors: { '[harbor]': { accent: '#123456' } } } };
+    expect(colorProblems(raw, [harbor])).toEqual([]);
+    expect(colorProblems(raw)).toEqual(['appearance.colors: "[harbor]" names no theme. It is skipped.']);
+    const warnings: string[] = [];
+    await writeFile(path.join(dir, SETTINGS_FILE), JSON.stringify(raw));
+    const file = new SettingsFile(dir, (m) => warnings.push(m), () => [harbor]);
+    expect((await file.reload()).appearance.dark).toBe('harbor');
+    expect(warnings).toEqual([]);
+  });
 });
 
 describe('outside addresses in the settings', () => {
@@ -221,5 +238,46 @@ describe('outside addresses in the settings', () => {
     expect(settings.access.addresses).toEqual([]);
     expect(warnings).toEqual([expect.stringMatching(/access\.addresses: is not a list/)]);
     expect(await accessReport(path.join(dir, 'nothing-here'))).toEqual({ addresses: [], pages: [], problems: [] });
+  });
+});
+
+describe('the schema of the settings file', () => {
+  it('is written beside the file, only when it differs, and the file is not touched', async () => {
+    const owners = `{ ${SCHEMA_LINE}, "theme": "dark" }`;
+    await writeFile(path.join(dir, SETTINGS_FILE), owners);
+    expect(await writeSettingsSchema(dir)).toBe('written');
+    const text = await readFile(path.join(dir, SETTINGS_SCHEMA_FILE), 'utf8');
+    expect(JSON.parse(text)).toEqual(settingsJsonSchema());
+    const first = (await stat(path.join(dir, SETTINGS_SCHEMA_FILE))).mtimeMs;
+    expect(await writeSettingsSchema(dir)).toBe('same');
+    expect((await stat(path.join(dir, SETTINGS_SCHEMA_FILE))).mtimeMs).toBe(first);
+    await writeFile(path.join(dir, SETTINGS_SCHEMA_FILE), '{}');
+    expect(await writeSettingsSchema(dir)).toBe('written');
+    expect(await readFile(path.join(dir, SETTINGS_SCHEMA_FILE), 'utf8')).toBe(text);
+    // The schema of a theme file is beside it, for the files in themes/.
+    expect(JSON.parse(await readFile(path.join(dir, THEME_SCHEMA_FILE), 'utf8'))).toEqual(themeFileJsonSchema());
+    // Nothing is left behind, and the owner's file is as it was.
+    expect((await readdir(dir)).sort()).toEqual([SETTINGS_FILE, SETTINGS_SCHEMA_FILE, THEME_SCHEMA_FILE].sort());
+    expect(await readFile(path.join(dir, SETTINGS_FILE), 'utf8')).toBe(owners);
+  });
+
+  it('says so when it cannot be written, and goes on', async () => {
+    const warnings: string[] = [];
+    // A folder where the file would be: it cannot be replaced.
+    await mkdir(path.join(dir, SETTINGS_SCHEMA_FILE));
+    expect(await writeSettingsSchema(dir, (message) => warnings.push(message))).toBe('failed');
+    expect(warnings).toEqual([expect.stringMatching(/Could not write .*config\.schema\.json/)]);
+  });
+
+  it('is turned on by a line in the file, which is read as before and kept when the page writes', async () => {
+    await writeFile(path.join(dir, SETTINGS_FILE), JSON.stringify({ $schema: `./${SETTINGS_SCHEMA_FILE}`, font: { size: 15 } }));
+    const warnings: string[] = [];
+    expect((await loadSettings(dir, (message) => warnings.push(message))).font.size).toBe(15);
+    expect(warnings).toEqual([]);
+    const file = new SettingsFile(dir);
+    await file.setAppearance({ theme: 'light' });
+    await file.setDesktopOpenNew(true);
+    await file.setDescribeRemind(false);
+    expect(JSON.parse(await readFile(path.join(dir, SETTINGS_FILE), 'utf8'))).toEqual({ $schema: `./${SETTINGS_SCHEMA_FILE}`, font: { size: 15 }, theme: 'light', desktop: { openNew: true }, describe: { remind: false } });
   });
 });

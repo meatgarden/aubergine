@@ -1,4 +1,4 @@
-import { CLOSE_DEVICE_REVOKED, PROJECT_HEADER, readSignInOffer, type LinkKind, type ThemeSetting, type ChangeAppearanceRequest } from '@aubergine/shared';
+import { CLOSE_DEVICE_REVOKED, PROJECT_HEADER, readSignInOffer, type LinkKind, type ThemeSetting, type ChangeAppearanceRequest, type ChangePluginRequest } from '@aubergine/shared';
 import { z, type ZodType } from 'zod';
 import { createClient } from '@aubergine/client';
 import {
@@ -346,6 +346,8 @@ export const api = guardAll({
   acceptDraft: (draftId: string, body: Parameters<typeof v1.acceptDraft>[0]['body'] = {}) => v1.acceptDraft({ draftId, body }),
   returnDraft: (draftId: string, comment: string) => v1.returnDraft({ draftId, body: { comment } }),
   discardDraft: (draftId: string) => v1.discardDraft({ draftId }),
+  acceptThemeProposal: (proposalId: string, digest: string) => v1.acceptThemeProposal({ proposalId, body: { digest } }),
+  declineThemeProposal: (proposalId: string) => v1.declineThemeProposal({ proposalId }),
   requestDraft: (body: { kind: 'workflow' | 'element'; description: string; sessionId: string; tell?: boolean }) => v1.requestDraft({ body: { tell: true, ...body } }),
   listRepositoryWorkflows: () => v1.listRepositoryWorkflows({ query: { limit: 100 } }),
   getRepositoryWorkflow: (root: string, file: string) => v1.getRepositoryWorkflow({ query: { root, file } }),
@@ -427,6 +429,14 @@ export const ownApi = {
   setTheme: (theme: ThemeSetting) => ownV1.changeAppearance({ body: { theme } }),
   /** How the page looks: only the fields that are sent are written. */
   setLook: (change: ChangeAppearanceRequest) => ownV1.changeAppearance({ body: change }),
+  /** The owner's theme files, read again by the own server: they are about the page, as the theme is. */
+  readThemes: () => ownV1.readThemes(),
+  /** The owner's own stylesheet, read again by the own server: it is the page's own, as the theme files are. */
+  readStylesheet: () => ownV1.readStylesheet(),
+  /** The owner's plugins, read again by the own server: code of the page, so the own server's whatever is shown. */
+  readPlugins: () => ownV1.readPlugins(),
+  /** Switches one plugin on (by the digest just read, or `follow`) or off (null), on the own server. */
+  changePlugin: (change: ChangePluginRequest) => ownV1.changePlugin({ body: change }),
   projects: async () => z.array(ProjectRow).parse((await ownV1.listProjects({ query: { limit: 200 } })).items),
 };
 

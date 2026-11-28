@@ -39,6 +39,10 @@ import {
   type RouteOutput,
   type RouteSpec,
   type AppearanceAnswer,
+  type ThemesAnswer,
+  type CustomCssAnswer,
+  type ChangePluginRequest,
+  type PluginsAnswer,
   type ChangeAppearanceRequest,
 } from '@aubergine/shared';
 import type { ActivityLog } from './activity';
@@ -50,6 +54,7 @@ import type { StateHub } from './state-hub';
 import type { Tokens } from './tokens';
 import type { Viewers } from './viewers';
 import type { Drafts } from './drafts';
+import type { ThemeProposals } from './theme-proposals';
 import type { Repositories } from './repositories';
 import type { TerminalAccess, TerminalTrace, Typist } from './terminal-access';
 import { isTerminalContentEvent, withoutTerminalContent } from './terminal-redact';
@@ -74,6 +79,7 @@ export interface PublicRouteDeps {
   tokens: Tokens;
   workflows: Workflows;
   drafts: Drafts;
+  themeProposals: ThemeProposals;
   repositories: Repositories;
   terminals: TerminalAccess;
   messages: Messages;
@@ -87,6 +93,16 @@ export interface PublicRouteDeps {
   changeDescribing: (remind: boolean) => Promise<DescribingSettings>;
   /** Writes the keys of how the page looks that a change sends, and answers with what the settings say afterwards. */
   changeAppearance: (change: ChangeAppearanceRequest) => Promise<AppearanceAnswer>;
+  /** Reads the owner's theme files again, and answers what they hold now. */
+  readThemes: () => Promise<ThemesAnswer>;
+  /** Reads the owner's own stylesheet again, and answers whether there is one to link: nothing of what it says. Nothing for a linked page. */
+  readStylesheet: (request: FastifyRequest) => Promise<CustomCssAnswer>;
+  /** Switches one plugin on or off in the settings, after reading it again; answers the plugins as they are then. Refused for a linked page. */
+  changePlugin: (request: FastifyRequest, change: ChangePluginRequest) => Promise<PluginsAnswer>;
+  /** Reads the plugins again. Nothing for a linked page: plugins are the page's own. */
+  readPlugins: (request: FastifyRequest) => Promise<PluginsAnswer>;
+  /** Refuses, as bad input, a theme's ID that names no theme the server knows now, or (with `kind`) one of the other kind. */
+  knowsTheme: (id: string, kind?: 'light' | 'dark', field?: string) => Promise<void>;
   projects: Projects;
   projectFiles: ProjectFiles;
   activity: ActivityLog;
@@ -295,8 +311,9 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
     },
 
     // A name or a summary says who wrote it: the owner's own words are not replaced by a program's, which are kept as a suggestion.
-    updateSession: ({ params, body, principal }) => {
+    updateSession: async ({ params, body, principal }) => {
       const { name, note, ...rest } = body;
+      if (typeof rest.theme === 'string') await deps.knowsTheme(rest.theme);
       if (name !== undefined || note !== undefined) deps.described.describe(params.sessionId, { ...(name !== undefined ? { name } : {}), ...(note !== undefined ? { summary: note } : {}) }, principal.kind === 'user' ? 'owner' : 'agent');
       return sessions.update(params.sessionId, rest);
     },
@@ -427,13 +444,22 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
     },
     changeDesktopSettings: ({ body }) => deps.desktop.setOpenNew(body.openNew),
     changeAppearance: ({ body }) => deps.changeAppearance(body),
+    readThemes: () => deps.readThemes(),
+    readStylesheet: ({ request }) => deps.readStylesheet(request),
+    changePlugin: ({ request, body }) => deps.changePlugin(request, body),
+    readPlugins: ({ request }) => deps.readPlugins(request),
     /* ---------- Projects, and what is shared between them ---------- */
 
     // Which projects there are: the ones the caller reaches. Everything that changes one is the owner's alone.
     listProjects: ({ query, principal }) => paginate(deps.projects.list((projectId) => principal.kind !== 'token' || reachesProject(principal.projects, projectId)), (p) => p.id, query),
     getProject: ({ params }) => deps.projects.get(params.projectId),
     addProject: ({ body }) => deps.projects.add(body),
-    changeProject: ({ params, body }) => deps.projects.change(params.projectId, body),
+    changeProject: async ({ params, body }) => {
+      // A project's themes name themes the server knows now, each of its own kind.
+      if (typeof body.themes?.light === 'string') await deps.knowsTheme(body.themes.light, 'light', 'themes.light');
+      if (typeof body.themes?.dark === 'string') await deps.knowsTheme(body.themes.dark, 'dark', 'themes.dark');
+      return deps.projects.change(params.projectId, body);
+    },
     moveCanvasToProject: ({ params, body }) => deps.projects.moveCanvas(params.canvasId, body.projectId),
     archiveProject: ({ params, body }) => deps.projects.archive(params.projectId, body ?? {}),
     reopenProject: ({ params }) => deps.projects.reopen(params.projectId),
@@ -522,6 +548,22 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
     },
 
     requestDraft: ({ body }) => drafts.request(body),
+
+    /* ---------- Color themes, and those proposed ---------- */
+
+    listThemes: async ({ query }) => paginate(await deps.themeProposals.list(), (t) => t.id, query),
+
+    listThemeProposals: ({ query }) => paginate(deps.themeProposals.rows(), (r) => `${r.state}:${r.id}`, query),
+
+    // What comes in here is read and kept, and nothing more: nothing is drawn, written, chosen or typed.
+    proposeTheme: ({ body, principal }) => deps.themeProposals.propose(body, principal.kind === 'token' ? { kind: 'token', tokenId: principal.tokenId, name: principal.name } : principal.kind === 'session' ? { kind: 'session', sessionId: principal.sessionId } : { kind: 'person' }),
+
+    // `authorize` has refused everyone but the owner.
+    acceptThemeProposal: ({ params, body, request }) => deps.themeProposals.accept(params.proposalId, body.digest, deps.ownerCaller(request)),
+
+    declineThemeProposal: ({ params, request }) => {
+      deps.themeProposals.decline(params.proposalId, deps.ownerCaller(request));
+    },
 
     /* ---------- The library ---------- */
 
@@ -803,6 +845,22 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
     listSessionDrafts: ({ params, query }) => paginate(drafts.ofSession(params.sessionId), (d) => d.id, query),
 
     proposeSessionDraft: ({ params, body }) => drafts.proposeFromSession(params.sessionId, body),
+
+    // The themes there are, and the session's own proposals: its own, by its own address. It cannot accept anything.
+    listSessionThemes: async ({ params, query }) => {
+      sessions.get(params.sessionId);
+      return paginate(await deps.themeProposals.list(), (t) => t.id, query);
+    },
+
+    listSessionThemeProposals: ({ params, query }) => {
+      sessions.get(params.sessionId);
+      return paginate(deps.themeProposals.rows({ kind: 'session', sessionId: params.sessionId }), (r) => `${r.state}:${r.id}`, query);
+    },
+
+    proposeSessionTheme: ({ params, body }) => {
+      sessions.get(params.sessionId);
+      return deps.themeProposals.propose(body, { kind: 'session', sessionId: params.sessionId });
+    },
 
     // What the repository of the session's own folder offers, and whether each was accepted. Reading only.
     getSessionRepositoryWorkflows: ({ params }) => repositories.offer(params.sessionId),

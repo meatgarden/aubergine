@@ -25,7 +25,7 @@ export function HelpPanel() {
         if (e.target === e.currentTarget) close();
       }}
     >
-      <div className="dialog sheet help-panel" role="dialog" aria-label="Help" data-testid="help-panel">
+      <div className="dialog sheet help-panel" role="dialog" data-part="dialog" aria-label="Help" data-testid="help-panel">
         <ScreenHead title="Help" onClose={close} />
         <div className="help-top">
           <button

@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="ja" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ターミナルのテーマ、色、キーのカスタマイズ | Aubergine</title>
+<meta name="description" content="10 のカラーテーマ、ターミナルごとのテーマ、手で決める色、フォント、カーソル、キー。VS Code、kitty、tmux などのカスタマイズ方法との比較も。">
+<link rel="canonical" href="https://thirstyeggplant.com/ja/customize-terminal-themes/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/customize-terminal-themes/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/customize-terminal-themes/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/customize-terminal-themes/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/customize-terminal-themes/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/customize-terminal-themes/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/customize-terminal-themes/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/customize-terminal-themes/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/customize-terminal-themes/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/customize-terminal-themes/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/customize-terminal-themes/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/customize-terminal-themes/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/customize-terminal-themes/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/customize-terminal-themes/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F7F0E4">
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="ターミナルのテーマ、色、キーのカスタマイズ | Aubergine">
+<meta property="og:description" content="10 のカラーテーマ、ターミナルごとのテーマ、手で決める色、フォント、カーソル、キー。VS Code、kitty、tmux などのカスタマイズ方法との比較も。">
+<meta property="og:url" content="https://thirstyeggplant.com/ja/customize-terminal-themes/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine：ターミナルが並ぶキャンバス。1つは処理中、1つはあなたを待っています">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine：ターミナルが並ぶキャンバス。1つは処理中、1つはあなたを待っています">
+<meta name="twitter:title" content="ターミナルのテーマ、色、キーのカスタマイズ | Aubergine">
+<meta name="twitter:description" content="10 のカラーテーマ、ターミナルごとのテーマ、手で決める色、フォント、カーソル、キー。VS Code、kitty、tmux などのカスタマイズ方法との比較も。">
+<link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">本文へ移動</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="32" height="32"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="ページ">
+      <ul>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">インストール</a></li>
+        <li><a href="../guides/">ガイド</a></li>
+        <li><a href="../security/">セキュリティ</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="言語: 日本語"><span class="lang-long" aria-hidden="true">日本語</span><span class="lang-short" aria-hidden="true">JA</span></summary>
+      <ul class="menu-list"><li><a href="../../customize-terminal-themes/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="../../es/customize-terminal-themes/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="../../pt/customize-terminal-themes/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="../../fr/customize-terminal-themes/" hreflang="fr" lang="fr" dir="ltr">Français</a></li><li><a href="../../de/customize-terminal-themes/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="./" hreflang="ja" lang="ja" dir="ltr" aria-current="true">日本語</a></li><li><a href="../../zh/customize-terminal-themes/" hreflang="zh-Hans" lang="zh-Hans" dir="ltr">简体中文</a></li><li><a href="../../ko/customize-terminal-themes/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="../../id/customize-terminal-themes/" hreflang="id" lang="id" dir="ltr">Bahasa Indonesia</a></li><li><a href="../../hi/customize-terminal-themes/" hreflang="hi" lang="hi" dir="ltr">हिन्दी</a></li><li><a href="../../bn/customize-terminal-themes/" hreflang="bn" lang="bn" dir="ltr">বাংলা</a></li><li><a href="../../ar/customize-terminal-themes/" hreflang="ar" lang="ar" dir="rtl">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>メニュー</summary>
+      <ul class="menu-list">
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">インストール</a></li>
+        <li><a href="../guides/">ガイド</a></li>
+        <li><a href="../security/">セキュリティ</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="translated">
+  <div class="wrap translated-in">
+    <p>Aubergine 本体は英語です。ボタン、メニュー、画像はすべて英語版のものです。</p>
+    <p>このページは英語版から機械翻訳されています。<a href="https://github.com/thirstyeggplant/aubergine/issues">修正を送る</a>。</p>
+  </div>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://thirstyeggplant.com/ja/customize-terminal-themes/#article",
+      "headline": "ターミナルのテーマ、色、フォント、キーをカスタマイズ",
+      "description": "10 のカラーテーマ、ターミナルごとのテーマ、手で決める色、フォント、カーソル、キー。VS Code、kitty、tmux などのカスタマイズ方法との比較も。",
+      "url": "https://thirstyeggplant.com/ja/customize-terminal-themes/",
+      "mainEntityOfPage": "https://thirstyeggplant.com/ja/customize-terminal-themes/",
+      "image": "https://thirstyeggplant.com/screenshots/terminal-themes.png",
+      "datePublished": "2026-11-28",
+      "dateModified": "2026-11-28",
+      "inLanguage": "ja",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "ガイド", "item": "https://thirstyeggplant.com/guides/" },
+        { "@type": "ListItem", "position": 3, "name": "カスタマイズ", "item": "https://thirstyeggplant.com/ja/customize-terminal-themes/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://thirstyeggplant.com/ja/customize-terminal-themes/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "ターミナルごとに違うカラーテーマにできますか？", "acceptedAnswer": { "@type": "Answer", "text": "はい。ターミナルのメニューの Theme… で、ページのテーマに関係なく、その本体を 10 のテーマのどれでも描けます。タグの付いたターミナルには Settings でそのタグによるテーマを与えられ、ほかのターミナルはターミナルの既定か、ページに従います。" } },
+        { "@type": "Question", "name": "Aubergine に自分の CSS を加えられますか？", "acceptedAnswer": { "@type": "Answer", "text": "できます。データフォルダーの custom.css です（aubergine css new で始めるためのファイルが書かれます）。最初の描画からページの最後にリンクされ、頼れるフックは docs/hooks.md にあります。ページのアドレスに ?plain を付けると、それなしで見られます。" } },
+        { "@type": "Question", "name": "Aubergine 用に自分のプラグインを書けますか？", "acceptedAnswer": { "@type": "Answer", "text": "はい。データフォルダーの plugins/\u003cid\u003e/ に JavaScript モジュールを置き（aubergine plugin new \u003cid\u003e で始めるためのものが書かれます）、Settings → Plugins でオンにします。ページの中であなたとして、ページにできることすべてを持って動きます。サンドボックスではありません。" } },
+        { "@type": "Question", "name": "Aubergine の設定ファイルはどこにありますか？", "acceptedAnswer": { "@type": "Answer", "text": "Aubergine のデータフォルダーにある config.json です。aubergine settings path が場所を表示し、サーバーも起動時に表示します。" } },
+        { "@type": "Question", "name": "エージェントが Aubergine の見た目を変えられますか？", "acceptedAnswer": { "@type": "Answer", "text": "設定は変えられません。設定はあなただけのものです。エージェントは自分のターミナルに名前を付けて説明でき、あなたが読んで受け入れるのを待つカラーテーマを提案できます。API トークンが許すプログラムは、ターミナルの名前変更、タグ付け、テーマ指定、キャンバスの整理ができ、テーマの提案もできます。" } }
+      ]
+    }
+  ]
+}
+</script>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="現在の位置"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">ガイド</a></li><li>カスタマイズ</li></ol></nav>
+    <h1>ターミナルのテーマ、色、フォント、キーをカスタマイズ</h1>
+    <p class="lead">ページの色を 10 のテーマから選び、ターミナルごとに専用のテーマを付け、個々の色、ターミナルのフォントとカーソル、すべてのキーを、Settings か、自分自身を説明する 1 つの設定ファイルで決められます。</p>
+  </div>
+</header>
+<div class="wrap page-body">
+  <div class="prose">
+    <h2 id="page-themes">ライトとダークの 10 のカラーテーマ</h2>
+    <p><strong>Settings → Appearance</strong> は 3 つの選択肢から始まります。<strong>Light</strong>、<strong>Dark</strong>、そして新しいインストールの初期状態で、システムが変わるとそれに従う <strong>Match the system</strong> です。その下で、それぞれの種類のテーマを 1 つずつ選びます。Light、High contrast light、Solarized light、Gruvbox light のいずれかと、Dark、High contrast dark、Solarized dark、Gruvbox dark、Nord、Dracula のいずれかです。どれも色の小さなプレビュー付きで表示されます。</p>
+    <p>変更は再読み込みなしで、ページとすべてのターミナルにすぐ反映され、設定ファイルに保存されるので、Aubergine を開くどのブラウザーでも同じになります。パレットにも同じものがコマンドとしてあります。たとえば <strong>Color theme: Nord</strong> です。</p>
+    <figure class="frame"><a href="../../screenshots/themes-settings.png" class="frame-pic"><img src="../../screenshots/themes-settings.png" width="1090" height="1412" loading="lazy" alt="Settings の Appearance：ライト、ダーク、システムに合わせるの選択と、2つのグループに分かれた10種類のカラーテーマ。それぞれに小さなプレビューがあり、ダークのページには Nord、ライトのページには Solarized light が選ばれています。"></a><figcaption>ライト、ダーク、またはシステムに合わせる、そして種類ごとのテーマ。どのテーマにも色の小さなプレビューがあります。</figcaption></figure>
+
+    <h2 id="terminal-themes">ターミナルごとに違うカラーテーマ</h2>
+    <p>ターミナルのメニューの <strong>Theme…</strong> で、ページのテーマに関係なく、そのターミナルを 10 のテーマのどれでも描けます。変わるのは本体だけで、タイトル、ノート、詳細はページのままです。専用のテーマがないターミナルは、Settings の <strong>Terminal theme</strong>（ターミナルの既定）に従い、それもなければページに従います。</p>
+    <figure class="frame"><a href="../../screenshots/terminal-theme-menu.png" class="frame-pic"><img src="../../screenshots/terminal-theme-menu.png" width="1262" height="1118" loading="lazy" alt="キャンバス上で開いたターミナルの Theme… メニュー。Same as the default（今はページと同じ Dark）、続いて 4 つのライトテーマと 6 つのダークテーマ。Dracula にチェック。"></a><figcaption>ターミナルのメニューの Theme…：既定か、10 のどれか。</figcaption></figure>
+    <p>同じ選択は、一覧のターミナルの行のメニュー、詳細、パレットにもあります。ターミナルと枠には専用の色も付けられ（13 色のどれか、または任意の色の <strong>Your own…</strong>）、キャンバスのタブも同様です。ターミナルの色は一覧の行の色にもなります。</p>
+    <figure class="frame"><a href="../../screenshots/terminal-themes-close.png" class="frame-pic"><img src="../../screenshots/terminal-themes-close.png" width="2444" height="722" loading="lazy" alt="ダークのページ上の2つのターミナル。左は Solarized light テーマの Git の履歴、右は Dracula テーマの色付きの差分。"></a><figcaption>ダークのページに並んだ2つのターミナル。1つは Solarized light、もう1つは Dracula。</figcaption></figure>
+
+    <h2 id="colors">個々の色を手で決める</h2>
+    <p>テーマに加えて、ページの 35 の色を設定ファイル <code>config.json</code> の <code>appearance.colors</code> で決められます。色の名前と、<code>#rrggbb</code> の形の値です。一番上に書けばすべてのテーマの上に、<code>"[nord]"</code> のように角かっこで囲んだテーマ ID の下に書けばそのテーマだけの上に効き、そちらが優先されます。</p>
+    <pre><code>{
+  "$schema": "./config.schema.json",
+  "appearance": {
+    "colors": {
+      "accent": "#c678dd",
+      "[nord]": { "terminal-bg": "#242933" }
+    }
+  }
+}</code></pre>
+    <p>名前はページの色トークンで、<code>bg</code>、<code>text</code>、<code>accent</code>、<code>terminal-bg</code> などです。一覧は <a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/design.md">docs/design.md</a> にあります。誤った項目は飛ばされ、ファイルの残りはそのまま有効です。どれが飛ばされたかは <strong>Settings → Appearance</strong> が示します。自分で決めた色は自分のもので、書いた色が読みやすいかは何も確かめません。</p>
+
+    <h2 id="theme-files">自作のテーマをファイルで</h2>
+    <p>自作のテーマはデータフォルダーの <code>themes/</code> にある JSON ファイルです。10 のうち同じ種類の 1 つを土台にし、35 色のどれでもその上に重ね、ターミナル自身の色（文字、カーソル、選択部分、プログラムが求める 16 色）も指定できます。同じ種類の 10 のテーマの後に「自作」として並び、それらと同じ場所で選べます。ページ、ターミナルの既定、または 1 つのターミナルにです。影とフォーカスリングは土台のままで、ファイルの中身が実行されることはありません。</p>
+    <pre><code>{
+  "$schema": "../theme.schema.json",
+  "name": "Harbor",
+  "kind": "dark",
+  "base": "nord",
+  "colors": { "bg": "#0e1a24", "accent": "#5fb3b3" },
+  "terminal": { "foreground": "#d8dee9", "cursor": "#5fb3b3" }
+}</code></pre>
+    <p><code>aubergine theme new harbor --from nord</code> は元のテーマのすべての色を書いた出発点のファイルを作ります。<code>aubergine theme check</code> はファイルの誤りを伝えます。Settings の <strong>Read themes again</strong> で変更を読み込みます。色が読みやすいかどうかの判断はあなたのものです。Settings は文字が読みにくいかもしれないときに伝えるだけです。形式は <a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/themes.md">docs/themes.md</a> にあります。</p>
+
+    <h2 id="by-condition">プロジェクトのテーマと、タグごとのターミナルのテーマ</h2>
+    <p>プロジェクトは、見ているあいだページを自分のテーマで描けます。ひと目でどこにいるかがわかります。<strong>Projects…</strong> で、プロジェクトの横の <strong>When light</strong> と <strong>When dark</strong> で種類ごとに 1 つ選びます。<strong>As the page</strong> なら Settings のままです。ほかのプロジェクトではページは選んだとおりで、そのプロジェクトのアドレスで再読み込みすると、最初の描画からそのテーマで描かれます。</p>
+    <p>Settings の Terminal theme の下にある <strong>By tag</strong> で、タグの付いたターミナルにテーマを与えられます。たとえば <code>prod</code> の付いたターミナルをすべて Dracula に、ページのテーマに関係なくすぐに。ターミナルが持つタグの最初の行が優先され、ターミナル自身のテーマはそのすべてより先です。設定ファイルでは <code>appearance.byTag</code> です。</p>
+    <pre><code>{
+  "appearance": {
+    "byTag": [
+      { "tag": "prod", "theme": "dracula" },
+      { "tag": "docs", "theme": "solarized-light" }
+    ]
+  }
+}</code></pre>
+    <p>アクセントの色を変えるだけで十分なことも多いでしょう。<code>aubergine theme new teal --from nord --accent "#2f9e8f"</code> は、Nord のアクセントとそれに合う 5 色だけを、読みやすさを保つよう計算して変えるテーマファイルを書きます。ほかのテーマと同じように、プロジェクトやタグに選べます。</p>
+
+    <h2 id="fonts-and-keys">フォント、カーソル、キーボードショートカット</h2>
+    <p>Settings → Appearance の <strong>Terminal text</strong> で、ターミナルの文字の大きさ（8〜32 ピクセル）とフォントを決めます。フォントはリストで、最初に見つかったものが使われます。<strong>Cursor</strong> では形（ブロック、バー、下線）と点滅するかどうかを決めます。</p>
+    <p>どのキーも変えられます。設定ファイルに <code>shortcuts</code> を加え、コマンド名にキーの組み合わせ、その一覧、またはキーなしの <code>null</code> を書きます。<code>shortcutsInAppWindow</code> も同じ形で、Aubergine を専用ウィンドウのアプリとしてインストールしたときだけ効きます。ページを再読み込みすると、ショートカット一覧（<strong>?</strong>）、パレット、ツールチップが、決めたとおりのキーを表示します。</p>
+    <pre><code>{
+  "shortcuts": {
+    "terminal.park": "X",
+    "attention.next": ["Ctrl+Cmd+G", "W"],
+    "view.fit": null
+  }
+}</code></pre>
+    <p>2 回決めたキーや読めないキーは、ショートカット一覧の上部とサーバーが知らせ、ファイルの残りはそのまま効きます。単独のキー、または Ctrl か Option とキーの組み合わせは、どのターミナルもキーボードを持っていないときだけ働きます。ターミナルのどのプログラムも、必要なキーを受け取り続けられるようにするためです。詳しくは README の <a href="https://github.com/thirstyeggplant/aubergine#keyboard">Keyboard</a> へ。</p>
+
+    <h2 id="titles-and-rows">タイトルと行に表示する内容を選ぶ</h2>
+    <p>ターミナルの名前のあと、そのタイトルとリストの行には 2 つのテンプレートの内容が表示されます。<code>{state}</code>、<code>{folder}</code>、<code>{time}</code>、<code>{field:Ticket}</code> のようなプレースホルダーを含むテキストです。<strong>Settings → Appearance → Titles and rows</strong> で変更でき、入力するたびに各欄の下に実際のタイトルと行が描かれます。設定ファイルでも変更できます。この例では、タイトルは状態、フォルダー、フィールド Ticket、リンク、タグを、行は状態、実行のステップ、ブランチ、時刻を表示します:</p>
+    <pre><code>{
+  "appearance": {
+    "titleFormat": "{state} {folder} · {field:Ticket} {links} {tags}",
+    "rowFormat": "{state} {step} {branch} · {time}"
+  }
+}</code></pre>
+    <p>表示するものがないプレースホルダーは、そこへ続くテキストと一緒に省かれます。チケットもリンクもタグもないターミナルでは、このタイトルは状態とフォルダーだけを表示し、余分な点は残りません。テンプレートに入るのはテキストとプレースホルダーだけで、マークアップもスタイルもありません。どれもページが他の場所で描くのと同じように描かれ、状態はその色で、リンクはチップになります。誤ったプレースホルダーは欄の下で知らされて飛ばされ、<strong>Reset</strong> はテンプレートがないときの表示を正確に戻します。すべてのプレースホルダーは <a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/templates.md">docs/templates.md</a> にあります。</p>
+
+    <h2 id="your-stylesheet">自分のスタイルシート</h2>
+    <p>設定で届かないところは、自分のスタイルシートを書きます。データフォルダーの <code>custom.css</code> です。サーバーはこれをページの head の最後にリンクするので、最初の描画からそこにあり、同じ詳細度ならアプリのルールよりあなたのルールが勝ちます。<code>!important</code> は要りません。<code>aubergine css new</code> で始めるためのファイルが書かれ、<strong>Settings → Appearance → Your stylesheet</strong> では見つかったかどうかがわかり、オフにでき、再読み込みなしで読み直せます。</p>
+    <p>頼るのはフックだけにしてください。すべてのトークン（<code>--accent</code>、<code>--radius-surface</code> など）、ページのルートの属性（<code>data-theme</code>、<code>data-page</code>）、<code>data-part</code> で印を付けた部分、そしてターミナル自身の属性（<code>data-tags</code>、<code>data-state</code>、<code>data-name</code>）です。属性はノード、行、そのターミナル専用のブラウザータブで同じです。一覧は <a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/hooks.md">docs/hooks.md</a> にあり、リリースをまたいで保たれます。クラス名は保たれません。この例では、タグ prod の付いたすべてのターミナルのタイトルが濃い赤になり、マップが消えます。</p>
+    <pre><code>[data-part="terminal"][data-tags~="prod"] [data-part="terminal-title"] {
+  background: #5c1f24;
+}
+[data-part="map"] {
+  display: none;
+}</code></pre>
+    <p>そして、2 つのトークンで、どこでも角をもっと丸く。</p>
+    <pre><code>:root {
+  --radius-surface: 16px;
+  --radius-control: 10px;
+}</code></pre>
+    <p>ルールでページが壊れたら、アドレスの後ろに <code>?plain</code> を付けて開いてください。スタイルシートなしで送られます。スタイルシートが指定するものは、ほかのアドレスからは取得されません。画像、フォント、スタイルシートはこのサーバーかインラインのデータから来るので、貼り付けたスニペットがページの内容をよそへ送ることはできません。これは自分で書いたり貼り付けたりしたファイルへの備えであって、サンドボックスではありません。試したのは Chromium だけです。</p>
+
+    <h2 id="plugins">自分のコード：プラグイン</h2>
+    <p>設定とスタイルシートの先は、コードを書きます。プラグインはデータフォルダーの <code>plugins/&lt;id&gt;/</code> にある自分の JavaScript モジュールで、名前を書いた <code>plugin.json</code> があります。ページはビルドの手順なしにそのままインポートし、ひとつのオブジェクト <code>aubergine</code> を渡します。サイドパネルのセクション、リストのフィルター、タイトルや行のプレースホルダー、パレットのコマンド、実行の見方、状態と起きたそばからの変更、そしてページが行うすべての呼び出しです。<code>aubergine plugin new &lt;id&gt;</code> で始めるためのものが書かれます。</p>
+    <p class="note"><strong>プラグインはページの中であなたとして動き、何もそれを隔離しません。</strong>すべてのターミナルを読み、どれにでも入力し、ページの何でも変えられます。サンドボックスではありません。<strong>Settings → Plugins</strong> でオンにしてから、そのときのファイルのままでだけ動きます。変わったファイルは、もう一度見るまで読み込まれません。これはコードがうっかり動くのを防ぎますが、鍵ではありません。ターミナルのエージェントもあなたとして動き、設定ファイルを書けるからです。自分で書いたか読んだものだけをオンにしてください。</p>
+    <p><code>aubergine</code> のメンバーは <a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/plugins.md">docs/plugins.md</a> にあり、リリースからリリースへと追加されるだけです。プラグインがその先で触れるものは変わることがあります。パレットのコマンドなら数行です。</p>
+    <pre><code>// plugins/hello/index.js
+export function activate(aubergine) {
+  aubergine.commands.add({
+    id: 'hello',
+    title: 'Say hello',
+    run: () =&gt; aubergine.say('Hello from my plugin'),
+  });
+}</code></pre>
+    <p>プラグインがページを壊したら、アドレスの後ろに <code>?plain</code> を付けて開きます。プラグインはひとつも読み込まれず、スタイルシートも外れます。失敗したプラグインは Settings に表示され、ページとほかのプラグインはそのまま動きます。オフにすると、<code>aubergine</code> を通して加えたものはすぐ消え、その先でしたことは再読み込みで消えます。Chromium でしか試していません。</p>
+
+    <h2 id="settings-file">自分自身を説明する 1 つの設定ファイル</h2>
+    <p>これらはすべて Aubergine のデータフォルダーの <code>config.json</code> に保存され、その場所は <code>aubergine settings path</code> が表示します。どのキーも省略できます。読めないファイルは既定値を意味し、サーバーが起動しなくなることはありません。ページの Settings は変更したキーだけを書き、ファイルの残りは書いたままにします。</p>
+    <p>サーバーは起動するたびに、ファイルの隣に <code>config.schema.json</code> を書きます。1 行加えるだけで、JSON Schema を読むエディターがすべてのキーを説明し、補完します。</p>
+    <pre><code>{ "$schema": "./config.schema.json" }</code></pre>
+    <p><code>aubergine settings list</code> はすべてのキーを現在の値とともに表示し、既定と違うものに印を付けます。<code>aubergine settings schema</code> はスキーマを表示します。<a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/settings.md">docs/settings.md</a> は、すべてのキーとその既定値、そして Settings が書くのか自分で書くのかを説明しています。</p>
+    <pre><code>aubergine settings path
+aubergine settings list
+aubergine settings schema</code></pre>
+    <p>ページでは、<strong>Settings → Every setting</strong> が同じキーを値とともに一覧にし、入力に合わせて絞り込みます。Settings が変えるキーはその操作部へ案内し、手で書くキーには、ファイルに加える行のための <strong>Copy</strong> があります。そこで設定が変わることはありません。</p>
+    <figure class="frame"><a href="../../screenshots/every-setting.png" class="frame-pic"><img src="../../screenshots/every-setting.png" width="1720" height="1332" loading="lazy" alt="Settings の Every setting を開き、検索に「appearance」と入力したところ。6 つのキーが現在の値、説明、既定値とともに並び、5 つは Changed above、appearance.colors には Copy ボタン。"></a><figcaption>検索した Every setting：各キーの説明、現在の値、既定値。</figcaption></figure>
+    <p>一部の選択はこのブラウザーのもので、ブラウザーに保存されます。キャンバスをタブ、1 つのリスト、列のどれで表示するか、キャンバス上のバーの位置と開いたままにするか、サイドパネルとマップを畳むか、パネルとターミナルの詳細の幅、そしてターミナル一覧の絞り込み、グループ分け、並び順です。</p>
+
+    <h2 id="programs-and-agents">プログラムやエージェントが変えられること、あなたのものとして残ること</h2>
+    <p><a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/api.md">ローカル API</a> を通じて、API トークンを持つプログラムは <code>canvases:write</code> でキャンバスを整えられます。名前、色、順序を決め、その上のターミナルを動かし、大きさを変え、色を付け、枠を加えます。<code>sessions:write</code> では、ターミナルの名前変更とタグ付け、フィールドの変更、カラーテーマの指定ができます。届くのはトークンが届くプロジェクトだけです。</p>
+    <p>ターミナルの中のエージェントは、自分のターミナルだけを説明し、ほかのものは説明しません。名前、何のためのものかの要約、リンク、フィールドを、<code>aubergine describe</code>、<code>aubergine link add</code>、<code>aubergine field set</code> で決めます。あなたが自分で書いた名前、要約、フィールドはそのまま残り、エージェントが送ったものは提案として横に保存されます。エージェントや <code>workflows:write</code> を持つプログラムは、<code>aubergine theme propose</code> でカラーテーマを提案することもできます。あなたが Review で読み、描かれた姿を見て、ページで試し、受け入れるまで、どこにも描かれません。受け入れるとそのファイルが書かれますが、何も選ばれません。</p>
+    <p>設定そのものはあなただけのものです。トークンも、ターミナルも、エージェントも変えられません。<code>PUT /v1/settings/appearance</code> はサインインしたブラウザーにしか応えず、<code>appearance.colors</code>、<code>shortcuts</code> などはファイルに手で書きます。</p>
+
+    <h2 id="other-tools">ほかのツールではインターフェースをどうカスタマイズできるのか</h2>
+    <p class="note"><strong>この表の書き方。</strong>各ツールについての記述は、そのツール自身のドキュメントを 2026 年 11 月 28 日に読んだもので、名前とセルからリンクしています。このためにこれらのツールを動かしてはいません。「見当たらず」は、読んだドキュメントに記述がないという意味で、そのツールにできないという意味ではありません。誤りや古い情報があれば、<a href="https://github.com/thirstyeggplant/aubergine/issues">お知らせください</a>。</p>
+    <div class="table table-wide">
+      <table class="table-stack">
+        <thead><tr><th>ツール</th><th>設定</th><th>テーマと色</th><th>独自の CSS</th><th>独自のコード</th><th>タイトルとステータスのテンプレート</th></tr></thead>
+        <tbody>
+          <tr><td><a href="https://code.visualstudio.com/docs/configure/settings">VS Code</a><br>エディター</td><td data-label="設定"><code>settings.json</code> か Settings エディター。ユーザーからワークスペース、フォルダー、言語へと層になる</td><td data-label="テーマと色">拡張機能の<a href="https://code.visualstudio.com/docs/configure/themes">テーマファイル</a>。<code>workbench.colorCustomizations</code> をすべてのテーマか 1 つに</td><td data-label="独自の CSS">非対応と<a href="https://code.visualstudio.com/api/extension-capabilities/overview">ドキュメントに記載</a></td><td data-label="独自のコード">拡張機能。VS Code と同じ権限を持つが、インターフェースの DOM には触れない。独自の画面には Webview</td><td data-label="タイトルとステータスのテンプレート"><code>window.title</code> とターミナルのタブタイトルが <code>${…}</code> 変数を受け付ける</td></tr>
+          <tr><td><a href="https://zed.dev/docs/configuring-zed">Zed</a><br>エディター</td><td data-label="設定">Settings Editor か、コメントを書ける <code>settings.json</code>。ユーザー、次にプロジェクト</td><td data-label="テーマと色">スキーマ付きの <a href="https://zed.dev/docs/themes">JSON テーマファイル</a>。1 つのテーマに <code>theme_overrides</code>。ライト、ダーク、システム</td><td data-label="独自の CSS">見当たらず</td><td data-label="独自のコード">Rust から WebAssembly にコンパイルした拡張機能。制限できる<a href="https://zed.dev/docs/extensions/capabilities">ケイパビリティ</a>付き</td><td data-label="タイトルとステータスのテンプレート">見当たらず</td></tr>
+          <tr><td><a href="https://help.obsidian.md/snippets">Obsidian</a><br>ノートアプリ</td><td data-label="設定">各保管庫の <code>.obsidian</code> フォルダーのファイル</td><td data-label="テーマと色"><a href="https://docs.obsidian.md/Themes/App+themes/Build+a+theme">テーマは CSS</a>。CSS 変数が文書化されている</td><td data-label="独自の CSS">CSS スニペット。1 つずつオンにする</td><td data-label="独自のコード">Obsidian と同じアクセスを持つ JavaScript の<a href="https://help.obsidian.md/plugin-security">プラグイン</a>。制限モードをオフにするまで動かない</td><td data-label="タイトルとステータスのテンプレート">見当たらず</td></tr>
+          <tr><td><a href="https://hyper.is/">Hyper</a><br>ターミナル</td><td data-label="設定">1 つのファイル。文書化されたリリースでは <code>.hyper.js</code>、開発ブランチでは <code>hyper.json</code></td><td data-label="テーマと色">テーマはプラグイン</td><td data-label="独自の CSS">ウィンドウ用の <code>css</code>。<code>termCSS</code> はバージョン 2 以降<a href="https://github.com/vercel/hyper/blob/canary/PLUGINS.md">ターミナルの文字を装飾しない</a></td><td data-label="独自のコード">Electron とレンダラーが読み込む npm プラグイン。React コンポーネントを包み、Redux ミドルウェアを加える</td><td data-label="タイトルとステータスのテンプレート">見当たらず</td></tr>
+          <tr><td><a href="https://wezterm.org/config/files.html">WezTerm</a><br>ターミナル</td><td data-label="設定">Lua ファイル <code>.wezterm.lua</code></td><td data-label="テーマと色"><a href="https://wezterm.org/config/appearance.html">700 以上の配色</a>。自作は Lua か TOML。個々の色は <code>colors</code></td><td data-label="独自の CSS">見当たらず</td><td data-label="独自のコード">設定そのものが Lua。<a href="https://wezterm.org/config/plugins.html">プラグイン</a>は Git アドレスから取る Lua</td><td data-label="タイトルとステータスのテンプレート">Lua 関数がタブとウィンドウのタイトルを返す（<a href="https://wezterm.org/config/lua/window-events/format-tab-title.html"><code>format-tab-title</code></a>）</td></tr>
+          <tr><td><a href="https://man.openbsd.org/tmux.1">tmux</a><br>ターミナルマルチプレクサー</td><td data-label="設定">ファイルに書く tmux コマンド。サーバー、セッション、ウィンドウ、ペインごとのオプション</td><td data-label="テーマと色"><code>status-style</code> や <code>window-style</code> などのスタイル</td><td data-label="独自の CSS">見当たらず</td><td data-label="独自のコード">フックが tmux コマンドを実行。プログラム向けのコントロールモード</td><td data-label="タイトルとステータスのテンプレート"><code>#{…}</code> を使う<a href="https://man.openbsd.org/tmux.1#FORMATS">フォーマット</a>。ステータス行、ウィンドウ一覧、ペインの境界、タイトルに</td></tr>
+          <tr><td><a href="https://sw.kovidgoyal.net/kitty/conf/">kitty</a><br>ターミナル</td><td data-label="設定"><code>kitty.conf</code>。インクルードでき、変わると読み直す</td><td data-label="テーマと色">テーマは <code>.conf</code> ファイル。<a href="https://sw.kovidgoyal.net/kitty/kittens/themes/"><code>kitten themes</code></a> で 300 以上から選べ、ダーク用とライト用を別に決められる</td><td data-label="独自の CSS">見当たらず</td><td data-label="独自のコード">kitty の内部に完全にアクセスできる Python の<a href="https://sw.kovidgoyal.net/kitty/kittens/custom/">キトン</a>。ウォッチャー</td><td data-label="タイトルとステータスのテンプレート"><code>tab_title_template</code>。<code>{custom}</code> で自分の Python を呼ぶ</td></tr>
+          <tr><td><a href="https://ghostty.org/docs/config">Ghostty</a><br>ターミナル</td><td data-label="設定"><code>key = value</code> のファイル。<code>config-file</code> でほかを追加</td><td data-label="テーマと色"><a href="https://ghostty.org/docs/features/theme">テーマは設定ファイル</a>。ライト用とダーク用を 1 つずつ</td><td data-label="独自の CSS">見当たらず</td><td data-label="独自のコード">ターミナルに重ねる <a href="https://ghostty.org/docs/config/reference#custom-shader">GLSL シェーダー</a>。macOS では AppleScript</td><td data-label="タイトルとステータスのテンプレート">見当たらず</td></tr>
+          <tr><td><a href="https://learn.microsoft.com/windows/terminal/customize-settings/color-schemes">Windows Terminal</a><br>ターミナル</td><td data-label="設定">Settings 画面か <code>settings.json</code>。<a href="https://github.com/microsoft/terminal/blob/main/doc/cascadia/profiles.schema.json">JSON スキーマ</a>あり</td><td data-label="テーマと色">プロファイルごとの配色。ウィンドウとタブの<a href="https://learn.microsoft.com/windows/terminal/customize-settings/themes">テーマ</a>はライトとダーク、JSON でのみ</td><td data-label="独自の CSS">見当たらず</td><td data-label="独自のコード">見当たらず。ほかのアプリが JSON フラグメントでプロファイルと配色を追加</td><td data-label="タイトルとステータスのテンプレート">見当たらず。プロファイルが <code>tabTitle</code> と <code>tabColor</code> を決める</td></tr>
+          <tr><td><a href="https://iterm2.com/documentation-automatic-profile-switching.html">iTerm2</a><br>ターミナル</td><td data-label="設定">Settings のプロファイル。プロパティリスト形式の <a href="https://iterm2.com/documentation-dynamic-profiles.html">Dynamic Profiles</a></td><td data-label="テーマと色">ユーザー、ホスト、フォルダー、ジョブで選ばれるプロファイル（Shell Integration が必要）</td><td data-label="独自の CSS">見当たらず</td><td data-label="独自のコード"><a href="https://iterm2.com/python-api/">Python API</a>、Python で書くステータスバー部品、AppleScript</td><td data-label="タイトルとステータスのテンプレート">セッション名、バッジ、ステータスバーの<a href="https://iterm2.com/documentation-scripting-fundamentals.html">補間文字列</a> <code>\(…)</code></td></tr>
+          <tr><td>Aubergine<br>キャンバス上のターミナル</td><td data-label="設定"><code>config.json</code> と Settings。エディター向けの JSON Schema 付き</td><td data-label="テーマと色">10 のテーマ、ライト・ダーク・システムに合わせる。そのいずれかに重ねる自作の JSON ファイル。プロジェクトごと、タグの付いたターミナルごと、ターミナルごとに 1 つ。35 色を手で、すべてのテーマまたは 1 つに</td><td data-label="独自の CSS">あり：データフォルダーの <code>custom.css</code>、文書化されたフック付き</td><td data-label="独自のコード">あり：プラグイン。ページの中であなたとして動く JavaScript モジュールで、文書化された API を通して、またその先でも動く。サンドボックスなし</td><td data-label="タイトルとステータスのテンプレート">2 つ。ターミナルのタイトルとリストの行のためのもので、<code>{state}</code> や <code>{field:Ticket}</code> のようなプレースホルダーを含むテキスト</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>ここにあるどのツールも設定をファイルに保存し、VS Code、Zed、Windows Terminal には、Aubergine と同じく、それを書く画面もあります。ほとんどでテーマもファイルです。VS Code と Zed では JSON、Obsidian では CSS、WezTerm では Lua か TOML、kitty と Ghostty では設定ファイルです。VS Code、Zed、WezTerm では、ここでの <code>appearance.colors</code> のように、テーマの上に個々の色を変えられます。</p>
+    <p>いちばん違うのはコードです。WezTerm の設定は全体が Lua のプログラムで、kitty と iTerm2 は自分の Python を動かし、Hyper のプラグインはインターフェースを包む JavaScript です。Obsidian と Hyper は自分の CSS も受け付けます。VS Code の拡張機能はインターフェースの DOM に触れられず、独自のスタイルシートにも対応していません。Zed は拡張機能を WebAssembly として、制限できるケイパビリティ付きで動かします。tmux、WezTerm、kitty、iTerm2 は、テンプレートや関数でタイトルとステータス行を組み立てます。</p>
+    <p>いまの Aubergine は設定の側からコードまで届きます。自分を説明するファイルにあるテーマ・色・キー、設定の一部を書くページ、ターミナルのタイトルと行が言うことのテンプレート、安定して保たれるフックのある自分のスタイルシート、そしてプラグイン、追加されるだけの API を持つページの中の自分の JavaScript です。プラグインはページにできることすべてを持って動きます。ほかの人のプラグインのためのサンドボックスのモードは<a href="../roadmap/#rm-yours">ロードマップ</a>にあり、まだ作られていません。</p>
+
+    <h2 id="planned">予定していること</h2>
+    <p>ほかの人が書いたプラグインをサンドボックスで動かす方法と、レビュー画面を通してインストールすることは予定で、まだ作られていません。<a href="../roadmap/#rm-yours">ロードマップ</a>を見てください。</p>
+
+    <h2 id="faq">よくある質問</h2>
+    <div class="questions">
+      <details><summary>ターミナルごとに違うカラーテーマにできますか？</summary><p>はい。ターミナルのメニューの Theme… で、ページのテーマに関係なく、その本体を 10 のテーマのどれでも描けます。タグの付いたターミナルには Settings でそのタグによるテーマを与えられ、ほかのターミナルはターミナルの既定か、ページに従います。</p></details>
+      <details><summary>Aubergine に自分の CSS を加えられますか？</summary><p>できます。データフォルダーの <code>custom.css</code> です（<code>aubergine css new</code> で始めるためのファイルが書かれます）。最初の描画からページの最後にリンクされ、頼れるフックは docs/hooks.md にあります。ページのアドレスに <code>?plain</code> を付けると、それなしで見られます。</p></details>
+      <details><summary>Aubergine 用に自分のプラグインを書けますか？</summary><p>はい。データフォルダーの <code>plugins/&lt;id&gt;/</code> に JavaScript モジュールを置き（<code>aubergine plugin new &lt;id&gt;</code> で始めるためのものが書かれます）、Settings → Plugins でオンにします。ページの中であなたとして、ページにできることすべてを持って動きます。サンドボックスではありません。</p></details>
+      <details><summary>Aubergine の設定ファイルはどこにありますか？</summary><p>Aubergine のデータフォルダーにある <code>config.json</code> です。<code>aubergine settings path</code> が場所を表示し、サーバーも起動時に表示します。</p></details>
+      <details><summary>エージェントが Aubergine の見た目を変えられますか？</summary><p>設定は変えられません。設定はあなただけのものです。エージェントは自分のターミナルに名前を付けて説明でき、あなたが読んで受け入れるのを待つカラーテーマを提案できます。API トークンが許すプログラムは、ターミナルの名前変更、タグ付け、テーマ指定、キャンバスの整理ができ、テーマの提案もできます。</p></details>
+    </div>
+    <p>関連：<a href="../too-many-terminal-tabs/">目的のターミナルを見つける</a> · <a href="../tmux-without-learning-tmux/">tmux を覚えずに tmux を使う</a> · <a href="../security/">セキュリティとプライバシー</a> · <a href="../faq/">よくある質問</a></p>
+    <p>Aubergine は、このページで名前を挙げたどのツールとも提携していません。各名称はそれぞれの所有者の商標です。</p>
+  </div>
+</div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">5分で動かす</h2>
+    <div class="close-do">
+      <p>tmux 3.2 以降と Node.js 22 以降の入った macOS が必要です。<code>brew install tmux node</code> で両方が入ります。</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="コピーしました" aria-live="polite" hidden>コピー</button></p>
+      <p class="actions"><a class="button" href="../install/">インストール</a><a class="button button-quiet" href="../guides/">ガイド</a></p>
+    </div>
+  </div>
+</section>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav aria-label="すべてのページ">
+      <ul class="foot-links">
+        <li><a href="../">ホーム</a></li>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex と ChatGPT</a></li>
+        <li><a href="../install/">インストール</a></li>
+        <li><a href="../guides/">ガイド</a></li>
+        <li><a href="../run-multiple-coding-agents/">複数のエージェントを動かす</a></li>
+        <li><a href="../working-copies/">作業コピー</a></li>
+        <li><a href="../queue-and-schedules/">キューとスケジュール</a></li>
+        <li><a href="./" aria-current="page">カスタマイズ</a></li>
+        <li><a href="../compare/">比較</a></li>
+        <li><a href="../security/">セキュリティ</a></li>
+        <li><a href="../roadmap/">ロードマップ</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+
+    <div class="share">
+      <p class="share-label">このページを共有</p>
+      <ul class="foot-links">
+        <li><a href="https://x.com/intent/post?text=%E3%82%BF%E3%83%BC%E3%83%9F%E3%83%8A%E3%83%AB%E3%81%AE%E3%83%86%E3%83%BC%E3%83%9E%E3%80%81%E8%89%B2%E3%80%81%E3%82%AD%E3%83%BC%E3%81%AE%E3%82%AB%E3%82%B9%E3%82%BF%E3%83%9E%E3%82%A4%E3%82%BA%20%7C%20Aubergine&amp;url=https%3A%2F%2Fthirstyeggplant.com%2Fja%2Fcustomize-terminal-themes%2F" rel="noopener nofollow">X</a></li>
+        <li><a href="https://bsky.app/intent/compose?text=%E3%82%BF%E3%83%BC%E3%83%9F%E3%83%8A%E3%83%AB%E3%81%AE%E3%83%86%E3%83%BC%E3%83%9E%E3%80%81%E8%89%B2%E3%80%81%E3%82%AD%E3%83%BC%E3%81%AE%E3%82%AB%E3%82%B9%E3%82%BF%E3%83%9E%E3%82%A4%E3%82%BA%20%7C%20Aubergine%20https%3A%2F%2Fthirstyeggplant.com%2Fja%2Fcustomize-terminal-themes%2F" rel="noopener nofollow">Bluesky</a></li>
+        <li><a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fthirstyeggplant.com%2Fja%2Fcustomize-terminal-themes%2F" rel="noopener nofollow">LinkedIn</a></li>
+        <li><a href="https://www.reddit.com/submit?url=https%3A%2F%2Fthirstyeggplant.com%2Fja%2Fcustomize-terminal-themes%2F&amp;title=%E3%82%BF%E3%83%BC%E3%83%9F%E3%83%8A%E3%83%AB%E3%81%AE%E3%83%86%E3%83%BC%E3%83%9E%E3%80%81%E8%89%B2%E3%80%81%E3%82%AD%E3%83%BC%E3%81%AE%E3%82%AB%E3%82%B9%E3%82%BF%E3%83%9E%E3%82%A4%E3%82%BA%20%7C%20Aubergine" rel="noopener nofollow">Reddit</a></li>
+        <li><a href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fthirstyeggplant.com%2Fja%2Fcustomize-terminal-themes%2F&amp;t=%E3%82%BF%E3%83%BC%E3%83%9F%E3%83%8A%E3%83%AB%E3%81%AE%E3%83%86%E3%83%BC%E3%83%9E%E3%80%81%E8%89%B2%E3%80%81%E3%82%AD%E3%83%BC%E3%81%AE%E3%82%AB%E3%82%B9%E3%82%BF%E3%83%9E%E3%82%A4%E3%82%BA%20%7C%20Aubergine" rel="noopener nofollow">Hacker News</a></li>
+        <li><a href="mailto:?subject=%E3%82%BF%E3%83%BC%E3%83%9F%E3%83%8A%E3%83%AB%E3%81%AE%E3%83%86%E3%83%BC%E3%83%9E%E3%80%81%E8%89%B2%E3%80%81%E3%82%AD%E3%83%BC%E3%81%AE%E3%82%AB%E3%82%B9%E3%82%BF%E3%83%9E%E3%82%A4%E3%82%BA%20%7C%20Aubergine&amp;body=https%3A%2F%2Fthirstyeggplant.com%2Fja%2Fcustomize-terminal-themes%2F">メール</a></li>
+        <li><button type="button" class="share-copy" data-copy-text="https://thirstyeggplant.com/ja/customize-terminal-themes/" data-copied="コピーしました" aria-live="polite" hidden>リンクをコピー</button></li>
+      </ul>
+    </div>
+    <p class="foot-line">Aubergine は <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">MIT ライセンス</a>のもとで公開された無料のオープンソースで、あなた自身のコンピューターで動きます。</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    if (!navigator.clipboard) return;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.querySelectorAll('[data-copy-text]').forEach(function (button) {
+  if (!navigator.clipboard) return;
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    navigator.clipboard.writeText(button.getAttribute('data-copy-text')).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+document.querySelectorAll('details.menu').forEach(function (menu) {
+  menu.addEventListener('toggle', function () {
+    if (!menu.open) return;
+    document.querySelectorAll('details.menu[open]').forEach(function (other) { if (other !== menu) other.open = false; });
+  });
+});
+</script>
+</body>
+</html>

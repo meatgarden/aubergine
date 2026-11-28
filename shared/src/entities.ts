@@ -8,11 +8,13 @@ import { Id, newId } from './ids';
 import { SessionMessages } from './messages';
 import { LibraryState } from './library';
 import { Draft, ShelfElement } from './drafts';
+import { ThemeProposals } from './theme-proposals';
 import { AcceptedRepositoryWorkflow } from './repository';
 import { TypedBy } from './terminal';
 import { Run, Workflow } from './workflows';
 import { TerminalFields } from './fields';
-import { ColorThemeId } from './themes';
+import { ProjectThemes, ThemeId } from './themes';
+import { Tags } from './tags';
 
 import { Found, LINKS_MAX, SessionLink, Suggested, Written } from './links';
 
@@ -64,6 +66,8 @@ export const Project = z.object({
   defaultFolder: Folder.nullable().default(null).describe('One of its folders: where a new terminal starts when it names no folder. Null: where new terminals start anyway.'),
   home: ProjectHome.default(LOCAL_HOME).describe('Which server owns its record. Set by the server.'),
   state: z.enum(['open', 'archived']).default('open'),
+  /** The color themes the page is drawn in while this project is looked at, of each kind. Left out, or null: the page's own. The owner's alone to set. Not written into a project file. */
+  themes: ProjectThemes.optional().describe('The color themes the page is drawn in while this project is looked at: one for the light page and one for the dark. Null or left out: the page’s own.'),
   /** Fields of the file it was read from that this version does not know: written out again when it is written to a file. */
   fileExtra: z.record(z.string(), z.unknown()).optional(),
   createdAt: Timestamp,
@@ -200,28 +204,7 @@ export const AgentInfo = z.object({
 });
 export type AgentInfo = z.infer<typeof AgentInfo>;
 
-export const TAG_MAX_LENGTH = 32;
-export const TAGS_MAX = 12;
-
-/** Trims tags and drops empty ones and repeats. Capitals are kept, but `Api` and `api` are the same tag. */
-export function normaliseTags(tags: readonly string[]): string[] {
-  const seen = new Set<string>();
-  const result: string[] = [];
-  for (const raw of tags) {
-    const tag = raw.trim();
-    if (tag === '' || seen.has(tag.toLowerCase())) continue;
-    seen.add(tag.toLowerCase());
-    result.push(tag);
-  }
-  return result;
-}
-
-/** A session's tags: a short list of short strings, without repeats. */
-export const Tags = z
-  .array(z.string().trim().min(1).max(TAG_MAX_LENGTH))
-  .max(TAGS_MAX)
-  // `overwrite`, not `transform`: the value is tidied but its kind stays the same, so it can still be described.
-  .overwrite((tags) => normaliseTags(tags));
+export { TAG_MAX_LENGTH, TAGS_MAX, Tag, Tags, normaliseTags } from './tags';
 
 /** Which of the fixed sentences. */
 export const ToldKind = z.enum(['kickoff', 'brief', 'recap', 'inbox']);
@@ -290,7 +273,7 @@ export const Session = z.object({
   /** Its fields, in order: a label and a value each, and who set it (the owner, or the agent in it). The owner's win. */
   fields: TerminalFields.default([]),
   /** The color theme its body is drawn in, whatever the page is drawn in. Null: the default for terminals (`terminalThemeOf`). */
-  theme: ColorThemeId.nullable().default(null),
+  theme: ThemeId.nullable().default(null),
   /** For a parked session: the canvas it came from and where it sat there. */
   parkedFrom: ParkedPlace.nullable().default(null),
   /** "People only": no token may read this terminal or type into it, whatever its scopes. Only the owner changes this. */
@@ -431,6 +414,8 @@ export const AppState = z.object({
   queue: QueueState.prefault({}),
   /** Schedules: at these times, run this there. Each of their times becomes a task of the queue. */
   schedules: SchedulesState.prefault({}),
+  /** Color themes proposed by agents and programs, waiting for the owner, and what became of the latest. Of no project, as themes are the page's own. */
+  themeProposals: ThemeProposals.prefault({}),
 });
 export type AppState = z.infer<typeof AppState>;
 
@@ -462,7 +447,7 @@ export function createInitialState(now: Date = new Date()): AppState {
     createdAt,
   };
   const project: Project = { id: newId(), workspaceId: workspace.id, name: 'Default', color: 'none', order: 0, labels: {}, folders: [], defaultFolder: null, home: LOCAL_HOME, state: 'open', createdAt };
-  return { organization, workspace, projects: [project], sharing: {}, sessions: [], canvases: [newCanvas(project.id, FIRST_CANVAS_NAME, 0, now)], tokens: [], devices: [], workflows: [], runs: [], drafts: [], shelf: [], repositoryAccepted: [], library: { sources: [], installed: [], requests: [] }, environments: [], queue: QueueState.parse({}), schedules: SchedulesState.parse({}) };
+  return { organization, workspace, projects: [project], sharing: {}, sessions: [], canvases: [newCanvas(project.id, FIRST_CANVAS_NAME, 0, now)], tokens: [], devices: [], workflows: [], runs: [], drafts: [], shelf: [], repositoryAccepted: [], library: { sources: [], installed: [], requests: [] }, environments: [], queue: QueueState.parse({}), schedules: SchedulesState.parse({}), themeProposals: { waiting: [], decided: [] } };
 }
 
 /** Canvases in tab order. */

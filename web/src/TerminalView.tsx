@@ -1,14 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { FitAddon } from '@xterm/addon-fit';
 import { Terminal } from '@xterm/xterm';
-import {
-  TerminalServerMessage,
-  paths,
-  resolveColors,
-  type Appearance,
-  type ColorThemeId,
-  type TerminalClientMessage,
-} from '@aubergine/shared';
+import { TerminalServerMessage, paths, type TerminalClientMessage } from '@aubergine/shared';
 import { isRefusal, isSuperseded, openSocket, socketIsCurrent } from './api';
 import { decodeOsc52 } from './clipboard';
 import { isMac, isPasteChord } from './keys';
@@ -16,8 +9,9 @@ import { activeShortcuts, pickBinding } from './shortcuts';
 import { Outbox } from './outbox';
 import { correctMouse } from './scaled-mouse';
 import { useApp } from './store';
-import { terminalTheme } from './terminal-themes';
-import { useTerminalTheme } from './theme';
+import { terminalColorsOf } from './terminal-themes';
+import { useTerminalTheme, useUserThemes } from './theme';
+import { useTrying, withTried } from './appearance/trying';
 
 interface Props {
   /** The canvas's zoom now, so that the pointer lands on the right cell at any size. */
@@ -30,13 +24,6 @@ interface Props {
    * and every key but the paste chord goes to the program.
    */
   chords?: boolean;
-}
-
-/** A terminal's colors in that theme, with its ground set by hand (`terminal-bg`) where the settings file sets it. */
-function colorsOf(id: ColorThemeId, appearance: Appearance) {
-  const ground = resolveColors(appearance.colors, id).colors['terminal-bg'];
-  const theme = terminalTheme(id);
-  return ground ? { ...theme, background: ground } : theme;
 }
 
 type Link = 'connecting' | 'open' | 'reconnecting' | 'ended';
@@ -74,7 +61,7 @@ export function TerminalView({ sessionId, interactive, zoom, chords = true }: Pr
       scrollback: 0,
       macOptionClickForcesSelection: true,
       disableStdin: !interactiveRef.current,
-      theme: colorsOf(themeRef.current, settings.appearance),
+      theme: terminalColorsOf(themeRef.current, settings.appearance.colors, withTried(useApp.getState().themes.themes, useTrying.getState().theme)),
     });
     const fit = new FitAddon();
     term.loadAddon(fit);
@@ -204,7 +191,8 @@ export function TerminalView({ sessionId, interactive, zoom, chords = true }: Pr
   // Follow changes to the settings file.
   const font = useApp((s) => s.settings.font);
   const appearance = useApp((s) => s.settings.appearance);
-  // Its colors follow its theme at once, and the colors set by hand for that theme.
+  const userThemes = useUserThemes();
+  // Its colors follow its theme at once, a theme file's own terminal colors, and the colors set by hand for that theme.
   useEffect(() => {
     const term = terminal.current;
     if (!term) return;
@@ -212,8 +200,8 @@ export function TerminalView({ sessionId, interactive, zoom, chords = true }: Pr
     term.options.fontSize = font.size;
     term.options.cursorStyle = appearance.cursor;
     term.options.cursorBlink = appearance.cursorBlink;
-    term.options.theme = colorsOf(theme, appearance);
-  }, [font, theme, appearance]);
+    term.options.theme = terminalColorsOf(theme, appearance.colors, userThemes);
+  }, [font, theme, appearance, userThemes]);
 
   // Input is accepted while the terminal is the live one.
   useEffect(() => {

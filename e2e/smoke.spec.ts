@@ -6,6 +6,7 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { expect, test, type Locator, type Page } from '@playwright/test';
 import { e2e, second } from '../playwright.config';
+import { ATTRIBUTE_HOOKS, PART_NAMES } from '../shared/src/hooks';
 
 const repoRoot = path.resolve(e2e.dataDir, '..');
 
@@ -3558,6 +3559,8 @@ test('one look: the canvas page and every screen use the two control heights (an
   await look('API tokens', 'token-screen', () => command('API tokens'));
   await look('API activity', 'activity-screen', () => command('API activity'));
   await look('adding a device', 'add-device-dialog', () => command('Add a device'));
+  await look('every setting', 'settings-all-search', () => command('Settings: every setting'));
+  await look('plugins in Settings', 'settings-plugins', () => command('Plugins'));
   await look('linking a server', 'link-server-dialog', () => command('Link a server'));
   await look('past conversations', 'history-panel', () => command('Past conversations'));
   // The detail drawer beside the panel, and the menu of the less used parts.
@@ -5267,6 +5270,393 @@ test('a terminal\'s own theme: a default for terminals in Settings, one terminal
   }
 });
 
+test('a theme of your own: a file in the data folder, read again from Settings, listed as yours, drawn as its base with its colors from the first paint, on a terminal too, and falling back when it is gone', async ({ page }) => {
+  const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
+  const configFile = path.join(e2e.dataDir, 'config.json');
+  const original = existsSync(configFile) ? readFileSync(configFile, 'utf8') : null;
+  const themesDir = path.join(e2e.dataDir, 'themes');
+  const hadThemes = existsSync(themesDir);
+  const harborFile = path.join(themesDir, 'harbor.json');
+  const wrongFile = path.join(themesDir, 'wrong.json');
+  // Every pair of kind and color theme the page has, from before anything is drawn, and the accent laid over it then.
+  await page.addInitScript(() => {
+    const seen: string[] = [];
+    const w = window as unknown as { looksSeen: string[]; firstAccent: string | null; firstId: string | null };
+    w.looksSeen = seen;
+    w.firstAccent = null;
+    w.firstId = null;
+    const note = (): void => {
+      const root = document.documentElement;
+      const kind = root?.getAttribute('data-theme') ?? null;
+      const id = root?.getAttribute('data-color-theme') ?? null;
+      if (kind === null && id === null) return;
+      if (w.firstAccent === null) w.firstAccent = root.style.getPropertyValue('--accent');
+      if (w.firstId === null) w.firstId = root.getAttribute('data-color-theme-id');
+      const now = `${kind}/${id}`;
+      if (seen.at(-1) !== now) seen.push(now);
+    };
+    new MutationObserver(note).observe(document, { attributes: true, subtree: true, attributeFilter: ['data-theme', 'data-color-theme'] });
+    document.addEventListener('DOMContentLoaded', note);
+    requestAnimationFrame(note);
+  });
+  await page.goto(`/auth?token=${token}`);
+  await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
+  const before = page.url();
+  await page.getByRole('button', { name: 'New canvas' }).click();
+  await expect(page).not.toHaveURL(before);
+  await page.getByTestId('toolbar-new-terminal').click();
+  const nodes = page.getByTestId('terminal-node');
+  await expect(nodes).toHaveCount(1);
+  await expect(nodes.locator('.xterm-rows')).toContainText(/[$%#>]/, { timeout: 20_000 });
+  const html = page.locator('html');
+  const rgb = (hex: string): string => `rgb(${[1, 3, 5].map((at) => Number.parseInt(hex.slice(at, at + 2), 16)).join(', ')})`;
+  const tokenOnPage = (name: string): Promise<string> => page.evaluate((n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim(), name);
+  const ground = (): Promise<string> =>
+    nodes.first().evaluate((node) => {
+      for (const el of node.querySelectorAll('.xterm .xterm-viewport, .xterm .xterm-scrollable-element, .xterm .xterm-screen, .xterm')) {
+        const color = getComputedStyle(el).backgroundColor;
+        const parts = color.match(/\d+(\.\d+)?/g);
+        if (parts && (parts.length < 4 || Number(parts[3]) > 0)) return color;
+      }
+      throw new Error('no background on a terminal');
+    });
+  const bodyGround = (): Promise<string> => nodes.first().getByTestId('node-body').evaluate((el) => getComputedStyle(el).backgroundColor);
+  type Saved = { theme?: string; appearance?: { light?: string; dark?: string } };
+  const saved = (): Saved => (existsSync(configFile) ? (JSON.parse(readFileSync(configFile, 'utf8')) as Saved) : {});
+  const settings = page.getByTestId('settings-dialog');
+  const part = settings.getByTestId('settings-appearance');
+  try {
+    await expect(html).toHaveAttribute('data-color-theme', 'dark');
+    // A file written into the data folder while the page is open: listed once it is read again.
+    mkdirSync(themesDir, { recursive: true });
+    writeFileSync(
+      harborFile,
+      JSON.stringify({ name: 'Harbor', kind: 'dark', base: 'nord', colors: { accent: '#5fb3b3', 'terminal-bg': '#0b1620' }, terminal: { foreground: '#d8dee9' } }),
+    );
+    writeFileSync(wrongFile, JSON.stringify({ name: 'Wrong', kind: 'light', colors: { accent: 'teal' } }));
+    await page.getByTestId('toolbar-settings').click();
+    await expect(part.getByTestId('theme-files-says')).toContainText('aubergine theme new');
+    await expect(part.getByTestId('theme-files-says')).toContainText(themesDir);
+    await part.getByTestId('themes-read-again').click();
+    const harbor = part.getByTestId('color-theme-harbor');
+    await expect(harbor).toHaveText('Harbor · yours');
+    await expect(part.getByTestId('color-themes-dark').getByRole('radio')).toHaveText(['Dark', 'High contrast dark', 'Solarized dark', 'Gruvbox dark', 'Nord', 'Dracula', 'Harbor · yours']);
+    await expect(part.getByTestId('color-theme-wrong')).toHaveText('Wrong · yours');
+    await expect(part.getByTestId('theme-file-problems')).toContainText('themes/wrong.json, colors: "accent" is not a color written as #rrggbb. It is skipped.');
+    // Its preview is its base with its own colors over it.
+    expect(await harbor.locator('.ui-theme-preview').getAttribute('data-theme-preview')).toBe('nord');
+    expect(await harbor.locator('.ui-theme-preview-accent').evaluate((el) => getComputedStyle(el).backgroundColor)).toBe(rgb('#5fb3b3'));
+
+    // Chosen: the root carries the base's block and the theme's own ID, and the colors of the file.
+    await harbor.click();
+    await expect(html).toHaveAttribute('data-color-theme', 'nord');
+    await expect(html).toHaveAttribute('data-color-theme-id', 'harbor');
+    await expect(html).toHaveAttribute('data-theme', 'dark');
+    expect(await tokenOnPage('--accent')).toBe('#5fb3b3');
+    await expect.poll(() => saved().appearance?.dark).toBe('harbor');
+    await expect(harbor).toHaveAttribute('aria-checked', 'true');
+    await expect(harbor).toHaveAttribute('data-drawn', 'true');
+    await expect(part.getByTestId('color-theme-says')).toContainText('Harbor while it is dark');
+    await expect.poll(ground).toBe(rgb('#0b1620'));
+    await page.keyboard.press('Escape');
+    await expect(settings).toHaveCount(0);
+
+    // After a reload, the first paint already has it: nothing else is ever drawn first.
+    const sent = await (await page.request.get(page.url())).text();
+    expect(sent).toContain('data-theme-dark="nord"');
+    expect(sent).toContain('data-theme-dark-id="harbor"');
+    await page.reload();
+    await expect(page.getByTestId('appbar')).toBeVisible();
+    await expect(nodes.locator('.xterm-rows')).toContainText(/[$%#>]/, { timeout: 20_000 });
+    expect(await page.evaluate(() => (window as unknown as { looksSeen: string[] }).looksSeen)).toEqual(['dark/nord']);
+    expect(await page.evaluate(() => (window as unknown as { firstAccent: string }).firstAccent)).toBe('#5fb3b3');
+    expect(await page.evaluate(() => (window as unknown as { firstId: string }).firstId)).toBe('harbor');
+
+    // The page back to Dark, and the terminal given Harbor from its title's menu: its body alone is drawn in it.
+    await page.getByTestId('toolbar-settings').click();
+    await part.getByTestId('color-theme-dark').click();
+    await expect(html).toHaveAttribute('data-color-theme-id', 'dark');
+    await page.keyboard.press('Escape');
+    await expect(settings).toHaveCount(0);
+    await nodes.first().getByTestId('node-more').focus();
+    await page.keyboard.press('Enter');
+    await nodes.first().getByTestId('terminal-theme').focus();
+    await page.keyboard.press('Enter');
+    const menu = nodes.first().getByTestId('terminal-theme-menu');
+    await expect(menu.getByTestId('terminal-theme-harbor')).toHaveText('Harbor · yours');
+    await menu.getByTestId('terminal-theme-harbor').click();
+    await expect(menu).toHaveCount(0);
+    await expect(nodes.first().getByTestId('node-body')).toHaveAttribute('data-theme-preview', 'nord');
+    await expect(nodes.first().getByTestId('node-body')).toHaveAttribute('data-theme-id', 'harbor');
+    await expect.poll(bodyGround).toBe(rgb('#0b1620'));
+    await expect.poll(ground).toBe(rgb('#0b1620'));
+
+    // The file removed and read again: the page falls back to Dark, the terminal to the page's, and Settings says so.
+    await page.getByTestId('toolbar-settings').click();
+    await part.getByTestId('color-theme-harbor').click();
+    await expect(html).toHaveAttribute('data-color-theme-id', 'harbor');
+    rmSync(harborFile);
+    await part.getByTestId('themes-read-again').click();
+    await expect(part.getByTestId('color-theme-harbor')).toHaveCount(0);
+    await expect(html).toHaveAttribute('data-color-theme', 'dark');
+    await expect(html).toHaveAttribute('data-color-theme-id', 'dark');
+    await expect(part.getByTestId('theme-fallbacks')).toHaveText('The dark theme chosen, "harbor", is not there now (no theme file of that name was read): Dark is drawn in its place.');
+    await expect(part.getByTestId('color-theme-dark')).toHaveAttribute('aria-checked', 'true');
+    expect(saved().appearance?.dark).toBe('harbor');
+    await page.keyboard.press('Escape');
+    await expect.poll(bodyGround).toBe(rgb('#101114'));
+    await expect(nodes.first().getByTestId('node-body')).not.toHaveAttribute('data-theme-preview');
+  } finally {
+    // As the data folder was before this test, for the tests that follow.
+    rmSync(harborFile, { force: true });
+    rmSync(wrongFile, { force: true });
+    if (!hadThemes) rmSync(themesDir, { recursive: true, force: true });
+    if (original === null) rmSync(configFile, { force: true });
+    else writeFileSync(configFile, original);
+  }
+});
+
+test('a theme proposed: a program proposes one, For you counts it, the review shows who, why, the theme drawn and its text, Try on this page draws it until the review is left, Accept writes the file and chooses nothing, Use it draws it, and a declined one leaves nothing', async ({ page }) => {
+  const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
+  const configFile = path.join(e2e.dataDir, 'config.json');
+  const original = existsSync(configFile) ? readFileSync(configFile, 'utf8') : null;
+  const themesDir = path.join(e2e.dataDir, 'themes');
+  const hadThemes = existsSync(themesDir);
+  const harborFile = path.join(themesDir, 'harbor.json');
+  const duskFile = path.join(themesDir, 'dusk.json');
+  const HARBOR = `${JSON.stringify({ name: 'Harbor', kind: 'dark', base: 'nord', colors: { accent: '#5fb3b3', 'terminal-bg': '#0b1620', bg: 'teal' }, terminal: { foreground: '#d8dee9' } }, null, 2)}\n`;
+  await page.goto(`/auth?token=${token}`);
+  await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
+  const origin = new URL(page.url()).origin;
+  const html = page.locator('html');
+  const tokenOnPage = (name: string): Promise<string> => page.evaluate((n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim(), name);
+  const made = (await (await page.request.post('/v1/tokens', { headers: { origin }, data: { name: 'theme maker', scopes: ['workflows:write'] } })).json()) as { secret: string; token: { id: string } };
+  const asToken = { Authorization: `Bearer ${made.secret}` };
+  const review = page.getByTestId('review-screen');
+  const settings = page.getByTestId('settings-dialog');
+  try {
+    await expect(html).toHaveAttribute('data-color-theme-id', 'dark');
+    const accentBefore = await tokenOnPage('--accent');
+    const countBefore = Number((await page.getByTestId('for-you').getAttribute('data-count')) ?? '0');
+    const proposed = await page.request.post('/v1/themes/proposals', { headers: asToken, data: { id: 'harbor', text: HARBOR, why: 'Easier on the eyes at night <b>not markup</b>' } });
+    expect(proposed.status()).toBe(201);
+    await expect(page.getByTestId('for-you')).toHaveAttribute('data-count', String(countBefore + 1));
+    // Nothing is drawn or written yet.
+    expect(existsSync(harborFile)).toBe(false);
+    expect(await tokenOnPage('--accent')).toBe(accentBefore);
+
+    // From the owner's list: the row opens the review on that theme.
+    await page.getByTestId('for-you').click();
+    const row = page.locator('[data-testid="foryou-row"][data-kind="theme"]');
+    await expect(row.getByTestId('foryou-who')).toHaveText('The token “theme maker”');
+    await expect(row.getByTestId('foryou-what')).toHaveText('A color theme: Harbor');
+    await row.click();
+    await expect(review).toBeVisible();
+    await expect(review.getByTestId('review-title')).toHaveText('Harbor');
+    await expect(review.getByTestId('review-origin')).toHaveText('A dark color theme, from a program, with the token “theme maker”.');
+    await expect(review.getByTestId('theme-review-why')).toContainText('“Easier on the eyes at night <b>not markup</b>”');
+    await expect(review.getByTestId('theme-review-why').locator('b')).toHaveCount(0);
+    // The theme drawn on a sample, beside its base, with its colors and what was skipped.
+    const sample = review.getByTestId('theme-review-sample');
+    await expect(sample).toHaveAttribute('data-theme-preview', 'nord');
+    expect(await sample.locator('.theme-review-accent').evaluate((el) => getComputedStyle(el).backgroundColor)).toBe('rgb(95, 179, 179)');
+    await expect(review.getByTestId('theme-review-base')).toHaveAttribute('data-theme-preview', 'nord');
+    await expect(review.getByTestId('theme-review-colors')).toContainText('accent');
+    await expect(review.getByTestId('theme-review-colors')).toContainText('#5fb3b3');
+    await expect(review.getByTestId('theme-review-problems')).toContainText('"bg" is not a color written as #rrggbb');
+    await expect(review.getByTestId('review-text')).toHaveText(HARBOR.trimEnd());
+
+    // Tried on this page: the page's accent is the theme's, and leaving the review puts it back; nothing was saved.
+    await review.getByTestId('theme-review-try').click();
+    await expect.poll(() => tokenOnPage('--accent')).toBe('#5fb3b3');
+    await expect(html).toHaveAttribute('data-color-theme', 'nord');
+    expect(await page.evaluate(() => localStorage.getItem('aubergine.theme.dark.id'))).toBe('dark');
+    await review.getByTestId('review-close').click();
+    await expect(review).toHaveCount(0);
+    await expect.poll(() => tokenOnPage('--accent')).toBe(accentBefore);
+    await expect(html).toHaveAttribute('data-color-theme-id', 'dark');
+    expect(existsSync(harborFile)).toBe(false);
+
+    // Accepted: the file is exactly the text, it is one of the owner's themes, and nothing chose it; Use it draws it.
+    await page.getByTestId('runs-screen').getByTestId('review-open').click();
+    await review.getByTestId('review-row').filter({ hasText: 'Harbor' }).click();
+    await expect(review.getByTestId('review-title')).toHaveText('Harbor');
+    await review.getByTestId('review-accept').click();
+    await expect.poll(() => (existsSync(harborFile) ? readFileSync(harborFile, 'utf8') : null)).toBe(HARBOR);
+    await expect(html).toHaveAttribute('data-color-theme-id', 'dark');
+    await expect(page.getByTestId('toast')).toContainText('“Harbor” is one of your themes now');
+    await page.getByTestId('toast-undo').click();
+    await expect(html).toHaveAttribute('data-color-theme-id', 'harbor');
+    await expect.poll(() => tokenOnPage('--accent')).toBe('#5fb3b3');
+    await expect(review.getByTestId('review-row').filter({ hasText: 'Harbor' })).toHaveCount(0);
+    await review.getByTestId('review-close').click();
+    await toCanvas(page);
+    await page.getByTestId('toolbar-settings').click();
+    const part = settings.getByTestId('settings-appearance');
+    await expect(part.getByTestId('color-theme-harbor')).toHaveText('Harbor · yours');
+    await part.getByTestId('color-theme-dark').click();
+    await expect(html).toHaveAttribute('data-color-theme-id', 'dark');
+
+    // A second one, read from Settings and declined: no file, and Settings no longer says one waits.
+    expect((await page.request.post('/v1/themes/proposals', { headers: asToken, data: { id: 'dusk', text: JSON.stringify({ name: 'Dusk', kind: 'light', colors: { accent: '#aa5500' } }) } })).status()).toBe(201);
+    await expect(part.getByTestId('themes-proposed')).toHaveText(/One color theme was proposed by an agent or a program/);
+    await part.getByTestId('themes-proposed-read').click();
+    await expect(review.getByTestId('review-title')).toHaveText('Dusk');
+    await review.getByTestId('review-discard').click();
+    await expect(review.getByTestId('review-row').filter({ hasText: 'Dusk' })).toHaveCount(0);
+    expect(existsSync(duskFile)).toBe(false);
+    await review.getByTestId('review-close').click();
+    await expect(page.getByTestId('for-you')).toHaveAttribute('data-count', String(countBefore));
+  } finally {
+    await page.request.delete(`/v1/tokens/${made.token.id}`, { headers: { origin } });
+    rmSync(harborFile, { force: true });
+    rmSync(duskFile, { force: true });
+    if (!hadThemes) rmSync(themesDir, { recursive: true, force: true });
+    if (original === null) rmSync(configFile, { force: true });
+    else writeFileSync(configFile, original);
+  }
+});
+
+test('looks by condition: a project draws the page in its own theme only while it is looked at, from the first paint, and a tag gives a terminal its theme at once, after its own', async ({ page }) => {
+  const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
+  const configFile = path.join(e2e.dataDir, 'config.json');
+  const original = existsSync(configFile) ? readFileSync(configFile, 'utf8') : null;
+  await page.addInitScript(() => {
+    const seen: string[] = [];
+    (window as unknown as { looksSeen: string[] }).looksSeen = seen;
+    const note = (): void => {
+      const root = document.documentElement;
+      const now = `${root?.getAttribute('data-theme')}/${root?.getAttribute('data-color-theme')}`;
+      if (!now.includes('null') && seen.at(-1) !== now) seen.push(now);
+    };
+    new MutationObserver(note).observe(document, { attributes: true, subtree: true, attributeFilter: ['data-theme', 'data-color-theme'] });
+    document.addEventListener('DOMContentLoaded', note);
+  });
+  await page.goto(`/auth?token=${token}`);
+  await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
+  const origin = new URL(page.url()).origin;
+  const asOwner = { origin, 'sec-fetch-site': 'same-origin' };
+  const html = page.locator('html');
+  const rgb = (hex: string): string => `rgb(${[1, 3, 5].map((at) => Number.parseInt(hex.slice(at, at + 2), 16)).join(', ')})`;
+  const made = await page.request.post('/v1/projects', { headers: asOwner, data: { name: 'Looks test' } });
+  expect(made.status()).toBe(201);
+  const projectId = ((await made.json()) as { id: string }).id;
+  const switcher = page.getByTestId('project-switcher');
+  const goToProject = async (id: string | null): Promise<void> => {
+    await switcher.click();
+    const rows = page.getByTestId('project-menu').getByTestId('project-row');
+    await (id === null ? rows.first() : page.getByTestId('project-menu').locator(`[data-testid="project-row"][data-project="${id}"]`)).click();
+  };
+  const settings = page.getByTestId('settings-dialog');
+  const part = settings.getByTestId('settings-appearance');
+  let session = '';
+  try {
+    await expect(html).toHaveAttribute('data-color-theme', 'dark');
+    await goToProject(projectId);
+    await expect(page.getByTestId('project-name')).toHaveText('Looks test');
+    await expect(page).toHaveURL(new RegExp(`/p/${projectId}/c/`));
+    const address = page.url();
+
+    // Its own theme for the dark page, chosen where the project is changed: "As the page" first, then the dark themes only.
+    await switcher.click();
+    await page.getByTestId('projects-open').click();
+    const item = page.getByTestId('projects-screen').locator(`[data-testid="project-item"][data-project="${projectId}"]`);
+    const dark = item.getByTestId('project-theme-dark');
+    await expect(dark.locator('option').first()).toHaveText('As the page');
+    await expect(dark.locator('optgroup')).toHaveCount(1);
+    await expect(dark.locator('optgroup')).toHaveAttribute('label', 'Dark');
+    await expect(item.getByTestId('project-theme-light').locator('optgroup')).toHaveAttribute('label', 'Light');
+    await dark.selectOption('dracula');
+    await expect.poll(async () => ((await (await page.request.get(`/v1/projects/${projectId}`, { headers: asOwner })).json()) as { themes?: unknown }).themes).toEqual({ light: null, dark: 'dracula' });
+    await expect(html).toHaveAttribute('data-color-theme', 'dracula');
+    await page.keyboard.press('Escape');
+    await expect(page.getByTestId('projects-screen')).toHaveCount(0);
+
+    // Settings says why its own choice shows no effect here, and still lists the page's own as chosen.
+    await page.getByTestId('toolbar-settings').click();
+    await expect(part.getByTestId('project-theme-says')).toHaveText('While you look at Looks test the page is drawn in Dracula: that is the project’s. What you choose here is the page’s own, drawn everywhere else.');
+    await expect(part.getByTestId('color-theme-dark')).toHaveAttribute('aria-checked', 'true');
+    await page.keyboard.press('Escape');
+    await expect(settings).toHaveCount(0);
+
+    // Only while it is looked at.
+    await goToProject(null);
+    await expect(page.getByTestId('project-name')).not.toHaveText('Looks test');
+    await expect(html).toHaveAttribute('data-color-theme', 'dark');
+    await page.getByTestId('toolbar-settings').click();
+    await expect(part.getByTestId('project-theme-says')).toHaveCount(0);
+    await page.keyboard.press('Escape');
+    await goToProject(projectId);
+    await expect(html).toHaveAttribute('data-color-theme', 'dracula');
+
+    // A reload on its address: never another theme first.
+    await page.goto(address);
+    await expect(page.getByTestId('appbar')).toBeVisible();
+    await expect(html).toHaveAttribute('data-color-theme', 'dracula');
+    expect(await page.evaluate(() => (window as unknown as { looksSeen: string[] }).looksSeen)).toEqual(['dark/dracula']);
+
+    // A terminal there, drawn as the page.
+    await page.getByTestId('toolbar-new-terminal').click();
+    const node = page.getByTestId('terminal-node');
+    await expect(node).toHaveCount(1);
+    await expect(node.locator('.xterm-rows')).toContainText(/[$%#>]/, { timeout: 20_000 });
+    session = (await node.getAttribute('data-session')) ?? '';
+    const ground = (): Promise<string> => node.getByTestId('node-body').evaluate((el) => getComputedStyle(el).backgroundColor);
+    await expect.poll(ground).toBe(rgb('#282a36'));
+
+    // A rule by tag, made in Settings with the keyboard.
+    await page.getByTestId('toolbar-settings').click();
+    await expect(part.getByTestId('by-tag-says')).toContainText('The first line whose tag it has wins, and a terminal’s own theme comes before all of them.');
+    await part.getByTestId('by-tag-add').focus();
+    await page.keyboard.press('Enter');
+    await expect(part.getByTestId('by-tag-draft-tag')).toBeFocused();
+    await page.keyboard.type('looks-prod');
+    await page.keyboard.press('Tab');
+    await expect(part.getByTestId('by-tag-draft-theme')).toBeFocused();
+    await page.keyboard.type('Solarized l');
+    await expect(part.getByTestId('by-tag-draft-theme')).toHaveValue('solarized-light');
+    await page.keyboard.press('Shift+Tab');
+    await page.keyboard.press('Enter');
+    await expect(part.getByTestId('by-tag-row')).toHaveCount(1);
+    await expect(part.getByTestId('by-tag-row').getByTestId('by-tag-theme')).toHaveValue('solarized-light');
+    await expect.poll(() => (JSON.parse(readFileSync(configFile, 'utf8')) as { appearance?: { byTag?: unknown } }).appearance?.byTag).toEqual([{ tag: 'looks-prod', theme: 'solarized-light' }]);
+    await page.keyboard.press('Escape');
+    await expect(settings).toHaveCount(0);
+
+    // Tagged: its body is drawn in that theme at once; its title stays the page's. Untagged: back.
+    const tag = async (tags: string[], theme: string | null = null): Promise<void> => expect((await page.request.patch(`/v1/sessions/${session}`, { headers: asOwner, data: { tags, theme } })).status()).toBe(200);
+    await tag(['looks-prod']);
+    await expect.poll(ground).toBe(rgb('#fdf6e3'));
+    await expect(node.getByTestId('node-body')).toHaveAttribute('data-theme-preview', 'solarized-light');
+    await tag([]);
+    await expect.poll(ground).toBe(rgb('#282a36'));
+    await expect(node.getByTestId('node-body')).not.toHaveAttribute('data-theme-preview');
+    // Its menu says where the theme in effect comes from.
+    await tag(['looks-prod']);
+    await expect.poll(ground).toBe(rgb('#fdf6e3'));
+    await node.getByTestId('node-more').focus();
+    await page.keyboard.press('Enter');
+    await node.getByTestId('terminal-theme').focus();
+    await page.keyboard.press('Enter');
+    const menu = node.getByTestId('terminal-theme-menu');
+    await expect(menu.getByTestId('terminal-theme-none')).toHaveText('Same as the defaultNow Solarized light, by the tag looks-prod');
+    await page.keyboard.press('Escape');
+    await expect(menu).toHaveCount(0);
+    // A terminal's own theme still wins.
+    await tag(['looks-prod'], 'gruvbox-dark');
+    await expect.poll(ground).toBe(rgb('#282828'));
+    await tag(['looks-prod'], null);
+    await expect.poll(ground).toBe(rgb('#fdf6e3'));
+  } finally {
+    // Everything as it was: the terminal ended, the project gone, the settings file back.
+    if (session) await page.request.delete(`/v1/sessions/${session}`, { headers: asOwner });
+    await page.request.post(`/v1/projects/${projectId}/archive`, { headers: asOwner, data: { sessions: 'end' } });
+    await page.request.delete(`/v1/projects/${projectId}`, { headers: asOwner });
+    if (original === null) rmSync(configFile, { force: true });
+    else writeFileSync(configFile, original);
+  }
+});
+
 test('states: every piece draws hover, pressed, focus and disabled differently from rest in both themes, nothing moves under the pointer, and what opens travels only where motion is wanted', async ({ page }) => {
   const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
   await page.goto(`/auth?token=${token}`);
@@ -5527,6 +5917,67 @@ test('devices: Settings → Devices from the keyboard and the mouse, empty with 
   await expect(dialog).toHaveCount(0);
   await page.getByTestId('settings-close').click();
   expect(await devicesNow()).toBe(0);
+});
+
+test('every setting: opened by its command from the keyboard, the schema beside the settings file, a search that narrows it, Copy gives the line for the file, and a row the page writes gives its control the keyboard', async ({ page, context }) => {
+  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+  const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
+  await page.goto(`/auth?token=${token}`);
+  await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
+  const origin = new URL(page.url()).origin;
+  const mac = await page.evaluate(() => navigator.platform.toLowerCase().includes('mac'));
+
+  // The server wrote the schema beside the settings file when it started, and it is JSON Schema.
+  const schema = JSON.parse(readFileSync(path.join(e2e.dataDir, 'config.schema.json'), 'utf8')) as { title: string; properties: Record<string, unknown> };
+  expect(schema.title).toBe('Aubergine settings');
+  expect(Object.keys(schema.properties)).toEqual(expect.arrayContaining(['$schema', 'font', 'theme', 'appearance', 'shortcuts']));
+
+  // From the keyboard: the palette's command opens Settings on Every setting, with the keyboard in its search.
+  await page.keyboard.press(mac ? 'Meta+k' : 'Control+Shift+K');
+  await page.keyboard.type('>every setting');
+  await expect(page.getByTestId('picker-command-row').first()).toContainText('Settings: every setting');
+  await page.keyboard.press('Enter');
+  const part = page.getByTestId('settings-all');
+  await expect(part).toBeInViewport();
+  const search = part.getByTestId('settings-all-search');
+  await expect(search).toBeFocused();
+  // Where the file is: the test server's own data folder.
+  await expect(part.getByTestId('settings-file')).toHaveText(path.join(e2e.dataDir, 'config.json'));
+  const rows = part.locator('.every-setting-row');
+  const all = await rows.count();
+  expect(all).toBeGreaterThan(40);
+
+  // A search narrows it, by key or by what a key is; nothing found is one sentence.
+  await page.keyboard.type('claudeCommand');
+  await expect(rows).toHaveCount(1);
+  await search.fill('cursor blinks');
+  await expect(rows).toHaveCount(1);
+  await expect(rows.first()).toContainText('appearance.cursorBlink');
+  await search.fill('no such setting anywhere');
+  await expect(rows).toHaveCount(0);
+  await expect(part.getByTestId('settings-all-none')).toBeVisible();
+
+  // A key written by hand: Copy gives the line to add, in the shape of the file, with the value now.
+  await search.fill('claudeCommand');
+  const state = (await (await page.request.get('/api/v1/state', { headers: { origin } })).json()) as { settings: { agents: { claudeCommand: string } } };
+  await rows.first().getByTestId('setting-copy').click();
+  await expect.poll(() => page.evaluate(() => navigator.clipboard.readText())).toContain('"agents"');
+  const copied = await page.evaluate(() => navigator.clipboard.readText());
+  expect(JSON.parse(`{ ${copied} }`)).toEqual({ agents: { claudeCommand: state.settings.agents.claudeCommand } });
+
+  // A key the page writes is changed above: its row gives that control the keyboard, from the keyboard too.
+  await search.fill('font.size');
+  await expect(rows).toHaveCount(1);
+  await expect(rows.first()).toContainText('Changed above');
+  await search.focus();
+  await page.keyboard.press('Tab');
+  await expect(rows.first()).toBeFocused();
+  await page.keyboard.press('Enter');
+  await expect(page.getByTestId('font-size')).toBeFocused();
+  await expect(page.getByTestId('font-size')).toBeInViewport();
+
+  await page.keyboard.press('Escape');
+  await expect(page.getByTestId('settings-dialog')).toHaveCount(0);
 });
 
 test('signing in with a code: a browser with no cookie is asked for one, a wrong one is answered with the server\'s sentence, and a code in the address is taken out of it at once', async ({ page, browser }) => {
@@ -7453,4 +7904,586 @@ test('two servers in one page: a server is linked with a code from its own comma
   await page.waitForTimeout(1500);
   expect(readFileSync(stateFile, 'utf8')).toBe(stateBefore);
   expect(ownCanvas).toContain(origin);
+});
+
+test('titles and rows: what a title and a row say after the name is a template, changed in Settings with the keyboard, drawn at once, said when wrong, put back exactly by Reset, and never wrapping', async ({ page, context }) => {
+  // The clock of the page stands still, so that a row's time says the same before and after: its markup is compared whole.
+  await page.clock.setFixedTime(new Date());
+  const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
+  await page.goto(`/auth?token=${token}`);
+  await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
+  const origin = new URL(page.url()).origin;
+  const asOwner = { headers: { origin, 'sec-fetch-site': 'same-origin' } };
+  const mac = await page.evaluate(() => navigator.platform.toLowerCase().includes('mac'));
+  const selectedTab = page.locator('[data-testid="tab"][aria-selected="true"]');
+  const before = (await selectedTab.getAttribute('data-canvas')) ?? '';
+  await page.getByRole('button', { name: 'New canvas' }).click();
+  await expect(selectedTab).not.toHaveAttribute('data-canvas', before);
+  const canvasId = (await selectedTab.getAttribute('data-canvas')) ?? '';
+  // A terminal in a folder of its own, with a field.
+  const folder = mkdtempSync(path.join(tmpdir(), 'aubergine-e2e-titles-'));
+  const made = (await (await page.request.post('/api/v1/sessions', { ...asOwner, data: { cwd: folder, canvasId, name: 'templated' } })).json()) as { session: { id: string } };
+  const id = made.session.id;
+  expect((await page.request.patch(`/v1/sessions/${id}`, { headers: { origin }, data: { fields: [{ label: 'Ticket', value: 'DEMO-7' }] } })).status()).toBe(200);
+  const row = page.locator(`[data-testid="list-row"][data-session="${id}"]`);
+  const node = page.locator(`[data-testid="terminal-node"][data-session="${id}"]`);
+  await expect(row).toBeVisible();
+  await expect(node.getByTestId('node-activity')).toBeVisible();
+  // Once the shell has settled: what the row and the title are now, with the default templates.
+  await expect.poll(async () => (await page.request.get('/api/v1/state', asOwner).then((r) => r.json()) as { state: { sessions: { id: string; status: { state: string | null } }[] } }).state.sessions.find((s) => s.id === id)?.status.state, { timeout: 15_000 }).toBe('idle');
+  await expect(row).not.toHaveAttribute('data-state', 'processing');
+  const rowBefore = await row.evaluate((el) => el.outerHTML);
+  const titleBefore = await node.locator('.node-title').evaluate((el) => el.outerHTML);
+  const rowHeight = (await row.boundingBox())!.height;
+  const titleHeight = (await node.locator('.node-title').boundingBox())!.height;
+  expect(await row.getByTestId('template-words').count()).toBe(0);
+
+  // From the keyboard: the palette's command opens Settings at Titles and rows, with the keyboard in the title's field.
+  await page.keyboard.press(mac ? 'Meta+k' : 'Control+Shift+K');
+  await page.keyboard.type('>titles and rows');
+  await expect(page.getByTestId('picker-command-row').first()).toContainText('Titles and rows: what they show');
+  await page.keyboard.press('Enter');
+  const part = page.getByTestId('settings-titles');
+  await expect(part).toBeInViewport();
+  const titleField = part.getByTestId('title-format');
+  const rowField = part.getByTestId('row-format');
+  await expect(titleField).toBeFocused();
+  await expect(part.getByTestId('title-format-reset')).toHaveCount(0);
+  // To the row's field, with Tab.
+  for (let i = 0; i < 12 && !(await rowField.evaluate((el) => el === document.activeElement)); i += 1) await page.keyboard.press('Tab');
+  await expect(rowField).toBeFocused();
+  await page.keyboard.press('ControlOrMeta+a');
+  await page.keyboard.type('{state} {folder} · {field:Ticket} {time}');
+  await page.keyboard.press('Enter');
+  // The row says them at once, without a reload: the folder, short, and the field.
+  const parts = folder.split('/').filter(Boolean);
+  const folderShort = parts.length <= 2 ? folder : `…/${parts.slice(-2).join('/')}`;
+  await expect(row.getByTestId('template-words')).toHaveText(folderShort);
+  await expect(row.getByTestId('template-field')).toHaveText('DEMO-7');
+  await expect(row.locator('.template-text')).toHaveText('·');
+  // The preview under the field draws it for the terminal selected, or one made up.
+  await expect(part.getByTestId('row-preview').getByTestId('template-field')).toHaveCount(1);
+  // A placeholder that is not one is said under the field, and the rest is still drawn.
+  await page.keyboard.press('ControlOrMeta+a');
+  await page.keyboard.type('{state} {nope} {folder}');
+  await page.keyboard.press('Enter');
+  await expect(part.getByTestId('row-format-says')).toContainText('{nope} is not a placeholder');
+  await expect(row.getByTestId('template-words')).toHaveText(folderShort);
+  await expect(row.getByTestId('template-field')).toHaveCount(0);
+  // A brace not closed is said and not saved.
+  await page.keyboard.type(' {time');
+  await page.keyboard.press('Enter');
+  await expect(part.getByTestId('row-format-says')).toContainText('It is not saved until the brace is closed.');
+  expect(((await (await page.request.get('/api/v1/state', asOwner)).json()) as { settings: { appearance: { rowFormat: string } } }).settings.appearance.rowFormat).toBe('{state} {nope} {folder}');
+  await page.keyboard.press('Escape');
+  await expect(rowField).toHaveValue('{state} {nope} {folder}');
+
+  // The title's template with the field: on the canvas and at the head of the terminal in a tab of its own.
+  await titleField.focus();
+  await page.keyboard.press('ControlOrMeta+a');
+  await page.keyboard.type('{state} {field:Ticket}');
+  await page.keyboard.press('Enter');
+  await expect(node.locator('.node-title').getByTestId('template-field')).toHaveText('DEMO-7');
+  const alone = await context.newPage();
+  await alone.goto(`/t/${id}`);
+  await expect(alone.getByTestId('terminal-page-says').getByTestId('template-field')).toHaveText('DEMO-7');
+  await alone.close();
+
+  // Reset puts back exactly the default: the row and the title are what they were, element for element.
+  await part.getByTestId('row-format-reset').click();
+  await part.getByTestId('title-format-reset').click();
+  await expect(part.getByTestId('row-format-reset')).toHaveCount(0);
+  await expect(part.getByTestId('title-format-reset')).toHaveCount(0);
+  await expect.poll(() => row.evaluate((el) => el.outerHTML)).toBe(rowBefore);
+  await expect.poll(() => node.locator('.node-title').evaluate((el) => el.outerHTML)).toBe(titleBefore);
+
+  // A template of 200 characters wraps neither the title nor the row's line, and makes neither taller.
+  const long = '{folder} · {field:Ticket} · {command} · {canvas} · {project} · '.repeat(4).slice(0, 200);
+  for (const field of [titleField, rowField]) {
+    await field.focus();
+    await page.keyboard.press('ControlOrMeta+a');
+    await page.keyboard.insertText(long);
+    await page.keyboard.press('Enter');
+  }
+  await expect(row.getByTestId('template-words').first()).toBeVisible();
+  await expect(node.locator('.node-title').getByTestId('template-field').first()).toHaveCount(1);
+  expect((await row.boundingBox())!.height).toBe(rowHeight);
+  expect((await node.locator('.node-title').boundingBox())!.height).toBe(titleHeight);
+  const lines = await row.locator('.list-detail').evaluate((el) => ({ scroll: el.scrollHeight, client: el.clientHeight }));
+  expect(lines.scroll).toBeLessThanOrEqual(lines.client);
+  // The tools at the end of the title stay inside the terminal's box, at its right end.
+  const nodeBox = (await node.boundingBox())!;
+  const more = (await node.getByTestId('node-more').boundingBox())!;
+  expect(more.x + more.width).toBeLessThanOrEqual(nodeBox.x + nodeBox.width + 1);
+  expect(more.y).toBeLessThan(nodeBox.y + titleHeight);
+  await part.getByTestId('row-format-reset').click();
+  await part.getByTestId('title-format-reset').click();
+  await expect.poll(() => row.evaluate((el) => el.outerHTML)).toBe(rowBefore);
+
+  await page.keyboard.press('Escape');
+  await expect(page.getByTestId('settings-dialog')).toHaveCount(0);
+  rmSync(folder, { recursive: true, force: true });
+});
+
+test('your own stylesheet: custom.css in the data folder is linked last from the first paint and beats the app at equal specificity, what it names elsewhere is not fetched, ?plain and the switch in Settings leave it out, and Read it again takes a change', async ({ page }) => {
+  const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
+  const origin = `http://127.0.0.1:${e2e.port}`;
+  const configFile = path.join(e2e.dataDir, 'config.json');
+  const original = existsSync(configFile) ? readFileSync(configFile, 'utf8') : null;
+  const cssFile = path.join(e2e.dataDir, 'custom.css');
+  const elsewhere = 'http://pictures.example.invalid/spy.png';
+  const tinted = 'rgb(92, 31, 36)';
+  const retinted = 'rgb(20, 60, 90)';
+  const pageGround = 'rgb(1, 2, 3)';
+  const stylesheet = (title: string): string =>
+    [
+      `[data-part="terminal"][data-tags~="prod"] [data-part="terminal-title"] { background-color: ${title}; }`,
+      '[data-part="map"] { display: none; }',
+      // As specific as the app's own rule for a page (one class), and later: it wins without !important.
+      `[data-part="page"] { background: ${pageGround}; }`,
+      `[data-part="canvas"] { background-image: url("${elsewhere}"); }`,
+      '',
+    ].join('\n');
+  // What the title of a tagged terminal looks like the moment it is first drawn, and every address a stylesheet named that the page refused.
+  await page.addInitScript(() => {
+    const w = window as unknown as { firstTitle: string | null; refused: string[] };
+    w.firstTitle = null;
+    w.refused = [];
+    document.addEventListener('securitypolicyviolation', (event) => w.refused.push(`${event.violatedDirective} ${event.blockedURI}`));
+    new MutationObserver(() => {
+      if (w.firstTitle !== null) return;
+      const title = document.querySelector('[data-part="terminal"][data-tags~="prod"] [data-part="terminal-title"]');
+      if (title) w.firstTitle = getComputedStyle(title).backgroundColor;
+    }).observe(document, { childList: true, subtree: true, attributes: true, attributeFilter: ['data-tags'] });
+  });
+  // What the browser did with each address elsewhere: refused before it was sent, or answered.
+  const elsewhereEnded: string[] = [];
+  page.on('requestfailed', (request) => request.url().includes('example.invalid') && elsewhereEnded.push(`failed ${request.failure()?.errorText ?? ''}`));
+  page.on('response', (response) => response.url().includes('example.invalid') && elsewhereEnded.push(`answered ${response.status()}`));
+  await page.goto(`/auth?token=${token}`);
+  await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
+  const before = page.url();
+  await page.getByRole('button', { name: 'New canvas' }).click();
+  await expect(page).not.toHaveURL(before);
+  await page.getByTestId('toolbar-new-terminal').click();
+  const node = page.getByTestId('terminal-node');
+  await expect(node).toHaveCount(1);
+  await expect(node.locator('.xterm-rows')).toContainText(/[$%#>]/, { timeout: 20_000 });
+  const sessionId = (await node.getAttribute('data-session')) ?? '';
+  expect((await page.request.patch(`/v1/sessions/${sessionId}`, { headers: { origin }, data: { tags: ['Prod'] } })).status()).toBe(200);
+  await expect(node).toHaveAttribute('data-tags', 'prod');
+  const title = node.locator('[data-part="terminal-title"]');
+  const titleGround = (): Promise<string> => title.evaluate((el) => getComputedStyle(el).backgroundColor);
+  const appTitle = await titleGround();
+  expect(appTitle).not.toBe(tinted);
+  // The map is shown, as a terminal's title is drawn, before there is a stylesheet.
+  if ((await page.getByTestId('map-fold').getAttribute('aria-expanded')) === 'false') await page.getByTestId('map-fold').click();
+  // With no terminal in use the map is not asked to step aside: the canvas itself is pressed, away from everything on it.
+  const pane = (await page.locator('.react-flow__pane').boundingBox())!;
+  await page.mouse.click(pane.x + 40, pane.y + pane.height - 40);
+  await expect(page.getByTestId('terminal-node')).not.toHaveAttribute('data-selected');
+  await expect(page.locator('[data-part="map"]')).toBeVisible();
+  const settings = page.getByTestId('settings-dialog');
+  const part = settings.getByTestId('settings-stylesheet');
+  try {
+    writeFileSync(cssFile, stylesheet(tinted));
+    // Sent with the page: one link, the last thing in the head, after the app's own stylesheet.
+    const sent = await (await page.request.get(page.url())).text();
+    const head = sent.slice(0, sent.indexOf('</head>'));
+    expect(head.match(/data-custom-css/g)).toHaveLength(1);
+    expect(head.lastIndexOf('<link rel="stylesheet" href="/api/v1/custom.css?v=')).toBeGreaterThan(head.lastIndexOf('/assets/'));
+    expect(head.trimEnd().endsWith('data-custom-css>')).toBe(true);
+    expect(sent).not.toContain(tinted);
+
+    await page.reload();
+    await expect(node.locator('.xterm-rows')).toContainText(/[$%#>]/, { timeout: 20_000 });
+    // Tinted from the moment the title is there: the stylesheet was on the page before it was drawn.
+    expect(await page.evaluate(() => (window as unknown as { firstTitle: string | null }).firstTitle)).toBe(tinted);
+    expect(await titleGround()).toBe(tinted);
+    await expect(page.locator('[data-part="map"]')).toBeHidden();
+    // Equal specificity, and the owner's wins over the app's own piece.
+    await openPage(page, 'library');
+    await expect.poll(() => page.locator('[data-part="page"]').evaluate((el) => getComputedStyle(el).backgroundColor)).toBe(pageGround);
+    await toCanvas(page);
+    // What the stylesheet named at another address was refused by the page, never asked for.
+    await expect.poll(() => page.evaluate(() => (window as unknown as { refused: string[] }).refused)).toContain(`img-src ${elsewhere}`);
+    await expect.poll(() => elsewhereEnded.length).toBeGreaterThan(0);
+    expect([...new Set(elsewhereEnded)]).toEqual(['failed csp']);
+
+    // The way out: the same page with ?plain is drawn without it.
+    await page.goto(`${page.url()}?plain`);
+    await expect(node.locator('.xterm-rows')).toContainText(/[$%#>]/, { timeout: 20_000 });
+    await expect(page.locator('link[data-custom-css]')).toHaveCount(0);
+    expect(await titleGround()).toBe(appTitle);
+    await expect(page.locator('[data-part="map"]')).toBeVisible();
+    await page.getByTestId('toolbar-settings').click();
+    await expect(part.getByTestId('stylesheet-says')).toContainText('left out of this page');
+    await page.keyboard.press('Escape');
+
+    // The switch in Settings, from the command that opens it there: off and on again without a reload.
+    await page.goto(page.url().replace(/\?plain$/, ''));
+    await expect(node.locator('.xterm-rows')).toContainText(/[$%#>]/, { timeout: 20_000 });
+    await expect.poll(titleGround).toBe(tinted);
+    await page.getByRole('button', { name: 'Go to…' }).click();
+    await page.keyboard.type('Your stylesheet');
+    await page.keyboard.press('Enter');
+    await expect(part).toBeVisible();
+    await expect(part.getByTestId('stylesheet-where')).toContainText(cssFile);
+    await expect(part.getByTestId('stylesheet-says')).toContainText('drawn on this page');
+    await expect(part.getByTestId('stylesheet-plain')).toHaveAttribute('href', /\?plain$/);
+    const on = part.getByTestId('custom-css-on');
+    await expect(on).toBeFocused();
+    await expect(on).toBeChecked();
+    await page.keyboard.press('Space');
+    await expect(on).not.toBeChecked();
+    await expect(page.locator('link[data-custom-css]')).toHaveCount(0);
+    await expect.poll(titleGround).toBe(appTitle);
+    await expect.poll(() => (JSON.parse(readFileSync(configFile, 'utf8')) as { appearance?: { customCss?: boolean } }).appearance?.customCss).toBe(false);
+    expect(linkIn(await (await page.request.get(page.url())).text())).toBeNull();
+    await on.click();
+    await expect(on).toBeChecked();
+    await expect.poll(titleGround).toBe(tinted);
+
+    // Changed in the file and read again: linked at its new address, drawn at once.
+    const firstHref = await page.locator('link[data-custom-css]').getAttribute('href');
+    writeFileSync(cssFile, stylesheet(retinted));
+    await part.getByTestId('stylesheet-read-again').click();
+    await expect(page.getByTestId('toast')).toContainText('custom.css is read');
+    await expect.poll(() => page.locator('link[data-custom-css]').getAttribute('href')).not.toBe(firstHref);
+    await expect(page.locator('link[data-custom-css]')).toHaveCount(1);
+    await expect.poll(titleGround).toBe(retinted);
+    // Gone, and read again: nothing is linked.
+    rmSync(cssFile);
+    await part.getByTestId('stylesheet-read-again').click();
+    await expect(page.locator('link[data-custom-css]')).toHaveCount(0);
+    await expect(part.getByTestId('stylesheet-says')).toContainText('aubergine css new');
+    await expect.poll(titleGround).toBe(appTitle);
+    await page.keyboard.press('Escape');
+  } finally {
+    rmSync(cssFile, { force: true });
+    if (original === null) rmSync(configFile, { force: true });
+    else writeFileSync(configFile, original);
+  }
+});
+
+/** The address of the owner's stylesheet in a page as it was sent, or null. */
+function linkIn(html: string): string | null {
+  return /<link rel="stylesheet" href="([^"]+)" data-custom-css>/.exec(html)?.[1] ?? null;
+}
+
+test('the hooks: every part in the list is drawn on the canvas, its list, a page, a dialog, a menu and the focus view, none is drawn that is not in it, and a terminal says the same about itself everywhere', async ({ page }) => {
+  const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
+  const origin = `http://127.0.0.1:${e2e.port}`;
+  const seen = new Set<string>();
+  const look = async (): Promise<void> => {
+    for (const name of await page.evaluate(() => [...document.querySelectorAll('[data-part]')].map((el) => el.getAttribute('data-part') ?? ''))) seen.add(name);
+    const unknown = [...seen].filter((name) => !(PART_NAMES as readonly string[]).includes(name));
+    expect(unknown, `drawn with a data-part that is not in UI_HOOKS (shared/src/hooks.ts): ${unknown.join(', ')}. A part that is drawn is a promise: add it to the list, or take it away.`).toEqual([]);
+  };
+  await page.goto(`/auth?token=${token}`);
+  await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
+  const before = page.url();
+  await page.getByRole('button', { name: 'New canvas' }).click();
+  await expect(page).not.toHaveURL(before);
+  await page.getByTestId('toolbar-new-terminal').click();
+  const node = page.getByTestId('terminal-node');
+  await expect(node).toHaveCount(1);
+  await expect(node.locator('.xterm-rows')).toContainText(/[$%#>]/, { timeout: 20_000 });
+  const sessionId = (await node.getAttribute('data-session')) ?? '';
+  expect((await page.request.patch(`/v1/sessions/${sessionId}`, { headers: { origin }, data: { tags: ['Hooks', 'prod'], name: 'prod hooks' } })).status()).toBe(200);
+  await expect(node).toHaveAttribute('data-name', 'prod hooks');
+  await page.getByTestId('toolbar-new-more').click();
+  await page.getByTestId('toolbar-new-frame').click();
+  await expect(page.getByTestId('frame')).toHaveCount(1);
+  if ((await page.getByTestId('map-fold').getAttribute('aria-expanded')) === 'false') await page.getByTestId('map-fold').click();
+  // With no terminal in use the map is not asked to step aside: the canvas itself is pressed, away from everything on it.
+  const pane = (await page.locator('.react-flow__pane').boundingBox())!;
+  await page.mouse.click(pane.x + 40, pane.y + pane.height - 40);
+  await expect(page.getByTestId('terminal-node')).not.toHaveAttribute('data-selected');
+  await expect(page.locator('[data-part="map"]')).toBeVisible();
+  await expect(page.locator('[data-part="terminal-note"]')).toHaveCount(1);
+  await look();
+  // The root says where the page is.
+  const html = page.locator('html');
+  await expect(html).toHaveAttribute('data-page', 'canvas');
+  await expect(html).toHaveAttribute('data-server', 'own');
+  await expect(html).toHaveAttribute('data-here', '');
+  await expect(html).toHaveAttribute('data-project', /^[0-9a-f-]{36}$/);
+
+  // A terminal says the same about itself on the canvas and in the list.
+  const row = page.locator(`[data-part="terminal-row"][data-session="${sessionId}"]`);
+  await expect(row).toHaveCount(1);
+  for (const attribute of ATTRIBUTE_HOOKS.filter((hook) => (hook.on as readonly string[]).includes('terminal-row') && !['data-selected', 'data-focused', 'data-agent'].includes(hook.name))) {
+    const onNode = await node.getAttribute(attribute.name);
+    expect(onNode, attribute.name).not.toBeNull();
+    expect(await row.getAttribute(attribute.name), attribute.name).toBe(onNode);
+  }
+  await expect(node).toHaveAttribute('data-tags', 'hooks prod');
+  await expect(node).toHaveAttribute('data-state', /^(waiting|processing|unread|failed|idle|ended)$/);
+  await expect(node).not.toHaveAttribute('data-agent');
+  // An agent on record: said on both.
+  expect((await page.request.put(`/v1/sessions/${sessionId}/agent`, { headers: { origin }, data: { kind: 'claude-code', conversationId: null } })).status()).toBe(200);
+  await expect(node).toHaveAttribute('data-agent', 'claude-code');
+  await expect(row).toHaveAttribute('data-agent', 'claude-code');
+  // The terminal with the keyboard, and the one selected.
+  await node.getByTestId('node-shield').click();
+  await expect(node).toHaveAttribute('data-focused', 'true');
+  await expect(row).toHaveAttribute('data-focused', 'true');
+
+  // A menu, the details, a tab of the canvas, a dialog, a toast and a page.
+  await node.getByTestId('node-more').click();
+  await expect(node.locator('[data-part="menu"]')).toBeVisible();
+  await look();
+  await page.keyboard.press('Escape');
+  await node.getByTestId('node-details').click();
+  await expect(page.locator('[data-part="details"]')).toBeVisible();
+  await look();
+  await page.keyboard.press('Escape');
+  const tab = page.locator('[data-part="canvas-tab"][data-current="true"]');
+  await expect(tab).toHaveCount(1);
+  await expect(tab).toHaveAttribute('data-canvas', /^[0-9a-f-]{36}$/);
+  await page.getByTestId('toolbar-settings').click();
+  await expect(page.locator('[data-part="dialog"]')).toBeVisible();
+  await page.getByTestId('settings-dialog').getByTestId('themes-read-again').click();
+  await expect(page.locator('[data-part="toast"]')).toBeVisible();
+  await look();
+  await page.keyboard.press('Escape');
+  await openPage(page, 'workflows');
+  await expect(page.locator('[data-part="page"]')).toBeVisible();
+  await expect(html).toHaveAttribute('data-page', 'workflows');
+  await look();
+  await toCanvas(page);
+  await expect(html).toHaveAttribute('data-page', 'canvas');
+
+  // The focus view: its head says what the terminal's node says.
+  const nodeSays = Object.fromEntries(await Promise.all(['data-session', 'data-name', 'data-state', 'data-tags', 'data-agent', 'data-color'].map(async (name) => [name, await node.getAttribute(name)] as const)));
+  await page.goto(`/t/${sessionId}`);
+  const head = page.locator('[data-part="focus-head"]');
+  await expect(head).toBeVisible();
+  await expect(page.locator('[data-part="focus-body"]')).toBeVisible();
+  for (const [name, value] of Object.entries(nodeSays)) expect(await head.getAttribute(name), name).toBe(value);
+  await expect(html).toHaveAttribute('data-page', 'terminal');
+  await look();
+  expect([...seen].sort()).toEqual([...PART_NAMES].sort());
+});
+
+test('plugins: one written into the data folder is off and asked for by nothing, switched on through its dialog with the keyboard it adds a section, a command, a placeholder and a filter and reaches past the API, a changed file is not loaded until it is switched on again or followed, one that throws is said and the other runs, ?plain loads none, switched off its registrations go at once, and no token or session reaches it', async ({ page, playwright }) => {
+  const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
+  const origin = `http://127.0.0.1:${e2e.port}`;
+  const configFile = path.join(e2e.dataDir, 'config.json');
+  const original = existsSync(configFile) ? readFileSync(configFile, 'utf8') : null;
+  const plugins = path.join(e2e.dataDir, 'plugins');
+  const manifest = (name: string): string => JSON.stringify({ name, version: '0.1.0', runs: 'page', main: 'index.js', style: 'style.css', api: 1 });
+  const module = (marker: string): string =>
+    [
+      'export function activate(aubergine) {',
+      '  const h = aubergine.ui.React.createElement;',
+      "  const ticket = (s) => s.fields.find((f) => f.label === 'Ticket')?.value ?? null;",
+      "  aubergine.panel.addSection({ id: 'tickets', title: 'Tickets', says: 'Terminals with a ticket.', icon: 'T', Component: () => h('p', { 'data-testid': 'plugin-section-body' }, `Tickets: ${(aubergine.state.use()?.sessions ?? []).filter(ticket).length}`) });",
+      "  aubergine.commands.add({ id: 'hello', title: 'Say hello from the plugin', description: 'Says hello.', run: () => aubergine.say('Hello from the plugin') });",
+      "  aubergine.templates.addPart({ name: 'ticket', says: 'Its ticket.', say: ticket });",
+      "  aubergine.list.addFilter({ id: 'has-ticket', label: 'Has a ticket', test: (s) => ticket(s) !== null });",
+      // Past the API: an element of its own in the top bar, which the page cannot take away.
+      "  const mark = document.createElement('span');",
+      "  mark.setAttribute('data-testid', 'plugin-past-api');",
+      `  mark.textContent = '${marker}';`,
+      "  document.querySelector('[data-part=\"top-bar\"]')?.append(mark);",
+      '}',
+      '',
+    ].join('\n');
+  const write = (id: string, files: Record<string, string>): void => {
+    mkdirSync(path.join(plugins, id), { recursive: true });
+    for (const [name, text] of Object.entries(files)) writeFileSync(path.join(plugins, id, name), text);
+  };
+  const asked: string[] = [];
+  page.on('request', (request) => request.url().includes('/api/v1/plugins/') && asked.push(new URL(request.url()).pathname));
+  try {
+    write('tickets', { 'plugin.json': manifest('Tickets'), 'index.js': module('first'), 'style.css': '[data-plugin="tickets"] { outline: 0; }\n' });
+    write('broken', { 'plugin.json': manifest('Broken'), 'index.js': "export function activate() { throw new Error('broken on purpose'); }\n", 'style.css': '' });
+    await page.goto(`/auth?token=${token}`);
+    await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
+    const before = page.url();
+    await page.getByRole('button', { name: 'New canvas' }).click();
+    await expect(page).not.toHaveURL(before);
+    await page.getByTestId('toolbar-new-terminal').click();
+    const node = page.getByTestId('terminal-node');
+    await expect(node).toHaveCount(1);
+    const sessionId = (await node.getAttribute('data-session')) ?? '';
+    expect((await page.request.patch(`/v1/sessions/${sessionId}`, { headers: { origin }, data: { fields: [{ label: 'Ticket', value: 'ABC-123' }] } })).status()).toBe(200);
+
+    const reload = async (): Promise<void> => {
+      await page.reload();
+      await expect(node.locator('.xterm-rows')).toContainText(/[$%#>]/, { timeout: 20_000 });
+    };
+    const mac = await page.evaluate(() => navigator.platform.toLowerCase().includes('mac'));
+    const palette = async (words: string): Promise<void> => {
+      await page.keyboard.press(mac ? 'Meta+k' : 'Control+Shift+K');
+      await page.keyboard.type(`>${words}`);
+      await expect(page.getByTestId('picker-command-row').first()).toBeVisible();
+    };
+    const part = page.getByTestId('settings-plugins');
+    const row = (id: string): Locator => part.locator(`[data-testid="plugin-row"][data-plugin-id="${id}"]`);
+    const openPlugins = async (): Promise<void> => {
+      await palette('Plugins');
+      await page.keyboard.press('Enter');
+      await expect(part).toBeVisible();
+      // Opened by its command, its first button has the keyboard.
+      await expect(part.locator('button').first()).toBeFocused();
+    };
+    const sectionLine = page.getByTestId('panel-menu').locator('[data-section="plugin.tickets.tickets"]');
+    const sectionThere = async (): Promise<boolean> => {
+      await page.getByTestId('panel-switcher').click();
+      await expect(page.getByTestId('panel-menu')).toBeVisible();
+      const there = (await sectionLine.count()) > 0;
+      await page.keyboard.press('Escape');
+      return there;
+    };
+    const switchOn = async (id: string): Promise<void> => {
+      // From the keyboard: the row's button, then the dialog's.
+      await row(id).getByTestId('plugin-switch-on').focus();
+      await page.keyboard.press('Enter');
+      const dialog = page.getByTestId('plugin-dialog');
+      await expect(dialog).toBeVisible();
+      await expect(dialog.getByTestId('plugin-dialog-warning')).toContainText('It can read and type into every terminal');
+      await expect(dialog.getByTestId('plugin-files')).toContainText('index.js');
+      await expect(dialog.getByTestId('plugin-files')).toContainText('plugin.json');
+      await expect(dialog.getByTestId('plugin-dialog-confirm')).toBeFocused();
+      expect(await measureLook(page), 'the dialog that switches a plugin on').toEqual([]);
+      await page.keyboard.press('Enter');
+      await expect(dialog).toHaveCount(0);
+    };
+
+    // Off: listed, and nothing of it is on the page or asked for.
+    await openPlugins();
+    await expect(part.getByTestId('plugins-warning')).toHaveText('A plugin is code that runs in this page as you. It can read and type into every terminal. Switch on only what you wrote or have read.');
+    await expect(row('tickets').getByTestId('plugin-state')).toHaveText('off');
+    await expect(row('broken').getByTestId('plugin-state')).toHaveText('off');
+    await expect(part.getByTestId('plugins-where')).toContainText(plugins);
+    await expect(part.getByTestId('plugins-plain')).toHaveAttribute('href', /\?plain$/);
+    expect(await measureLook(page), 'Settings → Plugins').toEqual([]);
+    expect(asked).toEqual([]);
+    await expect(page.getByTestId('plugin-past-api')).toHaveCount(0);
+
+    // Switched on through the dialog: it runs at once, its stylesheet before the owner's own.
+    await switchOn('tickets');
+    await expect(row('tickets').getByTestId('plugin-state')).toHaveText('on');
+    await expect(page.getByTestId('plugin-past-api')).toHaveText('first');
+    expect(asked.some((p) => /^\/api\/v1\/plugins\/tickets\/[0-9a-f]{64}\/index\.js$/.test(p))).toBe(true);
+    await expect(page.locator('link[data-plugin-style="tickets"]')).toHaveCount(1);
+    const digest = /[0-9a-f]{64}/.exec(asked[0] ?? '')?.[0] ?? '';
+    expect((JSON.parse(readFileSync(configFile, 'utf8')) as { plugins: { on: Record<string, string> } }).plugins.on).toEqual({ tickets: digest });
+    await page.keyboard.press('Escape');
+    await expect(part).toHaveCount(0);
+    // The section, in the panel's menu, and drawn.
+    expect(await sectionThere()).toBe(true);
+    await showSection(page, 'plugin.tickets.tickets');
+    await expect(page.locator('[data-plugin="tickets"] [data-testid="plugin-section-body"]')).toHaveText(/^Tickets: [1-9]\d*$/);
+    await showSection(page, 'terminals');
+    // The command, in the palette under the plugin's name, and run.
+    await palette('Say hello');
+    await expect(page.getByTestId('picker-section-plugin')).toHaveText('Plugin: Tickets');
+    await page.keyboard.press('Enter');
+    await expect(page.getByTestId('toast')).toContainText('Hello from the plugin');
+    // The filter, a line of the list's Filter menu.
+    await page.getByTestId('list-more').click();
+    await expect(page.locator('[data-filter="plugin.tickets.has-ticket"]')).toHaveText('Has a ticket');
+    await page.keyboard.press('Escape');
+    // The placeholder, in a row's template.
+    expect((await page.request.put('/v1/settings/appearance', { headers: { origin }, data: { rowFormat: '{ticket} {time}' } })).status()).toBe(200);
+    await reload();
+    const listRow = page.locator(`[data-testid="list-row"][data-session="${sessionId}"]`);
+    await expect(listRow.locator('[data-plugin="tickets"]')).toHaveText('ABC-123');
+    await expect(page.getByTestId('plugin-past-api')).toHaveText('first');
+
+    // A file changed: after a reload it is not loaded, and Settings says why.
+    writeFileSync(path.join(plugins, 'tickets', 'index.js'), module('second'));
+    await reload();
+    await openPlugins();
+    await expect(row('tickets').getByTestId('plugin-state')).toHaveText('changed since you switched it on: not loaded');
+    await expect(page.getByTestId('plugin-past-api')).toHaveCount(0);
+    await expect(listRow.locator('[data-plugin="tickets"]')).toHaveCount(0);
+    // Switched on again: what is there now runs.
+    await switchOn('tickets');
+    await expect(page.getByTestId('plugin-past-api')).toHaveText('second');
+    // Following changes: a change runs after a reload, without switching it on again.
+    await row('tickets').getByTestId('plugin-follow').click();
+    await expect(row('tickets').getByTestId('plugin-follow')).toBeChecked();
+    await expect(row('tickets').getByTestId('plugin-state')).toHaveText('on, following changes');
+    writeFileSync(path.join(plugins, 'tickets', 'index.js'), module('third'));
+    await reload();
+    await expect(page.getByTestId('plugin-past-api')).toHaveText('third');
+
+    // One that throws is said, and the other still runs.
+    await openPlugins();
+    await switchOn('broken');
+    await expect(row('broken').getByTestId('plugin-state')).toHaveText('failed: broken on purpose');
+    await expect(row('tickets').getByTestId('plugin-state')).toHaveText('on, following changes');
+    await page.keyboard.press('Escape');
+    await palette('Say hello');
+    await expect(page.getByTestId('picker-command-row').filter({ hasText: 'Say hello from the plugin' })).toHaveCount(1);
+    await page.keyboard.press('Escape');
+
+    // ?plain: none is loaded, and nothing of them is asked for.
+    const asking = asked.length;
+    await page.goto(`${page.url()}?plain`);
+    await expect(node.locator('.xterm-rows')).toContainText(/[$%#>]/, { timeout: 20_000 });
+    await openPlugins();
+    await expect(row('tickets').getByTestId('plugin-state')).toContainText('left out of this page');
+    await expect(page.getByTestId('plugin-past-api')).toHaveCount(0);
+    await page.keyboard.press('Escape');
+    await expect(part).toHaveCount(0);
+    expect(await sectionThere()).toBe(false);
+    expect(asked.length).toBe(asking);
+    await page.goto(page.url().replace(/\?plain$/, ''));
+    await expect(page.getByTestId('plugin-past-api')).toHaveText('third');
+
+    // Switched off: what it added through the API is gone at once; what it did past it stays until a reload, as it says.
+    await openPlugins();
+    await row('broken').getByTestId('plugin-switch-off').click();
+    await row('tickets').getByTestId('plugin-switch-off').click();
+    await expect(row('tickets').getByTestId('plugin-state')).toHaveText('off. Reload the page to be sure it is gone');
+    await expect(part.getByTestId('plugins-reload')).toContainText('Reload the page to be sure it is gone');
+    await expect(page.locator('link[data-plugin-style="tickets"]')).toHaveCount(0);
+    await page.keyboard.press('Escape');
+    expect(await sectionThere()).toBe(false);
+    await palette('Settings');
+    await page.keyboard.press('Control+a');
+    await page.keyboard.type('>Say hello');
+    await expect(page.locator('.picker-empty')).toHaveText('Nothing matches.');
+    await expect(page.getByTestId('picker-command-row').filter({ hasText: 'Say hello from the plugin' })).toHaveCount(0);
+    await page.keyboard.press('Escape');
+    await expect(listRow.locator('[data-plugin="tickets"]')).toHaveCount(0);
+    await expect(page.getByTestId('plugin-past-api')).toHaveCount(1);
+    await reload();
+    await expect(page.getByTestId('terminal-node')).toHaveCount(1);
+    await expect(page.getByTestId('plugin-past-api')).toHaveCount(0);
+
+    // No token and no session's own credential gets a file or switches one: switched on to follow, so that there is a file to give.
+    expect((await page.request.put('/v1/settings/plugins', { headers: { origin }, data: { id: 'tickets', on: 'follow' } })).status()).toBe(200);
+    const now = ((await (await page.request.post('/v1/settings/plugins/read', { headers: { origin }, data: {} })).json()) as { plugins: { id: string; digest: string }[] }).plugins.find((p) => p.id === 'tickets')?.digest ?? '';
+    const file = `/api/v1/plugins/tickets/${now}/index.js`;
+    expect((await page.request.get(file)).status()).toBe(200);
+    const made = (await (await page.request.post('/v1/tokens', { headers: { origin }, data: { name: 'tries plugins', scopes: ['read', 'sessions:write', 'terminal:read', 'terminal:input', 'workflows:write'], reach: { kind: 'all' } } })).json()) as { secret: string };
+    const own = `aub1.${sessionId}.${createHmac('sha256', token).update(`session:${sessionId}`).digest('hex')}`;
+    // A program holds its credential and not the owner's cookie: asked from a context of its own, with no cookie.
+    const program = await playwright.request.newContext({ baseURL: origin });
+    try {
+      for (const secret of [made.secret, own]) {
+        const authorization = `Bearer ${secret}`;
+        const sent = await program.get(file, { headers: { authorization } });
+        expect(sent.status()).toBe(401);
+        expect(await sent.text()).not.toContain('activate');
+        expect((await program.put('/v1/settings/plugins', { headers: { authorization }, data: { id: 'tickets', on: null } })).status()).toBe(403);
+        expect((await program.post('/v1/settings/plugins/read', { headers: { authorization }, data: {} })).status()).toBe(403);
+      }
+      expect((await program.get(file)).status()).toBe(401);
+    } finally {
+      await program.dispose();
+    }
+    expect((JSON.parse(readFileSync(configFile, 'utf8')) as { plugins: { on: Record<string, string> } }).plugins.on).toEqual({ tickets: 'follow' });
+  } finally {
+    rmSync(plugins, { recursive: true, force: true });
+    if (original === null) rmSync(configFile, { force: true });
+    else writeFileSync(configFile, original);
+  }
 });

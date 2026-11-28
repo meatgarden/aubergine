@@ -447,6 +447,7 @@ describe('the commands, against a running server', () => {
     expect(result.out).toContain(`ok  the server is answering at http://127.0.0.1:${port}`);
     expect(result.out).toContain(`ok  the "aubergine" command is on your PATH: ${path.join(bin, 'aubergine')}`);
     expect(result.out).toContain(`-   data folder: ${path.join(home, 'data')}`);
+    expect(result.out).toContain(`-   settings file: ${path.join(home, 'data', 'config.json')} (every key, and its value now: aubergine settings list)`);
     for (const line of lines.filter((l) => l !== '' && !l.startsWith('Everything') && !/thing/.test(l))) expect(line).toMatch(/^(ok |x {2}|- {2}) /);
 
     // Without the command on PATH, and with no server, it says so and fails.

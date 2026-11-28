@@ -1,16 +1,50 @@
 import { mkdir, readFile, rename, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
-import { DEFAULT_SETTINGS, Settings, accessEntries, resolveColors, resolveShortcuts, type AppearanceAnswer, type ChangeAppearanceRequest, type Platform } from '@aubergine/shared';
+import { DEFAULT_SETTINGS, SETTINGS_SCHEMA_FILE, Settings, THEME_SCHEMA_FILE, accessEntries, settingsJsonSchema, byTagProblems, resolveColors, resolveShortcuts, themeFileJsonSchema, type AppearanceAnswer, type ChangeAppearanceRequest, type Platform, type UserTheme } from '@aubergine/shared';
 
 export const SETTINGS_FILE = 'config.json';
+export { SETTINGS_SCHEMA_FILE };
+
+/** The text of `config.schema.json`: the schema of the settings file, for an editor. */
+export const settingsSchemaText = (): string => `${JSON.stringify(settingsJsonSchema(), null, 2)}\n`;
+/** The text of `theme.schema.json`: the schema of a theme file, for an editor. */
+export const themeSchemaText = (): string => `${JSON.stringify(themeFileJsonSchema(), null, 2)}\n`;
+
+/**
+ * Writes the schema of the settings file as `config.schema.json` beside it, and the schema of a theme file as
+ * `theme.schema.json`, for an editor: each only when what is there differs, and atomically. `config.json` and the theme
+ * files are not touched: a person turns a schema on by writing its `"$schema"` line. A failure is a warning, never a
+ * reason not to start.
+ */
+export async function writeSettingsSchema(dir: string, onWarning: (message: string) => void = () => {}): Promise<'written' | 'same' | 'failed'> {
+  const settings = await writeSchema(dir, SETTINGS_SCHEMA_FILE, settingsSchemaText(), 'the schema of the settings file', onWarning);
+  const theme = await writeSchema(dir, THEME_SCHEMA_FILE, themeSchemaText(), 'the schema of a theme file', onWarning);
+  return settings === 'failed' || theme === 'failed' ? 'failed' : settings === 'written' || theme === 'written' ? 'written' : 'same';
+}
+
+async function writeSchema(dir: string, name: string, text: string, what: string, onWarning: (message: string) => void): Promise<'written' | 'same' | 'failed'> {
+  const file = path.join(dir, name);
+  try {
+    const current = await readFile(file, 'utf8').catch(() => null);
+    if (current === text) return 'same';
+    await mkdir(dir, { recursive: true });
+    const tmp = `${file}.${process.pid}.tmp`;
+    await writeFile(tmp, text, { mode: 0o644 });
+    await rename(tmp, file);
+    return 'written';
+  } catch (error) {
+    onWarning(`Could not write ${file}, ${what} for an editor: ${(error as Error).message}`);
+    return 'failed';
+  }
+}
 
 /**
  * Reads `config.json` from the data folder. A missing file means defaults.
  * A file that cannot be used is reported and ignored, so a typo never keeps
  * the canvas from starting.
  */
-export async function loadSettings(dir: string, onWarning: (message: string) => void = () => {}): Promise<Settings> {
+export async function loadSettings(dir: string, onWarning: (message: string) => void = () => {}, themes: readonly UserTheme[] = []): Promise<Settings> {
   const file = path.join(dir, SETTINGS_FILE);
   let text: string;
   try {
@@ -24,7 +58,7 @@ export async function loadSettings(dir: string, onWarning: (message: string) => 
     const settings = Settings.parse(raw);
     for (const problem of shortcutProblems(settings)) onWarning(`${file}: ${problem}`);
     for (const problem of accessProblems(raw, settings)) onWarning(`${file}: ${problem} It is skipped.`);
-    for (const problem of colorProblems(raw)) onWarning(`${file}: ${problem}`);
+    for (const problem of colorProblems(raw, themes)) onWarning(`${file}: ${problem}`);
     return settings;
   } catch (error) {
     const detail =
@@ -55,12 +89,13 @@ export function shortcutProblems(settings: Settings, platform: Platform = proces
 /**
  * What is wrong with `appearance.colors` in the settings: each entry that names no color that can be set, no theme,
  * or no color written as `#rrggbb`. `raw` is the file as it was read, so that an entry the schema drops by itself is
- * still said. The problems are the same whichever theme is asked about.
+ * still said. The problems are the same whichever theme is asked about. `themes` are the owner's theme files, which an
+ * entry may name too.
  */
-export function colorProblems(raw: unknown): string[] {
+export function colorProblems(raw: unknown, themes: readonly UserTheme[] = []): string[] {
   const appearance = isObject(raw) ? raw.appearance : undefined;
   if (!isObject(appearance)) return [];
-  return [...new Set(resolveColors(appearance.colors, 'dark').problems)];
+  return [...new Set([...resolveColors(appearance.colors, 'dark', themes).problems, ...byTagProblems(appearance.byTag)])];
 }
 
 /** What the settings say about how the page looks, as the appearance route answers it. */
@@ -72,6 +107,10 @@ export const appearanceOf = (settings: Settings): AppearanceAnswer => ({
   cursor: settings.appearance.cursor,
   cursorBlink: settings.appearance.cursorBlink,
   terminal: settings.appearance.terminal,
+  byTag: settings.appearance.byTag,
+  titleFormat: settings.appearance.titleFormat,
+  rowFormat: settings.appearance.rowFormat,
+  customCss: settings.appearance.customCss,
 });
 
 const isObject = (value: unknown): value is Record<string, unknown> => value !== null && typeof value === 'object' && !Array.isArray(value);
@@ -131,6 +170,8 @@ export class SettingsFile {
   constructor(
     private readonly dir: string,
     private readonly onWarning: (message: string) => void = () => {},
+    /** The owner's theme files as last read, which colors set by hand may name. */
+    private readonly themes: () => readonly UserTheme[] = () => [],
   ) {}
 
   get value(): Settings {
@@ -167,6 +208,21 @@ export class SettingsFile {
     });
   }
 
+  /**
+   * Writes one entry of `plugins.on`: a plugin's digest or `follow`, or (null) none, which switches it off. Every other
+   * entry, and every other key of the file, stays as it was. It names code that runs in the page, never anything the
+   * server starts.
+   */
+  async setPluginSwitch(id: string, on: string | null): Promise<void> {
+    await this.write((whole) => {
+      const plugins = isObject(whole.plugins) ? whole.plugins : {};
+      const switched: Record<string, unknown> = isObject(plugins.on) ? { ...plugins.on } : {};
+      if (on === null) delete switched[id];
+      else switched[id] = on;
+      return { ...whole, plugins: { ...plugins, on: switched } };
+    });
+  }
+
   /** Writes `desktop.openNew`: one of the two keys the page changes. */
   async setDesktopOpenNew(value: boolean): Promise<void> {
     await this.write((whole) => {
@@ -177,14 +233,14 @@ export class SettingsFile {
 
   /**
    * Writes how the page looks: of `theme`, `appearance.light`, `appearance.dark`, `appearance.cursor`,
-   * `appearance.cursorBlink`, `appearance.terminal`, `font.family` and `font.size`, the ones that are sent, in one write. Every other key of
+   * `appearance.cursorBlink`, `appearance.terminal`, `appearance.byTag`, `appearance.titleFormat`, `appearance.rowFormat`, `appearance.customCss`, `font.family` and `font.size`, the ones that are sent, in one write. Every other key of
    * the file stays as it was, also the others inside `appearance` and `font`. None of them names anything that is run;
    * `appearance.colors` is written by hand only. A change that sends none of them does not write the file.
    */
   async setAppearance(change: ChangeAppearanceRequest): Promise<void> {
     const appearance: Record<string, unknown> = {};
     // `terminal` may be sent as null, which is written: the theme the page is drawn in.
-    for (const key of ['light', 'dark', 'cursor', 'cursorBlink', 'terminal'] as const) if (change[key] !== undefined) appearance[key] = change[key];
+    for (const key of ['light', 'dark', 'cursor', 'cursorBlink', 'terminal', 'byTag', 'titleFormat', 'rowFormat', 'customCss'] as const) if (change[key] !== undefined) appearance[key] = change[key];
     const font: Record<string, unknown> = {};
     if (change.fontFamily !== undefined) font.family = change.fontFamily;
     if (change.fontSize !== undefined) font.size = change.fontSize;
@@ -204,7 +260,7 @@ export class SettingsFile {
       // Say it once per distinct problem, not on every reload.
       if (!this.lastWarnings.has(message)) this.onWarning(message);
       warnings.add(message);
-    });
+    }, this.themes());
     this.lastWarnings = warnings;
     return this.current;
   }

@@ -1,5 +1,6 @@
 import { NEEDS_MAX, outputKind, outputKindNames, waitsForPerson, type Element, type Need } from '@aubergine/shared';
-import { elementView } from './registries';
+import { useSyncExternalStore } from 'react';
+import { elementView, subscribeToViews, viewsVersion } from './registries';
 
 const NEED_KINDS: [Need['kind'], string][] = [
   ['mcp', 'MCP server'],
@@ -14,6 +15,7 @@ const NEED_KINDS: [Need['kind'], string][] = [
  * shelf and the review screen all edit an element with this.
  */
 export function ElementFields({ element, onChange }: { element: Element; onChange: (element: Element) => void }) {
+  useSyncExternalStore(subscribeToViews, viewsVersion, viewsVersion);
   const Editor = elementView(element.kind)?.Editor;
   const setNeed = (index: number, change: Partial<Need>): void => onChange({ ...element, needs: element.needs.map((need, n) => (n === index ? { ...need, ...change } : need)) });
   return (

@@ -165,7 +165,7 @@ export function HistoryPanel() {
         if (e.target === e.currentTarget) close();
       }}
     >
-      <div className="dialog sheet history-panel" role="dialog" aria-label="Past conversations" data-testid="history-panel">
+      <div className="dialog sheet history-panel" role="dialog" data-part="dialog" aria-label="Past conversations" data-testid="history-panel">
         <ScreenHead title="Past conversations" onClose={close} closeTestid="history-close" />
         {reading ? (
           <TranscriptView folder={reading.folder} id={reading.id} onBack={() => setReading(null)} />

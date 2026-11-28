@@ -1670,6 +1670,46 @@ button.tab-more {
   flex: 1 1 0;
   min-width: 0;
 }
+/*
+ * What a template says after the name (docs/templates.md). Its plain words and the text written between placeholders
+ * are in the meta size and muted, on one line, and give way before a state chip or a mark does: cut where there is no
+ * room, with no "…". Whatever the template says, the tools at the end of a title stay at its right end.
+ */
+.node-words,
+.list-words,
+.template-text {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  font-size: var(--font-meta);
+  color: var(--text-muted);
+}
+.node-words {
+  flex-shrink: 100;
+}
+/* On a row, what does not fit is cut at the line's end rather than every piece cut to a letter. */
+.list-row .list-detail > .list-words,
+.list-row .list-detail > .template-text {
+  flex: none;
+}
+.node-title > .note-tool {
+  margin-left: auto;
+}
+.node-title button.run-strip.is-row,
+.terminal-page-says button.run-strip.is-row {
+  flex: none;
+  height: var(--chip);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: var(--font-meta);
+}
+.node-title button.run-strip.is-row:hover {
+  text-decoration: underline;
+  color: var(--text);
+}
 .node-note-new {
   margin-left: var(--space-1);
   font-size: var(--font-meta);
@@ -2680,6 +2720,76 @@ button.foryou-act {
   margin: var(--space-2) 0 0;
   font-size: var(--font-body);
 }
+/*
+ * Settings → Every setting: a search, then each top-level key of the file as a heading over its rows, with a hairline
+ * between rows. A row: the key and its value now on the first line, what it is under them, its default last, and at the
+ * right what is done with it. A row the page writes is pressed as a whole; one written by hand lies as that row does.
+ */
+.every-setting-search {
+  width: 100%;
+  margin-bottom: var(--space-2);
+}
+.every-setting-group {
+  margin-top: var(--space-4);
+}
+.every-setting-group > h4 {
+  margin: 0 0 var(--space-1);
+}
+/* A key is told by its font; only a key inside a sentence has the ground of code. */
+.every-setting-group > h4 > code,
+.every-setting-key {
+  padding: 0;
+  background: none;
+}
+.every-setting-own {
+  font-weight: var(--weight-normal);
+  color: var(--text-muted);
+}
+.every-setting-list > .every-setting-row + .every-setting-row {
+  border-top: 1px solid var(--border);
+}
+.every-setting-list > .ui-row {
+  border-radius: 0;
+}
+div.every-setting-row {
+  box-sizing: border-box;
+  padding: var(--space-2) var(--space-3);
+  margin-left: calc(var(--space-3) * -1 - 1px);
+  width: calc(100% + var(--space-3) + 1px);
+}
+.every-setting-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: var(--space-3);
+  row-gap: var(--space-1);
+  width: 100%;
+  min-width: 0;
+}
+.every-setting-head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+  min-width: 0;
+}
+.every-setting-key {
+  flex: none;
+}
+/* A long value is cut where its room ends, with the whole in its tooltip. */
+.every-setting-value {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: clip;
+}
+.every-setting-action {
+  grid-column: 2;
+  grid-row: 1 / span 4;
+  align-self: center;
+}
+.every-setting-says,
+.every-setting-default {
+  grid-column: 1;
+}
 /* Appearance has parts of its own, each laid out as a part of Settings is: a heading, the control, one line under it. */
 .appearance-part {
   margin-top: var(--space-6);
@@ -2690,6 +2800,10 @@ button.foryou-act {
 .appearance-part > .ui-meta {
   margin: var(--space-2) 0 0;
   font-size: var(--font-body);
+}
+/* A button under a line of words, such as Read themes again. */
+.appearance-part > .ui-meta + .settings-line {
+  margin-top: var(--space-1);
 }
 /* The color themes: one readable column, the light ones then the dark ones, each kind under its name. */
 .appearance-themes {
@@ -2713,6 +2827,42 @@ button.foryou-act {
   min-width: 0;
   max-width: 400px;
 }
+/* Titles and rows: a field for each template, a line under it, then the real title or row drawn as it is typed. */
+.titles-field {
+  margin-top: var(--space-3);
+}
+.titles-input {
+  flex: 1 1 320px;
+  min-width: 0;
+  font-family: var(--font-mono);
+}
+.titles-field > .ui-meta {
+  margin: var(--space-1) 0 var(--space-2);
+}
+.titles-preview-title {
+  position: relative;
+  max-width: 640px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+}
+.titles-preview-row {
+  position: relative;
+  width: 320px;
+  max-width: 100%;
+}
+.titles-parts {
+  margin: var(--space-2) 0 0;
+  padding: 0;
+  list-style: none;
+}
+.titles-parts > li {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+.titles-parts > li > button {
+  flex: none;
+}
 .appearance-problems {
   margin-top: var(--space-3);
   color: var(--text);
@@ -2721,6 +2871,124 @@ button.foryou-act {
 .appearance-problems > ul {
   margin: 0 0 var(--space-1);
   color: inherit;
+}
+/* Themes of terminals by tag, under the terminal theme: a heading of the body size, a line on how they count, then a row each. */
+.appearance-by-tag {
+  margin-top: var(--space-4);
+}
+.appearance-by-tag > h5 {
+  margin: 0 0 var(--space-1);
+  font-size: var(--font-body);
+  font-weight: var(--weight-strong);
+}
+.appearance-by-tag > .ui-meta {
+  margin: 0 0 var(--space-2);
+  font-size: var(--font-body);
+}
+.appearance-by-tag-rows {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-2);
+  padding: 0;
+  list-style: none;
+}
+.appearance-by-tag-tag {
+  flex: 0 1 160px;
+  min-width: 0;
+}
+.appearance-by-tag-theme {
+  flex: 0 1 200px;
+  min-width: 0;
+}
+.appearance-by-tag > .appearance-by-tag-row {
+  margin-bottom: var(--space-2);
+}
+
+/*
+ * A proposed theme in the review: no box of its own (it is read on the review's surface), then the theme drawn
+ * beside the one it is laid over, each a small page and a terminal in that theme's own tokens, then its colors.
+ */
+.review-choices.theme-review {
+  padding: 0;
+  border: 0;
+}
+.theme-review > h4 {
+  margin: var(--space-4) 0 var(--space-2);
+}
+.theme-review-previews {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  margin: var(--space-3) 0;
+}
+.theme-review-figure {
+  display: flex;
+  flex: 1 1 240px;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+  margin: 0;
+}
+.theme-review-sample {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-surface);
+}
+.theme-review-surface {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  background: var(--surface);
+  border-radius: var(--radius-control);
+}
+.theme-review-muted {
+  color: var(--text-muted);
+  font-size: var(--font-meta);
+}
+.theme-review-accent {
+  padding: 0 var(--space-2);
+  color: var(--on-accent);
+  background: var(--accent);
+  border-radius: var(--radius-control);
+}
+.theme-review-terminal {
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  overflow: hidden;
+  font: var(--font-meta) / var(--leading) var(--font-mono);
+  border-radius: var(--radius-control);
+}
+.theme-review-colors {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--space-1) var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.theme-review-colors > li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+}
+.theme-review-colors code {
+  margin-left: auto;
+}
+.theme-review-swatch {
+  flex: none;
+  width: var(--space-4);
+  height: var(--space-4);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-control);
 }
 
 /* What the browser draws itself (a tick box not yet ticked, a scroll bar, the list of a select) is in the theme that is drawn, not the system's. */
@@ -3785,8 +4053,8 @@ div.note-summary-read {
   text-decoration: underline;
   color: var(--text);
 }
-/* Between the words of the second line, a quiet dot; tags are pressed apart and need none. */
-.list-row .list-detail > :not(:first-child, .visually-hidden, .list-tags, .list-tag)::before {
+/* Between the words of the second line, a quiet dot; tags are pressed apart and need none. Where the row's template writes text between two of them, that text stands there instead. */
+.list-row .list-detail > :not(:first-child, .visually-hidden, .list-tags, .list-tag, .template-text, .template-text + *)::before {
   content: '·';
   margin-right: var(--space-1);
   color: var(--text-muted);

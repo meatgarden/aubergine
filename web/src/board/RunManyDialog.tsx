@@ -71,7 +71,7 @@ export function RunManyDialog({ onClose }: { onClose: () => void }) {
         if (e.key === 'Escape') onClose();
       }}
     >
-      <div className="dialog sheet run-many" role="dialog" aria-label="Start on several terminals" data-testid="run-many">
+      <div className="dialog sheet run-many" role="dialog" data-part="dialog" aria-label="Start on several terminals" data-testid="run-many">
         <ScreenHead title="Start on several terminals" onClose={onClose} closeTestid="run-many-close" />
         {results ? (
           <>

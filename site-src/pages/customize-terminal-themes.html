@@ -1,0 +1,227 @@
+<!--page {"updated":"2026-11-28","order":6.97,"key":"custom","llms":{"name":"Customize terminal themes, colors, fonts and keys","about":"ten color themes for the page, themes of your own as JSON files and an accent of your own, a theme for a project and for the terminals with a tag, a theme for each terminal, 35 colors set by hand in the settings file, a terminal's font and cursor, every key rebound, a settings file with a JSON Schema and a searchable list in Settings; what a program or an agent may change, and a theme an agent proposes for you to accept; and how VS Code, Zed, Obsidian, Hyper, WezTerm, tmux, kitty, Ghostty, Windows Terminal and iTerm2 document their own, read on 28 November 2026. templates for what a terminal's title and its row say; your own stylesheet (custom.css) with documented hooks; plugins, your own JavaScript in the page through a documented API, which run as you and are not sandboxed"}}-->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "{{=url}}#article",
+      "headline": {{json:custom.title}},
+      "description": {{json:custom.meta.description}},
+      "url": "{{=url}}",
+      "mainEntityOfPage": "{{=url}}",
+      "image": "https://thirstyeggplant.com/screenshots/terminal-themes.png",
+      "datePublished": "2026-11-28",
+      "dateModified": "{{=updated}}",
+      "inLanguage": "{{=lang}}",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": {{json:guides.crumb}}, "item": "https://thirstyeggplant.com/guides/" },
+        { "@type": "ListItem", "position": 3, "name": {{json:custom.crumb}}, "item": "{{=url}}" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "{{=url}}#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": {{json:custom.q.terminal.q}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:custom.q.terminal.a}} } },
+        { "@type": "Question", "name": {{json:custom.q.css.q}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:custom.q.css.a}} } },
+        { "@type": "Question", "name": {{json:custom.q.code.q}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:custom.q.code.a}} } },
+        { "@type": "Question", "name": {{json:custom.q.file.q}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:custom.q.file.a}} } },
+        { "@type": "Question", "name": {{json:custom.q.agent.q}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:custom.q.agent.a}} } }
+      ]
+    }
+  ]
+}
+</script>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="{{attr:site.crumbs}}"><ol><li><a href="/">Aubergine</a></li><li><a href="/guides/">{{guides.crumb}}</a></li><li>{{custom.crumb}}</li></ol></nav>
+    <h1>{{custom.title}}</h1>
+    <p class="lead">{{custom.lead}}</p>
+  </div>
+</header>
+<div class="wrap page-body">
+  <div class="prose">
+    <h2 id="page-themes">{{custom.page.title}}</h2>
+    <p>{{custom.page.text}}</p>
+    <p>{{custom.page.at}}</p>
+    <figure class="frame"><a href="/screenshots/themes-settings.png" class="frame-pic"><img src="/screenshots/themes-settings.png" width="1090" height="1412" loading="lazy" alt="{{attr:home.themes.pick.alt}}"></a><figcaption>{{home.themes.pick.caption}}</figcaption></figure>
+
+    <h2 id="terminal-themes">{{custom.own.title}}</h2>
+    <p>{{custom.own.text}}</p>
+    <figure class="frame"><a href="/screenshots/terminal-theme-menu.png" class="frame-pic"><img src="/screenshots/terminal-theme-menu.png" width="1262" height="1118" loading="lazy" alt="{{attr:custom.menu.alt}}"></a><figcaption>{{custom.menu.caption}}</figcaption></figure>
+    <p>{{custom.own.where}}</p>
+    <figure class="frame"><a href="/screenshots/terminal-themes-close.png" class="frame-pic"><img src="/screenshots/terminal-themes-close.png" width="2444" height="722" loading="lazy" alt="{{attr:home.themes.own.alt}}"></a><figcaption>{{home.themes.own.caption}}</figcaption></figure>
+
+    <h2 id="colors">{{custom.colors.title}}</h2>
+    <p>{{custom.colors.text}}</p>
+    <pre><code>{
+  "$schema": "./config.schema.json",
+  "appearance": {
+    "colors": {
+      "accent": "#c678dd",
+      "[nord]": { "terminal-bg": "#242933" }
+    }
+  }
+}</code></pre>
+    <p>{{custom.colors.names}}</p>
+
+    <h2 id="theme-files">{{custom.files.title}}</h2>
+    <p>{{custom.files.text}}</p>
+    <pre><code>{
+  "$schema": "../theme.schema.json",
+  "name": "Harbor",
+  "kind": "dark",
+  "base": "nord",
+  "colors": { "bg": "#0e1a24", "accent": "#5fb3b3" },
+  "terminal": { "foreground": "#d8dee9", "cursor": "#5fb3b3" }
+}</code></pre>
+    <p>{{custom.files.cli}}</p>
+
+    <h2 id="by-condition">{{custom.when.title}}</h2>
+    <p>{{custom.when.project}}</p>
+    <p>{{custom.when.tag}}</p>
+    <pre><code>{
+  "appearance": {
+    "byTag": [
+      { "tag": "prod", "theme": "dracula" },
+      { "tag": "docs", "theme": "solarized-light" }
+    ]
+  }
+}</code></pre>
+    <p>{{custom.when.accent}}</p>
+
+    <h2 id="fonts-and-keys">{{custom.text.title}}</h2>
+    <p>{{custom.text.font}}</p>
+    <p>{{custom.keys.text}}</p>
+    <pre><code>{
+  "shortcuts": {
+    "terminal.park": "X",
+    "attention.next": ["Ctrl+Cmd+G", "W"],
+    "view.fit": null
+  }
+}</code></pre>
+    <p>{{custom.keys.check}}</p>
+
+    <h2 id="titles-and-rows">{{custom.tpl.title}}</h2>
+    <p>{{custom.tpl.text}}</p>
+    <pre><code>{
+  "appearance": {
+    "titleFormat": "{state} {folder} · {field:Ticket} {links} {tags}",
+    "rowFormat": "{state} {step} {branch} · {time}"
+  }
+}</code></pre>
+    <p>{{custom.tpl.rule}}</p>
+
+    <h2 id="your-stylesheet">{{custom.css.title}}</h2>
+    <p>{{custom.css.text}}</p>
+    <p>{{custom.css.hooks}}</p>
+    <pre><code>[data-part="terminal"][data-tags~="prod"] [data-part="terminal-title"] {
+  background: #5c1f24;
+}
+[data-part="map"] {
+  display: none;
+}</code></pre>
+    <p>{{custom.css.tokens}}</p>
+    <pre><code>:root {
+  --radius-surface: 16px;
+  --radius-control: 10px;
+}</code></pre>
+    <p>{{custom.css.out}}</p>
+
+    <h2 id="plugins">{{custom.plugin.title}}</h2>
+    <p>{{custom.plugin.text}}</p>
+    <p class="note">{{custom.plugin.asyou}}</p>
+    <p>{{custom.plugin.api}}</p>
+    <pre><code>// plugins/hello/index.js
+export function activate(aubergine) {
+  aubergine.commands.add({
+    id: 'hello',
+    title: 'Say hello',
+    run: () =&gt; aubergine.say('Hello from my plugin'),
+  });
+}</code></pre>
+    <p>{{custom.plugin.out}}</p>
+
+    <h2 id="settings-file">{{custom.file.title}}</h2>
+    <p>{{custom.file.text}}</p>
+    <p>{{custom.file.schema}}</p>
+    <pre><code>{ "$schema": "./config.schema.json" }</code></pre>
+    <p>{{custom.file.cli}}</p>
+    <pre><code>aubergine settings path
+aubergine settings list
+aubergine settings schema</code></pre>
+    <p>{{custom.file.all}}</p>
+    <figure class="frame"><a href="/screenshots/every-setting.png" class="frame-pic"><img src="/screenshots/every-setting.png" width="1720" height="1332" loading="lazy" alt="{{attr:custom.all.alt}}"></a><figcaption>{{custom.all.caption}}</figcaption></figure>
+    <p>{{custom.file.browser}}</p>
+
+    <h2 id="programs-and-agents">{{custom.program.title}}</h2>
+    <p>{{custom.program.text}}</p>
+    <p>{{custom.program.agent}}</p>
+    <p>{{custom.program.owner}}</p>
+
+    <h2 id="other-tools">{{custom.cmp.title}}</h2>
+    <p class="note">{{custom.cmp.how}}</p>
+    <div class="table table-wide">
+      <table class="table-stack">
+        <thead><tr><th>{{custom.cmp.tool}}</th><th>{{custom.cmp.settings}}</th><th>{{custom.cmp.themes}}</th><th>{{custom.cmp.css}}</th><th>{{custom.cmp.code}}</th><th>{{custom.cmp.templates}}</th></tr></thead>
+        <tbody>
+          <tr><td><a href="https://code.visualstudio.com/docs/configure/settings">VS Code</a><br>{{custom.cmp.kind.editor}}</td><td data-label="{{attr:custom.cmp.settings}}">{{custom.cmp.vscode.settings}}</td><td data-label="{{attr:custom.cmp.themes}}">{{custom.cmp.vscode.themes}}</td><td data-label="{{attr:custom.cmp.css}}">{{custom.cmp.vscode.css}}</td><td data-label="{{attr:custom.cmp.code}}">{{custom.cmp.vscode.code}}</td><td data-label="{{attr:custom.cmp.templates}}">{{custom.cmp.vscode.templates}}</td></tr>
+          <tr><td><a href="https://zed.dev/docs/configuring-zed">Zed</a><br>{{custom.cmp.kind.editor}}</td><td data-label="{{attr:custom.cmp.settings}}">{{custom.cmp.zed.settings}}</td><td data-label="{{attr:custom.cmp.themes}}">{{custom.cmp.zed.themes}}</td><td data-label="{{attr:custom.cmp.css}}">{{custom.cmp.none}}</td><td data-label="{{attr:custom.cmp.code}}">{{custom.cmp.zed.code}}</td><td data-label="{{attr:custom.cmp.templates}}">{{custom.cmp.none}}</td></tr>
+          <tr><td><a href="https://help.obsidian.md/snippets">Obsidian</a><br>{{custom.cmp.kind.notes}}</td><td data-label="{{attr:custom.cmp.settings}}">{{custom.cmp.obsidian.settings}}</td><td data-label="{{attr:custom.cmp.themes}}">{{custom.cmp.obsidian.themes}}</td><td data-label="{{attr:custom.cmp.css}}">{{custom.cmp.obsidian.css}}</td><td data-label="{{attr:custom.cmp.code}}">{{custom.cmp.obsidian.code}}</td><td data-label="{{attr:custom.cmp.templates}}">{{custom.cmp.none}}</td></tr>
+          <tr><td><a href="https://hyper.is/">Hyper</a><br>{{custom.cmp.kind.terminal}}</td><td data-label="{{attr:custom.cmp.settings}}">{{custom.cmp.hyper.settings}}</td><td data-label="{{attr:custom.cmp.themes}}">{{custom.cmp.hyper.themes}}</td><td data-label="{{attr:custom.cmp.css}}">{{custom.cmp.hyper.css}}</td><td data-label="{{attr:custom.cmp.code}}">{{custom.cmp.hyper.code}}</td><td data-label="{{attr:custom.cmp.templates}}">{{custom.cmp.none}}</td></tr>
+          <tr><td><a href="https://wezterm.org/config/files.html">WezTerm</a><br>{{custom.cmp.kind.terminal}}</td><td data-label="{{attr:custom.cmp.settings}}">{{custom.cmp.wezterm.settings}}</td><td data-label="{{attr:custom.cmp.themes}}">{{custom.cmp.wezterm.themes}}</td><td data-label="{{attr:custom.cmp.css}}">{{custom.cmp.none}}</td><td data-label="{{attr:custom.cmp.code}}">{{custom.cmp.wezterm.code}}</td><td data-label="{{attr:custom.cmp.templates}}">{{custom.cmp.wezterm.templates}}</td></tr>
+          <tr><td><a href="https://man.openbsd.org/tmux.1">tmux</a><br>{{custom.cmp.kind.mux}}</td><td data-label="{{attr:custom.cmp.settings}}">{{custom.cmp.tmux.settings}}</td><td data-label="{{attr:custom.cmp.themes}}">{{custom.cmp.tmux.themes}}</td><td data-label="{{attr:custom.cmp.css}}">{{custom.cmp.none}}</td><td data-label="{{attr:custom.cmp.code}}">{{custom.cmp.tmux.code}}</td><td data-label="{{attr:custom.cmp.templates}}">{{custom.cmp.tmux.templates}}</td></tr>
+          <tr><td><a href="https://sw.kovidgoyal.net/kitty/conf/">kitty</a><br>{{custom.cmp.kind.terminal}}</td><td data-label="{{attr:custom.cmp.settings}}">{{custom.cmp.kitty.settings}}</td><td data-label="{{attr:custom.cmp.themes}}">{{custom.cmp.kitty.themes}}</td><td data-label="{{attr:custom.cmp.css}}">{{custom.cmp.none}}</td><td data-label="{{attr:custom.cmp.code}}">{{custom.cmp.kitty.code}}</td><td data-label="{{attr:custom.cmp.templates}}">{{custom.cmp.kitty.templates}}</td></tr>
+          <tr><td><a href="https://ghostty.org/docs/config">Ghostty</a><br>{{custom.cmp.kind.terminal}}</td><td data-label="{{attr:custom.cmp.settings}}">{{custom.cmp.ghostty.settings}}</td><td data-label="{{attr:custom.cmp.themes}}">{{custom.cmp.ghostty.themes}}</td><td data-label="{{attr:custom.cmp.css}}">{{custom.cmp.none}}</td><td data-label="{{attr:custom.cmp.code}}">{{custom.cmp.ghostty.code}}</td><td data-label="{{attr:custom.cmp.templates}}">{{custom.cmp.none}}</td></tr>
+          <tr><td><a href="https://learn.microsoft.com/windows/terminal/customize-settings/color-schemes">Windows Terminal</a><br>{{custom.cmp.kind.terminal}}</td><td data-label="{{attr:custom.cmp.settings}}">{{custom.cmp.wt.settings}}</td><td data-label="{{attr:custom.cmp.themes}}">{{custom.cmp.wt.themes}}</td><td data-label="{{attr:custom.cmp.css}}">{{custom.cmp.none}}</td><td data-label="{{attr:custom.cmp.code}}">{{custom.cmp.wt.code}}</td><td data-label="{{attr:custom.cmp.templates}}">{{custom.cmp.wt.templates}}</td></tr>
+          <tr><td><a href="https://iterm2.com/documentation-automatic-profile-switching.html">iTerm2</a><br>{{custom.cmp.kind.terminal}}</td><td data-label="{{attr:custom.cmp.settings}}">{{custom.cmp.iterm2.settings}}</td><td data-label="{{attr:custom.cmp.themes}}">{{custom.cmp.iterm2.themes}}</td><td data-label="{{attr:custom.cmp.css}}">{{custom.cmp.none}}</td><td data-label="{{attr:custom.cmp.code}}">{{custom.cmp.iterm2.code}}</td><td data-label="{{attr:custom.cmp.templates}}">{{custom.cmp.iterm2.templates}}</td></tr>
+          <tr><td>Aubergine<br>{{custom.cmp.kind.aubergine}}</td><td data-label="{{attr:custom.cmp.settings}}">{{custom.cmp.a.settings}}</td><td data-label="{{attr:custom.cmp.themes}}">{{custom.cmp.a.themes}}</td><td data-label="{{attr:custom.cmp.css}}">{{custom.cmp.a.css}}</td><td data-label="{{attr:custom.cmp.code}}">{{custom.cmp.a.code}}</td><td data-label="{{attr:custom.cmp.templates}}">{{custom.cmp.a.templates}}</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>{{custom.cmp.p1}}</p>
+    <p>{{custom.cmp.p2}}</p>
+    <p>{{custom.cmp.p3}}</p>
+
+    <h2 id="planned">{{custom.plan.title}}</h2>
+    <p>{{custom.plan.text}}</p>
+
+    <h2 id="faq">{{home.faq.title}}</h2>
+    <div class="questions">
+      <details><summary>{{custom.q.terminal.q}}</summary><p>{{custom.q.terminal.a}}</p></details>
+      <details><summary>{{custom.q.css.q}}</summary><p>{{custom.q.css.a}}</p></details>
+      <details><summary>{{custom.q.code.q}}</summary><p>{{custom.q.code.a}}</p></details>
+      <details><summary>{{custom.q.file.q}}</summary><p>{{custom.q.file.a}}</p></details>
+      <details><summary>{{custom.q.agent.q}}</summary><p>{{custom.q.agent.a}}</p></details>
+    </div>
+    <p>{{custom.related}}</p>
+    <p>{{custom.cmp.mark}}</p>
+  </div>
+</div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">{{home.install.title}}</h2>
+    <div class="close-do">
+      <p>{{home.install.intro}}</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="{{attr:site.copied}}" aria-live="polite" hidden>{{site.copy}}</button></p>
+      <p class="actions"><a class="button" href="/install/">{{home.hero.install}}</a><a class="button button-quiet" href="/guides/">{{guides.title}}</a></p>
+    </div>
+  </div>
+</section>

@@ -31,7 +31,8 @@ describe('Settings', () => {
       shortcutsInAppWindow: { 'canvas.go.1': ['Meta+1'] },
       describe: { remind: false, pullRequests: false },
       access: { addresses: ['https://aubergine.example.test'], pages: ['http://127.0.0.1:4600'] },
-      appearance: { light: 'solarized-light', dark: 'nord', cursor: 'bar', cursorBlink: false, terminal: 'gruvbox-dark', colors: { accent: '#aa66cc', '[nord]': { bg: '#101010' } } },
+      appearance: { light: 'solarized-light', dark: 'nord', cursor: 'bar', cursorBlink: false, terminal: 'gruvbox-dark', byTag: [{ tag: 'prod', theme: 'dracula' }], titleFormat: '{state} · {folder}', rowFormat: '{field:Ticket} {time}', customCss: false, colors: { accent: '#aa66cc', '[nord]': { bg: '#101010' } } },
+      plugins: { on: { tickets: 'a'.repeat(64), writing: 'follow' } },
     };
     expect(Settings.parse(full)).toEqual(full);
   });

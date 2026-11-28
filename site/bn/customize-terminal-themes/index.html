@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="bn" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>টার্মিনালের থিম, রং ও কী নিজের মতো করুন | Aubergine</title>
+<meta name="description" content="দশটি রঙের থিম, প্রতি টার্মিনালে একটি থিম, হাতে ঠিক করা রং, ফন্ট, কার্সর ও কী, আর VS Code, kitty, tmux ও অন্যরা কীভাবে সাজাতে দেয়।">
+<link rel="canonical" href="https://thirstyeggplant.com/bn/customize-terminal-themes/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/customize-terminal-themes/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/customize-terminal-themes/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/customize-terminal-themes/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/customize-terminal-themes/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/customize-terminal-themes/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/customize-terminal-themes/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/customize-terminal-themes/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/customize-terminal-themes/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/customize-terminal-themes/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/customize-terminal-themes/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/customize-terminal-themes/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/customize-terminal-themes/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/customize-terminal-themes/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F7F0E4">
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="টার্মিনালের থিম, রং ও কী নিজের মতো করুন | Aubergine">
+<meta property="og:description" content="দশটি রঙের থিম, প্রতি টার্মিনালে একটি থিম, হাতে ঠিক করা রং, ফন্ট, কার্সর ও কী, আর VS Code, kitty, tmux ও অন্যরা কীভাবে সাজাতে দেয়।">
+<meta property="og:url" content="https://thirstyeggplant.com/bn/customize-terminal-themes/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine: টার্মিনালের একটি ক্যানভাস, একটি কাজে ব্যস্ত আর একটি আপনার অপেক্ষায়">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine: টার্মিনালের একটি ক্যানভাস, একটি কাজে ব্যস্ত আর একটি আপনার অপেক্ষায়">
+<meta name="twitter:title" content="টার্মিনালের থিম, রং ও কী নিজের মতো করুন | Aubergine">
+<meta name="twitter:description" content="দশটি রঙের থিম, প্রতি টার্মিনালে একটি থিম, হাতে ঠিক করা রং, ফন্ট, কার্সর ও কী, আর VS Code, kitty, tmux ও অন্যরা কীভাবে সাজাতে দেয়।">
+<link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">পেজে যান</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="32" height="32"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="পেজ">
+      <ul>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">ইনস্টল</a></li>
+        <li><a href="../guides/">গাইড</a></li>
+        <li><a href="../security/">নিরাপত্তা</a></li>
+        <li><a href="../faq/">প্রশ্নোত্তর</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="ভাষা: বাংলা"><span class="lang-long" aria-hidden="true">বাংলা</span><span class="lang-short" aria-hidden="true">BN</span></summary>
+      <ul class="menu-list"><li><a href="../../customize-terminal-themes/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="../../es/customize-terminal-themes/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="../../pt/customize-terminal-themes/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="../../fr/customize-terminal-themes/" hreflang="fr" lang="fr" dir="ltr">Français</a></li><li><a href="../../de/customize-terminal-themes/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="../../ja/customize-terminal-themes/" hreflang="ja" lang="ja" dir="ltr">日本語</a></li><li><a href="../../zh/customize-terminal-themes/" hreflang="zh-Hans" lang="zh-Hans" dir="ltr">简体中文</a></li><li><a href="../../ko/customize-terminal-themes/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="../../id/customize-terminal-themes/" hreflang="id" lang="id" dir="ltr">Bahasa Indonesia</a></li><li><a href="../../hi/customize-terminal-themes/" hreflang="hi" lang="hi" dir="ltr">हिन्दी</a></li><li><a href="./" hreflang="bn" lang="bn" dir="ltr" aria-current="true">বাংলা</a></li><li><a href="../../ar/customize-terminal-themes/" hreflang="ar" lang="ar" dir="rtl">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>মেনু</summary>
+      <ul class="menu-list">
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">ইনস্টল</a></li>
+        <li><a href="../guides/">গাইড</a></li>
+        <li><a href="../security/">নিরাপত্তা</a></li>
+        <li><a href="../faq/">প্রশ্নোত্তর</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="translated">
+  <div class="wrap translated-in">
+    <p>Aubergine নিজে ইংরেজিতে: এর বোতাম, মেনু আর ছবি সবই ইংরেজি।</p>
+    <p>এই পেজটি ইংরেজি থেকে মেশিন দিয়ে অনুবাদ করা। <a href="https://github.com/thirstyeggplant/aubergine/issues">সংশোধন পাঠান</a>।</p>
+  </div>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://thirstyeggplant.com/bn/customize-terminal-themes/#article",
+      "headline": "টার্মিনালের থিম, রং, ফন্ট ও কী নিজের মতো করুন",
+      "description": "দশটি রঙের থিম, প্রতি টার্মিনালে একটি থিম, হাতে ঠিক করা রং, ফন্ট, কার্সর ও কী, আর VS Code, kitty, tmux ও অন্যরা কীভাবে সাজাতে দেয়।",
+      "url": "https://thirstyeggplant.com/bn/customize-terminal-themes/",
+      "mainEntityOfPage": "https://thirstyeggplant.com/bn/customize-terminal-themes/",
+      "image": "https://thirstyeggplant.com/screenshots/terminal-themes.png",
+      "datePublished": "2026-11-28",
+      "dateModified": "2026-11-28",
+      "inLanguage": "bn",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "গাইড", "item": "https://thirstyeggplant.com/guides/" },
+        { "@type": "ListItem", "position": 3, "name": "নিজের মতো করুন", "item": "https://thirstyeggplant.com/bn/customize-terminal-themes/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://thirstyeggplant.com/bn/customize-terminal-themes/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "প্রতিটি টার্মিনালের কি আলাদা রঙের থিম হতে পারে?", "acceptedAnswer": { "@type": "Answer", "text": "হ্যাঁ। টার্মিনালের মেনুতে Theme… তার মূল অংশ দশটি থিমের যেকোনোটিতে আঁকে, পেজের থিম যা-ই হোক। ট্যাগওয়ালা টার্মিনালকে Settings-এ সেই ট্যাগ দিয়ে থিম দেওয়া যায়, আর বাকিরা টার্মিনালের জন্য আপনার ঠিক করা ডিফল্ট বা পেজ অনুসরণ করে।" } },
+        { "@type": "Question", "name": "Aubergine-এ কি নিজের CSS যোগ করতে পারি?", "acceptedAnswer": { "@type": "Answer", "text": "হ্যাঁ: ডেটা ফোল্ডারে custom.css (aubergine css new শুরু করার জন্য একটি লিখে দেয়)। প্রথম আঁকা থেকেই এটি পেজে সবার শেষে যুক্ত হয়, আর যে হুকগুলোর ওপর এটি ভরসা করতে পারে সেগুলো docs/hooks.md-এ আছে। এটি ছাড়া দেখতে পেজের ঠিকানায় ?plain যোগ করুন।" } },
+        { "@type": "Question", "name": "আমি কি Aubergine-এর জন্য নিজের প্লাগইন লিখতে পারি?", "acceptedAnswer": { "@type": "Answer", "text": "হ্যাঁ: ডেটা ফোল্ডারের plugins/\u003cid\u003e/-এ একটি JavaScript মডিউল (aubergine plugin new \u003cid\u003e শুরু করার জন্য একটি লিখে দেয়), Settings → Plugins-এ চালু করা। এটি পেজে আপনার হয়ে, পেজ যা পারে তার সবকিছু নিয়ে চলে; এটি স্যান্ডবক্সে নেই।" } },
+        { "@type": "Question", "name": "Aubergine-এর সেটিংস ফাইল কোথায়?", "acceptedAnswer": { "@type": "Answer", "text": "এটি Aubergine-এর ডেটা ফোল্ডারে config.json। aubergine settings path জানায় কোথায়, আর সার্ভার চালু হওয়ার সময় তা দেখায়।" } },
+        { "@type": "Question", "name": "কোনো এজেন্ট কি Aubergine-এর চেহারা বদলাতে পারে?", "acceptedAnswer": { "@type": "Answer", "text": "সেটিংস নয়: সেগুলো শুধু আপনার। এজেন্ট নিজের টার্মিনালের নাম রাখতে ও বর্ণনা দিতে পারে, আর একটি রঙের থিম প্রস্তাব করতে পারে যা আপনার পড়া ও গ্রহণের অপেক্ষায় থাকে; যে প্রোগ্রামের API টোকেন অনুমতি দেয় সে টার্মিনালের নাম বদলাতে, ট্যাগ দিতে, থিম দিতে, ক্যানভাস সাজাতে আর থিম প্রস্তাবও করতে পারে।" } }
+      ]
+    }
+  ]
+}
+</script>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="আপনি কোথায় আছেন"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">গাইড</a></li><li>নিজের মতো করুন</li></ol></nav>
+    <h1>টার্মিনালের থিম, রং, ফন্ট ও কী নিজের মতো করুন</h1>
+    <p class="lead">দশটি থিম থেকে পেজের রং বেছে নিন, প্রতিটি টার্মিনালকে তার নিজের থিম দিন, আর আলাদা রং, টার্মিনালের ফন্ট ও কার্সর এবং প্রতিটি কী ঠিক করুন, Settings-এ বা এমন একটি সেটিংস ফাইলে যা নিজেই নিজের বর্ণনা দেয়।</p>
+  </div>
+</header>
+<div class="wrap page-body">
+  <div class="prose">
+    <h2 id="page-themes">হালকা ও গাঢ়, দশটি রঙের থিম</h2>
+    <p><strong>Settings → Appearance</strong> শুরু হয় তিনটি বিকল্প দিয়ে: <strong>Light</strong>, <strong>Dark</strong> আর <strong>Match the system</strong>; নতুন ইনস্টল এটি দিয়েই শুরু হয় এবং সিস্টেম বদলালে এটিও বদলায়। তার নিচে প্রতিটি ধরনের একটি করে থিম বাছেন: Light, High contrast light, Solarized light বা Gruvbox light; Dark, High contrast dark, Solarized dark, Gruvbox dark, Nord বা Dracula। প্রতিটি থিম তার রঙের একটি ছোট ছবির সঙ্গে দেখানো হয়।</p>
+    <p>কোনো বদল রিলোড ছাড়াই সঙ্গে সঙ্গে পেজ আর প্রতিটি টার্মিনালে লাগে, আর সেটিংস ফাইলে রাখা হয়, তাই যে ব্রাউজারেই Aubergine খুলুন, সব একই থাকে। প্যালেটেও একই জিনিস কমান্ড হিসেবে আছে, যেমন <strong>Color theme: Nord</strong>।</p>
+    <figure class="frame"><a href="../../screenshots/themes-settings.png" class="frame-pic"><img src="../../screenshots/themes-settings.png" width="1090" height="1412" loading="lazy" alt="Settings, Appearance: লাইট, ডার্ক বা সিস্টেমের মতো, তারপর দুই দলে দশটি কালার থিম, প্রতিটির ছোট প্রিভিউ; ডার্ক পেজের জন্য Nord আর লাইটের জন্য Solarized light বেছে নেওয়া আছে।"></a><figcaption>লাইট, ডার্ক বা সিস্টেমের মতো, আর প্রতিটি ধরনের একটি থিম, প্রতিটির সঙ্গে তার রঙের ছোট ছবি।</figcaption></figure>
+
+    <h2 id="terminal-themes">প্রতিটি টার্মিনালের জন্য আলাদা রঙের থিম</h2>
+    <p>টার্মিনালের মেনুর <strong>Theme…</strong> সেই টার্মিনালকে দশটি থিমের যেকোনোটিতে আঁকে, পেজ যে থিমেই থাকুক। বদলায় শুধু তার ভেতরের অংশ: শিরোনাম, নোট আর বিবরণ পেজের মতোই থাকে। যে টার্মিনালের নিজের থিম নেই, সে Settings-এর <strong>Terminal theme</strong> মেনে চলে, অর্থাৎ টার্মিনালের ডিফল্ট, আর সেটিও না থাকলে পেজকে।</p>
+    <figure class="frame"><a href="../../screenshots/terminal-theme-menu.png" class="frame-pic"><img src="../../screenshots/terminal-theme-menu.png" width="1262" height="1118" loading="lazy" alt="ক্যানভাসে খোলা একটি টার্মিনালের Theme… মেনু: Same as the default, এখন পেজের মতো, Dark; তারপর চারটি হালকা ও ছয়টি গাঢ় থিম, Dracula-তে টিক।"></a><figcaption>টার্মিনালের মেনুতে Theme…: ডিফল্ট, বা দশটির যেকোনোটি।</figcaption></figure>
+    <p>একই বিকল্প তালিকায় টার্মিনালের সারির মেনুতে, তার বিবরণে আর প্যালেটে আছে। টার্মিনাল আর ফ্রেমেরও নিজের রং থাকতে পারে, তেরোটির একটি বা যেকোনো রঙের জন্য <strong>Your own…</strong>, আর ক্যানভাসের ট্যাবেরও; টার্মিনালের রং তালিকায় তার সারিরও রং।</p>
+    <figure class="frame"><a href="../../screenshots/terminal-themes-close.png" class="frame-pic"><img src="../../screenshots/terminal-themes-close.png" width="2444" height="722" loading="lazy" alt="ডার্ক পেজে দুটি টার্মিনাল: বাঁ দিকে Solarized light থিমে Git-এর ইতিহাস, ডান দিকে Dracula থিমে রঙিন diff।"></a><figcaption>ডার্ক পেজে পাশাপাশি: একটি টার্মিনাল Solarized light-এ, একটি Dracula-য়।</figcaption></figure>
+
+    <h2 id="colors">আলাদা রং হাতে ঠিক করুন</h2>
+    <p>থিমের বাইরেও পেজের ৩৫টি রং সেটিংস ফাইল <code>config.json</code>-এ <code>appearance.colors</code>-এর নিচে ঠিক করা যায়: রঙের নাম আর <code>#rrggbb</code> আকারে লেখা মান। ওপরে লিখলে রংটি সব থিমের ওপর খাটে; বন্ধনীর ভেতরে থিমের ID-র নিচে লিখলে, যেমন <code>"[nord]"</code>, শুধু সেই থিমের ওপর খাটে, আর সেটিই প্রাধান্য পায়।</p>
+    <pre><code>{
+  "$schema": "./config.schema.json",
+  "appearance": {
+    "colors": {
+      "accent": "#c678dd",
+      "[nord]": { "terminal-bg": "#242933" }
+    }
+  }
+}</code></pre>
+    <p>নামগুলো পেজের রঙের টোকেন, যেমন <code>bg</code>, <code>text</code>, <code>accent</code> আর <code>terminal-bg</code>; <a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/design.md">docs/design.md</a>-এ তালিকা আছে। ভুল এন্ট্রি বাদ দেওয়া হয়, আর ফাইলের বাকিটা খাটে; কোনটি বাদ গেল তা <strong>Settings → Appearance</strong> জানায়। আপনার ঠিক করা রং আপনার দায়িত্ব: যা লিখলেন তা পড়া যায় কি না, কিছুই যাচাই করে না।</p>
+
+    <h2 id="theme-files">আপনার নিজের থিম, ফাইল হিসেবে</h2>
+    <p>আপনার নিজের থিম হলো ডেটা ফোল্ডারের <code>themes/</code>-এ একটি JSON ফাইল: দশটির মধ্যে একই ধরনের একটি ভিত্তি হিসেবে, তার ওপর ৩৫টি রঙের যেকোনোটি, আর টার্মিনালের নিজের রং: তার লেখা, কার্সর, নির্বাচিত অংশ, এবং একটি প্রোগ্রাম যে ষোলোটি রং চায়। এটি নিজের ধরনের দশটির পরে, আপনার হিসেবে চিহ্নিত হয়ে তালিকায় আসে, এবং সেগুলো যেখানে বাছা যায় সেখানে বাছা যায়: পেজের জন্য, টার্মিনালের ডিফল্ট হিসেবে, বা একটি টার্মিনালের জন্য। ছায়া আর ফোকাস রিং ভিত্তিরই থাকে, এবং ফাইলের কিছুই চালানো হয় না।</p>
+    <pre><code>{
+  "$schema": "../theme.schema.json",
+  "name": "Harbor",
+  "kind": "dark",
+  "base": "nord",
+  "colors": { "bg": "#0e1a24", "accent": "#5fb3b3" },
+  "terminal": { "foreground": "#d8dee9", "cursor": "#5fb3b3" }
+}</code></pre>
+    <p><code>aubergine theme new harbor --from nord</code> শুরু করার জন্য একটি ফাইল লেখে, মূল থিমের প্রতিটি রং সহ; <code>aubergine theme check</code> বলে একটি ফাইলে কী ভুল; Settings-এ <strong>Read themes again</strong> একটি পরিবর্তন পড়ে নেয়। আপনার রং পড়া যায় কি না তা আপনিই বিচার করবেন: Settings শুধু তখনই জানায় যখন লেখা পড়তে কঠিন হতে পারে। ফরম্যাট <a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/themes.md">docs/themes.md</a>-এ আছে।</p>
+
+    <h2 id="by-condition">একটি প্রজেক্টের থিম, আর ট্যাগ অনুযায়ী টার্মিনালের থিম</h2>
+    <p>আপনি যতক্ষণ একটি প্রজেক্ট দেখছেন, ততক্ষণ সেটি পেজটিকে নিজের থিমে আঁকতে পারে, যাতে এক নজরে বোঝা যায় আপনি কোথায়। <strong>Projects…</strong>-এ প্রজেক্টের পাশে <strong>When light</strong> আর <strong>When dark</strong> প্রতিটি ধরনের একটি করে থিম বেছে নেয়; <strong>As the page</strong> বিষয়টি Settings-এর ওপর ছেড়ে দেয়। অন্য যেকোনো প্রজেক্টে পেজ আপনার বেছে নেওয়া মতোই থাকে, আর সেই প্রজেক্টের ঠিকানায় রিলোড করলে প্রথম আঁকা থেকেই তার থিমে আঁকা হয়।</p>
+    <p>Settings-এ Terminal theme-এর নিচে <strong>By tag</strong> কোনো ট্যাগওয়ালা টার্মিনালগুলোকে নিজের থিম দেয়: যেমন <code>prod</code> ট্যাগওয়ালা প্রতিটি টার্মিনাল Dracula-তে, সঙ্গে সঙ্গে, পেজের থিম যা-ই হোক। টার্মিনালের যে ট্যাগের লাইন প্রথমে আসে সেটিই খাটে, আর টার্মিনালের নিজের থিম সবার আগে। সেটিংস ফাইলে এটি <code>appearance.byTag</code>:</p>
+    <pre><code>{
+  "appearance": {
+    "byTag": [
+      { "tag": "prod", "theme": "dracula" },
+      { "tag": "docs", "theme": "solarized-light" }
+    ]
+  }
+}</code></pre>
+    <p>প্রায়ই একটি আলাদা অ্যাকসেন্ট রংই যথেষ্ট। <code>aubergine theme new teal --from nord --accent "#2f9e8f"</code> এমন একটি থিম ফাইল লেখে যা শুধু Nord-এর অ্যাকসেন্ট আর তার সঙ্গের পাঁচটি রং বদলায়, এমনভাবে হিসাব করে যাতে সেগুলো পড়া যায়। অন্য যেকোনো থিমের মতো এটি একটি প্রজেক্ট বা ট্যাগের জন্য বেছে নিন।</p>
+
+    <h2 id="fonts-and-keys">ফন্ট, কার্সর ও কিবোর্ড শর্টকাট</h2>
+    <p>Settings → Appearance-এর <strong>Terminal text</strong> টার্মিনালের লেখার আকার, ৮ থেকে ৩২ পিক্সেল, আর ফন্ট ঠিক করে; ফন্ট একটি তালিকা, যার প্রথম পাওয়া ফন্টটি ব্যবহার হয়। <strong>Cursor</strong> তার আকার, ব্লক, বার বা আন্ডারলাইন, আর সেটি জ্বলে-নেভে কি না ঠিক করে।</p>
+    <p>প্রতিটি কী বদলানো যায়। সেটিংস ফাইলে <code>shortcuts</code> যোগ করুন: কোনো কমান্ডের নাম আর একটি কী-সমন্বয়, সমন্বয়ের তালিকা, বা কোনো কী না রাখতে <code>null</code>। <code>shortcutsInAppWindow</code> একই জিনিস নেয় আর শুধু সেখানে খাটে যেখানে Aubergine নিজস্ব জানালার অ্যাপ হিসেবে ইনস্টল করা। পেজ রিলোড করুন, তারপর শর্টকাট শিট (<strong>?</strong>), প্যালেট আর টুলটিপ কীগুলো ঠিক আপনার দেওয়া মতো দেখায়।</p>
+    <pre><code>{
+  "shortcuts": {
+    "terminal.park": "X",
+    "attention.next": ["Ctrl+Cmd+G", "W"],
+    "view.fit": null
+  }
+}</code></pre>
+    <p>দুবার ঠিক করা কী, বা যা পড়া যায় না, শর্টকাট শিটের ওপরে আর সার্ভারে জানানো হয়, আর ফাইলের বাকিটা খাটে। একা একটি কী, বা Ctrl বা Option-এর সঙ্গে একটি কী, তখনই কাজ করে যখন কোনো টার্মিনালের হাতে কিবোর্ড নেই, যাতে টার্মিনালের প্রতিটি প্রোগ্রাম তার দরকারি কী পেতে থাকে। আরও জানতে README-তে <a href="https://github.com/thirstyeggplant/aubergine#keyboard">Keyboard</a> দেখুন।</p>
+
+    <h2 id="titles-and-rows">শিরোনাম আর সারি কী বলবে তা বেছে নিন</h2>
+    <p>একটি টার্মিনালের নামের পরে, তার শিরোনাম আর তালিকায় তার সারি দুটি টেমপ্লেট যা বলে তা-ই বলে: <code>{state}</code>, <code>{folder}</code>, <code>{time}</code> ও <code>{field:Ticket}</code>-এর মতো প্লেসহোল্ডারসহ লেখা। এগুলো বদলান <strong>Settings → Appearance → Titles and rows</strong>-এ, যেখানে আপনি টাইপ করার সময় প্রতিটি ঘরের নিচে আসল শিরোনাম আর সারি আঁকা হয়, অথবা সেটিংস ফাইলে। এখানে শিরোনাম বলে অবস্থা, ফোল্ডার, ফিল্ড Ticket, লিংক আর ট্যাগ, আর সারি বলে অবস্থা, রানের ধাপ, ব্রাঞ্চ আর সময়:</p>
+    <pre><code>{
+  "appearance": {
+    "titleFormat": "{state} {folder} · {field:Ticket} {links} {tags}",
+    "rowFormat": "{state} {step} {branch} · {time}"
+  }
+}</code></pre>
+    <p>যে প্লেসহোল্ডারের বলার কিছু নেই, তা তার দিকে নিয়ে যাওয়া লেখাসহ বাদ পড়ে: টিকিট, লিংক বা ট্যাগ ছাড়া কোনো টার্মিনালে সেই শিরোনাম শুধু তার অবস্থা আর ফোল্ডার বলে, কোনো বাড়তি বিন্দু থাকে না। টেমপ্লেটে শুধু লেখা আর প্লেসহোল্ডার থাকে, কোনো মার্কআপ বা স্টাইল নয়; প্রত্যেকটি এমনভাবে আঁকা হয় যেভাবে পেজ অন্য জায়গায় সেই জিনিস আঁকে, অবস্থা তার রঙে আর লিংক একটি চিপ হিসেবে। ভুল প্লেসহোল্ডার ঘরের নিচে জানানো হয় ও বাদ দেওয়া হয়, আর <strong>Reset</strong> টেমপ্লেট ছাড়া যা আঁকা হয় ঠিক তা-ই ফিরিয়ে আনে। সব প্লেসহোল্ডার আছে <a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/templates.md">docs/templates.md</a>-এ।</p>
+
+    <h2 id="your-stylesheet">নিজের স্টাইলশিট</h2>
+    <p>সেটিংস যেখানে পৌঁছায় না, সেখানের জন্য নিজের একটি স্টাইলশিট লিখুন: ডেটা ফোল্ডারে <code>custom.css</code>। সার্ভার এটিকে পেজের head-এ সবার শেষে যুক্ত করে, তাই প্রথম আঁকা থেকেই এটি থাকে, আর সমান নির্দিষ্টতার অ্যাপের নিয়মের ওপর আপনার নিয়ম জেতে, <code>!important</code> ছাড়াই। <code>aubergine css new</code> শুরু করার জন্য একটি লিখে দেয়, আর <strong>Settings → Appearance → Your stylesheet</strong> বলে এটি পাওয়া গেছে কি না, এটি বন্ধ করে, আর রিলোড ছাড়াই আবার পড়ে।</p>
+    <p>শুধু হুকের ওপর ভরসা করুন, অন্য কিছুর ওপর নয়: প্রতিটি টোকেন (<code>--accent</code>, <code>--radius-surface</code> এবং বাকিগুলো), পেজের রুটের অ্যাট্রিবিউট (<code>data-theme</code>, <code>data-page</code>), <code>data-part</code> দিয়ে চিহ্নিত অংশ, আর টার্মিনালের নিজের অ্যাট্রিবিউট (<code>data-tags</code>, <code>data-state</code>, <code>data-name</code>), যা তার নোড, তার সারি আর তার নিজের ব্রাউজার ট্যাবে একই। এগুলো <a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/hooks.md">docs/hooks.md</a>-এ তালিকাভুক্ত এবং এক রিলিজ থেকে পরেরটিতে রাখা হয়; ক্লাসের নাম নয়। এখানে prod ট্যাগওয়ালা প্রতিটি টার্মিনালের শিরোনাম গাঢ় লাল, আর মানচিত্রটি নেই:</p>
+    <pre><code>[data-part="terminal"][data-tags~="prod"] [data-part="terminal-title"] {
+  background: #5c1f24;
+}
+[data-part="map"] {
+  display: none;
+}</code></pre>
+    <p>আর দুটি টোকেন দিয়ে সব জায়গায় আরও গোল কোণ:</p>
+    <pre><code>:root {
+  --radius-surface: 16px;
+  --radius-control: 10px;
+}</code></pre>
+    <p>কোনো নিয়ম পেজ ভেঙে দিলে, ঠিকানার পরে <code>?plain</code> দিয়ে খুলুন: পেজটি আপনার স্টাইলশিট ছাড়া পাঠানো হয়। স্টাইলশিট যা উল্লেখ করে তার কিছুই অন্য ঠিকানা থেকে আনা হয় না: ছবি, ফন্ট বা স্টাইলশিট আসে এই সার্ভার থেকে বা ইনলাইন ডেটা থেকে, তাই পেস্ট করা কোনো স্নিপেট আপনার পেজে যা আছে তা অন্য কোথাও পাঠাতে পারে না। এটি আপনার লেখা বা পেস্ট করা ফাইলের জন্য একটি সুরক্ষা, স্যান্ডবক্স নয়। এটি শুধু Chromium-এ চেষ্টা করা হয়েছে।</p>
+
+    <h2 id="plugins">আপনার নিজের কোড: প্লাগইন</h2>
+    <p>সেটিংস আর স্টাইলশিটের পরে, কোড লিখুন: প্লাগইন হলো ডেটা ফোল্ডারের <code>plugins/&lt;id&gt;/</code>-এ আপনার নিজের একটি JavaScript মডিউল, সঙ্গে তার নাম বলা একটি <code>plugin.json</code>। পেজ কোনো বিল্ড ধাপ ছাড়াই সেটি যেমন আছে তেমনই ইমপোর্ট করে এবং তাকে একটি অবজেক্ট দেয়, <code>aubergine</code>: সাইড প্যানেলের একটি অংশ, তালিকার একটি ফিল্টার, শিরোনাম বা সারির জন্য একটি প্লেসহোল্ডার, প্যালেটে একটি কমান্ড, একটি রান দেখার একটি উপায়, অবস্থা ও ঘটার সঙ্গে সঙ্গে প্রতিটি পরিবর্তন, এবং পেজের প্রতিটি কল। <code>aubergine plugin new &lt;id&gt;</code> শুরু করার জন্য একটি লিখে দেয়।</p>
+    <p class="note"><strong>প্লাগইন পেজে আপনার হয়ে চলে, আর কিছুই তাকে আলাদা রাখে না।</strong> এটি প্রতিটি টার্মিনাল পড়তে পারে, যেকোনোটিতে টাইপ করতে পারে এবং পেজের যেকোনো কিছু বদলাতে পারে। এটি স্যান্ডবক্সে নেই। এটি তখনই চলে যখন আপনি <strong>Settings → Plugins</strong>-এ এটি চালু করেন, এবং শুধু তখনকার ফাইলগুলোর মতোই: বদলে যাওয়া ফাইল আবার না দেখা পর্যন্ত লোড হয় না। এতে কোড ভুল করে চলে না; এটি তালা নয়, কারণ টার্মিনালের এজেন্টও আপনার হয়ে চলে এবং সেটিংস ফাইল লিখতে পারে। শুধু সেটাই চালু করুন যা আপনি লিখেছেন বা পড়েছেন।</p>
+    <p><code>aubergine</code>-এর সদস্যরা <a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/plugins.md">docs/plugins.md</a>-এ তালিকাভুক্ত এবং এক রিলিজ থেকে পরেরটিতে শুধু যোগ হয়; প্লাগইন তার বাইরে যা ছোঁয় তা বদলাতে পারে। প্যালেটে একটি কমান্ড, কয়েক লাইনে:</p>
+    <pre><code>// plugins/hello/index.js
+export function activate(aubergine) {
+  aubergine.commands.add({
+    id: 'hello',
+    title: 'Say hello',
+    run: () =&gt; aubergine.say('Hello from my plugin'),
+  });
+}</code></pre>
+    <p>কোনো প্লাগইন পেজ ভেঙে দিলে, ঠিকানার পরে <code>?plain</code> দিয়ে খুলুন: কোনো প্লাগইন লোড হয় না, আর আপনার স্টাইলশিট বাদ পড়ে। ব্যর্থ প্লাগইনের কথা Settings-এ বলা হয়, আর পেজ ও অন্য প্লাগইনগুলো চলতে থাকে। বন্ধ করলে, <code>aubergine</code> দিয়ে সে যা যোগ করেছে তা সঙ্গে সঙ্গে চলে যায়; তার বাইরে যা করেছে তা রিলোডে যায়। এটি শুধু Chromium-এ চেষ্টা করা হয়েছে।</p>
+
+    <h2 id="settings-file">একটি সেটিংস ফাইল যা নিজেই নিজের বর্ণনা দেয়</h2>
+    <p>এই সব Aubergine-এর ডেটা ফোল্ডারে <code>config.json</code>-এ রাখা হয়, আর সেটি কোথায় তা <code>aubergine settings path</code> দেখায়। যেকোনো কী বাদ দেওয়া যায়। যে ফাইল পড়া যায় না তার মানে ডিফল্ট, কখনো এমন সার্ভার নয় যা চালু হয় না। পেজের Settings শুধু যে কীগুলো বদলায় সেগুলোই লেখে, আর ফাইলের বাকিটা আপনি যেমন লিখেছেন তেমনই রাখে।</p>
+    <p>প্রতিবার চালু হলে সার্ভার ফাইলের পাশে <code>config.schema.json</code> লেখে। একটি লাইন যোগ করুন, আর JSON Schema পড়তে পারা এডিটর প্রতিটি কীর বর্ণনা দেয় ও নিজে থেকে পূরণ করে:</p>
+    <pre><code>{ "$schema": "./config.schema.json" }</code></pre>
+    <p><code>aubergine settings list</code> প্রতিটি কী তার এখনকার মানসহ দেখায়, যেখানে ডিফল্ট নয় সেখানে চিহ্ন দিয়ে, আর <code>aubergine settings schema</code> স্কিমা দেখায়। <a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/settings.md">docs/settings.md</a> প্রতিটি কী, তার ডিফল্ট, আর সেটি Settings লেখে নাকি আপনি, তা বর্ণনা করে।</p>
+    <pre><code>aubergine settings path
+aubergine settings list
+aubergine settings schema</code></pre>
+    <p>পেজে <strong>Settings → Every setting</strong> একই কীগুলো তাদের মানসহ দেখায়, আর টাইপ করতেই খুঁজে দেয়। যে কী Settings বদলায় সেটি আপনাকে তার নিয়ন্ত্রণে নিয়ে যায়; হাতে লেখা কীর পাশে আছে <strong>Copy</strong>, ফাইলে যোগ করার লাইনের জন্য। সেখানে কোনো সেটিং বদলায় না।</p>
+    <figure class="frame"><a href="../../screenshots/every-setting.png" class="frame-pic"><img src="../../screenshots/every-setting.png" width="1720" height="1332" loading="lazy" alt="Settings, Every setting, খোলা, খোঁজার ঘরে “appearance” লেখা: ছয়টি কী, প্রতিটির এখনকার মান, অর্থ আর ডিফল্ট; পাঁচটিতে লেখা Changed above, আর appearance.colors-এ একটি Copy বোতাম।"></a><figcaption>খোঁজা Every setting: প্রতিটি কী কী, তার এখনকার মান আর ডিফল্ট।</figcaption></figure>
+    <p>কিছু বিকল্প এই ব্রাউজারের, আর সেখানেই রাখা হয়: ক্যানভাসগুলো ট্যাব, একটি তালিকা না একটি কলাম; ক্যানভাসের ওপরের বার কোথায় আর খোলা থাকে কি না; পাশের প্যানেল আর মানচিত্র ভাঁজ করা কি না; প্যানেল আর টার্মিনালের বিবরণের চওড়া; আর টার্মিনালের তালিকা কীভাবে ছাঁকা, দলবদ্ধ ও সাজানো হয়।</p>
+
+    <h2 id="programs-and-agents">কোনো প্রোগ্রাম বা এজেন্ট কী বদলাতে পারে, আর কী আপনার থাকে</h2>
+    <p><a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/api.md">লোকাল API</a> দিয়ে, API টোকেন থাকা প্রোগ্রাম <code>canvases:write</code> নিয়ে ক্যানভাস সাজাতে পারে: নাম, রং ও ক্রম ঠিক করা, তাদের ওপর টার্মিনাল সরানো, আকার বদলানো ও রং দেওয়া, আর ফ্রেম যোগ করা। <code>sessions:write</code> নিয়ে সে টার্মিনালের নাম বদলাতে, ট্যাগ দিতে, ফিল্ড বদলাতে আর রঙের থিম দিতে পারে। সে শুধু সেই প্রজেক্টগুলোতেই পৌঁছায় যেখানে তার টোকেন পৌঁছায়।</p>
+    <p>টার্মিনালের ভেতরের এজেন্ট শুধু নিজের টার্মিনালের বর্ণনা দেয়, অন্য কারও নয়: নাম, সেটি কিসের জন্য তার সারাংশ, লিংক আর ফিল্ড, <code>aubergine describe</code>, <code>aubergine link add</code> আর <code>aubergine field set</code> দিয়ে। যেখানে আপনি নিজে নাম, সারাংশ বা ফিল্ড লিখেছেন, সেখানে আপনারটাই থাকে, আর এজেন্ট যা পাঠাল তা পাশে প্রস্তাব হিসেবে রাখা হয়। এজেন্ট, বা <code>workflows:write</code> থাকা কোনো প্রোগ্রাম, <code>aubergine theme propose</code> দিয়ে একটি রঙের থিমও প্রস্তাব করতে পারে: Review-এ আপনি সেটি পড়ে, আঁকা অবস্থায় দেখে, পেজে চেষ্টা করে গ্রহণ না করা পর্যন্ত সেটি কোথাও আঁকা হয় না, আর গ্রহণ করলে তার ফাইল লেখা হয়, কিছুই বেছে নেওয়া হয় না।</p>
+    <p>সেটিংস নিজেই শুধু আপনার। কোনো টোকেন, টার্মিনাল বা এজেন্ট সেগুলো বদলাতে পারে না: <code>PUT /v1/settings/appearance</code> শুধু সাইন-ইন করা ব্রাউজারকে উত্তর দেয়, আর <code>appearance.colors</code>, <code>shortcuts</code> ও বাকিগুলো ফাইলে হাতে লেখা হয়।</p>
+
+    <h2 id="other-tools">অন্য টুলগুলো ইন্টারফেস নিজের মতো করতে কীভাবে দেয়?</h2>
+    <p class="note"><strong>এটি কীভাবে লেখা হয়েছে।</strong> সারণি প্রতিটি টুল সম্পর্কে যা বলে তা সেই টুলের নিজের ডকুমেন্টেশন থেকে, ২৮ নভেম্বর ২০২৬-এ পড়া, আর তার নাম ও ঘর থেকে লিংক করা। এর জন্য আমরা এই টুলগুলো চালাইনি। “পাওয়া যায়নি” মানে আমাদের পড়া ডকুমেন্টেশনে এর বর্ণনা নেই, এই নয় যে টুলটি এটি পারে না। কিছু ভুল বা পুরোনো হলে <a href="https://github.com/thirstyeggplant/aubergine/issues">আমাদের জানান</a>।</p>
+    <div class="table table-wide">
+      <table class="table-stack">
+        <thead><tr><th>টুল</th><th>সেটিংস</th><th>থিম ও রং</th><th>আপনার নিজের CSS</th><th>আপনার নিজের কোড</th><th>শিরোনাম ও স্ট্যাটাসের টেমপ্লেট</th></tr></thead>
+        <tbody>
+          <tr><td><a href="https://code.visualstudio.com/docs/configure/settings">VS Code</a><br>একটি এডিটর</td><td data-label="সেটিংস"><code>settings.json</code> বা Settings এডিটর, ব্যবহারকারী থেকে ওয়ার্কস্পেস, ফোল্ডার ও ভাষা পর্যন্ত স্তরে স্তরে</td><td data-label="থিম ও রং">এক্সটেনশন থেকে <a href="https://code.visualstudio.com/docs/configure/themes">থিম ফাইল</a>; <code>workbench.colorCustomizations</code>, সব থিম বা একটির জন্য</td><td data-label="আপনার নিজের CSS">সমর্থিত নয়, <a href="https://code.visualstudio.com/api/extension-capabilities/overview">তার ডকুমেন্টেশন বলে</a></td><td data-label="আপনার নিজের কোড">এক্সটেনশন, VS Code-এর নিজের অনুমতিসহ কিন্তু ইন্টারফেসের DOM-এ প্রবেশ ছাড়া; নিজের ইন্টারফেসের জন্য webview</td><td data-label="শিরোনাম ও স্ট্যাটাসের টেমপ্লেট"><code>window.title</code> আর টার্মিনাল ট্যাবের শিরোনাম <code>${…}</code> ভেরিয়েবল নেয়</td></tr>
+          <tr><td><a href="https://zed.dev/docs/configuring-zed">Zed</a><br>একটি এডিটর</td><td data-label="সেটিংস">Settings Editor বা মন্তব্যসহ <code>settings.json</code>; আগে ব্যবহারকারী, পরে প্রজেক্ট</td><td data-label="থিম ও রং">স্কিমাসহ <a href="https://zed.dev/docs/themes">JSON থিম ফাইল</a>; একটি থিমের জন্য <code>theme_overrides</code>; হালকা, গাঢ় বা সিস্টেম</td><td data-label="আপনার নিজের CSS">পাওয়া যায়নি</td><td data-label="আপনার নিজের কোড">Rust-এ লেখা ও WebAssembly-তে কম্পাইল করা এক্সটেনশন, এমন <a href="https://zed.dev/docs/extensions/capabilities">সক্ষমতাসহ</a> যা আপনি সীমিত করতে পারেন</td><td data-label="শিরোনাম ও স্ট্যাটাসের টেমপ্লেট">পাওয়া যায়নি</td></tr>
+          <tr><td><a href="https://help.obsidian.md/snippets">Obsidian</a><br>একটি নোট অ্যাপ</td><td data-label="সেটিংস">প্রতিটি ভল্টের <code>.obsidian</code> ফোল্ডারের ফাইল</td><td data-label="থিম ও রং"><a href="https://docs.obsidian.md/Themes/App+themes/Build+a+theme">থিম হলো CSS</a>, নথিভুক্ত CSS ভেরিয়েবলসহ</td><td data-label="আপনার নিজের CSS">CSS স্নিপেট, একটি একটি করে চালু</td><td data-label="আপনার নিজের কোড">Obsidian-এর মতোই প্রবেশাধিকারসহ JavaScript <a href="https://help.obsidian.md/plugin-security">প্লাগইন</a>; সীমিত মোড বন্ধ না করা পর্যন্ত কোনোটি চলে না</td><td data-label="শিরোনাম ও স্ট্যাটাসের টেমপ্লেট">পাওয়া যায়নি</td></tr>
+          <tr><td><a href="https://hyper.is/">Hyper</a><br>একটি টার্মিনাল</td><td data-label="সেটিংস">একটি ফাইল: নথিভুক্ত রিলিজে <code>.hyper.js</code>, ডেভেলপমেন্ট ব্রাঞ্চে <code>hyper.json</code></td><td data-label="থিম ও রং">থিম হলো প্লাগইন</td><td data-label="আপনার নিজের CSS">জানালার জন্য <code>css</code>; <code>termCSS</code>, যা সংস্করণ ২ থেকে <a href="https://github.com/vercel/hyper/blob/canary/PLUGINS.md">আর টার্মিনালের লেখা সাজায় না</a></td><td data-label="আপনার নিজের কোড">Electron ও রেন্ডারার যে npm প্লাগইন লোড করে: সেগুলো তার React কম্পোনেন্ট মোড়ে আর Redux মিডলওয়্যার যোগ করে</td><td data-label="শিরোনাম ও স্ট্যাটাসের টেমপ্লেট">পাওয়া যায়নি</td></tr>
+          <tr><td><a href="https://wezterm.org/config/files.html">WezTerm</a><br>একটি টার্মিনাল</td><td data-label="সেটিংস">একটি Lua ফাইল, <code>.wezterm.lua</code></td><td data-label="থিম ও রং"><a href="https://wezterm.org/config/appearance.html">৭০০-র বেশি স্কিম</a>; আপনার নিজেরগুলো Lua বা TOML-এ; আলাদা রঙের জন্য <code>colors</code></td><td data-label="আপনার নিজের CSS">পাওয়া যায়নি</td><td data-label="আপনার নিজের কোড">কনফিগারেশনই Lua; <a href="https://wezterm.org/config/plugins.html">প্লাগইন</a> হলো কোনো Git ঠিকানা থেকে আসা Lua</td><td data-label="শিরোনাম ও স্ট্যাটাসের টেমপ্লেট">Lua ফাংশন ট্যাব ও জানালার শিরোনাম ফেরত দেয় (<a href="https://wezterm.org/config/lua/window-events/format-tab-title.html"><code>format-tab-title</code></a>)</td></tr>
+          <tr><td><a href="https://man.openbsd.org/tmux.1">tmux</a><br>একটি টার্মিনাল মাল্টিপ্লেক্সার</td><td data-label="সেটিংস">ফাইলে tmux কমান্ড; সার্ভার, সেশন, জানালা ও প্যান অনুযায়ী বিকল্প</td><td data-label="থিম ও রং"><code>status-style</code> আর <code>window-style</code>-এর মতো স্টাইল</td><td data-label="আপনার নিজের CSS">পাওয়া যায়নি</td><td data-label="আপনার নিজের কোড">হুক tmux কমান্ড চালায়; প্রোগ্রামের জন্য কন্ট্রোল মোড</td><td data-label="শিরোনাম ও স্ট্যাটাসের টেমপ্লেট"><code>#{…}</code> দিয়ে <a href="https://man.openbsd.org/tmux.1#FORMATS">ফরম্যাট</a>, স্ট্যাটাস লাইন, জানালার তালিকা, প্যানের সীমানা ও শিরোনামের জন্য</td></tr>
+          <tr><td><a href="https://sw.kovidgoyal.net/kitty/conf/">kitty</a><br>একটি টার্মিনাল</td><td data-label="সেটিংস"><code>kitty.conf</code>, অন্য ফাইল যোগ করা যায়, বদলালে আবার পড়া হয়</td><td data-label="থিম ও রং">থিম একটি <code>.conf</code> ফাইল; <a href="https://sw.kovidgoyal.net/kitty/kittens/themes/"><code>kitten themes</code></a> ৩০০-র বেশি থেকে বাছে, আর গাঢ় ও হালকার জন্য আলাদা ঠিক করা যায়</td><td data-label="আপনার নিজের CSS">পাওয়া যায়নি</td><td data-label="আপনার নিজের কোড">kitty-র ভেতরে পুরো প্রবেশাধিকারসহ Python <a href="https://sw.kovidgoyal.net/kitty/kittens/custom/">kitten</a>; watcher</td><td data-label="শিরোনাম ও স্ট্যাটাসের টেমপ্লেট"><code>tab_title_template</code>, যেখানে <code>{custom}</code> আপনার নিজের Python ডাকে</td></tr>
+          <tr><td><a href="https://ghostty.org/docs/config">Ghostty</a><br>একটি টার্মিনাল</td><td data-label="সেটিংস">একটি <code>key = value</code> ফাইল; <code>config-file</code> অন্যগুলো যোগ করে</td><td data-label="থিম ও রং"><a href="https://ghostty.org/docs/features/theme">থিম হলো কনফিগারেশন ফাইল</a>; হালকার জন্য একটি, গাঢ়র জন্য একটি</td><td data-label="আপনার নিজের CSS">পাওয়া যায়নি</td><td data-label="আপনার নিজের কোড">টার্মিনালের ওপর <a href="https://ghostty.org/docs/config/reference#custom-shader">GLSL শেডার</a>; macOS-এ AppleScript</td><td data-label="শিরোনাম ও স্ট্যাটাসের টেমপ্লেট">পাওয়া যায়নি</td></tr>
+          <tr><td><a href="https://learn.microsoft.com/windows/terminal/customize-settings/color-schemes">Windows Terminal</a><br>একটি টার্মিনাল</td><td data-label="সেটিংস">Settings পর্দা বা <code>settings.json</code>, একটি <a href="https://github.com/microsoft/terminal/blob/main/doc/cascadia/profiles.schema.json">JSON স্কিমা</a>সহ</td><td data-label="থিম ও রং">প্রোফাইল অনুযায়ী রঙের স্কিম; জানালা ও ট্যাবের <a href="https://learn.microsoft.com/windows/terminal/customize-settings/themes">থিম</a>, হালকা ও গাঢ়, শুধু JSON-এ</td><td data-label="আপনার নিজের CSS">পাওয়া যায়নি</td><td data-label="আপনার নিজের কোড">পাওয়া যায়নি; অন্য অ্যাপ JSON টুকরো হিসেবে প্রোফাইল ও রঙের স্কিম যোগ করে</td><td data-label="শিরোনাম ও স্ট্যাটাসের টেমপ্লেট">পাওয়া যায়নি; প্রোফাইল <code>tabTitle</code> আর <code>tabColor</code> ঠিক করে</td></tr>
+          <tr><td><a href="https://iterm2.com/documentation-automatic-profile-switching.html">iTerm2</a><br>একটি টার্মিনাল</td><td data-label="সেটিংস">Settings-এ প্রোফাইল; প্রপার্টি-লিস্ট ফাইল হিসেবে <a href="https://iterm2.com/documentation-dynamic-profiles.html">Dynamic Profiles</a></td><td data-label="থিম ও রং">ব্যবহারকারী, হোস্ট, ফোল্ডার বা জব অনুযায়ী বাছা প্রোফাইল, Shell Integration-সহ</td><td data-label="আপনার নিজের CSS">পাওয়া যায়নি</td><td data-label="আপনার নিজের কোড">একটি <a href="https://iterm2.com/python-api/">Python API</a>, Python-এ লেখা স্ট্যাটাস বারের অংশ, AppleScript</td><td data-label="শিরোনাম ও স্ট্যাটাসের টেমপ্লেট">সেশনের নাম, ব্যাজ আর স্ট্যাটাস বারে <a href="https://iterm2.com/documentation-scripting-fundamentals.html">ইন্টারপোলেটেড স্ট্রিং</a>, <code>\(…)</code></td></tr>
+          <tr><td>Aubergine<br>ক্যানভাসের ওপর টার্মিনাল</td><td data-label="সেটিংস"><code>config.json</code> আর Settings, এডিটরের জন্য JSON Schema-সহ</td><td data-label="থিম ও রং">দশটি থিম, লাইট, ডার্ক বা সিস্টেমের মতো; এর যেকোনো একটির ওপর আপনার নিজের JSON ফাইল; একটি প্রজেক্টের জন্য, ট্যাগওয়ালা টার্মিনালের জন্য আর প্রতিটি টার্মিনালের জন্য একটি; ৩৫টি রং হাতে, সব থিম বা একটির জন্য</td><td data-label="আপনার নিজের CSS">হ্যাঁ: ডেটা ফোল্ডারে <code>custom.css</code>, নথিভুক্ত হুকসহ</td><td data-label="আপনার নিজের কোড">হ্যাঁ: প্লাগইন, JavaScript মডিউল যা পেজে আপনার হয়ে চলে, নথিভুক্ত API দিয়ে এবং তার বাইরেও। স্যান্ডবক্স নেই</td><td data-label="শিরোনাম ও স্ট্যাটাসের টেমপ্লেট">দুটি, টার্মিনালের শিরোনাম আর তালিকার একটি সারির জন্য: <code>{state}</code> ও <code>{field:Ticket}</code>-এর মতো প্লেসহোল্ডারসহ লেখা</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>এখানকার প্রতিটি টুল তার সেটিংস একটি ফাইলে রাখে, আর VS Code, Zed ও Windows Terminal-এ Aubergine-এর মতো সেটি লেখার একটি পর্দাও আছে। বেশির ভাগে থিমও একটি ফাইল: VS Code ও Zed-এ JSON, Obsidian-এ CSS, WezTerm-এ Lua বা TOML, kitty ও Ghostty-তে কনফিগারেশন ফাইল। VS Code, Zed ও WezTerm থিমের ওপর আলাদা রং বদলাতে দেয়, যেমন এখানে <code>appearance.colors</code> করে।</p>
+    <p>সবচেয়ে বড় পার্থক্য কোডে। WezTerm-এর পুরো কনফিগারেশন একটি Lua প্রোগ্রাম, kitty ও iTerm2 আপনার নিজের Python চালায়, আর Hyper-এর প্লাগইন তার ইন্টারফেস মোড়ানো JavaScript; Obsidian ও Hyper আপনার নিজের CSS-ও নেয়। VS Code-এর এক্সটেনশনের তার ইন্টারফেসের DOM-এ প্রবেশ নেই, আর এটি আপনার নিজের স্টাইলশিট সমর্থন করে না; Zed এক্সটেনশন WebAssembly হিসেবে চালায়, এমন সক্ষমতাসহ যা আপনি সীমিত করতে পারেন। tmux, WezTerm, kitty ও iTerm2 টেমপ্লেট বা ফাংশন দিয়ে শিরোনাম ও স্ট্যাটাস লাইন বানায়।</p>
+    <p>আজ Aubergine সেটিংসের প্রান্ত থেকে কোড পর্যন্ত পৌঁছায়: নিজেকে বর্ণনা করা ফাইলে থিম, রং ও কী, সেটিংসের একাংশ লেখে এমন একটি পেজ, টার্মিনালের শিরোনাম ও তার সারি কী বলে তার টেমপ্লেট, স্থির রাখা হুকসহ আপনার নিজের স্টাইলশিট, এবং প্লাগইন, পেজে আপনার নিজের JavaScript, এমন API-সহ যাতে শুধু যোগ হয়। প্লাগইন পেজ যা পারে তার সব নিয়ে চলে; অন্যদের প্লাগইনের জন্য স্যান্ডবক্স মোড <a href="../roadmap/#rm-yours">রোডম্যাপে</a> আছে, তৈরি হয়নি।</p>
+
+    <h2 id="planned">কী পরিকল্পনায় আছে</h2>
+    <p>অন্য কারও লেখা প্লাগইন স্যান্ডবক্সে চালানোর উপায়, আর রিভিউ স্ক্রিন দিয়ে একটি ইনস্টল করা, পরিকল্পিত এবং তৈরি হয়নি: <a href="../roadmap/#rm-yours">রোডম্যাপ</a> দেখুন।</p>
+
+    <h2 id="faq">প্রশ্ন</h2>
+    <div class="questions">
+      <details><summary>প্রতিটি টার্মিনালের কি আলাদা রঙের থিম হতে পারে?</summary><p>হ্যাঁ। টার্মিনালের মেনুতে Theme… তার মূল অংশ দশটি থিমের যেকোনোটিতে আঁকে, পেজের থিম যা-ই হোক। ট্যাগওয়ালা টার্মিনালকে Settings-এ সেই ট্যাগ দিয়ে থিম দেওয়া যায়, আর বাকিরা টার্মিনালের জন্য আপনার ঠিক করা ডিফল্ট বা পেজ অনুসরণ করে।</p></details>
+      <details><summary>Aubergine-এ কি নিজের CSS যোগ করতে পারি?</summary><p>হ্যাঁ: ডেটা ফোল্ডারে <code>custom.css</code> (<code>aubergine css new</code> শুরু করার জন্য একটি লিখে দেয়)। প্রথম আঁকা থেকেই এটি পেজে সবার শেষে যুক্ত হয়, আর যে হুকগুলোর ওপর এটি ভরসা করতে পারে সেগুলো docs/hooks.md-এ আছে। এটি ছাড়া দেখতে পেজের ঠিকানায় <code>?plain</code> যোগ করুন।</p></details>
+      <details><summary>আমি কি Aubergine-এর জন্য নিজের প্লাগইন লিখতে পারি?</summary><p>হ্যাঁ: ডেটা ফোল্ডারের <code>plugins/&lt;id&gt;/</code>-এ একটি JavaScript মডিউল (<code>aubergine plugin new &lt;id&gt;</code> শুরু করার জন্য একটি লিখে দেয়), Settings → Plugins-এ চালু করা। এটি পেজে আপনার হয়ে, পেজ যা পারে তার সবকিছু নিয়ে চলে; এটি স্যান্ডবক্সে নেই।</p></details>
+      <details><summary>Aubergine-এর সেটিংস ফাইল কোথায়?</summary><p>এটি Aubergine-এর ডেটা ফোল্ডারে <code>config.json</code>। <code>aubergine settings path</code> জানায় কোথায়, আর সার্ভার চালু হওয়ার সময় তা দেখায়।</p></details>
+      <details><summary>কোনো এজেন্ট কি Aubergine-এর চেহারা বদলাতে পারে?</summary><p>সেটিংস নয়: সেগুলো শুধু আপনার। এজেন্ট নিজের টার্মিনালের নাম রাখতে ও বর্ণনা দিতে পারে, আর একটি রঙের থিম প্রস্তাব করতে পারে যা আপনার পড়া ও গ্রহণের অপেক্ষায় থাকে; যে প্রোগ্রামের API টোকেন অনুমতি দেয় সে টার্মিনালের নাম বদলাতে, ট্যাগ দিতে, থিম দিতে, ক্যানভাস সাজাতে আর থিম প্রস্তাবও করতে পারে।</p></details>
+    </div>
+    <p>সম্পর্কিত: <a href="../too-many-terminal-tabs/">ঠিক টার্মিনালটি খুঁজুন</a> · <a href="../tmux-without-learning-tmux/">tmux না শিখেই tmux</a> · <a href="../security/">নিরাপত্তা ও গোপনীয়তা</a> · <a href="../faq/">সাধারণ প্রশ্ন</a></p>
+    <p>এই পেজে নাম নেওয়া কোনো টুলের সঙ্গে Aubergine যুক্ত নয়। নামগুলো তাদের মালিকদের ট্রেডমার্ক।</p>
+  </div>
+</div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">পাঁচ মিনিটে চালু</h2>
+    <div class="close-do">
+      <p>আপনার লাগবে macOS, সঙ্গে tmux 3.2 বা নতুনতর আর Node.js 22 বা নতুনতর। <code>brew install tmux node</code> দুটোই এনে দেয়।</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="কপি হয়েছে" aria-live="polite" hidden>কপি করুন</button></p>
+      <p class="actions"><a class="button" href="../install/">ইনস্টল করুন</a><a class="button button-quiet" href="../guides/">গাইড</a></p>
+    </div>
+  </div>
+</section>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav aria-label="সব পেজ">
+      <ul class="foot-links">
+        <li><a href="../">হোম</a></li>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex আর ChatGPT</a></li>
+        <li><a href="../install/">ইনস্টল</a></li>
+        <li><a href="../guides/">গাইড</a></li>
+        <li><a href="../run-multiple-coding-agents/">একাধিক এজেন্ট চালান</a></li>
+        <li><a href="../working-copies/">ওয়ার্কিং কপি</a></li>
+        <li><a href="../queue-and-schedules/">কিউ আর শিডিউল</a></li>
+        <li><a href="./" aria-current="page">নিজের মতো করুন</a></li>
+        <li><a href="../compare/">তুলনা</a></li>
+        <li><a href="../security/">নিরাপত্তা</a></li>
+        <li><a href="../roadmap/">রোডম্যাপ</a></li>
+        <li><a href="../faq/">প্রশ্নোত্তর</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+
+    <div class="share">
+      <p class="share-label">এই পেজ শেয়ার করুন</p>
+      <ul class="foot-links">
+        <li><a href="https://x.com/intent/post?text=%E0%A6%9F%E0%A6%BE%E0%A6%B0%E0%A7%8D%E0%A6%AE%E0%A6%BF%E0%A6%A8%E0%A6%BE%E0%A6%B2%E0%A7%87%E0%A6%B0%20%E0%A6%A5%E0%A6%BF%E0%A6%AE%2C%20%E0%A6%B0%E0%A6%82%20%E0%A6%93%20%E0%A6%95%E0%A7%80%20%E0%A6%A8%E0%A6%BF%E0%A6%9C%E0%A7%87%E0%A6%B0%20%E0%A6%AE%E0%A6%A4%E0%A7%8B%20%E0%A6%95%E0%A6%B0%E0%A7%81%E0%A6%A8%20%7C%20Aubergine&amp;url=https%3A%2F%2Fthirstyeggplant.com%2Fbn%2Fcustomize-terminal-themes%2F" rel="noopener nofollow">X</a></li>
+        <li><a href="https://bsky.app/intent/compose?text=%E0%A6%9F%E0%A6%BE%E0%A6%B0%E0%A7%8D%E0%A6%AE%E0%A6%BF%E0%A6%A8%E0%A6%BE%E0%A6%B2%E0%A7%87%E0%A6%B0%20%E0%A6%A5%E0%A6%BF%E0%A6%AE%2C%20%E0%A6%B0%E0%A6%82%20%E0%A6%93%20%E0%A6%95%E0%A7%80%20%E0%A6%A8%E0%A6%BF%E0%A6%9C%E0%A7%87%E0%A6%B0%20%E0%A6%AE%E0%A6%A4%E0%A7%8B%20%E0%A6%95%E0%A6%B0%E0%A7%81%E0%A6%A8%20%7C%20Aubergine%20https%3A%2F%2Fthirstyeggplant.com%2Fbn%2Fcustomize-terminal-themes%2F" rel="noopener nofollow">Bluesky</a></li>
+        <li><a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fthirstyeggplant.com%2Fbn%2Fcustomize-terminal-themes%2F" rel="noopener nofollow">LinkedIn</a></li>
+        <li><a href="https://www.reddit.com/submit?url=https%3A%2F%2Fthirstyeggplant.com%2Fbn%2Fcustomize-terminal-themes%2F&amp;title=%E0%A6%9F%E0%A6%BE%E0%A6%B0%E0%A7%8D%E0%A6%AE%E0%A6%BF%E0%A6%A8%E0%A6%BE%E0%A6%B2%E0%A7%87%E0%A6%B0%20%E0%A6%A5%E0%A6%BF%E0%A6%AE%2C%20%E0%A6%B0%E0%A6%82%20%E0%A6%93%20%E0%A6%95%E0%A7%80%20%E0%A6%A8%E0%A6%BF%E0%A6%9C%E0%A7%87%E0%A6%B0%20%E0%A6%AE%E0%A6%A4%E0%A7%8B%20%E0%A6%95%E0%A6%B0%E0%A7%81%E0%A6%A8%20%7C%20Aubergine" rel="noopener nofollow">Reddit</a></li>
+        <li><a href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fthirstyeggplant.com%2Fbn%2Fcustomize-terminal-themes%2F&amp;t=%E0%A6%9F%E0%A6%BE%E0%A6%B0%E0%A7%8D%E0%A6%AE%E0%A6%BF%E0%A6%A8%E0%A6%BE%E0%A6%B2%E0%A7%87%E0%A6%B0%20%E0%A6%A5%E0%A6%BF%E0%A6%AE%2C%20%E0%A6%B0%E0%A6%82%20%E0%A6%93%20%E0%A6%95%E0%A7%80%20%E0%A6%A8%E0%A6%BF%E0%A6%9C%E0%A7%87%E0%A6%B0%20%E0%A6%AE%E0%A6%A4%E0%A7%8B%20%E0%A6%95%E0%A6%B0%E0%A7%81%E0%A6%A8%20%7C%20Aubergine" rel="noopener nofollow">Hacker News</a></li>
+        <li><a href="mailto:?subject=%E0%A6%9F%E0%A6%BE%E0%A6%B0%E0%A7%8D%E0%A6%AE%E0%A6%BF%E0%A6%A8%E0%A6%BE%E0%A6%B2%E0%A7%87%E0%A6%B0%20%E0%A6%A5%E0%A6%BF%E0%A6%AE%2C%20%E0%A6%B0%E0%A6%82%20%E0%A6%93%20%E0%A6%95%E0%A7%80%20%E0%A6%A8%E0%A6%BF%E0%A6%9C%E0%A7%87%E0%A6%B0%20%E0%A6%AE%E0%A6%A4%E0%A7%8B%20%E0%A6%95%E0%A6%B0%E0%A7%81%E0%A6%A8%20%7C%20Aubergine&amp;body=https%3A%2F%2Fthirstyeggplant.com%2Fbn%2Fcustomize-terminal-themes%2F">ইমেল</a></li>
+        <li><button type="button" class="share-copy" data-copy-text="https://thirstyeggplant.com/bn/customize-terminal-themes/" data-copied="কপি হয়েছে" aria-live="polite" hidden>লিংক কপি করুন</button></li>
+      </ul>
+    </div>
+    <p class="foot-line">Aubergine বিনামূল্যে ও ওপেন সোর্স, <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">MIT লাইসেন্সে</a>, আর চলে আপনার নিজের কম্পিউটারে।</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    if (!navigator.clipboard) return;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.querySelectorAll('[data-copy-text]').forEach(function (button) {
+  if (!navigator.clipboard) return;
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    navigator.clipboard.writeText(button.getAttribute('data-copy-text')).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+document.querySelectorAll('details.menu').forEach(function (menu) {
+  menu.addEventListener('toggle', function () {
+    if (!menu.open) return;
+    document.querySelectorAll('details.menu[open]').forEach(function (other) { if (other !== menu) other.open = false; });
+  });
+});
+</script>
+</body>
+</html>

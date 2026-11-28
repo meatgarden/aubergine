@@ -15,12 +15,12 @@ const wordsOf = (text: string): string[] => text.toLowerCase().split(/\s+/).filt
  * the title come first; otherwise the list keeps its order. The command that
  * opens the palette is left out: it is already open.
  */
-export function searchCommands(commands: readonly Command[], text: string): Command[] {
+export function searchCommands<C extends Pick<Command, 'title' | 'description'> & { id: string }>(commands: readonly C[], text: string): C[] {
   const words = wordsOf(text);
   const listed = commands.filter((command) => command.id !== 'palette.toggle');
   if (words.length === 0) return listed;
-  const inTitle: Command[] = [];
-  const elsewhere: Command[] = [];
+  const inTitle: C[] = [];
+  const elsewhere: C[] = [];
   for (const command of listed) {
     const title = command.title.toLowerCase();
     const all = `${title} ${command.description.toLowerCase()} ${command.id.toLowerCase()}`;

@@ -76,6 +76,9 @@ export const OWNERS_ALONE: Record<(typeof NEVER_BY_TOKEN)[number], string> = {
   'projects.manage': 'making, changing, archiving or removing a project, and moving a canvas to another project',
   'sharing.manage': 'saying what is shared between projects',
   'devices.manage': 'pairing another device with this server, and revoking one',
+  'themes.manage': 'accepting or declining a proposed color theme, and reading the theme files again',
+  'stylesheet.read': "reading the owner's own stylesheet again",
+  'plugins.manage': "switching a plugin (the owner's own code in the page) on or off, reading the plugins again, and being sent a plugin's files",
   'desktop.open': "opening a terminal in a window of the owner's own terminal application",
   'describe.manage': "keeping a link that was only seen in a terminal, or putting what an agent suggested in place of the owner's own words",
 };
@@ -216,6 +219,31 @@ export const GUIDE: readonly GuideSection[] = [
       },
       { needs: ['draft.own.read'], text: ['As a tool, for the request: draft_brief.'], tools: ['draft_brief'] },
       { needs: ['draft.own.propose', 'drafts.propose'], text: ['As tools, to hand in: draft_propose_element, draft_propose_workflow.'], tools: ['draft_propose_element', 'draft_propose_workflow'] },
+    ],
+  },
+  {
+    id: 'themes',
+    title: 'Proposing a color theme',
+    parts: [
+      {
+        needs: ['theme.own.propose', 'themes.propose'],
+        text: [
+          "Your owner's page can be drawn in a color theme of their own: a file with a name and colors, laid over a theme that comes with Aubergine. You may propose one. It is drawn and written nowhere until your owner has looked at it and accepted it, and accepting does not choose it: choosing is your owner's. Nothing tells you when it is decided; ask.",
+        ],
+      },
+      {
+        needs: ['theme.own.read', 'theme.own.propose'],
+        inTerminal: true,
+        text: [
+          'To see the themes there are, start a file in this folder from one, and propose it with one line on why:',
+          '    aubergine theme list',
+          '    aubergine theme new harbor --from nord',
+          '    aubergine theme propose harbor.json --why "easier on the eyes at night"',
+          '`aubergine theme check harbor.json` says first what is wrong in it; `aubergine theme proposals` says what became of yours.',
+        ],
+      },
+      { needs: ['theme.own.read', 'themes.read'], text: ['As a tool, for the themes and what became of those proposed: themes_list.'], tools: ['themes_list'] },
+      { needs: ['theme.own.propose', 'themes.propose'], text: ['As a tool, with the text of the file: theme_propose.'], tools: ['theme_propose'] },
     ],
   },
   {

@@ -65,7 +65,7 @@ export function BarSettings() {
         </svg>
       </button>
       {open && (
-        <span className="ui-menu toolbar-menu bar-settings-menu" role="menu" aria-label="Where this bar stands" data-testid="bar-settings-menu">
+        <span className="ui-menu toolbar-menu bar-settings-menu" role="menu" data-part="menu" aria-label="Where this bar stands" data-testid="bar-settings-menu">
           <span className="toolbar-menu-heading" role="presentation">
             Move this bar
           </span>

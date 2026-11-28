@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>خصّص سمات الطرفية وألوانها ومفاتيحها | Aubergine</title>
+<meta name="description" content="عشر سمات ألوان، وسمة لكل طرفية، وألوان تضبطها بيدك، وخطوط ومؤشر ومفاتيح، وكيف تتيح VS Code وkitty وtmux وغيرها التخصيص.">
+<link rel="canonical" href="https://thirstyeggplant.com/ar/customize-terminal-themes/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/customize-terminal-themes/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/customize-terminal-themes/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/customize-terminal-themes/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/customize-terminal-themes/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/customize-terminal-themes/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/customize-terminal-themes/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/customize-terminal-themes/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/customize-terminal-themes/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/customize-terminal-themes/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/customize-terminal-themes/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/customize-terminal-themes/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/customize-terminal-themes/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/customize-terminal-themes/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F7F0E4">
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="خصّص سمات الطرفية وألوانها ومفاتيحها | Aubergine">
+<meta property="og:description" content="عشر سمات ألوان، وسمة لكل طرفية، وألوان تضبطها بيدك، وخطوط ومؤشر ومفاتيح، وكيف تتيح VS Code وkitty وtmux وغيرها التخصيص.">
+<meta property="og:url" content="https://thirstyeggplant.com/ar/customize-terminal-themes/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine: لوحة من الطرفيات، إحداها مشغولة وأخرى بانتظارك">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine: لوحة من الطرفيات، إحداها مشغولة وأخرى بانتظارك">
+<meta name="twitter:title" content="خصّص سمات الطرفية وألوانها ومفاتيحها | Aubergine">
+<meta name="twitter:description" content="عشر سمات ألوان، وسمة لكل طرفية، وألوان تضبطها بيدك، وخطوط ومؤشر ومفاتيح، وكيف تتيح VS Code وkitty وtmux وغيرها التخصيص.">
+<link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">انتقل إلى محتوى الصفحة</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="32" height="32"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="الصفحات">
+      <ul>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">التثبيت</a></li>
+        <li><a href="../guides/">الأدلة</a></li>
+        <li><a href="../security/">الأمان</a></li>
+        <li><a href="../faq/">الأسئلة الشائعة</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="اللغة: العربية"><span class="lang-long" aria-hidden="true">العربية</span><span class="lang-short" aria-hidden="true">AR</span></summary>
+      <ul class="menu-list"><li><a href="../../customize-terminal-themes/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="../../es/customize-terminal-themes/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="../../pt/customize-terminal-themes/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="../../fr/customize-terminal-themes/" hreflang="fr" lang="fr" dir="ltr">Français</a></li><li><a href="../../de/customize-terminal-themes/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="../../ja/customize-terminal-themes/" hreflang="ja" lang="ja" dir="ltr">日本語</a></li><li><a href="../../zh/customize-terminal-themes/" hreflang="zh-Hans" lang="zh-Hans" dir="ltr">简体中文</a></li><li><a href="../../ko/customize-terminal-themes/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="../../id/customize-terminal-themes/" hreflang="id" lang="id" dir="ltr">Bahasa Indonesia</a></li><li><a href="../../hi/customize-terminal-themes/" hreflang="hi" lang="hi" dir="ltr">हिन्दी</a></li><li><a href="../../bn/customize-terminal-themes/" hreflang="bn" lang="bn" dir="ltr">বাংলা</a></li><li><a href="./" hreflang="ar" lang="ar" dir="rtl" aria-current="true">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>القائمة</summary>
+      <ul class="menu-list">
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">التثبيت</a></li>
+        <li><a href="../guides/">الأدلة</a></li>
+        <li><a href="../security/">الأمان</a></li>
+        <li><a href="../faq/">الأسئلة الشائعة</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="translated">
+  <div class="wrap translated-in">
+    <p>تطبيق Aubergine نفسه باللغة الإنجليزية: أزراره وقوائمه وصوره كلها بالإنجليزية.</p>
+    <p>ترجمت آلةٌ هذه الصفحة عن الإنجليزية. <a href="https://github.com/thirstyeggplant/aubergine/issues">أرسل تصحيحًا</a>.</p>
+  </div>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://thirstyeggplant.com/ar/customize-terminal-themes/#article",
+      "headline": "خصّص سمات الطرفية وألوانها وخطوطها ومفاتيحها",
+      "description": "عشر سمات ألوان، وسمة لكل طرفية، وألوان تضبطها بيدك، وخطوط ومؤشر ومفاتيح، وكيف تتيح VS Code وkitty وtmux وغيرها التخصيص.",
+      "url": "https://thirstyeggplant.com/ar/customize-terminal-themes/",
+      "mainEntityOfPage": "https://thirstyeggplant.com/ar/customize-terminal-themes/",
+      "image": "https://thirstyeggplant.com/screenshots/terminal-themes.png",
+      "datePublished": "2026-11-28",
+      "dateModified": "2026-11-28",
+      "inLanguage": "ar",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "الأدلة", "item": "https://thirstyeggplant.com/guides/" },
+        { "@type": "ListItem", "position": 3, "name": "التخصيص", "item": "https://thirstyeggplant.com/ar/customize-terminal-themes/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://thirstyeggplant.com/ar/customize-terminal-themes/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "هل يمكن أن يكون لكل طرفية سمة ألوان مختلفة؟", "acceptedAnswer": { "@type": "Answer", "text": "نعم. يرسم Theme… في قائمة الطرفية محتواها بأي من السمات العشر، أيًّا كانت سمة الصفحة. ويمكن إعطاء الطرفيات التي تحمل وسمًا سمة بهذا الوسم في Settings، والبقية تتبع الافتراضي الذي تحدده للطرفيات، أو الصفحة." } },
+        { "@type": "Question", "name": "هل يمكنني إضافة CSS خاص بي إلى Aubergine؟", "acceptedAnswer": { "@type": "Answer", "text": "نعم: custom.css في مجلد البيانات (يكتب aubergine css new واحدًا لتبدأ منه). يُربط آخرَ شيء في الصفحة منذ الرسم الأول، ونقاط الربط التي يمكنه الاعتماد عليها مذكورة في docs/hooks.md. أضف ?plain إلى عنوان الصفحة لتراها دونه." } },
+        { "@type": "Question", "name": "هل أستطيع كتابة إضافاتي الخاصة لـ Aubergine؟", "acceptedAnswer": { "@type": "Answer", "text": "نعم: وحدة JavaScript في plugins/\u003cid\u003e/ داخل مجلد البيانات (يكتب aubergine plugin new \u003cid\u003e واحدة لتبدأ منها)، تُشغَّل في Settings → Plugins. تعمل في الصفحة بصفتك، بكل ما تستطيعه الصفحة؛ وليست في بيئة معزولة." } },
+        { "@type": "Question", "name": "أين ملف إعدادات Aubergine؟", "acceptedAnswer": { "@type": "Answer", "text": "هو config.json في مجلد بيانات Aubergine. يعرض aubergine settings path مكانه، ويعرضه الخادم أيضًا عند بدئه." } },
+        { "@type": "Question", "name": "هل يستطيع وكيل تغيير مظهر Aubergine؟", "acceptedAnswer": { "@type": "Answer", "text": "ليس الإعدادات: فهي لك وحدك. يستطيع الوكيل تسمية طرفيته ووصفها واقتراح سمة ألوان تنتظر أن تقرأها وتقبلها، ويستطيع برنامج يسمح له رمز API الخاص به إعادة تسمية الطرفيات ووسمها ومنحها سمة وترتيب اللوحات واقتراح سمة أيضًا." } }
+      ]
+    }
+  ]
+}
+</script>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="أين أنت"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">الأدلة</a></li><li>التخصيص</li></ol></nav>
+    <h1>خصّص سمات الطرفية وألوانها وخطوطها ومفاتيحها</h1>
+    <p class="lead">اختر ألوان الصفحة من عشر سمات، وأعطِ كل طرفية سمة خاصة بها، واضبط الألوان المفردة وخط الطرفية ومؤشرها وكل مفتاح، في Settings أو في ملف إعدادات واحد يصف نفسه.</p>
+  </div>
+</header>
+<div class="wrap page-body">
+  <div class="prose">
+    <h2 id="page-themes">عشر سمات ألوان، فاتحة وداكنة</h2>
+    <p>يبدأ <strong>Settings → Appearance</strong> بثلاثة خيارات: <strong>Light</strong> و<strong>Dark</strong> و<strong>Match the system</strong>، وهو ما يبدأ به التثبيت الجديد ويتبع النظام حين يتغير. وتحتها تختار سمة من كل نوع: Light أو High contrast light أو Solarized light أو Gruvbox light؛ وDark أو High contrast dark أو Solarized dark أو Gruvbox dark أو Nord أو Dracula. وتظهر كل سمة مع صورة صغيرة لألوانها.</p>
+    <p>يسري التغيير فورًا على الصفحة وعلى كل طرفية، دون إعادة تحميل، ويُحفظ في ملف الإعدادات، فتتفق كل المتصفحات التي تفتح فيها Aubergine. وفي لوحة الأوامر الشيء نفسه أوامرَ، مثل <strong>Color theme: Nord</strong>.</p>
+    <figure class="frame"><a href="../../screenshots/themes-settings.png" class="frame-pic"><img src="../../screenshots/themes-settings.png" width="1090" height="1412" loading="lazy" alt="Settings، Appearance: فاتح أو داكن أو كما هو النظام، ثم الأنماط العشرة في مجموعتين مع معاينة صغيرة لكل منها؛ وNord مختار للصفحة الداكنة وSolarized light للفاتحة."></a><figcaption>فاتح أو داكن أو كما هو النظام، ونمط لكل نوع، لكلٍّ منها صورة صغيرة لألوانه.</figcaption></figure>
+
+    <h2 id="terminal-themes">سمة ألوان مختلفة لكل طرفية</h2>
+    <p>يرسم <strong>Theme…</strong> في قائمة الطرفية تلك الطرفية بأي سمة من السمات العشر، أيًّا كانت سمة الصفحة. يتغير جسمها وحده: يبقى عنوانها وملاحظتها وتفاصيلها كما الصفحة. والطرفية التي لا سمة خاصة لها تتبع <strong>Terminal theme</strong> في Settings، وهي السمة الافتراضية للطرفيات، وإن لم توجد فالصفحة.</p>
+    <figure class="frame"><a href="../../screenshots/terminal-theme-menu.png" class="frame-pic"><img src="../../screenshots/terminal-theme-menu.png" width="1262" height="1118" loading="lazy" alt="قائمة Theme… لطرفية مفتوحة على اللوحة: Same as the default، الآن كالصفحة، Dark؛ ثم السمات الفاتحة الأربع والداكنة الست، وعلامة اختيار على Dracula."></a><figcaption>Theme… في قائمة الطرفية: الافتراضية، أو أي واحدة من العشر.</figcaption></figure>
+    <p>الخيار نفسه موجود في قائمة صف الطرفية في القائمة، وفي تفاصيلها، وفي لوحة الأوامر. ويمكن أن يكون للطرفية وللإطار لون خاص أيضًا، واحد من ثلاثة عشر أو <strong>Your own…</strong> لأي لون، وكذلك لتبويب اللوحة؛ ولون الطرفية هو لون صفها في القائمة أيضًا.</p>
+    <figure class="frame"><a href="../../screenshots/terminal-themes-close.png" class="frame-pic"><img src="../../screenshots/terminal-themes-close.png" width="2444" height="722" loading="lazy" alt="طرفيتان على صفحة داكنة: على اليسار سجل Git في نمط Solarized light، وعلى اليمين diff ملوّن في نمط Dracula."></a><figcaption>جنبًا إلى جنب على صفحة داكنة: طرفية في Solarized light وأخرى في Dracula.</figcaption></figure>
+
+    <h2 id="colors">اضبط ألوانًا مفردة بيدك</h2>
+    <p>إلى جانب السمات، يمكن ضبط 35 لونًا من ألوان الصفحة في ملف الإعدادات <code>config.json</code> تحت <code>appearance.colors</code>: اسم اللون وقيمة مكتوبة بالصيغة <code>#rrggbb</code>. إن كُتب في الأعلى سرى اللون فوق كل سمة؛ وإن كُتب تحت معرّف سمة بين قوسين مربعين، مثل <code>"[nord]"</code>، سرى فوق تلك السمة وحدها، وكانت له الغلبة.</p>
+    <pre><code>{
+  "$schema": "./config.schema.json",
+  "appearance": {
+    "colors": {
+      "accent": "#c678dd",
+      "[nord]": { "terminal-bg": "#242933" }
+    }
+  }
+}</code></pre>
+    <p>الأسماء هي رموز ألوان الصفحة، مثل <code>bg</code> و<code>text</code> و<code>accent</code> و<code>terminal-bg</code>؛ ويسردها <a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/design.md">docs/design.md</a>. يُتخطى الإدخال الخاطئ، ويبقى باقي الملف ساريًا؛ ويذكر <strong>Settings → Appearance</strong> ما تُخطي. الألوان التي تضبطها مسؤوليتك: لا شيء يتحقق من أن ما كتبته مقروء.</p>
+
+    <h2 id="theme-files">سماتك الخاصة، كملفات</h2>
+    <p>السمة الخاصة بك ملف JSON في <code>themes/</code> داخل مجلد البيانات: إحدى السمات العشر من النوع نفسه أساسًا لها، وفوقها أي من الألوان الخمسة والثلاثين، وألوان الطرفية نفسها: نصها، والمؤشر، وما هو محدد، والألوان الستة عشر التي يطلبها برنامج. تُدرج بعد السمات العشر من نوعها، موسومة بأنها لك، ويمكن اختيارها حيثما يمكن اختيار تلك: للصفحة، أو افتراضيًا للطرفيات، أو لطرفية واحدة. تبقى الظلال وحلقة التركيز كما في الأساس، ولا يُشغَّل شيء في الملف.</p>
+    <pre><code>{
+  "$schema": "../theme.schema.json",
+  "name": "Harbor",
+  "kind": "dark",
+  "base": "nord",
+  "colors": { "bg": "#0e1a24", "accent": "#5fb3b3" },
+  "terminal": { "foreground": "#d8dee9", "cursor": "#5fb3b3" }
+}</code></pre>
+    <p>يكتب <code>aubergine theme new harbor --from nord</code> ملفًا للبدء منه، فيه كل لون من السمة التي بدأ منها؛ ويقول <code>aubergine theme check</code> ما الخطأ في ملف؛ ويقرأ <strong>Read themes again</strong> في Settings أي تغيير. أنت من يحكم إن كانت ألوانك مقروءة: لا يقول Settings إلا متى قد يصعب قراءة النص. يصف <a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/themes.md">docs/themes.md</a> الصيغة.</p>
+
+    <h2 id="by-condition">سمة لمشروع، وللطرفيات حسب الوسم</h2>
+    <p>يمكن لمشروع أن يرسم الصفحة بسمة خاصة به ما دمت تنظر إليه، فتعرف بنظرة واحدة أين أنت. في <strong>Projects…</strong>، يختار <strong>When light</strong> و<strong>When dark</strong> بجانب المشروع سمة لكل نوع؛ و<strong>As the page</strong> يترك الأمر لـ Settings. في أي مشروع آخر تبقى الصفحة كما اخترتها، وإعادة التحميل على عنوان ذلك المشروع ترسمها بسمته منذ أول رسم.</p>
+    <p>يمنح <strong>By tag</strong>، تحت Terminal theme في Settings، الطرفيات التي تحمل وسمًا سمة خاصة: مثلًا كل طرفية موسومة <code>prod</code> بسمة Dracula، فورًا وأيًّا كانت سمة الصفحة. يفوز أول سطر تحمل الطرفية وسمه، وسمة الطرفية الخاصة تسبق كل ذلك. وفي ملف الإعدادات هي <code>appearance.byTag</code>:</p>
+    <pre><code>{
+  "appearance": {
+    "byTag": [
+      { "tag": "prod", "theme": "dracula" },
+      { "tag": "docs", "theme": "solarized-light" }
+    ]
+  }
+}</code></pre>
+    <p>كثيرًا ما يكفي لون تمييز مختلف. يكتب <code>aubergine theme new teal --from nord --accent "#2f9e8f"</code> ملف سمة لا يغيّر إلا لون تمييز Nord والألوان الخمسة التي ترافقه، محسوبة لتبقى مقروءة. اخترها لمشروع أو وسم كأي سمة أخرى.</p>
+
+    <h2 id="fonts-and-keys">الخطوط والمؤشر واختصارات لوحة المفاتيح</h2>
+    <p>يضبط <strong>Terminal text</strong> في Settings → Appearance حجم نص الطرفية، من 8 إلى 32 بكسل، وخطها، في صورة قائمة يُستخدم أول خط يوجد منها. ويضبط <strong>Cursor</strong> شكله، كتلة أو شريط أو خط سفلي، وهل يومض.</p>
+    <p>يمكن تغيير كل مفتاح. أضف <code>shortcuts</code> إلى ملف الإعدادات: اسم أمر مع تركيبة مفاتيح، أو قائمة تركيبات، أو <code>null</code> لعدم وجود مفتاح. ويأخذ <code>shortcutsInAppWindow</code> الشكل نفسه ولا يسري إلا حيث ثُبّت Aubergine تطبيقًا بنافذة خاصة. أعد تحميل الصفحة، فتعرض صفحة الاختصارات (<strong>?</strong>) ولوحة الأوامر والتلميحات المفاتيح كما ضبطتها.</p>
+    <pre><code>{
+  "shortcuts": {
+    "terminal.park": "X",
+    "attention.next": ["Ctrl+Cmd+G", "W"],
+    "view.fit": null
+  }
+}</code></pre>
+    <p>المفتاح المضبوط مرتين، أو الذي لا يمكن قراءته، يُبلَّغ عنه أعلى صفحة الاختصارات ومن الخادم، ويبقى باقي الملف ساريًا. والمفتاح المنفرد، أو Ctrl أو Option مع مفتاح، لا يعمل إلا ما دامت لوحة المفاتيح ليست مع أي طرفية، كي يظل كل برنامج في الطرفية يتلقى المفاتيح التي يحتاجها. المزيد في <a href="https://github.com/thirstyeggplant/aubergine#keyboard">Keyboard</a> في README.</p>
+
+    <h2 id="titles-and-rows">اختر ما يقوله العنوان والصف</h2>
+    <p>بعد اسم الطرفية، يقول عنوانها وصفّها في القائمة ما يقوله قالبان: نص فيه عناصر نائبة مثل <code>{state}</code> و<code>{folder}</code> و<code>{time}</code> و<code>{field:Ticket}</code>. غيّرهما في <strong>Settings → Appearance → Titles and rows</strong>، حيث يُرسم العنوان والصف الحقيقيان تحت كل حقل أثناء الكتابة، أو في ملف الإعدادات. هنا يقول العنوان الحالة والمجلد والحقل Ticket والروابط والوسوم، ويقول الصف الحالة وخطوة التشغيل والفرع والوقت:</p>
+    <pre><code>{
+  "appearance": {
+    "titleFormat": "{state} {folder} · {field:Ticket} {links} {tags}",
+    "rowFormat": "{state} {step} {branch} · {time}"
+  }
+}</code></pre>
+    <p>العنصر النائب الذي ليس لديه ما يقوله يُترك مع النص الذي يؤدي إليه: في طرفية بلا تذكرة ولا روابط ولا وسوم، لا يقول ذلك العنوان إلا حالتها ومجلدها، دون نقطة زائدة. لا يحمل القالب إلا نصًا وعناصر نائبة، بلا ترميز ولا تنسيق؛ ويُرسم كل منها كما ترسم الصفحة ذلك الشيء في مواضع أخرى، الحالة بلونها والرابط شريحةً. يُذكر العنصر النائب الخاطئ تحت الحقل ويُتخطى، ويعيد <strong>Reset</strong> بالضبط ما يُرسم دون قالب. كل العناصر النائبة في <a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/templates.md">docs/templates.md</a>.</p>
+
+    <h2 id="your-stylesheet">ورقة أنماط خاصة بك</h2>
+    <p>لكل ما لا تبلغه الإعدادات، اكتب ورقة أنماط خاصة بك: <code>custom.css</code> في مجلد البيانات. يربطها الخادم آخرَ شيء في رأس الصفحة، فتكون حاضرة منذ الرسم الأول، وتغلب قاعدتك قاعدةَ التطبيق المساوية لها في الخصوصية، دون <code>!important</code>. يكتب <code>aubergine css new</code> واحدة لتبدأ منها، ويقول <strong>Settings → Appearance → Your stylesheet</strong> هل وُجدت، ويوقفها، ويقرؤها من جديد دون إعادة تحميل.</p>
+    <p>اعتمد على نقاط الربط ولا شيء غيرها: كل رمز (<code>--accent</code> و<code>--radius-surface</code> والبقية)، وسمات جذر الصفحة (<code>data-theme</code> و<code>data-page</code>)، والأجزاء الموسومة بـ<code>data-part</code>، وسمات الطرفية نفسها (<code>data-tags</code> و<code>data-state</code> و<code>data-name</code>)، وهي نفسها على عقدتها وصفّها وعلامة تبويب المتصفح الخاصة بها. تجدها في <a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/hooks.md">docs/hooks.md</a> وهي باقية من إصدار إلى آخر؛ أما أسماء الفئات فلا. هنا يصير عنوان كل طرفية موسومة بـ prod أحمر داكنًا، وتختفي الخريطة:</p>
+    <pre><code>[data-part="terminal"][data-tags~="prod"] [data-part="terminal-title"] {
+  background: #5c1f24;
+}
+[data-part="map"] {
+  display: none;
+}</code></pre>
+    <p>وزوايا أكثر استدارة في كل مكان، عبر رمزين:</p>
+    <pre><code>:root {
+  --radius-surface: 16px;
+  --radius-control: 10px;
+}</code></pre>
+    <p>إن أفسدت قاعدةٌ الصفحة، فافتحها مع <code>?plain</code> بعد عنوانها: تُرسل دون ورقة أنماطك. لا يُجلب شيء مما تسميه ورقة الأنماط من عنوان آخر: الصورة أو الخط أو ورقة الأنماط تأتي من هذا الخادم أو من بيانات مضمّنة، فلا يستطيع مقتطف ملصوق أن يرسل ما في صفحتك إلى مكان آخر. هذه حماية لملف كتبته أو لصقته، لا بيئة معزولة. جُرّب في Chromium فقط.</p>
+
+    <h2 id="plugins">شيفرتك أنت: الإضافات</h2>
+    <p>بعد الإعدادات وورقة الأنماط، اكتب شيفرة: الإضافة وحدة JavaScript خاصة بك في <code>plugins/&lt;id&gt;/</code> داخل مجلد البيانات، ومعها <code>plugin.json</code> يسمّيها. تستوردها الصفحة كما هي، دون خطوة بناء، وتعطيها كائنًا واحدًا، <code>aubergine</code>: قسمًا في اللوحة الجانبية، ومرشّحًا للقائمة، وعنصرًا نائبًا لعنوان أو صف، وأمرًا في لوحة الأوامر، وطريقة لعرض تشغيلة، والحالة وكل تغيير لحظة وقوعه، وكل استدعاء تجريه الصفحة. يكتب <code>aubergine plugin new &lt;id&gt;</code> واحدة لتبدأ منها.</p>
+    <p class="note"><strong>تعمل الإضافة في الصفحة بصفتك أنت، ولا شيء يعزلها.</strong> تستطيع قراءة كل طرفية والكتابة في أيٍّ منها وتغيير أي شيء في الصفحة. ليست في بيئة معزولة. لا تعمل إلا بعد أن تشغّلها في <strong>Settings → Plugins</strong>، وكما كانت ملفاتها حينئذٍ فقط: الملف الذي يتغيّر لا يُحمَّل حتى تنظر فيه من جديد. هذا يمنع تشغيل الشيفرة عن غير قصد؛ وليس قفلًا، لأن الوكيل في الطرفية يعمل بصفتك أيضًا ويستطيع كتابة ملف الإعدادات. لا تشغّل إلا ما كتبته أو قرأته.</p>
+    <p>أعضاء <code>aubergine</code> مدرجة في <a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/plugins.md">docs/plugins.md</a> ولا تُزاد إلا إضافةً من إصدار إلى آخر؛ وما تبلغه الإضافة خارجها قد يتغيّر. أمر في لوحة الأوامر، في أسطر قليلة:</p>
+    <pre><code>// plugins/hello/index.js
+export function activate(aubergine) {
+  aubergine.commands.add({
+    id: 'hello',
+    title: 'Say hello',
+    run: () =&gt; aubergine.say('Hello from my plugin'),
+  });
+}</code></pre>
+    <p>إن أفسدت إضافة الصفحة، فافتحها مع <code>?plain</code> بعد عنوانها: لا تُحمَّل أي إضافة، وتُترك ورقة أنماطك. الإضافة التي تفشل يُذكر أمرها في Settings، وتستمر الصفحة والإضافات الأخرى. وعند إيقافها يختفي فورًا كل ما أضافته عبر <code>aubergine</code>؛ وما فعلته خارج ذلك يختفي بإعادة التحميل. لم تُجرَّب إلا في Chromium.</p>
+
+    <h2 id="settings-file">ملف إعدادات واحد يصف نفسه</h2>
+    <p>يُحفظ كل هذا في <code>config.json</code> في مجلد بيانات Aubergine، ويعرض <code>aubergine settings path</code> مكانه. ويجوز حذف أي مفتاح. والملف الذي لا يُقرأ يعني القيم الافتراضية، ولا يعني أبدًا خادمًا لا يبدأ. ولا يكتب Settings في الصفحة إلا المفاتيح التي يغيّرها، ويترك باقي الملف كما كتبته.</p>
+    <p>في كل مرة يبدأ فيها الخادم يكتب <code>config.schema.json</code> بجوار الملف. أضف سطرًا واحدًا، فيصف المحرر الذي يقرأ JSON Schema كل مفتاح ويكمله:</p>
+    <pre><code>{ "$schema": "./config.schema.json" }</code></pre>
+    <p>يعرض <code>aubergine settings list</code> كل مفتاح بقيمته الحالية، مع علامة حيث لا تكون القيمة الافتراضية، ويعرض <code>aubergine settings schema</code> المخطط. ويصف <a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/settings.md">docs/settings.md</a> كل مفتاح وقيمته الافتراضية، وهل يكتبه Settings أم أنت.</p>
+    <pre><code>aubergine settings path
+aubergine settings list
+aubergine settings schema</code></pre>
+    <p>في الصفحة، يسرد <strong>Settings → Every setting</strong> المفاتيح نفسها بقيمها، ويجدها وأنت تكتب. المفتاح الذي يغيّره Settings ينقلك إلى عنصر التحكم الخاص به؛ والمفتاح المكتوب باليد له <strong>Copy</strong>، للسطر الذي يُضاف إلى الملف. لا يتغير هناك أي إعداد.</p>
+    <figure class="frame"><a href="../../screenshots/every-setting.png" class="frame-pic"><img src="../../screenshots/every-setting.png" width="1720" height="1332" loading="lazy" alt="Settings، Every setting، مفتوحًا، وفي بحثه كلمة “appearance”: ستة مفاتيح، لكل منها قيمته الحالية ومعناه وقيمته الافتراضية؛ خمسة تقول Changed above، ولـ appearance.colors زر Copy."></a><figcaption>Every setting بعد البحث: معنى كل مفتاح وقيمته الحالية وقيمته الافتراضية.</figcaption></figure>
+    <p>بعض الخيارات تخص هذا المتصفح وتُحفظ فيه: هل تظهر اللوحات تبويبات أم قائمة واحدة أم عمودًا؛ وأين يقف الشريط فوق اللوحة وهل يبقى مفتوحًا؛ وهل اللوحة الجانبية والخريطة مطويتان؛ وعرض اللوحة الجانبية وتفاصيل الطرفية؛ وكيف تُصفّى قائمة الطرفيات وتُجمّع وتُرتّب.</p>
+
+    <h2 id="programs-and-agents">ما يمكن لبرنامج أو وكيل تغييره، وما يبقى لك</h2>
+    <p>عبر <a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/api.md">الواجهة البرمجية المحلية</a>، يمكن لبرنامج يحمل رمز API أن يرتب اللوحات بصلاحية <code>canvases:write</code>: يسميها ويلونها ويرتبها، وينقل الطرفيات عليها ويغيّر حجمها ويلونها، ويضيف إطارات. وبصلاحية <code>sessions:write</code> يمكنه إعادة تسمية طرفية ووسمها وتغيير حقولها ومنحها سمة ألوان. ولا يبلغ إلا المشاريع التي يبلغها رمزه.</p>
+    <p>الوكيل داخل الطرفية يصف طرفيته وحدها لا غيرها: اسمًا، وملخصًا لما هي له، وروابطها، وحقولها، باستخدام <code>aubergine describe</code> و<code>aubergine link add</code> و<code>aubergine field set</code>. وحيث كتبت أنت اسمًا أو ملخصًا أو حقلًا، يبقى ما كتبته، ويُحفظ ما أرسله الوكيل بجانبه اقتراحًا. ويستطيع الوكيل، أو برنامج لديه <code>workflows:write</code>، أن يقترح سمة ألوان باستخدام <code>aubergine theme propose</code>: لا تُرسم في أي مكان حتى تقرأها في Review، وتراها مرسومة وتجربها على الصفحة، ثم تقبلها؛ والقبول يكتب ملفها ولا يختارها.</p>
+    <p>الإعدادات نفسها لك وحدك. لا يستطيع أي رمز أو طرفية أو وكيل تغييرها: لا يجيب <code>PUT /v1/settings/appearance</code> إلا المتصفح المسجَّل دخوله، و<code>appearance.colors</code> و<code>shortcuts</code> وغيرها تُكتب باليد في الملف.</p>
+
+    <h2 id="other-tools">كيف تتيح لك أدوات أخرى تخصيص الواجهة؟</h2>
+    <p class="note"><strong>كيف كُتب هذا.</strong> ما يقوله الجدول عن كل أداة مأخوذ من توثيقها هي، كما قُرئ في 28 نوفمبر 2026، ومرتبط من اسمها وخلاياها. لم نشغّل هذه الأدوات لهذا الغرض. “لم يُعثر عليه” تعني أن التوثيق الذي قرأناه لا يصف ذلك، لا أن الأداة لا تستطيعه. إن كان شيء هنا خاطئًا أو قديمًا، <a href="https://github.com/thirstyeggplant/aubergine/issues">أخبرنا</a>.</p>
+    <div class="table table-wide">
+      <table class="table-stack">
+        <thead><tr><th>الأداة</th><th>الإعدادات</th><th>السمات والألوان</th><th>CSS خاص بك</th><th>شيفرة خاصة بك</th><th>قوالب للعناوين والحالة</th></tr></thead>
+        <tbody>
+          <tr><td><a href="https://code.visualstudio.com/docs/configure/settings">VS Code</a><br>محرر</td><td data-label="الإعدادات"><code>settings.json</code> أو محرر Settings، في طبقات من المستخدم إلى مساحة العمل والمجلد واللغة</td><td data-label="السمات والألوان"><a href="https://code.visualstudio.com/docs/configure/themes">ملفات سمات</a> من الإضافات؛ <code>workbench.colorCustomizations</code> لكل السمات أو لواحدة</td><td data-label="CSS خاص بك">غير مدعوم، <a href="https://code.visualstudio.com/api/extension-capabilities/overview">كما يقول توثيقه</a></td><td data-label="شيفرة خاصة بك">إضافات، بصلاحيات VS Code نفسه لكن دون وصول إلى DOM الواجهة؛ وعروض ويب لواجهة خاصة بها</td><td data-label="قوالب للعناوين والحالة">يقبل <code>window.title</code> وعناوين تبويبات الطرفية متغيرات <code>${…}</code></td></tr>
+          <tr><td><a href="https://zed.dev/docs/configuring-zed">Zed</a><br>محرر</td><td data-label="الإعدادات">Settings Editor أو <code>settings.json</code> مع تعليقات؛ المستخدم ثم المشروع</td><td data-label="السمات والألوان"><a href="https://zed.dev/docs/themes">ملفات سمات JSON</a> بمخطط؛ <code>theme_overrides</code> لسمة واحدة؛ فاتح أو داكن أو حسب النظام</td><td data-label="CSS خاص بك">لم يُعثر عليه</td><td data-label="شيفرة خاصة بك">إضافات بلغة Rust مترجمة إلى WebAssembly، مع <a href="https://zed.dev/docs/extensions/capabilities">قدرات</a> يمكنك تقييدها</td><td data-label="قوالب للعناوين والحالة">لم يُعثر عليه</td></tr>
+          <tr><td><a href="https://help.obsidian.md/snippets">Obsidian</a><br>تطبيق ملاحظات</td><td data-label="الإعدادات">ملفات في مجلد <code>.obsidian</code> لكل خزنة</td><td data-label="السمات والألوان"><a href="https://docs.obsidian.md/Themes/App+themes/Build+a+theme">السمات CSS</a>، بمتغيرات CSS موثقة</td><td data-label="CSS خاص بك">مقتطفات CSS، تُفعَّل واحدًا واحدًا</td><td data-label="شيفرة خاصة بك"><a href="https://help.obsidian.md/plugin-security">إضافات</a> JavaScript بصلاحيات Obsidian نفسه؛ لا يعمل أي منها حتى يُطفأ الوضع المقيَّد</td><td data-label="قوالب للعناوين والحالة">لم يُعثر عليه</td></tr>
+          <tr><td><a href="https://hyper.is/">Hyper</a><br>طرفية</td><td data-label="الإعدادات">ملف واحد: <code>.hyper.js</code> في الإصدارات الموثقة، و<code>hyper.json</code> في فرع التطوير</td><td data-label="السمات والألوان">السمات إضافات</td><td data-label="CSS خاص بك"><code>css</code> للنافذة؛ و<code>termCSS</code> الذي <a href="https://github.com/vercel/hyper/blob/canary/PLUGINS.md">لم يعد ينسّق نص الطرفية</a> منذ الإصدار 2</td><td data-label="شيفرة خاصة بك">إضافات npm يحمّلها Electron والمُصيِّر: تغلّف مكوّنات React فيه وتضيف وسيطات Redux</td><td data-label="قوالب للعناوين والحالة">لم يُعثر عليه</td></tr>
+          <tr><td><a href="https://wezterm.org/config/files.html">WezTerm</a><br>طرفية</td><td data-label="الإعدادات">ملف Lua، <code>.wezterm.lua</code></td><td data-label="السمات والألوان"><a href="https://wezterm.org/config/appearance.html">أكثر من 700 مخطط ألوان</a>؛ وما تصنعه بلغة Lua أو TOML؛ و<code>colors</code> للألوان المفردة</td><td data-label="CSS خاص بك">لم يُعثر عليه</td><td data-label="شيفرة خاصة بك">الإعداد نفسه Lua؛ و<a href="https://wezterm.org/config/plugins.html">الإضافات</a> Lua من عنوان Git</td><td data-label="قوالب للعناوين والحالة">دوال Lua تعيد عناوين التبويبات والنوافذ (<a href="https://wezterm.org/config/lua/window-events/format-tab-title.html"><code>format-tab-title</code></a>)</td></tr>
+          <tr><td><a href="https://man.openbsd.org/tmux.1">tmux</a><br>مُضاعِف طرفيات</td><td data-label="الإعدادات">أوامر tmux في ملف؛ خيارات لكل خادم وجلسة ونافذة ولوح</td><td data-label="السمات والألوان">أنماط مثل <code>status-style</code> و<code>window-style</code></td><td data-label="CSS خاص بك">لم يُعثر عليه</td><td data-label="شيفرة خاصة بك">خطافات تشغّل أوامر tmux؛ ووضع تحكم للبرامج</td><td data-label="قوالب للعناوين والحالة"><a href="https://man.openbsd.org/tmux.1#FORMATS">صيغ</a> بـ <code>#{…}</code> لسطر الحالة وقائمة النوافذ وحدود الألواح والعناوين</td></tr>
+          <tr><td><a href="https://sw.kovidgoyal.net/kitty/conf/">kitty</a><br>طرفية</td><td data-label="الإعدادات"><code>kitty.conf</code>، مع تضمين ملفات، ويُقرأ من جديد حين يتغير</td><td data-label="السمات والألوان">السمة ملف <code>.conf</code>؛ يختار <a href="https://sw.kovidgoyal.net/kitty/kittens/themes/"><code>kitten themes</code></a> من أكثر من 300، ويمكن ضبط واحدة للداكن وأخرى للفاتح</td><td data-label="CSS خاص بك">لم يُعثر عليه</td><td data-label="شيفرة خاصة بك"><a href="https://sw.kovidgoyal.net/kitty/kittens/custom/">Kittens</a> بلغة Python بوصول كامل إلى دواخل kitty؛ ومراقِبات</td><td data-label="قوالب للعناوين والحالة"><code>tab_title_template</code>، حيث يستدعي <code>{custom}</code> شيفرة Python خاصة بك</td></tr>
+          <tr><td><a href="https://ghostty.org/docs/config">Ghostty</a><br>طرفية</td><td data-label="الإعدادات">ملف <code>key = value</code>؛ ويضيف <code>config-file</code> ملفات أخرى</td><td data-label="السمات والألوان"><a href="https://ghostty.org/docs/features/theme">السمات ملفات إعداد</a>؛ واحدة للفاتح وأخرى للداكن</td><td data-label="CSS خاص بك">لم يُعثر عليه</td><td data-label="شيفرة خاصة بك"><a href="https://ghostty.org/docs/config/reference#custom-shader">مظلِّلات GLSL</a> فوق الطرفية؛ وAppleScript على macOS</td><td data-label="قوالب للعناوين والحالة">لم يُعثر عليه</td></tr>
+          <tr><td><a href="https://learn.microsoft.com/windows/terminal/customize-settings/color-schemes">Windows Terminal</a><br>طرفية</td><td data-label="الإعدادات">شاشة Settings أو <code>settings.json</code>، مع <a href="https://github.com/microsoft/terminal/blob/main/doc/cascadia/profiles.schema.json">مخطط JSON</a></td><td data-label="السمات والألوان">مخططات ألوان لكل ملف تعريف؛ و<a href="https://learn.microsoft.com/windows/terminal/customize-settings/themes">سمات</a> للنافذة والتبويبات، فاتحة وداكنة، في JSON فقط</td><td data-label="CSS خاص بك">لم يُعثر عليه</td><td data-label="شيفرة خاصة بك">لم يُعثر عليه؛ تضيف تطبيقات أخرى ملفات تعريف ومخططات ألوان في صورة أجزاء JSON</td><td data-label="قوالب للعناوين والحالة">لم يُعثر عليه؛ يضبط ملف التعريف <code>tabTitle</code> و<code>tabColor</code></td></tr>
+          <tr><td><a href="https://iterm2.com/documentation-automatic-profile-switching.html">iTerm2</a><br>طرفية</td><td data-label="الإعدادات">ملفات تعريف في Settings؛ و<a href="https://iterm2.com/documentation-dynamic-profiles.html">Dynamic Profiles</a> في صورة ملفات قوائم خصائص</td><td data-label="السمات والألوان">ملف تعريف يُختار حسب المستخدم أو المضيف أو المجلد أو المهمة، مع Shell Integration</td><td data-label="CSS خاص بك">لم يُعثر عليه</td><td data-label="شيفرة خاصة بك"><a href="https://iterm2.com/python-api/">واجهة Python برمجية</a>، ومكوّنات لشريط الحالة بلغة Python، وAppleScript</td><td data-label="قوالب للعناوين والحالة"><a href="https://iterm2.com/documentation-scripting-fundamentals.html">سلاسل مُستكمَلة</a>، <code>\(…)</code>، في أسماء الجلسات والشارات وشريط الحالة</td></tr>
+          <tr><td>Aubergine<br>طرفيات على لوحة</td><td data-label="الإعدادات"><code>config.json</code> وSettings، مع JSON Schema للمحررات</td><td data-label="السمات والألوان">عشر سمات، فاتحة أو داكنة أو كالنظام؛ سماتك الخاصة ملفات JSON فوق إحداها؛ واحدة لمشروع، وللطرفيات التي تحمل وسمًا، ولكل طرفية؛ 35 لونًا يدويًا، لكل السمات أو لواحدة</td><td data-label="CSS خاص بك">نعم: <code>custom.css</code> في مجلد البيانات، بنقاط ربط موثقة</td><td data-label="شيفرة خاصة بك">نعم: إضافات، وحدات JavaScript تعمل في الصفحة بصفتك، عبر واجهة برمجية موثّقة وخارجها. دون عزل</td><td data-label="قوالب للعناوين والحالة">اثنان، لعنوان الطرفية ولصف في القائمة: نص فيه عناصر نائبة مثل <code>{state}</code> و<code>{field:Ticket}</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>كل أداة هنا تحفظ إعداداتها في ملف، ولدى VS Code وZed وWindows Terminal أيضًا شاشة تكتبه، كما في Aubergine. وفي معظمها تكون السمة ملفًا أيضًا: JSON في VS Code وZed، وCSS في Obsidian، وLua أو TOML في WezTerm، وملف إعداد في kitty وGhostty. وتتيح لك VS Code وZed وWezTerm تغيير ألوان مفردة فوق سمة، كما يفعل هنا <code>appearance.colors</code>.</p>
+    <p>أكثر ما تختلف فيه هو الشيفرة. إعداد WezTerm كله برنامج Lua، وkitty وiTerm2 يشغّلان شيفرة Python خاصة بك، وإضافات Hyper شيفرة JavaScript تغلّف واجهته؛ ويقبل Obsidian وHyper أيضًا CSS خاصًا بك. لا تصل إضافات VS Code إلى DOM واجهته، ولا يدعم ورقة أنماط خاصة بك؛ ويشغّل Zed الإضافات بصيغة WebAssembly، بقدرات يمكنك تقييدها. ويبني tmux وWezTerm وkitty وiTerm2 العناوين وأسطر الحالة من قوالب أو دوال.</p>
+    <p>يمتد Aubergine اليوم من طرف الإعدادات حتى الشيفرة: سمات وألوان ومفاتيح في ملفات تصف نفسها، وصفحة تكتب جزءًا من الإعدادات، وقوالب لما يقوله عنوان الطرفية وصفّها، وورقة أنماط خاصة بك مع نقاط ربط تبقى ثابتة، وإضافات، أي JavaScript خاص بك في الصفحة مع واجهة برمجية لا يُزاد عليها إلا إضافةً. تعمل الإضافة بكل ما تستطيعه الصفحة؛ ووضع معزول لإضافات الآخرين موجود في <a href="../roadmap/#rm-yours">خارطة الطريق</a>، ولم يُبنَ.</p>
+
+    <h2 id="planned">ما هو مخطط له</h2>
+    <p>طريقة معزولة لتشغيل إضافة كتبها شخص آخر، وتثبيتها عبر شاشة المراجعة، مخطط لهما ولم يُبنيا: انظر <a href="../roadmap/#rm-yours">خارطة الطريق</a>.</p>
+
+    <h2 id="faq">أسئلة</h2>
+    <div class="questions">
+      <details><summary>هل يمكن أن يكون لكل طرفية سمة ألوان مختلفة؟</summary><p>نعم. يرسم Theme… في قائمة الطرفية محتواها بأي من السمات العشر، أيًّا كانت سمة الصفحة. ويمكن إعطاء الطرفيات التي تحمل وسمًا سمة بهذا الوسم في Settings، والبقية تتبع الافتراضي الذي تحدده للطرفيات، أو الصفحة.</p></details>
+      <details><summary>هل يمكنني إضافة CSS خاص بي إلى Aubergine؟</summary><p>نعم: <code>custom.css</code> في مجلد البيانات (يكتب <code>aubergine css new</code> واحدًا لتبدأ منه). يُربط آخرَ شيء في الصفحة منذ الرسم الأول، ونقاط الربط التي يمكنه الاعتماد عليها مذكورة في docs/hooks.md. أضف <code>?plain</code> إلى عنوان الصفحة لتراها دونه.</p></details>
+      <details><summary>هل أستطيع كتابة إضافاتي الخاصة لـ Aubergine؟</summary><p>نعم: وحدة JavaScript في <code>plugins/&lt;id&gt;/</code> داخل مجلد البيانات (يكتب <code>aubergine plugin new &lt;id&gt;</code> واحدة لتبدأ منها)، تُشغَّل في Settings → Plugins. تعمل في الصفحة بصفتك، بكل ما تستطيعه الصفحة؛ وليست في بيئة معزولة.</p></details>
+      <details><summary>أين ملف إعدادات Aubergine؟</summary><p>هو <code>config.json</code> في مجلد بيانات Aubergine. يعرض <code>aubergine settings path</code> مكانه، ويعرضه الخادم أيضًا عند بدئه.</p></details>
+      <details><summary>هل يستطيع وكيل تغيير مظهر Aubergine؟</summary><p>ليس الإعدادات: فهي لك وحدك. يستطيع الوكيل تسمية طرفيته ووصفها واقتراح سمة ألوان تنتظر أن تقرأها وتقبلها، ويستطيع برنامج يسمح له رمز API الخاص به إعادة تسمية الطرفيات ووسمها ومنحها سمة وترتيب اللوحات واقتراح سمة أيضًا.</p></details>
+    </div>
+    <p>ذو صلة: <a href="../too-many-terminal-tabs/">اعثر على الطرفية الصحيحة</a> · <a href="../tmux-without-learning-tmux/">tmux دون تعلّم tmux</a> · <a href="../security/">الأمان والخصوصية</a> · <a href="../faq/">الأسئلة الشائعة</a></p>
+    <p>لا ينتسب Aubergine إلى أي من الأدوات المذكورة في هذه الصفحة. أسماؤها علامات تجارية لأصحابها.</p>
+  </div>
+</div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">جاهز للعمل في خمس دقائق</h2>
+    <div class="close-do">
+      <p>تحتاج إلى macOS مع tmux 3.2 أو أحدث، ومعه Node.js 22 أو أحدث. الأمر <code>brew install tmux node</code> يثبّت الاثنين.</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="تم النسخ" aria-live="polite" hidden>نسخ</button></p>
+      <p class="actions"><a class="button" href="../install/">التثبيت</a><a class="button button-quiet" href="../guides/">الأدلة</a></p>
+    </div>
+  </div>
+</section>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav aria-label="كل الصفحات">
+      <ul class="foot-links">
+        <li><a href="../">الرئيسية</a></li>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex و ChatGPT</a></li>
+        <li><a href="../install/">التثبيت</a></li>
+        <li><a href="../guides/">الأدلة</a></li>
+        <li><a href="../run-multiple-coding-agents/">تشغيل عدة وكلاء</a></li>
+        <li><a href="../working-copies/">نسخ العمل</a></li>
+        <li><a href="../queue-and-schedules/">الطابور والجداول الزمنية</a></li>
+        <li><a href="./" aria-current="page">التخصيص</a></li>
+        <li><a href="../compare/">مقارنة</a></li>
+        <li><a href="../security/">الأمان</a></li>
+        <li><a href="../roadmap/">خارطة الطريق</a></li>
+        <li><a href="../faq/">الأسئلة الشائعة</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+
+    <div class="share">
+      <p class="share-label">شارك هذه الصفحة</p>
+      <ul class="foot-links">
+        <li><a href="https://x.com/intent/post?text=%D8%AE%D8%B5%D9%91%D8%B5%20%D8%B3%D9%85%D8%A7%D8%AA%20%D8%A7%D9%84%D8%B7%D8%B1%D9%81%D9%8A%D8%A9%20%D9%88%D8%A3%D9%84%D9%88%D8%A7%D9%86%D9%87%D8%A7%20%D9%88%D9%85%D9%81%D8%A7%D8%AA%D9%8A%D8%AD%D9%87%D8%A7%20%7C%20Aubergine&amp;url=https%3A%2F%2Fthirstyeggplant.com%2Far%2Fcustomize-terminal-themes%2F" rel="noopener nofollow">X</a></li>
+        <li><a href="https://bsky.app/intent/compose?text=%D8%AE%D8%B5%D9%91%D8%B5%20%D8%B3%D9%85%D8%A7%D8%AA%20%D8%A7%D9%84%D8%B7%D8%B1%D9%81%D9%8A%D8%A9%20%D9%88%D8%A3%D9%84%D9%88%D8%A7%D9%86%D9%87%D8%A7%20%D9%88%D9%85%D9%81%D8%A7%D8%AA%D9%8A%D8%AD%D9%87%D8%A7%20%7C%20Aubergine%20https%3A%2F%2Fthirstyeggplant.com%2Far%2Fcustomize-terminal-themes%2F" rel="noopener nofollow">Bluesky</a></li>
+        <li><a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fthirstyeggplant.com%2Far%2Fcustomize-terminal-themes%2F" rel="noopener nofollow">LinkedIn</a></li>
+        <li><a href="https://www.reddit.com/submit?url=https%3A%2F%2Fthirstyeggplant.com%2Far%2Fcustomize-terminal-themes%2F&amp;title=%D8%AE%D8%B5%D9%91%D8%B5%20%D8%B3%D9%85%D8%A7%D8%AA%20%D8%A7%D9%84%D8%B7%D8%B1%D9%81%D9%8A%D8%A9%20%D9%88%D8%A3%D9%84%D9%88%D8%A7%D9%86%D9%87%D8%A7%20%D9%88%D9%85%D9%81%D8%A7%D8%AA%D9%8A%D8%AD%D9%87%D8%A7%20%7C%20Aubergine" rel="noopener nofollow">Reddit</a></li>
+        <li><a href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fthirstyeggplant.com%2Far%2Fcustomize-terminal-themes%2F&amp;t=%D8%AE%D8%B5%D9%91%D8%B5%20%D8%B3%D9%85%D8%A7%D8%AA%20%D8%A7%D9%84%D8%B7%D8%B1%D9%81%D9%8A%D8%A9%20%D9%88%D8%A3%D9%84%D9%88%D8%A7%D9%86%D9%87%D8%A7%20%D9%88%D9%85%D9%81%D8%A7%D8%AA%D9%8A%D8%AD%D9%87%D8%A7%20%7C%20Aubergine" rel="noopener nofollow">Hacker News</a></li>
+        <li><a href="mailto:?subject=%D8%AE%D8%B5%D9%91%D8%B5%20%D8%B3%D9%85%D8%A7%D8%AA%20%D8%A7%D9%84%D8%B7%D8%B1%D9%81%D9%8A%D8%A9%20%D9%88%D8%A3%D9%84%D9%88%D8%A7%D9%86%D9%87%D8%A7%20%D9%88%D9%85%D9%81%D8%A7%D8%AA%D9%8A%D8%AD%D9%87%D8%A7%20%7C%20Aubergine&amp;body=https%3A%2F%2Fthirstyeggplant.com%2Far%2Fcustomize-terminal-themes%2F">البريد الإلكتروني</a></li>
+        <li><button type="button" class="share-copy" data-copy-text="https://thirstyeggplant.com/ar/customize-terminal-themes/" data-copied="تم النسخ" aria-live="polite" hidden>نسخ الرابط</button></li>
+      </ul>
+    </div>
+    <p class="foot-line">Aubergine مجاني ومفتوح المصدر بموجب <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">رخصة MIT</a>، ويعمل على حاسوبك أنت.</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    if (!navigator.clipboard) return;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.querySelectorAll('[data-copy-text]').forEach(function (button) {
+  if (!navigator.clipboard) return;
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    navigator.clipboard.writeText(button.getAttribute('data-copy-text')).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+document.querySelectorAll('details.menu').forEach(function (menu) {
+  menu.addEventListener('toggle', function () {
+    if (!menu.open) return;
+    document.querySelectorAll('details.menu[open]').forEach(function (other) { if (other !== menu) other.open = false; });
+  });
+});
+</script>
+</body>
+</html>

@@ -14,6 +14,14 @@ export type Command =
   | { name: 'copies'; words: string[] }
   /** `device …`: its own words, parsed by the device commands. */
   | { name: 'device'; words: string[] }
+  /** `settings …`: where the settings file is, its schema, every key. Read from the file; the server is not needed. */
+  | { name: 'settings'; words: string[] }
+  /** `css …`: where the owner's own stylesheet is, and a starter. Read and written in the data folder, the server not needed. */
+  | { name: 'css'; words: string[] }
+  /** `plugin …`: the plugins in the data folder, where they are, and a starter. Read and written in the data folder, the server not needed; nothing here switches one on. */
+  | { name: 'plugin'; words: string[] }
+  /** `theme …`: the color themes there are, the owner's theme files, a new one; inside a terminal, proposing one. For the owner read from the files, the server not needed; inside a terminal, through the server. */
+  | { name: 'theme'; words: string[] }
   | { name: 'canvas-list' }
   | { name: 'canvas-new'; canvasName: string }
   | { name: 'attach'; query: string }
@@ -124,6 +132,28 @@ export const USAGE = `Usage: aubergine <command>
   update                     Bring this copy up to date: fetch, install, build
   version                    Version, commit, where this copy and your data are
   doctor                     Check that everything Aubergine needs is in place
+  settings [list]            Every key of the settings file with its value now, marked where it is not the default
+  settings path              Where the settings file is (config.json in the data folder)
+  settings schema            The JSON Schema of the settings file; the server also writes it beside the file as
+                             config.schema.json, and "$schema": "./config.schema.json" in the file lets an editor use it
+  css [path]                 Where your own stylesheet is (custom.css in the data folder), and whether there is one
+  css new                    Write a custom.css to start from: the hooks it may rely on (docs/hooks.md) and three
+                             examples, commented out. Never over a file that is there
+  plugin [list]              The plugins in the data folder (plugins/<id>/), whether each is on, and what is wrong
+  plugin path                Where the folder of plugins is
+  plugin new <id> [--name <name>]
+                             Write a plugin to start from: a manifest, a module that uses the plugin API alone and a
+                             stylesheet (docs/plugins.md). It is off: a plugin runs in the page as you, with everything
+                             the page can do. Switch it on in Settings → Plugins. Never over anything that is there
+  theme [list]               The color themes: those that come with Aubergine and your own theme files, with what is
+                             wrong in a file
+  theme new <id> [--from <theme>] [--name <name>] [--accent "#rrggbb"]
+                             Write themes/<id>.json in the data folder to start a theme of your own from: every color
+                             of the theme it is from (default: dark), for you to change. Never over a file that is there.
+                             --accent: only the accent and the five colors that go with it, worked out to be readable
+  theme check <file>         Say what is wrong with a theme file, as the server reads it
+  theme path                 Where the theme files are (themes/ in the data folder)
+  theme proposals            The color themes agents and programs proposed that wait for you (read them under Review)
   uninstall                  Remove the command and an installed copy. Your data and terminals are kept. (--yes: do not ask)
 
   demo                       Make a canvas named "Demo" with a small scene of stand-ins, and a tour of it in the browser.
@@ -238,6 +268,9 @@ export const USAGE = `Usage: aubergine <command>
   workflow brief             Inside a session that was asked to write a workflow or a step: the request
   workflow propose --file <file>   Hand a workflow in as a draft, for a person to read (- or nothing: standard input)
   element propose --file <file>    The same for one step
+  theme propose <file> [--id <id>] [--why "<one line>"]
+                             Inside a session: propose a color theme file, for a person to read. Inside a session,
+                             theme new writes the file into the current folder, and theme proposals says what became of yours
   element list | show <name> | remove <name>     The saved steps
   element run <name> [--session <name|id>] [--input key=value …] [--replace]
                              Run one step by itself on a session
@@ -509,6 +542,16 @@ export function parseCommand(argv: readonly string[]): Command {
     case 'device':
     case 'devices':
       return { name: 'device', words: rest };
+    case 'settings':
+      return { name: 'settings', words: rest };
+    case 'css':
+      return { name: 'css', words: rest };
+    case 'plugin':
+    case 'plugins':
+      return { name: 'plugin', words: rest };
+    case 'theme':
+    case 'themes':
+      return { name: 'theme', words: rest };
     case 'board': {
       const canvas = takeOption(rest, '--canvas');
       const workflow = takeOption(canvas.rest, '--workflow');

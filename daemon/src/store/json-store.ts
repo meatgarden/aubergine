@@ -97,7 +97,12 @@ const StateFileV13 = StateFileV12.extend({ version: z.literal(13), schedules: Sc
 const StateFileV14 = StateFileV13.omit({ project: true }).extend({ version: z.literal(14), projects: AppState.shape.projects, sharing: AppState.shape.sharing });
 
 /** The same, with devices: browsers paired from an outside address, each with a hash of its secret. An older file has none. */
-const StateFileV15 = StateFileV14.extend({ version: z.literal(15), devices: z.array(Device) });
+const StateFileV15 = StateFileV14.extend({
+  version: z.literal(15),
+  devices: z.array(Device),
+  /** Added without a new version: an empty list by default, so that a file written before it loads as it was. */
+  themeProposals: AppState.shape.themeProposals,
+});
 
 const StateFile = z.discriminatedUnion('version', [StateFileV1, StateFileV2, StateFileV3, StateFileV4, StateFileV5, StateFileV6, StateFileV7, StateFileV8, StateFileV9, StateFileV10, StateFileV11, StateFileV12, StateFileV13, StateFileV14, StateFileV15]);
 const CURRENT_VERSION = 15;
@@ -161,6 +166,7 @@ export function migrate(file: StateFile): AppState {
     environments: file.version >= 11 && 'environments' in file ? file.environments : [],
     queue: file.version >= 12 && 'queue' in file ? file.queue : QueueState.parse({}),
     schedules: file.version >= 13 && 'schedules' in file ? file.schedules : SchedulesState.parse({}),
+    themeProposals: file.version >= 15 && 'themeProposals' in file ? file.themeProposals : { waiting: [], decided: [] },
   });
 }
 

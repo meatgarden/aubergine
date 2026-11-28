@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { NO_ATTENTION, NO_STATUS, applyEvent, createInitialState, newCanvas, newId, type AppState, type LayoutNode, type Session } from '@aubergine/shared';
+import { NO_ATTENTION, NO_STATUS, applyEvent, parseTemplate, renderTemplate, createInitialState, newCanvas, newId, type AppState, type LayoutNode, type Session } from '@aubergine/shared';
 import { SCOPE_FILTER, listFilters, registerFilter, unregisterFilter } from './list-filters';
 import {
   DEFAULT_VIEW,
@@ -24,6 +24,7 @@ import {
   measureItems,
   navigationOrder,
   parseView,
+  rowFacts,
   rowState,
   sortRows,
   stateCounts,
@@ -377,6 +378,21 @@ describe('a thousand sessions', () => {
     expect(filterRows(rows, view({ filters: ['busy'], text: 's-3-' }), null)).toHaveLength(15);
   });
 
+  it('say what the row’s template says for every row quickly, from one reading of the template', () => {
+    const rows = createRowSelector()(big);
+    const now = Date.parse('2026-01-01T00:10:00.000Z');
+    const template = parseTemplate('{state} · {standing} · {time} {typed-by}', 'row');
+    const started = performance.now();
+    let drawn = 0;
+    for (const row of rows) {
+      const facts = rowFacts(row, now);
+      const said: Record<string, string | null> = { state: facts.state?.text ?? null, standing: facts.standing?.text ?? null, time: facts.time?.text ?? null, 'typed-by': facts.typedBy?.text ?? null };
+      drawn += renderTemplate(template.pieces, (piece) => said[piece.part] ?? null).length;
+    }
+    expect(drawn).toBeGreaterThan(0);
+    expect(performance.now() - started).toBeLessThan(250);
+  });
+
   it('touch one row when one session changes', () => {
     const select = createRowSelector();
     const before = select(big);
@@ -441,5 +457,34 @@ describe('kindCounts', () => {
     expect(kindWords({ agents: 1, shells: 2 })).toBe('1 agent · 2 shells');
     expect(kindWords({ agents: 3, shells: 0 })).toBe('3 agents');
     expect(kindWords({ agents: 0, shells: 0 })).toBe('');
+  });
+});
+
+describe('rowFacts: what a row has to say beyond its name', () => {
+  const now = Date.parse('2026-01-01T00:10:00.000Z');
+  const facts = (extra: Partial<Session>, parked = false) => {
+    const s = session('a', extra);
+    return rowFacts({ session: s, state: rowState(s), parked }, now);
+  };
+  it('says the state in words only where it is not the ordinary one, working too', () => {
+    expect(facts({}).state).toBeNull();
+    expect(facts({ attention: { state: 'waiting', message: 'ok?', at } }).state).toEqual({ text: 'waiting for you', tone: 'attention', dot: 'waiting', title: 'ok?' });
+    expect(facts({ attention: { state: 'done', message: null, at } }).state).toMatchObject({ text: 'finished', tone: 'ok' });
+    expect(facts({ status: { ...NO_STATUS, state: 'idle', lastExit: 3 } }).state).toMatchObject({ text: 'exit 3', tone: 'danger' });
+    expect(facts({ status: { ...NO_STATUS, state: 'busy' } }).state).toMatchObject({ text: 'working', tone: 'working' });
+  });
+  it('says parked, ended and what a terminal from a file was meant for', () => {
+    expect(facts({}).standing).toBeNull();
+    expect(facts({ state: 'parked' }, true).standing).toEqual({ text: 'parked', meantFor: null });
+    expect(facts({ state: 'exited', meantFor: { agent: 'claude-code', environment: null, placeUnset: false } }).standing).toEqual({ text: 'ended · was claude-code', meantFor: 'claude-code' });
+  });
+  it('says the later of the two times, and both to whoever asks', () => {
+    expect(facts({}).time).toBeNull();
+    expect(facts({ lastInputAt: '2026-01-01T00:06:00.000Z', lastOutputAt: '2026-01-01T00:09:00.000Z' }).time).toEqual({ text: '1m ago', title: 'You last typed here 4m ago. It last printed 1m ago', typed: '4m', updated: '1m' });
+    expect(facts({ lastOutputAt: '2026-01-01T00:09:58.000Z' }).time?.text).toBe('just now');
+  });
+  it('says which token typed into it, and when', () => {
+    expect(facts({}).typedBy).toBeNull();
+    expect(facts({ typedBy: { name: 'robot', at: '2026-01-01T00:07:00.000Z' } }).typedBy?.text).toBe('typed by robot 3m ago');
   });
 });

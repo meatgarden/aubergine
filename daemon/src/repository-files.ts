@@ -64,8 +64,9 @@ async function workflowFolder(root: string): Promise<string | null> {
 async function readBounded(file: string, maxBytes: number = REPOSITORY_MAX_BYTES): Promise<{ ok: true; bytes: Buffer } | { ok: false; reason: string }> {
   let handle;
   try {
-    // O_NOFOLLOW: if the name became a link between listing and opening, the open fails.
-    handle = await open(file, constants.O_RDONLY | constants.O_NOFOLLOW);
+    // O_NOFOLLOW: if the name became a link between listing and opening, the open fails. O_NONBLOCK: if it became a
+    // pipe, the open does not wait for a writer (the stat below then refuses it); on a regular file it changes nothing.
+    handle = await open(file, constants.O_RDONLY | constants.O_NOFOLLOW | constants.O_NONBLOCK);
   } catch (error) {
     return { ok: false, reason: (error as NodeJS.ErrnoException).code === 'ELOOP' ? 'It is a link; links are not followed.' : 'It could not be opened.' };
   }
@@ -225,9 +226,10 @@ export async function readInside(root: string, relative: string, maxBytes: numbe
  * Writes one file inside a folder the owner named, for publishing: by a path
  * of plain names from that folder's root. Folders on the way are made; none
  * may be a link, and neither may the file. Nothing outside the folder is
- * written.
+ * written. With `replace` false, a file that is there is never written over: it is refused, and a file that
+ * appears between looking and writing is refused too (it is opened to be made, never to be emptied).
  */
-export async function writeInside(root: string, relative: string, text: string): Promise<{ path: string; replaced: boolean }> {
+export async function writeInside(root: string, relative: string, text: string, replace = true): Promise<{ path: string; replaced: boolean }> {
   const parts = partsInside(relative);
   if (!parts) throw new RepositoryWriteError('That is not a plain path inside the folder.');
   let dir = path.resolve(root);
@@ -246,6 +248,7 @@ export async function writeInside(root: string, relative: string, text: string):
   const existing = await lstat(target).catch(() => null);
   if (existing?.isSymbolicLink()) throw new RepositoryWriteError(`${relative} is a link. Nothing is written through a link.`);
   if (existing && !existing.isFile()) throw new RepositoryWriteError(`${relative} is there and is not a file.`);
+  if (existing && !replace) throw new RepositoryWriteError(`${relative} is there already, and is not written over.`);
   let handle;
   try {
     handle = await open(target, constants.O_WRONLY | constants.O_CREAT | constants.O_NOFOLLOW | (existing ? constants.O_TRUNC : constants.O_EXCL), 0o644);

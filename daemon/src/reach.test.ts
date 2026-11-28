@@ -23,6 +23,7 @@ import {
   type ChangeEvent,
 } from '@aubergine/shared';
 import { ACTIVITY_FILE, FileActivityLog } from './activity';
+import { StylesheetFile } from './custom-css';
 import { authorize, sessionToken } from './auth';
 import type { DesktopOpener } from './desktop/open';
 import { TRIES_PER_MINUTE, WRONG_CODES_ALLOWED, Pairing } from './pairing';
@@ -70,6 +71,8 @@ async function start(addresses: string[] = [OUTSIDE, SECOND]): Promise<void> {
   await mkdir(path.join(web, 'assets'), { recursive: true });
   await writeFile(path.join(web, 'index.html'), '<!doctype html><html lang="en"><head><title>Aubergine</title></head><body></body></html>\n');
   await writeFile(path.join(web, 'assets', 'app.js'), 'console.log("the page");\n');
+  // The owner's own stylesheet is there, so that the walks reach its route with a file to give.
+  await writeFile(path.join(dir, 'custom.css'), '[data-part="map"] { display: none; }\n');
   const opener: DesktopOpener = {
     open: async (sessionId) => {
       opened.push(sessionId);
@@ -88,6 +91,7 @@ async function start(addresses: string[] = [OUTSIDE, SECOND]): Promise<void> {
     webDist: web,
     activity: new FileActivityLog(dir, 1024 * 1024),
     desktop: opener,
+    stylesheet: new StylesheetFile(dir),
     now: () => now,
   });
   await app.listen({ host: '127.0.0.1', port: 0 });
@@ -249,7 +253,7 @@ describe('where a request came in', () => {
   it('never lets the page be framed, here or from outside, at a linked server\'s addresses in it too', async () => {
     for (const answer of [await send('GET', '/', { host: `127.0.0.1:${port}` }), await fromOutside('GET', '/'), await fromOutside('GET', `/c/${newId()}`), await fromOutside('GET', '/index.html'), await send('GET', `/s/abcd1234/p/${newId()}/c/${newId()}/runs`, { host: `127.0.0.1:${port}` }), await fromOutside('GET', `/s/abcd1234/t/${newId()}`), await fromOutside('GET', '/s/abcd1234')]) {
       expect(answer.status).toBe(200);
-      expect(answer.headers['content-security-policy']).toBe("frame-ancestors 'none'");
+      expect(answer.headers['content-security-policy']).toBe("frame-ancestors 'none'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; media-src 'self' data: blob:");
       expect(answer.headers['x-frame-options']).toBe('DENY');
     }
   });
@@ -650,7 +654,7 @@ describe('a stranger from outside', () => {
     const filled = (url: string): string => url.replace('/*', '/assets/app.js').replace(/:[A-Za-z]+/g, () => newId());
     const routes = everyRouteOf(app);
     // Every kind of route is there to be tried: a walk of nothing would pass.
-    for (const wanted of ['GET /api/v1/state', 'POST /api/v1/sessions', 'GET /ws/v1/events', 'GET /v1/canvases', 'POST /auth/pair', 'GET /auth', 'GET /', 'GET /*', 'GET /api/v1/devices', 'POST /api/v1/pairing-codes', 'DELETE /api/v1/devices/:deviceId']) {
+    for (const wanted of ['GET /api/v1/state', 'POST /api/v1/sessions', 'GET /ws/v1/events', 'GET /v1/canvases', 'POST /auth/pair', 'GET /auth', 'GET /', 'GET /*', 'GET /api/v1/devices', 'POST /api/v1/pairing-codes', 'DELETE /api/v1/devices/:deviceId', 'GET /api/v1/custom.css', 'GET /api/v1/plugins/:pluginId/:digest/:file', 'PUT /v1/settings/plugins', 'POST /v1/settings/plugins/read']) {
       expect(routes.map((r) => `${r.method} ${r.url}`)).toContain(wanted);
     }
     const answered: string[] = [];

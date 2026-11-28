@@ -19,168 +19,161 @@ export const themeShown = (setting: ThemeSetting, systemIsLight: boolean): 'ligh
 export const Settings = z.object({
   font: z
     .object({
-      /** CSS font-family list for terminals. */
-      family: z.string().trim().min(1).max(300).default(DEFAULT_FONT_FAMILY),
-      /** Terminal font size in pixels. */
-      size: z.number().int().min(8).max(32).default(13),
+      family: z.string().trim().min(1).max(300).default(DEFAULT_FONT_FAMILY).describe('The fonts of a terminal’s text, as a CSS font-family list: the first one found is used.'),
+      size: z.number().int().min(8).max(32).default(13).describe('The size of a terminal’s text, in pixels.'),
     })
-    .prefault({}),
-  /** Light, dark, or whichever the system is set to (and following it when that changes). A file that says dark or light keeps meaning that. */
-  theme: ThemeSetting.default('system'),
-  /** Which color theme the light page and the dark page are, a terminal's cursor, and colors set by hand. */
-  appearance: Appearance.catch(() => Appearance.parse({})).prefault({}),
-  /** Absolute path of the shell to start. `null` means the user's own `$SHELL`. */
-  shell: z.string().startsWith('/').nullable().default(null),
-  /** Folder new terminals start in (`~` is allowed). `null` means the home folder. */
-  defaultFolder: z.string().min(1).nullable().default(null),
+    .prefault({})
+    .describe('A terminal’s text.'),
+  theme: ThemeSetting.default('system').describe('Light, dark, or whichever the system is set to (`system`), following it when that changes.'),
+  appearance: Appearance.catch(() => Appearance.parse({}))
+    .prefault({})
+    .describe('How the page looks beyond light or dark: the color theme of each, a terminal’s theme and cursor, and colors set by hand.'),
+  shell: z.string().startsWith('/').nullable().default(null).describe('The whole path of the shell new terminals start. Null: your own `$SHELL`.'),
+  defaultFolder: z.string().min(1).nullable().default(null).describe('The folder new terminals start in (`~` may begin it). Null: the home folder.'),
   away: z
     .object({
-      /** After this many minutes without the page being looked at, coming back shows what changed meanwhile. 0 switches that off. */
-      afterMinutes: z.number().int().min(0).max(10_080).default(30),
+      afterMinutes: z.number().int().min(0).max(10_080).default(30).describe('After this many minutes without the page being looked at, coming back shows what changed meanwhile. 0 switches that off.'),
     })
-    .prefault({}),
+    .prefault({})
+    .describe('What changed while you were away.'),
   agents: z
     .object({
-      /**
-       * Keep the prompts given to agents in the session's note log. Turn this
-       * off if prompts may contain secrets.
-       */
-      logPrompts: z.boolean().default(true),
-      /**
-       * The command line that starts Claude Code. It may be a whole launcher,
-       * such as `mytool launch -- claude`. Aubergine's own flags are added at
-       * the end, or where `{flags}` appears.
-       */
-      claudeCommand: z.string().trim().min(1).max(1000).default('claude'),
+      logPrompts: z.boolean().default(true).describe('Keep the prompts given to agents in the terminal’s note log. Turn this off if prompts may hold secrets.'),
+      claudeCommand: z
+        .string()
+        .trim()
+        .min(1)
+        .max(1000)
+        .default('claude')
+        .describe('The command line that starts Claude Code. It may be a whole launcher, such as `mytool launch -- claude`; Aubergine’s own flags are added at the end, or where `{flags}` is.'),
     })
-    .prefault({}),
-  /** Limits on calls made with API tokens. They apply from the next start of the server. */
+    .prefault({})
+    .describe('Agents Aubergine starts.'),
   api: z
     .object({
-      /** How many calls one token may make in a minute. */
-      rateLimitPerMinute: z.number().int().min(1).max(100_000).default(600),
-      /** The largest request body the server accepts, in bytes. */
-      maxBodyBytes: z.number().int().min(1024).max(64 * 1024 * 1024).default(1024 * 1024),
-      /** How large the activity log may grow before the older half is dropped, in bytes. */
-      activityLogMaxBytes: z.number().int().min(4096).max(1024 * 1024 * 1024).default(5 * 1024 * 1024),
+      rateLimitPerMinute: z.number().int().min(1).max(100_000).default(600).describe('How many calls one API token may make in a minute.'),
+      maxBodyBytes: z
+        .number()
+        .int()
+        .min(1024)
+        .max(64 * 1024 * 1024)
+        .default(1024 * 1024)
+        .describe('The largest request body the server takes, in bytes.'),
+      activityLogMaxBytes: z
+        .number()
+        .int()
+        .min(4096)
+        .max(1024 * 1024 * 1024)
+        .default(5 * 1024 * 1024)
+        .describe('How large the activity log may grow before its older half is dropped, in bytes.'),
     })
-    .prefault({}),
-  /** Limits on workflows, and when a run counts as quiet. */
+    .prefault({})
+    .describe('Limits on calls made with API tokens. They apply from the next start of the server.'),
   workflows: z
     .object({
-      /** How many elements one workflow may have. */
-      maxElements: z.number().int().min(1).max(200).default(50),
-      /** How long the text of one element (or the standing text) may be, in characters. */
-      maxElementChars: z.number().int().min(100).max(100_000).default(20_000),
-      /** A running run is marked quiet when its session has printed this many seconds after the last report. */
-      quietAfterSeconds: z.number().int().min(10).max(86_400).default(300),
+      maxElements: z.number().int().min(1).max(200).default(50).describe('How many steps one workflow may have.'),
+      maxElementChars: z.number().int().min(100).max(100_000).default(20_000).describe('How long the text of one step (or the text for every step) may be, in characters.'),
+      quietAfterSeconds: z.number().int().min(10).max(86_400).default(300).describe('A running run is marked quiet when its terminal has printed for this many seconds after the last report.'),
     })
-    .prefault({}),
-  /** The library: how long and how much a fetch of a Git source may take. They apply from the next start of the server. */
+    .prefault({})
+    .describe('Limits on workflows, and when a run counts as quiet.'),
   library: z
     .object({
-      /** The longest one Git command of a refresh may run, in seconds. */
-      fetchTimeoutSeconds: z.number().int().min(5).max(3600).default(60),
-      /** The largest file Git may write while fetching, in megabytes: a source that needs more is refused. */
-      maxFetchMegabytes: z.number().int().min(1).max(10_000).default(100),
+      fetchTimeoutSeconds: z.number().int().min(5).max(3600).default(60).describe('The longest one Git command of a refresh may run, in seconds.'),
+      maxFetchMegabytes: z.number().int().min(1).max(10_000).default(100).describe('The largest file Git may write while fetching, in megabytes: a source that needs more is refused.'),
     })
-    .prefault({}),
-  /** Messages between sessions: how many, how often, and when a thread waits for the owner. They apply from the next start of the server. */
+    .prefault({})
+    .describe('The library: how long and how much a fetch of a Git source may take. They apply from the next start of the server.'),
   messages: z
     .object({
-      /** How many messages one sender may send in a minute, to anyone. */
-      perSenderPerMinute: z.number().int().min(1).max(1000).default(6),
-      /** How many messages may pass between the same two in an hour, both ways together. */
-      perPairPerHour: z.number().int().min(1).max(10_000).default(30),
-      /** After this many messages between two that are not the owner, without the owner having looked, the thread pauses. */
-      pauseAfter: z.number().int().min(1).max(1000).default(6),
-      /** How many unread messages a session may have waiting. One more is refused. */
-      maxUnread: z.number().int().min(1).max(1000).default(20),
-      /** The fixed sentence that says a message is waiting is not typed into the same terminal again within this many seconds. */
-      nudgeIntervalSeconds: z.number().int().min(1).max(86_400).default(120),
-      /** Read messages older than this many days are left out of what is listed. */
-      keepDays: z.number().int().min(1).max(3650).default(30),
-      /** How large the file of messages may grow before the older part is set aside, in bytes. */
-      logMaxBytes: z.number().int().min(4096).max(1024 * 1024 * 1024).default(4 * 1024 * 1024),
+      perSenderPerMinute: z.number().int().min(1).max(1000).default(6).describe('How many messages one sender may send in a minute, to anyone.'),
+      perPairPerHour: z.number().int().min(1).max(10_000).default(30).describe('How many messages may pass between the same two in an hour, both ways together.'),
+      pauseAfter: z.number().int().min(1).max(1000).default(6).describe('After this many messages between two that are not the owner, without the owner having looked, the thread pauses.'),
+      maxUnread: z.number().int().min(1).max(1000).default(20).describe('How many unread messages a terminal may have waiting. One more is refused.'),
+      nudgeIntervalSeconds: z.number().int().min(1).max(86_400).default(120).describe('The fixed sentence that says a message is waiting is not typed into the same terminal again within this many seconds.'),
+      keepDays: z.number().int().min(1).max(3650).default(30).describe('Read messages older than this many days are left out of what is listed.'),
+      logMaxBytes: z
+        .number()
+        .int()
+        .min(4096)
+        .max(1024 * 1024 * 1024)
+        .default(4 * 1024 * 1024)
+        .describe('How large the file of messages may grow before its older part is set aside, in bytes.'),
     })
-    .prefault({}),
-  /** What a terminal says about itself. */
+    .prefault({})
+    .describe('Messages between terminals: how many, how often, and when a thread waits for the owner. They apply from the next start of the server.'),
   describe: z
     .object({
-      /** Whether an agent that stops with its terminal not named, or with no summary, is told once to set them. The page changes this one. */
-      remind: z.boolean().default(true),
-      /** Whether the pull request of a terminal's branch is asked of the `gh` tool, where that is installed and signed in. Written by hand. */
-      pullRequests: z.boolean().default(true),
+      remind: z.boolean().default(true).describe('Whether an agent that stops with its terminal not named, or with no summary, is told once to set them.'),
+      pullRequests: z.boolean().default(true).describe('Whether the pull request of a terminal’s branch is asked of the `gh` tool, where that is installed and signed in.'),
     })
-    .prefault({}),
-  /** Opening a canvas terminal in the owner's own terminal application. */
+    .prefault({})
+    .describe('What a terminal says about itself.'),
   desktop: z
     .object({
-      /**
-       * Which application: `terminal` or `iterm` (macOS), or `command` for a command line of your own. Null: the
-       * usual one for this system, which is `terminal` on macOS, and `command` elsewhere once one is written.
-       */
       app: z
         .string()
         .regex(/^[a-z][a-z0-9-]{0,39}$/)
         .nullable()
-        .default(null),
-      /** For `command`: the command line, with `{file}` where the script file goes. Started without a shell. */
-      command: z.string().max(1000).nullable().default(null),
-      /** New terminals made in the page also open on the desktop. */
-      openNew: z.boolean().default(false),
+        .default(null)
+        .describe('Which application opens a terminal on the desktop: `terminal` or `iterm` (macOS), or `command` for a command line of your own. Null: the usual one for this system, `terminal` on macOS, and `command` elsewhere once one is written.'),
+      command: z.string().max(1000).nullable().default(null).describe('For `command`: the command line, with `{file}` where the script file goes. It is started without a shell.'),
+      openNew: z.boolean().default(false).describe('New terminals made in the page also open on the desktop.'),
     })
-    .prefault({}),
-  /** Schedules. */
+    .prefault({})
+    .describe('Opening a canvas terminal in your own terminal application.'),
   schedules: z
     .object({
-      /**
-       * A time that passed while the server was stopped or the computer asleep still runs, marked late, when it is
-       * at most this many hours old. Older than that it does not run and its row says it was missed. 0: never late.
-       */
-      lateWithinHours: z.number().min(0).max(24).default(6),
+      lateWithinHours: z
+        .number()
+        .min(0)
+        .max(24)
+        .default(6)
+        .describe('A time that passed while the server was stopped or the computer asleep still runs, marked late, when it is at most this many hours old; older, it is missed. 0: never late. It applies from the next start of the server.'),
     })
-    .prefault({}),
-  /** Terminal access for programs with an API token: what is protected by default, the limits, and the audit of typed text. */
+    .prefault({})
+    .describe('Schedules.'),
   terminal: z
     .object({
-      /** New sessions are "people only" from the start. */
-      protectNewSessions: z.boolean().default(false),
-      /** New sessions that start an agent are "people only" from the start: a token typing into an agent is the riskiest case. */
-      protectAgentSessions: z.boolean().default(true),
-      /** How many input calls one token may make to one session in a minute. */
-      inputCallsPerMinute: z.number().int().min(1).max(10_000).default(60),
-      /** How many characters one input call may carry. */
-      inputCharsPerCall: z.number().int().min(1).max(20_000).default(4000),
-      /** How many characters one token may type into one session in a minute. */
-      inputCharsPerMinute: z.number().int().min(1).max(1_000_000).default(20_000),
-      /** How many runs may be waited for at once, over all sessions. */
-      maxWaitingRuns: z.number().int().min(1).max(100).default(8),
-      /** Keep the text that tokens type, itself, in `input.log` in the data folder. Off: only its length and a fingerprint are recorded. */
-      auditInput: z.boolean().default(false),
+      protectNewSessions: z.boolean().default(false).describe('New terminals are “people only” from the start.'),
+      protectAgentSessions: z.boolean().default(true).describe('New terminals that start an agent are “people only” from the start: a token typing into an agent is the riskiest case.'),
+      inputCallsPerMinute: z.number().int().min(1).max(10_000).default(60).describe('How many input calls one token may make to one terminal in a minute.'),
+      inputCharsPerCall: z.number().int().min(1).max(20_000).default(4000).describe('How many characters one input call may carry.'),
+      inputCharsPerMinute: z.number().int().min(1).max(1_000_000).default(20_000).describe('How many characters one token may type into one terminal in a minute.'),
+      maxWaitingRuns: z.number().int().min(1).max(100).default(8).describe('How many commands may be waited for at once, over all terminals.'),
+      auditInput: z.boolean().default(false).describe('Keep the text that tokens type, itself, in `input.log` in the data folder. Off: only its length and a fingerprint are recorded.'),
     })
-    .prefault({}),
+    .prefault({})
+    .describe('Terminal access for programs with an API token: what is people only from the start, the limits, and the audit of typed text.'),
   /**
-   * Reaching this server from another device. Written by hand and read when the server starts; no route writes
-   * them. An entry that is wrong is reported and skipped (`accessProblem`); a list that is not a list is reported
-   * and taken as empty, and the rest of the file still counts.
+   * Read when the server starts; no route writes them. An entry that is wrong is reported and skipped
+   * (`accessProblem`); a list that is not a list is reported and taken as empty, and the rest of the file still counts.
    */
   access: z
     .object({
-      /** HTTPS origins this server also answers under, through something on this computer that carries HTTPS to it. */
-      addresses: z.array(z.unknown()).max(20).catch([]).default([]),
-      /** Origins of pages that may show this server. Not used yet. */
-      pages: z.array(z.unknown()).max(20).catch([]).default([]),
+      addresses: z.array(z.unknown()).max(20).catch([]).default([]).describe('HTTPS origins this server also answers under, through something on this computer that carries HTTPS to it. Read when the server starts.'),
+      pages: z.array(z.unknown()).max(20).catch([]).default([]).describe('Origins of the pages of another Aubergine that may show this server. Read when the server starts.'),
     })
     .catch({ addresses: [], pages: [] })
-    .prefault({}),
+    .prefault({})
+    .describe('Reaching this server from another device or page. Written by hand only; a wrong entry is reported and skipped.'),
+  shortcuts: ShortcutSettings.default({}).describe('Keys: a command’s name to a chord (`"Ctrl+Meta+J"`), a list of chords, or null for no key. A wrong entry is reported and skipped.'),
+  shortcutsInAppWindow: ShortcutSettings.default({}).describe('Keys as `shortcuts`, applied over them only in a window of its own (an installed app).'),
   /**
-   * Keys: command name to a chord (`"Ctrl+Meta+J"`), a list of chords, or
-   * `null` for no key. Entries that are wrong are reported and skipped.
+   * Which plugins run in the page. Written by Settings → Plugins (`PUT /v1/settings/plugins`) and by hand. Each entry is
+   * read by `resolvePluginSwitches`: a wrong one is said and skipped, and the rest still count.
    */
-  shortcuts: ShortcutSettings.default({}),
-  /** The same, applied on top only in a window of its own (an installed app). */
-  shortcutsInAppWindow: ShortcutSettings.default({}),
+  plugins: z
+    .object({
+      on: z
+        .record(z.string(), z.unknown())
+        .catch({})
+        .default({})
+        .describe('Which plugins (folders in plugins/ in the data folder) run in the page, as you: a plugin’s ID to the digest it had when you switched it on, or "follow" to run whatever is in its folder. A plugin whose files changed since is not loaded until it is switched on again. A wrong entry is reported and skipped.'),
+    })
+    .catch({ on: {} })
+    .prefault({})
+    .describe('Plugins: code of your own that runs in the page as you, with everything the page can do. Nothing keeps it apart; see docs/plugins.md.'),
 });
 export type Settings = z.infer<typeof Settings>;
 

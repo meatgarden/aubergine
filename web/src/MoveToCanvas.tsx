@@ -60,7 +60,7 @@ export function MoveToCanvas({ sessionId, name }: { sessionId: string; name: str
       {open && (
         <span
           className="move-menu"
-          role="menu"
+          role="menu" data-part="menu"
           aria-label="Move to canvas"
           ref={menu}
           onKeyDown={(event) => {

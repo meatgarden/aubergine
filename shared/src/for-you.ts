@@ -201,6 +201,20 @@ registerForYouKind({
   items: ({ state }) => state.library.requests.map((request) => ({ id: `library:${request.id}`, sentence: `From the library, to read before it is installed: ${request.itemId}`, who: 'The library', what: request.itemId, from: 'the library', at: request.at, act: 'review' })),
 });
 
+registerForYouKind({
+  kind: 'theme',
+  title: 'Theme to read',
+  action: 'Read',
+  order: 25,
+  // A theme proposed by an agent or a program: drawn nowhere until the owner has read it and accepted it.
+  items: ({ state }) =>
+    state.themeProposals.waiting.map((proposal) => {
+      const by = proposal.proposedBy;
+      const who = by.kind === 'session' ? (sessionName(state, by.sessionId) ?? 'A terminal that is gone') : by.kind === 'token' ? `The token “${by.name}”` : 'You';
+      return { id: `theme:${proposal.id}`, sentence: `A color theme to read before it can be used: ${proposal.theme.name}`, who, what: `A color theme: ${proposal.theme.name}`, from: by.kind === 'session' ? who : by.kind === 'token' ? `a program, with the token “${by.name}”` : 'you', at: proposal.at, act: `review:theme-proposals:${proposal.id}` };
+    }),
+});
+
 /** The latest list a run handed in, with how far the owner has got through it. */
 function listOf(run: Run, elements: readonly { id: string; name: string; produces?: string }[]): { elementId: string; name: string; total: number; ticked: number } | null {
   for (let index = run.elements.length - 1; index >= 0; index -= 1) {

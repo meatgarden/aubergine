@@ -3199,6 +3199,10 @@
     "text": "<strong>审阅界面是库条目的把关手段。</strong>一个条目就是一组指令，智能体会用它被允许做的一切去执行。没读过的东西不要安装。",
     "from": "1972614790c0"
   },
+  "security.not.plugins": {
+    "text": "<strong>插件以你的身份运行。</strong>插件是你自己的代码，在 Settings → Plugins 中打开后由页面加载。它能读取每个终端、向任何终端输入，并做页面能做的一切；它不在沙箱里。它只按打开时文件的样子运行，所以改变了的代码不会在你不知情时运行；但终端里的代理同样以你的身份运行，可能写出一个插件以及打开它的设置。开关是一份记录，不是锁。",
+    "from": "934e6eb6cc73"
+  },
   "security.not.guide": {
     "text": "<strong>给智能体的指南是建议</strong>，不是锁。",
     "from": "79f0576917ce"
@@ -5026,5 +5030,553 @@
   "site.share.copy": {
     "text": "复制链接",
     "from": "dbf362d4f210"
+  },
+  "site.foot.customize": {
+    "text": "自定义",
+    "from": "c5276e27afba"
+  },
+  "guides.customize.name": {
+    "text": "自定义主题、颜色、字体和按键",
+    "from": "0f78f8ed86a6"
+  },
+  "guides.customize.text": {
+    "text": "十个配色主题、每个终端一个主题、手动设置的颜色、终端的字体和光标、每个按键，以及其他工具如何让你自定义。",
+    "from": "fc827f9b51fc"
+  },
+  "home.themes.more": {
+    "text": "你能改的一切，以及其他工具的做法",
+    "from": "b9eb2267d0a5"
+  },
+  "faq.look.q": {
+    "text": "能改变 Aubergine 的外观吗？",
+    "from": "25820b139d94"
+  },
+  "faq.look.a": {
+    "text": "能：十个配色主题、每个终端一个主题、手动设置的单个颜色、终端的字体和光标，以及每个按键。见<a href=\"/customize-terminal-themes/\">自定义</a>。",
+    "from": "4d0f29e81927"
+  },
+  "custom.meta.title": {
+    "text": "自定义终端主题、颜色和按键 | Aubergine",
+    "from": "2cbdb7a66d89"
+  },
+  "custom.meta.description": {
+    "text": "十个配色主题、每个终端一个主题、手动设置的颜色、字体、光标和按键，以及 VS Code、kitty、tmux 等工具的自定义方式。",
+    "from": "a225c6e71a17"
+  },
+  "custom.crumb": {
+    "text": "自定义",
+    "from": "c5276e27afba"
+  },
+  "custom.title": {
+    "text": "自定义终端主题、颜色、字体和按键",
+    "from": "c1d02d7228ca"
+  },
+  "custom.lead": {
+    "text": "从十个主题中选择页面的配色，为每个终端设置独立的主题，并在 Settings 或一个自我描述的设置文件中设置单个颜色、终端的字体和光标以及每个按键。",
+    "from": "c7447ef1ebe0"
+  },
+  "custom.page.title": {
+    "text": "十个配色主题，浅色与深色",
+    "from": "362e348c9513"
+  },
+  "custom.page.text": {
+    "text": "<strong>Settings → Appearance</strong> 先给出三个选项：<strong>Light</strong>、<strong>Dark</strong> 和 <strong>Match the system</strong>；新安装从后者开始，系统变化时它也跟着变。下面为每一类各选一个主题：Light、High contrast light、Solarized light 或 Gruvbox light；Dark、High contrast dark、Solarized dark、Gruvbox dark、Nord 或 Dracula。每个主题都配有一张小的颜色预览。",
+    "from": "3c86ee10d844"
+  },
+  "custom.page.at": {
+    "text": "更改立即应用到页面和每个终端，无需重新加载，并保存在设置文件中，因此你打开 Aubergine 的每个浏览器都一致。命令面板里也有相同的命令，例如 <strong>Color theme: Nord</strong>。",
+    "from": "280d6d38a2b6"
+  },
+  "custom.own.title": {
+    "text": "每个终端一个不同的配色主题",
+    "from": "f27bdf189165"
+  },
+  "custom.own.text": {
+    "text": "终端菜单里的 <strong>Theme…</strong> 可以用十个主题中的任意一个绘制该终端，与页面用哪个主题无关。只有终端主体会变：标题、笔记和详情仍与页面一致。没有自己主题的终端遵循 Settings 中的 <strong>Terminal theme</strong>，即终端的默认主题；没有设置时则跟随页面。",
+    "from": "e29c52f9c1e8"
+  },
+  "custom.menu.alt": {
+    "text": "画布上打开的终端 Theme… 菜单：Same as the default（当前与页面相同，Dark），然后是四个浅色主题和六个深色主题，Dracula 已勾选。",
+    "from": "c8e8e678bb8b"
+  },
+  "custom.menu.caption": {
+    "text": "终端菜单里的 Theme…：默认，或十个中的任意一个。",
+    "from": "43c132516f7e"
+  },
+  "custom.own.where": {
+    "text": "同样的选择也在列表中终端所在行的菜单、它的详情和命令面板里。终端和框架也可以有自己的颜色，十三种之一，或用 <strong>Your own…</strong> 选任意颜色，画布的标签页也可以；终端的颜色也是它在列表中那一行的颜色。",
+    "from": "914fa5f4b003"
+  },
+  "custom.colors.title": {
+    "text": "手动设置单个颜色",
+    "from": "5ebf453dd41c"
+  },
+  "custom.colors.text": {
+    "text": "除了主题，页面的 35 种颜色可以在设置文件 <code>config.json</code> 的 <code>appearance.colors</code> 下设置：颜色名加一个写成 <code>#rrggbb</code> 的值。写在顶层时作用于所有主题；写在方括号中的主题 ID 下，例如 <code>\"[nord]\"</code>，则只作用于该主题，并且优先。",
+    "from": "42f05c456f31"
+  },
+  "custom.colors.names": {
+    "text": "这些名字是页面的颜色令牌，例如 <code>bg</code>、<code>text</code>、<code>accent</code> 和 <code>terminal-bg</code>；完整列表见 <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/design.md\">docs/design.md</a>。错误的条目会被跳过，文件其余部分照常生效；<strong>Settings → Appearance</strong> 会说明跳过了哪一条。你设置的颜色由你负责：不会检查你写的颜色是否易读。",
+    "from": "86395864aac8"
+  },
+  "custom.files.title": {
+    "text": "你自己的主题，以文件形式",
+    "from": "06c16974771d"
+  },
+  "custom.files.text": {
+    "text": "你自己的主题是数据文件夹中 <code>themes/</code> 里的一个 JSON 文件：以十个主题中同类的一个为底，在上面叠加 35 种颜色中的任意几种，还可以设置终端自己的颜色：文字、光标、选中部分，以及程序请求的十六种颜色。它列在同类的十个主题之后，标为你的，凡是能选这十个的地方都能选它：页面、终端的默认主题或单个终端。阴影和焦点环仍是底主题的，文件里的任何内容都不会被执行。",
+    "from": "621009bfb006"
+  },
+  "custom.files.cli": {
+    "text": "<code>aubergine theme new harbor --from nord</code> 会写出一个起步文件，带有来源主题的每一种颜色；<code>aubergine theme check</code> 指出文件哪里有误；在 Settings 中按 <strong>Read themes again</strong> 即可载入改动。颜色是否易读由你判断：Settings 只在文字可能难以阅读时提醒。格式见 <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/themes.md\">docs/themes.md</a>。",
+    "from": "fa449a724abf"
+  },
+  "custom.when.title": {
+    "text": "为项目设主题，按标签为终端设主题",
+    "from": "0629d684f9aa"
+  },
+  "custom.when.project": {
+    "text": "项目可以在你查看它时用自己的主题绘制页面，一眼就知道身在何处。在 <strong>Projects…</strong> 中，项目旁边的 <strong>When light</strong> 和 <strong>When dark</strong> 为每种类型各选一个主题；<strong>As the page</strong> 则交给 Settings。在其他项目中，页面保持你的选择；在该项目的地址上重新加载，从第一次绘制起就是它的主题。",
+    "from": "8e3d89da8eae"
+  },
+  "custom.when.tag": {
+    "text": "Settings 中 Terminal theme 下方的 <strong>By tag</strong> 为带某个标签的终端设定主题：例如所有带 <code>prod</code> 标签的终端都用 Dracula，立即生效，无论页面是什么主题。终端拥有的标签中，排在最前的那一行生效；终端自己的主题优先于所有这些。在设置文件中，它是 <code>appearance.byTag</code>：",
+    "from": "ad341f16eef8"
+  },
+  "custom.when.accent": {
+    "text": "很多时候换一个强调色就够了。<code>aubergine theme new teal --from nord --accent \"#2f9e8f\"</code> 会写一个主题文件，只改变 Nord 的强调色和与之相配的五种颜色，并计算得仍然易读。像其他主题一样，可以为项目或标签选择它。",
+    "from": "4ec0df11bd03"
+  },
+  "custom.text.title": {
+    "text": "字体、光标和键盘快捷键",
+    "from": "a9eecef9b5f9"
+  },
+  "custom.text.font": {
+    "text": "Settings → Appearance 中的 <strong>Terminal text</strong> 设置终端文字的大小（8 到 32 像素）和字体；字体是一个列表，使用找到的第一个。<strong>Cursor</strong> 设置光标形状（方块、竖线或下划线）以及是否闪烁。",
+    "from": "dabcfd9344a6"
+  },
+  "custom.keys.text": {
+    "text": "每个按键都可以改。在设置文件中加入 <code>shortcuts</code>：命令名对应一个组合键、一组组合键，或 <code>null</code> 表示无按键。<code>shortcutsInAppWindow</code> 格式相同，只在 Aubergine 作为带独立窗口的应用安装时生效。重新加载页面后，快捷键表（<strong>?</strong>）、命令面板和提示都会显示你设置的按键。",
+    "from": "bf23fd932a40"
+  },
+  "custom.keys.check": {
+    "text": "设置了两次或无法读取的按键，会在快捷键表顶部和服务器中报告，文件其余部分照常生效。单个按键，或 Ctrl、Option 加一个键，只在没有终端占用键盘时起作用，这样终端里的每个程序仍能收到它需要的按键。详见 README 中的 <a href=\"https://github.com/thirstyeggplant/aubergine#keyboard\">Keyboard</a>。",
+    "from": "fe03dd01e818"
+  },
+  "custom.tpl.title": {
+    "text": "选择标题和行显示的内容",
+    "from": "4e7c78fba1f9"
+  },
+  "custom.tpl.text": {
+    "text": "在终端名称之后，它的标题和它在列表中的行显示两个模板所写的内容：带有 <code>{state}</code>、<code>{folder}</code>、<code>{time}</code> 和 <code>{field:Ticket}</code> 等占位符的文本。可以在 <strong>Settings → Appearance → Titles and rows</strong> 中修改，你输入时每个字段下方都会画出真实的标题和行；也可以在设置文件中修改。这里标题显示状态、文件夹、字段 Ticket、链接和标签，行显示状态、运行的步骤、分支和时间：",
+    "from": "8cd1b3e6f3f9"
+  },
+  "custom.tpl.rule": {
+    "text": "没有内容可显示的占位符会连同引向它的文本一起省略：在没有工单、链接或标签的终端上，这个标题只显示状态和文件夹，不会多出一个点。模板只包含文本和占位符，没有标记，也没有样式；每个占位符都按页面在其他地方画这类东西的方式来画，状态用它的颜色，链接是一个小标签。错误的占位符会在字段下方说明并被跳过，<strong>Reset</strong> 会准确恢复没有模板时画出的内容。所有占位符都在 <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/templates.md\">docs/templates.md</a> 中。",
+    "from": "163ceba573e3"
+  },
+  "custom.css.title": {
+    "text": "自己的样式表",
+    "from": "2222b72214ec"
+  },
+  "custom.css.text": {
+    "text": "设置管不到的地方，就写一个自己的样式表：数据文件夹中的 <code>custom.css</code>。服务器把它链接为页面 head 中的最后一项，所以从第一次绘制起它就在，而且在同等特异性下，你的规则胜过应用自己的规则，无需 <code>!important</code>。<code>aubergine css new</code> 会写一个供你起步，<strong>Settings → Appearance → Your stylesheet</strong> 会说明是否找到了它，可以关闭它，并且无需重新加载就能重新读取。",
+    "from": "c0183f3ec2e0"
+  },
+  "custom.css.hooks": {
+    "text": "只依靠这些钩子，别的都不要依靠：每个令牌（<code>--accent</code>、<code>--radius-surface</code> 等等）、页面根元素上的属性（<code>data-theme</code>、<code>data-page</code>）、用 <code>data-part</code> 标记的部分，以及终端自己的属性（<code>data-tags</code>、<code>data-state</code>、<code>data-name</code>），它们在终端的节点、它的行和它自己的浏览器标签页上都一样。它们列在 <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/hooks.md\">docs/hooks.md</a> 中，并在各个版本之间保持不变；类名则不保证。下面的例子把每个带有标签 prod 的终端的标题变成深红色，并去掉了地图：",
+    "from": "e6d9a53fa8bb"
+  },
+  "custom.css.tokens": {
+    "text": "再通过两个令牌，让各处的圆角更圆：",
+    "from": "f2699b36aa09"
+  },
+  "custom.css.out": {
+    "text": "如果某条规则弄坏了页面，就在地址后面加上 <code>?plain</code> 打开它：页面会在没有你的样式表的情况下发送。样式表中提到的任何东西都不会从别的地址获取：图片、字体或样式表只来自这台服务器或内联数据，所以粘贴来的代码片段无法把你页面上的内容发到别处。这是对你自己编写或粘贴的文件的一道防护，而不是沙箱。目前只在 Chromium 中试过。",
+    "from": "7cec576ea647"
+  },
+  "custom.plugin.title": {
+    "text": "你自己的代码：插件",
+    "from": "a35c5d0a8022"
+  },
+  "custom.plugin.text": {
+    "text": "在设置和样式表之外，还可以写代码：插件是你自己的 JavaScript 模块，放在数据文件夹的 <code>plugins/&lt;id&gt;/</code> 里，带一个为它命名的 <code>plugin.json</code>。页面原样导入它，不需要构建步骤，并交给它一个对象 <code>aubergine</code>：侧边栏的一个分区、列表的一个筛选、标题或行的一个占位符、面板里的一个命令、查看一次运行的方式、状态以及每个刚发生的变化，以及页面发出的每一个调用。<code>aubergine plugin new &lt;id&gt;</code> 会写一个供你起步。",
+    "from": "b196c36fa6d5"
+  },
+  "custom.plugin.asyou": {
+    "text": "<strong>插件在页面中以你的身份运行，没有任何东西把它隔开。</strong>它能读取每个终端、向任何终端输入，并改动页面上的任何东西。它不在沙箱里。只有在 <strong>Settings → Plugins</strong> 中打开后它才会运行，而且只按打开时文件的样子运行：改变了的文件，在你再看一遍之前不会被加载。这能防止代码意外运行；但它不是锁，因为终端里的代理同样以你的身份运行，也能写设置文件。只打开你写过或读过的东西。",
+    "from": "16f443abcf24"
+  },
+  "custom.plugin.api": {
+    "text": "<code>aubergine</code> 的成员列在 <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/plugins.md\">docs/plugins.md</a> 中，从一个版本到下一个版本只会增加；插件越过它们去触及的东西可能会变。面板里的一个命令，只需几行：",
+    "from": "ce92bb9a9099"
+  },
+  "custom.plugin.out": {
+    "text": "如果插件弄坏了页面，就在地址后加上 <code>?plain</code> 打开：不加载任何插件，你的样式表也不用。失败的插件会在 Settings 中说明，页面和其他插件照常运行。关闭后，它通过 <code>aubergine</code> 加入的一切立即消失；它越过 API 所做的，要重新加载才会消失。只在 Chromium 中试过。",
+    "from": "6b1c8303252c"
+  },
+  "custom.file.title": {
+    "text": "一个自我描述的设置文件",
+    "from": "9d7e735d280e"
+  },
+  "custom.file.text": {
+    "text": "这一切都保存在 Aubergine 数据文件夹中的 <code>config.json</code> 里，<code>aubergine settings path</code> 会显示它的位置。每个键都可以省略。无法读取的文件意味着使用默认值，绝不会导致服务器无法启动。页面中的 Settings 只写它更改的键，文件其余部分保持你写的样子。",
+    "from": "332625c30531"
+  },
+  "custom.file.schema": {
+    "text": "服务器每次启动时都会在文件旁写入 <code>config.schema.json</code>。加上一行，支持 JSON Schema 的编辑器就会为每个键提供说明和补全：",
+    "from": "f85b680c55e6"
+  },
+  "custom.file.cli": {
+    "text": "<code>aubergine settings list</code> 列出每个键及其当前值，并标出不是默认值的键；<code>aubergine settings schema</code> 输出 schema。<a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/settings.md\">docs/settings.md</a> 说明了每个键、它的默认值，以及它由 Settings 写入还是由你手写。",
+    "from": "255d97752978"
+  },
+  "custom.file.all": {
+    "text": "在页面中，<strong>Settings → Every setting</strong> 列出同样的键及其值，并随输入查找。由 Settings 更改的键会带你到对应的控件；手写的键有 <strong>Copy</strong>，用于复制要加入文件的那一行。那里不会更改任何设置。",
+    "from": "3f848aa20a56"
+  },
+  "custom.all.alt": {
+    "text": "打开的 Settings 的 Every setting，搜索框里输入了“appearance”：六个键，各自显示当前值、含义和默认值；五个显示 Changed above，appearance.colors 有一个 Copy 按钮。",
+    "from": "3ff59f419a23"
+  },
+  "custom.all.caption": {
+    "text": "搜索后的 Every setting：每个键的含义、当前值和默认值。",
+    "from": "44060f83bf0e"
+  },
+  "custom.file.browser": {
+    "text": "有些选择属于这个浏览器，并保存在其中：画布显示为标签页、一个列表还是一列；画布上方的栏放在哪里、是否保持展开；侧边面板和地图是否折叠；面板和终端详情的宽度；以及终端列表如何筛选、分组和排序。",
+    "from": "8d660a5ed4ca"
+  },
+  "custom.program.title": {
+    "text": "程序或代理能改什么，什么仍归你",
+    "from": "15b7cd56fd35"
+  },
+  "custom.program.text": {
+    "text": "通过<a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/api.md\">本地 API</a>，拥有 API 令牌的程序可以凭 <code>canvases:write</code> 整理画布：命名、着色、排序，移动、调整大小和着色其上的终端，以及添加框架。凭 <code>sessions:write</code>，它可以重命名终端、加标签、修改字段并设置配色主题。它只能触及其令牌可触及的项目。",
+    "from": "a0cf33b31432"
+  },
+  "custom.program.agent": {
+    "text": "终端里的代理只描述自己的终端，不涉及其他终端：名称、用途摘要、链接和字段，通过 <code>aubergine describe</code>、<code>aubergine link add</code> 和 <code>aubergine field set</code> 完成。凡是你亲自写下的名称、摘要或字段，都以你的为准，代理发送的内容会作为建议保存在旁边。代理或拥有 <code>workflows:write</code> 的程序还可以用 <code>aubergine theme propose</code> 提议一个颜色主题：在你于 Review 中读过、看过它画出来的样子、在页面上试过并接受之前，它不会在任何地方被画出；接受只会写入它的文件，不会选中任何东西。",
+    "from": "5f84d264cd4d"
+  },
+  "custom.program.owner": {
+    "text": "设置本身只属于你。任何令牌、终端或代理都不能更改：<code>PUT /v1/settings/appearance</code> 只响应已登录的浏览器，<code>appearance.colors</code>、<code>shortcuts</code> 等都需要在文件中手写。",
+    "from": "8120d56c7837"
+  },
+  "custom.cmp.title": {
+    "text": "其他工具如何让你自定义界面？",
+    "from": "66e3b8de628b"
+  },
+  "custom.cmp.how": {
+    "text": "<strong>本表的写法。</strong>表中关于每个工具的内容都来自其自身文档，于 2026 年 11 月 28 日阅读，并从工具名和单元格链接过去。我们没有为此运行这些工具。“未找到”表示我们读到的文档中没有描述，并不表示该工具做不到。如果有错误或过时之处，<a href=\"https://github.com/thirstyeggplant/aubergine/issues\">请告诉我们</a>。",
+    "from": "6ef9a80f81b8"
+  },
+  "custom.cmp.tool": {
+    "text": "工具",
+    "from": "2e53bdcd0740"
+  },
+  "custom.cmp.settings": {
+    "text": "设置",
+    "from": "74a883a037bc"
+  },
+  "custom.cmp.themes": {
+    "text": "主题与颜色",
+    "from": "1483a0993975"
+  },
+  "custom.cmp.css": {
+    "text": "自己的 CSS",
+    "from": "7551db76a705"
+  },
+  "custom.cmp.code": {
+    "text": "自己的代码",
+    "from": "90cd41d7d612"
+  },
+  "custom.cmp.templates": {
+    "text": "标题和状态模板",
+    "from": "0eb761541eb1"
+  },
+  "custom.cmp.kind.editor": {
+    "text": "编辑器",
+    "from": "120815ad81ae"
+  },
+  "custom.cmp.kind.notes": {
+    "text": "笔记应用",
+    "from": "d4729aaa963c"
+  },
+  "custom.cmp.kind.terminal": {
+    "text": "终端",
+    "from": "2c2715f8c7d4"
+  },
+  "custom.cmp.kind.mux": {
+    "text": "终端复用器",
+    "from": "b643b9019461"
+  },
+  "custom.cmp.kind.aubergine": {
+    "text": "画布上的终端",
+    "from": "ef37110351f3"
+  },
+  "custom.cmp.none": {
+    "text": "未找到",
+    "from": "66d2c65a4ede"
+  },
+  "custom.cmp.vscode.settings": {
+    "text": "<code>settings.json</code> 或 Settings 编辑器，从用户到工作区、文件夹和语言分层",
+    "from": "6dbfbb0bf531"
+  },
+  "custom.cmp.vscode.themes": {
+    "text": "来自扩展的<a href=\"https://code.visualstudio.com/docs/configure/themes\">主题文件</a>；<code>workbench.colorCustomizations</code>，作用于所有主题或某一个",
+    "from": "a9721fe91937"
+  },
+  "custom.cmp.vscode.css": {
+    "text": "不支持，<a href=\"https://code.visualstudio.com/api/extension-capabilities/overview\">其文档如此说明</a>",
+    "from": "5356dd1be55f"
+  },
+  "custom.cmp.vscode.code": {
+    "text": "扩展，拥有 VS Code 本身的权限，但不能访问界面的 DOM；自有界面用 webview",
+    "from": "cc389854306b"
+  },
+  "custom.cmp.vscode.templates": {
+    "text": "<code>window.title</code> 和终端标签标题接受 <code>${…}</code> 变量",
+    "from": "9111f5a25682"
+  },
+  "custom.cmp.zed.settings": {
+    "text": "Settings Editor 或可写注释的 <code>settings.json</code>；先用户，后项目",
+    "from": "12431607ec58"
+  },
+  "custom.cmp.zed.themes": {
+    "text": "带 schema 的 <a href=\"https://zed.dev/docs/themes\">JSON 主题文件</a>；<code>theme_overrides</code> 作用于某个主题；浅色、深色或跟随系统",
+    "from": "e0b219720c50"
+  },
+  "custom.cmp.zed.code": {
+    "text": "用 Rust 编写并编译为 WebAssembly 的扩展，带可由你限制的<a href=\"https://zed.dev/docs/extensions/capabilities\">能力</a>",
+    "from": "f9b83a4e3656"
+  },
+  "custom.cmp.obsidian.settings": {
+    "text": "每个仓库 <code>.obsidian</code> 文件夹中的文件",
+    "from": "2a7acb83efb8"
+  },
+  "custom.cmp.obsidian.themes": {
+    "text": "<a href=\"https://docs.obsidian.md/Themes/App+themes/Build+a+theme\">主题是 CSS</a>，有文档化的 CSS 变量",
+    "from": "c6b43ef8f558"
+  },
+  "custom.cmp.obsidian.css": {
+    "text": "CSS 片段，逐个开启",
+    "from": "71b027b4744c"
+  },
+  "custom.cmp.obsidian.code": {
+    "text": "拥有与 Obsidian 相同访问权限的 JavaScript <a href=\"https://help.obsidian.md/plugin-security\">插件</a>；关闭受限模式之前都不会运行",
+    "from": "ebe845afbaf3"
+  },
+  "custom.cmp.hyper.settings": {
+    "text": "一个文件：文档中的发布版为 <code>.hyper.js</code>，开发分支为 <code>hyper.json</code>",
+    "from": "cc98e8ab46d3"
+  },
+  "custom.cmp.hyper.themes": {
+    "text": "主题就是插件",
+    "from": "48e534e5d2ab"
+  },
+  "custom.cmp.hyper.css": {
+    "text": "窗口用 <code>css</code>；<code>termCSS</code> 自版本 2 起<a href=\"https://github.com/vercel/hyper/blob/canary/PLUGINS.md\">不再能设置终端文字的样式</a>",
+    "from": "0792e3e69be1"
+  },
+  "custom.cmp.hyper.code": {
+    "text": "由 Electron 和渲染进程加载的 npm 插件：包装其 React 组件并添加 Redux 中间件",
+    "from": "7e3468ba9cdd"
+  },
+  "custom.cmp.wezterm.settings": {
+    "text": "一个 Lua 文件，<code>.wezterm.lua</code>",
+    "from": "e2d4cfe9b3ef"
+  },
+  "custom.cmp.wezterm.themes": {
+    "text": "<a href=\"https://wezterm.org/config/appearance.html\">700 多种配色方案</a>；自定义的用 Lua 或 TOML；单个颜色用 <code>colors</code>",
+    "from": "852065821910"
+  },
+  "custom.cmp.wezterm.code": {
+    "text": "配置本身就是 Lua；<a href=\"https://wezterm.org/config/plugins.html\">插件</a>是来自 Git 地址的 Lua",
+    "from": "3c87ef215bdb"
+  },
+  "custom.cmp.wezterm.templates": {
+    "text": "Lua 函数返回标签和窗口标题（<a href=\"https://wezterm.org/config/lua/window-events/format-tab-title.html\"><code>format-tab-title</code></a>）",
+    "from": "7c7076a3a34d"
+  },
+  "custom.cmp.tmux.settings": {
+    "text": "写在文件里的 tmux 命令；按服务器、会话、窗口和窗格设置选项",
+    "from": "178293a2f902"
+  },
+  "custom.cmp.tmux.themes": {
+    "text": "<code>status-style</code>、<code>window-style</code> 等样式",
+    "from": "f43d8249a6c9"
+  },
+  "custom.cmp.tmux.code": {
+    "text": "钩子运行 tmux 命令；供程序使用的控制模式",
+    "from": "47e37dc0de8a"
+  },
+  "custom.cmp.tmux.templates": {
+    "text": "使用 <code>#{…}</code> 的<a href=\"https://man.openbsd.org/tmux.1#FORMATS\">格式</a>，用于状态行、窗口列表、窗格边框和标题",
+    "from": "e06333c05625"
+  },
+  "custom.cmp.kitty.settings": {
+    "text": "<code>kitty.conf</code>，可包含其他文件，变化时重新读取",
+    "from": "60f6aaf0744e"
+  },
+  "custom.cmp.kitty.themes": {
+    "text": "主题就是一个 <code>.conf</code> 文件；<a href=\"https://sw.kovidgoyal.net/kitty/kittens/themes/\"><code>kitten themes</code></a> 可从 300 多个中挑选，并可分别为深色和浅色设置",
+    "from": "1eac8df3e6f7"
+  },
+  "custom.cmp.kitty.code": {
+    "text": "可完全访问 kitty 内部的 Python <a href=\"https://sw.kovidgoyal.net/kitty/kittens/custom/\">kitten</a>；watcher",
+    "from": "1aa5c56cc144"
+  },
+  "custom.cmp.kitty.templates": {
+    "text": "<code>tab_title_template</code>，其中 <code>{custom}</code> 调用你自己的 Python",
+    "from": "72e78b0f5053"
+  },
+  "custom.cmp.ghostty.settings": {
+    "text": "一个 <code>key = value</code> 文件；<code>config-file</code> 引入其他文件",
+    "from": "0aed8a057084"
+  },
+  "custom.cmp.ghostty.themes": {
+    "text": "<a href=\"https://ghostty.org/docs/features/theme\">主题是配置文件</a>；浅色、深色各一个",
+    "from": "6e03a766b678"
+  },
+  "custom.cmp.ghostty.code": {
+    "text": "叠加在终端上的 <a href=\"https://ghostty.org/docs/config/reference#custom-shader\">GLSL 着色器</a>；macOS 上的 AppleScript",
+    "from": "cde7e57ced35"
+  },
+  "custom.cmp.wt.settings": {
+    "text": "Settings 界面或 <code>settings.json</code>，有 <a href=\"https://github.com/microsoft/terminal/blob/main/doc/cascadia/profiles.schema.json\">JSON schema</a>",
+    "from": "1d08016a0bea"
+  },
+  "custom.cmp.wt.themes": {
+    "text": "每个配置文件的配色方案；窗口和标签的<a href=\"https://learn.microsoft.com/windows/terminal/customize-settings/themes\">主题</a>分浅色和深色，只能在 JSON 中编辑",
+    "from": "74411fb1735c"
+  },
+  "custom.cmp.wt.code": {
+    "text": "未找到；其他应用以 JSON 片段添加配置文件和配色方案",
+    "from": "3ff970c2f46d"
+  },
+  "custom.cmp.wt.templates": {
+    "text": "未找到；配置文件可设置 <code>tabTitle</code> 和 <code>tabColor</code>",
+    "from": "2578d12f8fda"
+  },
+  "custom.cmp.iterm2.settings": {
+    "text": "Settings 中的配置文件；属性列表格式的 <a href=\"https://iterm2.com/documentation-dynamic-profiles.html\">Dynamic Profiles</a>",
+    "from": "7c477caf4c27"
+  },
+  "custom.cmp.iterm2.themes": {
+    "text": "按用户、主机、文件夹或任务选择配置文件，需要 Shell Integration",
+    "from": "654dec9e1e7a"
+  },
+  "custom.cmp.iterm2.code": {
+    "text": "<a href=\"https://iterm2.com/python-api/\">Python API</a>、用 Python 写的状态栏组件、AppleScript",
+    "from": "081a02768b0a"
+  },
+  "custom.cmp.iterm2.templates": {
+    "text": "会话名、徽章和状态栏中的<a href=\"https://iterm2.com/documentation-scripting-fundamentals.html\">插值字符串</a> <code>\\(…)</code>",
+    "from": "d543c499cae1"
+  },
+  "custom.cmp.a.settings": {
+    "text": "<code>config.json</code> 和 Settings，附带供编辑器使用的 JSON Schema",
+    "from": "bd438e8036f3"
+  },
+  "custom.cmp.a.themes": {
+    "text": "十个主题，浅色、深色或跟随系统；你自己的 JSON 文件，叠加在其中之一上；可为项目、带标签的终端和每个终端各设一个；35 种颜色可手动设定，适用于所有主题或单个主题",
+    "from": "5daef6eb6445"
+  },
+  "custom.cmp.a.css": {
+    "text": "有：数据文件夹中的 <code>custom.css</code>，带文档化的钩子",
+    "from": "7db23532c40d"
+  },
+  "custom.cmp.a.code": {
+    "text": "有：插件，在页面中以你的身份运行的 JavaScript 模块，通过有文档的 API，也可越过它。没有沙箱",
+    "from": "96c911a66f1f"
+  },
+  "custom.cmp.a.templates": {
+    "text": "两个，用于终端的标题和列表中的一行：带有 <code>{state}</code> 和 <code>{field:Ticket}</code> 等占位符的文本",
+    "from": "8133a0a553fb"
+  },
+  "custom.cmp.p1": {
+    "text": "这里的每个工具都把设置保存在文件中，VS Code、Zed 和 Windows Terminal 还像 Aubergine 一样有一个写入该文件的界面。大多数工具中主题也是文件：VS Code 和 Zed 是 JSON，Obsidian 是 CSS，WezTerm 是 Lua 或 TOML，kitty 和 Ghostty 是配置文件。VS Code、Zed 和 WezTerm 允许在主题之上修改单个颜色，就像这里的 <code>appearance.colors</code>。",
+    "from": "b3a5c5fb431c"
+  },
+  "custom.cmp.p2": {
+    "text": "差别最大的是代码。WezTerm 的整个配置是一个 Lua 程序，kitty 和 iTerm2 运行你自己的 Python，Hyper 的插件是包装其界面的 JavaScript；Obsidian 和 Hyper 还接受你自己的 CSS。VS Code 的扩展不能访问其界面的 DOM，它也不支持你自己的样式表；Zed 以 WebAssembly 运行扩展，并带有可由你限制的能力。tmux、WezTerm、kitty 和 iTerm2 用模板或函数生成标题和状态行。",
+    "from": "9538078a7039"
+  },
+  "custom.cmp.p3": {
+    "text": "如今的 Aubergine 从设置这一端一直延伸到代码：放在能自我描述的文件里的主题、颜色和按键，一个能写部分设置的页面，终端标题和行所显示内容的模板，带有保持稳定的挂钩的你自己的样式表，以及插件：页面中你自己的 JavaScript，配有只增不减的 API。插件拥有页面能做的一切；给他人插件用的沙箱模式在<a href=\"/roadmap/#rm-yours\">路线图</a>上，尚未构建。",
+    "from": "35e798f5a422"
+  },
+  "custom.cmp.mark": {
+    "text": "Aubergine 与本页提到的任何工具均无关联。这些名称是其各自所有者的商标。",
+    "from": "f011c5b28706"
+  },
+  "custom.plan.title": {
+    "text": "计划中的内容",
+    "from": "e10eed0040ae"
+  },
+  "custom.plan.text": {
+    "text": "用沙箱运行他人所写插件的方式，以及通过审阅界面安装插件，都在计划中，尚未构建：见<a href=\"/roadmap/#rm-yours\">路线图</a>。",
+    "from": "3d1b428010be"
+  },
+  "custom.q.terminal.q": {
+    "text": "每个终端可以用不同的配色主题吗？",
+    "from": "da02700eeeb8"
+  },
+  "custom.q.terminal.a": {
+    "text": "可以。终端菜单中的 Theme… 可将其主体用十个主题中的任意一个绘制，无论页面是什么主题。带标签的终端可以在 Settings 中按该标签获得主题，其他终端则跟随你为终端设定的默认主题，或跟随页面。",
+    "from": "0b2729c2862a"
+  },
+  "custom.q.css.q": {
+    "text": "可以给 Aubergine 加上自己的 CSS 吗？",
+    "from": "e4f4bf19de27"
+  },
+  "custom.q.css.a": {
+    "text": "可以：数据文件夹中的 <code>custom.css</code>（<code>aubergine css new</code> 会写一个供你起步）。它从第一次绘制起就被链接在页面的最后，可依靠的钩子列在 docs/hooks.md 中。在页面地址后加上 <code>?plain</code>，即可看到没有它时的样子。",
+    "from": "8ebf56535e5d"
+  },
+  "custom.q.code.q": {
+    "text": "我能为 Aubergine 写自己的插件吗？",
+    "from": "d5b081c290fa"
+  },
+  "custom.q.code.a": {
+    "text": "可以：在数据文件夹的 <code>plugins/&lt;id&gt;/</code> 中放一个 JavaScript 模块（<code>aubergine plugin new &lt;id&gt;</code> 会写一个供你起步），在 Settings → Plugins 中打开。它在页面中以你的身份运行，拥有页面能做的一切；它不在沙箱里。",
+    "from": "2cdaf7e15ca1"
+  },
+  "custom.q.file.q": {
+    "text": "Aubergine 的设置文件在哪里？",
+    "from": "4378f9f24f9d"
+  },
+  "custom.q.file.a": {
+    "text": "是 Aubergine 数据文件夹中的 <code>config.json</code>。<code>aubergine settings path</code> 会显示其位置，服务器启动时也会显示。",
+    "from": "c3247c2edfe9"
+  },
+  "custom.q.agent.q": {
+    "text": "代理能改变 Aubergine 的外观吗？",
+    "from": "f2f43a3f85b7"
+  },
+  "custom.q.agent.a": {
+    "text": "不能改设置：设置只属于你。代理可以为自己的终端命名和描述，并提议一个等你阅读和接受的颜色主题；API 令牌允许的程序可以重命名终端、加标签、设置主题、整理画布，也可以提议主题。",
+    "from": "4fff2dbea759"
+  },
+  "custom.related": {
+    "text": "相关：<a href=\"/too-many-terminal-tabs/\">找到需要的终端</a> · <a href=\"/tmux-without-learning-tmux/\">不学 tmux 也能用 tmux</a> · <a href=\"/security/\">安全与隐私</a> · <a href=\"/faq/\">常见问题</a>",
+    "from": "64333f8f5a0d"
+  },
+  "roadmap.yours.title": {
+    "text": "按你的方式",
+    "from": "34ca8a4540f5"
+  },
+  "roadmap.yours.sub": {
+    "text": "让页面更多地由你塑造，超越今天的主题、颜色、按键、模板、你自己的样式表和你自己的插件。",
+    "from": "f6ef69a6539a"
+  },
+  "roadmap.yours.plugins.name": {
+    "text": "他人的插件",
+    "from": "eea2e52b2e70"
+  },
+  "roadmap.yours.plugins.text": {
+    "text": "为他人所写插件提供的沙箱模式（权限少于全部），以及通过审阅界面安装插件。你自己的插件，在页面中以你的身份完全掌控地运行，已经构建。",
+    "from": "08c850bebd87"
   }
 }

@@ -1,21 +1,9 @@
-import { COLOR_THEMES } from '@aubergine/shared';
+import { COLOR_THEMES, UserTheme, contrastRatio as contrast } from '@aubergine/shared';
 import { describe, expect, it } from 'vitest';
-import { TERMINAL_THEMES, terminalTheme, type TerminalColors } from './terminal-themes';
+import { TERMINAL_THEMES, terminalColorsOf, terminalTheme, type TerminalColors } from './terminal-themes';
 import themesText from './themes.css?raw';
 import tokensText from './tokens.css?raw';
 
-/** Relative luminance and contrast, as the accessibility guidelines define them. */
-function luminance(hex: string): number {
-  const channel = (at: number): number => {
-    const c = Number.parseInt(hex.slice(at, at + 2), 16) / 255;
-    return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
-  };
-  return 0.2126 * channel(1) + 0.7152 * channel(3) + 0.0722 * channel(5);
-}
-function contrast(a: string, b: string): number {
-  const [hi, lo] = [luminance(a), luminance(b)].sort((x, y) => y - x) as [number, number];
-  return (hi + 0.05) / (lo + 0.05);
-}
 
 /** `--terminal-bg` of the block whose selector names that preview, in tokens.css or themes.css. */
 function terminalBg(id: string): string | undefined {
@@ -72,5 +60,38 @@ describe("a terminal's own colors", () => {
       const faint = ANSI.filter((name) => !exempt.includes(name) && colors[name] !== undefined && contrast(colors[name] ?? '', colors.background) < 4.5);
       expect(faint, theme.id).toEqual([]);
     }
+  });
+});
+
+describe("a terminal's colors in a theme of the owner's", () => {
+  const harbor = UserTheme.parse({
+    id: 'harbor',
+    name: 'Harbor',
+    kind: 'dark',
+    base: 'nord',
+    colors: { 'terminal-bg': '#0b1620' },
+    terminal: { foreground: '#d8dee9', cursor: '#5fb3b3', selection: '#2b4252', ansi: ['#000001', null, '#000003'] },
+  });
+
+  it('are the base\'s, with the file\'s own over them, the sixteen by number, on the theme\'s ground', () => {
+    expect(terminalColorsOf('harbor', {}, [harbor])).toEqual({
+      ...TERMINAL_THEMES.nord,
+      background: '#0b1620',
+      foreground: '#d8dee9',
+      cursor: '#5fb3b3',
+      selectionBackground: '#2b4252',
+      black: '#000001',
+      green: '#000003',
+    });
+  });
+
+  it('take the ground set by hand over the file\'s, and are a built-in theme\'s own where nothing is laid over it', () => {
+    expect(terminalColorsOf('harbor', { '[harbor]': { 'terminal-bg': '#101010' } }, [harbor]).background).toBe('#101010');
+    for (const theme of COLOR_THEMES) expect(terminalColorsOf(theme.id, {}, [harbor])).toEqual(TERMINAL_THEMES[theme.id]);
+    expect(terminalColorsOf('nord', { 'terminal-bg': '#000000' }, []).background).toBe('#000000');
+  });
+
+  it('are Dark\'s for a theme that is not there now', () => {
+    expect(terminalColorsOf('harbor', {}, [])).toEqual(TERMINAL_THEMES.dark);
   });
 });

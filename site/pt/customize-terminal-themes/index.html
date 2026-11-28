@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="pt-BR" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Personalize temas, cores e teclas do terminal | Aubergine</title>
+<meta name="description" content="Dez temas de cores, um tema por terminal, cores à mão, fontes, cursor e teclas, e como VS Code, kitty, tmux e outros deixam você personalizar.">
+<link rel="canonical" href="https://thirstyeggplant.com/pt/customize-terminal-themes/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/customize-terminal-themes/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/customize-terminal-themes/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/customize-terminal-themes/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/customize-terminal-themes/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/customize-terminal-themes/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/customize-terminal-themes/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/customize-terminal-themes/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/customize-terminal-themes/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/customize-terminal-themes/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/customize-terminal-themes/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/customize-terminal-themes/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/customize-terminal-themes/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/customize-terminal-themes/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F7F0E4">
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="Personalize temas, cores e teclas do terminal | Aubergine">
+<meta property="og:description" content="Dez temas de cores, um tema por terminal, cores à mão, fontes, cursor e teclas, e como VS Code, kitty, tmux e outros deixam você personalizar.">
+<meta property="og:url" content="https://thirstyeggplant.com/pt/customize-terminal-themes/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine: um canvas de terminais, um ocupado e outro esperando por você">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine: um canvas de terminais, um ocupado e outro esperando por você">
+<meta name="twitter:title" content="Personalize temas, cores e teclas do terminal | Aubergine">
+<meta name="twitter:description" content="Dez temas de cores, um tema por terminal, cores à mão, fontes, cursor e teclas, e como VS Code, kitty, tmux e outros deixam você personalizar.">
+<link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">Pular para a página</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="32" height="32"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="Páginas">
+      <ul>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">Instalar</a></li>
+        <li><a href="../guides/">Guias</a></li>
+        <li><a href="../security/">Segurança</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="Idioma: Português"><span class="lang-long" aria-hidden="true">Português</span><span class="lang-short" aria-hidden="true">PT</span></summary>
+      <ul class="menu-list"><li><a href="../../customize-terminal-themes/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="../../es/customize-terminal-themes/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="./" hreflang="pt-BR" lang="pt-BR" dir="ltr" aria-current="true">Português</a></li><li><a href="../../fr/customize-terminal-themes/" hreflang="fr" lang="fr" dir="ltr">Français</a></li><li><a href="../../de/customize-terminal-themes/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="../../ja/customize-terminal-themes/" hreflang="ja" lang="ja" dir="ltr">日本語</a></li><li><a href="../../zh/customize-terminal-themes/" hreflang="zh-Hans" lang="zh-Hans" dir="ltr">简体中文</a></li><li><a href="../../ko/customize-terminal-themes/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="../../id/customize-terminal-themes/" hreflang="id" lang="id" dir="ltr">Bahasa Indonesia</a></li><li><a href="../../hi/customize-terminal-themes/" hreflang="hi" lang="hi" dir="ltr">हिन्दी</a></li><li><a href="../../bn/customize-terminal-themes/" hreflang="bn" lang="bn" dir="ltr">বাংলা</a></li><li><a href="../../ar/customize-terminal-themes/" hreflang="ar" lang="ar" dir="rtl">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>Menu</summary>
+      <ul class="menu-list">
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">Instalar</a></li>
+        <li><a href="../guides/">Guias</a></li>
+        <li><a href="../security/">Segurança</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="translated">
+  <div class="wrap translated-in">
+    <p>O Aubergine em si está em inglês: seus botões, menus e imagens são os da versão em inglês.</p>
+    <p>Esta página foi traduzida do inglês por uma máquina. <a href="https://github.com/thirstyeggplant/aubergine/issues">Envie uma correção</a>.</p>
+  </div>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://thirstyeggplant.com/pt/customize-terminal-themes/#article",
+      "headline": "Personalize temas, cores, fontes e teclas do terminal",
+      "description": "Dez temas de cores, um tema por terminal, cores à mão, fontes, cursor e teclas, e como VS Code, kitty, tmux e outros deixam você personalizar.",
+      "url": "https://thirstyeggplant.com/pt/customize-terminal-themes/",
+      "mainEntityOfPage": "https://thirstyeggplant.com/pt/customize-terminal-themes/",
+      "image": "https://thirstyeggplant.com/screenshots/terminal-themes.png",
+      "datePublished": "2026-11-28",
+      "dateModified": "2026-11-28",
+      "inLanguage": "pt-BR",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Guias", "item": "https://thirstyeggplant.com/guides/" },
+        { "@type": "ListItem", "position": 3, "name": "Personalizar", "item": "https://thirstyeggplant.com/pt/customize-terminal-themes/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://thirstyeggplant.com/pt/customize-terminal-themes/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "Cada terminal pode ter um tema de cores diferente?", "acceptedAnswer": { "@type": "Answer", "text": "Sim. Theme… no menu de um terminal desenha o seu conteúdo em qualquer um dos dez temas, seja qual for o da página. Terminais com uma etiqueta podem receber um tema por essa etiqueta no Settings, e os outros seguem o padrão que você define para terminais, ou a página." } },
+        { "@type": "Question", "name": "Posso adicionar meu próprio CSS ao Aubergine?", "acceptedAnswer": { "@type": "Answer", "text": "Sim: custom.css na pasta de dados (aubergine css new escreve um para começar). Ele é vinculado por último na página, desde a primeira pintura, e os ganchos com que pode contar estão em docs/hooks.md. Acrescente ?plain ao endereço da página para vê-la sem ele." } },
+        { "@type": "Question", "name": "Posso escrever os meus próprios plugins para o Aubergine?", "acceptedAnswer": { "@type": "Answer", "text": "Sim: um módulo JavaScript em plugins/\u003cid\u003e/ na pasta de dados (aubergine plugin new \u003cid\u003e escreve um para começar), ligado em Settings → Plugins. Corre na página como você, com tudo o que a página pode fazer; não está numa sandbox." } },
+        { "@type": "Question", "name": "Onde fica o arquivo de configurações do Aubergine?", "acceptedAnswer": { "@type": "Answer", "text": "É o config.json na pasta de dados do Aubergine. aubergine settings path mostra onde, e o servidor mostra ao iniciar." } },
+        { "@type": "Question", "name": "Um agente pode mudar a aparência do Aubergine?", "acceptedAnswer": { "@type": "Answer", "text": "As configurações, não: elas são só suas. Um agente pode nomear e descrever o próprio terminal e propor um tema de cores, que espera você ler e aceitar; um programa cujo token de API permita pode renomear, etiquetar e dar tema a terminais, organizar canvases e também propor um tema." } }
+      ]
+    }
+  ]
+}
+</script>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Onde você está"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">Guias</a></li><li>Personalizar</li></ol></nav>
+    <h1>Personalize temas, cores, fontes e teclas do terminal</h1>
+    <p class="lead">Escolha as cores da página entre dez temas, dê a cada terminal um tema próprio e defina cores isoladas, a fonte e o cursor do terminal e todas as teclas, em Settings ou em um arquivo de configurações que descreve a si mesmo.</p>
+  </div>
+</header>
+<div class="wrap page-body">
+  <div class="prose">
+    <h2 id="page-themes">Dez temas de cores, claros e escuros</h2>
+    <p><strong>Settings → Appearance</strong> começa com três opções: <strong>Light</strong>, <strong>Dark</strong> e <strong>Match the system</strong>, que é como uma instalação nova começa e que acompanha o sistema quando ele muda. Abaixo delas você escolhe um tema de cada tipo: Light, High contrast light, Solarized light ou Gruvbox light; Dark, High contrast dark, Solarized dark, Gruvbox dark, Nord ou Dracula. Cada um aparece com uma pequena imagem das suas cores.</p>
+    <p>Uma mudança vale na hora para a página e para todos os terminais, sem recarregar, e fica no arquivo de configurações, então todo navegador em que você abrir o Aubergine concorda. A paleta tem o mesmo como comandos, por exemplo <strong>Color theme: Nord</strong>.</p>
+    <figure class="frame"><a href="../../screenshots/themes-settings.png" class="frame-pic"><img src="../../screenshots/themes-settings.png" width="1090" height="1412" loading="lazy" alt="Settings, Appearance: claro, escuro ou igual ao sistema, depois os dez temas de cores em dois grupos, cada um com uma pequena prévia; Nord está escolhido para a página escura e Solarized light para a clara."></a><figcaption>Claro, escuro ou como o sistema estiver, e um tema de cada tipo, cada um com uma pequena imagem das suas cores.</figcaption></figure>
+
+    <h2 id="terminal-themes">Um tema de cores diferente para cada terminal</h2>
+    <p><strong>Theme…</strong> no menu de um terminal o desenha em qualquer um dos dez temas, seja qual for o da página. Só o corpo muda: o título, a nota e os detalhes continuam como a página. Um terminal sem tema próprio segue <strong>Terminal theme</strong> em Settings, o padrão para terminais, e, sem ele, a página.</p>
+    <figure class="frame"><a href="../../screenshots/terminal-theme-menu.png" class="frame-pic"><img src="../../screenshots/terminal-theme-menu.png" width="1262" height="1118" loading="lazy" alt="O menu Theme… de um terminal aberto no canvas: Same as the default, agora como a página, Dark; depois os quatro temas claros e os seis escuros, com Dracula marcado."></a><figcaption>Theme… no menu de um terminal: o padrão, ou qualquer um dos dez.</figcaption></figure>
+    <p>A mesma escolha está no menu da linha do terminal na lista, nos detalhes e na paleta. Um terminal e um quadro também podem ter uma cor própria, uma de treze ou <strong>Your own…</strong> para qualquer cor, e a aba de um canvas também; a cor de um terminal é também a da sua linha na lista.</p>
+    <figure class="frame"><a href="../../screenshots/terminal-themes-close.png" class="frame-pic"><img src="../../screenshots/terminal-themes-close.png" width="2444" height="722" loading="lazy" alt="Dois terminais em uma página escura: à esquerda, um histórico do Git no tema Solarized light; à direita, um diff colorido no tema Dracula."></a><figcaption>Lado a lado em uma página escura: um terminal em Solarized light, outro em Dracula.</figcaption></figure>
+
+    <h2 id="colors">Defina cores isoladas à mão</h2>
+    <p>Além dos temas, 35 cores da página podem ser definidas no arquivo de configurações, <code>config.json</code>, em <code>appearance.colors</code>: o nome de uma cor e um valor escrito <code>#rrggbb</code>. Escrita no topo, uma cor vale sobre todos os temas; escrita sob o ID de um tema entre colchetes, como <code>"[nord]"</code>, vale só sobre esse tema, e prevalece.</p>
+    <pre><code>{
+  "$schema": "./config.schema.json",
+  "appearance": {
+    "colors": {
+      "accent": "#c678dd",
+      "[nord]": { "terminal-bg": "#242933" }
+    }
+  }
+}</code></pre>
+    <p>Os nomes são os tokens de cor da página, como <code>bg</code>, <code>text</code>, <code>accent</code> e <code>terminal-bg</code>; <a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/design.md">docs/design.md</a> lista todos. Uma entrada errada é ignorada, e o resto do arquivo continua valendo; <strong>Settings → Appearance</strong> diz qual foi ignorada. As cores que você define são suas: nada confere se o que você escreveu dá para ler.</p>
+
+    <h2 id="theme-files">Temas seus, como arquivos</h2>
+    <p>Um tema seu é um arquivo JSON em <code>themes/</code> na pasta de dados: um dos dez como base, do mesmo tipo, com qualquer uma das 35 cores por cima, e as cores próprias de um terminal: o texto, o cursor, o que está selecionado e as dezesseis cores que um programa pede. Ele aparece depois dos dez do seu tipo, marcado como seu, e pode ser escolhido onde eles podem: para a página, como padrão dos terminais ou para um só terminal. As sombras e o anel de foco continuam os da base, e nada em um arquivo é executado.</p>
+    <pre><code>{
+  "$schema": "../theme.schema.json",
+  "name": "Harbor",
+  "kind": "dark",
+  "base": "nord",
+  "colors": { "bg": "#0e1a24", "accent": "#5fb3b3" },
+  "terminal": { "foreground": "#d8dee9", "cursor": "#5fb3b3" }
+}</code></pre>
+    <p><code>aubergine theme new harbor --from nord</code> escreve um arquivo para começar, com cada cor do tema de origem; <code>aubergine theme check</code> diz o que está errado em um; <strong>Read themes again</strong> em Settings carrega uma mudança. Se as suas cores são legíveis é você quem julga: o Settings só avisa quando um texto pode ser difícil de ler. <a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/themes.md">docs/themes.md</a> descreve o formato.</p>
+
+    <h2 id="by-condition">Um tema para um projeto, e para terminais por etiqueta</h2>
+    <p>Um projeto pode desenhar a página num tema próprio enquanto você o olha, para que um relance diga onde você está. Em <strong>Projects…</strong>, <strong>When light</strong> e <strong>When dark</strong> ao lado de um projeto escolhem um tema de cada tipo; <strong>As the page</strong> deixa para Settings. Em qualquer outro projeto a página fica como você a escolheu, e recarregar no endereço desse projeto o desenha no seu tema desde a primeira pintura.</p>
+    <p><strong>By tag</strong>, em Terminal theme no Settings, dá um tema próprio aos terminais com uma etiqueta: por exemplo, todo terminal com a etiqueta <code>prod</code> em Dracula, na hora e seja qual for o tema da página. Vale a primeira linha cuja etiqueta o terminal tem, e o tema próprio de um terminal vem antes de todas. No arquivo de configurações é <code>appearance.byTag</code>:</p>
+    <pre><code>{
+  "appearance": {
+    "byTag": [
+      { "tag": "prod", "theme": "dracula" },
+      { "tag": "docs", "theme": "solarized-light" }
+    ]
+  }
+}</code></pre>
+    <p>Muitas vezes basta outra cor de destaque. <code>aubergine theme new teal --from nord --accent "#2f9e8f"</code> escreve um arquivo de tema que muda só o destaque do Nord e as cinco cores que o acompanham, calculadas para continuarem legíveis. Escolha-o para um projeto ou uma etiqueta como qualquer outro tema.</p>
+
+    <h2 id="fonts-and-keys">Fontes, cursor e atalhos de teclado</h2>
+    <p><strong>Terminal text</strong> em Settings → Appearance define o tamanho do texto de um terminal, de 8 a 32 pixels, e a fonte, como uma lista da qual se usa a primeira fonte encontrada. <strong>Cursor</strong> define a forma, bloco, barra ou sublinhado, e se ele pisca.</p>
+    <p>Todas as teclas podem ser mudadas. Adicione <code>shortcuts</code> ao arquivo de configurações: o nome de um comando com uma combinação, uma lista de combinações ou <code>null</code> para nenhuma tecla. <code>shortcutsInAppWindow</code> aceita o mesmo e vale só onde o Aubergine está instalado como app com janela própria. Recarregue a página, e a folha de atalhos (<strong>?</strong>), a paleta e as dicas mostram as teclas como você definiu.</p>
+    <pre><code>{
+  "shortcuts": {
+    "terminal.park": "X",
+    "attention.next": ["Ctrl+Cmd+G", "W"],
+    "view.fit": null
+  }
+}</code></pre>
+    <p>Uma tecla definida duas vezes, ou uma que não dá para ler, é apontada no topo da folha de atalhos e pelo servidor, e o resto do arquivo continua valendo. Uma tecla simples, ou Ctrl ou Option com uma tecla, só funciona enquanto nenhum terminal tem o teclado, para que todo programa em um terminal continue recebendo as teclas de que precisa. Mais em <a href="https://github.com/thirstyeggplant/aubergine#keyboard">Keyboard</a>, no README.</p>
+
+    <h2 id="titles-and-rows">Escolha o que um título e uma linha dizem</h2>
+    <p>Depois do nome de um terminal, o título dele e a linha dele na lista dizem o que dois modelos dizem: texto com marcadores como <code>{state}</code>, <code>{folder}</code>, <code>{time}</code> e <code>{field:Ticket}</code>. Mude-os em <strong>Settings → Appearance → Titles and rows</strong>, onde o título e a linha reais são desenhados sob cada campo enquanto você digita, ou no arquivo de configurações. Aqui o título diz o estado, a pasta, o campo Ticket, os links e as tags, e a linha o estado, o passo de uma execução, o branch e a hora:</p>
+    <pre><code>{
+  "appearance": {
+    "titleFormat": "{state} {folder} · {field:Ticket} {links} {tags}",
+    "rowFormat": "{state} {step} {branch} · {time}"
+  }
+}</code></pre>
+    <p>Um marcador sem nada a dizer é omitido junto com o texto que leva a ele: num terminal sem ticket, links nem tags, esse título diz só o estado e a pasta, sem nenhum ponto sobrando. Um modelo contém só texto e marcadores, sem marcação e sem estilo; cada um é desenhado como a página desenha essa coisa em outros lugares, o estado na sua cor e um link como um chip. Um marcador errado é indicado sob o campo e ignorado, e <strong>Reset</strong> devolve exatamente o que é desenhado sem modelo. Todos os marcadores estão em <a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/templates.md">docs/templates.md</a>.</p>
+
+    <h2 id="your-stylesheet">Sua própria folha de estilo</h2>
+    <p>Para tudo o que as configurações não alcançam, escreva uma folha de estilo sua: <code>custom.css</code> na pasta de dados. O servidor a vincula como a última coisa no cabeçalho da página, então ela está lá desde a primeira pintura, e uma regra sua vence uma regra do app tão específica quanto ela, sem <code>!important</code>. <code>aubergine css new</code> escreve uma para começar, e <strong>Settings → Appearance → Your stylesheet</strong> diz se ela foi encontrada, a desliga e a lê de novo sem recarregar.</p>
+    <p>Conte com os ganchos e com nada mais: cada token (<code>--accent</code>, <code>--radius-surface</code> e os outros), os atributos na raiz da página (<code>data-theme</code>, <code>data-page</code>), as partes marcadas com <code>data-part</code> e os atributos próprios de um terminal (<code>data-tags</code>, <code>data-state</code>, <code>data-name</code>), os mesmos no nó dele, na linha dele e na aba do navegador só dele. Eles estão em <a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/hooks.md">docs/hooks.md</a> e são mantidos de uma versão para a outra; nomes de classe, não. Aqui o título de cada terminal com a tag prod fica vermelho-escuro, e o mapa some:</p>
+    <pre><code>[data-part="terminal"][data-tags~="prod"] [data-part="terminal-title"] {
+  background: #5c1f24;
+}
+[data-part="map"] {
+  display: none;
+}</code></pre>
+    <p>E cantos mais arredondados em todo lugar, por dois tokens:</p>
+    <pre><code>:root {
+  --radius-surface: 16px;
+  --radius-control: 10px;
+}</code></pre>
+    <p>Se uma regra quebrar a página, abra-a com <code>?plain</code> depois do endereço: ela é enviada sem a sua folha de estilo. Nada do que uma folha de estilo cita é buscado em outro endereço: uma imagem, uma fonte ou uma folha de estilo vem deste servidor ou de dados embutidos, então um trecho colado não consegue enviar para outro lugar o que está na sua página. É uma proteção para um arquivo que você escreveu ou colou, não uma sandbox. Só foi testado no Chromium.</p>
+
+    <h2 id="plugins">O seu próprio código: plugins</h2>
+    <p>Para além das definições e da folha de estilo, escreva código: um plugin é um módulo JavaScript seu em <code>plugins/&lt;id&gt;/</code> na pasta de dados, com um <code>plugin.json</code> que o nomeia. A página importa-o tal como está, sem passo de compilação, e dá-lhe um objeto, <code>aubergine</code>: uma secção do painel lateral, um filtro da lista, um marcador para um título ou uma linha, um comando na paleta, uma forma de ver uma execução, o estado e cada mudança à medida que acontece, e cada chamada que a página faz. <code>aubergine plugin new &lt;id&gt;</code> escreve um para começar.</p>
+    <p class="note"><strong>Um plugin corre na página como você, e nada o mantém à parte.</strong> Pode ler cada terminal, escrever em qualquer um e mudar qualquer coisa na página. Não está numa sandbox. Só corre depois de o ligar em <strong>Settings → Plugins</strong>, e só como os seus ficheiros estavam quando o fez: um ficheiro que muda não é carregado até voltar a olhar. Isso evita que código corra por acidente; não é uma fechadura, já que um agente num terminal também corre como você e poderia escrever o ficheiro de definições. Ligue só o que escreveu ou leu.</p>
+    <p>Os membros de <code>aubergine</code> estão em <a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/plugins.md">docs/plugins.md</a> e de uma versão para a seguinte só são acrescentados; o que um plugin alcançar para além deles pode mudar. Um comando na paleta, em poucas linhas:</p>
+    <pre><code>// plugins/hello/index.js
+export function activate(aubergine) {
+  aubergine.commands.add({
+    id: 'hello',
+    title: 'Say hello',
+    run: () =&gt; aubergine.say('Hello from my plugin'),
+  });
+}</code></pre>
+    <p>Se um plugin estragar a página, abra-a com <code>?plain</code> depois do endereço: nenhum plugin é carregado e a sua folha de estilo fica de fora. Um plugin que falha é dito em Settings, e a página e os outros plugins continuam. Desligado, tudo o que acrescentou através de <code>aubergine</code> desaparece de imediato; o que fez para além disso, com um recarregamento. Só foi experimentado no Chromium.</p>
+
+    <h2 id="settings-file">Um arquivo de configurações que descreve a si mesmo</h2>
+    <p>Tudo isso fica em <code>config.json</code> na pasta de dados do Aubergine, e <code>aubergine settings path</code> mostra onde ela está. Qualquer chave pode ser omitida. Um arquivo que não dá para ler significa os padrões, nunca um servidor que não inicia. Settings na página escreve só as chaves que muda e deixa o resto do arquivo como você escreveu.</p>
+    <p>Toda vez que inicia, o servidor escreve <code>config.schema.json</code> ao lado do arquivo. Adicione uma linha, e um editor que lê JSON Schema descreve e completa cada chave:</p>
+    <pre><code>{ "$schema": "./config.schema.json" }</code></pre>
+    <p><code>aubergine settings list</code> mostra cada chave com o valor atual, marcada onde não é o padrão, e <code>aubergine settings schema</code> mostra o esquema. <a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/settings.md">docs/settings.md</a> descreve cada chave, o padrão e se quem a escreve é Settings ou você.</p>
+    <pre><code>aubergine settings path
+aubergine settings list
+aubergine settings schema</code></pre>
+    <p>Na página, <strong>Settings → Every setting</strong> lista as mesmas chaves com os valores, e as encontra enquanto você digita. Uma chave que Settings muda leva você ao controle dela; uma chave escrita à mão tem <strong>Copy</strong>, para a linha a adicionar ao arquivo. Nada ali muda uma configuração.</p>
+    <figure class="frame"><a href="../../screenshots/every-setting.png" class="frame-pic"><img src="../../screenshots/every-setting.png" width="1720" height="1332" loading="lazy" alt="Settings, Every setting, aberto, com “appearance” digitado na busca: seis chaves, cada uma com o valor atual, o que é e o padrão; cinco dizem Changed above, e appearance.colors tem um botão Copy."></a><figcaption>Every setting, com uma busca: o que é cada chave, o valor atual e o padrão.</figcaption></figure>
+    <p>Algumas escolhas são deste navegador e ficam nele: se os canvases são abas, uma lista ou uma coluna; onde fica a barra sobre o canvas e se ela fica aberta; se o painel lateral e o mapa estão recolhidos; a largura do painel e dos detalhes de um terminal; e como a lista de terminais é filtrada, agrupada e ordenada.</p>
+
+    <h2 id="programs-and-agents">O que um programa ou um agente pode mudar, e o que continua sendo seu</h2>
+    <p>Pela <a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/api.md">API local</a>, um programa com um token de API pode organizar canvases com <code>canvases:write</code>: nomeá-los, dar cor e ordem, mover, redimensionar e colorir terminais neles, e adicionar quadros. Com <code>sessions:write</code> ele pode renomear e etiquetar um terminal, mudar seus campos e dar a ele um tema de cores. Ele alcança só os projetos que o token alcança.</p>
+    <p>O agente de um terminal descreve o próprio terminal e nenhum outro: um nome, um resumo do que ele faz, seus links e seus campos, com <code>aubergine describe</code>, <code>aubergine link add</code> e <code>aubergine field set</code>. Onde você mesmo escreveu um nome, um resumo ou um campo, o seu fica, e o que o agente mandou é guardado ao lado como sugestão. Um agente, ou um programa com <code>workflows:write</code>, também pode propor um tema de cores com <code>aubergine theme propose</code>: ele não é desenhado em lugar nenhum até você o ler em Review, vê-lo desenhado, experimentá-lo na página e aceitá-lo, e aceitar escreve o arquivo dele sem escolher nada.</p>
+    <p>As configurações em si são só suas. Nenhum token, terminal ou agente pode mudá-las: <code>PUT /v1/settings/appearance</code> responde só ao navegador com login, e <code>appearance.colors</code>, <code>shortcuts</code> e o resto são escritos à mão no arquivo.</p>
+
+    <h2 id="other-tools">Como outras ferramentas deixam você personalizar a interface?</h2>
+    <p class="note"><strong>Como isto foi escrito.</strong> O que a tabela diz sobre cada ferramenta vem da documentação dela, lida em 28 de novembro de 2026 e com link no nome e nas células. Não executamos essas ferramentas para isto. “Nada encontrado” quer dizer que a documentação que lemos não descreve nada, não que a ferramenta não possa fazer. Se algo estiver errado ou desatualizado, <a href="https://github.com/thirstyeggplant/aubergine/issues">avise a gente</a>.</p>
+    <div class="table table-wide">
+      <table class="table-stack">
+        <thead><tr><th>Ferramenta</th><th>Configurações</th><th>Temas e cores</th><th>Seu próprio CSS</th><th>Seu próprio código</th><th>Modelos de títulos e status</th></tr></thead>
+        <tbody>
+          <tr><td><a href="https://code.visualstudio.com/docs/configure/settings">VS Code</a><br>Um editor</td><td data-label="Configurações"><code>settings.json</code> ou o editor de Settings, em camadas de usuário a workspace, pasta e linguagem</td><td data-label="Temas e cores"><a href="https://code.visualstudio.com/docs/configure/themes">Arquivos de tema</a> de extensões; <code>workbench.colorCustomizations</code>, para todos os temas ou para um</td><td data-label="Seu próprio CSS">Sem suporte, <a href="https://code.visualstudio.com/api/extension-capabilities/overview">diz a documentação</a></td><td data-label="Seu próprio código">Extensões, com as permissões do VS Code mas sem acesso ao DOM da interface; webviews para uma interface própria</td><td data-label="Modelos de títulos e status"><code>window.title</code> e os títulos das abas de terminal aceitam variáveis <code>${…}</code></td></tr>
+          <tr><td><a href="https://zed.dev/docs/configuring-zed">Zed</a><br>Um editor</td><td data-label="Configurações">Settings Editor ou <code>settings.json</code> com comentários; usuário, depois projeto</td><td data-label="Temas e cores"><a href="https://zed.dev/docs/themes">Arquivos de tema JSON</a> com esquema; <code>theme_overrides</code> para um tema; claro, escuro ou sistema</td><td data-label="Seu próprio CSS">Nada encontrado</td><td data-label="Seu próprio código">Extensões em Rust compiladas para WebAssembly, com <a href="https://zed.dev/docs/extensions/capabilities">capacidades</a> que você pode restringir</td><td data-label="Modelos de títulos e status">Nada encontrado</td></tr>
+          <tr><td><a href="https://help.obsidian.md/snippets">Obsidian</a><br>Um app de notas</td><td data-label="Configurações">Arquivos na pasta <code>.obsidian</code> de cada cofre</td><td data-label="Temas e cores"><a href="https://docs.obsidian.md/Themes/App+themes/Build+a+theme">Temas são CSS</a>, com variáveis CSS documentadas</td><td data-label="Seu próprio CSS">Snippets de CSS, ligados um a um</td><td data-label="Seu próprio código"><a href="https://help.obsidian.md/plugin-security">Plugins</a> em JavaScript com o mesmo acesso do Obsidian; nenhum roda até o modo restrito ser desligado</td><td data-label="Modelos de títulos e status">Nada encontrado</td></tr>
+          <tr><td><a href="https://hyper.is/">Hyper</a><br>Um terminal</td><td data-label="Configurações">Um arquivo: <code>.hyper.js</code> nas versões documentadas, <code>hyper.json</code> no branch de desenvolvimento</td><td data-label="Temas e cores">Temas são plugins</td><td data-label="Seu próprio CSS"><code>css</code> para a janela; <code>termCSS</code>, que <a href="https://github.com/vercel/hyper/blob/canary/PLUGINS.md">não estiliza mais o texto do terminal</a> desde a versão 2</td><td data-label="Seu próprio código">Plugins npm carregados pelo Electron e pelo renderizador: envolvem seus componentes React e adicionam middleware Redux</td><td data-label="Modelos de títulos e status">Nada encontrado</td></tr>
+          <tr><td><a href="https://wezterm.org/config/files.html">WezTerm</a><br>Um terminal</td><td data-label="Configurações">Um arquivo Lua, <code>.wezterm.lua</code></td><td data-label="Temas e cores"><a href="https://wezterm.org/config/appearance.html">Mais de 700 esquemas</a>; os seus em Lua ou TOML; <code>colors</code> para cores isoladas</td><td data-label="Seu próprio CSS">Nada encontrado</td><td data-label="Seu próprio código">A configuração é Lua; <a href="https://wezterm.org/config/plugins.html">plugins</a> são Lua vindos de um endereço Git</td><td data-label="Modelos de títulos e status">Funções Lua devolvem os títulos de aba e janela (<a href="https://wezterm.org/config/lua/window-events/format-tab-title.html"><code>format-tab-title</code></a>)</td></tr>
+          <tr><td><a href="https://man.openbsd.org/tmux.1">tmux</a><br>Um multiplexador de terminal</td><td data-label="Configurações">Comandos do tmux em um arquivo; opções por servidor, sessão, janela e painel</td><td data-label="Temas e cores">Estilos como <code>status-style</code> e <code>window-style</code></td><td data-label="Seu próprio CSS">Nada encontrado</td><td data-label="Seu próprio código">Hooks executam comandos do tmux; modo de controle para programas</td><td data-label="Modelos de títulos e status"><a href="https://man.openbsd.org/tmux.1#FORMATS">Formatos</a> com <code>#{…}</code> para a linha de status, a lista de janelas, as bordas dos painéis e os títulos</td></tr>
+          <tr><td><a href="https://sw.kovidgoyal.net/kitty/conf/">kitty</a><br>Um terminal</td><td data-label="Configurações"><code>kitty.conf</code>, com inclusões, lido de novo quando muda</td><td data-label="Temas e cores">Um tema é um arquivo <code>.conf</code>; <a href="https://sw.kovidgoyal.net/kitty/kittens/themes/"><code>kitten themes</code></a> escolhe entre mais de 300, e dá para definir um para escuro e um para claro</td><td data-label="Seu próprio CSS">Nada encontrado</td><td data-label="Seu próprio código"><a href="https://sw.kovidgoyal.net/kitty/kittens/custom/">Kittens</a> em Python com acesso total aos internos do kitty; watchers</td><td data-label="Modelos de títulos e status"><code>tab_title_template</code>, onde <code>{custom}</code> chama o seu próprio Python</td></tr>
+          <tr><td><a href="https://ghostty.org/docs/config">Ghostty</a><br>Um terminal</td><td data-label="Configurações">Um arquivo <code>key = value</code>; <code>config-file</code> adiciona outros</td><td data-label="Temas e cores"><a href="https://ghostty.org/docs/features/theme">Temas são arquivos de configuração</a>; um para claro e um para escuro</td><td data-label="Seu próprio CSS">Nada encontrado</td><td data-label="Seu próprio código"><a href="https://ghostty.org/docs/config/reference#custom-shader">Shaders GLSL</a> sobre o terminal; AppleScript no macOS</td><td data-label="Modelos de títulos e status">Nada encontrado</td></tr>
+          <tr><td><a href="https://learn.microsoft.com/windows/terminal/customize-settings/color-schemes">Windows Terminal</a><br>Um terminal</td><td data-label="Configurações">Tela de Settings ou <code>settings.json</code>, com um <a href="https://github.com/microsoft/terminal/blob/main/doc/cascadia/profiles.schema.json">esquema JSON</a></td><td data-label="Temas e cores">Esquemas de cores por perfil; <a href="https://learn.microsoft.com/windows/terminal/customize-settings/themes">temas</a> para a janela e as abas, claro e escuro, só no JSON</td><td data-label="Seu próprio CSS">Nada encontrado</td><td data-label="Seu próprio código">Nada encontrado; outros aplicativos adicionam perfis e esquemas de cores como fragmentos JSON</td><td data-label="Modelos de títulos e status">Nada encontrado; um perfil define <code>tabTitle</code> e <code>tabColor</code></td></tr>
+          <tr><td><a href="https://iterm2.com/documentation-automatic-profile-switching.html">iTerm2</a><br>Um terminal</td><td data-label="Configurações">Perfis em Settings; <a href="https://iterm2.com/documentation-dynamic-profiles.html">Dynamic Profiles</a> como arquivos de lista de propriedades</td><td data-label="Temas e cores">Um perfil escolhido por usuário, host, pasta ou tarefa, com Shell Integration</td><td data-label="Seu próprio CSS">Nada encontrado</td><td data-label="Seu próprio código">Uma <a href="https://iterm2.com/python-api/">API Python</a>, componentes da barra de status em Python, AppleScript</td><td data-label="Modelos de títulos e status"><a href="https://iterm2.com/documentation-scripting-fundamentals.html">Strings interpoladas</a>, <code>\(…)</code>, em nomes de sessão, badges e na barra de status</td></tr>
+          <tr><td>Aubergine<br>Terminais em um canvas</td><td data-label="Configurações"><code>config.json</code> e Settings, com um JSON Schema para editores</td><td data-label="Temas e cores">Dez temas, claro, escuro ou como o sistema; os seus como arquivos JSON sobre um deles; um para um projeto, para os terminais com uma etiqueta e para cada terminal; 35 cores à mão, para todos os temas ou um</td><td data-label="Seu próprio CSS">Sim: <code>custom.css</code> na pasta de dados, com ganchos documentados</td><td data-label="Seu próprio código">Sim: plugins, módulos JavaScript que correm na página como você, através de uma API documentada e para além dela. Sem sandbox</td><td data-label="Modelos de títulos e status">Dois, para o título de um terminal e uma linha da lista: texto com marcadores como <code>{state}</code> e <code>{field:Ticket}</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Todas estas ferramentas guardam as configurações em um arquivo, e VS Code, Zed e Windows Terminal também têm uma tela que o escreve, como o Aubergine. Na maioria, um tema também é um arquivo: JSON no VS Code e no Zed, CSS no Obsidian, Lua ou TOML no WezTerm, um arquivo de configuração no kitty e no Ghostty. VS Code, Zed e WezTerm deixam você mudar cores isoladas sobre um tema, como <code>appearance.colors</code> faz aqui.</p>
+    <p>Onde mais diferem é no código. Toda a configuração do WezTerm é um programa Lua, kitty e iTerm2 executam o seu próprio Python, e os plugins do Hyper são JavaScript que envolve a interface; Obsidian e Hyper também aceitam o seu próprio CSS. As extensões do VS Code não têm acesso ao DOM da interface, e ele não aceita folhas de estilo suas; o Zed executa extensões como WebAssembly, com capacidades que você pode restringir. tmux, WezTerm, kitty e iTerm2 montam títulos e linhas de status com modelos ou funções.</p>
+    <p>Hoje o Aubergine vai do lado das definições até ao código: temas, cores e teclas em ficheiros que se descrevem a si mesmos, uma página que escreve parte das definições, modelos para o que dizem o título de um terminal e a sua linha, uma folha de estilo sua com pontos de ligação mantidos estáveis, e plugins, o seu próprio JavaScript na página com uma API a que só se acrescenta. Um plugin corre com tudo o que a página pode fazer; um modo com sandbox para plugins de outras pessoas está no <a href="../roadmap/#rm-yours">roteiro</a>, e não está construído.</p>
+
+    <h2 id="planned">O que está planejado</h2>
+    <p>Uma forma com sandbox de correr um plugin escrito por outra pessoa, e instalar um através do ecrã de revisão, estão previstas e não construídas: veja o <a href="../roadmap/#rm-yours">roteiro</a>.</p>
+
+    <h2 id="faq">Perguntas</h2>
+    <div class="questions">
+      <details><summary>Cada terminal pode ter um tema de cores diferente?</summary><p>Sim. Theme… no menu de um terminal desenha o seu conteúdo em qualquer um dos dez temas, seja qual for o da página. Terminais com uma etiqueta podem receber um tema por essa etiqueta no Settings, e os outros seguem o padrão que você define para terminais, ou a página.</p></details>
+      <details><summary>Posso adicionar meu próprio CSS ao Aubergine?</summary><p>Sim: <code>custom.css</code> na pasta de dados (<code>aubergine css new</code> escreve um para começar). Ele é vinculado por último na página, desde a primeira pintura, e os ganchos com que pode contar estão em docs/hooks.md. Acrescente <code>?plain</code> ao endereço da página para vê-la sem ele.</p></details>
+      <details><summary>Posso escrever os meus próprios plugins para o Aubergine?</summary><p>Sim: um módulo JavaScript em <code>plugins/&lt;id&gt;/</code> na pasta de dados (<code>aubergine plugin new &lt;id&gt;</code> escreve um para começar), ligado em Settings → Plugins. Corre na página como você, com tudo o que a página pode fazer; não está numa sandbox.</p></details>
+      <details><summary>Onde fica o arquivo de configurações do Aubergine?</summary><p>É o <code>config.json</code> na pasta de dados do Aubergine. <code>aubergine settings path</code> mostra onde, e o servidor mostra ao iniciar.</p></details>
+      <details><summary>Um agente pode mudar a aparência do Aubergine?</summary><p>As configurações, não: elas são só suas. Um agente pode nomear e descrever o próprio terminal e propor um tema de cores, que espera você ler e aceitar; um programa cujo token de API permita pode renomear, etiquetar e dar tema a terminais, organizar canvases e também propor um tema.</p></details>
+    </div>
+    <p>Relacionado: <a href="../too-many-terminal-tabs/">Encontre o terminal certo</a> · <a href="../tmux-without-learning-tmux/">tmux sem aprender tmux</a> · <a href="../security/">Segurança e privacidade</a> · <a href="../faq/">Perguntas frequentes</a></p>
+    <p>O Aubergine não tem vínculo com nenhuma das ferramentas citadas nesta página. Os nomes delas são marcas dos seus respectivos donos.</p>
+  </div>
+</div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">Funcionando em cinco minutos</h2>
+    <div class="close-do">
+      <p>Você precisa de macOS com tmux 3.2 ou mais recente e Node.js 22 ou mais recente. <code>brew install tmux node</code> instala os dois.</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="Copiado" aria-live="polite" hidden>Copiar</button></p>
+      <p class="actions"><a class="button" href="../install/">Instalar</a><a class="button button-quiet" href="../guides/">Guias</a></p>
+    </div>
+  </div>
+</section>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav aria-label="Todas as páginas">
+      <ul class="foot-links">
+        <li><a href="../">Início</a></li>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex e ChatGPT</a></li>
+        <li><a href="../install/">Instalar</a></li>
+        <li><a href="../guides/">Guias</a></li>
+        <li><a href="../run-multiple-coding-agents/">Vários agentes ao mesmo tempo</a></li>
+        <li><a href="../working-copies/">Cópias de trabalho</a></li>
+        <li><a href="../queue-and-schedules/">Fila e agendamentos</a></li>
+        <li><a href="./" aria-current="page">Personalizar</a></li>
+        <li><a href="../compare/">Comparar</a></li>
+        <li><a href="../security/">Segurança</a></li>
+        <li><a href="../roadmap/">Roadmap</a></li>
+        <li><a href="../faq/">Perguntas frequentes</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+
+    <div class="share">
+      <p class="share-label">Compartilhar esta página</p>
+      <ul class="foot-links">
+        <li><a href="https://x.com/intent/post?text=Personalize%20temas%2C%20cores%20e%20teclas%20do%20terminal%20%7C%20Aubergine&amp;url=https%3A%2F%2Fthirstyeggplant.com%2Fpt%2Fcustomize-terminal-themes%2F" rel="noopener nofollow">X</a></li>
+        <li><a href="https://bsky.app/intent/compose?text=Personalize%20temas%2C%20cores%20e%20teclas%20do%20terminal%20%7C%20Aubergine%20https%3A%2F%2Fthirstyeggplant.com%2Fpt%2Fcustomize-terminal-themes%2F" rel="noopener nofollow">Bluesky</a></li>
+        <li><a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fthirstyeggplant.com%2Fpt%2Fcustomize-terminal-themes%2F" rel="noopener nofollow">LinkedIn</a></li>
+        <li><a href="https://www.reddit.com/submit?url=https%3A%2F%2Fthirstyeggplant.com%2Fpt%2Fcustomize-terminal-themes%2F&amp;title=Personalize%20temas%2C%20cores%20e%20teclas%20do%20terminal%20%7C%20Aubergine" rel="noopener nofollow">Reddit</a></li>
+        <li><a href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fthirstyeggplant.com%2Fpt%2Fcustomize-terminal-themes%2F&amp;t=Personalize%20temas%2C%20cores%20e%20teclas%20do%20terminal%20%7C%20Aubergine" rel="noopener nofollow">Hacker News</a></li>
+        <li><a href="mailto:?subject=Personalize%20temas%2C%20cores%20e%20teclas%20do%20terminal%20%7C%20Aubergine&amp;body=https%3A%2F%2Fthirstyeggplant.com%2Fpt%2Fcustomize-terminal-themes%2F">E-mail</a></li>
+        <li><button type="button" class="share-copy" data-copy-text="https://thirstyeggplant.com/pt/customize-terminal-themes/" data-copied="Copiado" aria-live="polite" hidden>Copiar link</button></li>
+      </ul>
+    </div>
+    <p class="foot-line">O Aubergine é livre e de código aberto sob a <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">licença MIT</a>, e roda no seu próprio computador.</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    if (!navigator.clipboard) return;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.querySelectorAll('[data-copy-text]').forEach(function (button) {
+  if (!navigator.clipboard) return;
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    navigator.clipboard.writeText(button.getAttribute('data-copy-text')).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+document.querySelectorAll('details.menu').forEach(function (menu) {
+  menu.addEventListener('toggle', function () {
+    if (!menu.open) return;
+    document.querySelectorAll('details.menu[open]').forEach(function (other) { if (other !== menu) other.open = false; });
+  });
+});
+</script>
+</body>
+</html>

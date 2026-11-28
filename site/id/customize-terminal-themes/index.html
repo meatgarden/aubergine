@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="id" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sesuaikan tema, warna, dan tombol terminal | Aubergine</title>
+<meta name="description" content="Sepuluh tema warna, satu tema per terminal, warna diatur sendiri, fon, kursor, dan tombol, serta cara VS Code, kitty, tmux, dan lainnya diatur.">
+<link rel="canonical" href="https://thirstyeggplant.com/id/customize-terminal-themes/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/customize-terminal-themes/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/customize-terminal-themes/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/customize-terminal-themes/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/customize-terminal-themes/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/customize-terminal-themes/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/customize-terminal-themes/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/customize-terminal-themes/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/customize-terminal-themes/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/customize-terminal-themes/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/customize-terminal-themes/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/customize-terminal-themes/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/customize-terminal-themes/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/customize-terminal-themes/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F7F0E4">
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="Sesuaikan tema, warna, dan tombol terminal | Aubergine">
+<meta property="og:description" content="Sepuluh tema warna, satu tema per terminal, warna diatur sendiri, fon, kursor, dan tombol, serta cara VS Code, kitty, tmux, dan lainnya diatur.">
+<meta property="og:url" content="https://thirstyeggplant.com/id/customize-terminal-themes/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine: kanvas berisi terminal, satu sedang sibuk dan satu menunggu Anda">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine: kanvas berisi terminal, satu sedang sibuk dan satu menunggu Anda">
+<meta name="twitter:title" content="Sesuaikan tema, warna, dan tombol terminal | Aubergine">
+<meta name="twitter:description" content="Sepuluh tema warna, satu tema per terminal, warna diatur sendiri, fon, kursor, dan tombol, serta cara VS Code, kitty, tmux, dan lainnya diatur.">
+<link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">Langsung ke isi halaman</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="32" height="32"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="Halaman">
+      <ul>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">Instalasi</a></li>
+        <li><a href="../guides/">Panduan</a></li>
+        <li><a href="../security/">Keamanan</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="Bahasa: Bahasa Indonesia"><span class="lang-long" aria-hidden="true">Bahasa Indonesia</span><span class="lang-short" aria-hidden="true">ID</span></summary>
+      <ul class="menu-list"><li><a href="../../customize-terminal-themes/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="../../es/customize-terminal-themes/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="../../pt/customize-terminal-themes/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="../../fr/customize-terminal-themes/" hreflang="fr" lang="fr" dir="ltr">Français</a></li><li><a href="../../de/customize-terminal-themes/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="../../ja/customize-terminal-themes/" hreflang="ja" lang="ja" dir="ltr">日本語</a></li><li><a href="../../zh/customize-terminal-themes/" hreflang="zh-Hans" lang="zh-Hans" dir="ltr">简体中文</a></li><li><a href="../../ko/customize-terminal-themes/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="./" hreflang="id" lang="id" dir="ltr" aria-current="true">Bahasa Indonesia</a></li><li><a href="../../hi/customize-terminal-themes/" hreflang="hi" lang="hi" dir="ltr">हिन्दी</a></li><li><a href="../../bn/customize-terminal-themes/" hreflang="bn" lang="bn" dir="ltr">বাংলা</a></li><li><a href="../../ar/customize-terminal-themes/" hreflang="ar" lang="ar" dir="rtl">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>Menu</summary>
+      <ul class="menu-list">
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">Instalasi</a></li>
+        <li><a href="../guides/">Panduan</a></li>
+        <li><a href="../security/">Keamanan</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="translated">
+  <div class="wrap translated-in">
+    <p>Aubergine sendiri berbahasa Inggris: tombol, menu, dan gambarnya adalah versi bahasa Inggris.</p>
+    <p>Halaman ini diterjemahkan oleh mesin dari bahasa Inggris. <a href="https://github.com/thirstyeggplant/aubergine/issues">Kirim koreksi</a>.</p>
+  </div>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://thirstyeggplant.com/id/customize-terminal-themes/#article",
+      "headline": "Sesuaikan tema, warna, fon, dan tombol terminal",
+      "description": "Sepuluh tema warna, satu tema per terminal, warna diatur sendiri, fon, kursor, dan tombol, serta cara VS Code, kitty, tmux, dan lainnya diatur.",
+      "url": "https://thirstyeggplant.com/id/customize-terminal-themes/",
+      "mainEntityOfPage": "https://thirstyeggplant.com/id/customize-terminal-themes/",
+      "image": "https://thirstyeggplant.com/screenshots/terminal-themes.png",
+      "datePublished": "2026-11-28",
+      "dateModified": "2026-11-28",
+      "inLanguage": "id",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Panduan", "item": "https://thirstyeggplant.com/guides/" },
+        { "@type": "ListItem", "position": 3, "name": "Sesuaikan", "item": "https://thirstyeggplant.com/id/customize-terminal-themes/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://thirstyeggplant.com/id/customize-terminal-themes/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "Bisakah setiap terminal punya tema warna yang berbeda?", "acceptedAnswer": { "@type": "Answer", "text": "Ya. Theme… di menu terminal menggambar isinya dengan salah satu dari sepuluh tema, apa pun tema halamannya. Terminal yang punya tag bisa diberi tema menurut tag itu di Settings, dan yang lain mengikuti bawaan yang Anda atur untuk terminal, atau halaman." } },
+        { "@type": "Question", "name": "Bisakah saya menambahkan CSS sendiri ke Aubergine?", "acceptedAnswer": { "@type": "Answer", "text": "Bisa: custom.css di folder data (aubergine css new menulis satu untuk memulai). Ia ditautkan paling akhir di halaman, sejak gambar pertama, dan kait yang bisa diandalkannya tercantum di docs/hooks.md. Tambahkan ?plain ke alamat halaman untuk melihatnya tanpa itu." } },
+        { "@type": "Question", "name": "Bisakah saya menulis plugin sendiri untuk Aubergine?", "acceptedAnswer": { "@type": "Answer", "text": "Bisa: modul JavaScript di plugins/\u003cid\u003e/ dalam folder data (aubergine plugin new \u003cid\u003e menulis satu untuk memulai), dinyalakan di Settings → Plugins. Ia berjalan di halaman sebagai Anda, dengan semua yang bisa dilakukan halaman; ia tidak berada dalam sandbox." } },
+        { "@type": "Question", "name": "Di mana berkas pengaturan Aubergine?", "acceptedAnswer": { "@type": "Answer", "text": "Yaitu config.json di folder data Aubergine. aubergine settings path menampilkan letaknya, dan server menampilkannya saat dimulai." } },
+        { "@type": "Question", "name": "Bisakah agen mengubah tampilan Aubergine?", "acceptedAnswer": { "@type": "Answer", "text": "Bukan pengaturannya: itu hanya milik Anda. Agen bisa memberi nama dan menjelaskan terminalnya sendiri serta mengusulkan tema warna yang menunggu Anda baca dan terima; program yang token API-nya mengizinkan bisa mengganti nama, menandai, dan memberi tema terminal, menata kanvas, dan juga mengusulkan tema." } }
+      ]
+    }
+  ]
+}
+</script>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Posisi Anda"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">Panduan</a></li><li>Sesuaikan</li></ol></nav>
+    <h1>Sesuaikan tema, warna, fon, dan tombol terminal</h1>
+    <p class="lead">Pilih warna halaman dari sepuluh tema, beri setiap terminal tema sendiri, dan atur warna tunggal, fon dan kursor terminal, serta setiap tombol, di Settings atau di satu berkas pengaturan yang menjelaskan dirinya sendiri.</p>
+  </div>
+</header>
+<div class="wrap page-body">
+  <div class="prose">
+    <h2 id="page-themes">Sepuluh tema warna, terang dan gelap</h2>
+    <p><strong>Settings → Appearance</strong> dimulai dengan tiga pilihan: <strong>Light</strong>, <strong>Dark</strong>, dan <strong>Match the system</strong>, yang menjadi awal pemasangan baru dan mengikuti sistem saat sistem berubah. Di bawahnya Anda memilih satu tema dari tiap jenis: Light, High contrast light, Solarized light, atau Gruvbox light; Dark, High contrast dark, Solarized dark, Gruvbox dark, Nord, atau Dracula. Masing-masing ditampilkan dengan gambar kecil warnanya.</p>
+    <p>Perubahan langsung berlaku untuk halaman dan setiap terminal, tanpa memuat ulang, dan disimpan di berkas pengaturan, jadi setiap peramban tempat Anda membuka Aubergine akan sama. Palet juga punya hal yang sama sebagai perintah, misalnya <strong>Color theme: Nord</strong>.</p>
+    <figure class="frame"><a href="../../screenshots/themes-settings.png" class="frame-pic"><img src="../../screenshots/themes-settings.png" width="1090" height="1412" loading="lazy" alt="Settings, Appearance: terang, gelap, atau mengikuti sistem, lalu sepuluh tema warna dalam dua kelompok, masing-masing dengan pratinjau kecil; Nord dipilih untuk halaman gelap dan Solarized light untuk yang terang."></a><figcaption>Terang, gelap, atau mengikuti sistem, dan satu tema untuk tiap jenis, masing-masing dengan gambar kecil warnanya.</figcaption></figure>
+
+    <h2 id="terminal-themes">Tema warna yang berbeda untuk tiap terminal</h2>
+    <p><strong>Theme…</strong> di menu terminal menggambar terminal itu dengan salah satu dari sepuluh tema, apa pun tema halamannya. Hanya badannya yang berubah: judul, catatan, dan detailnya tetap seperti halaman. Terminal tanpa tema sendiri mengikuti <strong>Terminal theme</strong> di Settings, yaitu bawaan untuk terminal, dan tanpa itu, mengikuti halaman.</p>
+    <figure class="frame"><a href="../../screenshots/terminal-theme-menu.png" class="frame-pic"><img src="../../screenshots/terminal-theme-menu.png" width="1262" height="1118" loading="lazy" alt="Menu Theme… sebuah terminal yang terbuka di kanvas: Same as the default, kini seperti halaman, Dark; lalu empat tema terang dan enam tema gelap, dengan Dracula dicentang."></a><figcaption>Theme… di menu terminal: bawaan, atau salah satu dari sepuluh.</figcaption></figure>
+    <p>Pilihan yang sama ada di menu baris terminal dalam daftar, di detailnya, dan di palet. Terminal dan bingkai juga bisa punya warna sendiri, salah satu dari tiga belas atau <strong>Your own…</strong> untuk warna apa saja, begitu pula tab kanvas; warna terminal juga menjadi warna barisnya di daftar.</p>
+    <figure class="frame"><a href="../../screenshots/terminal-themes-close.png" class="frame-pic"><img src="../../screenshots/terminal-themes-close.png" width="2444" height="722" loading="lazy" alt="Dua terminal di halaman gelap: di kiri riwayat Git dalam tema Solarized light, di kanan diff berwarna dalam tema Dracula."></a><figcaption>Berdampingan di halaman gelap: satu terminal dalam Solarized light, satu lagi dalam Dracula.</figcaption></figure>
+
+    <h2 id="colors">Atur warna tunggal sendiri</h2>
+    <p>Selain tema, 35 warna halaman bisa diatur di berkas pengaturan, <code>config.json</code>, di bawah <code>appearance.colors</code>: nama warna dan nilai yang ditulis <code>#rrggbb</code>. Ditulis di bagian atas, warna berlaku di atas setiap tema; ditulis di bawah ID tema dalam kurung siku, seperti <code>"[nord]"</code>, warna berlaku di atas tema itu saja, dan menang.</p>
+    <pre><code>{
+  "$schema": "./config.schema.json",
+  "appearance": {
+    "colors": {
+      "accent": "#c678dd",
+      "[nord]": { "terminal-bg": "#242933" }
+    }
+  }
+}</code></pre>
+    <p>Namanya adalah token warna halaman, seperti <code>bg</code>, <code>text</code>, <code>accent</code>, dan <code>terminal-bg</code>; <a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/design.md">docs/design.md</a> mencantumkannya. Entri yang salah dilewati, dan sisa berkas tetap berlaku; <strong>Settings → Appearance</strong> memberi tahu mana yang dilewati. Warna yang Anda atur adalah milik Anda: tidak ada yang memeriksa apakah tulisan Anda bisa dibaca.</p>
+
+    <h2 id="theme-files">Tema Anda sendiri, sebagai file</h2>
+    <p>Tema Anda sendiri adalah file JSON di <code>themes/</code> dalam folder data: salah satu dari sepuluh sebagai dasar, dari jenis yang sama, dengan warna mana pun dari 35 warna di atasnya, serta warna terminal itu sendiri: teksnya, kursor, bagian yang dipilih, dan enam belas warna yang diminta program. Tema itu tercantum setelah sepuluh tema sejenisnya, ditandai sebagai milik Anda, dan bisa dipilih di mana pun tema-tema itu bisa: untuk halaman, sebagai bawaan terminal, atau untuk satu terminal. Bayangan dan cincin fokus tetap milik dasarnya, dan tidak ada isi file yang dijalankan.</p>
+    <pre><code>{
+  "$schema": "../theme.schema.json",
+  "name": "Harbor",
+  "kind": "dark",
+  "base": "nord",
+  "colors": { "bg": "#0e1a24", "accent": "#5fb3b3" },
+  "terminal": { "foreground": "#d8dee9", "cursor": "#5fb3b3" }
+}</code></pre>
+    <p><code>aubergine theme new harbor --from nord</code> menulis file awal, dengan setiap warna dari tema asalnya; <code>aubergine theme check</code> memberi tahu apa yang salah di dalamnya; <strong>Read themes again</strong> di Settings memuat perubahan. Apakah warna Anda mudah dibaca, Anda yang menilai: Settings hanya memberi tahu bila teks mungkin sulit dibaca. <a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/themes.md">docs/themes.md</a> menjelaskan formatnya.</p>
+
+    <h2 id="by-condition">Tema untuk sebuah proyek, dan untuk terminal menurut tag</h2>
+    <p>Sebuah proyek dapat menggambar halaman dengan temanya sendiri selama Anda melihatnya, sehingga sekilas pandang menunjukkan di mana Anda berada. Di <strong>Projects…</strong>, <strong>When light</strong> dan <strong>When dark</strong> di samping sebuah proyek memilih satu tema untuk tiap jenis; <strong>As the page</strong> menyerahkannya ke Settings. Di proyek lain halaman tetap seperti pilihan Anda, dan memuat ulang di alamat proyek itu menggambarnya dengan temanya sejak gambar pertama.</p>
+    <p><strong>By tag</strong>, di bawah Terminal theme di Settings, memberi terminal yang punya sebuah tag tema sendiri: misalnya setiap terminal bertag <code>prod</code> dalam Dracula, seketika dan apa pun tema halamannya. Baris pertama yang tag-nya dimiliki terminal yang berlaku, dan tema milik terminal itu sendiri didahulukan dari semuanya. Di berkas pengaturan, ini adalah <code>appearance.byTag</code>:</p>
+    <pre><code>{
+  "appearance": {
+    "byTag": [
+      { "tag": "prod", "theme": "dracula" },
+      { "tag": "docs", "theme": "solarized-light" }
+    ]
+  }
+}</code></pre>
+    <p>Sering kali warna aksen lain sudah cukup. <code>aubergine theme new teal --from nord --accent "#2f9e8f"</code> menulis berkas tema yang hanya mengubah aksen Nord dan lima warna yang menyertainya, dihitung agar tetap terbaca. Pilih untuk proyek atau tag seperti tema lainnya.</p>
+
+    <h2 id="fonts-and-keys">Fon, kursor, dan pintasan keyboard</h2>
+    <p><strong>Terminal text</strong> di Settings → Appearance mengatur ukuran teks terminal, dari 8 sampai 32 piksel, dan fonnya, sebagai daftar yang fon pertama yang ditemukan dipakai. <strong>Cursor</strong> mengatur bentuknya, blok, batang, atau garis bawah, dan apakah ia berkedip.</p>
+    <p>Setiap tombol bisa diubah. Tambahkan <code>shortcuts</code> ke berkas pengaturan: nama perintah dengan satu kombinasi, daftar kombinasi, atau <code>null</code> untuk tanpa tombol. <code>shortcutsInAppWindow</code> menerima hal yang sama dan hanya berlaku di tempat Aubergine dipasang sebagai aplikasi dengan jendela sendiri. Muat ulang halaman, maka lembar pintasan (<strong>?</strong>), palet, dan tooltip menampilkan tombol seperti yang Anda atur.</p>
+    <pre><code>{
+  "shortcuts": {
+    "terminal.park": "X",
+    "attention.next": ["Ctrl+Cmd+G", "W"],
+    "view.fit": null
+  }
+}</code></pre>
+    <p>Tombol yang diatur dua kali, atau yang tidak bisa dibaca, dilaporkan di atas lembar pintasan dan oleh server, dan sisa berkas tetap berlaku. Tombol tunggal, atau Ctrl atau Option dengan satu tombol, hanya bekerja selama tidak ada terminal yang memegang keyboard, agar setiap program di terminal tetap menerima tombol yang dibutuhkannya. Selengkapnya di <a href="https://github.com/thirstyeggplant/aubergine#keyboard">Keyboard</a>, di README.</p>
+
+    <h2 id="titles-and-rows">Pilih apa yang dikatakan judul dan baris</h2>
+    <p>Setelah nama terminal, judulnya dan barisnya di daftar mengatakan apa yang dikatakan dua templat: teks dengan placeholder seperti <code>{state}</code>, <code>{folder}</code>, <code>{time}</code>, dan <code>{field:Ticket}</code>. Ubah di <strong>Settings → Appearance → Titles and rows</strong>, tempat judul dan baris yang sebenarnya digambar di bawah setiap kolom saat Anda mengetik, atau di file pengaturan. Di sini judul mengatakan status, folder, field Ticket, tautan, dan tag, dan baris mengatakan status, langkah sebuah run, branch, dan waktu:</p>
+    <pre><code>{
+  "appearance": {
+    "titleFormat": "{state} {folder} · {field:Ticket} {links} {tags}",
+    "rowFormat": "{state} {step} {branch} · {time}"
+  }
+}</code></pre>
+    <p>Placeholder yang tidak punya apa-apa untuk dikatakan dihilangkan bersama teks yang mengarah ke sana: pada terminal tanpa tiket, tautan, atau tag, judul itu hanya mengatakan status dan foldernya, tanpa titik yang tersisa. Templat hanya berisi teks dan placeholder, tanpa markup dan tanpa gaya; masing-masing digambar seperti halaman menggambar hal itu di tempat lain, status dalam warnanya dan tautan sebagai chip. Placeholder yang salah disebutkan di bawah kolom dan dilewati, dan <strong>Reset</strong> mengembalikan persis apa yang digambar tanpa templat. Semua placeholder ada di <a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/templates.md">docs/templates.md</a>.</p>
+
+    <h2 id="your-stylesheet">Stylesheet sendiri</h2>
+    <p>Untuk apa pun yang tidak terjangkau pengaturan, tulis stylesheet Anda sendiri: <code>custom.css</code> di folder data. Server menautkannya sebagai hal terakhir di head halaman, jadi ia ada sejak gambar pertama, dan aturan Anda mengalahkan aturan aplikasi yang sama spesifiknya, tanpa <code>!important</code>. <code>aubergine css new</code> menulis satu untuk memulai, dan <strong>Settings → Appearance → Your stylesheet</strong> memberi tahu apakah ia ditemukan, mematikannya, dan membacanya lagi tanpa memuat ulang.</p>
+    <p>Andalkan kait-kaitnya dan tidak ada yang lain: setiap token (<code>--accent</code>, <code>--radius-surface</code>, dan lainnya), atribut di akar halaman (<code>data-theme</code>, <code>data-page</code>), bagian yang ditandai <code>data-part</code>, dan atribut milik terminal sendiri (<code>data-tags</code>, <code>data-state</code>, <code>data-name</code>), sama di simpulnya, barisnya, dan tab browser miliknya sendiri. Semuanya tercantum di <a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/hooks.md">docs/hooks.md</a> dan dipertahankan dari satu rilis ke rilis berikutnya; nama kelas tidak. Di sini judul setiap terminal bertag prod berwarna merah tua, dan petanya hilang:</p>
+    <pre><code>[data-part="terminal"][data-tags~="prod"] [data-part="terminal-title"] {
+  background: #5c1f24;
+}
+[data-part="map"] {
+  display: none;
+}</code></pre>
+    <p>Dan sudut yang lebih bulat di mana-mana, lewat dua token:</p>
+    <pre><code>:root {
+  --radius-surface: 16px;
+  --radius-control: 10px;
+}</code></pre>
+    <p>Jika sebuah aturan merusak halaman, buka dengan <code>?plain</code> setelah alamatnya: halaman dikirim tanpa stylesheet Anda. Tidak ada yang disebut stylesheet yang diambil dari alamat lain: gambar, font, atau stylesheet datang dari server ini atau dari data sebaris, sehingga potongan yang ditempel tidak bisa mengirim isi halaman Anda ke tempat lain. Itu pengaman untuk berkas yang Anda tulis atau tempel, bukan sandbox. Baru dicoba di Chromium saja.</p>
+
+    <h2 id="plugins">Kode Anda sendiri: plugin</h2>
+    <p>Melampaui pengaturan dan stylesheet, tulis kode: plugin adalah modul JavaScript milik Anda di <code>plugins/&lt;id&gt;/</code> dalam folder data, dengan <code>plugin.json</code> yang menamainya. Halaman mengimpornya apa adanya, tanpa langkah build, dan memberinya satu objek, <code>aubergine</code>: bagian panel samping, filter daftar, placeholder untuk judul atau baris, perintah di palet, cara melihat sebuah run, status dan setiap perubahan saat terjadi, serta setiap panggilan yang dilakukan halaman. <code>aubergine plugin new &lt;id&gt;</code> menulis satu untuk memulai.</p>
+    <p class="note"><strong>Plugin berjalan di halaman sebagai Anda, dan tidak ada yang memisahkannya.</strong> Ia dapat membaca setiap terminal, mengetik ke terminal mana pun, dan mengubah apa pun di halaman. Ia tidak berada dalam sandbox. Ia hanya berjalan setelah Anda menyalakannya di <strong>Settings → Plugins</strong>, dan hanya seperti berkasnya saat itu: berkas yang berubah tidak dimuat sampai Anda melihatnya lagi. Itu mencegah kode berjalan tanpa sengaja; itu bukan kunci, karena agen di terminal juga berjalan sebagai Anda dan bisa menulis berkas pengaturan. Nyalakan hanya yang Anda tulis atau sudah Anda baca.</p>
+    <p>Anggota <code>aubergine</code> tercantum di <a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/plugins.md">docs/plugins.md</a> dan dari satu rilis ke rilis berikutnya hanya ditambah; apa pun yang dijangkau plugin di luar itu bisa berubah. Satu perintah di palet, dalam beberapa baris:</p>
+    <pre><code>// plugins/hello/index.js
+export function activate(aubergine) {
+  aubergine.commands.add({
+    id: 'hello',
+    title: 'Say hello',
+    run: () =&gt; aubergine.say('Hello from my plugin'),
+  });
+}</code></pre>
+    <p>Jika plugin merusak halaman, buka dengan <code>?plain</code> setelah alamatnya: tidak ada plugin yang dimuat, dan stylesheet Anda ditinggalkan. Plugin yang gagal disebutkan di Settings, dan halaman serta plugin lain tetap berjalan. Saat dimatikan, semua yang ditambahkannya lewat <code>aubergine</code> langsung hilang; yang dilakukannya di luar itu hilang dengan memuat ulang. Baru dicoba di Chromium saja.</p>
+
+    <h2 id="settings-file">Satu berkas pengaturan yang menjelaskan dirinya sendiri</h2>
+    <p>Semua ini disimpan di <code>config.json</code> di folder data Aubergine, dan <code>aubergine settings path</code> menampilkan letaknya. Setiap kunci boleh dihilangkan. Berkas yang tidak bisa dibaca berarti nilai bawaan, tidak pernah server yang gagal dimulai. Settings di halaman hanya menulis kunci yang diubahnya dan membiarkan sisa berkas seperti yang Anda tulis.</p>
+    <p>Setiap kali dimulai, server menulis <code>config.schema.json</code> di samping berkas. Tambahkan satu baris, dan editor yang membaca JSON Schema akan menjelaskan dan melengkapi setiap kunci:</p>
+    <pre><code>{ "$schema": "./config.schema.json" }</code></pre>
+    <p><code>aubergine settings list</code> menampilkan setiap kunci dengan nilainya sekarang, ditandai jika bukan bawaan, dan <code>aubergine settings schema</code> menampilkan skemanya. <a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/settings.md">docs/settings.md</a> menjelaskan setiap kunci, nilai bawaannya, dan apakah ditulis oleh Settings atau oleh Anda.</p>
+    <pre><code>aubergine settings path
+aubergine settings list
+aubergine settings schema</code></pre>
+    <p>Di halaman, <strong>Settings → Every setting</strong> mencantumkan kunci yang sama beserta nilainya, dan menemukannya saat Anda mengetik. Kunci yang diubah Settings membawa Anda ke kontrolnya; kunci yang ditulis sendiri punya <strong>Copy</strong>, untuk baris yang ditambahkan ke berkas. Tidak ada pengaturan yang berubah di sana.</p>
+    <figure class="frame"><a href="../../screenshots/every-setting.png" class="frame-pic"><img src="../../screenshots/every-setting.png" width="1720" height="1332" loading="lazy" alt="Settings, Every setting, terbuka, dengan “appearance” diketik di pencariannya: enam kunci, masing-masing dengan nilainya sekarang, artinya, dan bawaannya; lima bertuliskan Changed above, dan appearance.colors punya tombol Copy."></a><figcaption>Every setting, dicari: arti tiap kunci, nilainya sekarang, dan bawaannya.</figcaption></figure>
+    <p>Beberapa pilihan milik peramban ini dan disimpan di sana: apakah kanvas tampil sebagai tab, satu daftar, atau satu kolom; di mana bilah di atas kanvas berada dan apakah tetap terbuka; apakah panel samping dan peta dilipat; lebar panel dan detail terminal; dan bagaimana daftar terminal disaring, dikelompokkan, dan diurutkan.</p>
+
+    <h2 id="programs-and-agents">Apa yang boleh diubah program atau agen, dan apa yang tetap milik Anda</h2>
+    <p>Melalui <a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/api.md">API lokal</a>, program dengan token API boleh menata kanvas dengan <code>canvases:write</code>: memberi nama, warna, dan urutan, memindahkan, mengubah ukuran, dan mewarnai terminal di atasnya, serta menambah bingkai. Dengan <code>sessions:write</code> ia boleh mengganti nama dan menandai terminal, mengubah kolomnya, dan memberinya tema warna. Ia hanya menjangkau proyek yang dijangkau tokennya.</p>
+    <p>Agen di dalam terminal menjelaskan terminalnya sendiri dan tidak yang lain: nama, ringkasan untuk apa terminal itu, tautan, dan kolomnya, dengan <code>aubergine describe</code>, <code>aubergine link add</code>, dan <code>aubergine field set</code>. Di tempat Anda sendiri menulis nama, ringkasan, atau kolom, milik Anda tetap dipakai, dan yang dikirim agen disimpan di sampingnya sebagai saran. Agen, atau program dengan <code>workflows:write</code>, juga bisa mengusulkan tema warna dengan <code>aubergine theme propose</code>: tema itu tidak digambar di mana pun sampai Anda membacanya di Review, melihatnya digambar, mencobanya di halaman, lalu menerimanya, dan menerimanya menulis berkasnya tanpa memilih apa pun.</p>
+    <p>Pengaturan itu sendiri hanya milik Anda. Tidak ada token, terminal, atau agen yang bisa mengubahnya: <code>PUT /v1/settings/appearance</code> hanya menjawab peramban yang sudah masuk, dan <code>appearance.colors</code>, <code>shortcuts</code>, dan lainnya ditulis sendiri di berkas.</p>
+
+    <h2 id="other-tools">Bagaimana alat lain memungkinkan Anda menyesuaikan antarmuka?</h2>
+    <p class="note"><strong>Cara ini ditulis.</strong> Apa yang dikatakan tabel tentang tiap alat berasal dari dokumentasinya sendiri, dibaca pada 28 November 2026 dan ditautkan dari nama dan selnya. Kami tidak menjalankan alat-alat ini untuk ini. “Tidak ditemukan” berarti dokumentasi yang kami baca tidak menjelaskannya, bukan berarti alat itu tidak bisa. Jika ada yang salah atau usang, <a href="https://github.com/thirstyeggplant/aubergine/issues">beri tahu kami</a>.</p>
+    <div class="table table-wide">
+      <table class="table-stack">
+        <thead><tr><th>Alat</th><th>Pengaturan</th><th>Tema dan warna</th><th>CSS Anda sendiri</th><th>Kode Anda sendiri</th><th>Templat judul dan status</th></tr></thead>
+        <tbody>
+          <tr><td><a href="https://code.visualstudio.com/docs/configure/settings">VS Code</a><br>Sebuah editor</td><td data-label="Pengaturan"><code>settings.json</code> atau editor Settings, berlapis dari pengguna ke ruang kerja, folder, dan bahasa</td><td data-label="Tema dan warna"><a href="https://code.visualstudio.com/docs/configure/themes">Berkas tema</a> dari ekstensi; <code>workbench.colorCustomizations</code>, untuk setiap tema atau satu</td><td data-label="CSS Anda sendiri">Tidak didukung, <a href="https://code.visualstudio.com/api/extension-capabilities/overview">kata dokumentasinya</a></td><td data-label="Kode Anda sendiri">Ekstensi, dengan izin VS Code sendiri tetapi tanpa akses ke DOM antarmuka; webview untuk antarmuka sendiri</td><td data-label="Templat judul dan status"><code>window.title</code> dan judul tab terminal menerima variabel <code>${…}</code></td></tr>
+          <tr><td><a href="https://zed.dev/docs/configuring-zed">Zed</a><br>Sebuah editor</td><td data-label="Pengaturan">Settings Editor atau <code>settings.json</code> dengan komentar; pengguna, lalu proyek</td><td data-label="Tema dan warna"><a href="https://zed.dev/docs/themes">Berkas tema JSON</a> dengan skema; <code>theme_overrides</code> untuk satu tema; terang, gelap, atau sistem</td><td data-label="CSS Anda sendiri">Tidak ditemukan</td><td data-label="Kode Anda sendiri">Ekstensi dalam Rust yang dikompilasi ke WebAssembly, dengan <a href="https://zed.dev/docs/extensions/capabilities">kapabilitas</a> yang bisa Anda batasi</td><td data-label="Templat judul dan status">Tidak ditemukan</td></tr>
+          <tr><td><a href="https://help.obsidian.md/snippets">Obsidian</a><br>Aplikasi catatan</td><td data-label="Pengaturan">Berkas di folder <code>.obsidian</code> tiap vault</td><td data-label="Tema dan warna"><a href="https://docs.obsidian.md/Themes/App+themes/Build+a+theme">Tema adalah CSS</a>, dengan variabel CSS yang terdokumentasi</td><td data-label="CSS Anda sendiri">Cuplikan CSS, dinyalakan satu per satu</td><td data-label="Kode Anda sendiri"><a href="https://help.obsidian.md/plugin-security">Plugin</a> JavaScript dengan akses Obsidian sendiri; tidak ada yang berjalan sampai mode terbatas dimatikan</td><td data-label="Templat judul dan status">Tidak ditemukan</td></tr>
+          <tr><td><a href="https://hyper.is/">Hyper</a><br>Sebuah terminal</td><td data-label="Pengaturan">Satu berkas: <code>.hyper.js</code> di rilis yang terdokumentasi, <code>hyper.json</code> di cabang pengembangan</td><td data-label="Tema dan warna">Tema adalah plugin</td><td data-label="CSS Anda sendiri"><code>css</code> untuk jendela; <code>termCSS</code>, yang sejak versi 2 <a href="https://github.com/vercel/hyper/blob/canary/PLUGINS.md">tidak lagi menata teks terminal</a></td><td data-label="Kode Anda sendiri">Plugin npm yang dimuat oleh Electron dan oleh renderer: membungkus komponen React-nya dan menambah middleware Redux</td><td data-label="Templat judul dan status">Tidak ditemukan</td></tr>
+          <tr><td><a href="https://wezterm.org/config/files.html">WezTerm</a><br>Sebuah terminal</td><td data-label="Pengaturan">Berkas Lua, <code>.wezterm.lua</code></td><td data-label="Tema dan warna"><a href="https://wezterm.org/config/appearance.html">Lebih dari 700 skema</a>; milik Anda dalam Lua atau TOML; <code>colors</code> untuk warna tunggal</td><td data-label="CSS Anda sendiri">Tidak ditemukan</td><td data-label="Kode Anda sendiri">Konfigurasinya adalah Lua; <a href="https://wezterm.org/config/plugins.html">plugin</a> adalah Lua dari alamat Git</td><td data-label="Templat judul dan status">Fungsi Lua mengembalikan judul tab dan jendela (<a href="https://wezterm.org/config/lua/window-events/format-tab-title.html"><code>format-tab-title</code></a>)</td></tr>
+          <tr><td><a href="https://man.openbsd.org/tmux.1">tmux</a><br>Multiplekser terminal</td><td data-label="Pengaturan">Perintah tmux di dalam berkas; opsi per server, sesi, jendela, dan panel</td><td data-label="Tema dan warna">Gaya seperti <code>status-style</code> dan <code>window-style</code></td><td data-label="CSS Anda sendiri">Tidak ditemukan</td><td data-label="Kode Anda sendiri">Hook menjalankan perintah tmux; mode kontrol untuk program</td><td data-label="Templat judul dan status"><a href="https://man.openbsd.org/tmux.1#FORMATS">Format</a> dengan <code>#{…}</code> untuk baris status, daftar jendela, tepi panel, dan judul</td></tr>
+          <tr><td><a href="https://sw.kovidgoyal.net/kitty/conf/">kitty</a><br>Sebuah terminal</td><td data-label="Pengaturan"><code>kitty.conf</code>, dengan include, dibaca ulang saat berubah</td><td data-label="Tema dan warna">Tema adalah berkas <code>.conf</code>; <a href="https://sw.kovidgoyal.net/kitty/kittens/themes/"><code>kitten themes</code></a> memilih dari lebih dari 300, dan bisa diatur satu untuk gelap dan satu untuk terang</td><td data-label="CSS Anda sendiri">Tidak ditemukan</td><td data-label="Kode Anda sendiri"><a href="https://sw.kovidgoyal.net/kitty/kittens/custom/">Kitten</a> dalam Python dengan akses penuh ke bagian dalam kitty; watcher</td><td data-label="Templat judul dan status"><code>tab_title_template</code>, tempat <code>{custom}</code> memanggil Python Anda sendiri</td></tr>
+          <tr><td><a href="https://ghostty.org/docs/config">Ghostty</a><br>Sebuah terminal</td><td data-label="Pengaturan">Berkas <code>key = value</code>; <code>config-file</code> menambah yang lain</td><td data-label="Tema dan warna"><a href="https://ghostty.org/docs/features/theme">Tema adalah berkas konfigurasi</a>; satu untuk terang dan satu untuk gelap</td><td data-label="CSS Anda sendiri">Tidak ditemukan</td><td data-label="Kode Anda sendiri"><a href="https://ghostty.org/docs/config/reference#custom-shader">Shader GLSL</a> di atas terminal; AppleScript di macOS</td><td data-label="Templat judul dan status">Tidak ditemukan</td></tr>
+          <tr><td><a href="https://learn.microsoft.com/windows/terminal/customize-settings/color-schemes">Windows Terminal</a><br>Sebuah terminal</td><td data-label="Pengaturan">Layar Settings atau <code>settings.json</code>, dengan <a href="https://github.com/microsoft/terminal/blob/main/doc/cascadia/profiles.schema.json">skema JSON</a></td><td data-label="Tema dan warna">Skema warna per profil; <a href="https://learn.microsoft.com/windows/terminal/customize-settings/themes">tema</a> untuk jendela dan tab, terang dan gelap, hanya di JSON</td><td data-label="CSS Anda sendiri">Tidak ditemukan</td><td data-label="Kode Anda sendiri">Tidak ditemukan; aplikasi lain menambah profil dan skema warna sebagai fragmen JSON</td><td data-label="Templat judul dan status">Tidak ditemukan; profil mengatur <code>tabTitle</code> dan <code>tabColor</code></td></tr>
+          <tr><td><a href="https://iterm2.com/documentation-automatic-profile-switching.html">iTerm2</a><br>Sebuah terminal</td><td data-label="Pengaturan">Profil di Settings; <a href="https://iterm2.com/documentation-dynamic-profiles.html">Dynamic Profiles</a> sebagai berkas property list</td><td data-label="Tema dan warna">Profil yang dipilih menurut pengguna, host, folder, atau tugas, dengan Shell Integration</td><td data-label="CSS Anda sendiri">Tidak ditemukan</td><td data-label="Kode Anda sendiri"><a href="https://iterm2.com/python-api/">API Python</a>, komponen bilah status dalam Python, AppleScript</td><td data-label="Templat judul dan status"><a href="https://iterm2.com/documentation-scripting-fundamentals.html">String terinterpolasi</a>, <code>\(…)</code>, di nama sesi, lencana, dan bilah status</td></tr>
+          <tr><td>Aubergine<br>Terminal di atas kanvas</td><td data-label="Pengaturan"><code>config.json</code> dan Settings, dengan JSON Schema untuk editor</td><td data-label="Tema dan warna">Sepuluh tema, terang, gelap, atau mengikuti sistem; milik Anda sebagai berkas JSON di atas salah satunya; satu untuk proyek, untuk terminal bertag, dan untuk tiap terminal; 35 warna secara manual, untuk semua tema atau satu</td><td data-label="CSS Anda sendiri">Ya: <code>custom.css</code> di folder data, dengan kait yang terdokumentasi</td><td data-label="Kode Anda sendiri">Ya: plugin, modul JavaScript yang berjalan di halaman sebagai Anda, lewat API yang terdokumentasi dan di luarnya. Tanpa sandbox</td><td data-label="Templat judul dan status">Dua, untuk judul terminal dan baris daftar: teks dengan placeholder seperti <code>{state}</code> dan <code>{field:Ticket}</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Setiap alat di sini menyimpan pengaturannya di sebuah berkas, dan VS Code, Zed, serta Windows Terminal juga punya layar yang menulisnya, seperti Aubergine. Di sebagian besar, tema juga berupa berkas: JSON di VS Code dan Zed, CSS di Obsidian, Lua atau TOML di WezTerm, berkas konfigurasi di kitty dan Ghostty. VS Code, Zed, dan WezTerm memungkinkan Anda mengubah warna tunggal di atas tema, seperti yang dilakukan <code>appearance.colors</code> di sini.</p>
+    <p>Perbedaan terbesar ada pada kode. Seluruh konfigurasi WezTerm adalah program Lua, kitty dan iTerm2 menjalankan Python Anda sendiri, dan plugin Hyper adalah JavaScript yang membungkus antarmukanya; Obsidian dan Hyper juga menerima CSS Anda sendiri. Ekstensi VS Code tidak punya akses ke DOM antarmukanya, dan ia tidak mendukung stylesheet milik Anda; Zed menjalankan ekstensi sebagai WebAssembly, dengan kapabilitas yang bisa Anda batasi. tmux, WezTerm, kitty, dan iTerm2 membangun judul dan baris status dari templat atau fungsi.</p>
+    <p>Aubergine kini menjangkau dari sisi pengaturan sampai ke kode: tema, warna, dan tombol dalam berkas yang menjelaskan dirinya sendiri, halaman yang menulis sebagian pengaturan, templat untuk apa yang dikatakan judul terminal dan barisnya, stylesheet milik Anda dengan kait yang dijaga stabil, dan plugin, JavaScript Anda sendiri di halaman dengan API yang hanya bertambah. Plugin berjalan dengan semua yang bisa dilakukan halaman; mode sandbox untuk plugin orang lain ada di <a href="../roadmap/#rm-yours">peta jalan</a>, dan belum dibangun.</p>
+
+    <h2 id="planned">Yang direncanakan</h2>
+    <p>Cara menjalankan plugin tulisan orang lain dalam sandbox, dan memasangnya lewat layar tinjauan, direncanakan dan belum dibangun: lihat <a href="../roadmap/#rm-yours">peta jalan</a>.</p>
+
+    <h2 id="faq">Pertanyaan</h2>
+    <div class="questions">
+      <details><summary>Bisakah setiap terminal punya tema warna yang berbeda?</summary><p>Ya. Theme… di menu terminal menggambar isinya dengan salah satu dari sepuluh tema, apa pun tema halamannya. Terminal yang punya tag bisa diberi tema menurut tag itu di Settings, dan yang lain mengikuti bawaan yang Anda atur untuk terminal, atau halaman.</p></details>
+      <details><summary>Bisakah saya menambahkan CSS sendiri ke Aubergine?</summary><p>Bisa: <code>custom.css</code> di folder data (<code>aubergine css new</code> menulis satu untuk memulai). Ia ditautkan paling akhir di halaman, sejak gambar pertama, dan kait yang bisa diandalkannya tercantum di docs/hooks.md. Tambahkan <code>?plain</code> ke alamat halaman untuk melihatnya tanpa itu.</p></details>
+      <details><summary>Bisakah saya menulis plugin sendiri untuk Aubergine?</summary><p>Bisa: modul JavaScript di <code>plugins/&lt;id&gt;/</code> dalam folder data (<code>aubergine plugin new &lt;id&gt;</code> menulis satu untuk memulai), dinyalakan di Settings → Plugins. Ia berjalan di halaman sebagai Anda, dengan semua yang bisa dilakukan halaman; ia tidak berada dalam sandbox.</p></details>
+      <details><summary>Di mana berkas pengaturan Aubergine?</summary><p>Yaitu <code>config.json</code> di folder data Aubergine. <code>aubergine settings path</code> menampilkan letaknya, dan server menampilkannya saat dimulai.</p></details>
+      <details><summary>Bisakah agen mengubah tampilan Aubergine?</summary><p>Bukan pengaturannya: itu hanya milik Anda. Agen bisa memberi nama dan menjelaskan terminalnya sendiri serta mengusulkan tema warna yang menunggu Anda baca dan terima; program yang token API-nya mengizinkan bisa mengganti nama, menandai, dan memberi tema terminal, menata kanvas, dan juga mengusulkan tema.</p></details>
+    </div>
+    <p>Terkait: <a href="../too-many-terminal-tabs/">Temukan terminal yang tepat</a> · <a href="../tmux-without-learning-tmux/">tmux tanpa belajar tmux</a> · <a href="../security/">Keamanan dan privasi</a> · <a href="../faq/">FAQ</a></p>
+    <p>Aubergine tidak berafiliasi dengan alat mana pun yang disebut di halaman ini. Nama-nama itu adalah merek dagang pemiliknya masing-masing.</p>
+  </div>
+</div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">Siap dipakai dalam lima menit</h2>
+    <div class="close-do">
+      <p>Anda memerlukan macOS dengan tmux 3.2 atau lebih baru dan Node.js 22 atau lebih baru. <code>brew install tmux node</code> memasang keduanya.</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="Tersalin" aria-live="polite" hidden>Salin</button></p>
+      <p class="actions"><a class="button" href="../install/">Instal</a><a class="button button-quiet" href="../guides/">Panduan</a></p>
+    </div>
+  </div>
+</section>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav aria-label="Semua halaman">
+      <ul class="foot-links">
+        <li><a href="../">Beranda</a></li>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex dan ChatGPT</a></li>
+        <li><a href="../install/">Instalasi</a></li>
+        <li><a href="../guides/">Panduan</a></li>
+        <li><a href="../run-multiple-coding-agents/">Menjalankan beberapa agen</a></li>
+        <li><a href="../working-copies/">Salinan kerja</a></li>
+        <li><a href="../queue-and-schedules/">Antrean dan jadwal</a></li>
+        <li><a href="./" aria-current="page">Sesuaikan</a></li>
+        <li><a href="../compare/">Perbandingan</a></li>
+        <li><a href="../security/">Keamanan</a></li>
+        <li><a href="../roadmap/">Peta jalan</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+
+    <div class="share">
+      <p class="share-label">Bagikan halaman ini</p>
+      <ul class="foot-links">
+        <li><a href="https://x.com/intent/post?text=Sesuaikan%20tema%2C%20warna%2C%20dan%20tombol%20terminal%20%7C%20Aubergine&amp;url=https%3A%2F%2Fthirstyeggplant.com%2Fid%2Fcustomize-terminal-themes%2F" rel="noopener nofollow">X</a></li>
+        <li><a href="https://bsky.app/intent/compose?text=Sesuaikan%20tema%2C%20warna%2C%20dan%20tombol%20terminal%20%7C%20Aubergine%20https%3A%2F%2Fthirstyeggplant.com%2Fid%2Fcustomize-terminal-themes%2F" rel="noopener nofollow">Bluesky</a></li>
+        <li><a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fthirstyeggplant.com%2Fid%2Fcustomize-terminal-themes%2F" rel="noopener nofollow">LinkedIn</a></li>
+        <li><a href="https://www.reddit.com/submit?url=https%3A%2F%2Fthirstyeggplant.com%2Fid%2Fcustomize-terminal-themes%2F&amp;title=Sesuaikan%20tema%2C%20warna%2C%20dan%20tombol%20terminal%20%7C%20Aubergine" rel="noopener nofollow">Reddit</a></li>
+        <li><a href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fthirstyeggplant.com%2Fid%2Fcustomize-terminal-themes%2F&amp;t=Sesuaikan%20tema%2C%20warna%2C%20dan%20tombol%20terminal%20%7C%20Aubergine" rel="noopener nofollow">Hacker News</a></li>
+        <li><a href="mailto:?subject=Sesuaikan%20tema%2C%20warna%2C%20dan%20tombol%20terminal%20%7C%20Aubergine&amp;body=https%3A%2F%2Fthirstyeggplant.com%2Fid%2Fcustomize-terminal-themes%2F">Email</a></li>
+        <li><button type="button" class="share-copy" data-copy-text="https://thirstyeggplant.com/id/customize-terminal-themes/" data-copied="Tersalin" aria-live="polite" hidden>Salin tautan</button></li>
+      </ul>
+    </div>
+    <p class="foot-line">Aubergine gratis dan open source di bawah <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">lisensi MIT</a>, dan berjalan di komputer Anda sendiri.</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    if (!navigator.clipboard) return;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.querySelectorAll('[data-copy-text]').forEach(function (button) {
+  if (!navigator.clipboard) return;
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    navigator.clipboard.writeText(button.getAttribute('data-copy-text')).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+document.querySelectorAll('details.menu').forEach(function (menu) {
+  menu.addEventListener('toggle', function () {
+    if (!menu.open) return;
+    document.querySelectorAll('details.menu[open]').forEach(function (other) { if (other !== menu) other.open = false; });
+  });
+});
+</script>
+</body>
+</html>

@@ -31,7 +31,7 @@ Bagikan Aubergine: [X](https://x.com/intent/post?text=Aubergine%3A%20mission%20c
 
 ### Tema warna
 
-Halaman ini hadir dalam sepuluh tema warna, empat terang dan enam gelap, dipilih di **Settings → Appearance**. Terminal mana pun juga bisa punya tema sendiri (**Theme…** di menunya), dan yang lain mengikuti tema bawaan yang Anda atur untuk terminal, atau halaman. Warna satu per satu bisa diatur sendiri di [berkas pengaturan](../../README.md#settings).
+Halaman ini hadir dalam sepuluh tema warna, empat terang dan enam gelap, dipilih di **Settings → Appearance**. Terminal mana pun juga bisa punya tema sendiri (**Theme…** di menunya), dan yang lain mengikuti tema bawaan yang Anda atur untuk terminal, atau halaman. Warna satu per satu bisa diatur sendiri di [berkas pengaturan](../../README.md#settings). Tema Anda sendiri adalah sebuah file: salah satu dari sepuluh dengan warna Anda di atasnya, tercantum di samping mereka sebagai milik Anda ([docs/themes.md](../themes.md)). Sebuah proyek dapat memiliki tema sendiri untuk tiap jenis, yang digambar selama Anda melihatnya, dan terminal yang punya tag dapat diberi tema menurut tag itu ([docs/themes.md](../themes.md#while-you-look-at-a-project)).
 
 | | | |
 |---|---|---|

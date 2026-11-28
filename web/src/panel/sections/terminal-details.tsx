@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { sessionsWaiting, shortId, showControl, undescribed, type ColorThemeId, type Session, type WaitingSession } from '@aubergine/shared';
+import { sessionsWaiting, shortId, showControl, undescribed, type Session, type TerminalThemeFrom, type WaitingSession } from '@aubergine/shared';
 import { api } from '../../api';
 import { FieldsPart } from '../../fields/FieldsPart';
 import { LinkChip } from '../../links/LinkChip';
@@ -9,8 +9,8 @@ import { RecapBlock, type MoreFact } from '../../Recap';
 import { setDetailsFolds, useDetailsFolds } from '../../details-folds';
 import { SessionMessages } from '../../Messages';
 import { TerminalInput } from '../../TerminalInput';
-import { ThemeSelect, chooseTerminalTheme, defaultThemeWords } from '../../TerminalTheme';
-import { useColorThemeShown } from '../../theme';
+import { ThemeSelect, chooseTerminalTheme, themeFromWords } from '../../TerminalTheme';
+import { useTerminalThemeFrom } from '../../theme';
 import { markNotesSeen, useUnseenNotes } from '../../notes-seen';
 import { atThisComputer, useApp } from '../../store';
 import { DOT_WORD, dotTone, rowState } from '../../terminal-rows';
@@ -29,13 +29,20 @@ const session = (id: string) => (s: ReturnType<typeof useApp.getState>) => s.app
 
 /** What was found about its folder, and the conversation its agent is in, as facts: each a chip, or a short id that is copied whole. */
 /** The theme a terminal's body is drawn in, chosen in its details: its own, or the same as the default. */
-function DetailsTheme({ sessionId, theme }: { sessionId: string; theme: ColorThemeId | null }) {
-  const appearance = useApp((s) => s.settings.appearance);
-  const page = useColorThemeShown();
-  return <ThemeSelect value={theme} onChange={(next) => chooseTerminalTheme(sessionId, next)} none={`Same as the default (${defaultThemeWords(appearance, page)})`} aria-label="Theme of this terminal" data-testid="details-theme" />;
+function DetailsTheme({ sessionId, theme }: { sessionId: string; theme: string | null }) {
+  const themes = useApp((s) => s.themes.themes);
+  const without = useTerminalThemeFrom(sessionId, true);
+  return <ThemeSelect value={theme} onChange={(next) => chooseTerminalTheme(sessionId, next)} none={`Same as the default (${themeFromWords(without, themes)})`} aria-label="Theme of this terminal" data-testid="details-theme" />;
 }
 
-function foundFacts(found: Session): MoreFact[] {
+/** The theme a tag gives a terminal without one of its own, and the tag: said beside what else is known. */
+function ThemeFrom({ sessionId }: { sessionId: string }) {
+  const themes = useApp((s) => s.themes.themes);
+  const from = useTerminalThemeFrom(sessionId);
+  return <span data-testid="details-theme-from">{themeFromWords(from, themes)}</span>;
+}
+
+function foundFacts(found: Session, themeFrom: TerminalThemeFrom['from']): MoreFact[] {
   const facts: MoreFact[] = [];
   const at = found.found;
   if (at?.repository) facts.push({ group: 'place', key: 'repository', label: 'Repository', value: at.repositoryUrl ? <LinkChip url={at.repositoryUrl} kind="repository" label={at.repository} about="Found in its folder" testid="fact-repository" /> : showControl(at.repository) });
@@ -54,6 +61,8 @@ function foundFacts(found: Session): MoreFact[] {
   // Its own theme, where it has one: something known about it, changed where it is said. Without one it is drawn in the
   // default, and Theme… in the menu at the end of the head gives it one.
   if (found.theme) facts.push({ group: 'about', key: 'theme', label: 'Theme', value: <DetailsTheme sessionId={found.id} theme={found.theme} /> });
+  // Without one: where one of its tags gives it a theme, that is said, with the tag.
+  else if (themeFrom === 'tag') facts.push({ group: 'about', key: 'theme', label: 'Theme', value: <ThemeFrom sessionId={found.id} /> });
   const conversation = found.agent?.conversationId;
   if (conversation)
     facts.push({
@@ -174,6 +183,7 @@ export function Details({ id, onClose, standalone = false, noteElsewhere = false
     setChosen(next);
   };
   const folds = useDetailsFolds();
+  const themeFrom = useTerminalThemeFrom(id);
   const missing = found ? undescribed(found) : [];
   const entries = found?.noteLog.length ?? 0;
   const unseen = useUnseenNotes(id, entries);
@@ -227,7 +237,7 @@ export function Details({ id, onClose, standalone = false, noteElsewhere = false
         </FoldHeading>
         {!folds.known && (
           <div id={`details-known-${id}`}>
-            <RecapBlock sessionId={id} omit={['note']} more={foundFacts(found)} />
+            <RecapBlock sessionId={id} omit={['note']} more={foundFacts(found, themeFrom.from)} />
           </div>
         )}
       </section>

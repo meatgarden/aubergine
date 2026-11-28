@@ -1,6 +1,6 @@
 import { useMapFolded, underMap } from './map-fold';
 import { NOTE_GAP, NOTE_WIDTH } from './note-open';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import {
   Background,
   BackgroundVariant,
@@ -42,6 +42,7 @@ import { tourSignal } from './tour/tour-store';
 import './review/drafts-source';
 import './review/library-source';
 import './review/project-file-source';
+import './review/theme-source';
 import './panel/sections/copies';
 import './panel/sections/for-you';
 import './workflows/output-views';
@@ -126,8 +127,14 @@ function CanvasMap({ aboveBar }: { aboveBar: boolean }) {
     return id ? (currentLayout(s).nodes.find((n) => n.sessionId === id) ?? null) : null;
   });
   const aside = useStore((s) => focused !== null && underMap(focused, NOTE_GAP + NOTE_WIDTH, { x: s.transform[0], y: s.transform[1], zoom: s.transform[2] }, { width: s.width, height: s.height }));
+  const shown = !folded && !aside;
+  // The map is a hook for the owner's stylesheet (`data-part="map"`); the canvas library's map takes no attribute of its
+  // own, so it is marked once it is drawn, before the paint.
+  useLayoutEffect(() => {
+    if (shown) for (const map of document.querySelectorAll('.react-flow__minimap.minimap')) map.setAttribute('data-part', 'map');
+  }, [shown, aboveBar]);
   // Where the bar stands in the map's corner, the map stands over it.
-  return !folded && !aside ? <MiniMap pannable zoomable position="bottom-right" className={`minimap${aboveBar ? ' above-bar' : ''}`} /> : null;
+  return shown ? <MiniMap pannable zoomable position="bottom-right" className={`minimap${aboveBar ? ' above-bar' : ''}`} /> : null;
 }
 
 /** The button that folds the map away and brings it back: a picture of a map, in the bar beside "Go to…". */
@@ -454,7 +461,7 @@ export function Canvas() {
   const percent = useMemo(() => `${Math.round(zoom * 100)}%`, [zoom]);
 
   return (
-    <div className="canvas">
+    <div className="canvas" data-part="canvas">
       <ReactFlow<CanvasNode>
         nodes={nodes}
         nodeTypes={nodeTypes}
@@ -490,7 +497,7 @@ export function Canvas() {
         )}
         {/* Folded to "Go to…" and the map's button unless kept open in Settings: the rest shows while the pointer or the keyboard is in the bar. "New terminal" is at the top of the list of terminals. */}
         {/* It stands where this browser chose in Settings; at the foot of the canvas what hangs from it opens upward. */}
-        <Panel position={barAt} className={`toolbar${narrow ? ' is-narrow' : ''}${barOpen ? '' : ' is-folded'}${opensUp(barAt) ? ' opens-up' : ''}${barAt.endsWith('-right') ? ' at-right' : ''}`} data-place={barAt} data-testid="canvas-bar">
+        <Panel position={barAt} className={`toolbar${narrow ? ' is-narrow' : ''}${barOpen ? '' : ' is-folded'}${opensUp(barAt) ? ' opens-up' : ''}${barAt.endsWith('-right') ? ' at-right' : ''}`} data-place={barAt} data-part="canvas-bar" data-testid="canvas-bar">
           <span className="toolbar-group toolbar-first" role="group" aria-label="Go to, and the map">
             <button
               type="button"

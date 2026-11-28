@@ -1,4 +1,4 @@
-import { Id, firstProject, reachesProject, type AppState, type ProjectReach } from '@aubergine/shared';
+import { Id, firstProject, projectOfSession, reachesProject, type AppState, type ProjectReach } from '@aubergine/shared';
 
 /**
  * What a credential that is limited to some projects is kept from.
@@ -31,6 +31,9 @@ export function projectOfId(state: AppState, id: string): string | null | undefi
   if (shared) return shared.projectId;
   const draft = state.drafts.find((thing) => thing.id === id);
   if (draft) return (draft.sessionId ? state.sessions.find((s) => s.id === draft.sessionId)?.projectId : undefined) ?? null;
+  // A color theme proposed: as a draft, of the project of the terminal that proposed it, else shared.
+  const proposal = state.themeProposals.waiting.find((thing) => thing.id === id);
+  if (proposal) return (proposal.proposedBy.kind === 'session' ? projectOfSession(state, proposal.proposedBy.sessionId) : undefined) ?? null;
   // A frame or a node: of its canvas.
   for (const canvas of state.canvases) if (canvas.layout.nodes.some((node) => node.id === id) || canvas.layout.frames.some((frame) => frame.id === id)) return canvas.projectId;
   return undefined;

@@ -37,6 +37,10 @@ How to create a token, what the scopes mean, the limits and the activity log are
 | [`POST /v1/sessions/{sessionId}/desktop`](#opensessionondesktop) | Open a session in the owner's terminal application | browser only |
 | [`PUT /v1/settings/desktop`](#changedesktopsettings) | Say whether new terminals made in the page also open on the desktop | browser only |
 | [`PUT /v1/settings/appearance`](#changeappearance) | Choose how the page looks: light, dark or matching the system, each one's color theme, the default theme of terminals, a terminal's font and cursor | browser only |
+| [`POST /v1/settings/themes/read`](#readthemes) | Read the owner's theme files again | browser only |
+| [`POST /v1/settings/stylesheet/read`](#readstylesheet) | Read the owner's own stylesheet again | browser only |
+| [`PUT /v1/settings/plugins`](#changeplugin) | Switch a plugin on or off: code of your own that runs in the page as you | browser only |
+| [`POST /v1/settings/plugins/read`](#readplugins) | Read the plugins again | browser only |
 | [`POST /v1/sessions/{sessionId}/notes`](#appendnote) | Add an entry to a session's note log | session's own token, or `notes:write` |
 | [`PATCH /v1/canvases/{canvasId}/nodes/{nodeId}`](#updatenode) | Move, resize or color a node | `canvases:write` |
 | [`POST /v1/canvases/{canvasId}/frames`](#createframe) | Add a frame | `canvases:write` |
@@ -69,6 +73,11 @@ How to create a token, what the scopes mean, the limits and the activity log are
 | [`POST /v1/drafts/{draftId}/return`](#returndraft) | Send a draft back with a comment | browser only |
 | [`GET /v1/draft-records`](#listdraftrecords) | What became of drafts | browser only |
 | [`POST /v1/draft-requests`](#requestdraft) | Ask the agent in a session to write a workflow or a step | browser only |
+| [`GET /v1/themes`](#listthemes) | List the color themes there are | `read` |
+| [`GET /v1/themes/proposals`](#listthemeproposals) | List the color themes proposed, and what became of the latest | `read` |
+| [`POST /v1/themes/proposals`](#proposetheme) | Propose a color theme | `workflows:write` |
+| [`POST /v1/themes/proposals/{proposalId}/accept`](#acceptthemeproposal) | Accept a proposed color theme | browser only |
+| [`DELETE /v1/themes/proposals/{proposalId}`](#declinethemeproposal) | Decline a proposed color theme | browser only |
 | [`GET /v1/library/sources`](#listlibrarysources) | List the sources of the library | `read` |
 | [`POST /v1/library/sources`](#addlibrarysource) | Add a source | browser only |
 | [`DELETE /v1/library/sources/{sourceId}`](#removelibrarysource) | Remove a source | browser only |
@@ -124,7 +133,7 @@ How to create a token, what the scopes mean, the limits and the activity log are
 | [`GET /v1/projects`](#listprojects) | List the projects | `read` |
 | [`POST /v1/projects`](#addproject) | Make a project | browser only |
 | [`GET /v1/projects/{projectId}`](#getproject) | One project | `read` |
-| [`PATCH /v1/projects/{projectId}`](#changeproject) | Change a project: its name, color, folders, or its place in the order | browser only |
+| [`PATCH /v1/projects/{projectId}`](#changeproject) | Change a project: its name, color, folders, color themes, or its place in the order | browser only |
 | [`DELETE /v1/projects/{projectId}`](#removeproject) | Remove a project for good | browser only |
 | [`POST /v1/canvases/{canvasId}/project`](#movecanvastoproject) | Move a canvas to another project | browser only |
 | [`POST /v1/projects/{projectId}/archive`](#archiveproject) | Archive a project | browser only |
@@ -193,6 +202,9 @@ How to create a token, what the scopes mean, the limits and the activity log are
 | [`GET /v1/sessions/{sessionId}/brief`](#getsessionbrief) | What a session was asked to write | session's own token |
 | [`GET /v1/sessions/{sessionId}/drafts`](#listsessiondrafts) | The drafts a session proposed or was asked for | session's own token |
 | [`POST /v1/sessions/{sessionId}/drafts`](#proposesessiondraft) | Hand in a draft from a session | session's own token |
+| [`GET /v1/sessions/{sessionId}/themes`](#listsessionthemes) | The color themes there are | session's own token |
+| [`GET /v1/sessions/{sessionId}/theme-proposals`](#listsessionthemeproposals) | The color themes a session proposed, and what became of them | session's own token |
+| [`POST /v1/sessions/{sessionId}/theme-proposals`](#proposesessiontheme) | Propose a color theme from a session | session's own token |
 | [`GET /v1/sessions/{sessionId}/repository-workflows`](#getsessionrepositoryworkflows) | The workflows the repository of a session offers | session's own token, or `read` |
 | [`PUT /v1/sessions/{sessionId}/agent`](#reportagent) | Say which agent runs in the session, and in which conversation | session's own token |
 
@@ -666,7 +678,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
         at: string;
       };
     }[];
-    theme: ("light" | "high-contrast-light" | "solarized-light" | "gruvbox-light" | "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula") | null;
+    theme: string | null;
     parkedFrom: {
       canvasId: string;
       rect: {
@@ -855,7 +867,7 @@ An API token needs the scope `sessions:write`. Sending `command` needs `terminal
         at: string;
       };
     }[];
-    theme: ("light" | "high-contrast-light" | "solarized-light" | "gruvbox-light" | "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula") | null;
+    theme: string | null;
     parkedFrom: {
       canvasId: string;
       rect: {
@@ -1047,7 +1059,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
         at: string;
       };
     }[];
-    theme: ("light" | "high-contrast-light" | "solarized-light" | "gruvbox-light" | "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula") | null;
+    theme: string | null;
     parkedFrom: {
       canvasId: string;
       rect: {
@@ -1221,7 +1233,7 @@ An API token needs the scope `read`.
       at: string;
     };
   }[];
-  theme: ("light" | "high-contrast-light" | "solarized-light" | "gruvbox-light" | "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula") | null;
+  theme: string | null;
   parkedFrom: {
     canvasId: string;
     rect: {
@@ -1339,7 +1351,7 @@ An API token needs the scope `sessions:write`. Sending `note` needs `notes:write
 | `tags` | `string[]` | no |  |
 | `note` | `string` | no |  |
 | `fields` | `{ /** What the value is, in a few words: one line of plain text, wi…` | no | The fields of the terminal, in order: at most 12, each label once. Who set each is the server’s to say: what is sent is the owner’s, except a field sent exactly as it stood, which keeps who set it. |
-| `theme` | `("light" \| "high-contrast-light" \| "solarized-light" \| "gruvbox-lig…` | no | The color theme the terminal's body is drawn in, whatever the page is drawn in: one of the IDs of the color themes. `null` clears it: the terminal is then drawn in the default for terminals, or as the page is. |
+| `theme` | `string \| null` | no | The color theme the terminal's body is drawn in, whatever the page is drawn in: one of the IDs of the color themes, built-in or a theme file the server has read (another is refused with 400). `null` clears it: the terminal is then drawn in the default for terminals, or as the page is. |
 
 **Answer** `200`:
 
@@ -1405,7 +1417,7 @@ An API token needs the scope `sessions:write`. Sending `note` needs `notes:write
       at: string;
     };
   }[];
-  theme: ("light" | "high-contrast-light" | "solarized-light" | "gruvbox-light" | "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula") | null;
+  theme: string | null;
   parkedFrom: {
     canvasId: string;
     rect: {
@@ -1609,7 +1621,7 @@ An API token needs the scope `sessions:write`.
         at: string;
       };
     }[];
-    theme: ("light" | "high-contrast-light" | "solarized-light" | "gruvbox-light" | "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula") | null;
+    theme: string | null;
     parkedFrom: {
       canvasId: string;
       rect: {
@@ -1795,7 +1807,7 @@ An API token needs the scope `sessions:write`.
       at: string;
     };
   }[];
-  theme: ("light" | "high-contrast-light" | "solarized-light" | "gruvbox-light" | "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula") | null;
+  theme: string | null;
   parkedFrom: {
     canvasId: string;
     rect: {
@@ -1976,7 +1988,7 @@ An API token needs the scope `sessions:write`.
         at: string;
       };
     }[];
-    theme: ("light" | "high-contrast-light" | "solarized-light" | "gruvbox-light" | "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula") | null;
+    theme: string | null;
     parkedFrom: {
       canvasId: string;
       rect: {
@@ -2167,7 +2179,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 
 `PUT /v1/settings/appearance`: Choose how the page looks: light, dark or matching the system, each one's color theme, the default theme of terminals, a terminal's font and cursor.
 
-For the owner only: no token and no session can do this, whatever its scopes. It writes the keys that are sent, and only those: `theme`, `appearance.light`, `appearance.dark`, `appearance.terminal` (null: as the page is), `appearance.cursor`, `appearance.cursorBlink`, `font.family` and `font.size`; the rest of the settings file stays as it was, and a body that sends none of them changes nothing and answers what the file says. None of them names anything that is run. `appearance.colors`, colors set over a theme, is written by hand in the file and changed by no route. Every browser has the choice from its next load.
+For the owner only: no token and no session can do this, whatever its scopes. It writes the keys that are sent, and only those: `theme`, `appearance.light`, `appearance.dark`, `appearance.terminal` (null: as the page is), `appearance.byTag`, `appearance.cursor`, `appearance.cursorBlink`, `appearance.titleFormat` and `appearance.rowFormat` (what a terminal's title and its row say after its name: templates, see docs/templates.md), `appearance.customCss` (whether the owner's own stylesheet is linked on the page), `font.family` and `font.size`; the rest of the settings file stays as it was, and a body that sends none of them changes nothing and answers what the file says. None of them names anything that is run. `appearance.colors`, colors set over a theme, is written by hand in the file and changed by no route. Every browser has the choice from its next load.
 
 For the signed-in browser only. No API token may call this, whatever its scopes.
 
@@ -2176,13 +2188,17 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 | Field | Type | Required | |
 |---|---|---|---|
 | `theme` | `"light" \| "dark" \| "system"` | no | `light`, `dark`, or `system` to match the system. |
-| `light` | `"light" \| "high-contrast-light" \| "solarized-light" \| "gruvbox-light"` | no | The color theme to draw when the page is light: one whose kind is light. |
-| `dark` | `"dark" \| "high-contrast-dark" \| "solarized-dark" \| "gruvbox-dark" \|…` | no | The color theme to draw when the page is dark: one whose kind is dark. |
+| `light` | `string` | no | The color theme to draw when the page is light: one whose kind is light, built-in or a theme file the server has read. Another is refused with 400. |
+| `dark` | `string` | no | The color theme to draw when the page is dark: one whose kind is dark, built-in or a theme file the server has read. Another is refused with 400. |
 | `fontSize` | `number` | no | The size of a terminal's text, in pixels, from 8 to 32. |
 | `fontFamily` | `string` | no | The font-family list for a terminal's text: one line of at most 300 characters, without control characters or any of `;{}<>`. |
 | `cursor` | `"block" \| "bar" \| "underline"` | no | The shape of a terminal's cursor: `block`, `bar` or `underline`. |
 | `cursorBlink` | `boolean` | no | Whether a terminal's cursor blinks. |
-| `terminal` | `("light" \| "high-contrast-light" \| "solarized-light" \| "gruvbox-lig…` | no | The color theme every terminal is drawn in that has none of its own: one of the IDs of the color themes, of either kind. `null`: the theme the page is drawn in. |
+| `terminal` | `string \| null` | no | The color theme every terminal is drawn in that has none of its own: one of the IDs of the color themes, of either kind, built-in or a theme file the server has read (another is refused with 400). `null`: the theme the page is drawn in. |
+| `titleFormat` | `string` | no | What a terminal’s title says after its name, on the canvas and at the head of a terminal in a browser tab of its own: a template, one line of at most 200 characters without control characters (another is refused with 400), with placeholders such as {state}, {folder} and {field:Ticket}. A placeholder that is not known is kept as written and skipped where it is drawn. |
+| `rowFormat` | `string` | no | What a terminal’s row in the list says on its second line: a template, as `titleFormat` is. |
+| `customCss` | `boolean` | no | Whether the owner’s own stylesheet (`custom.css` in the data folder) is linked on the page. It names nothing that is run; what the file holds is written by hand. |
+| `byTag` | `{ /** A terminal’s tag, as tags are written: whatever the capitals,…` | no | The color themes of terminals by tag, in order, at most 20: the whole list, which replaces the one there was (an empty list removes them all). The first entry whose tag a terminal has wins; a terminal’s own theme comes before all of them. A theme the server has not read is refused with 400. |
 
 **Answer** `200`:
 
@@ -2190,10 +2206,10 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 {
   /** `light`, `dark`, or `system` for whichever the system is set to. */
   theme: "light" | "dark" | "system";
-  /** The color theme drawn when the page is light. */
-  light: "light" | "high-contrast-light" | "solarized-light" | "gruvbox-light";
-  /** The color theme drawn when the page is dark. */
-  dark: "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula";
+  /** The color theme drawn when the page is light: the ID of a built-in theme, or of a theme file of the owner’s. */
+  light: string;
+  /** The color theme drawn when the page is dark: the ID of a built-in theme, or of a theme file of the owner’s. */
+  dark: string;
   /** A terminal's font. */
   font: {
     /** The font-family list for a terminal's text. */
@@ -2205,12 +2221,292 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
   cursor: "block" | "bar" | "underline";
   /** Whether a terminal's cursor blinks. */
   cursorBlink: boolean;
-  /** The color theme of a terminal that has none of its own; `null`: the theme the page is drawn in. */
-  terminal: ("light" | "high-contrast-light" | "solarized-light" | "gruvbox-light" | "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula") | null;
+  /** The color theme of a terminal that has none of its own, built-in or of a theme file; `null`: the theme the page is drawn in. */
+  terminal: string | null;
+  /** Color themes for terminals by tag, in order: a terminal without one of its own is drawn in the theme of the first entry whose tag it has. */
+  byTag: {
+    /** A terminal’s tag, as tags are written: whatever the capitals, the same tag. */
+    tag: string;
+    /** The color theme of the terminals with that tag, of either kind, built-in or of a theme file. */
+    theme: string;
+  }[];
+  /** What a terminal’s title says after its name: a template with placeholders such as {state} and {folder}. */
+  titleFormat: string;
+  /** What a terminal’s row in the list says on its second line: a template with placeholders such as {state} and {time}. */
+  rowFormat: string;
+  /** Whether the owner’s own stylesheet (`custom.css` in the data folder) is linked on the page. */
+  customCss: boolean;
 }
 ```
 
 **Errors:** 400, 401, 403, 409, 413, 429.
+
+### readThemes
+
+`POST /v1/settings/themes/read`: Read the owner's theme files again.
+
+For the owner only: no token and no session can do this, whatever its scopes. It reads the theme files (`themes/<id>.json` in the data folder) again and answers which themes there are now and what in the files was wrong. It writes nothing, and nothing in a file is run: a theme file is a plain name and colors. The server also reads them when it starts and whenever it reads its settings file.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+**Answer** `200`:
+
+```ts
+{
+  /** The themes of the owner’s own that were read, by the name of their file. */
+  themes: {
+    /** The name of its file, without `.json`. */
+    id: string;
+    /** What the theme is called: one line of plain text. */
+    name: string;
+    /** Whether it is drawn as the light page or the dark one. */
+    kind: "light" | "dark";
+    /** The built-in theme it is laid over, of the same kind. Its shadows, scrim and focus ring are the base’s. */
+    base: "light" | "high-contrast-light" | "solarized-light" | "gruvbox-light" | "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula";
+    /** Colors laid over the base theme, by the names of the page’s color tokens. What is not named is the base’s. */
+    colors: {
+      /** The page’s color token --bg, as #rrggbb. */
+      bg?: string;
+      /** The page’s color token --surface, as #rrggbb. */
+      surface?: string;
+      /** The page’s color token --surface-raised, as #rrggbb. */
+      "surface-raised"?: string;
+      /** The page’s color token --field, as #rrggbb. */
+      field?: string;
+      /** The page’s color token --surface-active, as #rrggbb. */
+      "surface-active"?: string;
+      /** The page’s color token --border, as #rrggbb. */
+      border?: string;
+      /** The page’s color token --border-strong, as #rrggbb. */
+      "border-strong"?: string;
+      /** The page’s color token --border-control, as #rrggbb. */
+      "border-control"?: string;
+      /** The page’s color token --text, as #rrggbb. */
+      text?: string;
+      /** The page’s color token --text-muted, as #rrggbb. */
+      "text-muted"?: string;
+      /** The page’s color token --accent, as #rrggbb. */
+      accent?: string;
+      /** The page’s color token --accent-soft, as #rrggbb. */
+      "accent-soft"?: string;
+      /** The page’s color token --accent-text, as #rrggbb. */
+      "accent-text"?: string;
+      /** The page’s color token --on-accent, as #rrggbb. */
+      "on-accent"?: string;
+      /** The page’s color token --accent-pressed, as #rrggbb. */
+      "accent-pressed"?: string;
+      /** The page’s color token --attention, as #rrggbb. */
+      attention?: string;
+      /** The page’s color token --attention-soft, as #rrggbb. */
+      "attention-soft"?: string;
+      /** The page’s color token --attention-text, as #rrggbb. */
+      "attention-text"?: string;
+      /** The page’s color token --on-attention, as #rrggbb. */
+      "on-attention"?: string;
+      /** The page’s color token --attention-pressed, as #rrggbb. */
+      "attention-pressed"?: string;
+      /** The page’s color token --working, as #rrggbb. */
+      working?: string;
+      /** The page’s color token --working-soft, as #rrggbb. */
+      "working-soft"?: string;
+      /** The page’s color token --working-text, as #rrggbb. */
+      "working-text"?: string;
+      /** The page’s color token --ok, as #rrggbb. */
+      ok?: string;
+      /** The page’s color token --ok-soft, as #rrggbb. */
+      "ok-soft"?: string;
+      /** The page’s color token --ok-text, as #rrggbb. */
+      "ok-text"?: string;
+      /** The page’s color token --danger, as #rrggbb. */
+      danger?: string;
+      /** The page’s color token --danger-soft, as #rrggbb. */
+      "danger-soft"?: string;
+      /** The page’s color token --danger-text, as #rrggbb. */
+      "danger-text"?: string;
+      /** The page’s color token --on-danger, as #rrggbb. */
+      "on-danger"?: string;
+      /** The page’s color token --danger-pressed, as #rrggbb. */
+      "danger-pressed"?: string;
+      /** The page’s color token --selection, as #rrggbb. */
+      selection?: string;
+      /** The page’s color token --terminal-bg, as #rrggbb. */
+      "terminal-bg"?: string;
+      /** The page’s color token --canvas-dot, as #rrggbb. */
+      "canvas-dot"?: string;
+      /** The page’s color token --minimap-node, as #rrggbb. */
+      "minimap-node"?: string;
+    };
+    /** A terminal’s own colors, over the base’s. Its ground is the theme’s terminal-bg. */
+    terminal: {
+      /** The color of a terminal’s words, as #rrggbb. */
+      foreground?: string;
+      /** The color of a terminal’s cursor, as #rrggbb. */
+      cursor?: string;
+      /** The color behind what is selected in a terminal, as #rrggbb. */
+      selection?: string;
+      /** The sixteen colors a program asks for by number, in order: black, red, green, yellow, blue, magenta, cyan, white, then the bright eight. Null, or left out at the end: the base’s. */
+      ansi?: (string | null)[];
+    };
+  }[];
+  /** One sentence for each file that was not read, and each entry of a file that was skipped. */
+  problems: string[];
+}
+```
+
+**Errors:** 400, 401, 403, 413, 429.
+
+### readStylesheet
+
+`POST /v1/settings/stylesheet/read`: Read the owner's own stylesheet again.
+
+For the owner only: no token and no session can do this, whatever its scopes. It reads `custom.css` in the data folder again and answers whether there is one to link on the page, by a short hash of its content and its size, or why a file that is there was not read. It answers nothing of what the file says, and writes nothing. The page links the stylesheet with that hash in its address, so that the new one is taken without a reload.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+**Answer** `200`:
+
+```ts
+{
+  /** The stylesheet found now: null when there is none to link. */
+  stylesheet: {
+    /** A short hash of the file’s content: it changes when the content does, and is put in the address of the stylesheet so that a browser takes the new one. */
+    version: string;
+    /** The file’s size, in bytes. */
+    bytes: number;
+  } | null;
+  /** Why a file that is there was not read (a link, a folder, too large), in one sentence; null otherwise. */
+  problem: string | null;
+}
+```
+
+**Errors:** 400, 401, 403, 413, 429.
+
+### changePlugin
+
+`PUT /v1/settings/plugins`: Switch a plugin on or off: code of your own that runs in the page as you.
+
+For the owner only: no token and no session can do this, whatever its scopes. It writes one entry of `plugins.on` in the settings file and leaves the rest of the file as it was: the plugin's digest, `follow`, or (with null) nothing, which switches it off. A digest that is not the plugin's digest as the server reads its folder now is refused with 409, so what is switched on is what was just read; a plugin that is not in the folder, or cannot be loaded, is refused with 404 or 409. It names code that runs in the page as the owner, never anything the server starts: the server runs nothing of a plugin. A switch is a record of what the owner chose, not a lock: anything that runs as the owner can write the settings file too. It answers the plugins as they are now.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+**Body** (JSON):
+
+| Field | Type | Required | |
+|---|---|---|---|
+| `id` | `string` | yes | The plugin’s ID: its folder’s name. |
+| `on` | `(string \| "follow") \| null` | yes | The digest of the plugin as the server answered it just now (another is refused with 409: what is switched on is what was read), `follow` to run whatever is in its folder (for a plugin you are writing), or null to switch it off. |
+
+**Answer** `200`:
+
+```ts
+{
+  /** Where the folder of plugins is, on the computer the server runs on; null where the server does not say. */
+  folder: string | null;
+  /** Every plugin found, in the order of their IDs. */
+  plugins: {
+    /** Its folder’s name. */
+    id: string;
+    /** What its manifest calls it, else its ID. */
+    name: string;
+    /** Its manifest, or null where it could not be read. */
+    manifest: {
+      /** What the plugin is called: one line of plain text. */
+      name: string;
+      /** Its version, as its author writes it: one line of at most 40 characters. */
+      version: string;
+      /** How it runs. `page`: in the page, as the owner, with nothing kept apart. */
+      runs: "page";
+      /** The module the page imports: a `.js` file directly in its folder. */
+      main: string;
+      /** A stylesheet the page links while it runs: a `.css` file directly in its folder, or null. */
+      style: string | null;
+      /** The version of the plugin API it was written for. */
+      api: number;
+    } | null;
+    /** The SHA-256 over its files’ names and contents, as read now; null where they could not all be read. */
+    digest: string | null;
+    /** The files read, by name. */
+    files: {
+      /** The file’s name, directly in the plugin’s folder. */
+      name: string;
+      /** Its size, in bytes. */
+      bytes: number;
+    }[];
+    /** Why it cannot be loaded, in a sentence; null where it can. */
+    notLoaded: string | null;
+    /** What was skipped in its folder, one sentence each: a link, a folder, a name a file cannot have, a key a manifest does not have. */
+    problems: string[];
+  }[];
+  /** What the settings switch on, by plugin ID: the digest that was switched on, or `follow`. */
+  on: {
+    [key: string]: string | "follow";
+  };
+  /** What was wrong with the folder of plugins or with `plugins.on`, one sentence each. */
+  problems: string[];
+}
+```
+
+**Errors:** 400, 401, 403, 404, 409, 413, 429.
+
+### readPlugins
+
+`POST /v1/settings/plugins/read`: Read the plugins again.
+
+For the owner only: no token and no session can do this, whatever its scopes. It reads the folder of plugins (`plugins/` in the data folder) again and answers every plugin there, with its manifest, its digest, its files and what is wrong, and what the settings switch on. It writes nothing and runs nothing of a plugin.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+**Answer** `200`:
+
+```ts
+{
+  /** Where the folder of plugins is, on the computer the server runs on; null where the server does not say. */
+  folder: string | null;
+  /** Every plugin found, in the order of their IDs. */
+  plugins: {
+    /** Its folder’s name. */
+    id: string;
+    /** What its manifest calls it, else its ID. */
+    name: string;
+    /** Its manifest, or null where it could not be read. */
+    manifest: {
+      /** What the plugin is called: one line of plain text. */
+      name: string;
+      /** Its version, as its author writes it: one line of at most 40 characters. */
+      version: string;
+      /** How it runs. `page`: in the page, as the owner, with nothing kept apart. */
+      runs: "page";
+      /** The module the page imports: a `.js` file directly in its folder. */
+      main: string;
+      /** A stylesheet the page links while it runs: a `.css` file directly in its folder, or null. */
+      style: string | null;
+      /** The version of the plugin API it was written for. */
+      api: number;
+    } | null;
+    /** The SHA-256 over its files’ names and contents, as read now; null where they could not all be read. */
+    digest: string | null;
+    /** The files read, by name. */
+    files: {
+      /** The file’s name, directly in the plugin’s folder. */
+      name: string;
+      /** Its size, in bytes. */
+      bytes: number;
+    }[];
+    /** Why it cannot be loaded, in a sentence; null where it can. */
+    notLoaded: string | null;
+    /** What was skipped in its folder, one sentence each: a link, a folder, a name a file cannot have, a key a manifest does not have. */
+    problems: string[];
+  }[];
+  /** What the settings switch on, by plugin ID: the digest that was switched on, or `follow`. */
+  on: {
+    [key: string]: string | "follow";
+  };
+  /** What was wrong with the folder of plugins or with `plugins.on`, one sentence each. */
+  problems: string[];
+}
+```
+
+**Errors:** 400, 401, 403, 413, 429.
 
 ## Notes
 
@@ -5756,6 +6052,411 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 
 **Errors:** 400, 401, 403, 404, 409, 413, 429.
 
+## Themes
+
+### listThemes
+
+`GET /v1/themes`: List the color themes there are.
+
+The ten that come with Aubergine, then the owner’s theme files, each with its ID, name, kind and the built-in theme it is laid over. No colors, and nothing about which is chosen.
+
+An API token needs the scope `read`.
+
+A list: it answers a page at a time, see `limit` and `cursor`.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `projectId` | query | `string \| "all"` | no | Which project: its ID, or `all`. Left out: the first project the caller reaches. A request that names a thing of a project (a session, a canvas, a task) is about that project. |
+| `limit` | query | `number` | no | How many items to return at most. |
+| `cursor` | query | `string` | no | The `nextCursor` of the page before. Opaque: do not build or change it. |
+
+**Answer** `200`:
+
+```ts
+{
+  items: {
+    /** What a setting, a menu and a request call it. */
+    id: string;
+    /** What Settings calls it. */
+    name: string;
+    /** Whether it is drawn as the light page or the dark one. */
+    kind: "light" | "dark";
+    /** The built-in theme it is laid over: itself, for a built-in one. */
+    base: "light" | "high-contrast-light" | "solarized-light" | "gruvbox-light" | "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula";
+    /** True for a theme file of the owner’s; false for one that comes with Aubergine. */
+    own: boolean;
+  }[];
+  nextCursor: string | null;
+}
+```
+
+**Errors:** 400, 401, 403, 413, 429.
+
+```sh
+curl -H "Authorization: Bearer $TOKEN" \
+     http://127.0.0.1:4600/v1/themes
+```
+
+### listThemeProposals
+
+`GET /v1/themes/proposals`: List the color themes proposed, and what became of the latest.
+
+Those that wait for the owner, oldest first, then the latest decisions, newest first. Never the text of a file.
+
+An API token needs the scope `read`.
+
+A list: it answers a page at a time, see `limit` and `cursor`.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `projectId` | query | `string \| "all"` | no | Which project: its ID, or `all`. Left out: the first project the caller reaches. A request that names a thing of a project (a session, a canvas, a task) is about that project. |
+| `limit` | query | `number` | no | How many items to return at most. |
+| `cursor` | query | `string` | no | The `nextCursor` of the page before. Opaque: do not build or change it. |
+
+**Answer** `200`:
+
+```ts
+{
+  items: {
+    id: string;
+    themeId: string;
+    /** What the theme would be called. */
+    name: string;
+    /** Light or dark; null for one that was decided. */
+    kind: ("light" | "dark") | null;
+    /** The built-in theme it is laid over; null for one that was decided. */
+    base: ("light" | "high-contrast-light" | "solarized-light" | "gruvbox-light" | "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula") | null;
+    /** How many of its colors are its own (0 for one that was decided). */
+    colors: number;
+    /** What in the file was skipped. Empty for one that was decided. */
+    problems: string[];
+    /** Why it was proposed, in the words of whoever proposed it. */
+    why: string;
+    proposedBy: {
+      kind: "session";
+      sessionId: string;
+    } | {
+      kind: "token";
+      tokenId: string;
+      name: string;
+    } | {
+      kind: "person";
+    };
+    /** `waiting` for the owner; `accepted`: it is a theme file now; `declined`: it was not taken, and nothing of it is kept. */
+    state: "waiting" | "accepted" | "declined";
+    /** When it was proposed, or when it was decided. */
+    at: string;
+  }[];
+  nextCursor: string | null;
+}
+```
+
+**Errors:** 400, 401, 403, 413, 429.
+
+```sh
+curl -H "Authorization: Bearer $TOKEN" \
+     http://127.0.0.1:4600/v1/themes/proposals
+```
+
+### proposeTheme
+
+`POST /v1/themes/proposals`: Propose a color theme.
+
+The text of a theme file, read as it arrives: one that cannot be read is refused whole (400) and nothing is kept; one with entries that are skipped is kept with what was skipped. It is drawn nowhere and written nowhere until the owner has read it and accepted it in the browser; accepting chooses nothing. At most 20 wait at once (409 beyond that), and a newer proposal of the same ID by the same proposer takes the place of the older.
+
+An API token needs the scope `workflows:write`.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `idempotency-key` | header | `string` | no | A key of your choosing (1 to 128 visible ASCII characters). Sending the same request again with the same key returns the first answer and creates nothing more. |
+
+**Body** (JSON):
+
+| Field | Type | Required | |
+|---|---|---|---|
+| `id` | `string` | yes | The ID it would have: the name of its file without `.json`. Not the ID of a theme that comes with Aubergine. |
+| `text` | `string` | yes | The theme file, as text: the same form as a file in `themes/` (docs/themes.md). It is read as it arrives; one that cannot be read is refused whole and nothing is kept. |
+| `why` | `string` | no | Why it is proposed, in one line, for the owner to read. |
+
+**Answer** `201`:
+
+```ts
+{
+  id: string;
+  themeId: string;
+  /** What the theme would be called. */
+  name: string;
+  /** Light or dark; null for one that was decided. */
+  kind: ("light" | "dark") | null;
+  /** The built-in theme it is laid over; null for one that was decided. */
+  base: ("light" | "high-contrast-light" | "solarized-light" | "gruvbox-light" | "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula") | null;
+  /** How many of its colors are its own (0 for one that was decided). */
+  colors: number;
+  /** What in the file was skipped. Empty for one that was decided. */
+  problems: string[];
+  /** Why it was proposed, in the words of whoever proposed it. */
+  why: string;
+  proposedBy: {
+    kind: "session";
+    sessionId: string;
+  } | {
+    kind: "token";
+    tokenId: string;
+    name: string;
+  } | {
+    kind: "person";
+  };
+  /** `waiting` for the owner; `accepted`: it is a theme file now; `declined`: it was not taken, and nothing of it is kept. */
+  state: "waiting" | "accepted" | "declined";
+  /** When it was proposed, or when it was decided. */
+  at: string;
+}
+```
+
+**Errors:** 400, 401, 403, 409, 413, 429.
+
+```sh
+curl -X POST -H "Authorization: Bearer $TOKEN" \
+     -H "Content-Type: application/json" -d '{"id":"text","text":"text"}' \
+     http://127.0.0.1:4600/v1/themes/proposals
+```
+
+### acceptThemeProposal
+
+`POST /v1/themes/proposals/{proposalId}/accept`: Accept a proposed color theme.
+
+For the owner only: no token and no session can do this, whatever its scopes. The digest names the text that was shown; another is refused with 409. The text that was kept is written as `themes/<id>.json` in the data folder, never through a link, and never over a file that is there (409: rename or remove that file first). It chooses nothing: the theme is then one the owner can choose.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `proposalId` | path | `string` | yes | An ID. |
+
+**Body** (JSON):
+
+| Field | Type | Required | |
+|---|---|---|---|
+| `digest` | `string` | yes | The digest of the proposal as it was shown. A proposal whose text is not that one is refused with 409. |
+
+**Answer** `200`:
+
+```ts
+{
+  theme: {
+    /** The name of its file, without `.json`. */
+    id: string;
+    /** What the theme is called: one line of plain text. */
+    name: string;
+    /** Whether it is drawn as the light page or the dark one. */
+    kind: "light" | "dark";
+    /** The built-in theme it is laid over, of the same kind. Its shadows, scrim and focus ring are the base’s. */
+    base: "light" | "high-contrast-light" | "solarized-light" | "gruvbox-light" | "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula";
+    /** Colors laid over the base theme, by the names of the page’s color tokens. What is not named is the base’s. */
+    colors: {
+      /** The page’s color token --bg, as #rrggbb. */
+      bg?: string;
+      /** The page’s color token --surface, as #rrggbb. */
+      surface?: string;
+      /** The page’s color token --surface-raised, as #rrggbb. */
+      "surface-raised"?: string;
+      /** The page’s color token --field, as #rrggbb. */
+      field?: string;
+      /** The page’s color token --surface-active, as #rrggbb. */
+      "surface-active"?: string;
+      /** The page’s color token --border, as #rrggbb. */
+      border?: string;
+      /** The page’s color token --border-strong, as #rrggbb. */
+      "border-strong"?: string;
+      /** The page’s color token --border-control, as #rrggbb. */
+      "border-control"?: string;
+      /** The page’s color token --text, as #rrggbb. */
+      text?: string;
+      /** The page’s color token --text-muted, as #rrggbb. */
+      "text-muted"?: string;
+      /** The page’s color token --accent, as #rrggbb. */
+      accent?: string;
+      /** The page’s color token --accent-soft, as #rrggbb. */
+      "accent-soft"?: string;
+      /** The page’s color token --accent-text, as #rrggbb. */
+      "accent-text"?: string;
+      /** The page’s color token --on-accent, as #rrggbb. */
+      "on-accent"?: string;
+      /** The page’s color token --accent-pressed, as #rrggbb. */
+      "accent-pressed"?: string;
+      /** The page’s color token --attention, as #rrggbb. */
+      attention?: string;
+      /** The page’s color token --attention-soft, as #rrggbb. */
+      "attention-soft"?: string;
+      /** The page’s color token --attention-text, as #rrggbb. */
+      "attention-text"?: string;
+      /** The page’s color token --on-attention, as #rrggbb. */
+      "on-attention"?: string;
+      /** The page’s color token --attention-pressed, as #rrggbb. */
+      "attention-pressed"?: string;
+      /** The page’s color token --working, as #rrggbb. */
+      working?: string;
+      /** The page’s color token --working-soft, as #rrggbb. */
+      "working-soft"?: string;
+      /** The page’s color token --working-text, as #rrggbb. */
+      "working-text"?: string;
+      /** The page’s color token --ok, as #rrggbb. */
+      ok?: string;
+      /** The page’s color token --ok-soft, as #rrggbb. */
+      "ok-soft"?: string;
+      /** The page’s color token --ok-text, as #rrggbb. */
+      "ok-text"?: string;
+      /** The page’s color token --danger, as #rrggbb. */
+      danger?: string;
+      /** The page’s color token --danger-soft, as #rrggbb. */
+      "danger-soft"?: string;
+      /** The page’s color token --danger-text, as #rrggbb. */
+      "danger-text"?: string;
+      /** The page’s color token --on-danger, as #rrggbb. */
+      "on-danger"?: string;
+      /** The page’s color token --danger-pressed, as #rrggbb. */
+      "danger-pressed"?: string;
+      /** The page’s color token --selection, as #rrggbb. */
+      selection?: string;
+      /** The page’s color token --terminal-bg, as #rrggbb. */
+      "terminal-bg"?: string;
+      /** The page’s color token --canvas-dot, as #rrggbb. */
+      "canvas-dot"?: string;
+      /** The page’s color token --minimap-node, as #rrggbb. */
+      "minimap-node"?: string;
+    };
+    /** A terminal’s own colors, over the base’s. Its ground is the theme’s terminal-bg. */
+    terminal: {
+      /** The color of a terminal’s words, as #rrggbb. */
+      foreground?: string;
+      /** The color of a terminal’s cursor, as #rrggbb. */
+      cursor?: string;
+      /** The color behind what is selected in a terminal, as #rrggbb. */
+      selection?: string;
+      /** The sixteen colors a program asks for by number, in order: black, red, green, yellow, blue, magenta, cyan, white, then the bright eight. Null, or left out at the end: the base’s. */
+      ansi?: (string | null)[];
+    };
+  };
+  /** The name of the file that was written, in `themes/`. */
+  file: string;
+  /** The themes of the owner’s own there are now. */
+  themes: {
+    /** The name of its file, without `.json`. */
+    id: string;
+    /** What the theme is called: one line of plain text. */
+    name: string;
+    /** Whether it is drawn as the light page or the dark one. */
+    kind: "light" | "dark";
+    /** The built-in theme it is laid over, of the same kind. Its shadows, scrim and focus ring are the base’s. */
+    base: "light" | "high-contrast-light" | "solarized-light" | "gruvbox-light" | "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula";
+    /** Colors laid over the base theme, by the names of the page’s color tokens. What is not named is the base’s. */
+    colors: {
+      /** The page’s color token --bg, as #rrggbb. */
+      bg?: string;
+      /** The page’s color token --surface, as #rrggbb. */
+      surface?: string;
+      /** The page’s color token --surface-raised, as #rrggbb. */
+      "surface-raised"?: string;
+      /** The page’s color token --field, as #rrggbb. */
+      field?: string;
+      /** The page’s color token --surface-active, as #rrggbb. */
+      "surface-active"?: string;
+      /** The page’s color token --border, as #rrggbb. */
+      border?: string;
+      /** The page’s color token --border-strong, as #rrggbb. */
+      "border-strong"?: string;
+      /** The page’s color token --border-control, as #rrggbb. */
+      "border-control"?: string;
+      /** The page’s color token --text, as #rrggbb. */
+      text?: string;
+      /** The page’s color token --text-muted, as #rrggbb. */
+      "text-muted"?: string;
+      /** The page’s color token --accent, as #rrggbb. */
+      accent?: string;
+      /** The page’s color token --accent-soft, as #rrggbb. */
+      "accent-soft"?: string;
+      /** The page’s color token --accent-text, as #rrggbb. */
+      "accent-text"?: string;
+      /** The page’s color token --on-accent, as #rrggbb. */
+      "on-accent"?: string;
+      /** The page’s color token --accent-pressed, as #rrggbb. */
+      "accent-pressed"?: string;
+      /** The page’s color token --attention, as #rrggbb. */
+      attention?: string;
+      /** The page’s color token --attention-soft, as #rrggbb. */
+      "attention-soft"?: string;
+      /** The page’s color token --attention-text, as #rrggbb. */
+      "attention-text"?: string;
+      /** The page’s color token --on-attention, as #rrggbb. */
+      "on-attention"?: string;
+      /** The page’s color token --attention-pressed, as #rrggbb. */
+      "attention-pressed"?: string;
+      /** The page’s color token --working, as #rrggbb. */
+      working?: string;
+      /** The page’s color token --working-soft, as #rrggbb. */
+      "working-soft"?: string;
+      /** The page’s color token --working-text, as #rrggbb. */
+      "working-text"?: string;
+      /** The page’s color token --ok, as #rrggbb. */
+      ok?: string;
+      /** The page’s color token --ok-soft, as #rrggbb. */
+      "ok-soft"?: string;
+      /** The page’s color token --ok-text, as #rrggbb. */
+      "ok-text"?: string;
+      /** The page’s color token --danger, as #rrggbb. */
+      danger?: string;
+      /** The page’s color token --danger-soft, as #rrggbb. */
+      "danger-soft"?: string;
+      /** The page’s color token --danger-text, as #rrggbb. */
+      "danger-text"?: string;
+      /** The page’s color token --on-danger, as #rrggbb. */
+      "on-danger"?: string;
+      /** The page’s color token --danger-pressed, as #rrggbb. */
+      "danger-pressed"?: string;
+      /** The page’s color token --selection, as #rrggbb. */
+      selection?: string;
+      /** The page’s color token --terminal-bg, as #rrggbb. */
+      "terminal-bg"?: string;
+      /** The page’s color token --canvas-dot, as #rrggbb. */
+      "canvas-dot"?: string;
+      /** The page’s color token --minimap-node, as #rrggbb. */
+      "minimap-node"?: string;
+    };
+    /** A terminal’s own colors, over the base’s. Its ground is the theme’s terminal-bg. */
+    terminal: {
+      /** The color of a terminal’s words, as #rrggbb. */
+      foreground?: string;
+      /** The color of a terminal’s cursor, as #rrggbb. */
+      cursor?: string;
+      /** The color behind what is selected in a terminal, as #rrggbb. */
+      selection?: string;
+      /** The sixteen colors a program asks for by number, in order: black, red, green, yellow, blue, magenta, cyan, white, then the bright eight. Null, or left out at the end: the base’s. */
+      ansi?: (string | null)[];
+    };
+  }[];
+  /** What in the theme files is not read now, or skipped. */
+  problems: string[];
+}
+```
+
+**Errors:** 400, 401, 403, 404, 409, 413, 429.
+
+### declineThemeProposal
+
+`DELETE /v1/themes/proposals/{proposalId}`: Decline a proposed color theme.
+
+For the owner only: no token and no session can do this, whatever its scopes. Nothing of it is kept but that it was declined.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `proposalId` | path | `string` | yes | An ID. |
+
+**Answer** `204`, with nothing in it.
+
+**Errors:** 400, 401, 403, 404, 413, 429.
+
 ## Library
 
 ### listLibrarySources
@@ -9133,6 +9834,13 @@ A list: it answers a page at a time, see `limit` and `cursor`.
       [key: string]: unknown;
     };
     state: "open" | "archived";
+    /** The color themes the page is drawn in while this project is looked at: one for the light page and one for the dark. Null or left out: the page’s own. */
+    themes?: {
+      /** The color theme of the light page while this project is looked at: a light one. Null: the page’s own. */
+      light: string | null;
+      /** The color theme of the dark page while this project is looked at: a dark one. Null: the page’s own. */
+      dark: string | null;
+    };
     fileExtra?: {
       [key: string]: unknown;
     };
@@ -9200,6 +9908,13 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
     [key: string]: unknown;
   };
   state: "open" | "archived";
+  /** The color themes the page is drawn in while this project is looked at: one for the light page and one for the dark. Null or left out: the page’s own. */
+  themes?: {
+    /** The color theme of the light page while this project is looked at: a light one. Null: the page’s own. */
+    light: string | null;
+    /** The color theme of the dark page while this project is looked at: a dark one. Null: the page’s own. */
+    dark: string | null;
+  };
   fileExtra?: {
     [key: string]: unknown;
   };
@@ -9248,6 +9963,13 @@ An API token needs the scope `read`.
     [key: string]: unknown;
   };
   state: "open" | "archived";
+  /** The color themes the page is drawn in while this project is looked at: one for the light page and one for the dark. Null or left out: the page’s own. */
+  themes?: {
+    /** The color theme of the light page while this project is looked at: a light one. Null: the page’s own. */
+    light: string | null;
+    /** The color theme of the dark page while this project is looked at: a dark one. Null: the page’s own. */
+    dark: string | null;
+  };
   fileExtra?: {
     [key: string]: unknown;
   };
@@ -9269,9 +9991,9 @@ curl -H "Authorization: Bearer $TOKEN" \
 
 ### changeProject
 
-`PATCH /v1/projects/{projectId}`: Change a project: its name, color, folders, or its place in the order.
+`PATCH /v1/projects/{projectId}`: Change a project: its name, color, folders, color themes, or its place in the order.
 
-For the owner only: no token and no session can do this, whatever its scopes. What is left out stays as it was.
+For the owner only: no token and no session can do this, whatever its scopes. What is left out stays as it was. A theme that names no theme the server has read now, or one of the other kind, is refused with 400; the IDs name the themes of the page this server sends.
 
 For the signed-in browser only. No API token may call this, whatever its scopes.
 
@@ -9288,6 +10010,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 | `folders` | `string[]` | no |  |
 | `defaultFolder` | `string \| null` | no |  |
 | `labels` | `{ [key: string]: string; }` | no |  |
+| `themes` | `{ /** The theme of the light page while this project is looked at: …` | no | The color themes the page is drawn in while this project is looked at. Each that is left out stays as it was. |
 | `before` | `string \| null` | no | Put it before this project in the order; null puts it last. |
 
 **Answer** `200`:
@@ -9314,6 +10037,13 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
     [key: string]: unknown;
   };
   state: "open" | "archived";
+  /** The color themes the page is drawn in while this project is looked at: one for the light page and one for the dark. Null or left out: the page’s own. */
+  themes?: {
+    /** The color theme of the light page while this project is looked at: a light one. Null: the page’s own. */
+    light: string | null;
+    /** The color theme of the dark page while this project is looked at: a dark one. Null: the page’s own. */
+    dark: string | null;
+  };
   fileExtra?: {
     [key: string]: unknown;
   };
@@ -9386,6 +10116,13 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
     [key: string]: unknown;
   };
   state: "open" | "archived";
+  /** The color themes the page is drawn in while this project is looked at: one for the light page and one for the dark. Null or left out: the page’s own. */
+  themes?: {
+    /** The color theme of the light page while this project is looked at: a light one. Null: the page’s own. */
+    light: string | null;
+    /** The color theme of the dark page while this project is looked at: a dark one. Null: the page’s own. */
+    dark: string | null;
+  };
   fileExtra?: {
     [key: string]: unknown;
   };
@@ -9442,6 +10179,13 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
     [key: string]: unknown;
   };
   state: "open" | "archived";
+  /** The color themes the page is drawn in while this project is looked at: one for the light page and one for the dark. Null or left out: the page’s own. */
+  themes?: {
+    /** The color theme of the light page while this project is looked at: a light one. Null: the page’s own. */
+    light: string | null;
+    /** The color theme of the dark page while this project is looked at: a dark one. Null: the page’s own. */
+    dark: string | null;
+  };
   fileExtra?: {
     [key: string]: unknown;
   };
@@ -9492,6 +10236,13 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
     [key: string]: unknown;
   };
   state: "open" | "archived";
+  /** The color themes the page is drawn in while this project is looked at: one for the light page and one for the dark. Null or left out: the page’s own. */
+  themes?: {
+    /** The color theme of the light page while this project is looked at: a light one. Null: the page’s own. */
+    light: string | null;
+    /** The color theme of the dark page while this project is looked at: a dark one. Null: the page’s own. */
+    dark: string | null;
+  };
   fileExtra?: {
     [key: string]: unknown;
   };
@@ -9645,6 +10396,13 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
       [key: string]: unknown;
     };
     state: "open" | "archived";
+    /** The color themes the page is drawn in while this project is looked at: one for the light page and one for the dark. Null or left out: the page’s own. */
+    themes?: {
+      /** The color theme of the light page while this project is looked at: a light one. Null: the page’s own. */
+      light: string | null;
+      /** The color theme of the dark page while this project is looked at: a dark one. Null: the page’s own. */
+      dark: string | null;
+    };
     fileExtra?: {
       [key: string]: unknown;
     };
@@ -9893,6 +10651,13 @@ For a session's own token, about that session. No API token may call this.
     [key: string]: unknown;
   };
   state: "open" | "archived";
+  /** The color themes the page is drawn in while this project is looked at: one for the light page and one for the dark. Null or left out: the page’s own. */
+  themes?: {
+    /** The color theme of the light page while this project is looked at: a light one. Null: the page’s own. */
+    light: string | null;
+    /** The color theme of the dark page while this project is looked at: a dark one. Null: the page’s own. */
+    dark: string | null;
+  };
   fileExtra?: {
     [key: string]: unknown;
   };
@@ -11273,7 +12038,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
       at: string;
     };
   }[];
-  theme: ("light" | "high-contrast-light" | "solarized-light" | "gruvbox-light" | "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula") | null;
+  theme: string | null;
   parkedFrom: {
     canvasId: string;
     rect: {
@@ -11450,7 +12215,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
       at: string;
     };
   }[];
-  theme: ("light" | "high-contrast-light" | "solarized-light" | "gruvbox-light" | "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula") | null;
+  theme: string | null;
   parkedFrom: {
     canvasId: string;
     rect: {
@@ -13427,6 +14192,175 @@ For a session's own token, about that session. No API token may call this.
 curl -X POST -H "Authorization: Bearer $AUBERGINE_TOKEN" \
      -H "Content-Type: application/json" -d '{"workflow":{"name":"example","elements":[{"name":"example"}]}}' \
      $AUBERGINE_URL/v1/sessions/<sessionId>/drafts
+```
+
+### listSessionThemes
+
+`GET /v1/sessions/{sessionId}/themes`: The color themes there are.
+
+With that session's own token: the same list as `GET /v1/themes`, so that an agent knows which IDs are taken and which built-in theme it can lay one over.
+
+For a session's own token, about that session. No API token may call this.
+
+A list: it answers a page at a time, see `limit` and `cursor`.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `sessionId` | path | `string` | yes | An ID. |
+| `projectId` | query | `string \| "all"` | no | Which project: its ID, or `all`. Left out: the first project the caller reaches. A request that names a thing of a project (a session, a canvas, a task) is about that project. |
+| `limit` | query | `number` | no | How many items to return at most. |
+| `cursor` | query | `string` | no | The `nextCursor` of the page before. Opaque: do not build or change it. |
+
+**Answer** `200`:
+
+```ts
+{
+  items: {
+    /** What a setting, a menu and a request call it. */
+    id: string;
+    /** What Settings calls it. */
+    name: string;
+    /** Whether it is drawn as the light page or the dark one. */
+    kind: "light" | "dark";
+    /** The built-in theme it is laid over: itself, for a built-in one. */
+    base: "light" | "high-contrast-light" | "solarized-light" | "gruvbox-light" | "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula";
+    /** True for a theme file of the owner’s; false for one that comes with Aubergine. */
+    own: boolean;
+  }[];
+  nextCursor: string | null;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 413, 429.
+
+```sh
+curl -H "Authorization: Bearer $AUBERGINE_TOKEN" \
+     $AUBERGINE_URL/v1/sessions/<sessionId>/themes
+```
+
+### listSessionThemeProposals
+
+`GET /v1/sessions/{sessionId}/theme-proposals`: The color themes a session proposed, and what became of them.
+
+With that session's own token: its own proposals, waiting, accepted or declined, and no others.
+
+For a session's own token, about that session. No API token may call this.
+
+A list: it answers a page at a time, see `limit` and `cursor`.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `sessionId` | path | `string` | yes | An ID. |
+| `projectId` | query | `string \| "all"` | no | Which project: its ID, or `all`. Left out: the first project the caller reaches. A request that names a thing of a project (a session, a canvas, a task) is about that project. |
+| `limit` | query | `number` | no | How many items to return at most. |
+| `cursor` | query | `string` | no | The `nextCursor` of the page before. Opaque: do not build or change it. |
+
+**Answer** `200`:
+
+```ts
+{
+  items: {
+    id: string;
+    themeId: string;
+    /** What the theme would be called. */
+    name: string;
+    /** Light or dark; null for one that was decided. */
+    kind: ("light" | "dark") | null;
+    /** The built-in theme it is laid over; null for one that was decided. */
+    base: ("light" | "high-contrast-light" | "solarized-light" | "gruvbox-light" | "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula") | null;
+    /** How many of its colors are its own (0 for one that was decided). */
+    colors: number;
+    /** What in the file was skipped. Empty for one that was decided. */
+    problems: string[];
+    /** Why it was proposed, in the words of whoever proposed it. */
+    why: string;
+    proposedBy: {
+      kind: "session";
+      sessionId: string;
+    } | {
+      kind: "token";
+      tokenId: string;
+      name: string;
+    } | {
+      kind: "person";
+    };
+    /** `waiting` for the owner; `accepted`: it is a theme file now; `declined`: it was not taken, and nothing of it is kept. */
+    state: "waiting" | "accepted" | "declined";
+    /** When it was proposed, or when it was decided. */
+    at: string;
+  }[];
+  nextCursor: string | null;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 413, 429.
+
+```sh
+curl -H "Authorization: Bearer $AUBERGINE_TOKEN" \
+     $AUBERGINE_URL/v1/sessions/<sessionId>/theme-proposals
+```
+
+### proposeSessionTheme
+
+`POST /v1/sessions/{sessionId}/theme-proposals`: Propose a color theme from a session.
+
+With that session's own token. The same as `POST /v1/themes/proposals`, proposed as that session: nothing is drawn or written until the owner has read it and accepted it.
+
+For a session's own token, about that session. No API token may call this.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `sessionId` | path | `string` | yes | An ID. |
+
+**Body** (JSON):
+
+| Field | Type | Required | |
+|---|---|---|---|
+| `id` | `string` | yes | The ID it would have: the name of its file without `.json`. Not the ID of a theme that comes with Aubergine. |
+| `text` | `string` | yes | The theme file, as text: the same form as a file in `themes/` (docs/themes.md). It is read as it arrives; one that cannot be read is refused whole and nothing is kept. |
+| `why` | `string` | no | Why it is proposed, in one line, for the owner to read. |
+
+**Answer** `201`:
+
+```ts
+{
+  id: string;
+  themeId: string;
+  /** What the theme would be called. */
+  name: string;
+  /** Light or dark; null for one that was decided. */
+  kind: ("light" | "dark") | null;
+  /** The built-in theme it is laid over; null for one that was decided. */
+  base: ("light" | "high-contrast-light" | "solarized-light" | "gruvbox-light" | "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula") | null;
+  /** How many of its colors are its own (0 for one that was decided). */
+  colors: number;
+  /** What in the file was skipped. Empty for one that was decided. */
+  problems: string[];
+  /** Why it was proposed, in the words of whoever proposed it. */
+  why: string;
+  proposedBy: {
+    kind: "session";
+    sessionId: string;
+  } | {
+    kind: "token";
+    tokenId: string;
+    name: string;
+  } | {
+    kind: "person";
+  };
+  /** `waiting` for the owner; `accepted`: it is a theme file now; `declined`: it was not taken, and nothing of it is kept. */
+  state: "waiting" | "accepted" | "declined";
+  /** When it was proposed, or when it was decided. */
+  at: string;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 409, 413, 429.
+
+```sh
+curl -X POST -H "Authorization: Bearer $AUBERGINE_TOKEN" \
+     -H "Content-Type: application/json" -d '{"id":"text","text":"text"}' \
+     $AUBERGINE_URL/v1/sessions/<sessionId>/theme-proposals
 ```
 
 ### getSessionRepositoryWorkflows

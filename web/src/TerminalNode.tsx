@@ -1,10 +1,7 @@
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
-import { TITLE_LINKS, sortedLinks } from '@aubergine/shared';
-import { LinkChip } from './links/LinkChip';
 import { NodeResizer, useStore, useStoreApi, type Node, type NodeProps } from '@xyflow/react';
 import { NODE_MIN_HEIGHT, NODE_MIN_WIDTH, type CommandId } from '@aubergine/shared';
 import { api } from './api';
-import { canResumeAgent } from './attention';
 import { ColorButton } from './ColorButton';
 import { parkSession, runCommand } from './commands';
 import { hint } from './shortcuts';
@@ -12,7 +9,7 @@ import { nodeMode, type NodeMode } from './culling';
 import { MoveToCanvas } from './MoveToCanvas';
 import { NotePanel } from './NotePanel';
 import { SnapshotView } from './SnapshotView';
-import { StatusBadges, TitleDot } from './StatusBadges';
+import { TitleDot } from './StatusBadges';
 import { useUnseenNotes } from './notes-seen';
 import { atThisComputer, currentLayout, useApp } from './store';
 import { TerminalView } from './TerminalView';
@@ -21,10 +18,10 @@ import { TerminalThemeMenu } from './TerminalTheme';
 import { colorClass, colorStyle } from './color';
 import { noteRoom, noteStartsOpen, rememberNoteOpen } from './note-open';
 import { tourSignal } from './tour/tour-store';
-import { RecapBlock, recapTitle } from './Recap';
-import { ListMark } from './workflows/ListMark';
+import { RecapBlock } from './Recap';
 import { RunStrip } from './workflows/RunStrip';
-import { EnvironmentChip } from './environment/EnvironmentChip';
+import { TitleSays } from './templates/TemplateSays';
+import { terminalHooks } from './page-hooks';
 
 export type TerminalFlowNode = Node<{ sessionId: string }, 'terminal'>;
 
@@ -149,7 +146,9 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
     <div
       style={colorStyle(color)}
       className={`terminal-node ${colorClass(color)}${selected ? ' selected' : ''}${isSelected && !focused ? ' is-selected' : ''}`}
+      data-part="terminal"
       data-testid="terminal-node"
+      {...(session ? terminalHooks(session, color) : {})}
       data-session={sessionId}
       data-selected={isSelected && !focused ? 'true' : undefined}
       data-focused={focused ? 'true' : undefined}
@@ -166,7 +165,7 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
           void api.updateNode(id, { x: rect.x, y: rect.y, width: rect.width, height: rect.height })
         }
       />
-      <header className="node-title" onDoubleClick={() => setDraft(name)}>
+      <header className="node-title" data-part="terminal-title" onDoubleClick={() => setDraft(name)}>
         {session && <TitleDot session={session} focused={focused} />}
         {draft === null ? (
           <span className="node-name" title={hint('terminal.rename', 'Double-click to rename')} data-testid="node-name">
@@ -188,63 +187,10 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
             }}
           />
         )}
-        {draft === null && !exited && session && (session.attention.state === 'waiting' || session.attention.state === 'done') && (
-          // The state in words, where it is not the ordinary one. Working is said by the mark alone.
-          <span className={`badge-attention is-${session.attention.state}`} title={session.attention.message ?? undefined} data-testid="badge-attention">
-            {session.attention.state === 'waiting' ? 'waiting for you' : 'finished'}
-          </span>
-        )}
-        {draft === null && !exited && session && <StatusBadges session={session} />}
-        {draft === null && <EnvironmentChip sessionId={sessionId} />}
-        {draft === null && <ListMark sessionId={sessionId} variant="node" />}
-        {draft === null && session?.typedBy && <TypedBy by={session.typedBy} />}
-        {draft === null && !exited && (session?.outsideViewers ?? 0) > 0 && (
-          <span
-            className="badge-desktop"
-            title="Something outside this page is attached to this terminal and shows it too: most likely a window of your terminal application. Which program it is cannot be told from here. The two views share one size."
-            data-testid="badge-desktop"
-          >
-            also on desktop
-          </span>
-        )}
-        {draft === null && session && canResumeAgent(session) && (
-          <button
-            type="button"
-            className="node-tool resume-agent nodrag"
-            title="Start the agent again in the conversation it was last in"
-            // What that conversation was about, as far as is known, when the pointer arrives.
-            onMouseEnter={(event) => {
-              event.currentTarget.title = `Start the agent again in the conversation it was last in.\n\n${recapTitle(sessionId)}`;
-            }}
-            data-testid="resume-agent"
-            onClick={() => void api.resumeAgent(sessionId).catch(() => {})}
-          >
-            Resume agent
-          </button>
-        )}
-        {draft === null && !exited && session?.peopleOnly && (
-          <span className="ui-badge" title="People only: no API token may read this terminal or type into it. It is switched in the menu at the right." data-testid="badge-people-only">
-            people only
-          </span>
-        )}
-        {/* The marks of at most three of its links, the ticket and the pull request first: pressed to open. */}
-        {draft === null &&
-          sortedLinks(session?.links ?? [])
-            .slice(0, TITLE_LINKS)
-            .map((link) => (
-              <span key={link.id} className="nodrag node-link">
-                <LinkChip url={link.url} kind={link.kind} label={link.label} markOnly testid="node-link" />
-              </span>
-            ))}
-        {draft === null && (session?.tags.length ?? 0) > 0 && (
-          <button type="button" className="ui-chip nodrag" title={hint('terminal.tags', `Tags: ${session?.tags.join(', ')}`)} aria-label={`Tags of ${name}: ${session?.tags.join(', ')}`} onClick={() => useApp.getState().request({ kind: 'tags', id: sessionId })} data-testid="node-tags">
-            #{session?.tags[0]}
-            {(session?.tags.length ?? 0) > 1 ? ` +${(session?.tags.length ?? 1) - 1}` : ''}
-          </button>
-        )}
+        {draft === null && session && <TitleSays session={session} />}
         <button
           type="button"
-          className={`node-tool nodrag${hasNote ? ' has-note' : ''}`}
+          className={`node-tool note-tool nodrag${hasNote ? ' has-note' : ''}`}
           aria-label={`Note for ${name}`}
           aria-pressed={noteShown}
           title={hint('notes.toggle', hasNote ? 'Show note' : 'Add a note')}
@@ -297,7 +243,7 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
               ⋮
             </button>
             {/* Kept in the page while closed: what a key or the palette asks for (move, colour) is answered from here. */}
-            <span className="ui-menu toolbar-menu node-menu" role="menu" hidden={!more} onClick={(event) => (event.target as HTMLElement).closest('[role^="menuitem"]') && !(event.target as HTMLElement).closest('.move-to, .color-button') && setMore(false)} data-testid="node-menu">
+            <span className="ui-menu toolbar-menu node-menu" role="menu" data-part="menu" hidden={!more} onClick={(event) => (event.target as HTMLElement).closest('[role^="menuitem"]') && !(event.target as HTMLElement).closest('.move-to, .color-button') && setMore(false)} data-testid="node-menu">
               {draft === null && (
                 <button
                   type="button"
@@ -449,7 +395,7 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
       </header>
       {!exited && <RunStrip sessionId={sessionId} variant="node" />}
       {exited ? (
-        <div className="node-body node-ended nodrag" data-testid="node-ended">
+        <div className="node-body node-ended nodrag" data-part="terminal-body" data-testid="node-ended">
           {session?.meantFor ? (
             // Came in a project file: its shell was never started here. What it was is said; nothing is done because of it.
             <p data-testid="node-not-started">
@@ -475,7 +421,7 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
       ) : mode === 'live' ? (
         <LiveBody sessionId={sessionId} onFocusChange={onFocusChange} />
       ) : (
-        <div className="node-body nodrag nopan" data-testid="node-body" data-mode={mode} {...bodyTheme}>
+        <div className="node-body nodrag nopan" data-part="terminal-body" data-testid="node-body" data-mode={mode} {...bodyTheme}>
           <SnapshotView sessionId={sessionId} refreshing={mode === 'snapshot'} />
           <div className="node-shield zoomed-out" title="Too small to type in: click to zoom in" />
         </div>
@@ -486,24 +432,6 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
     </div>
   );
 });
-
-/** A brief mark that a token typed into the terminal, and which. It fades after half a minute; the row in the list keeps the time. */
-function TypedBy({ by }: { by: { name: string; at: string } }) {
-  const [recent, setRecent] = useState(() => Date.now() - Date.parse(by.at) < 30_000);
-  useEffect(() => {
-    const left = 30_000 - (Date.now() - Date.parse(by.at));
-    setRecent(left > 0);
-    if (left <= 0) return;
-    const timer = window.setTimeout(() => setRecent(false), left);
-    return () => window.clearTimeout(timer);
-  }, [by.at]);
-  if (!recent) return null;
-  return (
-    <span className="badge-typed" title={`The API token “${by.name}” typed into this terminal at ${new Date(by.at).toLocaleTimeString()}`} data-testid="badge-typed">
-      typed by {by.name}
-    </span>
-  );
-}
 
 /**
  * The body never drags or pans the canvas. Until its terminal has focus a
@@ -525,6 +453,7 @@ function LiveBody({ sessionId, onFocusChange }: { sessionId: string; onFocusChan
       className={`node-body nodrag nopan${live ? ' nowheel' : ''}`}
       onFocus={() => change(true)}
       onBlur={() => change(false)}
+      data-part="terminal-body"
       data-testid="node-body"
       {...bodyTheme}
     >

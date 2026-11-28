@@ -31,7 +31,7 @@ Partager Aubergine : [X](https://x.com/intent/post?text=Aubergine%3A%20mission%2
 
 ### Thèmes de couleurs
 
-La page existe en dix thèmes de couleurs, quatre clairs et six sombres, choisis dans **Settings → Appearance**. Chaque terminal peut aussi avoir son propre thème (**Theme…** dans son menu), et les autres suivent le thème par défaut que vous choisissez pour les terminaux, ou la page. Des couleurs isolées se règlent à la main dans le [fichier de réglages](../../README.md#settings).
+La page existe en dix thèmes de couleurs, quatre clairs et six sombres, choisis dans **Settings → Appearance**. Chaque terminal peut aussi avoir son propre thème (**Theme…** dans son menu), et les autres suivent le thème par défaut que vous choisissez pour les terminaux, ou la page. Des couleurs isolées se règlent à la main dans le [fichier de réglages](../../README.md#settings). Un thème à vous est un fichier : l’un des dix avec vos couleurs par-dessus, listé à côté d’eux comme le vôtre ([docs/themes.md](../themes.md)). Un projet peut avoir un thème à lui pour chaque sorte, dessiné tant que vous le regardez, et les terminaux qui portent une étiquette peuvent recevoir un thème par cette étiquette ([docs/themes.md](../themes.md#while-you-look-at-a-project)).
 
 | | | |
 |---|---|---|

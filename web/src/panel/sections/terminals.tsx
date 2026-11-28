@@ -1,8 +1,8 @@
-import { memo, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { memo, useEffect, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
 import { openProjects, projectName, type CommandId } from '@aubergine/shared';
 import { canvasActions } from '../../canvas-actions';
 import { runCommand } from '../../commands';
-import { SCOPE_FILTER, TAG_FILTER, TEXT_FILTER, listFilters } from '../../list-filters';
+import { SCOPE_FILTER, TAG_FILTER, TEXT_FILTER, filtersVersion, listFilters, subscribeToFilters } from '../../list-filters';
 import { listModel, listSource } from '../../list-model';
 import { recapTitle } from '../../Recap';
 import { colorClass, colorStyle } from '../../color';
@@ -14,7 +14,6 @@ import {
   STATE_MARK,
   STATE_WORD,
   dotTone,
-  ago,
   describeEmpty,
   filterChips,
   itemHeight,
@@ -29,10 +28,11 @@ import {
   type Row,
 } from '../../terminal-rows';
 import { registerSection } from '../registry';
+import { terminalHooks } from '../../page-hooks';
 import { NewTerminal } from '../../NewTerminal';
 import { Details, DetailsHead } from './terminal-details';
 import { Menu, StateDot } from '../../ui';
-import { RunStrip } from '../../workflows/RunStrip';
+import { RowSays } from '../../templates/TemplateSays';
 
 const SECTION = 'terminals';
 /** Relative times are brought up to date this often, by one timer for the whole list. */
@@ -50,7 +50,9 @@ function useModel() {
   const app = useApp((s) => listSource(s));
   const view = useApp((s) => s.listView);
   const canvasId = useApp((s) => s.canvasId);
-  return useMemo(() => listModel(app, view, canvasId), [app, view, canvasId]);
+  // A filter added or taken away after the page was drawn (a plugin's) works the list out again.
+  const filters = useSyncExternalStore(subscribeToFilters, filtersVersion, filtersVersion);
+  return useMemo(() => listModel(app, view, canvasId), [app, view, canvasId, filters]); // eslint-disable-line react-hooks/exhaustive-deps -- `filters` is what the registry was when the list was worked out
 }
 
 /**
@@ -264,7 +266,7 @@ function TerminalsSection() {
   };
 
   return (
-    <div className={`terminal-list${view.tags.length > 0 ? ' by-tag' : ''}`} data-testid="terminal-list">
+    <div className={`terminal-list${view.tags.length > 0 ? ' by-tag' : ''}`} data-part="terminal-list" data-testid="terminal-list">
       <div className="list-bar" ref={bar}>
         <div className="list-find">
           <input
@@ -496,45 +498,21 @@ export function actOnTerminal(sessionId: string, command: CommandId): void {
   runCommand(command);
 }
 
-/** The state of a row in words, where it is not the ordinary one: what the chip on its second line says. */
-export function chipOf(row: Pick<Row, 'session' | 'state'>): { text: string; tone: 'attention' | 'ok' | 'danger' } | null {
-  const { session, state } = row;
-  if (state === 'waiting') return session.attention.state === 'done' ? { text: 'finished', tone: 'ok' } : { text: 'waiting for you', tone: 'attention' };
-  if (state === 'failed') return { text: `exit ${session.status.lastExit}`, tone: 'danger' };
-  return null;
-}
+export { chipOf } from '../../terminal-rows';
 
 const RowView = memo(function RowView({ row, style, density, indented, current, focused, here, menuOpen, canMove, now, onGo, onMenu, onAct, onNotes, onDetails, onTag }: RowProps) {
   const { session, state } = row;
   const desktop = useApp(atThisComputer);
   const compact = density === 'compact';
-  const chip = chipOf(row);
-  const tone = dotTone(session, row.parked);
-  const typed = ago(session.lastInputAt, now);
-  const updated = ago(session.lastOutputAt, now);
-  // The later of the two times is the one the row says.
-  const active = ago([session.lastInputAt, session.lastOutputAt].filter((t): t is string => typeof t === 'string').sort().at(-1) ?? null, now);
-  const said = (short: string): string => (short === 'now' ? 'just now' : `${short} ago`);
   const hasNotes = session.note !== '' || session.noteLog.length > 0;
-  // What else is known that a row has room for. The folder is not said here: it is in the details and in the recap on hover.
-  const where = [session.state === 'exited' ? 'ended' : null, session.meantFor?.agent ? `was ${session.meantFor.agent}` : null, row.parked && session.state !== 'exited' ? 'parked' : null].filter(Boolean).join(' · ');
-  // Its state in words, plain text in the color of the state; nothing for the ordinary state.
-  const stateWords = chip ? (
-    <span className={`list-said is-${chip.tone} list-badge`} data-testid="list-badge" data-tone={tone} title={session.attention.message ?? session.status.commandLine ?? undefined}>
-      {chip.text}
-    </span>
-  ) : state === 'processing' ? (
-    <span className="list-said list-working" data-testid="list-working" data-tone={tone}>
-      working
-    </span>
-  ) : null;
-
   return (
     <div
       className={`list-row state-${state}${compact ? ' compact' : ''}${current ? ' current' : ''}${focused ? ' focused' : ''}${indented ? ' indented' : ''}`}
       style={style}
       role="option"
       aria-selected={current}
+      data-part="terminal-row"
+      {...terminalHooks(session, row.color, { selected: current, focused })}
       data-testid="list-row"
       data-session={session.id}
       data-state={state}
@@ -549,7 +527,7 @@ const RowView = memo(function RowView({ row, style, density, indented, current, 
       <div className="list-main">
         <span className={`list-color ${colorClass(row.color, 'swatch')}`} style={colorStyle(row.color)} aria-hidden="true" data-testid="list-color" data-color={row.color} />
         {/* Compact, there is no second line: its state in words follows the name, where it is not the ordinary one. */}
-        {compact && stateWords}
+        {compact && <RowSays row={row} now={now} onTag={onTag} compact />}
         <span
           className="list-name"
           // The recap, on hover: worked out when the pointer arrives, so that drawing a row costs nothing more.
@@ -564,45 +542,7 @@ const RowView = memo(function RowView({ row, style, density, indented, current, 
       {/* The second line: its state in words where that is not the ordinary one, the step it is on, then what is known about it. */}
       {!compact && (
         <div className="list-detail">
-          {/* Words only on the second line: its state where that is not the ordinary one, then its step and one time. */}
-          {stateWords}
-          <RunStrip sessionId={session.id} variant="row" />
-          {where && <span className="list-where">{where}</span>}
-          {session.meantFor?.agent && <span className="visually-hidden" data-testid="row-meant-for">was {session.meantFor.agent}</span>}
-          {active && (
-            // The later of the two times, said once; both are said in full to whoever asks.
-            <span className="list-active" title={[typed ? `You last typed here ${said(typed)}` : null, updated ? `It last printed ${said(updated)}` : null].filter(Boolean).join('. ')} data-testid="list-active" data-typed={typed || undefined} data-updated={updated || undefined}>
-              {said(active)}
-            </span>
-          )}
-          {session.peopleOnly && (
-            <span className="list-lock" title="People only: no API token may read this terminal or type into it" data-testid="row-people-only">
-              people only
-            </span>
-          )}
-          {session.typedBy && (
-            <span className="list-time list-typed-by" title={`An API token typed into this terminal: ${new Date(session.typedBy.at).toLocaleString()}`} data-testid="list-typed-by">
-              typed by {session.typedBy.name} {said(ago(session.typedBy.at, now))}
-            </span>
-          )}
-          {/* Tags are on the row while the pointer or the keyboard is on it, and while the list is filtered by a tag. */}
-          <span className="list-tags">
-            {session.tags.map((tag) => (
-              <button
-                key={tag}
-                type="button"
-                className="list-tag"
-                title={`Show only terminals tagged ${tag}`}
-                data-testid="list-tag"
-                onClick={(event) => {
-                  event.stopPropagation();
-                  onTag(tag);
-                }}
-              >
-                #{tag}
-              </button>
-            ))}
-          </span>
+          <RowSays row={row} now={now} onTag={onTag} />
         </div>
       )}
       {/* Everything else that can be done with it: one menu, there while the pointer or the keyboard is on the row. */}
@@ -621,7 +561,7 @@ const RowView = memo(function RowView({ row, style, density, indented, current, 
         ⋮
       </button>
       {menuOpen && (
-        <div className="list-menu" role="menu" aria-label={`Actions for ${session.name}`} onClick={(event) => event.stopPropagation()}>
+        <div className="list-menu" role="menu" data-part="menu" aria-label={`Actions for ${session.name}`} onClick={(event) => event.stopPropagation()}>
           {terminalActions(session, { here, parked: row.parked, canMove, hasNotes, desktop }).map((action) => (
             <button
               key={action.key}

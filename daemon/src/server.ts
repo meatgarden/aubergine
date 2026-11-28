@@ -1,5 +1,5 @@
 import { packageRoot } from './package-root';
-import { DEVICE_UNUSED_DAYS, LINKED_PAGE_HEADERS, PROJECT_HEADER, PairRequest, PairingCodeRequest, TICKET_PARAM, accessEntries, accessProblem, deviceStatus, isLocalHost, viewOfDevice, type ChangeAppearanceRequest, type DeviceList, type OpenedOnDesktop, type PairedPage, type PairingCodeAnswer, type RevokedDevice, type SocketTicket } from '@aubergine/shared';
+import { CUSTOM_CSS_PATH, NO_PLUGINS_ANSWER, PLUGIN_FILES_PATH, DEVICE_UNUSED_DAYS, LINKED_PAGE_HEADERS, asksPlain, customCssHref, PROJECT_HEADER, PairRequest, PairingCodeRequest, TICKET_PARAM, accessEntries, accessProblem, deviceStatus, isLocalHost, themeOf, viewOfDevice, type ChangeAppearanceRequest, type DeviceList, type OpenedOnDesktop, type PairedPage, type PairingCodeAnswer, type RevokedDevice, type SocketTicket } from '@aubergine/shared';
 import { DeviceNotFoundError, Devices } from './devices';
 import { Pairing } from './pairing';
 import { SocketTickets } from './socket-tickets';
@@ -7,6 +7,9 @@ import { existsSync } from 'node:fs';
 import { readFile } from 'node:fs/promises';
 import { SettingsUnreadableError, appearanceOf } from './settings';
 import { pageAttributes } from './page-choice';
+import { NO_THEMES, type Themes } from './theme-files';
+import { NO_STYLESHEET, type Stylesheet } from './custom-css';
+import { NO_PLUGINS, type Plugins } from './plugins';
 import type { AddressInfo } from 'node:net';
 import cookie from '@fastify/cookie';
 import fastifyStatic from '@fastify/static';
@@ -101,6 +104,7 @@ import { tokensMatch } from './token';
 import { MemoryRunArchive, type RunArchive } from './run-archive';
 import type { DraftLog } from './draft-log';
 import { Drafts } from './drafts';
+import { ThemeProposals } from './theme-proposals';
 import { Repositories } from './repositories';
 import { noInputAudit, type InputAudit } from './input-audit';
 import { TerminalAccess, TerminalRefusal, type TerminalTrace } from './terminal-access';
@@ -134,6 +138,8 @@ export interface ServerOptions {
   outside?: Outside;
   /** Returns the current settings, re-reading the settings file. */
   settings: () => Promise<Settings>;
+  /** Where the settings file is, said to the owner in the state answer. Left out: not said. */
+  settingsFile?: string;
   token: string;
   devOrigin: string | null;
   webDist: string;
@@ -161,6 +167,14 @@ export interface ServerOptions {
   setAppearance?: (change: ChangeAppearanceRequest) => Promise<void>;
   /** Writes `describe.remind` into the settings file. Left out: the page cannot change it. */
   setDescribeRemind?: (value: boolean) => Promise<void>;
+  /** The owner's theme files. Left out: there are none. Read again with the settings, and when the owner asks. */
+  themes?: Themes;
+  /** The owner's own stylesheet. Left out: there is none. Read again whenever the page is sent, when it is served, and when the owner asks. */
+  stylesheet?: Stylesheet;
+  /** The owner's plugins. Left out: there are none. Read again for every answer and every file sent; nothing of them is run here. */
+  plugins?: Plugins;
+  /** Writes one entry of `plugins.on` into the settings file. Left out: the page cannot switch a plugin on. */
+  setPluginSwitch?: (id: string, on: string | null) => Promise<void>;
   /** Asks a signed-in local tool for a branch's pull request. Left out: none is ever asked for. */
   pullRequests?: PullRequestFinder | null;
   /** The branch and repository of a folder. Left out: Git is asked. A test passes its own. */
@@ -196,6 +210,15 @@ export interface ServerOptions {
   /** The clock devices and pairing codes are judged by. A test passes its own, so that it never waits. */
   now?: () => number;
 }
+
+/**
+ * The page's `Content-Security-Policy`. It is never shown inside another page (`frame-ancestors`), and what a stylesheet
+ * names is loaded from this server or inline data only: a stylesheet, a picture, a font, a sound or a film. So a
+ * stylesheet the owner wrote or pasted cannot make the page fetch anything from another address, which is how a
+ * stylesheet would report what it sees. It is a guard, not a sandbox: scripts, connections (the page talks to linked
+ * servers on other origins and opens sockets) and frames are not restricted by it, and nothing here is `default-src`.
+ */
+export const PAGE_POLICY = "frame-ancestors 'none'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; media-src 'self' data: blob:";
 
 /** Where a request came in, worked out from its `Host` alone: under this computer's own name, or an outside address. */
 export type CameIn = 'here' | 'outside';
@@ -280,6 +303,22 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
   const limits = (await options.settings()).api;
   const app = Fastify({ logger: false, bodyLimit: limits.maxBodyBytes });
   const tokens = new Tokens(hub);
+  const themes = options.themes ?? NO_THEMES;
+  const stylesheet = options.stylesheet ?? NO_STYLESHEET;
+  const plugins = options.plugins ?? NO_PLUGINS;
+  /** The plugins as the folder and the settings file are now: read again for every answer. */
+  const pluginsNow = async () => plugins.answer((await options.settings()).plugins.on);
+  // The theme files are read again whenever the settings are read for the page, first, so that colors set by hand may name one.
+  const lookNow = async () => {
+    const themesNow = await themes.reload();
+    return { settings: await options.settings(), themes: themesNow };
+  };
+  /** Refuses (400) a theme's ID that names no theme the server knows now, or one of another kind than asked. */
+  const knowsTheme = (id: string, kind?: 'light' | 'dark', field = 'theme'): void => {
+    const theme = themeOf(id, themes.value.themes);
+    if (!theme) throw new BadInputError(`${field}: "${id}" names no theme: neither one that comes with Aubergine nor a theme file the server has read.`);
+    if (kind && theme.kind !== kind) throw new BadInputError(`${field}: ${theme.name} is a ${theme.kind} theme, not a ${kind} one.`);
+  };
   const clock = options.now ?? Date.now;
   // The outside addresses, read once, when the server starts. A wrong entry was reported where the settings were read, and is skipped.
   const outsideAddresses = accessEntries('addresses', (await options.settings()).access.addresses).entries;
@@ -301,6 +340,7 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
   const workflowLimits = (): { maxElements: number; maxElementChars: number } => ({ maxElements: workflowSettings.maxElements, maxElementChars: workflowSettings.maxElementChars });
   const drafts = new Drafts(hub, sessions, workflows, workflowLimits, options.draftLog);
   const repositories = new Repositories(hub, sessions, workflows, workflowLimits, options.homeFolder);
+  const themeProposals = new ThemeProposals(hub, themes);
   const terminalSettings = (await options.settings()).terminal;
   const messageSettings = (await options.settings()).messages;
   const messages = new Messages(hub, sessions, () => messageSettings, options.messageLog);
@@ -424,7 +464,7 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     return typeof said === 'string' && ClientName.safeParse(said).success ? said : null;
   };
   /** What only the owner may do and is worth seeing when it was not done in the browser. */
-  const WATCHED: readonly Action[] = ['desktop.open', 'settings.write', 'drafts.review', 'repository.review', 'repository.write', 'tokens.manage', 'terminal.input', 'sessions.protect', 'messages.manage', 'runs.approve'];
+  const WATCHED: readonly Action[] = ['desktop.open', 'settings.write', 'drafts.review', 'repository.review', 'repository.write', 'tokens.manage', 'terminal.input', 'sessions.protect', 'messages.manage', 'runs.approve', 'themes.manage', 'plugins.manage'];
   /** Reading a terminal is watched too, though it changes nothing. */
   const WATCHED_READS: readonly Action[] = ['terminal.read'];
   const ownerLogged = new WeakSet<FastifyRequest>();
@@ -536,6 +576,19 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     deviceOf.set(request, found.device.id);
     if (devices.touch(found.device.id) && !isUpgrade) setDeviceCookie(reply, secret, 'outside');
     return true;
+  };
+
+  /**
+   * Whether a request that needs no sign-in (the page itself) carries the owner's: the access token's cookie here, a
+   * browser device's cookie from outside. Only looked at, never given again. A page for anyone else links nothing of
+   * the owner's own.
+   */
+  const carriesOwnerSignIn = (request: FastifyRequest): boolean => {
+    if (fromLinkedPage.has(request)) return false;
+    if (cameIn.get(request) === 'here') return tokensMatch(token, request.cookies[cookieName(port())]);
+    const secret = request.cookies[deviceCookieName(port())];
+    const found = secret === undefined ? null : devices.authenticate(secret);
+    return found !== null && found.status === 'active' && found.device.kind === 'browser';
   };
 
   // Every request, including WebSocket upgrades, passes these checks.
@@ -860,7 +913,8 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     parse(Id, (request.params as Record<string, string>)[name]);
 
   app.get(paths.state, async (request): Promise<StateResponse> => {
-    const [runtimeNow, settingsNow] = [await sessions.status(), await options.settings()];
+    const runtimeNow = await sessions.status();
+    const { settings: settingsNow, themes: themesNow } = await lookNow();
     // The state and its number are read together, after everything that waits: a change cannot come between the two.
     return {
       protocolVersion: PROTOCOL_VERSION,
@@ -872,7 +926,41 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
       revision: hub.revision,
       defaultCanvasId: sessions.defaultCanvasId(),
       here: atThisComputer(request),
+      ...(options.settingsFile === undefined ? {} : { settingsFile: options.settingsFile }),
+      themes: themesNow.themes,
+      themeProblems: themesNow.problems,
+      // The owner's own stylesheet is the page's own: a linked page is told nothing of it.
+      ...(fromLinkedPage.has(request) ? {} : await stylesheet.answer().then((css) => ({ customCss: css.stylesheet, customCssProblem: css.problem }))),
+      // And so are the plugins: code that runs in the page as the owner. A linked page is told nothing of them.
+      ...(fromLinkedPage.has(request) ? {} : { plugins: await pluginsNow() }),
     };
+  });
+
+  // A plugin's files, to the owner's own page alone: under /api, so only the owner's sign-in reaches it, and never to
+  // a linked page. Sent only under the digest the plugin has now, and only while that digest is the one switched on
+  // (or it follows changes): a file that changed after it was switched on is not sent, also to a page already open.
+  // Nothing in it is run or looked at here: its bytes are sent as they are.
+  app.get(`${PLUGIN_FILES_PATH}/:pluginId/:digest/:file`, async (request, reply) => {
+    allowOn(request, 'plugins.manage', {});
+    if (fromLinkedPage.has(request)) throw new HttpError(404, 'not_found', 'Not found');
+    const { pluginId, digest, file } = request.params as { pluginId: string; digest: string; file: string };
+    const sent = await plugins.file(pluginId, digest, file, (await options.settings()).plugins.on);
+    if (!sent) throw new HttpError(404, 'not_found', 'Not found');
+    return reply.type(sent.type).header('x-content-type-options', 'nosniff').header('cache-control', 'no-cache').send(sent.bytes);
+  });
+
+  // The owner's own stylesheet, to the owner's own page alone: under /api, so only the owner's sign-in reaches it, and
+  // never to a linked page, whose own server has a stylesheet of its own. Its bytes are sent as they are, as CSS.
+  app.get(CUSTOM_CSS_PATH, async (request, reply) => {
+    allowOn(request, 'stylesheet.read', {});
+    if (fromLinkedPage.has(request)) throw new HttpError(404, 'not_found', 'Not found');
+    const now = await stylesheet.reload();
+    if (!now) throw new HttpError(404, 'not_found', 'There is no stylesheet of your own to send.');
+    return reply
+      .type('text/css; charset=utf-8')
+      .header('x-content-type-options', 'nosniff')
+      .header('cache-control', 'no-cache')
+      .send(now.bytes);
   });
 
   app.post(paths.sessions, async (request, reply): Promise<CreateSessionResponse> => {
@@ -891,6 +979,10 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
 
   app.patch(paths.session(':sessionId'), async (request) => {
     const body = parse(UpdateSessionRequest, request.body);
+    if (typeof body.theme === 'string') {
+      await themes.reload();
+      knowsTheme(body.theme);
+    }
     return sessions.update(idParam(request, 'sessionId'), body);
   });
 
@@ -1140,6 +1232,7 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     tokens,
     workflows,
     drafts,
+    themeProposals,
     repositories,
     terminals,
     messages,
@@ -1163,6 +1256,14 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     // sends none of them writes nothing.
     changeAppearance: async (change) => {
       const sent = Object.values(change).some((value) => value !== undefined);
+      if (change.light !== undefined || change.dark !== undefined || typeof change.terminal === 'string' || (change.byTag?.length ?? 0) > 0) {
+        // What the folder holds now: a file may have been added or removed since the page last asked.
+        await themes.reload();
+        if (change.light !== undefined) knowsTheme(change.light, 'light', 'light');
+        if (change.dark !== undefined) knowsTheme(change.dark, 'dark', 'dark');
+        if (typeof change.terminal === 'string') knowsTheme(change.terminal, undefined, 'terminal');
+        for (const [at, entry] of (change.byTag ?? []).entries()) knowsTheme(entry.theme, undefined, `byTag[${at}].theme`);
+      }
       if (sent) {
         if (!options.setAppearance) throw new ConflictError('This server has no settings file to write.');
         try {
@@ -1173,6 +1274,32 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
         }
       }
       return appearanceOf(await options.settings());
+    },
+    readThemes: async () => (await lookNow()).themes,
+    readStylesheet: async (request) => (fromLinkedPage.has(request) ? { stylesheet: null, problem: null } : stylesheet.answer()),
+    readPlugins: async (request) => (fromLinkedPage.has(request) ? NO_PLUGINS_ANSWER : pluginsNow()),
+    changePlugin: async (request, change) => {
+      // Plugins are the page's own: a page of another Aubergine that shows this server loads its own server's.
+      if (fromLinkedPage.has(request)) throw new HttpError(403, 'forbidden', 'A linked page does not switch the plugins of this server: they are the own page’s, and its own server has its own.');
+      if (change.on !== null) {
+        // What is switched on is what is in the folder now: read again here, not taken from what the page last saw.
+        const now = await plugins.one(change.id);
+        if (!now) throw new NotFoundError(`There is no plugin named ${change.id} in the folder of plugins.`);
+        if (now.found.notLoaded !== null || now.found.digest === null) throw new ConflictError(`It cannot be switched on: ${now.found.notLoaded ?? 'its files could not all be read.'}`);
+        if (change.on !== 'follow' && change.on !== now.found.digest) throw new ConflictError('Its files changed since they were read: that is not its digest now. Read the plugins again and look at it before switching it on.');
+      }
+      if (!options.setPluginSwitch) throw new ConflictError('This server has no settings file to write.');
+      try {
+        await options.setPluginSwitch(change.id, change.on);
+      } catch (error) {
+        if (error instanceof SettingsUnreadableError) throw new ConflictError(error.message);
+        throw error;
+      }
+      return pluginsNow();
+    },
+    knowsTheme: async (id, kind, field) => {
+      await themes.reload();
+      knowsTheme(id, kind, field);
     },
     projects,
     projectFiles,
@@ -1341,16 +1468,24 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     // those words of the settings are in it, each in a shape that needs no escaping (`pageAttributes`). Never kept
     // by a browser: the choice may change.
     const pageFile = path.join(options.webDist, 'index.html');
-    const sendPage = async (_request: unknown, reply: FastifyReply): Promise<FastifyReply> => {
+    const sendPage = async (request: FastifyRequest, reply: FastifyReply): Promise<FastifyReply> => {
       const html = await readFile(pageFile, 'utf8');
-      const attributes = pageAttributes(await options.settings());
+      const look = await lookNow();
+      const attributes = pageAttributes(look.settings, look.themes.themes);
+      // The owner's own stylesheet, last in the head, so that it wins and is there from the first paint: for the
+      // signed-in owner, while it is switched on, and not for a page asked for `?plain`. Only its hash is written here.
+      const plain = asksPlain(request.url.slice(request.url.split('?')[0]?.length ?? 0));
+      const own = !plain && look.settings.appearance.customCss && carriesOwnerSignIn(request) ? await stylesheet.reload() : null;
+      const withAttributes = html.replace('<html lang="en"', `<html lang="en" ${attributes}`);
+      const at = withAttributes.lastIndexOf('</head>');
+      const page = own && at >= 0 ? `${withAttributes.slice(0, at)}  <link rel="stylesheet" href="${customCssHref(own.found.version)}" data-custom-css>\n  ${withAttributes.slice(at)}` : withAttributes;
       return reply
         .type('text/html; charset=utf-8')
         .header('cache-control', 'no-cache')
-        // The page is never shown inside another page.
-        .header('content-security-policy', "frame-ancestors 'none'")
+        // Never shown inside another page, and nothing a stylesheet names is fetched from another address.
+        .header('content-security-policy', PAGE_POLICY)
         .header('x-frame-options', 'DENY')
-        .send(html.replace('<html lang="en"', `<html lang="en" ${attributes}`));
+        .send(page);
     };
     app.get('/', sendPage);
     app.get('/index.html', sendPage);
@@ -1378,7 +1513,7 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     app.get('/', async (_request, reply) =>
       reply
         .type('text/plain; charset=utf-8')
-        .header('content-security-policy', "frame-ancestors 'none'")
+        .header('content-security-policy', PAGE_POLICY)
         .header('x-frame-options', 'DENY')
         .send(
           options.devOrigin

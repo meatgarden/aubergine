@@ -3199,6 +3199,10 @@
     "text": "<strong>라이브러리 항목에 대한 통제 수단은 검토 화면입니다.</strong> 항목은 에이전트가 자신이 할 수 있는 모든 것을 동원해 따를 지침입니다. 읽지 않은 것은 설치하지 마세요.",
     "from": "1972614790c0"
   },
+  "security.not.plugins": {
+    "text": "<strong>플러그인은 당신으로 실행됩니다.</strong> 플러그인은 Settings → Plugins 에서 켜면 페이지가 불러오는 나만의 코드입니다. 모든 터미널을 읽고, 어느 터미널에든 입력하고, 페이지가 할 수 있는 모든 것을 합니다. 샌드박스가 아닙니다. 켰을 때의 파일 그대로만 실행되므로 바뀐 코드가 모르는 사이에 실행되지는 않지만, 터미널의 에이전트도 당신으로 실행되어 플러그인과 그것을 켜는 설정을 쓸 수 있습니다. 스위치는 기록이지 잠금이 아닙니다.",
+    "from": "934e6eb6cc73"
+  },
   "security.not.guide": {
     "text": "<strong>에이전트용 가이드는 조언이지</strong>, 잠금장치가 아닙니다.",
     "from": "79f0576917ce"
@@ -5026,5 +5030,553 @@
   "site.share.copy": {
     "text": "링크 복사",
     "from": "dbf362d4f210"
+  },
+  "site.foot.customize": {
+    "text": "사용자 지정",
+    "from": "c5276e27afba"
+  },
+  "guides.customize.name": {
+    "text": "테마, 색, 글꼴, 키 사용자 지정",
+    "from": "0f78f8ed86a6"
+  },
+  "guides.customize.text": {
+    "text": "열 가지 색 테마, 터미널마다 다른 테마, 직접 정하는 색, 터미널의 글꼴과 커서, 모든 키, 그리고 다른 도구들의 사용자 지정 방식.",
+    "from": "fc827f9b51fc"
+  },
+  "home.themes.more": {
+    "text": "바꿀 수 있는 모든 것, 그리고 다른 도구의 방식",
+    "from": "b9eb2267d0a5"
+  },
+  "faq.look.q": {
+    "text": "Aubergine의 모양을 바꿀 수 있나요?",
+    "from": "25820b139d94"
+  },
+  "faq.look.a": {
+    "text": "네. 열 가지 색 테마, 터미널마다 다른 테마, 직접 정하는 개별 색, 터미널의 글꼴과 커서, 그리고 모든 키를 바꿀 수 있습니다. <a href=\"/customize-terminal-themes/\">사용자 지정</a>을 보세요.",
+    "from": "4d0f29e81927"
+  },
+  "custom.meta.title": {
+    "text": "터미널 테마, 색, 키 사용자 지정 | Aubergine",
+    "from": "2cbdb7a66d89"
+  },
+  "custom.meta.description": {
+    "text": "열 가지 색 테마, 터미널별 테마, 직접 정하는 색, 글꼴, 커서, 키. 그리고 VS Code, kitty, tmux 등은 사용자 지정을 어떻게 하는지.",
+    "from": "a225c6e71a17"
+  },
+  "custom.crumb": {
+    "text": "사용자 지정",
+    "from": "c5276e27afba"
+  },
+  "custom.title": {
+    "text": "터미널 테마, 색, 글꼴, 키 사용자 지정",
+    "from": "c1d02d7228ca"
+  },
+  "custom.lead": {
+    "text": "열 가지 테마에서 페이지의 색을 고르고, 터미널마다 자기 테마를 주고, 개별 색, 터미널의 글꼴과 커서, 모든 키를 Settings나 스스로를 설명하는 설정 파일 하나에서 정합니다.",
+    "from": "c7447ef1ebe0"
+  },
+  "custom.page.title": {
+    "text": "밝은 테마와 어두운 테마, 열 가지",
+    "from": "362e348c9513"
+  },
+  "custom.page.text": {
+    "text": "<strong>Settings → Appearance</strong>는 세 가지 선택으로 시작합니다. <strong>Light</strong>, <strong>Dark</strong>, 그리고 새로 설치하면 이것으로 시작하고 시스템이 바뀌면 따라가는 <strong>Match the system</strong>입니다. 그 아래에서 종류마다 테마를 하나씩 고릅니다. Light, High contrast light, Solarized light, Gruvbox light 중 하나와, Dark, High contrast dark, Solarized dark, Gruvbox dark, Nord, Dracula 중 하나입니다. 각 테마에는 색을 보여 주는 작은 그림이 붙어 있습니다.",
+    "from": "3c86ee10d844"
+  },
+  "custom.page.at": {
+    "text": "바꾸면 다시 불러오지 않아도 페이지와 모든 터미널에 바로 적용되고, 설정 파일에 저장되므로 Aubergine을 여는 모든 브라우저에서 같습니다. 팔레트에도 같은 명령이 있습니다. 예를 들어 <strong>Color theme: Nord</strong>입니다.",
+    "from": "280d6d38a2b6"
+  },
+  "custom.own.title": {
+    "text": "터미널마다 다른 색 테마",
+    "from": "f27bdf189165"
+  },
+  "custom.own.text": {
+    "text": "터미널 메뉴의 <strong>Theme…</strong>는 페이지가 어떤 테마이든 그 터미널을 열 가지 테마 중 어느 것으로든 그립니다. 바뀌는 것은 본문뿐이고, 제목, 노트, 세부 정보는 페이지 그대로입니다. 자기 테마가 없는 터미널은 Settings의 <strong>Terminal theme</strong>, 즉 터미널의 기본값을 따르고, 그것도 없으면 페이지를 따릅니다.",
+    "from": "e29c52f9c1e8"
+  },
+  "custom.menu.alt": {
+    "text": "캔버스에서 연 터미널의 Theme… 메뉴: Same as the default(지금은 페이지와 같은 Dark), 이어서 밝은 테마 네 개와 어두운 테마 여섯 개, Dracula에 체크.",
+    "from": "c8e8e678bb8b"
+  },
+  "custom.menu.caption": {
+    "text": "터미널 메뉴의 Theme…: 기본값, 또는 열 가지 중 하나.",
+    "from": "43c132516f7e"
+  },
+  "custom.own.where": {
+    "text": "같은 선택이 목록에서 터미널 행의 메뉴, 세부 정보, 팔레트에도 있습니다. 터미널과 프레임에는 자기 색도 줄 수 있고(열세 가지 중 하나, 또는 아무 색이나 고르는 <strong>Your own…</strong>), 캔버스 탭도 마찬가지입니다. 터미널의 색은 목록에서 그 행의 색이기도 합니다.",
+    "from": "914fa5f4b003"
+  },
+  "custom.colors.title": {
+    "text": "개별 색을 직접 정하기",
+    "from": "5ebf453dd41c"
+  },
+  "custom.colors.text": {
+    "text": "테마 외에도 페이지의 색 35가지를 설정 파일 <code>config.json</code>의 <code>appearance.colors</code>에서 정할 수 있습니다. 색 이름과 <code>#rrggbb</code> 형태의 값입니다. 맨 위에 쓰면 모든 테마 위에 적용되고, <code>\"[nord]\"</code>처럼 대괄호로 감싼 테마 ID 아래에 쓰면 그 테마에만 적용되며 우선합니다.",
+    "from": "42f05c456f31"
+  },
+  "custom.colors.names": {
+    "text": "이름은 페이지의 색 토큰입니다. 예를 들어 <code>bg</code>, <code>text</code>, <code>accent</code>, <code>terminal-bg</code>이며, <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/design.md\">docs/design.md</a>에 목록이 있습니다. 잘못된 항목은 건너뛰고 파일의 나머지는 그대로 적용되며, 어느 것을 건너뛰었는지 <strong>Settings → Appearance</strong>가 알려 줍니다. 직접 정한 색은 여러분의 몫입니다. 쓴 색이 읽기 좋은지는 아무것도 확인하지 않습니다.",
+    "from": "86395864aac8"
+  },
+  "custom.files.title": {
+    "text": "나만의 테마를 파일로",
+    "from": "06c16974771d"
+  },
+  "custom.files.text": {
+    "text": "나만의 테마는 데이터 폴더의 <code>themes/</code>에 있는 JSON 파일입니다. 10개 중 같은 종류의 하나를 바탕으로, 35가지 색 중 원하는 것을 그 위에 얹고, 터미널 자체의 색(글자, 커서, 선택 영역, 프로그램이 요청하는 16가지 색)도 정할 수 있습니다. 같은 종류의 10개 뒤에 내 것으로 표시되어 나오며, 그것들을 고를 수 있는 곳이면 어디서든 고를 수 있습니다. 페이지, 터미널의 기본값, 또는 터미널 하나에. 그림자와 포커스 링은 바탕의 것이 유지되고, 파일 안의 어떤 것도 실행되지 않습니다.",
+    "from": "621009bfb006"
+  },
+  "custom.files.cli": {
+    "text": "<code>aubergine theme new harbor --from nord</code>은 원래 테마의 모든 색이 담긴 시작용 파일을 씁니다. <code>aubergine theme check</code>는 파일에서 잘못된 점을 알려 줍니다. Settings의 <strong>Read themes again</strong>이 변경을 읽어 들입니다. 색이 읽기 좋은지는 여러분이 판단합니다. Settings는 글자가 읽기 어려울 수 있을 때만 알려 줍니다. 형식은 <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/themes.md\">docs/themes.md</a>에 있습니다.",
+    "from": "fa449a724abf"
+  },
+  "custom.when.title": {
+    "text": "프로젝트의 테마, 그리고 태그별 터미널 테마",
+    "from": "0629d684f9aa"
+  },
+  "custom.when.project": {
+    "text": "프로젝트는 보고 있는 동안 페이지를 자기 테마로 그릴 수 있어, 한눈에 어디에 있는지 알 수 있습니다. <strong>Projects…</strong>에서 프로젝트 옆의 <strong>When light</strong>와 <strong>When dark</strong>로 종류마다 테마를 하나씩 고릅니다. <strong>As the page</strong>는 Settings에 맡깁니다. 다른 프로젝트에서는 페이지가 고른 그대로이고, 그 프로젝트의 주소에서 새로 고치면 첫 그리기부터 그 테마로 그려집니다.",
+    "from": "8e3d89da8eae"
+  },
+  "custom.when.tag": {
+    "text": "Settings의 Terminal theme 아래 <strong>By tag</strong>는 태그가 있는 터미널에 테마를 줍니다. 예를 들어 <code>prod</code> 태그가 붙은 모든 터미널을 Dracula로, 페이지의 테마와 상관없이 바로. 터미널이 가진 태그 중 첫 번째 줄이 이기고, 터미널 자신의 테마가 그 모두보다 먼저입니다. 설정 파일에서는 <code>appearance.byTag</code>입니다:",
+    "from": "ad341f16eef8"
+  },
+  "custom.when.accent": {
+    "text": "강조 색만 바꿔도 충분할 때가 많습니다. <code>aubergine theme new teal --from nord --accent \"#2f9e8f\"</code>는 Nord의 강조 색과 그에 맞는 다섯 가지 색만, 읽을 수 있도록 계산해 바꾸는 테마 파일을 씁니다. 다른 테마처럼 프로젝트나 태그에 고를 수 있습니다.",
+    "from": "4ec0df11bd03"
+  },
+  "custom.text.title": {
+    "text": "글꼴, 커서, 키보드 단축키",
+    "from": "a9eecef9b5f9"
+  },
+  "custom.text.font": {
+    "text": "Settings → Appearance의 <strong>Terminal text</strong>는 터미널 글자의 크기(8~32픽셀)와 글꼴을 정합니다. 글꼴은 목록이며, 처음 찾은 글꼴을 씁니다. <strong>Cursor</strong>는 모양(블록, 막대, 밑줄)과 깜박임 여부를 정합니다.",
+    "from": "dabcfd9344a6"
+  },
+  "custom.keys.text": {
+    "text": "모든 키를 바꿀 수 있습니다. 설정 파일에 <code>shortcuts</code>를 넣고, 명령 이름에 키 조합, 키 조합 목록, 또는 키 없음을 뜻하는 <code>null</code>을 적습니다. <code>shortcutsInAppWindow</code>도 같은 형식이며, Aubergine을 자기 창이 있는 앱으로 설치했을 때만 적용됩니다. 페이지를 다시 불러오면 단축키 표(<strong>?</strong>), 팔레트, 툴팁이 정한 대로 키를 보여 줍니다.",
+    "from": "bf23fd932a40"
+  },
+  "custom.keys.check": {
+    "text": "두 번 정한 키나 읽을 수 없는 키는 단축키 표 맨 위와 서버가 알려 주고, 파일의 나머지는 그대로 적용됩니다. 키 하나만, 또는 Ctrl이나 Option과 키를 함께 쓰는 조합은 어떤 터미널도 키보드를 갖고 있지 않을 때만 동작합니다. 터미널 안의 모든 프로그램이 필요한 키를 계속 받도록 하기 위해서입니다. 자세한 내용은 README의 <a href=\"https://github.com/thirstyeggplant/aubergine#keyboard\">Keyboard</a>에 있습니다.",
+    "from": "fe03dd01e818"
+  },
+  "custom.tpl.title": {
+    "text": "제목과 행에 무엇을 표시할지 고르기",
+    "from": "4e7c78fba1f9"
+  },
+  "custom.tpl.text": {
+    "text": "터미널 이름 뒤에는, 그 제목과 목록의 행이 두 템플릿의 내용을 표시합니다. <code>{state}</code>, <code>{folder}</code>, <code>{time}</code>, <code>{field:Ticket}</code> 같은 자리 표시자가 들어 있는 텍스트입니다. <strong>Settings → Appearance → Titles and rows</strong>에서 바꿀 수 있고, 입력하는 동안 각 필드 아래에 실제 제목과 행이 그려집니다. 설정 파일에서도 바꿀 수 있습니다. 여기서 제목은 상태, 폴더, 필드 Ticket, 링크, 태그를, 행은 상태, 실행의 단계, 브랜치, 시간을 표시합니다:",
+    "from": "8cd1b3e6f3f9"
+  },
+  "custom.tpl.rule": {
+    "text": "표시할 것이 없는 자리 표시자는 그리로 이어지는 텍스트와 함께 빠집니다. 티켓도 링크도 태그도 없는 터미널에서는 이 제목이 상태와 폴더만 표시하고, 남는 점은 없습니다. 템플릿에는 텍스트와 자리 표시자만 들어가며 마크업도 스타일도 없습니다. 각각은 페이지가 다른 곳에서 그것을 그리는 방식 그대로 그려지며, 상태는 그 색으로, 링크는 칩으로 그려집니다. 잘못된 자리 표시자는 필드 아래에 알려지고 건너뛰며, <strong>Reset</strong>은 템플릿이 없을 때 그려지는 것을 정확히 되돌립니다. 모든 자리 표시자는 <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/templates.md\">docs/templates.md</a>에 있습니다.",
+    "from": "163ceba573e3"
+  },
+  "custom.css.title": {
+    "text": "내 스타일시트",
+    "from": "2222b72214ec"
+  },
+  "custom.css.text": {
+    "text": "설정이 닿지 않는 부분은 직접 스타일시트를 쓰면 됩니다. 데이터 폴더의 <code>custom.css</code>입니다. 서버가 이것을 페이지 head의 맨 마지막에 연결하므로 첫 그리기부터 적용되고, 같은 명시도라면 앱의 규칙보다 여러분의 규칙이 이깁니다. <code>!important</code>는 필요 없습니다. <code>aubergine css new</code>가 시작할 파일을 써 주고, <strong>Settings → Appearance → Your stylesheet</strong>에서 파일을 찾았는지 확인하고, 끄고, 새로고침 없이 다시 읽을 수 있습니다.",
+    "from": "c0183f3ec2e0"
+  },
+  "custom.css.hooks": {
+    "text": "훅에만 기대고 다른 것에는 기대지 마세요. 모든 토큰(<code>--accent</code>, <code>--radius-surface</code> 등), 페이지 루트의 속성(<code>data-theme</code>, <code>data-page</code>), <code>data-part</code>로 표시된 부분, 그리고 터미널 자체의 속성(<code>data-tags</code>, <code>data-state</code>, <code>data-name</code>)이며, 이 속성은 노드, 행, 그 터미널만의 브라우저 탭에서 같습니다. 목록은 <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/hooks.md\">docs/hooks.md</a>에 있고 릴리스가 바뀌어도 유지됩니다. 클래스 이름은 유지되지 않습니다. 이 예에서는 태그 prod가 붙은 모든 터미널의 제목이 짙은 빨간색이 되고 지도가 사라집니다.",
+    "from": "e6d9a53fa8bb"
+  },
+  "custom.css.tokens": {
+    "text": "그리고 토큰 두 개로 모든 곳의 모서리를 더 둥글게:",
+    "from": "f2699b36aa09"
+  },
+  "custom.css.out": {
+    "text": "규칙 때문에 페이지가 깨지면 주소 뒤에 <code>?plain</code>을 붙여 여세요. 스타일시트 없이 전송됩니다. 스타일시트가 가리키는 것은 다른 주소에서 가져오지 않습니다. 그림, 글꼴, 스타일시트는 이 서버나 인라인 데이터에서만 오므로, 붙여 넣은 코드 조각이 페이지의 내용을 다른 곳으로 보낼 수 없습니다. 이는 직접 쓰거나 붙여 넣은 파일을 위한 보호 장치이지 샌드박스가 아닙니다. Chromium에서만 시험했습니다.",
+    "from": "7cec576ea647"
+  },
+  "custom.plugin.title": {
+    "text": "내 코드: 플러그인",
+    "from": "a35c5d0a8022"
+  },
+  "custom.plugin.text": {
+    "text": "설정과 스타일시트를 넘어서면 코드를 씁니다. 플러그인은 데이터 폴더의 <code>plugins/&lt;id&gt;/</code> 에 있는 나만의 JavaScript 모듈이며, 이름을 적은 <code>plugin.json</code> 이 함께 있습니다. 페이지는 빌드 단계 없이 그대로 가져와 객체 하나, <code>aubergine</code> 을 건넵니다. 사이드 패널의 섹션, 목록의 필터, 제목이나 행의 자리표시자, 팔레트의 명령, 실행을 보는 방식, 상태와 일어나는 대로의 모든 변경, 그리고 페이지가 하는 모든 호출입니다. <code>aubergine plugin new &lt;id&gt;</code> 가 시작할 것을 하나 써 줍니다.",
+    "from": "b196c36fa6d5"
+  },
+  "custom.plugin.asyou": {
+    "text": "<strong>플러그인은 페이지 안에서 당신으로 실행되며, 무엇도 그것을 떼어 놓지 않습니다.</strong> 모든 터미널을 읽고, 어느 터미널에든 입력하고, 페이지의 무엇이든 바꿀 수 있습니다. 샌드박스가 아닙니다. <strong>Settings → Plugins</strong> 에서 켠 뒤에만, 그리고 켰을 때의 파일 그대로만 실행됩니다. 바뀐 파일은 다시 볼 때까지 불러오지 않습니다. 이것은 코드가 실수로 실행되는 것을 막지만 잠금은 아닙니다. 터미널의 에이전트도 당신으로 실행되어 설정 파일을 쓸 수 있기 때문입니다. 직접 썼거나 읽은 것만 켜세요.",
+    "from": "16f443abcf24"
+  },
+  "custom.plugin.api": {
+    "text": "<code>aubergine</code> 의 멤버는 <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/plugins.md\">docs/plugins.md</a> 에 있고 릴리스마다 추가되기만 합니다. 플러그인이 그 너머에서 닿는 것은 바뀔 수 있습니다. 팔레트의 명령 하나는 몇 줄이면 됩니다.",
+    "from": "ce92bb9a9099"
+  },
+  "custom.plugin.out": {
+    "text": "플러그인이 페이지를 망가뜨리면 주소 뒤에 <code>?plain</code> 을 붙여 여세요. 어떤 플러그인도 불러오지 않고, 스타일시트도 빠집니다. 실패한 플러그인은 Settings 에 표시되고, 페이지와 다른 플러그인은 계속 동작합니다. 끄면 <code>aubergine</code> 으로 더한 것은 바로 사라지고, 그 너머에서 한 일은 새로고침으로 사라집니다. Chromium 에서만 시험했습니다.",
+    "from": "6b1c8303252c"
+  },
+  "custom.file.title": {
+    "text": "스스로를 설명하는 설정 파일 하나",
+    "from": "9d7e735d280e"
+  },
+  "custom.file.text": {
+    "text": "이 모든 것은 Aubergine 데이터 폴더의 <code>config.json</code>에 저장되며, 위치는 <code>aubergine settings path</code>가 알려 줍니다. 어떤 키든 빼도 됩니다. 읽을 수 없는 파일은 기본값을 뜻할 뿐, 서버가 시작되지 않는 일은 없습니다. 페이지의 Settings는 바꾼 키만 쓰고, 파일의 나머지는 쓴 그대로 둡니다.",
+    "from": "332625c30531"
+  },
+  "custom.file.schema": {
+    "text": "서버는 시작할 때마다 파일 옆에 <code>config.schema.json</code>을 씁니다. 한 줄만 더하면 JSON Schema를 읽는 편집기가 모든 키를 설명하고 자동 완성합니다.",
+    "from": "f85b680c55e6"
+  },
+  "custom.file.cli": {
+    "text": "<code>aubergine settings list</code>는 모든 키를 지금 값과 함께 보여 주고 기본값이 아닌 것에 표시하며, <code>aubergine settings schema</code>는 스키마를 출력합니다. <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/settings.md\">docs/settings.md</a>는 모든 키와 기본값, 그리고 Settings가 쓰는지 직접 쓰는지를 설명합니다.",
+    "from": "255d97752978"
+  },
+  "custom.file.all": {
+    "text": "페이지에서는 <strong>Settings → Every setting</strong>이 같은 키를 값과 함께 보여 주고, 입력하는 대로 찾아 줍니다. Settings가 바꾸는 키는 해당 컨트롤로 데려가고, 직접 쓰는 키에는 파일에 넣을 줄을 위한 <strong>Copy</strong>가 있습니다. 거기서는 어떤 설정도 바뀌지 않습니다.",
+    "from": "3f848aa20a56"
+  },
+  "custom.all.alt": {
+    "text": "Settings의 Every setting을 열고 검색에 ‘appearance’를 입력한 모습: 키 여섯 개가 지금 값, 설명, 기본값과 함께 나오고, 다섯 개는 Changed above, appearance.colors에는 Copy 버튼.",
+    "from": "3ff59f419a23"
+  },
+  "custom.all.caption": {
+    "text": "검색한 Every setting: 각 키의 설명, 지금 값, 기본값.",
+    "from": "44060f83bf0e"
+  },
+  "custom.file.browser": {
+    "text": "어떤 선택은 이 브라우저의 것이며 브라우저에 저장됩니다. 캔버스를 탭, 목록 하나, 열 중 무엇으로 보일지, 캔버스 위 막대의 위치와 열어 둘지, 사이드 패널과 지도를 접을지, 패널과 터미널 세부 정보의 너비, 그리고 터미널 목록의 필터, 묶음, 정렬입니다.",
+    "from": "8d660a5ed4ca"
+  },
+  "custom.program.title": {
+    "text": "프로그램이나 에이전트가 바꿀 수 있는 것, 여러분의 것으로 남는 것",
+    "from": "15b7cd56fd35"
+  },
+  "custom.program.text": {
+    "text": "<a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/api.md\">로컬 API</a>를 통해, API 토큰을 가진 프로그램은 <code>canvases:write</code>로 캔버스를 정리할 수 있습니다. 이름, 색, 순서를 정하고, 그 위의 터미널을 옮기고 크기를 바꾸고 색을 주고, 프레임을 더합니다. <code>sessions:write</code>로는 터미널의 이름을 바꾸고 태그를 달고 필드를 바꾸고 색 테마를 줄 수 있습니다. 토큰이 닿는 프로젝트에만 닿습니다.",
+    "from": "a0cf33b31432"
+  },
+  "custom.program.agent": {
+    "text": "터미널 안의 에이전트는 자기 터미널만 설명하고 다른 터미널은 설명하지 않습니다. 이름, 무엇을 위한 것인지에 대한 요약, 링크, 필드를 <code>aubergine describe</code>, <code>aubergine link add</code>, <code>aubergine field set</code>으로 정합니다. 여러분이 직접 쓴 이름, 요약, 필드는 그대로 남고, 에이전트가 보낸 것은 제안으로 옆에 보관됩니다. 에이전트나 <code>workflows:write</code>이 있는 프로그램은 <code>aubergine theme propose</code>으로 색상 테마를 제안할 수도 있습니다. 여러분이 Review에서 읽고, 그려진 모습을 보고, 페이지에서 시험해 본 뒤 받아들이기 전까지는 어디에도 그려지지 않으며, 받아들이면 그 파일이 쓰일 뿐 아무것도 선택되지 않습니다.",
+    "from": "5f84d264cd4d"
+  },
+  "custom.program.owner": {
+    "text": "설정 자체는 오직 여러분의 것입니다. 어떤 토큰, 터미널, 에이전트도 바꿀 수 없습니다. <code>PUT /v1/settings/appearance</code>는 로그인한 브라우저에만 응답하고, <code>appearance.colors</code>, <code>shortcuts</code> 등은 파일에 직접 씁니다.",
+    "from": "8120d56c7837"
+  },
+  "custom.cmp.title": {
+    "text": "다른 도구는 인터페이스를 어떻게 사용자 지정하게 하나요?",
+    "from": "66e3b8de628b"
+  },
+  "custom.cmp.how": {
+    "text": "<strong>이 표를 쓴 방법.</strong> 표에서 각 도구에 대해 말하는 내용은 그 도구 자체의 문서를 2026년 11월 28일에 읽은 것이며, 이름과 칸에서 링크됩니다. 이를 위해 이 도구들을 실행하지는 않았습니다. ‘찾지 못함’은 읽은 문서에 설명이 없다는 뜻이지, 그 도구가 할 수 없다는 뜻이 아닙니다. 틀리거나 오래된 내용이 있으면 <a href=\"https://github.com/thirstyeggplant/aubergine/issues\">알려 주세요</a>.",
+    "from": "6ef9a80f81b8"
+  },
+  "custom.cmp.tool": {
+    "text": "도구",
+    "from": "2e53bdcd0740"
+  },
+  "custom.cmp.settings": {
+    "text": "설정",
+    "from": "74a883a037bc"
+  },
+  "custom.cmp.themes": {
+    "text": "테마와 색",
+    "from": "1483a0993975"
+  },
+  "custom.cmp.css": {
+    "text": "내 CSS",
+    "from": "7551db76a705"
+  },
+  "custom.cmp.code": {
+    "text": "내 코드",
+    "from": "90cd41d7d612"
+  },
+  "custom.cmp.templates": {
+    "text": "제목과 상태 표시 템플릿",
+    "from": "0eb761541eb1"
+  },
+  "custom.cmp.kind.editor": {
+    "text": "편집기",
+    "from": "120815ad81ae"
+  },
+  "custom.cmp.kind.notes": {
+    "text": "노트 앱",
+    "from": "d4729aaa963c"
+  },
+  "custom.cmp.kind.terminal": {
+    "text": "터미널",
+    "from": "2c2715f8c7d4"
+  },
+  "custom.cmp.kind.mux": {
+    "text": "터미널 멀티플렉서",
+    "from": "b643b9019461"
+  },
+  "custom.cmp.kind.aubergine": {
+    "text": "캔버스 위의 터미널",
+    "from": "ef37110351f3"
+  },
+  "custom.cmp.none": {
+    "text": "찾지 못함",
+    "from": "66d2c65a4ede"
+  },
+  "custom.cmp.vscode.settings": {
+    "text": "<code>settings.json</code> 또는 Settings 편집기, 사용자에서 작업 영역, 폴더, 언어로 이어지는 층",
+    "from": "6dbfbb0bf531"
+  },
+  "custom.cmp.vscode.themes": {
+    "text": "확장의 <a href=\"https://code.visualstudio.com/docs/configure/themes\">테마 파일</a>; <code>workbench.colorCustomizations</code>, 모든 테마 또는 하나에",
+    "from": "a9721fe91937"
+  },
+  "custom.cmp.vscode.css": {
+    "text": "지원하지 않는다고 <a href=\"https://code.visualstudio.com/api/extension-capabilities/overview\">문서에 적혀 있음</a>",
+    "from": "5356dd1be55f"
+  },
+  "custom.cmp.vscode.code": {
+    "text": "확장. VS Code와 같은 권한을 갖지만 인터페이스의 DOM에는 접근하지 못함; 자체 화면은 webview",
+    "from": "cc389854306b"
+  },
+  "custom.cmp.vscode.templates": {
+    "text": "<code>window.title</code>과 터미널 탭 제목이 <code>${…}</code> 변수를 받음",
+    "from": "9111f5a25682"
+  },
+  "custom.cmp.zed.settings": {
+    "text": "Settings Editor 또는 주석을 쓸 수 있는 <code>settings.json</code>; 사용자, 그다음 프로젝트",
+    "from": "12431607ec58"
+  },
+  "custom.cmp.zed.themes": {
+    "text": "스키마가 있는 <a href=\"https://zed.dev/docs/themes\">JSON 테마 파일</a>; 테마 하나에 <code>theme_overrides</code>; 밝게, 어둡게, 시스템",
+    "from": "e0b219720c50"
+  },
+  "custom.cmp.zed.code": {
+    "text": "Rust로 쓰고 WebAssembly로 컴파일한 확장, 제한할 수 있는 <a href=\"https://zed.dev/docs/extensions/capabilities\">권한</a> 포함",
+    "from": "f9b83a4e3656"
+  },
+  "custom.cmp.obsidian.settings": {
+    "text": "보관함마다 있는 <code>.obsidian</code> 폴더의 파일",
+    "from": "2a7acb83efb8"
+  },
+  "custom.cmp.obsidian.themes": {
+    "text": "<a href=\"https://docs.obsidian.md/Themes/App+themes/Build+a+theme\">테마는 CSS</a>, 문서화된 CSS 변수",
+    "from": "c6b43ef8f558"
+  },
+  "custom.cmp.obsidian.css": {
+    "text": "CSS 스니펫, 하나씩 켬",
+    "from": "71b027b4744c"
+  },
+  "custom.cmp.obsidian.code": {
+    "text": "Obsidian과 같은 접근 권한을 갖는 JavaScript <a href=\"https://help.obsidian.md/plugin-security\">플러그인</a>; 제한 모드를 끄기 전에는 실행되지 않음",
+    "from": "ebe845afbaf3"
+  },
+  "custom.cmp.hyper.settings": {
+    "text": "파일 하나: 문서화된 릴리스에서는 <code>.hyper.js</code>, 개발 브랜치에서는 <code>hyper.json</code>",
+    "from": "cc98e8ab46d3"
+  },
+  "custom.cmp.hyper.themes": {
+    "text": "테마는 플러그인",
+    "from": "48e534e5d2ab"
+  },
+  "custom.cmp.hyper.css": {
+    "text": "창에는 <code>css</code>; <code>termCSS</code>는 버전 2부터 <a href=\"https://github.com/vercel/hyper/blob/canary/PLUGINS.md\">터미널 글자에 스타일을 주지 못함</a>",
+    "from": "0792e3e69be1"
+  },
+  "custom.cmp.hyper.code": {
+    "text": "Electron과 렌더러가 불러오는 npm 플러그인: React 컴포넌트를 감싸고 Redux 미들웨어를 더함",
+    "from": "7e3468ba9cdd"
+  },
+  "custom.cmp.wezterm.settings": {
+    "text": "Lua 파일 <code>.wezterm.lua</code>",
+    "from": "e2d4cfe9b3ef"
+  },
+  "custom.cmp.wezterm.themes": {
+    "text": "<a href=\"https://wezterm.org/config/appearance.html\">700가지가 넘는 색 구성</a>; 직접 만든 것은 Lua나 TOML; 개별 색은 <code>colors</code>",
+    "from": "852065821910"
+  },
+  "custom.cmp.wezterm.code": {
+    "text": "설정 자체가 Lua; <a href=\"https://wezterm.org/config/plugins.html\">플러그인</a>은 Git 주소에서 받는 Lua",
+    "from": "3c87ef215bdb"
+  },
+  "custom.cmp.wezterm.templates": {
+    "text": "Lua 함수가 탭과 창 제목을 돌려줌(<a href=\"https://wezterm.org/config/lua/window-events/format-tab-title.html\"><code>format-tab-title</code></a>)",
+    "from": "7c7076a3a34d"
+  },
+  "custom.cmp.tmux.settings": {
+    "text": "파일에 쓴 tmux 명령; 서버, 세션, 창, 패널별 옵션",
+    "from": "178293a2f902"
+  },
+  "custom.cmp.tmux.themes": {
+    "text": "<code>status-style</code>, <code>window-style</code> 같은 스타일",
+    "from": "f43d8249a6c9"
+  },
+  "custom.cmp.tmux.code": {
+    "text": "훅이 tmux 명령을 실행; 프로그램용 제어 모드",
+    "from": "47e37dc0de8a"
+  },
+  "custom.cmp.tmux.templates": {
+    "text": "<code>#{…}</code>를 쓰는 <a href=\"https://man.openbsd.org/tmux.1#FORMATS\">형식</a>, 상태 줄, 창 목록, 패널 테두리, 제목에",
+    "from": "e06333c05625"
+  },
+  "custom.cmp.kitty.settings": {
+    "text": "<code>kitty.conf</code>, 다른 파일 포함 가능, 바뀌면 다시 읽음",
+    "from": "60f6aaf0744e"
+  },
+  "custom.cmp.kitty.themes": {
+    "text": "테마는 <code>.conf</code> 파일; <a href=\"https://sw.kovidgoyal.net/kitty/kittens/themes/\"><code>kitten themes</code></a>로 300개가 넘는 것 중 고르고, 어두울 때와 밝을 때를 따로 정할 수 있음",
+    "from": "1eac8df3e6f7"
+  },
+  "custom.cmp.kitty.code": {
+    "text": "kitty 내부에 완전히 접근하는 Python <a href=\"https://sw.kovidgoyal.net/kitty/kittens/custom/\">키튼</a>; 감시자",
+    "from": "1aa5c56cc144"
+  },
+  "custom.cmp.kitty.templates": {
+    "text": "<code>tab_title_template</code>, 여기서 <code>{custom}</code>이 내 Python을 호출",
+    "from": "72e78b0f5053"
+  },
+  "custom.cmp.ghostty.settings": {
+    "text": "<code>key = value</code> 파일; <code>config-file</code>로 다른 파일 추가",
+    "from": "0aed8a057084"
+  },
+  "custom.cmp.ghostty.themes": {
+    "text": "<a href=\"https://ghostty.org/docs/features/theme\">테마는 설정 파일</a>; 밝을 때 하나, 어두울 때 하나",
+    "from": "6e03a766b678"
+  },
+  "custom.cmp.ghostty.code": {
+    "text": "터미널 위에 덧입히는 <a href=\"https://ghostty.org/docs/config/reference#custom-shader\">GLSL 셰이더</a>; macOS에서는 AppleScript",
+    "from": "cde7e57ced35"
+  },
+  "custom.cmp.wt.settings": {
+    "text": "Settings 화면 또는 <code>settings.json</code>, <a href=\"https://github.com/microsoft/terminal/blob/main/doc/cascadia/profiles.schema.json\">JSON 스키마</a> 있음",
+    "from": "1d08016a0bea"
+  },
+  "custom.cmp.wt.themes": {
+    "text": "프로필별 색 구성; 창과 탭의 <a href=\"https://learn.microsoft.com/windows/terminal/customize-settings/themes\">테마</a>는 밝게와 어둡게, JSON에서만",
+    "from": "74411fb1735c"
+  },
+  "custom.cmp.wt.code": {
+    "text": "찾지 못함; 다른 앱이 JSON 조각으로 프로필과 색 구성을 추가",
+    "from": "3ff970c2f46d"
+  },
+  "custom.cmp.wt.templates": {
+    "text": "찾지 못함; 프로필이 <code>tabTitle</code>과 <code>tabColor</code>를 정함",
+    "from": "2578d12f8fda"
+  },
+  "custom.cmp.iterm2.settings": {
+    "text": "Settings의 프로필; 속성 목록 파일인 <a href=\"https://iterm2.com/documentation-dynamic-profiles.html\">Dynamic Profiles</a>",
+    "from": "7c477caf4c27"
+  },
+  "custom.cmp.iterm2.themes": {
+    "text": "사용자, 호스트, 폴더, 작업에 따라 고르는 프로필(Shell Integration 필요)",
+    "from": "654dec9e1e7a"
+  },
+  "custom.cmp.iterm2.code": {
+    "text": "<a href=\"https://iterm2.com/python-api/\">Python API</a>, Python으로 만드는 상태 막대 구성 요소, AppleScript",
+    "from": "081a02768b0a"
+  },
+  "custom.cmp.iterm2.templates": {
+    "text": "세션 이름, 배지, 상태 막대의 <a href=\"https://iterm2.com/documentation-scripting-fundamentals.html\">보간 문자열</a> <code>\\(…)</code>",
+    "from": "d543c499cae1"
+  },
+  "custom.cmp.a.settings": {
+    "text": "<code>config.json</code>과 Settings, 편집기용 JSON Schema 포함",
+    "from": "bd438e8036f3"
+  },
+  "custom.cmp.a.themes": {
+    "text": "열 가지 테마, 라이트·다크·시스템 따라; 그중 하나 위에 얹는 나만의 JSON 파일; 프로젝트, 태그가 있는 터미널, 터미널마다 하나; 35가지 색을 직접, 모든 테마나 하나에",
+    "from": "5daef6eb6445"
+  },
+  "custom.cmp.a.css": {
+    "text": "있음: 데이터 폴더의 <code>custom.css</code>, 문서화된 훅 포함",
+    "from": "7db23532c40d"
+  },
+  "custom.cmp.a.code": {
+    "text": "있음: 플러그인. 페이지 안에서 당신으로 실행되는 JavaScript 모듈로, 문서화된 API를 통해, 또 그 너머로. 샌드박스 없음",
+    "from": "96c911a66f1f"
+  },
+  "custom.cmp.a.templates": {
+    "text": "두 개. 터미널의 제목과 목록의 행을 위한 것으로, <code>{state}</code>와 <code>{field:Ticket}</code> 같은 자리 표시자가 들어 있는 텍스트",
+    "from": "8133a0a553fb"
+  },
+  "custom.cmp.p1": {
+    "text": "여기 있는 모든 도구는 설정을 파일에 두며, VS Code, Zed, Windows Terminal에는 Aubergine처럼 그 파일을 쓰는 화면도 있습니다. 대부분에서 테마도 파일입니다. VS Code와 Zed에서는 JSON, Obsidian에서는 CSS, WezTerm에서는 Lua나 TOML, kitty와 Ghostty에서는 설정 파일입니다. VS Code, Zed, WezTerm에서는 여기의 <code>appearance.colors</code>처럼 테마 위에 개별 색을 바꿀 수 있습니다.",
+    "from": "b3a5c5fb431c"
+  },
+  "custom.cmp.p2": {
+    "text": "가장 크게 다른 것은 코드입니다. WezTerm의 설정은 통째로 Lua 프로그램이고, kitty와 iTerm2는 내 Python을 실행하며, Hyper의 플러그인은 인터페이스를 감싸는 JavaScript입니다. Obsidian과 Hyper는 내 CSS도 받습니다. VS Code의 확장은 인터페이스의 DOM에 접근하지 못하고, VS Code는 내 스타일시트를 지원하지 않습니다. Zed는 확장을 WebAssembly로, 제한할 수 있는 권한과 함께 실행합니다. tmux, WezTerm, kitty, iTerm2는 템플릿이나 함수로 제목과 상태 줄을 만듭니다.",
+    "from": "9538078a7039"
+  },
+  "custom.cmp.p3": {
+    "text": "오늘의 Aubergine은 설정 쪽에서 코드까지 닿습니다. 스스로를 설명하는 파일에 담긴 테마·색·키, 설정 일부를 쓰는 페이지, 터미널 제목과 행이 말하는 것의 템플릿, 안정적으로 유지되는 훅이 있는 나만의 스타일시트, 그리고 플러그인, 추가되기만 하는 API를 가진 페이지 속 나만의 JavaScript입니다. 플러그인은 페이지가 할 수 있는 모든 것을 가지고 실행됩니다. 다른 사람의 플러그인을 위한 샌드박스 모드는 <a href=\"/roadmap/#rm-yours\">로드맵</a>에 있으며 아직 만들어지지 않았습니다.",
+    "from": "35e798f5a422"
+  },
+  "custom.cmp.mark": {
+    "text": "Aubergine은 이 페이지에 이름이 나온 어떤 도구와도 제휴하지 않았습니다. 각 이름은 해당 소유자의 상표입니다.",
+    "from": "f011c5b28706"
+  },
+  "custom.plan.title": {
+    "text": "계획된 것",
+    "from": "e10eed0040ae"
+  },
+  "custom.plan.text": {
+    "text": "다른 사람이 쓴 플러그인을 샌드박스에서 실행하는 방식과 검토 화면을 통한 설치는 계획되어 있으며 아직 만들어지지 않았습니다. <a href=\"/roadmap/#rm-yours\">로드맵</a>을 보세요.",
+    "from": "3d1b428010be"
+  },
+  "custom.q.terminal.q": {
+    "text": "터미널마다 다른 색 테마를 쓸 수 있나요?",
+    "from": "da02700eeeb8"
+  },
+  "custom.q.terminal.a": {
+    "text": "예. 터미널 메뉴의 Theme…로 페이지의 테마와 상관없이 본문을 열 가지 테마 중 어느 것으로든 그릴 수 있습니다. 태그가 있는 터미널은 Settings에서 그 태그로 테마를 받을 수 있고, 나머지는 터미널 기본값이나 페이지를 따릅니다.",
+    "from": "0b2729c2862a"
+  },
+  "custom.q.css.q": {
+    "text": "Aubergine에 내 CSS를 넣을 수 있나요?",
+    "from": "e4f4bf19de27"
+  },
+  "custom.q.css.a": {
+    "text": "네. 데이터 폴더의 <code>custom.css</code>입니다(<code>aubergine css new</code>가 시작할 파일을 써 줍니다). 첫 그리기부터 페이지의 마지막에 연결되며, 기댈 수 있는 훅은 docs/hooks.md에 있습니다. 페이지 주소에 <code>?plain</code>을 붙이면 그것 없이 볼 수 있습니다.",
+    "from": "8ebf56535e5d"
+  },
+  "custom.q.code.q": {
+    "text": "Aubergine 용 플러그인을 직접 쓸 수 있나요?",
+    "from": "d5b081c290fa"
+  },
+  "custom.q.code.a": {
+    "text": "네. 데이터 폴더의 <code>plugins/&lt;id&gt;/</code> 에 JavaScript 모듈을 두고(<code>aubergine plugin new &lt;id&gt;</code> 가 시작할 것을 써 줍니다) Settings → Plugins 에서 켭니다. 페이지 안에서 당신으로, 페이지가 할 수 있는 모든 것을 가지고 실행됩니다. 샌드박스가 아닙니다.",
+    "from": "2cdaf7e15ca1"
+  },
+  "custom.q.file.q": {
+    "text": "Aubergine의 설정 파일은 어디에 있나요?",
+    "from": "4378f9f24f9d"
+  },
+  "custom.q.file.a": {
+    "text": "Aubergine 데이터 폴더의 <code>config.json</code>입니다. <code>aubergine settings path</code>가 위치를 알려 주고, 서버도 시작할 때 보여 줍니다.",
+    "from": "c3247c2edfe9"
+  },
+  "custom.q.agent.q": {
+    "text": "에이전트가 Aubergine의 모양을 바꿀 수 있나요?",
+    "from": "f2f43a3f85b7"
+  },
+  "custom.q.agent.a": {
+    "text": "설정은 아닙니다. 설정은 오직 여러분의 것입니다. 에이전트는 자기 터미널의 이름을 정하고 설명할 수 있으며, 여러분이 읽고 받아들이기를 기다리는 색상 테마를 제안할 수 있습니다. API 토큰이 허락하는 프로그램은 터미널의 이름을 바꾸고 태그를 달고 테마를 주고 캔버스를 정리할 수 있으며, 테마를 제안할 수도 있습니다.",
+    "from": "4fff2dbea759"
+  },
+  "custom.related": {
+    "text": "관련: <a href=\"/too-many-terminal-tabs/\">원하는 터미널 찾기</a> · <a href=\"/tmux-without-learning-tmux/\">tmux를 배우지 않고 tmux 쓰기</a> · <a href=\"/security/\">보안과 개인 정보</a> · <a href=\"/faq/\">자주 묻는 질문</a>",
+    "from": "64333f8f5a0d"
+  },
+  "roadmap.yours.title": {
+    "text": "내 방식대로",
+    "from": "34ca8a4540f5"
+  },
+  "roadmap.yours.sub": {
+    "text": "오늘의 테마, 색, 키, 템플릿, 나만의 스타일시트와 나만의 플러그인을 넘어, 페이지를 더 내 모양대로.",
+    "from": "f6ef69a6539a"
+  },
+  "roadmap.yours.plugins.name": {
+    "text": "다른 사람의 플러그인",
+    "from": "eea2e52b2e70"
+  },
+  "roadmap.yours.plugins.text": {
+    "text": "다른 사람이 쓴 플러그인을 위한, 모든 것보다 적은 권한의 샌드박스 모드와 검토 화면을 통한 설치. 페이지 안에서 당신으로 완전한 제어를 가지고 실행되는 나만의 플러그인은 만들어져 있습니다.",
+    "from": "08c850bebd87"
   }
 }

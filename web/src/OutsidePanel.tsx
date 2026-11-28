@@ -114,7 +114,7 @@ export function OutsidePanel() {
       </button>
       )}
       {open && (
-        <div className="outside-panel nowheel" role="dialog" aria-label="Terminals open elsewhere" data-testid="outside-panel">
+        <div className="outside-panel nowheel" role="dialog" data-part="dialog" aria-label="Terminals open elsewhere" data-testid="outside-panel">
           <header>
             <span>Terminals open in your terminal application</span>
             <button type="button" className="quiet" onClick={() => void refresh()} disabled={loading}>
