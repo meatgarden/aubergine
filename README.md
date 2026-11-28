@@ -1801,6 +1801,8 @@ Neither terminal scope is implied by any other, `read` included.
 
 **The routes** are in [docs/api.md](docs/api.md): one section for each, with the scope it needs, its parameters, what it takes and gives, and an example with curl. In short: canvases (list, create, read, change, close, show), terminals (list, start, read, change, end, move, park, restore, show), notes, layout (nodes and frames), and a stream of changes.
 
+**To react to what happens** (a terminal starts waiting, a command fails, a task is done), follow that stream from a program of yours: [Reacting to what happens: the event stream](docs/events.md), with two example scripts in [`examples/events/`](examples/events).
+
 That reference is not written by hand. Every route is declared once in the code; the server registers its handlers from those declarations and describes them, as an OpenAPI 3.1 document, at:
 
 ```sh
