@@ -667,7 +667,10 @@ aubergine project export "Garden site" garden.project.json
 aubergine project import garden.project.json --place main=~/work/garden   # prints all of it, then asks
 aubergine project templates
 aubergine project new "Mornings" --template "Morning list"
+aubergine project diff garden.project.json --project "Garden site"        # how the file and the project differ; changes nothing
 ```
+
+**Comparing a file with a project.** A file kept in a repository can be compared with the project it describes: `aubergine project diff <file>` prints what only the file has, what only the project has, and what both have differently, matched by name (a renamed thing shows as one of each). It changes nothing, and ends with 0 when they agree, 1 when they differ and 2 when nothing could be compared, so it can run in a check. Only what a file holds is compared, and there is no command yet that makes a project match a file.
 
 The format is written down in [docs/project-file.md](docs/project-file.md).
 
