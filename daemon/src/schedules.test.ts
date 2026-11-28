@@ -469,6 +469,10 @@ describe('what stays the owner\'s', () => {
     const proposed = await asSession(worker, 'POST', `/v1/sessions/${worker.id}/tasks`, { title: 'Run me every minute', source: { kind: 'schedule', name: 'Theirs' } });
     expect(proposed.status, JSON.stringify(proposed.body)).toBe(201);
     expect(proposed.body).toMatchObject({ state: 'proposed', unattended: false, elementId: null });
+    // Nor is its terminal heard while it is on that run: it asks, a command fails in it, it says it finished.
+    for (const event of ['terminal.waiting', 'terminal.finished', 'command.failed']) await asOwner('POST', '/v1/rules', { event, action: { kind: 'notify' } });
+    for (const state of ['waiting', 'working', 'done', 'working']) expect((await asSession(worker, 'PUT', `/v1/sessions/${worker.id}/attention`, { state })).status).toBe(200);
+    hub.emit({ type: 'session.status', sessionId: worker.id, status: { ...worker.status, state: 'idle', lastExit: 1, lastFinishedAt: '2026-06-15T12:32:00.000Z' } });
     await new Promise((resolve) => setTimeout(resolve, 150));
     expect(notified).toEqual([]);
     expect(activity.entries.filter((entry) => entry.caller === 'rule')).toEqual([]);
@@ -484,6 +488,13 @@ describe('what stays the owner\'s', () => {
     await until(() => !queueNow().ruleRuns.includes(run.id));
     await asSession(worker, 'POST', `/v1/sessions/${worker.id}/asks`, { text: 'And now?' });
     await until(() => notified.length === 1);
+    // The end of its turn still comes about because of that run and is not heard; what it does once it was given something new is.
+    expect((await asSession(worker, 'PUT', `/v1/sessions/${worker.id}/attention`, { state: 'done' })).status).toBe(200);
+    await new Promise((resolve) => setTimeout(resolve, 150));
+    expect(notified).toHaveLength(1);
+    for (const state of ['working', 'done']) await asSession(worker, 'PUT', `/v1/sessions/${worker.id}/attention`, { state });
+    await until(() => notified.length === 2);
+    expect(notified[1]).toBe('The terminal “worker” finished');
   });
 });
 

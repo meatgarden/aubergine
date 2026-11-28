@@ -343,6 +343,19 @@ describe('a project written to a file', () => {
   });
 });
 
+describe('a rule that hears a terminal', () => {
+  it('is written into a file and read in from one, switched off like every rule', async () => {
+    const projectId = state().projects[0]!.id;
+    for (const event of ['terminal.waiting', 'terminal.finished', 'command.failed']) expect((await asOwner('POST', '/v1/rules', { projectId, event, action: { kind: 'notify' } })).status).toBe(201);
+    const { text } = await exportOf(projectId);
+    expect((JSON.parse(text) as ProjectFile).rules.map((r) => r.event)).toEqual(['terminal.waiting', 'terminal.finished', 'command.failed']);
+    expect((await reading(text)).counts.rules).toBe(3);
+    const taken = await takeIn(text, { name: 'Read in again' });
+    expect(taken.status, all(taken.body)).toBe(201);
+    expect(state().queue.rules.filter((r) => r.projectId !== projectId).map((r) => [r.event, r.on])).toEqual([['terminal.waiting', false], ['terminal.finished', false], ['command.failed', false]]);
+  });
+});
+
 describe('a file read in on another server', () => {
   it('gives the same canvases, layout, frames, notes, rules, schedules, workflows and steps, with new IDs and nothing pointing at the first server', async () => {
     const { projectId, folder } = await fullProject();

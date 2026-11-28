@@ -8961,7 +8961,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
     id: string;
     /** The project it belongs to. Set by the server from where it was made. */
     projectId: string;
-    event: "task.done" | "task.failed" | "task.needs-owner" | "ask.added" | "schedule.fired" | "schedule.failed";
+    event: "task.done" | "task.failed" | "task.needs-owner" | "ask.added" | "schedule.fired" | "schedule.failed" | "terminal.waiting" | "terminal.finished" | "command.failed";
     action: {
       kind: string;
       [key: string]: unknown;
@@ -9006,7 +9006,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
     id: string;
     /** The project it belongs to. Set by the server from where it was made. */
     projectId: string;
-    event: "task.done" | "task.failed" | "task.needs-owner" | "ask.added" | "schedule.fired" | "schedule.failed";
+    event: "task.done" | "task.failed" | "task.needs-owner" | "ask.added" | "schedule.fired" | "schedule.failed" | "terminal.waiting" | "terminal.finished" | "command.failed";
     action: {
       kind: string;
       [key: string]: unknown;
@@ -9053,7 +9053,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
     id: string;
     /** The project it belongs to. Set by the server from where it was made. */
     projectId: string;
-    event: "task.done" | "task.failed" | "task.needs-owner" | "ask.added" | "schedule.fired" | "schedule.failed";
+    event: "task.done" | "task.failed" | "task.needs-owner" | "ask.added" | "schedule.fired" | "schedule.failed" | "terminal.waiting" | "terminal.finished" | "command.failed";
     action: {
       kind: string;
       [key: string]: unknown;

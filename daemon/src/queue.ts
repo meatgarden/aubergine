@@ -25,6 +25,9 @@ import {
   newId,
   nextToStart,
   occasionOfTask,
+  occasionOfTerminal,
+  terminalBefore,
+  terminalHappening,
   orderAtEnd,
   placeOfSession,
   queueWords,
@@ -46,6 +49,8 @@ import {
   type ForYou,
   type ItemSource,
   type Occasion,
+  type TerminalBefore,
+  type TerminalRuleEvent,
   type OwnQueue,
   type QueueSettings,
   type Rule,
@@ -104,6 +109,15 @@ export class Queue {
   /** What each rule already fired for, and when it fired lately. Not kept across a restart. */
   private readonly fired = new Set<string>();
   private readonly firedAt = new Map<string, number[]>();
+  /** What each terminal was, to tell a change from a repeat: a rule hears a terminal start to wait, not that it waits. Memory. */
+  private readonly terminals: Map<string, TerminalBefore>;
+  /**
+   * Terminals a rule's run (or an unattended task's) was on and has ended on. What such a terminal does next (its
+   * agent finishes its turn, or asks) still comes about because of that run, so it stays unheard until its attention
+   * is something other than waiting or finished again: the owner looked at it, or it was given something new. Memory.
+   */
+  private readonly unheard = new Set<string>();
+  private happenings = 0;
 
   constructor(
     private readonly hub: StateHub,
@@ -114,6 +128,7 @@ export class Queue {
     private readonly archive: TaskArchive,
     private readonly options: QueueOptions,
   ) {
+    this.terminals = new Map(hub.state.sessions.map((session) => [session.id, terminalBefore(session)]));
     this.unsubscribe = hub.subscribe((event) => this.on(event));
   }
 
@@ -153,11 +168,13 @@ export class Queue {
   /* ---------- Following what happens ---------- */
 
   private on(event: ChangeEvent): void {
+    this.heard(event);
     if (event.type === 'run.moved' || event.type === 'run.finished') {
       const task = this.queue.tasks.find((t) => t.runId === event.run.id);
       if (task) this.follow(task, event.run);
       if (event.type === 'run.finished') {
         // A run a rule started is over: what its terminal does from now on can set off rules again.
+        if (this.queue.ruleRuns.includes(event.run.id) && event.run.sessionId) this.unheard.add(event.run.sessionId);
         if (this.queue.ruleRuns.includes(event.run.id)) this.emitSettings(projectOfRun(this.hub.state, event.run) ?? firstProject(this.hub.state).id, { ruleRuns: this.queue.ruleRuns.filter((id) => id !== event.run.id) });
         this.maybeDispatch();
       }
@@ -168,6 +185,35 @@ export class Queue {
     if (event.type === 'task.changed' && event.task.state === 'queued') this.maybeDispatch();
     else if (event.type === 'queue.settings') this.maybeDispatch();
     else if (FREES_AN_AGENT.has(event.type)) this.maybeDispatch();
+  }
+
+  /**
+   * What a change event means for a terminal, said to the rules: it started waiting for the owner, its agent
+   * finished, a command in it failed. The happening is the change, so a terminal that keeps waiting is heard once.
+   * A terminal on a run a rule started, or an unattended task's, is not heard at all, nor is it afterwards until
+   * its attention has been something else (`unheard`): a rule cannot set itself off.
+   */
+  private heard(event: ChangeEvent): void {
+    if (event.type === 'session.closed') {
+      this.terminals.delete(event.sessionId);
+      this.unheard.delete(event.sessionId);
+      return;
+    }
+    const happening = terminalHappening((id) => this.terminals.get(id), event);
+    if (!happening) return;
+    this.terminals.set(happening.sessionId, happening.after);
+    const session = this.hub.state.sessions.find((s) => s.id === happening.sessionId);
+    if (!session) return;
+    const run = this.workflows.liveRunOf(session.id);
+    const onRuleRun = run !== null && this.queue.ruleRuns.includes(run.id);
+    // Off that run, the first time its attention is neither waiting nor finished, it is heard again: from the next change on.
+    if (!onRuleRun && event.type === 'session.attention' && happening.after.attention !== 'waiting' && happening.after.attention !== 'done') this.unheard.delete(session.id);
+    if (onRuleRun || this.unheard.has(session.id)) return;
+    const events: TerminalRuleEvent[] = [...(happening.waiting === 'began' ? (['terminal.waiting'] as const) : []), ...(happening.finished === 'began' ? (['terminal.finished'] as const) : []), ...(happening.failedWith !== null ? (['command.failed'] as const) : [])];
+    for (const what of events) {
+      this.happenings += 1;
+      this.fire(occasionOfTerminal(session, what, this.happenings), { kind: 'hand' });
+    }
   }
 
   /** A task follows its run. */
@@ -454,6 +500,8 @@ export class Queue {
         const created = await this.sessions.create({ agent: 'claude-code', agentArgs: [kickoffLine()], canvasId: task.taker.canvasId, ...(folder ? { cwd: folder } : {}), environment, name: task.title.slice(0, 60), uniqueName: true });
         sessionId = created.session.id;
         onNew = true;
+        // Made for a task nobody was there for: unheard from the start, before its run is on record.
+        if (task.unattended) this.unheard.add(sessionId);
       }
       task = await this.apply(task, { type: 'take', sessionId });
       const by = { kind: 'person' as const };
@@ -580,6 +628,8 @@ export class Queue {
         if (on.kind === 'new') {
           sessionId = (await this.sessions.create({ agent: 'claude-code', agentArgs: [kickoffLine()], canvasId: on.canvasId, uniqueName: true, name: 'For a rule' })).session.id;
           onNew = true;
+          // Made for a rule: unheard from the start, before its run is on record.
+          this.unheard.add(sessionId);
         } else sessionId = on.sessionId;
         const run = await this.workflows.startElement(this.drafts.runnable(elementId, projectId), { sessionId, inputs: { task }, replace: false, typeKickoff: !onNew }, { kind: 'person' });
         // Remembered while it goes: what comes about because of this run sets off no rule.
@@ -610,7 +660,7 @@ export class Queue {
       const now = Date.now();
       const lately = (this.firedAt.get(rule.id) ?? []).filter((at) => at > now - 60_000);
       const record = (status: number, outcome: 'ok' | 'limited' | 'error'): void =>
-        void this.options.activity.append({ at: new Date().toISOString(), caller: 'rule', tokenId: null, tokenName: `rule ${rule.id}`, action: `rule.${rule.action.kind}`, resource: {}, method: 'RULE', route: occasion.event, status, outcome });
+        void this.options.activity.append({ at: new Date().toISOString(), caller: 'rule', tokenId: null, tokenName: `rule ${rule.id}`, action: `rule.${rule.action.kind}`, resource: occasion.sessionId ? { sessionId: occasion.sessionId } : {}, method: 'RULE', route: occasion.event, status, outcome });
       if (lately.length >= RULE_RATE_PER_MINUTE) {
         this.firedAt.set(rule.id, lately);
         record(429, 'limited');

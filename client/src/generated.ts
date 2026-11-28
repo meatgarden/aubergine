@@ -7358,7 +7358,7 @@ export type ListRulesResult = {
     id: string;
     /** The project it belongs to. Set by the server from where it was made. */
     projectId: string;
-    event: "task.done" | "task.failed" | "task.needs-owner" | "ask.added" | "schedule.fired" | "schedule.failed";
+    event: "task.done" | "task.failed" | "task.needs-owner" | "ask.added" | "schedule.fired" | "schedule.failed" | "terminal.waiting" | "terminal.finished" | "command.failed";
     action: {
       kind: string;
       [key: string]: unknown;
@@ -7380,7 +7380,7 @@ export type AddRuleBody = {
   /** The project the rule is of. Left out: the first project. */
   projectId?: string;
   /** What sets it off. */
-  event: "task.done" | "task.failed" | "task.needs-owner" | "ask.added" | "schedule.fired" | "schedule.failed";
+  event: "task.done" | "task.failed" | "task.needs-owner" | "ask.added" | "schedule.fired" | "schedule.failed" | "terminal.waiting" | "terminal.finished" | "command.failed";
   /** What it does: `{"kind":"notify"}`, or `{"kind":"run-element","elementId":"…","on":{"kind":"session","sessionId":"…"}}`. */
   action: {
     kind: string;
@@ -7393,7 +7393,7 @@ export type AddRuleResult = {
     id: string;
     /** The project it belongs to. Set by the server from where it was made. */
     projectId: string;
-    event: "task.done" | "task.failed" | "task.needs-owner" | "ask.added" | "schedule.fired" | "schedule.failed";
+    event: "task.done" | "task.failed" | "task.needs-owner" | "ask.added" | "schedule.fired" | "schedule.failed" | "terminal.waiting" | "terminal.finished" | "command.failed";
     action: {
       kind: string;
       [key: string]: unknown;
@@ -7420,7 +7420,7 @@ export type SwitchRuleResult = {
     id: string;
     /** The project it belongs to. Set by the server from where it was made. */
     projectId: string;
-    event: "task.done" | "task.failed" | "task.needs-owner" | "ask.added" | "schedule.fired" | "schedule.failed";
+    event: "task.done" | "task.failed" | "task.needs-owner" | "ask.added" | "schedule.fired" | "schedule.failed" | "terminal.waiting" | "terminal.finished" | "command.failed";
     action: {
       kind: string;
       [key: string]: unknown;
