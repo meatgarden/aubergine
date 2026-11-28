@@ -2,11 +2,11 @@
 
 Aubergine tells a program of yours about every change as it happens: a terminal starts waiting for you, a command ends, a run moves to its next step, a task fails. The program keeps one HTTP connection open and reads lines from it. Two small examples are in [`examples/events/`](../examples/events): one prints every change, the other does one thing each time a terminal starts waiting.
 
-This page says what the stream is, which token it needs, which changes are most worth reacting to, and what it does not do. At the end it says what was tried and what was not.
+This page says what the stream is, which token it needs, which changes are most worth reacting to, how a program that was cut off goes on without missing anything, and what the stream does not do. At the end it says what was tried and what was not.
 
 ## What it is
 
-`GET /v1/events` answers with a stream of [server-sent events](https://html.spec.whatwg.org/multipage/server-sent-events.html) that does not end. Each change is one `data:` line holding one JSON object, followed by an empty line. The object's `type` names the change (`session.attention`, `run.moved`, `task.changed`); its other fields depend on the type. A line that begins with a colon is a comment: the server sends `: connected` at the start and `: still here` every 25 seconds, so that nothing between you and it closes a quiet connection.
+`GET /v1/events` answers with a stream of [server-sent events](https://html.spec.whatwg.org/multipage/server-sent-events.html) that does not end. Each change is one `data:` line holding one JSON object, followed by an empty line. The object's `type` names the change (`session.attention`, `run.moved`, `task.changed`); its other fields depend on the type. A line that begins with a colon is a comment: the server sends `: connected` at the start and `: still here` every 25 seconds, so that nothing between you and it closes a quiet connection. Before its `data:` line each change has an `id:` line, and the first event of every connection is not a change but `hello`; both are for going on after a drop, and [Not missing anything](#not-missing-anything) says how. A program that looks only at `data:` lines and passes over the types it does not know needs neither.
 
 ```sh
 curl -N -H "Authorization: Bearer $TOKEN" http://127.0.0.1:4600/v1/events
@@ -85,13 +85,13 @@ function startedWaiting(change) {
 }
 ```
 
-`waitingTracker` in [`examples/events/sse.mjs`](../examples/events/sse.mjs) is this, with two additions: what a list says when the connection is made is remembered without acting on it (a terminal that already waits did not start now), and after a drop the list is read again and whoever began to wait meanwhile is acted on once. A wait that began and ended while nothing was connected is never known.
+`waitingTracker` in [`examples/events/sse.mjs`](../examples/events/sse.mjs) is this, with two additions: what a list says when the first connection is made is remembered without acting on it (a terminal that already waits did not start now), and when the server says `reset` the list is read again and whoever began to wait meanwhile is acted on once. After an ordinary drop no list is needed: the changes that were missed are sent again and go through the tracker like any other, so a wait that began and ended meanwhile is acted on, late. Only across a `reset` is such a wait never known.
 
 Waiting has more than one form. A terminal's `attention.state` is `waiting` when its agent asks you something. A run whose `status` is `awaiting` waits for your approval, a task in `needs-owner` or `proposed` waits for you, and so does an `ask`. `GET /v1/for-you` is all of them as one list.
 
 ## The two examples
 
-Both are single files for Node.js 22 with no dependencies: `fetch` and the standard library. They read the token from `AUBERGINE_TOKEN` and the server's address from `AUBERGINE_URL` (`http://127.0.0.1:4600` when it is not set). The token is sent in a header to that server, and is never printed or put in an address. Both connect again after a drop, waiting 1 second, then 2, 4, and so on up to 30; both stop at once, with a sentence and exit code 2, when the server answers 401 or 403.
+Both are single files for Node.js 22 with no dependencies: `fetch` and the standard library. They read the token from `AUBERGINE_TOKEN` and the server's address from `AUBERGINE_URL` (`http://127.0.0.1:4600` when it is not set). The token is sent in a header to that server, and is never printed or put in an address. Both connect again after a drop, waiting 1 second, then 2, 4, and so on up to 30, and go on from the last event they handled ([Not missing anything](#not-missing-anything)); both stop at once, with a sentence and exit code 2, when the server answers 401 or 403.
 
 Put the token in the environment without typing it on a command line (see [Keeping it safe](#keeping-it-safe)):
 
@@ -114,7 +114,7 @@ node examples/events/listen.mjs --json               # each change whole, as one
 2026-11-28T00:08:59.476Z run.finished run="01a21f7b-…" terminal="01a21f7a-…" status="finished"
 ```
 
-(IDs are shortened here.) What is said about the connection goes to standard error, so `--json` can be piped into another program.
+(IDs are shortened here.) What is said about the connection goes to standard error, so `--json` can be piped into another program. When it is stopped (Ctrl-C) it says there which `id` it stopped after; started again with `--after` and that `id`, it first prints what happened in between, or says that the server can no longer tell.
 
 **`on-waiting.mjs`** does one thing each time a terminal starts waiting. With no option it prints a line. With `--post <address>` it sends this, and nothing else, to the address you give:
 
@@ -137,11 +137,11 @@ There is no option that runs a command. Starting a shell because of something an
 
 ## What this is not
 
-**Aubergine does not call anything.** The server sends nothing to an address by itself: no webhook, no e-mail, no chat message. Inside Aubergine, [rules](../README.md#rules-when-something-happens-do-something) can notify the browser or run a saved step when something happens. Reaching anything outside is a program of yours that listens, like the examples, so **the listener has to be running**: what happens while it is not is not told later.
+**Aubergine does not call anything.** The server sends nothing to an address by itself: no webhook, no e-mail, no chat message. Inside Aubergine, [rules](../README.md#rules-when-something-happens-do-something) can notify the browser or run a saved step when something happens. Reaching anything outside is a program of yours that listens, like the examples, so **the listener has to be running**: what happens while it is not is told later only to a listener that comes back with its last `id` soon enough ([Not missing anything](#not-missing-anything)), and otherwise not at all.
 
 **It is on the same computer.** The server listens on `127.0.0.1` only, so the listener runs on the computer Aubergine runs on, unless you have set up a way in from elsewhere: [Using Aubergine from elsewhere](remote.md). An API token is taken the same from there.
 
-**It is not a log.** Nothing is kept for a listener. For "what happened while I was away", the page has its own view; a program reads the lists.
+**It is not a log.** The server keeps its last 2,000 changes in memory so that a listener can get over a drop; nothing is written down for a listener, and nothing outlasts a restart. For "what happened while I was away", the page has its own view; a program that was away for long reads the lists.
 
 ## Keeping it safe
 
@@ -164,3 +164,4 @@ Tried on 2026-11-28, on Linux (x86_64, Node.js 22.23, tmux, zsh), against a thro
 - The parser and the tracker have tests (`pnpm examples:test`): events cut at every position, comments, several `data:` lines, CRLF.
 
 Not tried: a real agent setting a terminal waiting (the `aubergine attention` command was typed in a shell instead); a real chat tool or any address outside this computer; HTTPS; a server reached from another computer; a listener left running for days; macOS and Windows; a people-only terminal; `?canvasId=`; many terminals at once; any Node.js other than 22.
+node examples/events/listen.mjs --after <id>         # go on from where an earlier run stopped
