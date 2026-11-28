@@ -1,0 +1,78 @@
+{
+  "aubergine": "workflow",
+  "format": 1,
+  "workflow": {
+    "name": "Plan, review, apply",
+    "description": "For a change to infrastructure that is kept as code: say what will change, make the plan with the repository's own tool, stop for your yes, apply exactly the plan you read, and check. It needs the tool the repository already uses (Terraform or OpenTofu, AWS CDK, Pulumi, CloudFormation, kubectl) and cloud access in the agent's terminal; nothing is installed. The approval is a checkpoint for you, not a lock: the agent runs with your cloud access. Give it a read-only profile for the steps before the approval, and access that can change things only for the apply. This workflow was written from how those tools are documented; it was not tried against a real cloud account.",
+    "standing": "Work on this one change only, with the tool this repository already uses: do not install a tool and do not switch to another one. Change nothing before the approval. Never print, copy or store a credential, a key or a secret value. Never widen a permission, a role or a policy to get past an error. When the plan differs from what was reviewed, or something is unclear or would be expensive to undo, stop, report blocked and ask.",
+    "elements": [
+      {
+        "id": "say-what-will-change",
+        "name": "Say what will change",
+        "instructions": "Say in plain words what {{task}} will change and why, before you run anything.\n\nRead the infrastructure code and the change that is asked for. Write down: which stacks, workspaces or environments it touches; what will be added, changed or removed, as far as the code shows; and what it is for. If the request does not say which environment, do not pick one: report blocked and ask.\n\nChange nothing in this step, in the code's target or in the cloud.\n\nWhatever happens: never print, copy or store a credential, a key or a secret value (if a tool shows one, leave it out of what you write); never widen a permission, a role or a policy to get past an error; and when anything differs from what was reviewed, stop, report blocked and ask.",
+        "doneWhen": "What will change, where and why is written down in plain words, and nothing was changed."
+      },
+      {
+        "id": "make-the-plan",
+        "name": "Make the plan",
+        "instructions": "Produce the plan for {{task}} with the tool this repository already uses. Do not install anything; if the tool or the access is missing, report blocked and say which.\n\nUse the tool's own way of showing a change without making it, for example:\n- Terraform or OpenTofu: `plan -out=<file>`, so that exactly this plan can be applied later. Keep the file out of version control: it can hold secret values.\n- AWS CDK: `cdk diff`.\n- Pulumi: `pulumi preview`.\n- CloudFormation: create a change set and describe it; do not execute it.\n- Kubernetes: `kubectl diff`.\nThese are examples: use what the repository uses, with the options its own scripts or documentation use.\n\nThen hand in a note a person can decide from. First, on their own lines, anything that touches data (a database, a bucket, a volume, a queue), access (roles, policies, keys, users) or networking (what is reachable from where), and anything that replaces or destroys a resource rather than changing it in place. Then the counts and the names: what is added, what is changed, what is destroyed. Say which command you ran, against which stack or workspace, and where the saved plan is if the tool saves one. If the plan shows something the first step did not expect, say so plainly.\n\nThis step reads; it must not apply anything.\n\nWhatever happens: never print, copy or store a credential, a key or a secret value (if a tool shows one, leave it out of what you write); never widen a permission, a role or a policy to get past an error; and when anything differs from what was reviewed, stop, report blocked and ask.",
+        "doneWhen": "The plan was made with the repository's own tool, nothing was applied, and the note names what is added, changed, destroyed and replaced, with data, access and networking first.",
+        "needs": [
+          {
+            "kind": "command",
+            "name": "the repository's own infrastructure tool",
+            "note": "Terraform or OpenTofu, AWS CDK, Pulumi, the AWS CLI or kubectl: whichever the repository already uses. Nothing is installed for you."
+          },
+          {
+            "kind": "access",
+            "name": "cloud access that can read",
+            "note": "A read-only profile is enough here, and is the better choice."
+          }
+        ]
+      },
+      {
+        "id": "review-the-plan",
+        "kind": "approval",
+        "name": "Review the plan",
+        "ask": "Is this the change you want made, to these stacks, now?\n\nApprove to have exactly this plan applied. Send back with a comment to have it made again.\n\nThis is a checkpoint for you, not a lock: the agent runs with your cloud access.",
+        "lookAt": "The note of \"Make the plan\": what is destroyed or replaced, and what touches data, access or networking, come first. Where the tool saved a plan, read it in the terminal too."
+      },
+      {
+        "id": "apply-the-plan",
+        "name": "Apply the reviewed plan",
+        "instructions": "Apply exactly the plan that was reviewed for {{task}}, and nothing else.\n\n- Terraform or OpenTofu: apply the saved plan file from \"Make the plan\". If the tool says the plan is stale, do not make a new one and apply it: stop and report blocked.\n- A CloudFormation change set: execute the one that was reviewed.\n- Where the tool cannot apply a saved plan (AWS CDK, Pulumi without a saved plan, kubectl): say so, show the difference again first, and compare it with the note that was reviewed. Go on only if it is the same. If it differs in anything, stop, report blocked and say what differs.\n\nStop at the first error. Do not retry with other options, do not force, do not skip a resource, do not remove a lock that someone else may hold, and do not change the code to make the error go away: report blocked with what the tool printed, without any secret value in it.\n\nWhatever happens: never print, copy or store a credential, a key or a secret value (if a tool shows one, leave it out of what you write); never widen a permission, a role or a policy to get past an error; and when anything differs from what was reviewed, stop, report blocked and ask.",
+        "doneWhen": "Exactly the reviewed plan was applied and the tool reported success, or the run is blocked at the first error with what was and was not applied.",
+        "needs": [
+          {
+            "kind": "command",
+            "name": "the repository's own infrastructure tool",
+            "note": "Terraform or OpenTofu, AWS CDK, Pulumi, the AWS CLI or kubectl: whichever the repository already uses. Nothing is installed for you."
+          },
+          {
+            "kind": "access",
+            "name": "cloud access that can change what the plan changes",
+            "note": "Only this step changes anything. The agent uses whatever access its terminal has."
+          }
+        ]
+      },
+      {
+        "id": "check-and-report",
+        "name": "Check and report",
+        "instructions": "Check what was applied for {{task}} and hand in a note.\n\nLook at what the tool reported, and run its read-only plan once more: it should show nothing left to change. If it shows something, say what. Where the change has an obvious sign of working (an address that answers, a service that is healthy, an output of the stack), look at it with a command that only reads.\n\nThe note says: what was applied, to which stacks; what to watch in the next hours, and where; and how to roll back (which earlier version of the code or the state, with which command), or that there is no clean way back and why. Say what you did not check.\n\nChange nothing in this step.\n\nWhatever happens: never print, copy or store a credential, a key or a secret value (if a tool shows one, leave it out of what you write); never widen a permission, a role or a policy to get past an error; and when anything differs from what was reviewed, stop, report blocked and ask.",
+        "doneWhen": "The note says what was applied, what to watch and how to roll back, and what was not checked.",
+        "needs": [
+          {
+            "kind": "command",
+            "name": "the repository's own infrastructure tool",
+            "note": "Terraform or OpenTofu, AWS CDK, Pulumi, the AWS CLI or kubectl: whichever the repository already uses. Nothing is installed for you."
+          },
+          {
+            "kind": "access",
+            "name": "cloud access that can read",
+            "note": "A read-only profile is enough here, and is the better choice."
+          }
+        ]
+      }
+    ]
+  }
+}

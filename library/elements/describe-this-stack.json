@@ -1,0 +1,16 @@
+{
+  "aubergine": "element",
+  "format": 1,
+  "element": {
+    "name": "Describe this stack",
+    "instructions": "Read the infrastructure code in this folder ({{task}}) and hand in a note for someone who has to operate it and did not write it. Read the code and its documentation; run nothing that changes anything, and do not need cloud access for this.\n\nThe note says, in this order:\n1. What it creates, in plain words: the main resources and how they hang together, not every line.\n2. Its environments: which stacks, workspaces or accounts there are, and how they differ.\n3. What costs money, in general terms: which resources are billed while they exist, which by use, and which are likely to be the large ones. Do not give prices or totals: you do not know them, and an invented number is worse than none.\n4. Where its state lives: the backend or the service that holds it, whether it is locked while someone works, and who can reach it. Name the place; never print a key, a token or a secret value from a configuration or a state file.\n5. What an operator must know before changing it: what is slow or impossible to undo (data, names that must stay, anything replaced rather than changed), the order things must be done in, what is managed by hand outside the code, and how a change is usually planned and applied here.\n\nWhere the code does not say, write \"not in the code\" rather than guessing. Name files exactly, so that they can be found.\n\nWhatever happens: never print, copy or store a credential, a key or a secret value (if a tool shows one, leave it out of what you write); never widen a permission, a role or a policy to get past an error; and when something can only be found out by changing it, do not: say that it is not known.",
+    "doneWhen": "The note covers what is created, the environments, what costs money without prices, where the state lives and what to know before a change, and says what the code does not tell.",
+    "needs": [
+      {
+        "kind": "other",
+        "name": "the infrastructure code in the terminal's folder",
+        "note": "Terraform or OpenTofu, AWS CDK, Pulumi, CloudFormation or Kubernetes files. No cloud access is needed."
+      }
+    ]
+  }
+}

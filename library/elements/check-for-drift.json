@@ -1,0 +1,22 @@
+{
+  "aubergine": "element",
+  "format": 1,
+  "element": {
+    "name": "Check for drift",
+    "instructions": "Find out whether what runs in the cloud still matches the infrastructure code in this repository. This step only reads: it must never apply, import, refresh state in place, or change anything, and it is made to be run on a schedule with nobody watching.\n\nFind every stack, workspace or environment the repository defines ({{task}} may name the ones to look at). For each, run the read-only plan of the tool the repository already uses, for example `terraform plan` or `tofu plan` with `-lock=false -detailed-exitcode` and without `-out`, `cdk diff`, `pulumi preview --diff`, CloudFormation drift detection, or `kubectl diff`. These are examples: use what the repository uses, and do not install anything. If the tool or the access is missing for a stack, put that on the list for that stack and go on to the next.\n\nHand in a list with one line for each thing that differs: the stack, the resource, and what differs between the code and what runs, in a few words. Put anything that touches data, access or networking first. If nothing differs anywhere, hand in one line that says \"nothing drifted\" and how many stacks were looked at. Never put a secret value on the list, even if the tool shows one.\n\nDo not fix what you find, even if the fix looks obvious: whether the code or the cloud is right is the owner's decision.\n\nWhatever happens: never print, copy or store a credential, a key or a secret value (if a tool shows one, leave it out of what you write); never widen a permission, a role or a policy to get past an error; and when a command would change anything, do not run it: report blocked and ask.",
+    "doneWhen": "Every stack the repository defines was planned read-only or is named as not checked, nothing was changed, and the list says what differs or \"nothing drifted\".",
+    "needs": [
+      {
+        "kind": "command",
+        "name": "the repository's own infrastructure tool",
+        "note": "Terraform or OpenTofu, AWS CDK, Pulumi, the AWS CLI or kubectl: whichever the repository already uses. Nothing is installed for you."
+      },
+      {
+        "kind": "access",
+        "name": "cloud access that can read",
+        "note": "Give the agent a read-only profile: this step never needs more, and it runs with whatever access its terminal has."
+      }
+    ],
+    "produces": "checklist"
+  }
+}
