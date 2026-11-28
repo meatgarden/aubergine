@@ -68,6 +68,8 @@ export function RunViewDialog() {
       : ended
         ? pictureOf(ended.run, ended, null, quietAfter)
         : null;
+  // A view added or taken away after the page was drawn (a plugin's) is drawn at once.
+  useSyncExternalStore(subscribeToViews, viewsVersion);
   const views = runViewList();
   const View = (views.find((v) => v.id === view) ?? views[0])?.Component;
   const run = picture?.run;

@@ -30,6 +30,7 @@ import { Settings, ThemeSetting } from './settings';
 import { BY_TAG_MAX, CursorStyle, ThemeId, ThemesByTag, UserTheme } from './themes';
 import { TEMPLATE_MAX, TemplateText } from './templates';
 import { CustomCss } from './custom-css';
+import { PluginsAnswer } from './plugins';
 
 /**
  * The wire protocol between the browser and the daemon. Bump the version and
@@ -155,6 +156,8 @@ export const StateResponse = z.object({
   customCss: CustomCss.nullable().optional(),
   /** Why a `custom.css` that is there was not read, in one sentence; left out or null otherwise. */
   customCssProblem: z.string().max(1000).nullable().optional(),
+  /** The owner's plugins (`plugins/` in the data folder) as the server found them now, and what the settings switch on. Left out by an older server, and for a linked page: plugins are the page's own. */
+  plugins: PluginsAnswer.optional(),
 });
 export type StateResponse = z.infer<typeof StateResponse>;
 

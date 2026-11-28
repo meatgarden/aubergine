@@ -46,6 +46,29 @@ export function registerTemplatePart(part: TemplatePart): void {
   if (parts.has(part.name)) throw new Error(`The placeholder {${part.name}} is already registered`);
   if (part.where.length === 0) throw new Error(`The placeholder {${part.name}} is for no place`);
   parts.set(part.name, part);
+  changed();
+}
+
+/**
+ * Takes a placeholder away again: for a plugin's, when the plugin is switched off. The ones registered here stay; a
+ * template that names a placeholder that went is said and skipped as for any unknown one.
+ */
+export function unregisterTemplatePart(name: string): void {
+  if (parts.delete(name)) changed();
+}
+
+const listeners = new Set<() => void>();
+let version = 0;
+function changed(): void {
+  version += 1;
+  for (const listener of listeners) listener();
+}
+/** A number that changes each time a placeholder is added or taken away: what a template was read against. */
+export const templatePartsVersion = (): number => version;
+/** Tells a listener each time a placeholder is added or taken away, so that templates are read again. */
+export function onTemplateParts(listener: () => void): () => void {
+  listeners.add(listener);
+  return () => listeners.delete(listener);
 }
 
 /** Every placeholder, in the order registered. */

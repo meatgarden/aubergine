@@ -18,6 +18,8 @@ export type Command =
   | { name: 'settings'; words: string[] }
   /** `css …`: where the owner's own stylesheet is, and a starter. Read and written in the data folder, the server not needed. */
   | { name: 'css'; words: string[] }
+  /** `plugin …`: the plugins in the data folder, where they are, and a starter. Read and written in the data folder, the server not needed; nothing here switches one on. */
+  | { name: 'plugin'; words: string[] }
   /** `theme …`: the color themes there are, the owner's theme files, a new one; inside a terminal, proposing one. For the owner read from the files, the server not needed; inside a terminal, through the server. */
   | { name: 'theme'; words: string[] }
   | { name: 'canvas-list' }
@@ -137,6 +139,12 @@ export const USAGE = `Usage: aubergine <command>
   css [path]                 Where your own stylesheet is (custom.css in the data folder), and whether there is one
   css new                    Write a custom.css to start from: the hooks it may rely on (docs/hooks.md) and three
                              examples, commented out. Never over a file that is there
+  plugin [list]              The plugins in the data folder (plugins/<id>/), whether each is on, and what is wrong
+  plugin path                Where the folder of plugins is
+  plugin new <id> [--name <name>]
+                             Write a plugin to start from: a manifest, a module that uses the plugin API alone and a
+                             stylesheet (docs/plugins.md). It is off: a plugin runs in the page as you, with everything
+                             the page can do. Switch it on in Settings → Plugins. Never over anything that is there
   theme [list]               The color themes: those that come with Aubergine and your own theme files, with what is
                              wrong in a file
   theme new <id> [--from <theme>] [--name <name>] [--accent "#rrggbb"]
@@ -536,6 +544,9 @@ export function parseCommand(argv: readonly string[]): Command {
       return { name: 'settings', words: rest };
     case 'css':
       return { name: 'css', words: rest };
+    case 'plugin':
+    case 'plugins':
+      return { name: 'plugin', words: rest };
     case 'theme':
     case 'themes':
       return { name: 'theme', words: rest };

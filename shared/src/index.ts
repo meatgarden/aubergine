@@ -29,6 +29,8 @@ export * from './theme-files';
 export * from './theme-proposals';
 export * from './hooks';
 export * from './custom-css';
+export * from './plugins';
+export * from './plugin-starter';
 export * from './token-names.generated';
 export * from './contrast';
 export * from './accent';

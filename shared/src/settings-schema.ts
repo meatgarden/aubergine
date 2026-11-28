@@ -3,6 +3,7 @@ import type { JsonSchema } from './openapi';
 import { Settings } from './settings';
 import { COMMAND_IDS } from './shortcuts';
 import { COLOR_THEMES, THEME_COLORS, THEME_ID } from './themes';
+import { FOLLOW, PLUGIN_DIGEST, PLUGIN_ID } from './plugins';
 
 type Json = null | boolean | number | string | Json[] | { [key: string]: Json };
 const isNode = (value: unknown): value is { [key: string]: Json } => value !== null && typeof value === 'object' && !Array.isArray(value);
@@ -27,6 +28,7 @@ export const PAGE_WRITTEN_SETTINGS = [
   'font.size',
   'desktop.openNew',
   'describe.remind',
+  'plugins.on',
 ] as const;
 export type PageWrittenSetting = (typeof PAGE_WRITTEN_SETTINGS)[number];
 export const isPageWritten = (key: string): key is PageWrittenSetting => (PAGE_WRITTEN_SETTINGS as readonly string[]).includes(key);
@@ -102,6 +104,12 @@ export function settingsJsonSchema(): JsonSchema {
   delete terminal.type;
   delete terminal.pattern;
   terminal.anyOf = [...(idOf(COLOR_THEMES.map((theme) => theme.id)) as Json[]), { type: 'null' }];
+
+  // A plugin's ID to the digest that was switched on, or "follow": as `resolvePluginSwitches` reads them.
+  const pluginsOn = (properties.plugins as { properties: { [key: string]: { [key: string]: Json } } }).properties.on as { [key: string]: Json };
+  delete pluginsOn.propertyNames;
+  pluginsOn.patternProperties = { [PLUGIN_ID.source]: { description: 'The digest the plugin had when it was switched on, or "follow".', anyOf: [{ type: 'string', pattern: PLUGIN_DIGEST.source }, { const: FOLLOW }] } };
+  pluginsOn.additionalProperties = false;
 
   const access = (properties.access as { properties: { [key: string]: { [key: string]: Json } } }).properties;
   for (const kind of ['addresses', 'pages'] as const) (access[kind] as { [key: string]: Json }).items = { type: 'string', description: 'An origin alone, such as "https://aubergine.example.net".' };

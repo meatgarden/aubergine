@@ -208,6 +208,21 @@ export class SettingsFile {
     });
   }
 
+  /**
+   * Writes one entry of `plugins.on`: a plugin's digest or `follow`, or (null) none, which switches it off. Every other
+   * entry, and every other key of the file, stays as it was. It names code that runs in the page, never anything the
+   * server starts.
+   */
+  async setPluginSwitch(id: string, on: string | null): Promise<void> {
+    await this.write((whole) => {
+      const plugins = isObject(whole.plugins) ? whole.plugins : {};
+      const switched: Record<string, unknown> = isObject(plugins.on) ? { ...plugins.on } : {};
+      if (on === null) delete switched[id];
+      else switched[id] = on;
+      return { ...whole, plugins: { ...plugins, on: switched } };
+    });
+  }
+
   /** Writes `desktop.openNew`: one of the two keys the page changes. */
   async setDesktopOpenNew(value: boolean): Promise<void> {
     await this.write((whole) => {

@@ -76,4 +76,5 @@ export const CONTROL_OF: Record<PageWrittenSetting, (settings: Settings) => stri
   'font.size': () => 'font-size',
   'desktop.openNew': () => 'settings-desktop-new',
   'describe.remind': () => 'settings-describe-remind',
+  'plugins.on': () => 'plugins-read-again',
 };

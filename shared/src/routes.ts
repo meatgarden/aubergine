@@ -40,6 +40,7 @@ import { Capabilities, CreateTokenRequest, CreatedToken, TokenView } from './tok
 import { Draft, ShelfElement } from './drafts';
 import { ThemesAnswer } from './theme-files';
 import { CustomCssAnswer } from './custom-css';
+import { ChangePluginRequest, PluginsAnswer } from './plugins';
 import { AcceptThemeRequest, AcceptedTheme, ProposeThemeRequest, ThemeProposalList, ThemeProposalRow, ThemeRowList } from './theme-proposals';
 import { WriteRecapRequest, WrittenRecap } from './recap';
 import { AddLinkRequest, ChangeLinkRequest, DescribeCheckAnswer, DescribeCheckRequest, DescribeRequest, DescribedAnswer, DescribingSettings, FoundAnswer, KeepSeenRequest, LinkAnswer, LinksAnswer, SeenLinksAnswer, UseSuggestionRequest } from './links-api';
@@ -482,6 +483,32 @@ export const ROUTES = {
     description: "For the owner only: no token and no session can do this, whatever its scopes. It reads `custom.css` in the data folder again and answers whether there is one to link on the page, by a short hash of its content and its size, or why a file that is there was not read. It answers nothing of what the file says, and writes nothing. The page links the stylesheet with that hash in its address, so that the new one is taken without a reload.",
     action: 'stylesheet.read',
     response: CustomCssAnswer,
+    status: 200,
+  }),
+
+  changePlugin: route({
+    method: 'PUT',
+    path: '/v1/settings/plugins',
+    tag: 'Sessions',
+    summary: 'Switch a plugin on or off: code of your own that runs in the page as you',
+    description:
+      "For the owner only: no token and no session can do this, whatever its scopes. It writes one entry of `plugins.on` in the settings file and leaves the rest of the file as it was: the plugin's digest, `follow`, or (with null) nothing, which switches it off. A digest that is not the plugin's digest as the server reads its folder now is refused with 409, so what is switched on is what was just read; a plugin that is not in the folder, or cannot be loaded, is refused with 404 or 409. It names code that runs in the page as the owner, never anything the server starts: the server runs nothing of a plugin. A switch is a record of what the owner chose, not a lock: anything that runs as the owner can write the settings file too. It answers the plugins as they are now.",
+    action: 'plugins.manage',
+    body: ChangePluginRequest,
+    response: PluginsAnswer,
+    status: 200,
+    errors: [404, 409],
+  }),
+
+  readPlugins: route({
+    method: 'POST',
+    path: '/v1/settings/plugins/read',
+    tag: 'Sessions',
+    summary: 'Read the plugins again',
+    description:
+      'For the owner only: no token and no session can do this, whatever its scopes. It reads the folder of plugins (`plugins/` in the data folder) again and answers every plugin there, with its manifest, its digest, its files and what is wrong, and what the settings switch on. It writes nothing and runs nothing of a plugin.',
+    action: 'plugins.manage',
+    response: PluginsAnswer,
     status: 200,
   }),
 

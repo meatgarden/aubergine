@@ -64,8 +64,9 @@ async function workflowFolder(root: string): Promise<string | null> {
 async function readBounded(file: string, maxBytes: number = REPOSITORY_MAX_BYTES): Promise<{ ok: true; bytes: Buffer } | { ok: false; reason: string }> {
   let handle;
   try {
-    // O_NOFOLLOW: if the name became a link between listing and opening, the open fails.
-    handle = await open(file, constants.O_RDONLY | constants.O_NOFOLLOW);
+    // O_NOFOLLOW: if the name became a link between listing and opening, the open fails. O_NONBLOCK: if it became a
+    // pipe, the open does not wait for a writer (the stat below then refuses it); on a regular file it changes nothing.
+    handle = await open(file, constants.O_RDONLY | constants.O_NOFOLLOW | constants.O_NONBLOCK);
   } catch (error) {
     return { ok: false, reason: (error as NodeJS.ErrnoException).code === 'ELOOP' ? 'It is a link; links are not followed.' : 'It could not be opened.' };
   }

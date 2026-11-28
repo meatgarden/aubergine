@@ -159,6 +159,21 @@ export const Settings = z.object({
     .describe('Reaching this server from another device or page. Written by hand only; a wrong entry is reported and skipped.'),
   shortcuts: ShortcutSettings.default({}).describe('Keys: a command’s name to a chord (`"Ctrl+Meta+J"`), a list of chords, or null for no key. A wrong entry is reported and skipped.'),
   shortcutsInAppWindow: ShortcutSettings.default({}).describe('Keys as `shortcuts`, applied over them only in a window of its own (an installed app).'),
+  /**
+   * Which plugins run in the page. Written by Settings → Plugins (`PUT /v1/settings/plugins`) and by hand. Each entry is
+   * read by `resolvePluginSwitches`: a wrong one is said and skipped, and the rest still count.
+   */
+  plugins: z
+    .object({
+      on: z
+        .record(z.string().max(100), z.unknown())
+        .catch({})
+        .default({})
+        .describe('Which plugins (folders in plugins/ in the data folder) run in the page, as you: a plugin’s ID to the digest it had when you switched it on, or "follow" to run whatever is in its folder. A plugin whose files changed since is not loaded until it is switched on again. A wrong entry is reported and skipped.'),
+    })
+    .catch({ on: {} })
+    .prefault({})
+    .describe('Plugins: code of your own that runs in the page as you, with everything the page can do. Nothing keeps it apart; see docs/plugins.md.'),
 });
 export type Settings = z.infer<typeof Settings>;
 

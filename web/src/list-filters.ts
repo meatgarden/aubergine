@@ -30,13 +30,28 @@ export interface ListFilter {
 }
 
 const registry = new Map<string, ListFilter>();
+const listeners = new Set<() => void>();
+let version = 0;
+function changed(): void {
+  version += 1;
+  for (const listener of listeners) listener();
+}
 
 export function registerFilter(filter: ListFilter): void {
   registry.set(filter.id, filter);
+  changed();
 }
 
 export function unregisterFilter(id: string): void {
-  registry.delete(id);
+  if (registry.delete(id)) changed();
+}
+
+/** A number that changes each time a filter is added or taken away (a plugin's, after the page is drawn). */
+export const filtersVersion = (): number => version;
+/** For the list to be worked out again when a filter is added or taken away. */
+export function subscribeToFilters(listener: () => void): () => void {
+  listeners.add(listener);
+  return () => listeners.delete(listener);
 }
 
 export function listFilters(): ListFilter[] {

@@ -1,5 +1,5 @@
 import { packageRoot } from './package-root';
-import { CUSTOM_CSS_PATH, DEVICE_UNUSED_DAYS, LINKED_PAGE_HEADERS, asksPlain, customCssHref, PROJECT_HEADER, PairRequest, PairingCodeRequest, TICKET_PARAM, accessEntries, accessProblem, deviceStatus, isLocalHost, themeOf, viewOfDevice, type ChangeAppearanceRequest, type DeviceList, type OpenedOnDesktop, type PairedPage, type PairingCodeAnswer, type RevokedDevice, type SocketTicket } from '@aubergine/shared';
+import { CUSTOM_CSS_PATH, NO_PLUGINS_ANSWER, PLUGIN_FILES_PATH, DEVICE_UNUSED_DAYS, LINKED_PAGE_HEADERS, asksPlain, customCssHref, PROJECT_HEADER, PairRequest, PairingCodeRequest, TICKET_PARAM, accessEntries, accessProblem, deviceStatus, isLocalHost, themeOf, viewOfDevice, type ChangeAppearanceRequest, type DeviceList, type OpenedOnDesktop, type PairedPage, type PairingCodeAnswer, type RevokedDevice, type SocketTicket } from '@aubergine/shared';
 import { DeviceNotFoundError, Devices } from './devices';
 import { Pairing } from './pairing';
 import { SocketTickets } from './socket-tickets';
@@ -9,6 +9,7 @@ import { SettingsUnreadableError, appearanceOf } from './settings';
 import { pageAttributes } from './page-choice';
 import { NO_THEMES, type Themes } from './theme-files';
 import { NO_STYLESHEET, type Stylesheet } from './custom-css';
+import { NO_PLUGINS, type Plugins } from './plugins';
 import type { AddressInfo } from 'node:net';
 import cookie from '@fastify/cookie';
 import fastifyStatic from '@fastify/static';
@@ -170,6 +171,10 @@ export interface ServerOptions {
   themes?: Themes;
   /** The owner's own stylesheet. Left out: there is none. Read again whenever the page is sent, when it is served, and when the owner asks. */
   stylesheet?: Stylesheet;
+  /** The owner's plugins. Left out: there are none. Read again for every answer and every file sent; nothing of them is run here. */
+  plugins?: Plugins;
+  /** Writes one entry of `plugins.on` into the settings file. Left out: the page cannot switch a plugin on. */
+  setPluginSwitch?: (id: string, on: string | null) => Promise<void>;
   /** Asks a signed-in local tool for a branch's pull request. Left out: none is ever asked for. */
   pullRequests?: PullRequestFinder | null;
   /** The branch and repository of a folder. Left out: Git is asked. A test passes its own. */
@@ -300,6 +305,9 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
   const tokens = new Tokens(hub);
   const themes = options.themes ?? NO_THEMES;
   const stylesheet = options.stylesheet ?? NO_STYLESHEET;
+  const plugins = options.plugins ?? NO_PLUGINS;
+  /** The plugins as the folder and the settings file are now: read again for every answer. */
+  const pluginsNow = async () => plugins.answer((await options.settings()).plugins.on);
   // The theme files are read again whenever the settings are read for the page, first, so that colors set by hand may name one.
   const lookNow = async () => {
     const themesNow = await themes.reload();
@@ -451,7 +459,7 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     return typeof said === 'string' && ClientName.safeParse(said).success ? said : null;
   };
   /** What only the owner may do and is worth seeing when it was not done in the browser. */
-  const WATCHED: readonly Action[] = ['desktop.open', 'settings.write', 'drafts.review', 'repository.review', 'repository.write', 'tokens.manage', 'terminal.input', 'sessions.protect', 'messages.manage', 'runs.approve', 'themes.manage'];
+  const WATCHED: readonly Action[] = ['desktop.open', 'settings.write', 'drafts.review', 'repository.review', 'repository.write', 'tokens.manage', 'terminal.input', 'sessions.protect', 'messages.manage', 'runs.approve', 'themes.manage', 'plugins.manage'];
   /** Reading a terminal is watched too, though it changes nothing. */
   const WATCHED_READS: readonly Action[] = ['terminal.read'];
   const ownerLogged = new WeakSet<FastifyRequest>();
@@ -915,7 +923,22 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
       themeProblems: themesNow.problems,
       // The owner's own stylesheet is the page's own: a linked page is told nothing of it.
       ...(fromLinkedPage.has(request) ? {} : await stylesheet.answer().then((css) => ({ customCss: css.stylesheet, customCssProblem: css.problem }))),
+      // And so are the plugins: code that runs in the page as the owner. A linked page is told nothing of them.
+      ...(fromLinkedPage.has(request) ? {} : { plugins: await pluginsNow() }),
     };
+  });
+
+  // A plugin's files, to the owner's own page alone: under /api, so only the owner's sign-in reaches it, and never to
+  // a linked page. Sent only under the digest the plugin has now, and only while that digest is the one switched on
+  // (or it follows changes): a file that changed after it was switched on is not sent, also to a page already open.
+  // Nothing in it is run or looked at here: its bytes are sent as they are.
+  app.get(`${PLUGIN_FILES_PATH}/:pluginId/:digest/:file`, async (request, reply) => {
+    allowOn(request, 'plugins.manage', {});
+    if (fromLinkedPage.has(request)) throw new HttpError(404, 'not_found', 'Not found');
+    const { pluginId, digest, file } = request.params as { pluginId: string; digest: string; file: string };
+    const sent = await plugins.file(pluginId, digest, file, (await options.settings()).plugins.on);
+    if (!sent) throw new HttpError(404, 'not_found', 'Not found');
+    return reply.type(sent.type).header('x-content-type-options', 'nosniff').header('cache-control', 'no-cache').send(sent.bytes);
   });
 
   // The owner's own stylesheet, to the owner's own page alone: under /api, so only the owner's sign-in reaches it, and
@@ -1246,6 +1269,26 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     },
     readThemes: async () => (await lookNow()).themes,
     readStylesheet: async (request) => (fromLinkedPage.has(request) ? { stylesheet: null, problem: null } : stylesheet.answer()),
+    readPlugins: async (request) => (fromLinkedPage.has(request) ? NO_PLUGINS_ANSWER : pluginsNow()),
+    changePlugin: async (request, change) => {
+      // Plugins are the page's own: a page of another Aubergine that shows this server loads its own server's.
+      if (fromLinkedPage.has(request)) throw new HttpError(403, 'forbidden', 'A linked page does not switch the plugins of this server: they are the own page’s, and its own server has its own.');
+      if (change.on !== null) {
+        // What is switched on is what is in the folder now: read again here, not taken from what the page last saw.
+        const now = await plugins.one(change.id);
+        if (!now) throw new NotFoundError(`There is no plugin named ${change.id} in the folder of plugins.`);
+        if (now.found.notLoaded !== null || now.found.digest === null) throw new ConflictError(`It cannot be switched on: ${now.found.notLoaded ?? 'its files could not all be read.'}`);
+        if (change.on !== 'follow' && change.on !== now.found.digest) throw new ConflictError('Its files changed since they were read: that is not its digest now. Read the plugins again and look at it before switching it on.');
+      }
+      if (!options.setPluginSwitch) throw new ConflictError('This server has no settings file to write.');
+      try {
+        await options.setPluginSwitch(change.id, change.on);
+      } catch (error) {
+        if (error instanceof SettingsUnreadableError) throw new ConflictError(error.message);
+        throw error;
+      }
+      return pluginsNow();
+    },
     knowsTheme: async (id, kind, field) => {
       await themes.reload();
       knowsTheme(id, kind, field);

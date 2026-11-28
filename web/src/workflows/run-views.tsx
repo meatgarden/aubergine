@@ -1,12 +1,13 @@
-import { useState } from 'react';
+import { useState, useSyncExternalStore } from 'react';
 import { reportRun, tickItem } from './actions';
-import { elementView, outputView, registerRunView, type RunViewProps } from './registries';
+import { elementView, outputView, registerRunView, subscribeToViews, viewsVersion, type RunViewProps } from './registries';
 import { STATE_MARK, actorWord, took } from './run-model';
 
 /** The run from top to bottom: every element with its state, how long it took, who moved it and the note; the current one open. */
 function Pipeline({ picture, elements, live, now }: RunViewProps) {
   const { run } = picture;
   const [open, setOpen] = useState<string | null>(null);
+  useSyncExternalStore(subscribeToViews, viewsVersion);
   return (
     <ol className="run-pipeline" data-testid="run-pipeline">
       {picture.segments.map((segment, index) => {

@@ -78,6 +78,7 @@ export const OWNERS_ALONE: Record<(typeof NEVER_BY_TOKEN)[number], string> = {
   'devices.manage': 'pairing another device with this server, and revoking one',
   'themes.manage': 'accepting or declining a proposed color theme, and reading the theme files again',
   'stylesheet.read': "reading the owner's own stylesheet again",
+  'plugins.manage': "switching a plugin (the owner's own code in the page) on or off, reading the plugins again, and being sent a plugin's files",
   'desktop.open': "opening a terminal in a window of the owner's own terminal application",
   'describe.manage': "keeping a link that was only seen in a terminal, or putting what an agent suggested in place of the owner's own words",
 };

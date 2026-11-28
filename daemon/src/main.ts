@@ -28,6 +28,7 @@ import { ZshIntegration } from './shell/integration';
 import { SETTINGS_FILE, SettingsFile, expandHome, writeSettingsSchema } from './settings';
 import { ThemeFolder } from './theme-files';
 import { StylesheetFile } from './custom-css';
+import { PluginFolder } from './plugins';
 import { pathWithCommand, writeCommandLauncher } from './command-path';
 import { FileDesktopOpener } from './desktop/open';
 import { FileDraftLog } from './draft-log';
@@ -56,6 +57,8 @@ async function main(): Promise<void> {
   // The owner's own stylesheet: read when the page is sent, when it is served and when asked; a problem is said once.
   const stylesheet = new StylesheetFile(config.dataDir, (message) => console.warn(message));
   await stylesheet.reload();
+  // The owner's plugins: read for every answer and every file sent; a problem is said once. Nothing of them is run here.
+  const plugins = new PluginFolder(config.dataDir, (message) => console.warn(message));
   const settings = new SettingsFile(config.dataDir, (message) => console.warn(message), () => themes.value.themes);
   await settings.reload();
   // Beside the settings file, for an editor that is pointed at it (and the schema of a theme file); never a reason not to start.
@@ -149,6 +152,8 @@ async function main(): Promise<void> {
     setDescribeRemind: (value) => settings.setDescribeRemind(value),
     themes,
     stylesheet,
+    plugins,
+    setPluginSwitch: (id, on) => settings.setPluginSwitch(id, on),
     pullRequests: ghFinder(),
     runArchive: new FileRunArchive(config.dataDir, (error) => console.warn(`Could not write the archive of runs: ${String(error)}`)),
     version: versionInfo(installRoot(), config).version,

@@ -57,6 +57,7 @@ import { parseDeviceCommand, runDeviceCommand } from './cli/device';
 import { parseSettingsCommand, runSettingsCommand } from './cli/settings';
 import { parseThemeCommand, runThemeCommand } from './cli/theme';
 import { parseCssCommand, runCssCommand } from './cli/css';
+import { parsePluginCommand, runPluginCommand } from './cli/plugin';
 import { parseAskCommand, parseRuleCommand, parseTaskCommand, parseTodoCommand, runQueueCommand } from './cli/queue';
 import { expandHome } from './settings';
 import { INSIDE_ITS_OWN, TAKES_PROJECT, parseProjectCommand, pickProject, runProjectCommand, takeProject } from './cli/project';
@@ -709,6 +710,9 @@ async function main(): Promise<number> {
 
     case 'css':
       return runCssCommand(parseCssCommand(command.words), { dataDir: config.dataDir, print: (text) => console.log(text), warn: (text) => console.error(text) });
+
+    case 'plugin':
+      return runPluginCommand(parsePluginCommand(command.words), { dataDir: config.dataDir, print: (text) => console.log(text), warn: (text) => console.error(text) });
 
     case 'theme':
       return runThemeCommand(parseThemeCommand(command.words), { dataDir: config.dataDir, print: (text) => console.log(text), warn: (text) => console.error(text), env: process.env, owner: (work) => v1(config, work), cwd: process.cwd() });

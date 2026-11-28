@@ -1,8 +1,8 @@
-import { memo, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { memo, useEffect, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
 import { openProjects, projectName, type CommandId } from '@aubergine/shared';
 import { canvasActions } from '../../canvas-actions';
 import { runCommand } from '../../commands';
-import { SCOPE_FILTER, TAG_FILTER, TEXT_FILTER, listFilters } from '../../list-filters';
+import { SCOPE_FILTER, TAG_FILTER, TEXT_FILTER, filtersVersion, listFilters, subscribeToFilters } from '../../list-filters';
 import { listModel, listSource } from '../../list-model';
 import { recapTitle } from '../../Recap';
 import { colorClass, colorStyle } from '../../color';
@@ -50,7 +50,9 @@ function useModel() {
   const app = useApp((s) => listSource(s));
   const view = useApp((s) => s.listView);
   const canvasId = useApp((s) => s.canvasId);
-  return useMemo(() => listModel(app, view, canvasId), [app, view, canvasId]);
+  // A filter added or taken away after the page was drawn (a plugin's) works the list out again.
+  const filters = useSyncExternalStore(subscribeToFilters, filtersVersion);
+  return useMemo(() => listModel(app, view, canvasId), [app, view, canvasId, filters]); // eslint-disable-line react-hooks/exhaustive-deps -- `filters` is what the registry was when the list was worked out
 }
 
 /**

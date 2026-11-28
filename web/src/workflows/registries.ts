@@ -17,14 +17,38 @@ export interface ElementView {
   Detail: ComponentType<{ element: Element; inputs: Record<string, string> }>;
 }
 
-const elementViews = new Map<string, ElementView>();
+/**
+ * A view registered for a kind that has one already stands over it, and taking it away (a plugin's, when the plugin is
+ * switched off) brings back the one under it. Every view registered is kept in the order registered, by kind.
+ */
+const elementViews = new Map<string, ElementView[]>();
 export function registerElementView(view: ElementView): void {
-  elementViews.set(view.kind, view);
+  elementViews.set(view.kind, [...(elementViews.get(view.kind) ?? []), view]);
+  changed();
 }
-export function unregisterElementView(kind: string): void {
-  elementViews.delete(kind);
+/** Takes away that view, or with none named the last one registered for the kind. */
+export function unregisterElementView(kind: string, view?: ElementView): void {
+  const views = elementViews.get(kind) ?? [];
+  const at = view === undefined ? views.length - 1 : views.lastIndexOf(view);
+  if (at < 0) return;
+  elementViews.set(kind, views.filter((_, i) => i !== at));
+  changed();
 }
-export const elementView = (kind: string): ElementView | undefined => elementViews.get(kind);
+export const elementView = (kind: string): ElementView | undefined => elementViews.get(kind)?.at(-1);
+
+const listeners = new Set<() => void>();
+let version = 0;
+function changed(): void {
+  version += 1;
+  for (const listener of listeners) listener();
+}
+/** A number that changes each time a view of any of these registries is added or taken away. */
+export const viewsVersion = (): number => version;
+/** For what draws a run to draw again when a view is added or taken away after the page was drawn (a plugin's). */
+export function subscribeToViews(listener: () => void): () => void {
+  listeners.add(listener);
+  return () => listeners.delete(listener);
+}
 
 /** One way of looking at a run. */
 export interface RunViewProps {
@@ -50,9 +74,10 @@ export interface RunView {
 const runViews = new Map<string, RunView>();
 export function registerRunView(view: RunView): void {
   runViews.set(view.id, view);
+  changed();
 }
 export function unregisterRunView(id: string): void {
-  runViews.delete(id);
+  if (runViews.delete(id)) changed();
 }
 export function runViewList(): RunView[] {
   return [...runViews.values()].sort((a, b) => a.order - b.order || a.id.localeCompare(b.id));
@@ -69,11 +94,18 @@ export interface OutputView {
   }>;
 }
 
-const outputViews = new Map<string, OutputView>();
+/** As for element views: one registered over another stands over it until it is taken away. */
+const outputViews = new Map<string, OutputView[]>();
 export function registerOutputView(view: OutputView): void {
-  outputViews.set(view.kind, view);
+  outputViews.set(view.kind, [...(outputViews.get(view.kind) ?? []), view]);
+  changed();
 }
-export function unregisterOutputView(kind: string): void {
-  outputViews.delete(kind);
+/** Takes away that view, or with none named the last one registered for the kind. */
+export function unregisterOutputView(kind: string, view?: OutputView): void {
+  const views = outputViews.get(kind) ?? [];
+  const at = view === undefined ? views.length - 1 : views.lastIndexOf(view);
+  if (at < 0) return;
+  outputViews.set(kind, views.filter((_, i) => i !== at));
+  changed();
 }
-export const outputView = (kind: string): OutputView | undefined => outputViews.get(kind);
+export const outputView = (kind: string): OutputView | undefined => outputViews.get(kind)?.at(-1);

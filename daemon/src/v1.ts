@@ -41,6 +41,8 @@ import {
   type AppearanceAnswer,
   type ThemesAnswer,
   type CustomCssAnswer,
+  type ChangePluginRequest,
+  type PluginsAnswer,
   type ChangeAppearanceRequest,
 } from '@aubergine/shared';
 import type { ActivityLog } from './activity';
@@ -95,6 +97,10 @@ export interface PublicRouteDeps {
   readThemes: () => Promise<ThemesAnswer>;
   /** Reads the owner's own stylesheet again, and answers whether there is one to link: nothing of what it says. Nothing for a linked page. */
   readStylesheet: (request: FastifyRequest) => Promise<CustomCssAnswer>;
+  /** Switches one plugin on or off in the settings, after reading it again; answers the plugins as they are then. Refused for a linked page. */
+  changePlugin: (request: FastifyRequest, change: ChangePluginRequest) => Promise<PluginsAnswer>;
+  /** Reads the plugins again. Nothing for a linked page: plugins are the page's own. */
+  readPlugins: (request: FastifyRequest) => Promise<PluginsAnswer>;
   /** Refuses, as bad input, a theme's ID that names no theme the server knows now, or (with `kind`) one of the other kind. */
   knowsTheme: (id: string, kind?: 'light' | 'dark', field?: string) => Promise<void>;
   projects: Projects;
@@ -440,6 +446,8 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
     changeAppearance: ({ body }) => deps.changeAppearance(body),
     readThemes: () => deps.readThemes(),
     readStylesheet: ({ request }) => deps.readStylesheet(request),
+    changePlugin: ({ request, body }) => deps.changePlugin(request, body),
+    readPlugins: ({ request }) => deps.readPlugins(request),
     /* ---------- Projects, and what is shared between them ---------- */
 
     // Which projects there are: the ones the caller reaches. Everything that changes one is the owner's alone.
