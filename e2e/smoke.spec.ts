@@ -7692,6 +7692,60 @@ test('two servers in one page: a server is linked with a code from its own comma
   expect(await page.evaluate(() => localStorage.getItem('aubergine.directories'))).toBeNull();
   await addDirectory(directoryAt);
   await expect(listed.getByTestId('link-directory-server')).toHaveCount(3);
+  // A directory that asks who you are: it answers 401 with where its own sign-in page is, the page opens that in a
+  // window, and the window hands a token back. Both are stand-ins served by this test.
+  const askingAt = 'https://signed.example.test/aubergine-directory.json';
+  const directoryToken = 'made-up-directory-token-0123456789';
+  const cors = { 'access-control-allow-origin': origin, 'access-control-allow-headers': 'authorization', 'access-control-allow-methods': 'GET' };
+  let directoryTakes = true;
+  await context.route(askingAt, (route) => {
+    const request = route.request();
+    if (request.method() === 'OPTIONS') return route.fulfill({ status: 204, headers: cors });
+    if (directoryTakes && request.headers().authorization === `Bearer ${directoryToken}`) {
+      return route.fulfill({ status: 200, contentType: 'application/json', headers: cors, body: JSON.stringify({ aubergineDirectory: 1, name: 'Signed Works', servers: [{ label: 'Behind a sign-in', address: 'https://behind.example.test', organization: 'Search' }] }) });
+    }
+    return route.fulfill({ status: 401, contentType: 'application/json', headers: cors, body: JSON.stringify({ aubergineDirectory: 1, signIn: 'https://signed.example.test/sign-in' }) });
+  });
+  await context.route('https://signed.example.test/sign-in**', (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: 'text/html',
+      body: `<!doctype html><title>Sign in</title><script>
+        const asked = new URL(location.href).searchParams;
+        // A message for another try first, which the page does not take; then the one for this try.
+        opener.postMessage({ aubergineDirectory: 1, request: 'zzzzzzzzzzzzzzzzzzzzzzzz', token: 'not-for-this-try-0123456789' }, asked.get('page'));
+        opener.postMessage({ aubergineDirectory: 1, request: asked.get('request'), token: '${directoryToken}' }, asked.get('page'));
+      </script>`,
+    }),
+  );
+  await addDirectory(askingAt);
+  const asking = dialog.getByTestId('link-directory').nth(1);
+  await expect(asking.getByTestId('link-directory-asks')).toContainText('It asks who you are before it lists anything.');
+  await expect(asking.getByTestId('link-directory-asks')).toContainText('a window at signed.example.test');
+  await expect(asking.getByTestId('link-directory-server')).toHaveCount(0);
+  expect(await page.evaluate(() => document.querySelectorAll('[data-testid="link-server-dialog"] button.primary').length)).toBe(1);
+  expect(await measureLook(page)).toEqual([]);
+  const signInWindow = context.waitForEvent('page');
+  await asking.getByTestId('link-directory-sign-in').click();
+  const signInAt = new URL((await signInWindow).url());
+  expect(`${signInAt.origin}${signInAt.pathname}`).toBe('https://signed.example.test/sign-in');
+  expect(signInAt.searchParams.get('page')).toBe(origin);
+  expect([...signInAt.searchParams.keys()]).toEqual(['page', 'request']);
+  // Signed in: the directory is read with what the window gave, and its servers are listed.
+  await expect(asking).toContainText('Signed Works');
+  await expect(asking.getByTestId('link-directory-server')).toHaveText(/Behind a sign-in/);
+  await expect(asking.getByTestId('link-directory-asks')).toHaveCount(0);
+  // What the window gave is in nothing this browser keeps, and in no address.
+  expect(await page.evaluate(() => JSON.stringify([{ ...localStorage }, { ...sessionStorage }, location.href]))).not.toContain(directoryToken);
+  // The directory no longer takes it: the page says to sign in again. Then the directory is removed.
+  directoryTakes = false;
+  await dialog.getByTestId('link-server-close').click();
+  await switcher.click();
+  await menu.getByTestId('server-link').click();
+  await expect(asking.getByTestId('link-directory-asks')).toContainText('It no longer takes the sign-in this page had.');
+  await asking.getByTestId('link-directory-remove').click();
+  await expect(dialog.getByTestId('link-directory')).toHaveCount(1);
+
   // Pressing a server writes its address and name into the fields, puts the keyboard in Code, and links nothing.
   await listed.getByTestId('link-directory-server').first().click();
   await expect(dialog.getByTestId('link-server-address')).toHaveValue(secondOrigin);
@@ -7832,6 +7886,15 @@ test('two servers in one page: a server is linked with a code from its own comma
     expect(request.body).toBe('');
   }
   for (const request of toOwn) expect(`${request.url}\n${JSON.stringify(request.headers)}\n${request.body}`, request.url).not.toContain('lists.example.test');
+  // What a directory's sign-in gave went to that directory alone, as a header, and the own server heard of neither.
+  const withToken = requests.filter((r) => `${r.url}\n${JSON.stringify(r.headers)}\n${r.body}`.includes(directoryToken));
+  expect(withToken.length).toBeGreaterThan(0);
+  for (const request of withToken) {
+    expect(request.url).toBe(askingAt);
+    expect(request.headers.authorization).toBe(`Bearer ${directoryToken}`);
+    expect(request.headers.cookie, request.url).toBeUndefined();
+  }
+  for (const request of toOwn) expect(`${request.url}\n${JSON.stringify(request.headers)}\n${request.body}`, request.url).not.toContain('signed.example.test');
   for (const url of sockets) {
     expect(url).not.toContain(credential);
     if (new URL(url).port === String(second.port)) expect(url).toContain('ticket=');
