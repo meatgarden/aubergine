@@ -212,7 +212,23 @@ describe('the description of the API', () => {
     // The stream, as far as it can be described.
     const stream = document.paths['/v1/events']!.get!;
     expect(stream['x-aubergine-stream']).toBe(true);
-    expect(stream.responses['200']).toMatchObject({ content: { 'text/event-stream': { schema: { type: 'object', required: ['type'] } } } });
+    // A change, as before, and the two things the stream says about itself: where it stands, and that it cannot go on from an id.
+    expect(stream.responses['200']).toMatchObject({
+      content: {
+        'text/event-stream': {
+          schema: {
+            anyOf: [
+              { type: 'object', properties: { type: { const: 'hello' }, epoch: { type: 'string' }, revision: { type: 'integer' }, version: { type: 'string' }, resumed: { type: 'boolean' } }, required: ['type', 'epoch', 'revision', 'version', 'resumed'] },
+              { type: 'object', properties: { type: { const: 'reset' }, reason: { enum: ['restarted', 'too-old', 'unreadable'] } }, required: ['type', 'reason'] },
+              { type: 'object', required: ['type'] },
+            ],
+          },
+        },
+      },
+    });
+    // The header a program comes back with is said, and is not required.
+    expect(stream.parameters.find((p) => p.in === 'header')).toMatchObject({ name: 'Last-Event-ID', required: false, schema: { type: 'string' } });
+    expect(stream.description).toContain('`reset`');
 
     // Path parameters are all there, and all required.
     for (const { path, method, operation } of operations) {
