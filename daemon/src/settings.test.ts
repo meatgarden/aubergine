@@ -2,7 +2,7 @@ import { mkdir, mkdtemp, readFile, readdir, rm, stat, writeFile } from 'node:fs/
 import os from 'node:os';
 import path from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { DEFAULT_SETTINGS, SCHEMA_LINE, Settings, settingsJsonSchema } from '@aubergine/shared';
+import { DEFAULT_SETTINGS, SCHEMA_LINE, Settings, THEME_SCHEMA_FILE, UserTheme, settingsJsonSchema, themeFileJsonSchema } from '@aubergine/shared';
 import { SETTINGS_FILE, SETTINGS_SCHEMA_FILE, SettingsFile, accessReport, appearanceOf, colorProblems, expandHome, loadSettings, shortcutProblems, writeSettingsSchema } from './settings';
 
 let dir: string;
@@ -195,6 +195,18 @@ describe('how the page looks', () => {
     expect(colorProblems({ appearance: 'x' })).toEqual([]);
     expect(colorProblems({ appearance: { colors: [1] } })).toEqual(['appearance.colors is not a list of colors by name: it is left out.']);
   });
+
+  it('takes colors set by hand for a theme of the owner\'s, where that theme was read', async () => {
+    const harbor = UserTheme.parse({ id: 'harbor', name: 'Harbor', kind: 'dark', base: 'nord', colors: {}, terminal: {} });
+    const raw = { appearance: { dark: 'harbor', colors: { '[harbor]': { accent: '#123456' } } } };
+    expect(colorProblems(raw, [harbor])).toEqual([]);
+    expect(colorProblems(raw)).toEqual(['appearance.colors: "[harbor]" names no theme. It is skipped.']);
+    const warnings: string[] = [];
+    await writeFile(path.join(dir, SETTINGS_FILE), JSON.stringify(raw));
+    const file = new SettingsFile(dir, (m) => warnings.push(m), () => [harbor]);
+    expect((await file.reload()).appearance.dark).toBe('harbor');
+    expect(warnings).toEqual([]);
+  });
 });
 
 describe('outside addresses in the settings', () => {
@@ -237,8 +249,10 @@ describe('the schema of the settings file', () => {
     await writeFile(path.join(dir, SETTINGS_SCHEMA_FILE), '{}');
     expect(await writeSettingsSchema(dir)).toBe('written');
     expect(await readFile(path.join(dir, SETTINGS_SCHEMA_FILE), 'utf8')).toBe(text);
+    // The schema of a theme file is beside it, for the files in themes/.
+    expect(JSON.parse(await readFile(path.join(dir, THEME_SCHEMA_FILE), 'utf8'))).toEqual(themeFileJsonSchema());
     // Nothing is left behind, and the owner's file is as it was.
-    expect((await readdir(dir)).sort()).toEqual([SETTINGS_FILE, SETTINGS_SCHEMA_FILE].sort());
+    expect((await readdir(dir)).sort()).toEqual([SETTINGS_FILE, SETTINGS_SCHEMA_FILE, THEME_SCHEMA_FILE].sort());
     expect(await readFile(path.join(dir, SETTINGS_FILE), 'utf8')).toBe(owners);
   });
 

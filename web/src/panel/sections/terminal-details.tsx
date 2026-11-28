@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { sessionsWaiting, shortId, showControl, undescribed, type ColorThemeId, type Session, type WaitingSession } from '@aubergine/shared';
+import { sessionsWaiting, shortId, showControl, undescribed, type Session, type WaitingSession } from '@aubergine/shared';
 import { api } from '../../api';
 import { FieldsPart } from '../../fields/FieldsPart';
 import { LinkChip } from '../../links/LinkChip';
@@ -29,10 +29,11 @@ const session = (id: string) => (s: ReturnType<typeof useApp.getState>) => s.app
 
 /** What was found about its folder, and the conversation its agent is in, as facts: each a chip, or a short id that is copied whole. */
 /** The theme a terminal's body is drawn in, chosen in its details: its own, or the same as the default. */
-function DetailsTheme({ sessionId, theme }: { sessionId: string; theme: ColorThemeId | null }) {
+function DetailsTheme({ sessionId, theme }: { sessionId: string; theme: string | null }) {
   const appearance = useApp((s) => s.settings.appearance);
+  const themes = useApp((s) => s.themes.themes);
   const page = useColorThemeShown();
-  return <ThemeSelect value={theme} onChange={(next) => chooseTerminalTheme(sessionId, next)} none={`Same as the default (${defaultThemeWords(appearance, page)})`} aria-label="Theme of this terminal" data-testid="details-theme" />;
+  return <ThemeSelect value={theme} onChange={(next) => chooseTerminalTheme(sessionId, next)} none={`Same as the default (${defaultThemeWords(appearance, page, themes)})`} aria-label="Theme of this terminal" data-testid="details-theme" />;
 }
 
 function foundFacts(found: Session): MoreFact[] {

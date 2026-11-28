@@ -5115,6 +5115,18 @@
     "text": "名前はページの色トークンで、<code>bg</code>、<code>text</code>、<code>accent</code>、<code>terminal-bg</code> などです。一覧は <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/design.md\">docs/design.md</a> にあります。誤った項目は飛ばされ、ファイルの残りはそのまま有効です。どれが飛ばされたかは <strong>Settings → Appearance</strong> が示します。自分で決めた色は自分のもので、書いた色が読みやすいかは何も確かめません。",
     "from": "86395864aac8"
   },
+  "custom.files.title": {
+    "text": "自作のテーマをファイルで",
+    "from": "06c16974771d"
+  },
+  "custom.files.text": {
+    "text": "自作のテーマはデータフォルダーの <code>themes/</code> にある JSON ファイルです。10 のうち同じ種類の 1 つを土台にし、35 色のどれでもその上に重ね、ターミナル自身の色（文字、カーソル、選択部分、プログラムが求める 16 色）も指定できます。同じ種類の 10 のテーマの後に「自作」として並び、それらと同じ場所で選べます。ページ、ターミナルの既定、または 1 つのターミナルにです。影とフォーカスリングは土台のままで、ファイルの中身が実行されることはありません。",
+    "from": "621009bfb006"
+  },
+  "custom.files.cli": {
+    "text": "<code>aubergine theme new harbor --from nord</code> は元のテーマのすべての色を書いた出発点のファイルを作ります。<code>aubergine theme check</code> はファイルの誤りを伝えます。Settings の <strong>Read themes again</strong> で変更を読み込みます。色が読みやすいかどうかの判断はあなたのものです。Settings は文字が読みにくいかもしれないときに伝えるだけです。形式は <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/themes.md\">docs/themes.md</a> にあります。",
+    "from": "fa449a724abf"
+  },
   "custom.text.title": {
     "text": "フォント、カーソル、キーボードショートカット",
     "from": "a9eecef9b5f9"
@@ -5396,8 +5408,8 @@
     "from": "bd438e8036f3"
   },
   "custom.cmp.a.themes": {
-    "text": "10 のテーマ（ライト、ダーク、システムどおり）。ターミナルごとに 1 つ。手で決める 35 色を全テーマか 1 つに",
-    "from": "fa76b50a8212"
+    "text": "10 のテーマ、ライト・ダーク・システムに合わせる。そのいずれかに重ねる自作の JSON ファイル。ターミナルごとに 1 つ。35 色を手で、すべてのテーマまたは 1 つに",
+    "from": "6d078567501b"
   },
   "custom.cmp.a.css": {
     "text": "なし。予定：文書化されたフック付きの <code>custom.css</code>",
@@ -5420,8 +5432,8 @@
     "from": "9538078a7039"
   },
   "custom.cmp.p3": {
-    "text": "今の Aubergine は設定の側にあります。テーマ、色、キーを自分自身を説明する 1 つのファイルにまとめ、その一部をページが書きます。ページで自分のコードを動かすことも、自分のスタイルシートを入れることもできず、テンプレートもありません。それらは<a href=\"/roadmap/#rm-yours\">ロードマップ</a>にあり、まだ作られていません。",
-    "from": "94f37707471f"
+    "text": "現在の Aubergine は設定の側にあります。テーマ、色、キーは自分自身を説明するファイルにあり、ページが設定の一部を書きます。ページであなたのコードは実行せず、あなたのスタイルシートも受け付けず、テンプレートもありません。それらは<a href=\"/roadmap/#rm-yours\">ロードマップ</a>にあり、まだ作られていません。",
+    "from": "5018de362a41"
   },
   "custom.cmp.mark": {
     "text": "Aubergine は、このページで名前を挙げたどのツールとも提携していません。各名称はそれぞれの所有者の商標です。",
@@ -5432,8 +5444,8 @@
     "from": "e10eed0040ae"
   },
   "custom.plan.text": {
-    "text": "自作のテーマファイル、プロジェクトやタグごとの見た目、テンプレート、<code>custom.css</code>、プラグインは予定で、まだ作られていません。<a href=\"/roadmap/#rm-yours\">ロードマップ</a>をご覧ください。",
-    "from": "a392418737d9"
+    "text": "プロジェクトやタグごとの見た目、テンプレート、<code>custom.css</code>、プラグイン、そしてエージェントが提案しあなたの承認を待つテーマは予定で、まだ作られていません。<a href=\"/roadmap/#rm-yours\">ロードマップ</a>をご覧ください。",
+    "from": "6d31705c7ce4"
   },
   "custom.q.terminal.q": {
     "text": "ターミナルごとに違うカラーテーマにできますか？",
@@ -5480,12 +5492,12 @@
     "from": "6fef807ba454"
   },
   "roadmap.yours.themes.name": {
-    "text": "自作のテーマファイル",
-    "from": "ec9cabb5c1c9"
+    "text": "エージェントが提案するテーマ",
+    "from": "9227cd56845e"
   },
   "roadmap.yours.themes.text": {
-    "text": "カラーテーマをファイルとして書き、Aubergine 付属の 10 と並べて選ぶ。エージェントが提案することもでき、それはあなたが受け入れるまで待ちます。",
-    "from": "c47421ed6549"
+    "text": "エージェントがカラーテーマを提案でき、あなたが承認するまで他のテーマと並んで表示されません。自分で書くテーマファイルはすでに作られています。",
+    "from": "593bf89b9177"
   },
   "roadmap.yours.when.name": {
     "text": "条件で変わる見た目",

@@ -165,6 +165,18 @@
 }</code></pre>
     <p>名前はページの色トークンで、<code>bg</code>、<code>text</code>、<code>accent</code>、<code>terminal-bg</code> などです。一覧は <a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/design.md">docs/design.md</a> にあります。誤った項目は飛ばされ、ファイルの残りはそのまま有効です。どれが飛ばされたかは <strong>Settings → Appearance</strong> が示します。自分で決めた色は自分のもので、書いた色が読みやすいかは何も確かめません。</p>
 
+    <h2 id="theme-files">自作のテーマをファイルで</h2>
+    <p>自作のテーマはデータフォルダーの <code>themes/</code> にある JSON ファイルです。10 のうち同じ種類の 1 つを土台にし、35 色のどれでもその上に重ね、ターミナル自身の色（文字、カーソル、選択部分、プログラムが求める 16 色）も指定できます。同じ種類の 10 のテーマの後に「自作」として並び、それらと同じ場所で選べます。ページ、ターミナルの既定、または 1 つのターミナルにです。影とフォーカスリングは土台のままで、ファイルの中身が実行されることはありません。</p>
+    <pre><code>{
+  "$schema": "../theme.schema.json",
+  "name": "Harbor",
+  "kind": "dark",
+  "base": "nord",
+  "colors": { "bg": "#0e1a24", "accent": "#5fb3b3" },
+  "terminal": { "foreground": "#d8dee9", "cursor": "#5fb3b3" }
+}</code></pre>
+    <p><code>aubergine theme new harbor --from nord</code> は元のテーマのすべての色を書いた出発点のファイルを作ります。<code>aubergine theme check</code> はファイルの誤りを伝えます。Settings の <strong>Read themes again</strong> で変更を読み込みます。色が読みやすいかどうかの判断はあなたのものです。Settings は文字が読みにくいかもしれないときに伝えるだけです。形式は <a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/themes.md">docs/themes.md</a> にあります。</p>
+
     <h2 id="fonts-and-keys">フォント、カーソル、キーボードショートカット</h2>
     <p>Settings → Appearance の <strong>Terminal text</strong> で、ターミナルの文字の大きさ（8〜32 ピクセル）とフォントを決めます。フォントはリストで、最初に見つかったものが使われます。<strong>Cursor</strong> では形（ブロック、バー、下線）と点滅するかどうかを決めます。</p>
     <p>どのキーも変えられます。設定ファイルに <code>shortcuts</code> を加え、コマンド名にキーの組み合わせ、その一覧、またはキーなしの <code>null</code> を書きます。<code>shortcutsInAppWindow</code> も同じ形で、Aubergine を専用ウィンドウのアプリとしてインストールしたときだけ効きます。ページを再読み込みすると、ショートカット一覧（<strong>?</strong>）、パレット、ツールチップが、決めたとおりのキーを表示します。</p>
@@ -210,16 +222,16 @@ aubergine settings schema</code></pre>
           <tr><td><a href="https://ghostty.org/docs/config">Ghostty</a><br>ターミナル</td><td data-label="設定"><code>key = value</code> のファイル。<code>config-file</code> でほかを追加</td><td data-label="テーマと色"><a href="https://ghostty.org/docs/features/theme">テーマは設定ファイル</a>。ライト用とダーク用を 1 つずつ</td><td data-label="独自の CSS">見当たらず</td><td data-label="独自のコード">ターミナルに重ねる <a href="https://ghostty.org/docs/config/reference#custom-shader">GLSL シェーダー</a>。macOS では AppleScript</td><td data-label="タイトルとステータスのテンプレート">見当たらず</td></tr>
           <tr><td><a href="https://learn.microsoft.com/windows/terminal/customize-settings/color-schemes">Windows Terminal</a><br>ターミナル</td><td data-label="設定">Settings 画面か <code>settings.json</code>。<a href="https://github.com/microsoft/terminal/blob/main/doc/cascadia/profiles.schema.json">JSON スキーマ</a>あり</td><td data-label="テーマと色">プロファイルごとの配色。ウィンドウとタブの<a href="https://learn.microsoft.com/windows/terminal/customize-settings/themes">テーマ</a>はライトとダーク、JSON でのみ</td><td data-label="独自の CSS">見当たらず</td><td data-label="独自のコード">見当たらず。ほかのアプリが JSON フラグメントでプロファイルと配色を追加</td><td data-label="タイトルとステータスのテンプレート">見当たらず。プロファイルが <code>tabTitle</code> と <code>tabColor</code> を決める</td></tr>
           <tr><td><a href="https://iterm2.com/documentation-automatic-profile-switching.html">iTerm2</a><br>ターミナル</td><td data-label="設定">Settings のプロファイル。プロパティリスト形式の <a href="https://iterm2.com/documentation-dynamic-profiles.html">Dynamic Profiles</a></td><td data-label="テーマと色">ユーザー、ホスト、フォルダー、ジョブで選ばれるプロファイル（Shell Integration が必要）</td><td data-label="独自の CSS">見当たらず</td><td data-label="独自のコード"><a href="https://iterm2.com/python-api/">Python API</a>、Python で書くステータスバー部品、AppleScript</td><td data-label="タイトルとステータスのテンプレート">セッション名、バッジ、ステータスバーの<a href="https://iterm2.com/documentation-scripting-fundamentals.html">補間文字列</a> <code>\(…)</code></td></tr>
-          <tr><td>Aubergine<br>キャンバス上のターミナル</td><td data-label="設定"><code>config.json</code> と Settings。エディター向けの JSON Schema 付き</td><td data-label="テーマと色">10 のテーマ（ライト、ダーク、システムどおり）。ターミナルごとに 1 つ。手で決める 35 色を全テーマか 1 つに</td><td data-label="独自の CSS">なし。予定：文書化されたフック付きの <code>custom.css</code></td><td data-label="独自のコード">なし。予定：プラグイン</td><td data-label="タイトルとステータスのテンプレート">なし。予定：ターミナルのタイトルと一覧の行に</td></tr>
+          <tr><td>Aubergine<br>キャンバス上のターミナル</td><td data-label="設定"><code>config.json</code> と Settings。エディター向けの JSON Schema 付き</td><td data-label="テーマと色">10 のテーマ、ライト・ダーク・システムに合わせる。そのいずれかに重ねる自作の JSON ファイル。ターミナルごとに 1 つ。35 色を手で、すべてのテーマまたは 1 つに</td><td data-label="独自の CSS">なし。予定：文書化されたフック付きの <code>custom.css</code></td><td data-label="独自のコード">なし。予定：プラグイン</td><td data-label="タイトルとステータスのテンプレート">なし。予定：ターミナルのタイトルと一覧の行に</td></tr>
         </tbody>
       </table>
     </div>
     <p>ここにあるどのツールも設定をファイルに保存し、VS Code、Zed、Windows Terminal には、Aubergine と同じく、それを書く画面もあります。ほとんどでテーマもファイルです。VS Code と Zed では JSON、Obsidian では CSS、WezTerm では Lua か TOML、kitty と Ghostty では設定ファイルです。VS Code、Zed、WezTerm では、ここでの <code>appearance.colors</code> のように、テーマの上に個々の色を変えられます。</p>
     <p>いちばん違うのはコードです。WezTerm の設定は全体が Lua のプログラムで、kitty と iTerm2 は自分の Python を動かし、Hyper のプラグインはインターフェースを包む JavaScript です。Obsidian と Hyper は自分の CSS も受け付けます。VS Code の拡張機能はインターフェースの DOM に触れられず、独自のスタイルシートにも対応していません。Zed は拡張機能を WebAssembly として、制限できるケイパビリティ付きで動かします。tmux、WezTerm、kitty、iTerm2 は、テンプレートや関数でタイトルとステータス行を組み立てます。</p>
-    <p>今の Aubergine は設定の側にあります。テーマ、色、キーを自分自身を説明する 1 つのファイルにまとめ、その一部をページが書きます。ページで自分のコードを動かすことも、自分のスタイルシートを入れることもできず、テンプレートもありません。それらは<a href="../roadmap/#rm-yours">ロードマップ</a>にあり、まだ作られていません。</p>
+    <p>現在の Aubergine は設定の側にあります。テーマ、色、キーは自分自身を説明するファイルにあり、ページが設定の一部を書きます。ページであなたのコードは実行せず、あなたのスタイルシートも受け付けず、テンプレートもありません。それらは<a href="../roadmap/#rm-yours">ロードマップ</a>にあり、まだ作られていません。</p>
 
     <h2 id="planned">予定していること</h2>
-    <p>自作のテーマファイル、プロジェクトやタグごとの見た目、テンプレート、<code>custom.css</code>、プラグインは予定で、まだ作られていません。<a href="../roadmap/#rm-yours">ロードマップ</a>をご覧ください。</p>
+    <p>プロジェクトやタグごとの見た目、テンプレート、<code>custom.css</code>、プラグイン、そしてエージェントが提案しあなたの承認を待つテーマは予定で、まだ作られていません。<a href="../roadmap/#rm-yours">ロードマップ</a>をご覧ください。</p>
 
     <h2 id="faq">よくある質問</h2>
     <div class="questions">

@@ -5115,6 +5115,18 @@
     "text": "이름은 페이지의 색 토큰입니다. 예를 들어 <code>bg</code>, <code>text</code>, <code>accent</code>, <code>terminal-bg</code>이며, <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/design.md\">docs/design.md</a>에 목록이 있습니다. 잘못된 항목은 건너뛰고 파일의 나머지는 그대로 적용되며, 어느 것을 건너뛰었는지 <strong>Settings → Appearance</strong>가 알려 줍니다. 직접 정한 색은 여러분의 몫입니다. 쓴 색이 읽기 좋은지는 아무것도 확인하지 않습니다.",
     "from": "86395864aac8"
   },
+  "custom.files.title": {
+    "text": "나만의 테마를 파일로",
+    "from": "06c16974771d"
+  },
+  "custom.files.text": {
+    "text": "나만의 테마는 데이터 폴더의 <code>themes/</code>에 있는 JSON 파일입니다. 10개 중 같은 종류의 하나를 바탕으로, 35가지 색 중 원하는 것을 그 위에 얹고, 터미널 자체의 색(글자, 커서, 선택 영역, 프로그램이 요청하는 16가지 색)도 정할 수 있습니다. 같은 종류의 10개 뒤에 내 것으로 표시되어 나오며, 그것들을 고를 수 있는 곳이면 어디서든 고를 수 있습니다. 페이지, 터미널의 기본값, 또는 터미널 하나에. 그림자와 포커스 링은 바탕의 것이 유지되고, 파일 안의 어떤 것도 실행되지 않습니다.",
+    "from": "621009bfb006"
+  },
+  "custom.files.cli": {
+    "text": "<code>aubergine theme new harbor --from nord</code>은 원래 테마의 모든 색이 담긴 시작용 파일을 씁니다. <code>aubergine theme check</code>는 파일에서 잘못된 점을 알려 줍니다. Settings의 <strong>Read themes again</strong>이 변경을 읽어 들입니다. 색이 읽기 좋은지는 여러분이 판단합니다. Settings는 글자가 읽기 어려울 수 있을 때만 알려 줍니다. 형식은 <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/themes.md\">docs/themes.md</a>에 있습니다.",
+    "from": "fa449a724abf"
+  },
   "custom.text.title": {
     "text": "글꼴, 커서, 키보드 단축키",
     "from": "a9eecef9b5f9"
@@ -5396,8 +5408,8 @@
     "from": "bd438e8036f3"
   },
   "custom.cmp.a.themes": {
-    "text": "테마 열 가지, 밝게, 어둡게, 시스템대로; 터미널마다 하나; 직접 정하는 색 35가지, 모든 테마 또는 하나에",
-    "from": "fa76b50a8212"
+    "text": "테마 10개, 라이트·다크·시스템을 따름; 그중 하나 위에 얹는 나만의 JSON 파일; 터미널마다 하나; 35가지 색을 직접, 모든 테마 또는 하나에",
+    "from": "6d078567501b"
   },
   "custom.cmp.a.css": {
     "text": "없음. 계획: 문서화된 훅이 있는 <code>custom.css</code>",
@@ -5420,8 +5432,8 @@
     "from": "9538078a7039"
   },
   "custom.cmp.p3": {
-    "text": "오늘의 Aubergine은 설정 쪽 끝에 있습니다. 테마, 색, 키를 스스로를 설명하는 파일 하나에 두고, 그 일부를 페이지가 씁니다. 페이지에서 내 코드를 실행하지 않고, 내 스타일시트를 받지 않으며, 템플릿도 없습니다. 이것들은 <a href=\"/roadmap/#rm-yours\">로드맵</a>에 있으며 아직 만들어지지 않았습니다.",
-    "from": "94f37707471f"
+    "text": "오늘의 Aubergine은 설정 쪽에 있습니다. 테마, 색, 키는 스스로를 설명하는 파일에 있고, 페이지가 설정의 일부를 씁니다. 페이지에서 여러분의 코드를 실행하지 않고, 여러분의 스타일시트를 받지 않으며, 템플릿도 없습니다. 이것들은 <a href=\"/roadmap/#rm-yours\">로드맵</a>에 있고 아직 만들어지지 않았습니다.",
+    "from": "5018de362a41"
   },
   "custom.cmp.mark": {
     "text": "Aubergine은 이 페이지에 이름이 나온 어떤 도구와도 제휴하지 않았습니다. 각 이름은 해당 소유자의 상표입니다.",
@@ -5432,8 +5444,8 @@
     "from": "e10eed0040ae"
   },
   "custom.plan.text": {
-    "text": "내 테마 파일, 프로젝트나 태그에 따른 모양, 템플릿, <code>custom.css</code>, 플러그인은 계획되어 있으며 아직 만들어지지 않았습니다. <a href=\"/roadmap/#rm-yours\">로드맵</a>을 보세요.",
-    "from": "a392418737d9"
+    "text": "프로젝트나 태그별 모습, 템플릿, <code>custom.css</code>, 플러그인, 그리고 에이전트가 제안하고 여러분의 승인을 기다리는 테마는 계획되어 있으며 아직 만들어지지 않았습니다. <a href=\"/roadmap/#rm-yours\">로드맵</a>을 보세요.",
+    "from": "6d31705c7ce4"
   },
   "custom.q.terminal.q": {
     "text": "터미널마다 다른 색 테마를 쓸 수 있나요?",
@@ -5480,12 +5492,12 @@
     "from": "6fef807ba454"
   },
   "roadmap.yours.themes.name": {
-    "text": "내 테마 파일",
-    "from": "ec9cabb5c1c9"
+    "text": "에이전트가 제안하는 테마",
+    "from": "9227cd56845e"
   },
   "roadmap.yours.themes.text": {
-    "text": "색 테마를 파일로 쓰고, Aubergine에 들어 있는 열 가지와 나란히 고릅니다. 에이전트가 하나를 제안할 수도 있으며, 여러분이 받아들일 때까지 기다립니다.",
-    "from": "c47421ed6549"
+    "text": "에이전트가 색 테마를 제안할 수 있고, 여러분이 승인해야 다른 테마들과 나란히 표시됩니다. 직접 쓰는 테마 파일은 이미 만들어져 있습니다.",
+    "from": "593bf89b9177"
   },
   "roadmap.yours.when.name": {
     "text": "조건에 따른 모양",

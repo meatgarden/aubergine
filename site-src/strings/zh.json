@@ -5115,6 +5115,18 @@
     "text": "这些名字是页面的颜色令牌，例如 <code>bg</code>、<code>text</code>、<code>accent</code> 和 <code>terminal-bg</code>；完整列表见 <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/design.md\">docs/design.md</a>。错误的条目会被跳过，文件其余部分照常生效；<strong>Settings → Appearance</strong> 会说明跳过了哪一条。你设置的颜色由你负责：不会检查你写的颜色是否易读。",
     "from": "86395864aac8"
   },
+  "custom.files.title": {
+    "text": "你自己的主题，以文件形式",
+    "from": "06c16974771d"
+  },
+  "custom.files.text": {
+    "text": "你自己的主题是数据文件夹中 <code>themes/</code> 里的一个 JSON 文件：以十个主题中同类的一个为底，在上面叠加 35 种颜色中的任意几种，还可以设置终端自己的颜色：文字、光标、选中部分，以及程序请求的十六种颜色。它列在同类的十个主题之后，标为你的，凡是能选这十个的地方都能选它：页面、终端的默认主题或单个终端。阴影和焦点环仍是底主题的，文件里的任何内容都不会被执行。",
+    "from": "621009bfb006"
+  },
+  "custom.files.cli": {
+    "text": "<code>aubergine theme new harbor --from nord</code> 会写出一个起步文件，带有来源主题的每一种颜色；<code>aubergine theme check</code> 指出文件哪里有误；在 Settings 中按 <strong>Read themes again</strong> 即可载入改动。颜色是否易读由你判断：Settings 只在文字可能难以阅读时提醒。格式见 <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/themes.md\">docs/themes.md</a>。",
+    "from": "fa449a724abf"
+  },
   "custom.text.title": {
     "text": "字体、光标和键盘快捷键",
     "from": "a9eecef9b5f9"
@@ -5396,8 +5408,8 @@
     "from": "bd438e8036f3"
   },
   "custom.cmp.a.themes": {
-    "text": "十个主题，浅色、深色或跟随系统；每个终端一个；手动设置 35 种颜色，作用于所有主题或某一个",
-    "from": "fa76b50a8212"
+    "text": "十个主题，浅色、深色或跟随系统；你自己的主题是叠在其中之一上的 JSON 文件；每个终端一个；35 种颜色手动设置，作用于所有主题或某一个",
+    "from": "6d078567501b"
   },
   "custom.cmp.a.css": {
     "text": "没有。计划中：带文档化钩子的 <code>custom.css</code>",
@@ -5420,8 +5432,8 @@
     "from": "9538078a7039"
   },
   "custom.cmp.p3": {
-    "text": "今天的 Aubergine 处在设置这一端：主题、颜色和按键都在一个自我描述的文件里，页面负责写入其中一部分。它不会在页面中运行你的代码，不接受你的样式表，也没有模板。这些都在<a href=\"/roadmap/#rm-yours\">路线图</a>上，尚未构建。",
-    "from": "94f37707471f"
+    "text": "如今的 Aubergine 处在设置这一端：主题、颜色和按键放在自我描述的文件里，页面写入其中一部分设置。它不在页面中运行你的代码，不接受你的样式表，也没有模板。这些都在<a href=\"/roadmap/#rm-yours\">路线图</a>上，尚未构建。",
+    "from": "5018de362a41"
   },
   "custom.cmp.mark": {
     "text": "Aubergine 与本页提到的任何工具均无关联。这些名称是其各自所有者的商标。",
@@ -5432,8 +5444,8 @@
     "from": "e10eed0040ae"
   },
   "custom.plan.text": {
-    "text": "自己的主题文件、按项目或标签变化的外观、模板、<code>custom.css</code> 和插件都在计划中，尚未构建：见<a href=\"/roadmap/#rm-yours\">路线图</a>。",
-    "from": "a392418737d9"
+    "text": "按项目或标签的外观、模板、<code>custom.css</code>、插件，以及由智能体提议并等待你同意的主题，都在计划中，尚未构建：见<a href=\"/roadmap/#rm-yours\">路线图</a>。",
+    "from": "6d31705c7ce4"
   },
   "custom.q.terminal.q": {
     "text": "每个终端可以用不同的配色主题吗？",
@@ -5480,12 +5492,12 @@
     "from": "6fef807ba454"
   },
   "roadmap.yours.themes.name": {
-    "text": "自己的主题文件",
-    "from": "ec9cabb5c1c9"
+    "text": "由智能体提议的主题",
+    "from": "9227cd56845e"
   },
   "roadmap.yours.themes.text": {
-    "text": "把配色主题写成文件，与 Aubergine 自带的十个并列选择。代理也可以提议一个，它会等你接受。",
-    "from": "c47421ed6549"
+    "text": "智能体可以提议一个颜色主题，它要等你同意后才会和其他主题列在一起。你自己编写的主题文件已经可以用了。",
+    "from": "593bf89b9177"
   },
   "roadmap.yours.when.name": {
     "text": "按条件变化的外观",

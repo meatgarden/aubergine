@@ -3,7 +3,7 @@ import { Schedule } from './schedules';
 import { SessionEnvironment } from './environment';
 import { z } from 'zod';
 import { Found, LINKS_MAX, SessionLink, Suggested, Written } from './links';
-import { ColorThemeId } from './themes';
+import { ThemeId } from './themes';
 import {
   AgentInfo,
   Untold,
@@ -90,7 +90,7 @@ export const ChangeEvent = z.discriminatedUnion('type', [
   /** The fields of the session were replaced, as a whole list: by the owner, or one of them by the agent in it. */
   z.object({ type: z.literal('session.fields'), sessionId: Id, fields: TerminalFields }),
   /** The terminal's own color theme was chosen, or cleared (null: the default for terminals). */
-  z.object({ type: z.literal('session.themed'), sessionId: Id, theme: ColorThemeId.nullable() }),
+  z.object({ type: z.literal('session.themed'), sessionId: Id, theme: ThemeId.nullable() }),
   /** "People only" was switched on or off. */
   z.object({ type: z.literal('session.protected'), sessionId: Id, peopleOnly: z.boolean() }),
   /** The owner changed whether the session takes messages from other terminals while it is "people only". */

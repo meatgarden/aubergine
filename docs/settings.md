@@ -37,12 +37,12 @@ How the page looks beyond light or dark: the color theme of each, a terminal’s
 
 | Key | What it is | Default | Written |
 |---|---|---|---|
-| `appearance.light` | The color theme drawn when the page is light. One of `light`, `high-contrast-light`, `solarized-light`, `gruvbox-light`. | `"light"` | Settings |
-| `appearance.dark` | The color theme drawn when the page is dark. One of `dark`, `high-contrast-dark`, `solarized-dark`, `gruvbox-dark`, `nord`, `dracula`. | `"dark"` | Settings |
+| `appearance.light` | The color theme drawn when the page is light: a built-in one of that kind, or the ID of a theme file of that kind. One of `light`, `high-contrast-light`, `solarized-light`, `gruvbox-light`. | `"light"` | Settings |
+| `appearance.dark` | The color theme drawn when the page is dark: a built-in one of that kind, or the ID of a theme file of that kind. One of `dark`, `high-contrast-dark`, `solarized-dark`, `gruvbox-dark`, `nord`, `dracula`. | `"dark"` | Settings |
 | `appearance.cursor` | The shape of a terminal’s cursor. One of `block`, `bar`, `underline`. | `"block"` | Settings |
 | `appearance.cursorBlink` | Whether a terminal’s cursor blinks. | `true` | Settings |
-| `appearance.terminal` | The color theme of every terminal that has none of its own. Null: the theme the page is drawn in. One of `light`, `high-contrast-light`, `solarized-light`, `gruvbox-light`, `dark`, `high-contrast-dark`, `solarized-dark`, `gruvbox-dark`, `nord`, `dracula`. | `null` | Settings |
-| `appearance.colors` | Colors set by hand over the theme that is drawn: `"<color>": "#rrggbb"` for every theme, or `"[<theme id>]": { … }` for one theme alone, which wins. Written by hand only. | no entries | by hand |
+| `appearance.terminal` | The color theme of every terminal that has none of its own, of either kind, built-in or of a theme file. Null: the theme the page is drawn in. One of `light`, `high-contrast-light`, `solarized-light`, `gruvbox-light`, `dark`, `high-contrast-dark`, `solarized-dark`, `gruvbox-dark`, `nord`, `dracula`. | `null` | Settings |
+| `appearance.colors` | Colors set by hand over the theme that is drawn: `"<color>": "#rrggbb"` for every theme, or `"[<theme id>]": { … }` for one theme alone (built-in or of a theme file), which wins. Written by hand only. | no entries | by hand |
 
 ## `shell`
 

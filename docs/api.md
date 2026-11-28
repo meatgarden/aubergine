@@ -37,6 +37,7 @@ How to create a token, what the scopes mean, the limits and the activity log are
 | [`POST /v1/sessions/{sessionId}/desktop`](#opensessionondesktop) | Open a session in the owner's terminal application | browser only |
 | [`PUT /v1/settings/desktop`](#changedesktopsettings) | Say whether new terminals made in the page also open on the desktop | browser only |
 | [`PUT /v1/settings/appearance`](#changeappearance) | Choose how the page looks: light, dark or matching the system, each one's color theme, the default theme of terminals, a terminal's font and cursor | browser only |
+| [`POST /v1/settings/themes/read`](#readthemes) | Read the owner's theme files again | browser only |
 | [`POST /v1/sessions/{sessionId}/notes`](#appendnote) | Add an entry to a session's note log | session's own token, or `notes:write` |
 | [`PATCH /v1/canvases/{canvasId}/nodes/{nodeId}`](#updatenode) | Move, resize or color a node | `canvases:write` |
 | [`POST /v1/canvases/{canvasId}/frames`](#createframe) | Add a frame | `canvases:write` |
@@ -666,7 +667,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
         at: string;
       };
     }[];
-    theme: ("light" | "high-contrast-light" | "solarized-light" | "gruvbox-light" | "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula") | null;
+    theme: string | null;
     parkedFrom: {
       canvasId: string;
       rect: {
@@ -855,7 +856,7 @@ An API token needs the scope `sessions:write`. Sending `command` needs `terminal
         at: string;
       };
     }[];
-    theme: ("light" | "high-contrast-light" | "solarized-light" | "gruvbox-light" | "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula") | null;
+    theme: string | null;
     parkedFrom: {
       canvasId: string;
       rect: {
@@ -1047,7 +1048,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
         at: string;
       };
     }[];
-    theme: ("light" | "high-contrast-light" | "solarized-light" | "gruvbox-light" | "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula") | null;
+    theme: string | null;
     parkedFrom: {
       canvasId: string;
       rect: {
@@ -1221,7 +1222,7 @@ An API token needs the scope `read`.
       at: string;
     };
   }[];
-  theme: ("light" | "high-contrast-light" | "solarized-light" | "gruvbox-light" | "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula") | null;
+  theme: string | null;
   parkedFrom: {
     canvasId: string;
     rect: {
@@ -1339,7 +1340,7 @@ An API token needs the scope `sessions:write`. Sending `note` needs `notes:write
 | `tags` | `string[]` | no |  |
 | `note` | `string` | no |  |
 | `fields` | `{ /** What the value is, in a few words: one line of plain text, wi…` | no | The fields of the terminal, in order: at most 12, each label once. Who set each is the server’s to say: what is sent is the owner’s, except a field sent exactly as it stood, which keeps who set it. |
-| `theme` | `("light" \| "high-contrast-light" \| "solarized-light" \| "gruvbox-lig…` | no | The color theme the terminal's body is drawn in, whatever the page is drawn in: one of the IDs of the color themes. `null` clears it: the terminal is then drawn in the default for terminals, or as the page is. |
+| `theme` | `string \| null` | no | The color theme the terminal's body is drawn in, whatever the page is drawn in: one of the IDs of the color themes, built-in or a theme file the server has read (another is refused with 400). `null` clears it: the terminal is then drawn in the default for terminals, or as the page is. |
 
 **Answer** `200`:
 
@@ -1405,7 +1406,7 @@ An API token needs the scope `sessions:write`. Sending `note` needs `notes:write
       at: string;
     };
   }[];
-  theme: ("light" | "high-contrast-light" | "solarized-light" | "gruvbox-light" | "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula") | null;
+  theme: string | null;
   parkedFrom: {
     canvasId: string;
     rect: {
@@ -1609,7 +1610,7 @@ An API token needs the scope `sessions:write`.
         at: string;
       };
     }[];
-    theme: ("light" | "high-contrast-light" | "solarized-light" | "gruvbox-light" | "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula") | null;
+    theme: string | null;
     parkedFrom: {
       canvasId: string;
       rect: {
@@ -1795,7 +1796,7 @@ An API token needs the scope `sessions:write`.
       at: string;
     };
   }[];
-  theme: ("light" | "high-contrast-light" | "solarized-light" | "gruvbox-light" | "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula") | null;
+  theme: string | null;
   parkedFrom: {
     canvasId: string;
     rect: {
@@ -1976,7 +1977,7 @@ An API token needs the scope `sessions:write`.
         at: string;
       };
     }[];
-    theme: ("light" | "high-contrast-light" | "solarized-light" | "gruvbox-light" | "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula") | null;
+    theme: string | null;
     parkedFrom: {
       canvasId: string;
       rect: {
@@ -2176,13 +2177,13 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 | Field | Type | Required | |
 |---|---|---|---|
 | `theme` | `"light" \| "dark" \| "system"` | no | `light`, `dark`, or `system` to match the system. |
-| `light` | `"light" \| "high-contrast-light" \| "solarized-light" \| "gruvbox-light"` | no | The color theme to draw when the page is light: one whose kind is light. |
-| `dark` | `"dark" \| "high-contrast-dark" \| "solarized-dark" \| "gruvbox-dark" \|…` | no | The color theme to draw when the page is dark: one whose kind is dark. |
+| `light` | `string` | no | The color theme to draw when the page is light: one whose kind is light, built-in or a theme file the server has read. Another is refused with 400. |
+| `dark` | `string` | no | The color theme to draw when the page is dark: one whose kind is dark, built-in or a theme file the server has read. Another is refused with 400. |
 | `fontSize` | `number` | no | The size of a terminal's text, in pixels, from 8 to 32. |
 | `fontFamily` | `string` | no | The font-family list for a terminal's text: one line of at most 300 characters, without control characters or any of `;{}<>`. |
 | `cursor` | `"block" \| "bar" \| "underline"` | no | The shape of a terminal's cursor: `block`, `bar` or `underline`. |
 | `cursorBlink` | `boolean` | no | Whether a terminal's cursor blinks. |
-| `terminal` | `("light" \| "high-contrast-light" \| "solarized-light" \| "gruvbox-lig…` | no | The color theme every terminal is drawn in that has none of its own: one of the IDs of the color themes, of either kind. `null`: the theme the page is drawn in. |
+| `terminal` | `string \| null` | no | The color theme every terminal is drawn in that has none of its own: one of the IDs of the color themes, of either kind, built-in or a theme file the server has read (another is refused with 400). `null`: the theme the page is drawn in. |
 
 **Answer** `200`:
 
@@ -2190,10 +2191,10 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 {
   /** `light`, `dark`, or `system` for whichever the system is set to. */
   theme: "light" | "dark" | "system";
-  /** The color theme drawn when the page is light. */
-  light: "light" | "high-contrast-light" | "solarized-light" | "gruvbox-light";
-  /** The color theme drawn when the page is dark. */
-  dark: "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula";
+  /** The color theme drawn when the page is light: the ID of a built-in theme, or of a theme file of the owner’s. */
+  light: string;
+  /** The color theme drawn when the page is dark: the ID of a built-in theme, or of a theme file of the owner’s. */
+  dark: string;
   /** A terminal's font. */
   font: {
     /** The font-family list for a terminal's text. */
@@ -2205,12 +2206,126 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
   cursor: "block" | "bar" | "underline";
   /** Whether a terminal's cursor blinks. */
   cursorBlink: boolean;
-  /** The color theme of a terminal that has none of its own; `null`: the theme the page is drawn in. */
-  terminal: ("light" | "high-contrast-light" | "solarized-light" | "gruvbox-light" | "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula") | null;
+  /** The color theme of a terminal that has none of its own, built-in or of a theme file; `null`: the theme the page is drawn in. */
+  terminal: string | null;
 }
 ```
 
 **Errors:** 400, 401, 403, 409, 413, 429.
+
+### readThemes
+
+`POST /v1/settings/themes/read`: Read the owner's theme files again.
+
+For the owner only: no token and no session can do this, whatever its scopes. It reads the theme files (`themes/<id>.json` in the data folder) again and answers which themes there are now and what in the files was wrong. It writes nothing, and nothing in a file is run: a theme file is a plain name and colors. The server also reads them when it starts and whenever it reads its settings file.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+**Answer** `200`:
+
+```ts
+{
+  /** The themes of the owner’s own that were read, by the name of their file. */
+  themes: {
+    /** The name of its file, without `.json`. */
+    id: string;
+    /** What the theme is called: one line of plain text. */
+    name: string;
+    /** Whether it is drawn as the light page or the dark one. */
+    kind: "light" | "dark";
+    /** The built-in theme it is laid over, of the same kind. Its shadows, scrim and focus ring are the base’s. */
+    base: "light" | "high-contrast-light" | "solarized-light" | "gruvbox-light" | "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula";
+    /** Colors laid over the base theme, by the names of the page’s color tokens. What is not named is the base’s. */
+    colors: {
+      /** The page’s color token --bg, as #rrggbb. */
+      bg?: string;
+      /** The page’s color token --surface, as #rrggbb. */
+      surface?: string;
+      /** The page’s color token --surface-raised, as #rrggbb. */
+      "surface-raised"?: string;
+      /** The page’s color token --field, as #rrggbb. */
+      field?: string;
+      /** The page’s color token --surface-active, as #rrggbb. */
+      "surface-active"?: string;
+      /** The page’s color token --border, as #rrggbb. */
+      border?: string;
+      /** The page’s color token --border-strong, as #rrggbb. */
+      "border-strong"?: string;
+      /** The page’s color token --border-control, as #rrggbb. */
+      "border-control"?: string;
+      /** The page’s color token --text, as #rrggbb. */
+      text?: string;
+      /** The page’s color token --text-muted, as #rrggbb. */
+      "text-muted"?: string;
+      /** The page’s color token --accent, as #rrggbb. */
+      accent?: string;
+      /** The page’s color token --accent-soft, as #rrggbb. */
+      "accent-soft"?: string;
+      /** The page’s color token --accent-text, as #rrggbb. */
+      "accent-text"?: string;
+      /** The page’s color token --on-accent, as #rrggbb. */
+      "on-accent"?: string;
+      /** The page’s color token --accent-pressed, as #rrggbb. */
+      "accent-pressed"?: string;
+      /** The page’s color token --attention, as #rrggbb. */
+      attention?: string;
+      /** The page’s color token --attention-soft, as #rrggbb. */
+      "attention-soft"?: string;
+      /** The page’s color token --attention-text, as #rrggbb. */
+      "attention-text"?: string;
+      /** The page’s color token --on-attention, as #rrggbb. */
+      "on-attention"?: string;
+      /** The page’s color token --attention-pressed, as #rrggbb. */
+      "attention-pressed"?: string;
+      /** The page’s color token --working, as #rrggbb. */
+      working?: string;
+      /** The page’s color token --working-soft, as #rrggbb. */
+      "working-soft"?: string;
+      /** The page’s color token --working-text, as #rrggbb. */
+      "working-text"?: string;
+      /** The page’s color token --ok, as #rrggbb. */
+      ok?: string;
+      /** The page’s color token --ok-soft, as #rrggbb. */
+      "ok-soft"?: string;
+      /** The page’s color token --ok-text, as #rrggbb. */
+      "ok-text"?: string;
+      /** The page’s color token --danger, as #rrggbb. */
+      danger?: string;
+      /** The page’s color token --danger-soft, as #rrggbb. */
+      "danger-soft"?: string;
+      /** The page’s color token --danger-text, as #rrggbb. */
+      "danger-text"?: string;
+      /** The page’s color token --on-danger, as #rrggbb. */
+      "on-danger"?: string;
+      /** The page’s color token --danger-pressed, as #rrggbb. */
+      "danger-pressed"?: string;
+      /** The page’s color token --selection, as #rrggbb. */
+      selection?: string;
+      /** The page’s color token --terminal-bg, as #rrggbb. */
+      "terminal-bg"?: string;
+      /** The page’s color token --canvas-dot, as #rrggbb. */
+      "canvas-dot"?: string;
+      /** The page’s color token --minimap-node, as #rrggbb. */
+      "minimap-node"?: string;
+    };
+    /** A terminal’s own colors, over the base’s. Its ground is the theme’s terminal-bg. */
+    terminal: {
+      /** The color of a terminal’s words, as #rrggbb. */
+      foreground?: string;
+      /** The color of a terminal’s cursor, as #rrggbb. */
+      cursor?: string;
+      /** The color behind what is selected in a terminal, as #rrggbb. */
+      selection?: string;
+      /** The sixteen colors a program asks for by number, in order: black, red, green, yellow, blue, magenta, cyan, white, then the bright eight. Null, or left out at the end: the base’s. */
+      ansi?: (string | null)[];
+    };
+  }[];
+  /** One sentence for each file that was not read, and each entry of a file that was skipped. */
+  problems: string[];
+}
+```
+
+**Errors:** 400, 401, 403, 413, 429.
 
 ## Notes
 
@@ -11273,7 +11388,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
       at: string;
     };
   }[];
-  theme: ("light" | "high-contrast-light" | "solarized-light" | "gruvbox-light" | "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula") | null;
+  theme: string | null;
   parkedFrom: {
     canvasId: string;
     rect: {
@@ -11450,7 +11565,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
       at: string;
     };
   }[];
-  theme: ("light" | "high-contrast-light" | "solarized-light" | "gruvbox-light" | "dark" | "high-contrast-dark" | "solarized-dark" | "gruvbox-dark" | "nord" | "dracula") | null;
+  theme: string | null;
   parkedFrom: {
     canvasId: string;
     rect: {

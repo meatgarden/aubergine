@@ -39,6 +39,7 @@ import {
   type RouteOutput,
   type RouteSpec,
   type AppearanceAnswer,
+  type ThemesAnswer,
   type ChangeAppearanceRequest,
 } from '@aubergine/shared';
 import type { ActivityLog } from './activity';
@@ -87,6 +88,10 @@ export interface PublicRouteDeps {
   changeDescribing: (remind: boolean) => Promise<DescribingSettings>;
   /** Writes the keys of how the page looks that a change sends, and answers with what the settings say afterwards. */
   changeAppearance: (change: ChangeAppearanceRequest) => Promise<AppearanceAnswer>;
+  /** Reads the owner's theme files again, and answers what they hold now. */
+  readThemes: () => Promise<ThemesAnswer>;
+  /** Refuses, as bad input, a theme's ID that names no theme the server knows now. */
+  knowsTheme: (id: string) => Promise<void>;
   projects: Projects;
   projectFiles: ProjectFiles;
   activity: ActivityLog;
@@ -295,8 +300,9 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
     },
 
     // A name or a summary says who wrote it: the owner's own words are not replaced by a program's, which are kept as a suggestion.
-    updateSession: ({ params, body, principal }) => {
+    updateSession: async ({ params, body, principal }) => {
       const { name, note, ...rest } = body;
+      if (typeof rest.theme === 'string') await deps.knowsTheme(rest.theme);
       if (name !== undefined || note !== undefined) deps.described.describe(params.sessionId, { ...(name !== undefined ? { name } : {}), ...(note !== undefined ? { summary: note } : {}) }, principal.kind === 'user' ? 'owner' : 'agent');
       return sessions.update(params.sessionId, rest);
     },
@@ -427,6 +433,7 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
     },
     changeDesktopSettings: ({ body }) => deps.desktop.setOpenNew(body.openNew),
     changeAppearance: ({ body }) => deps.changeAppearance(body),
+    readThemes: () => deps.readThemes(),
     /* ---------- Projects, and what is shared between them ---------- */
 
     // Which projects there are: the ones the caller reaches. Everything that changes one is the owner's alone.

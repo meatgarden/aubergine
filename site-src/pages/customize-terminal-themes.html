@@ -1,4 +1,4 @@
-<!--page {"updated":"2026-11-28","order":6.97,"key":"custom","llms":{"name":"Customize terminal themes, colors, fonts and keys","about":"ten color themes for the page, a theme for each terminal, 35 colors set by hand in the settings file, a terminal's font and cursor, every key rebound, a settings file with a JSON Schema and a searchable list in Settings; what a program or an agent may change; and how VS Code, Zed, Obsidian, Hyper, WezTerm, tmux, kitty, Ghostty, Windows Terminal and iTerm2 document their own, read on 28 November 2026. Your own CSS, plugins and templates are planned, not built"}}-->
+<!--page {"updated":"2026-11-28","order":6.97,"key":"custom","llms":{"name":"Customize terminal themes, colors, fonts and keys","about":"ten color themes for the page, themes of your own as JSON files, a theme for each terminal, 35 colors set by hand in the settings file, a terminal's font and cursor, every key rebound, a settings file with a JSON Schema and a searchable list in Settings; what a program or an agent may change; and how VS Code, Zed, Obsidian, Hyper, WezTerm, tmux, kitty, Ghostty, Windows Terminal and iTerm2 document their own, read on 28 November 2026. Your own CSS, plugins, templates and a theme proposed by an agent are planned, not built"}}-->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -79,6 +79,18 @@
   }
 }</code></pre>
     <p>{{custom.colors.names}}</p>
+
+    <h2 id="theme-files">{{custom.files.title}}</h2>
+    <p>{{custom.files.text}}</p>
+    <pre><code>{
+  "$schema": "../theme.schema.json",
+  "name": "Harbor",
+  "kind": "dark",
+  "base": "nord",
+  "colors": { "bg": "#0e1a24", "accent": "#5fb3b3" },
+  "terminal": { "foreground": "#d8dee9", "cursor": "#5fb3b3" }
+}</code></pre>
+    <p>{{custom.files.cli}}</p>
 
     <h2 id="fonts-and-keys">{{custom.text.title}}</h2>
     <p>{{custom.text.font}}</p>

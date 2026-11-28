@@ -1,0 +1,264 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Aubergine color theme",
+  "description": "themes/<id>.json in the data folder of an Aubergine server: a theme of your own, a built-in theme of the same kind (base) with colors over it. The ID is the name of the file without .json.",
+  "type": "object",
+  "required": [
+    "name",
+    "kind"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "Where an editor finds this schema: \"../theme.schema.json\". Aubergine itself does not read it."
+    },
+    "name": {
+      "type": "string",
+      "maxLength": 60,
+      "description": "What the theme is called in Settings: one line of plain text."
+    },
+    "kind": {
+      "enum": [
+        "light",
+        "dark"
+      ],
+      "description": "Whether it is drawn as the light page or the dark one."
+    },
+    "base": {
+      "enum": [
+        "light",
+        "high-contrast-light",
+        "solarized-light",
+        "gruvbox-light",
+        "dark",
+        "high-contrast-dark",
+        "solarized-dark",
+        "gruvbox-dark",
+        "nord",
+        "dracula"
+      ],
+      "description": "A built-in theme of the same kind that it is laid over; left out, light or dark by its kind. Light ones: light, high-contrast-light, solarized-light, gruvbox-light. Dark ones: dark, high-contrast-dark, solarized-dark, gruvbox-dark, nord, dracula."
+    },
+    "colors": {
+      "type": "object",
+      "description": "Colors over the base, by the names of the page’s color tokens, each #rrggbb. What is not named is the base’s. Shadows, the scrim and the focus ring are always the base’s.",
+      "properties": {
+        "bg": {
+          "type": "string",
+          "pattern": "^\\s*#[0-9A-Fa-f]{6}\\s*$",
+          "description": "The page’s color token --bg."
+        },
+        "surface": {
+          "type": "string",
+          "pattern": "^\\s*#[0-9A-Fa-f]{6}\\s*$",
+          "description": "The page’s color token --surface."
+        },
+        "surface-raised": {
+          "type": "string",
+          "pattern": "^\\s*#[0-9A-Fa-f]{6}\\s*$",
+          "description": "The page’s color token --surface-raised."
+        },
+        "field": {
+          "type": "string",
+          "pattern": "^\\s*#[0-9A-Fa-f]{6}\\s*$",
+          "description": "The page’s color token --field."
+        },
+        "surface-active": {
+          "type": "string",
+          "pattern": "^\\s*#[0-9A-Fa-f]{6}\\s*$",
+          "description": "The page’s color token --surface-active."
+        },
+        "border": {
+          "type": "string",
+          "pattern": "^\\s*#[0-9A-Fa-f]{6}\\s*$",
+          "description": "The page’s color token --border."
+        },
+        "border-strong": {
+          "type": "string",
+          "pattern": "^\\s*#[0-9A-Fa-f]{6}\\s*$",
+          "description": "The page’s color token --border-strong."
+        },
+        "border-control": {
+          "type": "string",
+          "pattern": "^\\s*#[0-9A-Fa-f]{6}\\s*$",
+          "description": "The page’s color token --border-control."
+        },
+        "text": {
+          "type": "string",
+          "pattern": "^\\s*#[0-9A-Fa-f]{6}\\s*$",
+          "description": "The page’s color token --text."
+        },
+        "text-muted": {
+          "type": "string",
+          "pattern": "^\\s*#[0-9A-Fa-f]{6}\\s*$",
+          "description": "The page’s color token --text-muted."
+        },
+        "accent": {
+          "type": "string",
+          "pattern": "^\\s*#[0-9A-Fa-f]{6}\\s*$",
+          "description": "The page’s color token --accent."
+        },
+        "accent-soft": {
+          "type": "string",
+          "pattern": "^\\s*#[0-9A-Fa-f]{6}\\s*$",
+          "description": "The page’s color token --accent-soft."
+        },
+        "accent-text": {
+          "type": "string",
+          "pattern": "^\\s*#[0-9A-Fa-f]{6}\\s*$",
+          "description": "The page’s color token --accent-text."
+        },
+        "on-accent": {
+          "type": "string",
+          "pattern": "^\\s*#[0-9A-Fa-f]{6}\\s*$",
+          "description": "The page’s color token --on-accent."
+        },
+        "accent-pressed": {
+          "type": "string",
+          "pattern": "^\\s*#[0-9A-Fa-f]{6}\\s*$",
+          "description": "The page’s color token --accent-pressed."
+        },
+        "attention": {
+          "type": "string",
+          "pattern": "^\\s*#[0-9A-Fa-f]{6}\\s*$",
+          "description": "The page’s color token --attention."
+        },
+        "attention-soft": {
+          "type": "string",
+          "pattern": "^\\s*#[0-9A-Fa-f]{6}\\s*$",
+          "description": "The page’s color token --attention-soft."
+        },
+        "attention-text": {
+          "type": "string",
+          "pattern": "^\\s*#[0-9A-Fa-f]{6}\\s*$",
+          "description": "The page’s color token --attention-text."
+        },
+        "on-attention": {
+          "type": "string",
+          "pattern": "^\\s*#[0-9A-Fa-f]{6}\\s*$",
+          "description": "The page’s color token --on-attention."
+        },
+        "attention-pressed": {
+          "type": "string",
+          "pattern": "^\\s*#[0-9A-Fa-f]{6}\\s*$",
+          "description": "The page’s color token --attention-pressed."
+        },
+        "working": {
+          "type": "string",
+          "pattern": "^\\s*#[0-9A-Fa-f]{6}\\s*$",
+          "description": "The page’s color token --working."
+        },
+        "working-soft": {
+          "type": "string",
+          "pattern": "^\\s*#[0-9A-Fa-f]{6}\\s*$",
+          "description": "The page’s color token --working-soft."
+        },
+        "working-text": {
+          "type": "string",
+          "pattern": "^\\s*#[0-9A-Fa-f]{6}\\s*$",
+          "description": "The page’s color token --working-text."
+        },
+        "ok": {
+          "type": "string",
+          "pattern": "^\\s*#[0-9A-Fa-f]{6}\\s*$",
+          "description": "The page’s color token --ok."
+        },
+        "ok-soft": {
+          "type": "string",
+          "pattern": "^\\s*#[0-9A-Fa-f]{6}\\s*$",
+          "description": "The page’s color token --ok-soft."
+        },
+        "ok-text": {
+          "type": "string",
+          "pattern": "^\\s*#[0-9A-Fa-f]{6}\\s*$",
+          "description": "The page’s color token --ok-text."
+        },
+        "danger": {
+          "type": "string",
+          "pattern": "^\\s*#[0-9A-Fa-f]{6}\\s*$",
+          "description": "The page’s color token --danger."
+        },
+        "danger-soft": {
+          "type": "string",
+          "pattern": "^\\s*#[0-9A-Fa-f]{6}\\s*$",
+          "description": "The page’s color token --danger-soft."
+        },
+        "danger-text": {
+          "type": "string",
+          "pattern": "^\\s*#[0-9A-Fa-f]{6}\\s*$",
+          "description": "The page’s color token --danger-text."
+        },
+        "on-danger": {
+          "type": "string",
+          "pattern": "^\\s*#[0-9A-Fa-f]{6}\\s*$",
+          "description": "The page’s color token --on-danger."
+        },
+        "danger-pressed": {
+          "type": "string",
+          "pattern": "^\\s*#[0-9A-Fa-f]{6}\\s*$",
+          "description": "The page’s color token --danger-pressed."
+        },
+        "selection": {
+          "type": "string",
+          "pattern": "^\\s*#[0-9A-Fa-f]{6}\\s*$",
+          "description": "The page’s color token --selection."
+        },
+        "terminal-bg": {
+          "type": "string",
+          "pattern": "^\\s*#[0-9A-Fa-f]{6}\\s*$",
+          "description": "The page’s color token --terminal-bg."
+        },
+        "canvas-dot": {
+          "type": "string",
+          "pattern": "^\\s*#[0-9A-Fa-f]{6}\\s*$",
+          "description": "The page’s color token --canvas-dot."
+        },
+        "minimap-node": {
+          "type": "string",
+          "pattern": "^\\s*#[0-9A-Fa-f]{6}\\s*$",
+          "description": "The page’s color token --minimap-node."
+        }
+      },
+      "additionalProperties": false
+    },
+    "terminal": {
+      "type": "object",
+      "description": "A terminal’s own colors over the base’s. Its ground is the theme’s terminal-bg.",
+      "properties": {
+        "foreground": {
+          "type": "string",
+          "pattern": "^\\s*#[0-9A-Fa-f]{6}\\s*$",
+          "description": "The color of a terminal’s words."
+        },
+        "cursor": {
+          "type": "string",
+          "pattern": "^\\s*#[0-9A-Fa-f]{6}\\s*$",
+          "description": "The color of the cursor."
+        },
+        "selection": {
+          "type": "string",
+          "pattern": "^\\s*#[0-9A-Fa-f]{6}\\s*$",
+          "description": "The color behind what is selected."
+        },
+        "ansi": {
+          "type": "array",
+          "maxItems": 16,
+          "items": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^\\s*#[0-9A-Fa-f]{6}\\s*$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "description": "The sixteen colors a program asks for by number, in order: black, red, green, yellow, blue, magenta, cyan, white, brightBlack, brightRed, brightGreen, brightYellow, brightBlue, brightMagenta, brightCyan, brightWhite. Null: the base’s."
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,4 +1,4 @@
-import type { ColorThemeId } from '@aubergine/shared';
+import { ANSI_NAMES, colorsOver, themeOf, type ColorThemeId, type UserTheme } from '@aubergine/shared';
 import type { ITheme } from '@xterm/xterm';
 
 /**
@@ -80,4 +80,25 @@ export const TERMINAL_THEMES: Record<ColorThemeId, TerminalColors> = {
 /** The colors of a terminal drawn in that theme. */
 export function terminalTheme(id: ColorThemeId): TerminalColors {
   return TERMINAL_THEMES[id];
+}
+
+/**
+ * The colors of a terminal drawn in a theme, built-in or of a file: the base's, with a theme file's own terminal colors
+ * over them (the sixteen by number), and the ground of the theme (`terminal-bg` of the file, then as set by hand) where
+ * one is laid over the base. A theme that names nothing now is drawn as Dark. Pure.
+ */
+export function terminalColorsOf(id: string, colors: unknown, themes: readonly UserTheme[]): TerminalColors {
+  const theme = themeOf(id, themes);
+  const out: TerminalColors = { ...TERMINAL_THEMES[theme?.base ?? 'dark'] };
+  const own = theme?.terminal ?? {};
+  if (own.foreground) out.foreground = own.foreground;
+  if (own.cursor) out.cursor = own.cursor;
+  if (own.selection) out.selectionBackground = own.selection;
+  own.ansi?.forEach((hex, at) => {
+    const name = ANSI_NAMES[at];
+    if (hex && name) out[name] = hex;
+  });
+  const ground = colorsOver(id, colors, themes).colors['terminal-bg'];
+  if (ground) out.background = ground;
+  return out;
 }

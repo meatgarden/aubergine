@@ -1,14 +1,14 @@
 import { useSyncExternalStore } from 'react';
 import {
   THEME_COLORS,
-  colorTheme,
   colorThemeShown,
-  resolveColors,
+  colorsOver,
+  themeOf,
   themeShown,
   type Appearance,
   type ChangeAppearanceRequest,
-  type ColorThemeId,
   type ThemeSetting,
+  type UserTheme,
   terminalThemeOf,
 } from '@aubergine/shared';
 import type { CSSProperties } from 'react';
@@ -19,12 +19,15 @@ import { useApp } from './store';
  * How the page looks. The choice is one of the settings (light, dark, or match the system) and is kept in the
  * settings file, so every browser and the next start agree. What is drawn is that choice, or for "match the
  * system" whichever the system has now: followed while the page is open. Each of the two kinds is drawn in the color
- * theme chosen for it (`appearance.light`, `appearance.dark`), with the colors set by hand in the file over it.
+ * theme chosen for it (`appearance.light`, `appearance.dark`), with the colors set by hand in the file over it. A theme
+ * of the owner's own (a theme file) is drawn as the built-in theme it is laid over, with its colors over that
+ * (`themeOf`, `colorsOver`): the same way as colors set by hand.
  */
 
 const KEY = 'aubergine.theme';
-/** Copies kept in this browser for the next load's first paint, read by the lines in index.html. */
+/** Copies kept in this browser for the next load's first paint, read by the lines in index.html: the base drawn, the theme's own ID, and what is laid over it. */
 const THEME_KEY = { light: 'aubergine.theme.light', dark: 'aubergine.theme.dark' } as const;
+const THEME_ID_KEY = { light: 'aubergine.theme.light.id', dark: 'aubergine.theme.dark.id' } as const;
 const COLORS_KEY = { light: 'aubergine.colors.light', dark: 'aubergine.colors.dark' } as const;
 const query = typeof window !== 'undefined' && typeof window.matchMedia === 'function' ? window.matchMedia('(prefers-color-scheme: light)') : null;
 
@@ -44,38 +47,52 @@ export function useThemeShown(): 'light' | 'dark' {
   return themeShown(setting, useSystemIsLight());
 }
 
-/** The color theme that is drawn now. Everything that draws colors of its own (a terminal) reads this. */
-export function useColorThemeShown(): ColorThemeId {
+/** The owner's themes of their own, as the own server read them. */
+export const useUserThemes = (): UserTheme[] => useApp((s) => s.themes.themes);
+
+/** The color theme that is drawn now, built-in or of a file. Everything that draws colors of its own (a terminal) reads this. */
+export function useColorThemeShown(): string {
   const appearance = useApp((s) => s.settings.appearance);
-  return colorThemeShown(appearance, useThemeShown());
+  return colorThemeShown(appearance, useThemeShown(), useUserThemes());
 }
 
 /**
  * The color theme a terminal's body is drawn in now: its own, else the default for terminals, else the page's
  * (`terminalThemeOf`). Its live terminal, its snapshot and the ground under both read this, so they never disagree.
  */
-export function useTerminalTheme(sessionId: string): ColorThemeId {
+export function useTerminalTheme(sessionId: string): string {
   const own = useApp((s) => s.whole?.sessions.find((x) => x.id === sessionId)?.theme ?? null);
   const appearance = useApp((s) => s.settings.appearance);
-  return terminalThemeOf(own, appearance, useThemeShown());
+  return terminalThemeOf(own, appearance, useThemeShown(), useUserThemes());
 }
 
-/** What is put on a terminal's body element so that it is drawn in its theme. */
+/** What is put on an element so that it is drawn in a theme: its base's tokens, the theme's own ID, and what is laid over the base. */
 export interface BodyTheme {
-  'data-theme-preview'?: ColorThemeId;
+  'data-theme-preview'?: string;
+  /** A theme of the owner's: its own ID, beside the base it is drawn as. */
+  'data-theme-id'?: string;
   style?: CSSProperties;
 }
 
 /**
- * How a terminal's body carries its theme. Where it is the page's, nothing: the body is drawn as the page is, the colors
- * set by hand on the page's root included. Where it is another, the body is a preview of that theme (its tokens, from
- * tokens.css or themes.css) with that theme's own colors set by hand over it, written on the body itself. Only the
+ * How an element shows a theme whatever the page is drawn in: a preview of its base (the tokens of tokens.css or
+ * themes.css), with what is laid over the base (a theme file's own colors, then the colors set by hand for it) written
+ * on the element itself. Pure.
+ */
+export function previewOf(id: string, colors: unknown, themes: readonly UserTheme[]): BodyTheme {
+  const theme = themeOf(id, themes);
+  const base = theme?.base ?? id;
+  const style = Object.fromEntries(pairsOf(colorsLine(colors, id, themes)).map(([name, value]) => [`--${name}`, value])) as CSSProperties;
+  return { 'data-theme-preview': base, ...(theme?.own ? { 'data-theme-id': id } : {}), ...(Object.keys(style).length > 0 ? { style } : {}) };
+}
+
+/**
+ * How a terminal's body carries its theme. Where it is the page's, nothing: the body is drawn as the page is, what is
+ * laid over the page's root included. Where it is another, the body is a preview of that theme (`previewOf`). Only the
  * body: the terminal's title and its note stay the page's. Pure.
  */
-export function bodyThemeOf(id: ColorThemeId, pageId: ColorThemeId, colors: unknown): BodyTheme {
-  if (id === pageId) return {};
-  const style = Object.fromEntries(pairsOf(colorsLine(colors, id)).map(([name, value]) => [`--${name}`, value])) as CSSProperties;
-  return Object.keys(style).length > 0 ? { 'data-theme-preview': id, style } : { 'data-theme-preview': id };
+export function bodyThemeOf(id: string, pageId: string, colors: unknown, themes: readonly UserTheme[] = []): BodyTheme {
+  return id === pageId ? {} : previewOf(id, colors, themes);
 }
 
 /** `bodyThemeOf` for the terminal of that session, followed as anything it depends on changes. */
@@ -83,7 +100,7 @@ export function useBodyTheme(sessionId: string): BodyTheme {
   const id = useTerminalTheme(sessionId);
   const page = useColorThemeShown();
   const colors = useApp((s) => s.settings.appearance.colors);
-  return bodyThemeOf(id, page, colors);
+  return bodyThemeOf(id, page, colors, useUserThemes());
 }
 
 /** One color as it may be written on the page: a name of `THEME_COLORS`, a colon, `#rrggbb`. The same rule as index.html's. */
@@ -91,11 +108,12 @@ const PAIR = /^([a-z-]+):(#[0-9a-f]{6})$/;
 const NAMES = new Set<string>(THEME_COLORS);
 
 /**
- * The colors set by hand for one theme, as `name:#rrggbb` pairs joined by `,` (the shape the server writes on the
- * page), from what `resolveColors` gives; each pair is held to that shape again, and anything else is left out.
+ * What is laid over one theme's base, as `name:#rrggbb` pairs joined by `,` (the shape the server writes on the page):
+ * a theme file's own colors, then the colors set by hand (`colorsOver`); each pair is held to that shape again, and
+ * anything else is left out.
  */
-export function colorsLine(raw: unknown, id: ColorThemeId): string {
-  const { colors } = resolveColors(raw, id);
+export function colorsLine(raw: unknown, id: string, themes: readonly UserTheme[] = []): string {
+  const { colors } = colorsOver(id, raw, themes);
   return THEME_COLORS.flatMap((name) => {
     const pair = `${name}:${colors[name] ?? ''}`;
     const shape = PAIR.exec(pair);
@@ -124,19 +142,24 @@ function colorsOnPage(root: HTMLElement): string {
  * Puts the theme on the page: which kind, which color theme, and the colors set by hand over it; and keeps copies of
  * the choice in this browser for the next load's first paint.
  */
-export function applyTheme(setting: ThemeSetting, shown: 'light' | 'dark', appearance: Appearance): void {
+export function applyTheme(setting: ThemeSetting, shown: 'light' | 'dark', appearance: Appearance, themes: readonly UserTheme[] = []): void {
   const root = document.documentElement;
-  const id = colorThemeShown(appearance, shown);
-  const lines = { light: colorsLine(appearance.colors, appearance.light), dark: colorsLine(appearance.colors, appearance.dark) };
+  const ids = { light: colorThemeShown(appearance, 'light', themes), dark: colorThemeShown(appearance, 'dark', themes) };
+  const bases = { light: themeOf(ids.light, themes)?.base ?? 'light', dark: themeOf(ids.dark, themes)?.base ?? 'dark' };
+  const id = ids[shown];
+  const base = bases[shown];
+  const lines = { light: colorsLine(appearance.colors, ids.light, themes), dark: colorsLine(appearance.colors, ids.dark, themes) };
   const colors = lines[shown];
-  if (root.dataset.theme !== shown || root.dataset.colorTheme !== id || colorsOnPage(root) !== colors) {
+  if (root.dataset.theme !== shown || root.dataset.colorTheme !== base || root.dataset.colorThemeId !== id || colorsOnPage(root) !== colors) {
     // The change is at once: for this moment nothing on the page takes time to change color, so that no part of it
     // is caught half-way between the two themes.
     root.classList.add('theme-changing');
     window.setTimeout(() => root.classList.remove('theme-changing'), 60);
   }
   root.dataset.theme = shown;
-  root.dataset.colorTheme = id;
+  // Drawn as the base's block of colors; the theme's own ID beside it, for a theme file.
+  root.dataset.colorTheme = base;
+  root.dataset.colorThemeId = id;
   root.dataset.themeSetting = setting;
   const set = new Map(pairsOf(colors));
   for (const name of THEME_COLORS) {
@@ -147,9 +170,9 @@ export function applyTheme(setting: ThemeSetting, shown: 'light' | 'dark', appea
   document.querySelector('meta[name="theme-color"]')?.setAttribute('content', getComputedStyle(root).getPropertyValue('--surface').trim() || '#17181c');
   try {
     localStorage.setItem(KEY, setting);
-    localStorage.setItem(THEME_KEY.light, appearance.light);
-    localStorage.setItem(THEME_KEY.dark, appearance.dark);
     for (const kind of ['light', 'dark'] as const) {
+      localStorage.setItem(THEME_KEY[kind], bases[kind]);
+      localStorage.setItem(THEME_ID_KEY[kind], ids[kind]);
       if (lines[kind]) localStorage.setItem(COLORS_KEY[kind], lines[kind]);
       else localStorage.removeItem(COLORS_KEY[kind]);
     }
@@ -196,11 +219,11 @@ export function chooseTheme(theme: ThemeSetting): void {
  * Chooses the color theme of its kind. Where the page is not drawing that kind now, it is drawn as that kind from
  * now on, so that what was chosen is seen: one request with both.
  */
-export function chooseColorTheme(id: ColorThemeId): void {
-  const theme = colorTheme(id);
+export function chooseColorTheme(id: string): void {
+  const { settings, themes } = useApp.getState();
+  const theme = themeOf(id, themes.themes);
   if (!theme) return;
-  const settings = useApp.getState().settings;
-  const change: ChangeAppearanceRequest = theme.kind === 'light' ? { light: theme.id as ChangeAppearanceRequest['light'] } : { dark: theme.id as ChangeAppearanceRequest['dark'] };
+  const change: ChangeAppearanceRequest = theme.kind === 'light' ? { light: theme.id } : { dark: theme.id };
   if (themeShown(settings.theme, query?.matches ?? false) !== theme.kind) change.theme = theme.kind;
   changeLook(change, 'The color theme');
 }
@@ -210,5 +233,20 @@ export const setFontFamily = (fontFamily: string): void => changeLook({ fontFami
 export const setTerminalFont = (fontFamily: string, fontSize: number): void => changeLook({ fontFamily, fontSize }, 'The font');
 export const setCursor = (cursor: Appearance['cursor']): void => changeLook({ cursor }, 'The cursor');
 /** The theme of every terminal that has none of its own; null: as the page is drawn. */
-export const setTerminalTheme = (terminal: ColorThemeId | null): void => changeLook({ terminal }, 'The theme of terminals');
+export const setTerminalTheme = (terminal: string | null): void => changeLook({ terminal }, 'The theme of terminals');
 export const setCursorBlink = (cursorBlink: boolean): void => changeLook({ cursorBlink }, 'The cursor');
+
+/**
+ * Reads the owner's theme files again, on the own server, and keeps what it answers. What is drawn follows at once: a
+ * theme whose file is gone falls back. The answer is said in one sentence.
+ */
+export async function readThemesAgain(): Promise<void> {
+  try {
+    const answer = await ownApi.readThemes();
+    useApp.getState().setThemes(answer);
+    const count = answer.themes.length;
+    useApp.getState().say(`${count === 0 ? 'No theme' : count === 1 ? 'One theme' : `${count} themes`} of your own${answer.problems.length > 0 ? `, and ${answer.problems.length === 1 ? 'one problem' : `${answer.problems.length} problems`} in the files` : ''}.`);
+  } catch (error) {
+    useApp.getState().setNotice(`The theme files could not be read again: ${(error as Error).message}`);
+  }
+}

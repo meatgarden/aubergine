@@ -5115,6 +5115,18 @@
     "text": "Os nomes são os tokens de cor da página, como <code>bg</code>, <code>text</code>, <code>accent</code> e <code>terminal-bg</code>; <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/design.md\">docs/design.md</a> lista todos. Uma entrada errada é ignorada, e o resto do arquivo continua valendo; <strong>Settings → Appearance</strong> diz qual foi ignorada. As cores que você define são suas: nada confere se o que você escreveu dá para ler.",
     "from": "86395864aac8"
   },
+  "custom.files.title": {
+    "text": "Temas seus, como arquivos",
+    "from": "06c16974771d"
+  },
+  "custom.files.text": {
+    "text": "Um tema seu é um arquivo JSON em <code>themes/</code> na pasta de dados: um dos dez como base, do mesmo tipo, com qualquer uma das 35 cores por cima, e as cores próprias de um terminal: o texto, o cursor, o que está selecionado e as dezesseis cores que um programa pede. Ele aparece depois dos dez do seu tipo, marcado como seu, e pode ser escolhido onde eles podem: para a página, como padrão dos terminais ou para um só terminal. As sombras e o anel de foco continuam os da base, e nada em um arquivo é executado.",
+    "from": "621009bfb006"
+  },
+  "custom.files.cli": {
+    "text": "<code>aubergine theme new harbor --from nord</code> escreve um arquivo para começar, com cada cor do tema de origem; <code>aubergine theme check</code> diz o que está errado em um; <strong>Read themes again</strong> em Settings carrega uma mudança. Se as suas cores são legíveis é você quem julga: o Settings só avisa quando um texto pode ser difícil de ler. <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/themes.md\">docs/themes.md</a> descreve o formato.",
+    "from": "fa449a724abf"
+  },
   "custom.text.title": {
     "text": "Fontes, cursor e atalhos de teclado",
     "from": "a9eecef9b5f9"
@@ -5396,8 +5408,8 @@
     "from": "bd438e8036f3"
   },
   "custom.cmp.a.themes": {
-    "text": "Dez temas, claro, escuro ou como o sistema; um para cada terminal; 35 cores à mão, para todos os temas ou um",
-    "from": "fa76b50a8212"
+    "text": "Dez temas, claro, escuro ou como o sistema; os seus como arquivos JSON sobre um deles; um para cada terminal; 35 cores à mão, para todos os temas ou para um",
+    "from": "6d078567501b"
   },
   "custom.cmp.a.css": {
     "text": "Não. Planejado: um <code>custom.css</code> com ganchos documentados",
@@ -5420,8 +5432,8 @@
     "from": "9538078a7039"
   },
   "custom.cmp.p3": {
-    "text": "O Aubergine hoje está na ponta das configurações: temas, cores e teclas em um arquivo que descreve a si mesmo, e uma página que escreve parte dele. Ele não executa código seu na página, não aceita folhas de estilo suas e não tem modelos. Isso está no <a href=\"/roadmap/#rm-yours\">roadmap</a>, e não está construído.",
-    "from": "94f37707471f"
+    "text": "O Aubergine hoje está no lado das configurações: temas, cores e teclas em arquivos que se descrevem, e uma página que escreve parte das configurações. Ele não executa código seu na página, não aceita folha de estilo sua e não tem modelos. Isso está no <a href=\"/roadmap/#rm-yours\">roteiro</a>, e não construído.",
+    "from": "5018de362a41"
   },
   "custom.cmp.mark": {
     "text": "O Aubergine não tem vínculo com nenhuma das ferramentas citadas nesta página. Os nomes delas são marcas dos seus respectivos donos.",
@@ -5432,8 +5444,8 @@
     "from": "e10eed0040ae"
   },
   "custom.plan.text": {
-    "text": "Arquivos de tema próprios, uma aparência para um projeto ou uma etiqueta, modelos, um <code>custom.css</code> e plugins estão planejados e não construídos: veja o <a href=\"/roadmap/#rm-yours\">roadmap</a>.",
-    "from": "a392418737d9"
+    "text": "Uma aparência para um projeto ou uma etiqueta, modelos, um <code>custom.css</code>, plugins e um tema proposto por um agente que espera a sua aprovação estão planejados e não construídos: veja o <a href=\"/roadmap/#rm-yours\">roteiro</a>.",
+    "from": "6d31705c7ce4"
   },
   "custom.q.terminal.q": {
     "text": "Cada terminal pode ter um tema de cores diferente?",
@@ -5480,12 +5492,12 @@
     "from": "6fef807ba454"
   },
   "roadmap.yours.themes.name": {
-    "text": "Arquivos de tema próprios",
-    "from": "ec9cabb5c1c9"
+    "text": "Um tema proposto por um agente",
+    "from": "9227cd56845e"
   },
   "roadmap.yours.themes.text": {
-    "text": "Escreva um tema de cores como arquivo e escolha-o ao lado dos dez que vêm com o Aubergine. Um agente pode propor um, e ele espera você aceitar.",
-    "from": "c47421ed6549"
+    "text": "Um agente pode propor um tema de cores, e ele espera a sua aprovação antes de aparecer ao lado dos outros. Arquivos de tema que você mesmo escreve já estão construídos.",
+    "from": "593bf89b9177"
   },
   "roadmap.yours.when.name": {
     "text": "Aparência por condição",

@@ -2,7 +2,7 @@ import { z } from 'zod';
 import type { JsonSchema } from './openapi';
 import { Settings } from './settings';
 import { COMMAND_IDS } from './shortcuts';
-import { COLOR_THEMES, THEME_COLORS } from './themes';
+import { COLOR_THEMES, THEME_COLORS, THEME_ID } from './themes';
 
 type Json = null | boolean | number | string | Json[] | { [key: string]: Json };
 const isNode = (value: unknown): value is { [key: string]: Json } => value !== null && typeof value === 'object' && !Array.isArray(value);
@@ -80,7 +80,24 @@ export function settingsJsonSchema(): JsonSchema {
       COLOR_THEMES.map((theme) => [`[${theme.id}]`, { type: 'object', description: `Colors set by hand for ${theme.name} alone, over those for every theme.`, properties: colorProperties(), additionalProperties: false }]),
     ),
   };
+  // A theme file's own: its ID is its file's name, which the schema cannot know.
+  colors.patternProperties = {
+    [`^\\[${THEME_ID.source.slice(1, -1)}\\]$`]: { type: 'object', description: 'Colors set by hand for a theme of your own (a file in themes/ in the data folder) alone, over those for every theme.', properties: colorProperties(), additionalProperties: false },
+  };
   colors.additionalProperties = false;
+
+  // A theme is one that comes with Aubergine, listed so that an editor offers them, or the ID of a theme file of your own.
+  const idOf = (ids: string[]): Json => [{ enum: ids }, { type: 'string', pattern: THEME_ID.source }];
+  for (const kind of ['light', 'dark'] as const) {
+    const node = appearance[kind] as { [key: string]: Json };
+    delete node.type;
+    delete node.pattern;
+    node.anyOf = idOf(COLOR_THEMES.filter((theme) => theme.kind === kind).map((theme) => theme.id));
+  }
+  const terminal = appearance.terminal as { [key: string]: Json };
+  delete terminal.type;
+  delete terminal.pattern;
+  terminal.anyOf = [...(idOf(COLOR_THEMES.map((theme) => theme.id)) as Json[]), { type: 'null' }];
 
   const access = (properties.access as { properties: { [key: string]: { [key: string]: Json } } }).properties;
   for (const kind of ['addresses', 'pages'] as const) (access[kind] as { [key: string]: Json }).items = { type: 'string', description: 'An origin alone, such as "https://aubergine.example.net".' };

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { COLOR_THEMES, colorTheme, type Appearance, type ColorThemeId } from '@aubergine/shared';
+import { themeChoices, themeOf, type Appearance, type UserTheme } from '@aubergine/shared';
 import { api, isSuperseded } from './api';
 import { useApp } from './store';
 import { Select } from './ui';
@@ -9,34 +9,46 @@ import { Select } from './ui';
  * terminals. Which theme a terminal is drawn in is `terminalThemeOf` in shared/, and nothing here decides it.
  */
 
-const nameOf = (id: ColorThemeId): string => colorTheme(id)?.name ?? id;
+/** A theme's name, or, for one that is not there now, its ID and that it is not. */
+const nameOf = (id: string, themes: readonly UserTheme[]): string => themeOf(id, themes)?.name ?? `${id} (not there now)`;
 const KINDS = [
   { kind: 'light', words: 'Light' },
   { kind: 'dark', words: 'Dark' },
 ] as const;
 
 /** What a terminal without a theme of its own is drawn in now, in words: the default for terminals, or the page's. Pure. */
-export function defaultThemeWords(appearance: Pick<Appearance, 'terminal'>, page: ColorThemeId): string {
-  return appearance.terminal ? nameOf(appearance.terminal) : `as the page: ${nameOf(page)}`;
+export function defaultThemeWords(appearance: Pick<Appearance, 'terminal'>, page: string, themes: readonly UserTheme[] = []): string {
+  return appearance.terminal && themeOf(appearance.terminal, themes) ? nameOf(appearance.terminal, themes) : `as the page: ${nameOf(page, themes)}`;
 }
 
 /** Gives the terminal its own theme, or (null) takes it away. The page follows the change event; a failure is said. */
-export function chooseTerminalTheme(sessionId: string, theme: ColorThemeId | null): void {
+export function chooseTerminalTheme(sessionId: string, theme: string | null): void {
   const session = useApp.getState().whole?.sessions.find((s) => s.id === sessionId);
   if (!session || (session.theme ?? null) === theme) return;
   void api.updateSession(sessionId, { theme }).catch((error: unknown) => !isSuperseded(error) && useApp.getState().setNotice(`The theme of "${session.name}" could not be changed: ${(error as Error).message}`));
 }
 
-/** A choice of theme: the first line for "none" (its words given), then the light themes and the dark ones. */
-export function ThemeSelect({ value, onChange, none, ...rest }: { value: ColorThemeId | null; onChange: (theme: ColorThemeId | null) => void; none: string; id?: string; 'aria-label'?: string; 'aria-describedby'?: string; 'data-testid'?: string }) {
+/**
+ * A choice of theme: the first line for "none" (its words given), then the light themes and the dark ones, each kind's
+ * built-in ones first and the owner's after them. A theme chosen that is not there now is kept as a line of its own,
+ * said so, so that the select still shows what is set.
+ */
+export function ThemeSelect({ value, onChange, none, ...rest }: { value: string | null; onChange: (theme: string | null) => void; none: string; id?: string; 'aria-label'?: string; 'aria-describedby'?: string; 'data-testid'?: string }) {
+  const themes = useApp((s) => s.themes.themes);
+  const gone = value !== null && !themeOf(value, themes);
   return (
-    <Select value={value ?? ''} onChange={(event) => onChange(colorTheme(event.target.value)?.id ?? null)} {...rest}>
+    <Select value={value ?? ''} onChange={(event) => onChange(event.target.value === '' ? null : (themeOf(event.target.value, themes)?.id ?? null))} {...rest}>
       <option value="">{none}</option>
+      {gone && (
+        <option value={value} disabled>
+          {nameOf(value, themes)}
+        </option>
+      )}
       {KINDS.map(({ kind, words }) => (
         <optgroup key={kind} label={words}>
-          {COLOR_THEMES.filter((one) => one.kind === kind).map((one) => (
+          {themeChoices(themes, kind).map((one) => (
             <option key={one.id} value={one.id}>
-              {one.name}
+              {one.own ? `${one.name} (yours)` : one.name}
             </option>
           ))}
         </optgroup>
@@ -47,11 +59,13 @@ export function ThemeSelect({ value, onChange, none, ...rest }: { value: ColorTh
 
 /**
  * The themes a terminal can have, hanging from its title: asked for from the title's menu, the palette or a key
- * (`terminal.theme`). "Same as the default" first, then the ten under their two headings; the one in use ticked.
+ * (`terminal.theme`). "Same as the default" first, then every theme under its kind's heading, the owner's after the
+ * built-in ones; the one in use ticked.
  */
-export function TerminalThemeMenu({ sessionId, name, page }: { sessionId: string; name: string; page: ColorThemeId }) {
+export function TerminalThemeMenu({ sessionId, name, page }: { sessionId: string; name: string; page: string }) {
   const own = useApp((s) => s.whole?.sessions.find((x) => x.id === sessionId)?.theme ?? null);
   const appearance = useApp((s) => s.settings.appearance);
+  const themes = useApp((s) => s.themes.themes);
   const [open, setOpen] = useState(false);
   const root = useRef<HTMLSpanElement>(null);
   const menu = useRef<HTMLSpanElement>(null);
@@ -89,7 +103,7 @@ export function TerminalThemeMenu({ sessionId, name, page }: { sessionId: string
     if (open) (menu.current?.querySelector<HTMLButtonElement>('[aria-checked="true"]') ?? menu.current?.querySelector('button'))?.focus();
   }, [open]);
 
-  const choose = (theme: ColorThemeId | null): void => {
+  const choose = (theme: string | null): void => {
     setOpen(false);
     chooseTerminalTheme(sessionId, theme);
   };
@@ -117,15 +131,16 @@ export function TerminalThemeMenu({ sessionId, name, page }: { sessionId: string
         >
           <button type="button" role="menuitemradio" aria-checked={own === null} onClick={() => choose(null)} data-testid="terminal-theme-none">
             Same as the default
-            <small>Now {defaultThemeWords(appearance, page)}</small>
+            <small>Now {defaultThemeWords(appearance, page, themes)}</small>
           </button>
           {KINDS.map(({ kind, words }) => [
             <span key={kind} className="ui-menu-label" role="presentation">
               {words}
             </span>,
-            ...COLOR_THEMES.filter((one) => one.kind === kind).map((one) => (
+            ...themeChoices(themes, kind).map((one) => (
               <button key={one.id} type="button" role="menuitemradio" aria-checked={own === one.id} onClick={() => choose(one.id)} data-testid={`terminal-theme-${one.id}`}>
                 {one.name}
+                {one.own && <span className="ui-meta"> · yours</span>}
               </button>
             )),
           ])}

@@ -165,6 +165,18 @@
 }</code></pre>
     <p>الأسماء هي رموز ألوان الصفحة، مثل <code>bg</code> و<code>text</code> و<code>accent</code> و<code>terminal-bg</code>؛ ويسردها <a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/design.md">docs/design.md</a>. يُتخطى الإدخال الخاطئ، ويبقى باقي الملف ساريًا؛ ويذكر <strong>Settings → Appearance</strong> ما تُخطي. الألوان التي تضبطها مسؤوليتك: لا شيء يتحقق من أن ما كتبته مقروء.</p>
 
+    <h2 id="theme-files">سماتك الخاصة، كملفات</h2>
+    <p>السمة الخاصة بك ملف JSON في <code>themes/</code> داخل مجلد البيانات: إحدى السمات العشر من النوع نفسه أساسًا لها، وفوقها أي من الألوان الخمسة والثلاثين، وألوان الطرفية نفسها: نصها، والمؤشر، وما هو محدد، والألوان الستة عشر التي يطلبها برنامج. تُدرج بعد السمات العشر من نوعها، موسومة بأنها لك، ويمكن اختيارها حيثما يمكن اختيار تلك: للصفحة، أو افتراضيًا للطرفيات، أو لطرفية واحدة. تبقى الظلال وحلقة التركيز كما في الأساس، ولا يُشغَّل شيء في الملف.</p>
+    <pre><code>{
+  "$schema": "../theme.schema.json",
+  "name": "Harbor",
+  "kind": "dark",
+  "base": "nord",
+  "colors": { "bg": "#0e1a24", "accent": "#5fb3b3" },
+  "terminal": { "foreground": "#d8dee9", "cursor": "#5fb3b3" }
+}</code></pre>
+    <p>يكتب <code>aubergine theme new harbor --from nord</code> ملفًا للبدء منه، فيه كل لون من السمة التي بدأ منها؛ ويقول <code>aubergine theme check</code> ما الخطأ في ملف؛ ويقرأ <strong>Read themes again</strong> في Settings أي تغيير. أنت من يحكم إن كانت ألوانك مقروءة: لا يقول Settings إلا متى قد يصعب قراءة النص. يصف <a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/themes.md">docs/themes.md</a> الصيغة.</p>
+
     <h2 id="fonts-and-keys">الخطوط والمؤشر واختصارات لوحة المفاتيح</h2>
     <p>يضبط <strong>Terminal text</strong> في Settings → Appearance حجم نص الطرفية، من 8 إلى 32 بكسل، وخطها، في صورة قائمة يُستخدم أول خط يوجد منها. ويضبط <strong>Cursor</strong> شكله، كتلة أو شريط أو خط سفلي، وهل يومض.</p>
     <p>يمكن تغيير كل مفتاح. أضف <code>shortcuts</code> إلى ملف الإعدادات: اسم أمر مع تركيبة مفاتيح، أو قائمة تركيبات، أو <code>null</code> لعدم وجود مفتاح. ويأخذ <code>shortcutsInAppWindow</code> الشكل نفسه ولا يسري إلا حيث ثُبّت Aubergine تطبيقًا بنافذة خاصة. أعد تحميل الصفحة، فتعرض صفحة الاختصارات (<strong>?</strong>) ولوحة الأوامر والتلميحات المفاتيح كما ضبطتها.</p>
@@ -210,16 +222,16 @@ aubergine settings schema</code></pre>
           <tr><td><a href="https://ghostty.org/docs/config">Ghostty</a><br>طرفية</td><td data-label="الإعدادات">ملف <code>key = value</code>؛ ويضيف <code>config-file</code> ملفات أخرى</td><td data-label="السمات والألوان"><a href="https://ghostty.org/docs/features/theme">السمات ملفات إعداد</a>؛ واحدة للفاتح وأخرى للداكن</td><td data-label="CSS خاص بك">لم يُعثر عليه</td><td data-label="شيفرة خاصة بك"><a href="https://ghostty.org/docs/config/reference#custom-shader">مظلِّلات GLSL</a> فوق الطرفية؛ وAppleScript على macOS</td><td data-label="قوالب للعناوين والحالة">لم يُعثر عليه</td></tr>
           <tr><td><a href="https://learn.microsoft.com/windows/terminal/customize-settings/color-schemes">Windows Terminal</a><br>طرفية</td><td data-label="الإعدادات">شاشة Settings أو <code>settings.json</code>، مع <a href="https://github.com/microsoft/terminal/blob/main/doc/cascadia/profiles.schema.json">مخطط JSON</a></td><td data-label="السمات والألوان">مخططات ألوان لكل ملف تعريف؛ و<a href="https://learn.microsoft.com/windows/terminal/customize-settings/themes">سمات</a> للنافذة والتبويبات، فاتحة وداكنة، في JSON فقط</td><td data-label="CSS خاص بك">لم يُعثر عليه</td><td data-label="شيفرة خاصة بك">لم يُعثر عليه؛ تضيف تطبيقات أخرى ملفات تعريف ومخططات ألوان في صورة أجزاء JSON</td><td data-label="قوالب للعناوين والحالة">لم يُعثر عليه؛ يضبط ملف التعريف <code>tabTitle</code> و<code>tabColor</code></td></tr>
           <tr><td><a href="https://iterm2.com/documentation-automatic-profile-switching.html">iTerm2</a><br>طرفية</td><td data-label="الإعدادات">ملفات تعريف في Settings؛ و<a href="https://iterm2.com/documentation-dynamic-profiles.html">Dynamic Profiles</a> في صورة ملفات قوائم خصائص</td><td data-label="السمات والألوان">ملف تعريف يُختار حسب المستخدم أو المضيف أو المجلد أو المهمة، مع Shell Integration</td><td data-label="CSS خاص بك">لم يُعثر عليه</td><td data-label="شيفرة خاصة بك"><a href="https://iterm2.com/python-api/">واجهة Python برمجية</a>، ومكوّنات لشريط الحالة بلغة Python، وAppleScript</td><td data-label="قوالب للعناوين والحالة"><a href="https://iterm2.com/documentation-scripting-fundamentals.html">سلاسل مُستكمَلة</a>، <code>\(…)</code>، في أسماء الجلسات والشارات وشريط الحالة</td></tr>
-          <tr><td>Aubergine<br>طرفيات على لوحة</td><td data-label="الإعدادات"><code>config.json</code> وSettings، مع JSON Schema للمحررات</td><td data-label="السمات والألوان">عشر سمات، فاتحة أو داكنة أو حسب النظام؛ واحدة لكل طرفية؛ 35 لونًا باليد، لكل السمات أو لواحدة</td><td data-label="CSS خاص بك">لا. مخطط له: <code>custom.css</code> بنقاط ربط موثقة</td><td data-label="شيفرة خاصة بك">لا. مخطط له: إضافات</td><td data-label="قوالب للعناوين والحالة">لا. مخطط له: لعنوان الطرفية ولصف في القائمة</td></tr>
+          <tr><td>Aubergine<br>طرفيات على لوحة</td><td data-label="الإعدادات"><code>config.json</code> وSettings، مع JSON Schema للمحررات</td><td data-label="السمات والألوان">عشر سمات، فاتحة أو داكنة أو كالنظام؛ سماتك أنت كملفات JSON فوق إحداها؛ واحدة لكل طرفية؛ 35 لونًا باليد، لكل السمات أو لواحدة</td><td data-label="CSS خاص بك">لا. مخطط له: <code>custom.css</code> بنقاط ربط موثقة</td><td data-label="شيفرة خاصة بك">لا. مخطط له: إضافات</td><td data-label="قوالب للعناوين والحالة">لا. مخطط له: لعنوان الطرفية ولصف في القائمة</td></tr>
         </tbody>
       </table>
     </div>
     <p>كل أداة هنا تحفظ إعداداتها في ملف، ولدى VS Code وZed وWindows Terminal أيضًا شاشة تكتبه، كما في Aubergine. وفي معظمها تكون السمة ملفًا أيضًا: JSON في VS Code وZed، وCSS في Obsidian، وLua أو TOML في WezTerm، وملف إعداد في kitty وGhostty. وتتيح لك VS Code وZed وWezTerm تغيير ألوان مفردة فوق سمة، كما يفعل هنا <code>appearance.colors</code>.</p>
     <p>أكثر ما تختلف فيه هو الشيفرة. إعداد WezTerm كله برنامج Lua، وkitty وiTerm2 يشغّلان شيفرة Python خاصة بك، وإضافات Hyper شيفرة JavaScript تغلّف واجهته؛ ويقبل Obsidian وHyper أيضًا CSS خاصًا بك. لا تصل إضافات VS Code إلى DOM واجهته، ولا يدعم ورقة أنماط خاصة بك؛ ويشغّل Zed الإضافات بصيغة WebAssembly، بقدرات يمكنك تقييدها. ويبني tmux وWezTerm وkitty وiTerm2 العناوين وأسطر الحالة من قوالب أو دوال.</p>
-    <p>يقف Aubergine اليوم عند طرف الإعدادات: سمات وألوان ومفاتيح في ملف واحد يصف نفسه، وصفحة تكتب جزءًا منه. لا يشغّل أي شيفرة لك في الصفحة، ولا يقبل ورقة أنماط خاصة بك، وليست فيه قوالب. هذه كلها على <a href="../roadmap/#rm-yours">خارطة الطريق</a>، ولم تُبنَ بعد.</p>
+    <p>يقف Aubergine اليوم عند طرف الإعدادات: السمات والألوان والمفاتيح في ملفات تصف نفسها، وصفحة تكتب جزءًا من الإعدادات. لا يشغّل أي شيفرة لك في الصفحة، ولا يأخذ ورقة أنماط منك، وليس فيه قوالب. هذه كلها على <a href="../roadmap/#rm-yours">خارطة الطريق</a>، ولم تُبنَ بعد.</p>
 
     <h2 id="planned">ما هو مخطط له</h2>
-    <p>ملفات سمات خاصة بك، ومظهر لمشروع أو وسم، وقوالب، و<code>custom.css</code>، وإضافات: كلها مخطط لها ولم تُبنَ بعد. انظر <a href="../roadmap/#rm-yours">خارطة الطريق</a>.</p>
+    <p>مظهر لمشروع أو وسم، وقوالب، و<code>custom.css</code>، وإضافات، وسمة يقترحها وكيل وتنتظر موافقتك: كلها مخطط لها ولم تُبنَ بعد. انظر <a href="../roadmap/#rm-yours">خارطة الطريق</a>.</p>
 
     <h2 id="faq">أسئلة</h2>
     <div class="questions">

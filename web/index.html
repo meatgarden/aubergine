@@ -11,7 +11,7 @@
     <script>
       // Before anything is drawn: the theme that was chosen (the server writes it on this page; a copy is kept in this
       // browser for when it does not), or for "match the system" the one the system has; the color theme of that kind,
-      // and the colors set by hand over it, each held to its shape. So no other theme is seen first.
+      // and the colors laid over it (a theme file's own, and those set by hand), each held to its shape. So no other theme is seen first.
       (function () {
         var root = document.documentElement;
         var stored = function (key) {
@@ -32,7 +32,12 @@
           var pair = /^([a-z-]+):(#[0-9a-f]{6})$/.exec(pairs[i]);
           if (pair) root.style.setProperty('--' + pair[1], pair[2]);
         }
+        // The theme's own ID: a theme file is drawn as the built-in theme it is laid over, and named here.
+        var own = root.getAttribute('data-theme-' + setting + '-id');
+        if (own === null && !root.hasAttribute('data-theme-' + setting)) own = stored('aubergine.theme.' + setting + '.id');
+        if (!own || !/^[a-z][a-z0-9-]{0,39}$/.test(own)) own = id;
         root.setAttribute('data-color-theme', id);
+        root.setAttribute('data-color-theme-id', own);
         root.setAttribute('data-theme', setting);
       })();
     </script>

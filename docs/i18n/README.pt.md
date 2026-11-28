@@ -31,7 +31,7 @@ Compartilhe o Aubergine: [X](https://x.com/intent/post?text=Aubergine%3A%20missi
 
 ### Temas de cores
 
-A página vem em dez temas de cores, quatro claros e seis escuros, escolhidos em **Settings → Appearance**. Qualquer terminal também pode ter um tema próprio (**Theme…** no menu dele), e os outros seguem o padrão que você define para os terminais, ou a página. Cores isoladas podem ser definidas à mão no [arquivo de configurações](../../README.md#settings).
+A página vem em dez temas de cores, quatro claros e seis escuros, escolhidos em **Settings → Appearance**. Qualquer terminal também pode ter um tema próprio (**Theme…** no menu dele), e os outros seguem o padrão que você define para os terminais, ou a página. Cores isoladas podem ser definidas à mão no [arquivo de configurações](../../README.md#settings). Um tema seu é um arquivo: um dos dez com as suas cores por cima, listado ao lado deles como seu ([docs/themes.md](../themes.md)).
 
 | | | |
 |---|---|---|

@@ -38,6 +38,7 @@ import {
 } from './protocol';
 import { Capabilities, CreateTokenRequest, CreatedToken, TokenView } from './tokens';
 import { Draft, ShelfElement } from './drafts';
+import { ThemesAnswer } from './theme-files';
 import { WriteRecapRequest, WrittenRecap } from './recap';
 import { AddLinkRequest, ChangeLinkRequest, DescribeCheckAnswer, DescribeCheckRequest, DescribeRequest, DescribedAnswer, DescribingSettings, FoundAnswer, KeepSeenRequest, LinkAnswer, LinksAnswer, SeenLinksAnswer, UseSuggestionRequest } from './links-api';
 import { OwnFieldAnswer, OwnFieldsAnswer, SetOwnFieldRequest } from './fields';
@@ -457,6 +458,17 @@ export const ROUTES = {
     response: AppearanceAnswer,
     status: 200,
     errors: [409],
+  }),
+
+  readThemes: route({
+    method: 'POST',
+    path: '/v1/settings/themes/read',
+    tag: 'Sessions',
+    summary: "Read the owner's theme files again",
+    description: "For the owner only: no token and no session can do this, whatever its scopes. It reads the theme files (`themes/<id>.json` in the data folder) again and answers which themes there are now and what in the files was wrong. It writes nothing, and nothing in a file is run: a theme file is a plain name and colors. The server also reads them when it starts and whenever it reads its settings file.",
+    action: 'themes.manage',
+    response: ThemesAnswer,
+    status: 200,
   }),
 
   /* ---------- Notes ---------- */

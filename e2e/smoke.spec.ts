@@ -5268,6 +5268,152 @@ test('a terminal\'s own theme: a default for terminals in Settings, one terminal
   }
 });
 
+test('a theme of your own: a file in the data folder, read again from Settings, listed as yours, drawn as its base with its colors from the first paint, on a terminal too, and falling back when it is gone', async ({ page }) => {
+  const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
+  const configFile = path.join(e2e.dataDir, 'config.json');
+  const original = existsSync(configFile) ? readFileSync(configFile, 'utf8') : null;
+  const themesDir = path.join(e2e.dataDir, 'themes');
+  const hadThemes = existsSync(themesDir);
+  const harborFile = path.join(themesDir, 'harbor.json');
+  const wrongFile = path.join(themesDir, 'wrong.json');
+  // Every pair of kind and color theme the page has, from before anything is drawn, and the accent laid over it then.
+  await page.addInitScript(() => {
+    const seen: string[] = [];
+    const w = window as unknown as { looksSeen: string[]; firstAccent: string | null; firstId: string | null };
+    w.looksSeen = seen;
+    w.firstAccent = null;
+    w.firstId = null;
+    const note = (): void => {
+      const root = document.documentElement;
+      const kind = root?.getAttribute('data-theme') ?? null;
+      const id = root?.getAttribute('data-color-theme') ?? null;
+      if (kind === null && id === null) return;
+      if (w.firstAccent === null) w.firstAccent = root.style.getPropertyValue('--accent');
+      if (w.firstId === null) w.firstId = root.getAttribute('data-color-theme-id');
+      const now = `${kind}/${id}`;
+      if (seen.at(-1) !== now) seen.push(now);
+    };
+    new MutationObserver(note).observe(document, { attributes: true, subtree: true, attributeFilter: ['data-theme', 'data-color-theme'] });
+    document.addEventListener('DOMContentLoaded', note);
+    requestAnimationFrame(note);
+  });
+  await page.goto(`/auth?token=${token}`);
+  await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
+  const before = page.url();
+  await page.getByRole('button', { name: 'New canvas' }).click();
+  await expect(page).not.toHaveURL(before);
+  await page.getByTestId('toolbar-new-terminal').click();
+  const nodes = page.getByTestId('terminal-node');
+  await expect(nodes).toHaveCount(1);
+  await expect(nodes.locator('.xterm-rows')).toContainText(/[$%#>]/, { timeout: 20_000 });
+  const html = page.locator('html');
+  const rgb = (hex: string): string => `rgb(${[1, 3, 5].map((at) => Number.parseInt(hex.slice(at, at + 2), 16)).join(', ')})`;
+  const tokenOnPage = (name: string): Promise<string> => page.evaluate((n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim(), name);
+  const ground = (): Promise<string> =>
+    nodes.first().evaluate((node) => {
+      for (const el of node.querySelectorAll('.xterm .xterm-viewport, .xterm .xterm-scrollable-element, .xterm .xterm-screen, .xterm')) {
+        const color = getComputedStyle(el).backgroundColor;
+        const parts = color.match(/\d+(\.\d+)?/g);
+        if (parts && (parts.length < 4 || Number(parts[3]) > 0)) return color;
+      }
+      throw new Error('no background on a terminal');
+    });
+  const bodyGround = (): Promise<string> => nodes.first().getByTestId('node-body').evaluate((el) => getComputedStyle(el).backgroundColor);
+  type Saved = { theme?: string; appearance?: { light?: string; dark?: string } };
+  const saved = (): Saved => (existsSync(configFile) ? (JSON.parse(readFileSync(configFile, 'utf8')) as Saved) : {});
+  const settings = page.getByTestId('settings-dialog');
+  const part = settings.getByTestId('settings-appearance');
+  try {
+    await expect(html).toHaveAttribute('data-color-theme', 'dark');
+    // A file written into the data folder while the page is open: listed once it is read again.
+    mkdirSync(themesDir, { recursive: true });
+    writeFileSync(
+      harborFile,
+      JSON.stringify({ name: 'Harbor', kind: 'dark', base: 'nord', colors: { accent: '#5fb3b3', 'terminal-bg': '#0b1620' }, terminal: { foreground: '#d8dee9' } }),
+    );
+    writeFileSync(wrongFile, JSON.stringify({ name: 'Wrong', kind: 'light', colors: { accent: 'teal' } }));
+    await page.getByTestId('toolbar-settings').click();
+    await expect(part.getByTestId('theme-files-says')).toContainText('aubergine theme new');
+    await expect(part.getByTestId('theme-files-says')).toContainText(themesDir);
+    await part.getByTestId('themes-read-again').click();
+    const harbor = part.getByTestId('color-theme-harbor');
+    await expect(harbor).toHaveText('Harbor · yours');
+    await expect(part.getByTestId('color-themes-dark').getByRole('radio')).toHaveText(['Dark', 'High contrast dark', 'Solarized dark', 'Gruvbox dark', 'Nord', 'Dracula', 'Harbor · yours']);
+    await expect(part.getByTestId('color-theme-wrong')).toHaveText('Wrong · yours');
+    await expect(part.getByTestId('theme-file-problems')).toContainText('themes/wrong.json, colors: "accent" is not a color written as #rrggbb. It is skipped.');
+    // Its preview is its base with its own colors over it.
+    expect(await harbor.locator('.ui-theme-preview').getAttribute('data-theme-preview')).toBe('nord');
+    expect(await harbor.locator('.ui-theme-preview-accent').evaluate((el) => getComputedStyle(el).backgroundColor)).toBe(rgb('#5fb3b3'));
+
+    // Chosen: the root carries the base's block and the theme's own ID, and the colors of the file.
+    await harbor.click();
+    await expect(html).toHaveAttribute('data-color-theme', 'nord');
+    await expect(html).toHaveAttribute('data-color-theme-id', 'harbor');
+    await expect(html).toHaveAttribute('data-theme', 'dark');
+    expect(await tokenOnPage('--accent')).toBe('#5fb3b3');
+    await expect.poll(() => saved().appearance?.dark).toBe('harbor');
+    await expect(harbor).toHaveAttribute('aria-checked', 'true');
+    await expect(harbor).toHaveAttribute('data-drawn', 'true');
+    await expect(part.getByTestId('color-theme-says')).toContainText('Harbor while it is dark');
+    await expect.poll(ground).toBe(rgb('#0b1620'));
+    await page.keyboard.press('Escape');
+    await expect(settings).toHaveCount(0);
+
+    // After a reload, the first paint already has it: nothing else is ever drawn first.
+    const sent = await (await page.request.get(page.url())).text();
+    expect(sent).toContain('data-theme-dark="nord"');
+    expect(sent).toContain('data-theme-dark-id="harbor"');
+    await page.reload();
+    await expect(page.getByTestId('appbar')).toBeVisible();
+    await expect(nodes.locator('.xterm-rows')).toContainText(/[$%#>]/, { timeout: 20_000 });
+    expect(await page.evaluate(() => (window as unknown as { looksSeen: string[] }).looksSeen)).toEqual(['dark/nord']);
+    expect(await page.evaluate(() => (window as unknown as { firstAccent: string }).firstAccent)).toBe('#5fb3b3');
+    expect(await page.evaluate(() => (window as unknown as { firstId: string }).firstId)).toBe('harbor');
+
+    // The page back to Dark, and the terminal given Harbor from its title's menu: its body alone is drawn in it.
+    await page.getByTestId('toolbar-settings').click();
+    await part.getByTestId('color-theme-dark').click();
+    await expect(html).toHaveAttribute('data-color-theme-id', 'dark');
+    await page.keyboard.press('Escape');
+    await expect(settings).toHaveCount(0);
+    await nodes.first().getByTestId('node-more').focus();
+    await page.keyboard.press('Enter');
+    await nodes.first().getByTestId('terminal-theme').focus();
+    await page.keyboard.press('Enter');
+    const menu = nodes.first().getByTestId('terminal-theme-menu');
+    await expect(menu.getByTestId('terminal-theme-harbor')).toHaveText('Harbor · yours');
+    await menu.getByTestId('terminal-theme-harbor').click();
+    await expect(menu).toHaveCount(0);
+    await expect(nodes.first().getByTestId('node-body')).toHaveAttribute('data-theme-preview', 'nord');
+    await expect(nodes.first().getByTestId('node-body')).toHaveAttribute('data-theme-id', 'harbor');
+    await expect.poll(bodyGround).toBe(rgb('#0b1620'));
+    await expect.poll(ground).toBe(rgb('#0b1620'));
+
+    // The file removed and read again: the page falls back to Dark, the terminal to the page's, and Settings says so.
+    await page.getByTestId('toolbar-settings').click();
+    await part.getByTestId('color-theme-harbor').click();
+    await expect(html).toHaveAttribute('data-color-theme-id', 'harbor');
+    rmSync(harborFile);
+    await part.getByTestId('themes-read-again').click();
+    await expect(part.getByTestId('color-theme-harbor')).toHaveCount(0);
+    await expect(html).toHaveAttribute('data-color-theme', 'dark');
+    await expect(html).toHaveAttribute('data-color-theme-id', 'dark');
+    await expect(part.getByTestId('theme-fallbacks')).toHaveText('The dark theme chosen, "harbor", is not there now (no theme file of that name was read): Dark is drawn in its place.');
+    await expect(part.getByTestId('color-theme-dark')).toHaveAttribute('aria-checked', 'true');
+    expect(saved().appearance?.dark).toBe('harbor');
+    await page.keyboard.press('Escape');
+    await expect.poll(bodyGround).toBe(rgb('#101114'));
+    await expect(nodes.first().getByTestId('node-body')).not.toHaveAttribute('data-theme-preview');
+  } finally {
+    // As the data folder was before this test, for the tests that follow.
+    rmSync(harborFile, { force: true });
+    rmSync(wrongFile, { force: true });
+    if (!hadThemes) rmSync(themesDir, { recursive: true, force: true });
+    if (original === null) rmSync(configFile, { force: true });
+    else writeFileSync(configFile, original);
+  }
+});
+
 test('states: every piece draws hover, pressed, focus and disabled differently from rest in both themes, nothing moves under the pointer, and what opens travels only where motion is wanted', async ({ page }) => {
   const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
   await page.goto(`/auth?token=${token}`);

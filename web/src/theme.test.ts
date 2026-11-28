@@ -1,6 +1,7 @@
+import { UserTheme } from '@aubergine/shared';
 import { describe, expect, it } from 'vitest';
 import page from '../index.html?raw';
-import { colorThemeSays, familyProblem, sizeProblem } from './appearance/AppearancePart';
+import { colorThemeSays, familyProblem, hardToReadSays, sizeProblem, themesFolderOf } from './appearance/AppearancePart';
 import { bodyThemeOf, colorsLine, pairsOf } from './theme';
 import { defaultThemeWords } from './TerminalTheme';
 
@@ -21,14 +22,17 @@ function firstPaint({ attributes = {}, stored = {}, systemIsLight = false }: { a
   const storage = { getItem: (key: string) => stored[key] ?? null };
   const window = { matchMedia: () => ({ matches: systemIsLight }) };
   new Function('document', 'localStorage', 'window', script)({ documentElement: root }, storage, window);
-  return { theme: set['data-theme'], colorTheme: set['data-color-theme'], style };
+  return { theme: set['data-theme'], colorTheme: set['data-color-theme'], style, id: set['data-color-theme-id'] };
 }
+
+const harbor = UserTheme.parse({ id: 'harbor', name: 'Harbor', kind: 'dark', base: 'nord', colors: { bg: '#0e1a24', accent: '#5fb3b3' }, terminal: {} });
+const dim = UserTheme.parse({ id: 'dim', name: 'Dim', kind: 'dark', base: 'dark', colors: { text: '#303030' }, terminal: {} });
 
 describe('the lines before first paint', () => {
   it('draw the kind and its color theme the server wrote on the page', () => {
     const page = { 'data-theme-setting': 'system', 'data-theme-light': 'solarized-light', 'data-theme-dark': 'nord' };
-    expect(firstPaint({ attributes: page })).toEqual({ theme: 'dark', colorTheme: 'nord', style: {} });
-    expect(firstPaint({ attributes: page, systemIsLight: true })).toEqual({ theme: 'light', colorTheme: 'solarized-light', style: {} });
+    expect(firstPaint({ attributes: page })).toEqual({ theme: 'dark', colorTheme: 'nord', style: {}, id: 'nord' });
+    expect(firstPaint({ attributes: page, systemIsLight: true })).toEqual({ theme: 'light', colorTheme: 'solarized-light', style: {}, id: 'solarized-light' });
     expect(firstPaint({ attributes: { ...page, 'data-theme-setting': 'light' } }).colorTheme).toBe('solarized-light');
   });
 
@@ -39,15 +43,26 @@ describe('the lines before first paint', () => {
 
   it('use this browser’s copies where the server wrote nothing, and never a word that is not an ID', () => {
     const stored = { 'aubergine.theme': 'light', 'aubergine.theme.light': 'gruvbox-light', 'aubergine.colors.light': 'accent:#445566' };
-    expect(firstPaint({ stored })).toEqual({ theme: 'light', colorTheme: 'gruvbox-light', style: { '--accent': '#445566' } });
+    expect(firstPaint({ stored })).toEqual({ theme: 'light', colorTheme: 'gruvbox-light', style: { '--accent': '#445566' }, id: 'gruvbox-light' });
     expect(firstPaint({ stored: { 'aubergine.theme': 'dark', 'aubergine.theme.dark': 'x"><b>' } }).colorTheme).toBe('dark');
     // Where the server wrote the page, its word counts and no copy is read: no colors from the copy either.
     expect(firstPaint({ attributes: { 'data-theme-setting': 'light', 'data-theme-light': 'light' }, stored }).style).toEqual({});
   });
 
   it('fall back to the system and the kind itself where nothing is known', () => {
-    expect(firstPaint({})).toEqual({ theme: 'dark', colorTheme: 'dark', style: {} });
-    expect(firstPaint({ systemIsLight: true })).toEqual({ theme: 'light', colorTheme: 'light', style: {} });
+    expect(firstPaint({})).toEqual({ theme: 'dark', colorTheme: 'dark', style: {}, id: 'dark' });
+    expect(firstPaint({ systemIsLight: true })).toEqual({ theme: 'light', colorTheme: 'light', style: {}, id: 'light' });
+  });
+
+  it('draw a theme file as its base, with its colors over it and its own ID beside, from the page or this browser\'s copies', () => {
+    const attributes = { 'data-theme-setting': 'dark', 'data-theme-dark': 'nord', 'data-theme-dark-id': 'harbor', 'data-colors-dark': 'bg:#0e1a24,accent:#5fb3b3' };
+    expect(firstPaint({ attributes })).toEqual({ theme: 'dark', colorTheme: 'nord', style: { '--bg': '#0e1a24', '--accent': '#5fb3b3' }, id: 'harbor' });
+    const stored = { 'aubergine.theme': 'dark', 'aubergine.theme.dark': 'nord', 'aubergine.theme.dark.id': 'harbor', 'aubergine.colors.dark': 'accent:#5fb3b3' };
+    expect(firstPaint({ stored })).toEqual({ theme: 'dark', colorTheme: 'nord', style: { '--accent': '#5fb3b3' }, id: 'harbor' });
+    // An ID that is not one is the base's.
+    expect(firstPaint({ attributes: { ...attributes, 'data-theme-dark-id': 'x"><b>' } }).id).toBe('nord');
+    // Where the server wrote the page, no copy of this browser is read.
+    expect(firstPaint({ attributes: { 'data-theme-setting': 'dark', 'data-theme-dark': 'dark' }, stored }).id).toBe('dark');
   });
 });
 
@@ -57,6 +72,9 @@ describe('the colors set by hand, as the page writes them', () => {
     expect(colorsLine(raw, 'nord')).toBe('text:#aabbcc,accent:#445566');
     expect(colorsLine(raw, 'dark')).toBe('text:#aabbcc,accent:#112233');
     expect(colorsLine(undefined, 'dark')).toBe('');
+    // A theme file's own colors first, then those set by hand over them.
+    expect(colorsLine(raw, 'harbor', [harbor])).toBe('bg:#0e1a24,text:#aabbcc,accent:#112233');
+    expect(colorsLine({ '[harbor]': { accent: '#000000' } }, 'harbor', [harbor])).toBe('bg:#0e1a24,accent:#000000');
     expect(pairsOf('text:#aabbcc,accent:#445566,bogus:#000000,bg:#12')).toEqual([
       ['text', '#aabbcc'],
       ['accent', '#445566'],
@@ -69,6 +87,14 @@ describe('what Appearance says', () => {
     expect(colorThemeSays('system', 'light', 'nord')).toBe('Light is used while the system is light, Nord while it is dark.');
     expect(colorThemeSays('light', 'solarized-light', 'dark')).toBe('The page is drawn in Solarized light. Dark is the theme of the dark page.');
     expect(colorThemeSays('dark', 'light', 'dracula')).toBe('The page is drawn in Dracula. Light is the theme of the light page.');
+    expect(colorThemeSays('dark', 'light', 'harbor', [harbor])).toBe('The page is drawn in Harbor. Light is the theme of the light page.');
+  });
+
+  it('says where the theme files are, and which of them may be hard to read', () => {
+    expect(themesFolderOf('/home/someone/.aubergine/data/config.json')).toBe('/home/someone/.aubergine/data/themes');
+    expect(themesFolderOf(null)).toBeNull();
+    expect(hardToReadSays([harbor, dim])).toEqual(['Dim may be hard to read: its text is less than 4.5 to 1 on its background or its surface.']);
+    expect(hardToReadSays([])).toEqual([]);
   });
 
   it('takes a size from 8 to 32 and a font-family list the server takes, and says why not otherwise', () => {
@@ -96,11 +122,19 @@ describe('the body of a terminal', () => {
     // Nothing of a wrong entry reaches the style.
     expect(bodyThemeOf('nord', 'dark', { 'terminal-bg': '#000000; color: red', 'x-y': '#000000', '[nord]': { bg: 'red' } })).toEqual({ 'data-theme-preview': 'nord' });
   });
+
+  it('is a preview of a theme file\'s base, with the file\'s colors and then those set by hand on it, and the file\'s ID beside', () => {
+    expect(bodyThemeOf('harbor', 'dark', { text: '#eeeeee' }, [harbor])).toEqual({ 'data-theme-preview': 'nord', 'data-theme-id': 'harbor', style: { '--bg': '#0e1a24', '--text': '#eeeeee', '--accent': '#5fb3b3' } });
+    expect(bodyThemeOf('harbor', 'harbor', {}, [harbor])).toEqual({});
+  });
 });
 
 describe('the words for the default of terminals', () => {
   it('name the default, or say it is the page\'s', () => {
     expect(defaultThemeWords({ terminal: 'gruvbox-dark' }, 'light')).toBe('Gruvbox dark');
     expect(defaultThemeWords({ terminal: null }, 'nord')).toBe('as the page: Nord');
+    expect(defaultThemeWords({ terminal: 'harbor' }, 'nord', [harbor])).toBe('Harbor');
+    // A default that is not there now is the page's, as it is drawn.
+    expect(defaultThemeWords({ terminal: 'harbor' }, 'nord')).toBe('as the page: Nord');
   });
 });

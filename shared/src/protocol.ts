@@ -27,7 +27,7 @@ import { CanvasChanges, ChangeEvent } from './events';
 import { Id } from './ids';
 import { FieldsInput } from './fields';
 import { Settings, ThemeSetting } from './settings';
-import { ColorThemeId, CursorStyle, DarkThemeId, LightThemeId } from './themes';
+import { CursorStyle, ThemeId, UserTheme } from './themes';
 
 /**
  * The wire protocol between the browser and the daemon. Bump the version and
@@ -145,6 +145,10 @@ export const StateResponse = z.object({
   here: z.boolean(),
   /** The whole path of this server's settings file (`config.json` in its data folder), for the owner to open. Left out by an older server, and by one started without a data folder. */
   settingsFile: z.string().max(4096).optional(),
+  /** The owner's themes of their own, read from the theme files in the data folder. Left out by an older server. */
+  themes: z.array(UserTheme).max(50).optional(),
+  /** One sentence for each theme file that was not read, and each entry of one that was skipped. */
+  themeProblems: z.array(z.string().max(1000)).max(500).optional(),
 });
 export type StateResponse = z.infer<typeof StateResponse>;
 
@@ -162,8 +166,8 @@ export type ChangeDesktopSettingsRequest = z.infer<typeof ChangeDesktopSettingsR
 /** What the settings say about how the page looks, after a change. */
 export const AppearanceAnswer = z.object({
   theme: ThemeSetting.describe('`light`, `dark`, or `system` for whichever the system is set to.'),
-  light: LightThemeId.describe('The color theme drawn when the page is light.'),
-  dark: DarkThemeId.describe('The color theme drawn when the page is dark.'),
+  light: ThemeId.describe('The color theme drawn when the page is light: the ID of a built-in theme, or of a theme file of the owner’s.'),
+  dark: ThemeId.describe('The color theme drawn when the page is dark: the ID of a built-in theme, or of a theme file of the owner’s.'),
   font: z
     .object({
       family: z.string().describe("The font-family list for a terminal's text."),
@@ -172,7 +176,7 @@ export const AppearanceAnswer = z.object({
     .describe("A terminal's font."),
   cursor: CursorStyle.describe("The shape of a terminal's cursor: `block`, `bar` or `underline`."),
   cursorBlink: z.boolean().describe("Whether a terminal's cursor blinks."),
-  terminal: ColorThemeId.nullable().describe('The color theme of a terminal that has none of its own; `null`: the theme the page is drawn in.'),
+  terminal: ThemeId.nullable().describe('The color theme of a terminal that has none of its own, built-in or of a theme file; `null`: the theme the page is drawn in.'),
 });
 export type AppearanceAnswer = z.infer<typeof AppearanceAnswer>;
 /**
@@ -192,13 +196,13 @@ export const FontFamilyChoice = z
  */
 export const ChangeAppearanceRequest = z.object({
   theme: ThemeSetting.optional().describe('`light`, `dark`, or `system` to match the system.'),
-  light: LightThemeId.optional().describe('The color theme to draw when the page is light: one whose kind is light.'),
-  dark: DarkThemeId.optional().describe('The color theme to draw when the page is dark: one whose kind is dark.'),
+  light: ThemeId.optional().describe('The color theme to draw when the page is light: one whose kind is light, built-in or a theme file the server has read. Another is refused with 400.'),
+  dark: ThemeId.optional().describe('The color theme to draw when the page is dark: one whose kind is dark, built-in or a theme file the server has read. Another is refused with 400.'),
   fontSize: z.number().int().min(8).max(32).optional().describe("The size of a terminal's text, in pixels, from 8 to 32."),
   fontFamily: FontFamilyChoice.optional().describe("The font-family list for a terminal's text: one line of at most 300 characters, without control characters or any of `;{}<>`."),
   cursor: CursorStyle.optional().describe("The shape of a terminal's cursor: `block`, `bar` or `underline`."),
   cursorBlink: z.boolean().optional().describe("Whether a terminal's cursor blinks."),
-  terminal: ColorThemeId.nullable().optional().describe('The color theme every terminal is drawn in that has none of its own: one of the IDs of the color themes, of either kind. `null`: the theme the page is drawn in.'),
+  terminal: ThemeId.nullable().optional().describe('The color theme every terminal is drawn in that has none of its own: one of the IDs of the color themes, of either kind, built-in or a theme file the server has read (another is refused with 400). `null`: the theme the page is drawn in.'),
 });
 export type ChangeAppearanceRequest = z.infer<typeof ChangeAppearanceRequest>;
 
@@ -246,7 +250,7 @@ export type CreateSessionResponse = z.infer<typeof CreateSessionResponse>;
 
 /** PATCH body: any of the fields the user can edit. */
 export const UpdateSessionRequest = z
-  .object({ name: SessionName, note: SessionNote, tags: Tags, fields: FieldsInput, theme: ColorThemeId.nullable() })
+  .object({ name: SessionName, note: SessionNote, tags: Tags, fields: FieldsInput, theme: ThemeId.nullable() })
   .partial()
   .refine((body) => body.name !== undefined || body.note !== undefined || body.tags !== undefined || body.fields !== undefined || body.theme !== undefined, 'Nothing to update');
 export type UpdateSessionRequest = z.infer<typeof UpdateSessionRequest>;
@@ -704,7 +708,7 @@ export const PatchSessionRequest = z
     tags: Tags,
     note: SessionNote,
     fields: FieldsInput,
-    theme: ColorThemeId.nullable().describe("The color theme the terminal's body is drawn in, whatever the page is drawn in: one of the IDs of the color themes. `null` clears it: the terminal is then drawn in the default for terminals, or as the page is."),
+    theme: ThemeId.nullable().describe("The color theme the terminal's body is drawn in, whatever the page is drawn in: one of the IDs of the color themes, built-in or a theme file the server has read (another is refused with 400). `null` clears it: the terminal is then drawn in the default for terminals, or as the page is."),
   })
   .partial()
   .refine((body) => body.name !== undefined || body.tags !== undefined || body.note !== undefined || body.fields !== undefined || body.theme !== undefined, 'Nothing to update');

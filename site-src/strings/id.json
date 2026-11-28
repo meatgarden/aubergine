@@ -5115,6 +5115,18 @@
     "text": "Namanya adalah token warna halaman, seperti <code>bg</code>, <code>text</code>, <code>accent</code>, dan <code>terminal-bg</code>; <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/design.md\">docs/design.md</a> mencantumkannya. Entri yang salah dilewati, dan sisa berkas tetap berlaku; <strong>Settings → Appearance</strong> memberi tahu mana yang dilewati. Warna yang Anda atur adalah milik Anda: tidak ada yang memeriksa apakah tulisan Anda bisa dibaca.",
     "from": "86395864aac8"
   },
+  "custom.files.title": {
+    "text": "Tema Anda sendiri, sebagai file",
+    "from": "06c16974771d"
+  },
+  "custom.files.text": {
+    "text": "Tema Anda sendiri adalah file JSON di <code>themes/</code> dalam folder data: salah satu dari sepuluh sebagai dasar, dari jenis yang sama, dengan warna mana pun dari 35 warna di atasnya, serta warna terminal itu sendiri: teksnya, kursor, bagian yang dipilih, dan enam belas warna yang diminta program. Tema itu tercantum setelah sepuluh tema sejenisnya, ditandai sebagai milik Anda, dan bisa dipilih di mana pun tema-tema itu bisa: untuk halaman, sebagai bawaan terminal, atau untuk satu terminal. Bayangan dan cincin fokus tetap milik dasarnya, dan tidak ada isi file yang dijalankan.",
+    "from": "621009bfb006"
+  },
+  "custom.files.cli": {
+    "text": "<code>aubergine theme new harbor --from nord</code> menulis file awal, dengan setiap warna dari tema asalnya; <code>aubergine theme check</code> memberi tahu apa yang salah di dalamnya; <strong>Read themes again</strong> di Settings memuat perubahan. Apakah warna Anda mudah dibaca, Anda yang menilai: Settings hanya memberi tahu bila teks mungkin sulit dibaca. <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/themes.md\">docs/themes.md</a> menjelaskan formatnya.",
+    "from": "fa449a724abf"
+  },
   "custom.text.title": {
     "text": "Fon, kursor, dan pintasan keyboard",
     "from": "a9eecef9b5f9"
@@ -5396,8 +5408,8 @@
     "from": "bd438e8036f3"
   },
   "custom.cmp.a.themes": {
-    "text": "Sepuluh tema, terang, gelap, atau mengikuti sistem; satu untuk tiap terminal; 35 warna diatur sendiri, untuk setiap tema atau satu",
-    "from": "fa76b50a8212"
+    "text": "Sepuluh tema, terang, gelap, atau mengikuti sistem; tema Anda sendiri sebagai file JSON di atas salah satunya; satu untuk tiap terminal; 35 warna diatur manual, untuk semua tema atau satu",
+    "from": "6d078567501b"
   },
   "custom.cmp.a.css": {
     "text": "Tidak. Direncanakan: <code>custom.css</code> dengan kait yang terdokumentasi",
@@ -5420,8 +5432,8 @@
     "from": "9538078a7039"
   },
   "custom.cmp.p3": {
-    "text": "Aubergine saat ini berada di ujung pengaturan: tema, warna, dan tombol dalam satu berkas yang menjelaskan dirinya sendiri, dan halaman yang menulis sebagiannya. Ia tidak menjalankan kode Anda di halaman, tidak menerima stylesheet Anda, dan tidak punya templat. Semua itu ada di <a href=\"/roadmap/#rm-yours\">peta jalan</a>, dan belum dibuat.",
-    "from": "94f37707471f"
+    "text": "Aubergine saat ini berada di ujung pengaturan: tema, warna, dan tombol ada di file yang menjelaskan dirinya sendiri, dan halaman yang menulis sebagian pengaturan. Ia tidak menjalankan kode Anda di halaman, tidak menerima style sheet Anda, dan tidak punya templat. Semua itu ada di <a href=\"/roadmap/#rm-yours\">peta jalan</a>, dan belum dibuat.",
+    "from": "5018de362a41"
   },
   "custom.cmp.mark": {
     "text": "Aubergine tidak berafiliasi dengan alat mana pun yang disebut di halaman ini. Nama-nama itu adalah merek dagang pemiliknya masing-masing.",
@@ -5432,8 +5444,8 @@
     "from": "e10eed0040ae"
   },
   "custom.plan.text": {
-    "text": "Berkas tema sendiri, tampilan untuk proyek atau tag, templat, <code>custom.css</code>, dan plugin direncanakan dan belum dibuat: lihat <a href=\"/roadmap/#rm-yours\">peta jalan</a>.",
-    "from": "a392418737d9"
+    "text": "Tampilan untuk satu proyek atau tag, templat, <code>custom.css</code>, plugin, dan tema yang diusulkan agen lalu menunggu persetujuan Anda direncanakan dan belum dibuat: lihat <a href=\"/roadmap/#rm-yours\">peta jalan</a>.",
+    "from": "6d31705c7ce4"
   },
   "custom.q.terminal.q": {
     "text": "Bisakah setiap terminal punya tema warna yang berbeda?",
@@ -5480,12 +5492,12 @@
     "from": "6fef807ba454"
   },
   "roadmap.yours.themes.name": {
-    "text": "Berkas tema sendiri",
-    "from": "ec9cabb5c1c9"
+    "text": "Tema yang diusulkan agen",
+    "from": "9227cd56845e"
   },
   "roadmap.yours.themes.text": {
-    "text": "Tulis tema warna sebagai berkas dan pilih di samping sepuluh tema bawaan Aubergine. Agen bisa mengusulkan satu, dan usulan itu menunggu Anda menerimanya.",
-    "from": "c47421ed6549"
+    "text": "Agen dapat mengusulkan tema warna, dan tema itu menunggu persetujuan Anda sebelum tercantum di samping yang lain. File tema yang Anda tulis sendiri sudah dibuat.",
+    "from": "593bf89b9177"
   },
   "roadmap.yours.when.name": {
     "text": "Tampilan menurut kondisi",

@@ -24,6 +24,8 @@ export * from './placement';
 export * from './settings';
 export * from './settings-schema';
 export * from './themes';
+export * from './theme-files';
+export * from './contrast';
 export * from './chords';
 export * from './shortcuts';
 export * from './access';

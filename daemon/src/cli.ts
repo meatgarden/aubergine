@@ -55,6 +55,7 @@ import { parseLibraryCommand, runLibraryCommand } from './cli/library';
 import { parseCopiesCommand, runCopiesCommand } from './cli/copies';
 import { parseDeviceCommand, runDeviceCommand } from './cli/device';
 import { parseSettingsCommand, runSettingsCommand } from './cli/settings';
+import { parseThemeCommand, runThemeCommand } from './cli/theme';
 import { parseAskCommand, parseRuleCommand, parseTaskCommand, parseTodoCommand, runQueueCommand } from './cli/queue';
 import { expandHome } from './settings';
 import { INSIDE_ITS_OWN, TAKES_PROJECT, parseProjectCommand, pickProject, runProjectCommand, takeProject } from './cli/project';
@@ -704,6 +705,9 @@ async function main(): Promise<number> {
 
     case 'settings':
       return runSettingsCommand(parseSettingsCommand(command.words), { dataDir: config.dataDir, print: (text) => console.log(text), warn: (text) => console.error(text) });
+
+    case 'theme':
+      return runThemeCommand(parseThemeCommand(command.words), { dataDir: config.dataDir, print: (text) => console.log(text), warn: (text) => console.error(text) });
 
     case 'copies':
       return runCopiesCommand(parseCopiesCommand(command.words), { owner: (work) => v1(config, work), print: (text) => console.log(text), ask });

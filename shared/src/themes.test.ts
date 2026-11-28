@@ -7,7 +7,11 @@ import { applyEvent } from './events';
 import { PatchSessionRequest, UpdateSessionRequest } from './protocol';
 import { Session, createInitialState } from './entities';
 import { newId } from './ids';
-import { Appearance, COLOR_THEMES, DARK_THEME_IDS, LIGHT_THEME_IDS, THEME_COLORS, colorTheme, colorThemeShown, resolveColors, terminalThemeOf } from './themes';
+import { Appearance, COLOR_THEMES, DARK_THEME_IDS, LIGHT_THEME_IDS, THEME_COLORS, UserTheme, colorTheme, colorThemeShown, colorsOver, resolveColors, terminalThemeOf, themeChoices, themeFallbacks, themeOf } from './themes';
+
+const harbor = UserTheme.parse({ id: 'harbor', name: 'Harbor', kind: 'dark', base: 'nord', colors: { bg: '#0e1a24', accent: '#5fb3b3' }, terminal: { foreground: '#d8dee9' } });
+const paper = UserTheme.parse({ id: 'paper', name: 'Paper', kind: 'light', base: 'light', colors: {}, terminal: {} });
+const mine = [harbor, paper];
 
 describe('the color themes', () => {
   it('have unique IDs and names, both kinds, and the two that come first', () => {
@@ -31,8 +35,23 @@ describe('the color themes', () => {
   });
 
   it('the one shown is the light one or the dark one as the page is', () => {
-    expect(colorThemeShown({ light: 'solarized-light', dark: 'nord' }, 'light')).toBe('solarized-light');
-    expect(colorThemeShown({ light: 'solarized-light', dark: 'nord' }, 'dark')).toBe('nord');
+    expect(colorThemeShown({ light: 'solarized-light', dark: 'nord' }, 'light', [])).toBe('solarized-light');
+    expect(colorThemeShown({ light: 'solarized-light', dark: 'nord' }, 'dark', [])).toBe('nord');
+    expect(colorThemeShown({ light: 'paper', dark: 'harbor' }, 'dark', mine)).toBe('harbor');
+    expect(colorThemeShown({ light: 'paper', dark: 'harbor' }, 'light', mine)).toBe('paper');
+  });
+
+  it('falls back where the theme chosen is not there now, or is of the other kind, and says so', () => {
+    expect(colorThemeShown({ light: 'paper', dark: 'harbor' }, 'dark', [])).toBe('dark');
+    expect(colorThemeShown({ light: 'paper', dark: 'harbor' }, 'light', [])).toBe('light');
+    expect(colorThemeShown({ light: 'nord', dark: 'paper' }, 'light', mine)).toBe('light');
+    expect(colorThemeShown({ light: 'nord', dark: 'paper' }, 'dark', mine)).toBe('dark');
+    expect(themeFallbacks({ light: 'light', dark: 'harbor', terminal: null }, mine)).toEqual([]);
+    expect(themeFallbacks({ light: 'nord', dark: 'harbor', terminal: 'gone' }, [])).toEqual([
+      'The light theme chosen, Nord, is a dark theme: Light is drawn in its place.',
+      'The dark theme chosen, "harbor", is not there now (no theme file of that name was read): Dark is drawn in its place.',
+      'The theme of terminals, "gone", is not there now: terminals are drawn as the page is.',
+    ]);
   });
 
   it('color names are plain words', () => {
@@ -72,6 +91,7 @@ describe('colors set by hand', () => {
       danger: null,
       selection: '#1234567',
       '[sepia]': { bg: '#000000' },
+      '[harbor]': { bg: '#000000' },
       '[]': {},
       '[nord]': 'dark',
       '[dracula]': [1],
@@ -89,6 +109,7 @@ describe('colors set by hand', () => {
       'appearance.colors: "danger" is not a color written as #rrggbb. It is skipped.',
       'appearance.colors: "selection" is not a color written as #rrggbb. It is skipped.',
       'appearance.colors: "[sepia]" names no theme. It is skipped.',
+      'appearance.colors: "[harbor]" names no theme. It is skipped.',
       'appearance.colors: "[]" names no theme. It is skipped.',
       'appearance.colors: "[nord]" is not a list of colors by name. It is skipped.',
       'appearance.colors: "[dracula]" is not a list of colors by name. It is skipped.',
@@ -100,6 +121,22 @@ describe('colors set by hand', () => {
     const problems = resolveColors(raw, 'nord').problems;
     expect(problems).toHaveLength(4);
     for (const id of COLOR_THEMES.map((theme) => theme.id)) expect(resolveColors(raw, id).problems.sort()).toEqual([...problems].sort());
+  });
+
+  it('takes an entry for a theme of the owner\'s, where that theme was read', () => {
+    const raw = { accent: '#111111', '[harbor]': { accent: '#222222' } };
+    expect(resolveColors(raw, 'harbor', mine)).toEqual({ colors: { accent: '#222222' }, problems: [] });
+    expect(resolveColors(raw, 'nord', mine)).toEqual({ colors: { accent: '#111111' }, problems: [] });
+    expect(resolveColors(raw, 'harbor').problems).toEqual(['appearance.colors: "[harbor]" names no theme. It is skipped.']);
+  });
+
+  it('lays a theme\'s own colors first, then those for every theme, then those for that theme alone', () => {
+    expect(colorsOver('harbor', undefined, mine).colors).toEqual({ bg: '#0e1a24', accent: '#5fb3b3' });
+    expect(colorsOver('harbor', { accent: '#111111', text: '#222222' }, mine).colors).toEqual({ bg: '#0e1a24', accent: '#111111', text: '#222222' });
+    expect(colorsOver('harbor', { accent: '#111111', '[harbor]': { accent: '#333333', bg: '#444444' } }, mine).colors).toEqual({ bg: '#444444', accent: '#333333' });
+    expect(colorsOver('nord', { accent: '#111111' }, mine).colors).toEqual({ accent: '#111111' });
+    // A theme that is not there lays nothing of its own.
+    expect(colorsOver('harbor', { accent: '#111111' }, []).colors).toEqual({ accent: '#111111' });
   });
 
   it('takes nothing but a list of colors by name', () => {
@@ -149,8 +186,10 @@ describe('the appearance in the settings', () => {
   });
 
   it('lets a wrong field fall back to its default by itself, and keeps the others', () => {
-    expect(Settings.parse({ appearance: { light: 'nord', dark: 'dracula', cursor: 'bar' } }).appearance).toEqual({ light: 'light', dark: 'dracula', cursor: 'bar', cursorBlink: true, terminal: null, colors: {} });
-    expect(Settings.parse({ appearance: { light: 'solarized-light', dark: 'light', cursor: 'beam', cursorBlink: 'yes', terminal: 'sepia', colors: [1] } }).appearance).toEqual({ light: 'solarized-light', dark: 'dark', cursor: 'block', cursorBlink: true, terminal: null, colors: {} });
+    // A theme's ID is kept whatever it names now: a theme file may be there, or come back. What is drawn falls back (`colorThemeShown`).
+    expect(Settings.parse({ appearance: { light: 'nord', dark: 'dracula', cursor: 'bar' } }).appearance).toEqual({ light: 'nord', dark: 'dracula', cursor: 'bar', cursorBlink: true, terminal: null, colors: {} });
+    expect(Settings.parse({ appearance: { light: 'solarized-light', dark: 'Not An Id', cursor: 'beam', cursorBlink: 'yes', terminal: 'sepia', colors: [1] } }).appearance).toEqual({ light: 'solarized-light', dark: 'dark', cursor: 'block', cursorBlink: true, terminal: 'sepia', colors: {} });
+    expect(Settings.parse({ appearance: { dark: 'harbor', terminal: '9lives' } }).appearance).toMatchObject({ dark: 'harbor', terminal: null });
     // The default theme of terminals is any theme, of either kind.
     expect(Settings.parse({ theme: 'dark', appearance: { terminal: 'solarized-light' } }).appearance.terminal).toBe('solarized-light');
     expect(Settings.parse({ appearance: { terminal: 12 } }).appearance.terminal).toBeNull();
@@ -189,11 +228,18 @@ describe('a change of how the page looks', () => {
     expect(ChangeAppearanceRequest.parse({ light: 'gruvbox-light', colors: { accent: '#000000' } })).toEqual({ light: 'gruvbox-light' });
   });
 
-  it('refuses a theme of the other kind, and everything that cannot work', () => {
+  it('takes the ID of any theme, built-in or of a file: whether it names one of the right kind is the server\'s to say', () => {
+    for (const body of [{ light: 'nord' }, { dark: 'harbor' }, { terminal: 'sepia' }]) expect(ChangeAppearanceRequest.parse(body)).toEqual(body);
+  });
+
+  it('refuses what cannot be an ID, and everything that cannot work', () => {
     for (const body of [
-      { light: 'nord' },
-      { dark: 'light' },
-      { light: 'sepia' },
+      { light: 'Nord' },
+      { dark: '' },
+      { light: 'x'.repeat(41) },
+      { light: '-x' },
+      { dark: 'a b' },
+      { dark: '__proto__' },
       { theme: 'sepia' },
       { fontSize: 7 },
       { fontSize: 33 },
@@ -211,7 +257,6 @@ describe('a change of how the page looks', () => {
       { fontFamily: 'Mono\u0000' },
       { fontFamily: 'Mono\u2028monospace' },
       { fontFamily: 12 },
-      { terminal: 'sepia' },
       { terminal: '' },
       { terminal: 1 },
     ])
@@ -223,20 +268,28 @@ describe('a change of how the page looks', () => {
 });
 
 describe('the theme a terminal is drawn in', () => {
-  const appearance = (terminal: Appearance['terminal']) => ({ light: 'gruvbox-light' as const, dark: 'nord' as const, terminal });
+  const appearance = (terminal: Appearance['terminal']) => ({ light: 'gruvbox-light', dark: 'nord', terminal });
 
   it('is its own, else the default for terminals, else the theme the page is drawn in', () => {
-    expect(terminalThemeOf(null, appearance(null), 'dark')).toBe('nord');
-    expect(terminalThemeOf(null, appearance(null), 'light')).toBe('gruvbox-light');
-    expect(terminalThemeOf(undefined, appearance(null), 'light')).toBe('gruvbox-light');
-    expect(terminalThemeOf(null, appearance('dracula'), 'light')).toBe('dracula');
-    expect(terminalThemeOf(null, appearance('solarized-light'), 'dark')).toBe('solarized-light');
-    expect(terminalThemeOf('high-contrast-dark', appearance('dracula'), 'light')).toBe('high-contrast-dark');
-    expect(terminalThemeOf('light', appearance(null), 'dark')).toBe('light');
+    expect(terminalThemeOf(null, appearance(null), 'dark', [])).toBe('nord');
+    expect(terminalThemeOf(null, appearance(null), 'light', [])).toBe('gruvbox-light');
+    expect(terminalThemeOf(undefined, appearance(null), 'light', [])).toBe('gruvbox-light');
+    expect(terminalThemeOf(null, appearance('dracula'), 'light', [])).toBe('dracula');
+    expect(terminalThemeOf(null, appearance('solarized-light'), 'dark', [])).toBe('solarized-light');
+    expect(terminalThemeOf('high-contrast-dark', appearance('dracula'), 'light', [])).toBe('high-contrast-dark');
+    expect(terminalThemeOf('light', appearance(null), 'dark', [])).toBe('light');
+    expect(terminalThemeOf('harbor', appearance(null), 'light', mine)).toBe('harbor');
+    expect(terminalThemeOf(null, appearance('paper'), 'dark', mine)).toBe('paper');
+  });
+
+  it('passes over a theme that is not there now for the next', () => {
+    expect(terminalThemeOf('harbor', appearance('dracula'), 'light', [])).toBe('dracula');
+    expect(terminalThemeOf('harbor', appearance('paper'), 'dark', [])).toBe('nord');
+    expect(terminalThemeOf('harbor', { light: 'gone', dark: 'gone', terminal: 'gone' }, 'dark', [])).toBe('dark');
     // Every combination gives a theme that exists.
     for (const own of [null, ...COLOR_THEMES.map((t) => t.id)])
       for (const terminal of [null, ...COLOR_THEMES.map((t) => t.id)])
-        for (const shown of ['light', 'dark'] as const) expect(colorTheme(terminalThemeOf(own, appearance(terminal), shown))).toBeDefined();
+        for (const shown of ['light', 'dark'] as const) expect(colorTheme(terminalThemeOf(own, appearance(terminal), shown, []))).toBeDefined();
   });
 });
 
@@ -247,7 +300,9 @@ describe('the theme of a session', () => {
   it('is none in a stored session without it, and only a theme or null in one with it', () => {
     expect(session.theme).toBeNull();
     expect(Session.parse({ ...session, theme: 'nord' }).theme).toBe('nord');
-    expect(Session.safeParse({ ...session, theme: 'sepia' }).success).toBe(false);
+    // A theme file's ID is kept, whether or not the file is there now; what cannot be an ID is not.
+    expect(Session.parse({ ...session, theme: 'sepia' }).theme).toBe('sepia');
+    expect(Session.safeParse({ ...session, theme: 'Sepia Tone' }).success).toBe(false);
   });
 
   it('changes by its one event, through the shared reducer', () => {
@@ -263,8 +318,30 @@ describe('the theme of a session', () => {
       expect(Body.parse({ theme: 'nord' })).toEqual({ theme: 'nord' });
       expect(Body.parse({ theme: null })).toEqual({ theme: null });
       expect('theme' in Body.parse({ name: 'x' })).toBe(false);
-      for (const theme of ['sepia', '', 3, {}]) expect(Body.safeParse({ theme }).success, JSON.stringify(theme)).toBe(false);
+      expect(Body.parse({ theme: 'harbor' })).toEqual({ theme: 'harbor' });
+      for (const theme of ['Sepia', '', 3, {}, 'a;b']) expect(Body.safeParse({ theme }).success, JSON.stringify(theme)).toBe(false);
     }
     expect(() => z.toJSONSchema(PatchSessionRequest, { io: 'input' })).not.toThrow();
+  });
+});
+
+describe('what a theme ID comes to', () => {
+  it('is a built-in theme as itself, with nothing over it', () => {
+    expect(themeOf('nord', mine)).toEqual({ id: 'nord', name: 'Nord', kind: 'dark', base: 'nord', own: false, colors: {}, terminal: {} });
+  });
+
+  it('is a theme file as its base with its colors over it', () => {
+    expect(themeOf('harbor', mine)).toEqual({ id: 'harbor', name: 'Harbor', kind: 'dark', base: 'nord', own: true, colors: { bg: '#0e1a24', accent: '#5fb3b3' }, terminal: { foreground: '#d8dee9' } });
+  });
+
+  it('is nothing for an ID that names no theme now, a word that is no ID, or a file over a base of the other kind', () => {
+    for (const id of ['harbor', 'sepia', '', null, undefined, '__proto__', 'constructor']) expect(themeOf(id, []), String(id)).toBeUndefined();
+    expect(themeOf('odd', [{ ...harbor, id: 'odd', base: 'light' }])).toBeUndefined();
+  });
+
+  it('lists the built-in themes first, then the owner\'s by name, of a kind or both', () => {
+    expect(themeChoices(mine).map((theme) => theme.id)).toEqual([...COLOR_THEMES.map((theme) => theme.id), 'harbor', 'paper']);
+    expect(themeChoices(mine, 'light').map((theme) => theme.id)).toEqual([...LIGHT_THEME_IDS, 'paper']);
+    expect(themeChoices([], 'dark').map((theme) => theme.id)).toEqual(DARK_THEME_IDS);
   });
 });

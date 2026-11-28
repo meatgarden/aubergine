@@ -14,6 +14,7 @@ import {
   type ChangeEvent,
   type RuntimeStatus,
   type Settings,
+  type ThemesAnswer,
   firstProject,
   stateOf,
 } from '@aubergine/shared';
@@ -58,6 +59,12 @@ export interface AppStore {
   ownSettings: Settings | null;
   /** Where the own server's settings file is, as it said with its state; null where it did not say. */
   ownSettingsFile: string | null;
+  /**
+   * The owner's themes of their own (theme files) and what was wrong with them, as the own server read them: a setting
+   * of the page, as the theme is, whatever server is shown.
+   */
+  themes: ThemesAnswer;
+  setThemes: (themes: ThemesAnswer) => void;
   /** Where the settings file of the server shown is, as it said with its state; null where it did not say. */
   settingsFile: string | null;
   /** The dialog that links a server is open. */
@@ -241,6 +248,8 @@ export const useApp = create<AppStore>((set, get) => ({
   server: null,
   ownSettings: null,
   ownSettingsFile: null,
+  themes: { themes: [], problems: [] },
+  setThemes: (themes) => set({ themes }),
   settingsFile: null,
   linking: false,
   linkServer: (linking) => set({ linking }),
@@ -309,17 +318,19 @@ export const useApp = create<AppStore>((set, get) => ({
       if (server !== null && get().ownSettings === null) {
         let own: Settings;
         let ownFile: string | null;
+        let ownThemes: ThemesAnswer;
         try {
           const ownState = await ownApi.getState();
           own = ownState.settings;
           ownFile = ownState.settingsFile ?? null;
+          ownThemes = { themes: ownState.themes ?? [], problems: ownState.themeProblems ?? [] };
         } catch {
           // The own server is not there or does not take this page: that is said as it always is, by showing it.
           if (get().server === server) get().showServer(null);
           return;
         }
         if (get().server !== server) return;
-        set({ ownSettings: own, ownSettingsFile: ownFile });
+        set({ ownSettings: own, ownSettingsFile: ownFile, themes: ownThemes });
       }
       const response = await api.getState();
       // Taken unless it is older than what the stream has already brought; what the stream brought before it is applied after it.
@@ -330,7 +341,9 @@ export const useApp = create<AppStore>((set, get) => ({
       const ownSettings = server === null ? response.settings : get().ownSettings;
       const settingsFile = response.settingsFile ?? null;
       const ownSettingsFile = server === null ? settingsFile : get().ownSettingsFile;
-      set({ phase: 'ready', runtime: response.runtime, settings: withPageSettings(response.settings, ownSettings), ownSettings, settingsFile, ownSettingsFile, here: response.here, following, whole: everything, app: viewOf(everything, current, get().app) });
+      // The themes of the owner's own are the page's: the own server's, whatever is shown.
+      const themes = server === null ? { themes: response.themes ?? [], problems: response.themeProblems ?? [] } : get().themes;
+      set({ phase: 'ready', themes, runtime: response.runtime, settings: withPageSettings(response.settings, ownSettings), ownSettings, settingsFile, ownSettingsFile, here: response.here, following, whole: everything, app: viewOf(everything, current, get().app) });
       // A tab that shows one terminal by itself looks at no canvas, and keeps its own address.
       if (terminalPage !== null) return;
       // Keep looking at the same canvas. On opening the page, or if that canvas is gone: the one asked for on

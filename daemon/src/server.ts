@@ -1,5 +1,5 @@
 import { packageRoot } from './package-root';
-import { DEVICE_UNUSED_DAYS, LINKED_PAGE_HEADERS, PROJECT_HEADER, PairRequest, PairingCodeRequest, TICKET_PARAM, accessEntries, accessProblem, deviceStatus, isLocalHost, viewOfDevice, type ChangeAppearanceRequest, type DeviceList, type OpenedOnDesktop, type PairedPage, type PairingCodeAnswer, type RevokedDevice, type SocketTicket } from '@aubergine/shared';
+import { DEVICE_UNUSED_DAYS, LINKED_PAGE_HEADERS, PROJECT_HEADER, PairRequest, PairingCodeRequest, TICKET_PARAM, accessEntries, accessProblem, deviceStatus, isLocalHost, themeOf, viewOfDevice, type ChangeAppearanceRequest, type DeviceList, type OpenedOnDesktop, type PairedPage, type PairingCodeAnswer, type RevokedDevice, type SocketTicket } from '@aubergine/shared';
 import { DeviceNotFoundError, Devices } from './devices';
 import { Pairing } from './pairing';
 import { SocketTickets } from './socket-tickets';
@@ -7,6 +7,7 @@ import { existsSync } from 'node:fs';
 import { readFile } from 'node:fs/promises';
 import { SettingsUnreadableError, appearanceOf } from './settings';
 import { pageAttributes } from './page-choice';
+import { NO_THEMES, type Themes } from './theme-files';
 import type { AddressInfo } from 'node:net';
 import cookie from '@fastify/cookie';
 import fastifyStatic from '@fastify/static';
@@ -163,6 +164,8 @@ export interface ServerOptions {
   setAppearance?: (change: ChangeAppearanceRequest) => Promise<void>;
   /** Writes `describe.remind` into the settings file. Left out: the page cannot change it. */
   setDescribeRemind?: (value: boolean) => Promise<void>;
+  /** The owner's theme files. Left out: there are none. Read again with the settings, and when the owner asks. */
+  themes?: Themes;
   /** Asks a signed-in local tool for a branch's pull request. Left out: none is ever asked for. */
   pullRequests?: PullRequestFinder | null;
   /** The branch and repository of a folder. Left out: Git is asked. A test passes its own. */
@@ -282,6 +285,18 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
   const limits = (await options.settings()).api;
   const app = Fastify({ logger: false, bodyLimit: limits.maxBodyBytes });
   const tokens = new Tokens(hub);
+  const themes = options.themes ?? NO_THEMES;
+  // The theme files are read again whenever the settings are read for the page, first, so that colors set by hand may name one.
+  const lookNow = async () => {
+    const themesNow = await themes.reload();
+    return { settings: await options.settings(), themes: themesNow };
+  };
+  /** Refuses (400) a theme's ID that names no theme the server knows now, or one of another kind than asked. */
+  const knowsTheme = (id: string, kind?: 'light' | 'dark', field = 'theme'): void => {
+    const theme = themeOf(id, themes.value.themes);
+    if (!theme) throw new BadInputError(`${field}: "${id}" names no theme: neither one that comes with Aubergine nor a theme file the server has read.`);
+    if (kind && theme.kind !== kind) throw new BadInputError(`${field}: ${theme.name} is a ${theme.kind} theme, not a ${kind} one.`);
+  };
   const clock = options.now ?? Date.now;
   // The outside addresses, read once, when the server starts. A wrong entry was reported where the settings were read, and is skipped.
   const outsideAddresses = accessEntries('addresses', (await options.settings()).access.addresses).entries;
@@ -854,7 +869,8 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     parse(Id, (request.params as Record<string, string>)[name]);
 
   app.get(paths.state, async (request): Promise<StateResponse> => {
-    const [runtimeNow, settingsNow] = [await sessions.status(), await options.settings()];
+    const runtimeNow = await sessions.status();
+    const { settings: settingsNow, themes: themesNow } = await lookNow();
     // The state and its number are read together, after everything that waits: a change cannot come between the two.
     return {
       protocolVersion: PROTOCOL_VERSION,
@@ -867,6 +883,8 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
       defaultCanvasId: sessions.defaultCanvasId(),
       here: atThisComputer(request),
       ...(options.settingsFile === undefined ? {} : { settingsFile: options.settingsFile }),
+      themes: themesNow.themes,
+      themeProblems: themesNow.problems,
     };
   });
 
@@ -886,6 +904,10 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
 
   app.patch(paths.session(':sessionId'), async (request) => {
     const body = parse(UpdateSessionRequest, request.body);
+    if (typeof body.theme === 'string') {
+      await themes.reload();
+      knowsTheme(body.theme);
+    }
     return sessions.update(idParam(request, 'sessionId'), body);
   });
 
@@ -1158,6 +1180,13 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     // sends none of them writes nothing.
     changeAppearance: async (change) => {
       const sent = Object.values(change).some((value) => value !== undefined);
+      if (change.light !== undefined || change.dark !== undefined || typeof change.terminal === 'string') {
+        // What the folder holds now: a file may have been added or removed since the page last asked.
+        await themes.reload();
+        if (change.light !== undefined) knowsTheme(change.light, 'light', 'light');
+        if (change.dark !== undefined) knowsTheme(change.dark, 'dark', 'dark');
+        if (typeof change.terminal === 'string') knowsTheme(change.terminal, undefined, 'terminal');
+      }
       if (sent) {
         if (!options.setAppearance) throw new ConflictError('This server has no settings file to write.');
         try {
@@ -1168,6 +1197,11 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
         }
       }
       return appearanceOf(await options.settings());
+    },
+    readThemes: async () => (await lookNow()).themes,
+    knowsTheme: async (id) => {
+      await themes.reload();
+      knowsTheme(id);
     },
     projects,
     projectFiles,
@@ -1338,7 +1372,8 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     const pageFile = path.join(options.webDist, 'index.html');
     const sendPage = async (_request: unknown, reply: FastifyReply): Promise<FastifyReply> => {
       const html = await readFile(pageFile, 'utf8');
-      const attributes = pageAttributes(await options.settings());
+      const look = await lookNow();
+      const attributes = pageAttributes(look.settings, look.themes.themes);
       return reply
         .type('text/html; charset=utf-8')
         .header('cache-control', 'no-cache')

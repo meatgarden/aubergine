@@ -16,6 +16,8 @@ export type Command =
   | { name: 'device'; words: string[] }
   /** `settings …`: where the settings file is, its schema, every key. Read from the file; the server is not needed. */
   | { name: 'settings'; words: string[] }
+  /** `theme …`: the color themes there are, the owner's theme files, a new one. Read from the files; the server is not needed. */
+  | { name: 'theme'; words: string[] }
   | { name: 'canvas-list' }
   | { name: 'canvas-new'; canvasName: string }
   | { name: 'attach'; query: string }
@@ -130,6 +132,13 @@ export const USAGE = `Usage: aubergine <command>
   settings path              Where the settings file is (config.json in the data folder)
   settings schema            The JSON Schema of the settings file; the server also writes it beside the file as
                              config.schema.json, and "$schema": "./config.schema.json" in the file lets an editor use it
+  theme [list]               The color themes: those that come with Aubergine and your own theme files, with what is
+                             wrong in a file
+  theme new <id> [--from <theme>] [--name <name>]
+                             Write themes/<id>.json in the data folder to start a theme of your own from: every color
+                             of the theme it is from (default: dark), for you to change. Never over a file that is there
+  theme check <file>         Say what is wrong with a theme file, as the server reads it
+  theme path                 Where the theme files are (themes/ in the data folder)
   uninstall                  Remove the command and an installed copy. Your data and terminals are kept. (--yes: do not ask)
 
   demo                       Make a canvas named "Demo" with a small scene of stand-ins, and a tour of it in the browser.
@@ -515,6 +524,9 @@ export function parseCommand(argv: readonly string[]): Command {
       return { name: 'device', words: rest };
     case 'settings':
       return { name: 'settings', words: rest };
+    case 'theme':
+    case 'themes':
+      return { name: 'theme', words: rest };
     case 'board': {
       const canvas = takeOption(rest, '--canvas');
       const workflow = takeOption(canvas.rest, '--workflow');

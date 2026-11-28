@@ -2761,6 +2761,10 @@ div.every-setting-row {
   margin: var(--space-2) 0 0;
   font-size: var(--font-body);
 }
+/* A button under a line of words, such as Read themes again. */
+.appearance-part > .ui-meta + .settings-line {
+  margin-top: var(--space-1);
+}
 /* The color themes: one readable column, the light ones then the dark ones, each kind under its name. */
 .appearance-themes {
   max-width: 400px;

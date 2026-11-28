@@ -7,6 +7,9 @@
  *   docs/for-agents.md        the guide for agents, in full
  *   docs/settings.md          the reference of the settings file
  *   docs/config.schema.json   the schema of the settings file, for an editor
+ *   docs/theme.schema.json    the schema of a theme file, for an editor
+ *   shared/src/theme-colors.generated.ts
+ *                             the colors of the built-in themes, read from web/src/tokens.css and themes.css
  *
  *   pnpm generate            write them
  *   pnpm generate --check    change nothing; fail if any is out of date

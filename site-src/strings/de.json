@@ -5115,6 +5115,18 @@
     "text": "Die Namen sind die Farb-Tokens der Seite, etwa <code>bg</code>, <code>text</code>, <code>accent</code> und <code>terminal-bg</code>; <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/design.md\">docs/design.md</a> listet sie auf. Ein falscher Eintrag wird übersprungen, und der Rest der Datei gilt weiter; <strong>Settings → Appearance</strong> sagt, welcher. Selbst gesetzte Farben sind Ihre Sache: Nichts prüft, ob das Geschriebene lesbar ist.",
     "from": "86395864aac8"
   },
+  "custom.files.title": {
+    "text": "Eigene Themen als Dateien",
+    "from": "06c16974771d"
+  },
+  "custom.files.text": {
+    "text": "Ein eigenes Thema ist eine JSON-Datei in <code>themes/</code> im Datenordner: eines der zehn als Grundlage, derselben Art, mit beliebigen der 35 Farben darüber, und den eigenen Farben eines Terminals: seine Schrift, der Cursor, das Ausgewählte und die sechzehn Farben, nach denen ein Programm fragt. Es steht nach den zehn seiner Art, als Ihres markiert, und lässt sich überall wählen, wo diese es können: für die Seite, als Vorgabe für Terminals oder für ein einzelnes Terminal. Schatten und der Fokusring bleiben die der Grundlage, und nichts in einer Datei wird ausgeführt.",
+    "from": "621009bfb006"
+  },
+  "custom.files.cli": {
+    "text": "<code>aubergine theme new harbor --from nord</code> schreibt eine Datei zum Anfangen, mit jeder Farbe des Themas, von dem sie ausgeht; <code>aubergine theme check</code> sagt, was in einer falsch ist; <strong>Read themes again</strong> in Settings übernimmt eine Änderung. Ob Ihre Farben lesbar sind, beurteilen Sie selbst: Settings sagt nur, wenn Text schwer lesbar sein könnte. <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/themes.md\">docs/themes.md</a> beschreibt das Format.",
+    "from": "fa449a724abf"
+  },
   "custom.text.title": {
     "text": "Schriften, Cursor und Tastenkürzel",
     "from": "a9eecef9b5f9"
@@ -5396,8 +5408,8 @@
     "from": "bd438e8036f3"
   },
   "custom.cmp.a.themes": {
-    "text": "Zehn Themen, hell, dunkel oder wie das System; eines für jedes Terminal; 35 Farben von Hand, für jedes Thema oder eines",
-    "from": "fa76b50a8212"
+    "text": "Zehn Themen, hell, dunkel oder wie das System; eigene als JSON-Dateien über einem davon; eines für jedes Terminal; 35 Farben von Hand, für jedes Thema oder eines",
+    "from": "6d078567501b"
   },
   "custom.cmp.a.css": {
     "text": "Nein. Geplant: eine <code>custom.css</code> mit dokumentierten Ansatzpunkten",
@@ -5420,8 +5432,8 @@
     "from": "9538078a7039"
   },
   "custom.cmp.p3": {
-    "text": "Aubergine steht heute am Ende der Einstellungen: Themen, Farben und Tasten in einer Datei, die sich selbst beschreibt, und eine Seite, die einen Teil davon schreibt. Es führt keinen Code von Ihnen in der Seite aus, nimmt kein eigenes Stylesheet und hat keine Vorlagen. Das steht auf der <a href=\"/roadmap/#rm-yours\">Roadmap</a> und ist nicht gebaut.",
-    "from": "94f37707471f"
+    "text": "Aubergine steht heute am Einstellungs-Ende: Themen, Farben und Tasten in Dateien, die sich selbst beschreiben, und eine Seite, die einen Teil der Einstellungen schreibt. Sie führt keinen Code von Ihnen in der Seite aus, nimmt kein Stylesheet von Ihnen und hat keine Vorlagen. Das steht auf der <a href=\"/roadmap/#rm-yours\">Roadmap</a> und ist nicht gebaut.",
+    "from": "5018de362a41"
   },
   "custom.cmp.mark": {
     "text": "Aubergine ist mit keinem der auf dieser Seite genannten Werkzeuge verbunden. Ihre Namen sind Marken ihrer Inhaber.",
@@ -5432,8 +5444,8 @@
     "from": "e10eed0040ae"
   },
   "custom.plan.text": {
-    "text": "Eigene Themendateien, ein Aussehen für ein Projekt oder einen Tag, Vorlagen, eine <code>custom.css</code> und Plugins sind geplant und nicht gebaut: siehe die <a href=\"/roadmap/#rm-yours\">Roadmap</a>.",
-    "from": "a392418737d9"
+    "text": "Ein Aussehen für ein Projekt oder einen Tag, Vorlagen, eine <code>custom.css</code>, Plugins und ein von einem Agenten vorgeschlagenes Thema, das auf Ihre Zustimmung wartet, sind geplant und nicht gebaut: siehe die <a href=\"/roadmap/#rm-yours\">Roadmap</a>.",
+    "from": "6d31705c7ce4"
   },
   "custom.q.terminal.q": {
     "text": "Kann jedes Terminal ein eigenes Farbthema haben?",
@@ -5480,12 +5492,12 @@
     "from": "6fef807ba454"
   },
   "roadmap.yours.themes.name": {
-    "text": "Eigene Themendateien",
-    "from": "ec9cabb5c1c9"
+    "text": "Ein von einem Agenten vorgeschlagenes Thema",
+    "from": "9227cd56845e"
   },
   "roadmap.yours.themes.text": {
-    "text": "Ein Farbthema als Datei schreiben und neben den zehn wählen, die mit Aubergine kommen. Ein Agent kann eines vorschlagen, und es wartet, bis Sie es annehmen.",
-    "from": "c47421ed6549"
+    "text": "Ein Agent kann ein Farbthema vorschlagen, und es wartet auf Ihre Zustimmung, bevor es neben den anderen steht. Themendateien, die Sie selbst schreiben, gibt es schon.",
+    "from": "593bf89b9177"
   },
   "roadmap.yours.when.name": {
     "text": "Aussehen nach Bedingung",
