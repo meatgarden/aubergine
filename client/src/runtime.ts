@@ -182,10 +182,18 @@ export function requester(options: ClientOptions): {
       const decoder = new TextDecoder();
       let pending = '';
       let id: string | null = null;
+      // Stopping ends the reading by this client's own hand: the signal given to `fetch` was seen not to end
+      // a body that is being read, in a process that had run for a while.
+      const stopped = (): void => void reader.cancel().catch(() => {});
+      args.signal?.addEventListener('abort', stopped, { once: true });
       try {
         for (;;) {
           const { done, value } = await reader.read();
-          if (done) return;
+          if (done) {
+            // Stopped by the caller: said as it always was, whichever of the two ended the reading.
+            if (args.signal?.aborted) throw args.signal.reason;
+            return;
+          }
           pending += decoder.decode(value, { stream: true });
           let end = pending.indexOf('\n');
           while (end >= 0) {
@@ -208,6 +216,7 @@ export function requester(options: ClientOptions): {
           }
         }
       } finally {
+        args.signal?.removeEventListener('abort', stopped);
         await reader.cancel().catch(() => {});
       }
     },

@@ -214,9 +214,21 @@ export async function follow(server, { onChange, onOpen, onNote = () => {}, sign
         if (SENDABLE_ID.test(id)) lastId = id;
       };
       const decoder = new TextDecoder();
-      for await (const chunk of answer.body) {
-        parser.feed(decoder.decode(chunk, { stream: true }));
-        for (const event of arrived.splice(0)) await take(event);
+      // Stopping ends the reading here, by this program's own hand: in a process that has run for a while,
+      // the signal given to `fetch` was seen not to end a body that is being read.
+      const reader = answer.body.getReader();
+      const ended = () => void reader.cancel().catch(() => {});
+      signal?.addEventListener('abort', ended, { once: true });
+      try {
+        while (!signal?.aborted) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          parser.feed(decoder.decode(value, { stream: true }));
+          for (const event of arrived.splice(0)) await take(event);
+        }
+      } finally {
+        signal?.removeEventListener('abort', ended);
+        reader.cancel().catch(() => {});
       }
       throw new Error('the server closed the connection');
     } catch (error) {
