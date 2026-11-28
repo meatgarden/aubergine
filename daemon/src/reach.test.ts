@@ -557,6 +557,74 @@ describe('a device', () => {
   });
 });
 
+describe('who a device is for', () => {
+  const codeFor = async (name: string, person?: unknown): Promise<Answer> => asOwnerHere('POST', paths.pairingCodes, { name, kind: 'browser', ...(person === undefined ? {} : { person }) });
+
+  it('is written when the code is made, kept on the device, and null where nobody was named', async () => {
+    const made = await codeFor('Phone', '  Ada Example ');
+    expect(made.status).toBe(201);
+    // What the browser sends with the code plays no part: the name is the code's.
+    expect((await tryCode(PairingCodeAnswer.parse(made.json).code, {}, )).status).toBe(204);
+    expect(hub.state.devices.at(-1)).toMatchObject({ name: 'Phone', person: 'Ada Example' });
+    await pairDevice('Tablet');
+    expect(hub.state.devices.at(-1)).toMatchObject({ name: 'Tablet', person: null });
+    const listed = DeviceList.parse((await asOwnerHere('GET', paths.devices)).json);
+    expect(listed.devices.map((d) => [d.name, d.person])).toEqual([
+      ['Tablet', null],
+      ['Phone', 'Ada Example'],
+    ]);
+  });
+
+  it('is never taken from the browser that types the code', async () => {
+    const code = PairingCodeAnswer.parse((await codeFor('Phone', 'Ada')).json).code;
+    expect((await fromOutside('POST', paths.pair, {}, { code, person: 'Mallory', name: 'Mine' })).status).toBe(204);
+    expect(hub.state.devices.at(-1)).toMatchObject({ name: 'Phone', person: 'Ada' });
+  });
+
+  it('is one line of plain text, or the code is not made', async () => {
+    for (const person of ['', '   ', 'two\nlines', 'a bell \u0007', 'turned \u202e round', 'a'.repeat(81), 7, null, ['Ada']]) {
+      expect((await codeFor('Phone', person)).status, JSON.stringify(person)).toBe(400);
+    }
+    expect(hub.state.devices).toHaveLength(0);
+  });
+
+  it('gives and takes no right: a device made for someone is the owner', async () => {
+    const code = PairingCodeAnswer.parse((await codeFor('Phone', 'Ada')).json).code;
+    const secret = secretOf(await tryCode(code));
+    const cookie = deviceCookie(secret);
+    expect((await fromOutside('GET', paths.state, { cookie })).status).toBe(200);
+    // What no token may do, the owner's alone: a named device does it as any device does.
+    expect((await fromOutside('GET', paths.devices, { cookie })).status).toBe(200);
+    expect((await fromOutside('POST', publicPaths.tokens, { cookie, 'sec-fetch-site': 'same-origin' }, { name: 'made by Ada', scopes: ['read'], reviewWorkflowChanges: true })).status).toBe(201);
+    expect((await fromOutside('POST', paths.pairingCodes, { cookie }, { name: 'Another', kind: 'browser', person: 'Grace' })).status).toBe(201);
+  });
+
+  it('is said in the activity log for what its device did, and not where nobody was named', async () => {
+    const ada = secretOf(await tryCode(PairingCodeAnswer.parse((await codeFor('Phone', 'Ada')).json).code));
+    now += 1000;
+    const plain = await pairDevice('Tablet');
+    const page = { 'sec-fetch-site': 'same-origin' };
+    // What only the owner may do, done in the page on each device, and at this computer.
+    expect((await fromOutside('POST', publicPaths.tokens, { cookie: deviceCookie(ada), ...page }, { name: 'one', scopes: ['read'], reviewWorkflowChanges: true })).status).toBe(201);
+    expect((await fromOutside('POST', publicPaths.tokens, { cookie: deviceCookie(plain.secret), ...page }, { name: 'two', scopes: ['read'], reviewWorkflowChanges: true })).status).toBe(201);
+    expect((await asOwnerHere('POST', publicPaths.tokens, { name: 'three', scopes: ['read'], reviewWorkflowChanges: true })).status).toBe(201);
+    // Ada's device revokes the other one.
+    expect((await fromOutside('DELETE', paths.device(plain.id), { cookie: deviceCookie(ada) })).status).toBe(200);
+    const read = async (): Promise<ActivityEntry[]> =>
+      (await readFile(path.join(dir, ACTIVITY_FILE), 'utf8').catch(() => ''))
+        .split('\n')
+        .filter((line) => line !== '')
+        .map((line) => JSON.parse(line) as ActivityEntry);
+    await expect.poll(async () => (await read()).filter((line) => line.caller === 'device').length, { timeout: 5000 }).toBe(3);
+    const byDevice = (await read()).filter((line) => line.caller === 'device');
+    expect(byDevice.map((line) => `${line.action} ${line.byPerson ?? '-'} ${hub.state.devices.find((d) => d.id === line.byDeviceId)?.name}`)).toEqual(['tokens.manage Ada Phone', 'tokens.manage - Tablet', 'devices.manage Ada Phone']);
+    // At this computer, in the page: as before, no line for it.
+    expect((await read()).some((line) => line.caller === 'owner' && line.action === 'tokens.manage')).toBe(false);
+    // A line says who and what, never what was sent.
+    expect(JSON.stringify(byDevice)).not.toContain('"one"');
+  });
+});
+
 describe('what only the owner may do about devices', () => {
   it('is closed to every token whatever its scopes, and to sessions', () => {
     expect(authorize({ kind: 'token', tokenId: newId(), name: 'everything', scopes: [...GRANTABLE_SCOPES], reach: { kind: 'all' } }, 'devices.manage', {})).toBe(false);

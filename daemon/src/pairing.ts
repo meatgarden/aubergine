@@ -30,12 +30,14 @@ interface Waiting {
   kind: DeviceKind;
   /** For a page: the origin it may be paired from, and no other. Null for a browser. */
   origin: string | null;
+  /** Who the device is for, as whoever made the code wrote it. Null: nobody was named. */
+  person: string | null;
   madeAt: number;
   expiresAt: number;
 }
 
 /** What a try at a code came to. `wrong` is every failure alike; `limited` is said before anything was compared. */
-export type PairingTry = { result: 'right'; name: string; kind: DeviceKind; origin: string | null } | { result: 'wrong' } | { result: 'limited'; retryAfterSeconds: number };
+export type PairingTry = { result: 'right'; name: string; kind: DeviceKind; origin: string | null; person: string | null } | { result: 'wrong' } | { result: 'limited'; retryAfterSeconds: number };
 
 const hashOf = (text: string): Buffer => createHash('sha256').update(`pairing:${text}`).digest();
 /** Compared against when no code waits, so that the work done does not say so. Nothing typed has this hash. */
@@ -48,14 +50,14 @@ export class Pairing {
 
   constructor(private readonly now: () => number = Date.now) {}
 
-  /** Makes a code for a device of this name and kind (and, for a page, origin). The code is returned to be shown, and kept only as a hash. */
-  make(name: string, kind: DeviceKind, origin: string | null = null): { code: string; expiresAt: number } {
+  /** Makes a code for a device of this name and kind (and, for a page, origin), and for the person named, if one is. The code is returned to be shown, and kept only as a hash. */
+  make(name: string, kind: DeviceKind, origin: string | null = null, person: string | null = null): { code: string; expiresAt: number } {
     const now = this.now();
     this.prune(now);
     let code = '';
     for (let i = 0; i < PAIRING_CODE_LENGTH; i += 1) code += PAIRING_ALPHABET[randomInt(PAIRING_ALPHABET.length)];
     const expiresAt = now + PAIRING_CODE_MINUTES * MINUTE_MS;
-    this.waiting.push({ hash: hashOf(code), name, kind, origin: kind === 'page' ? origin : null, madeAt: now, expiresAt });
+    this.waiting.push({ hash: hashOf(code), name, kind, origin: kind === 'page' ? origin : null, person, madeAt: now, expiresAt });
     // A fourth withdraws the oldest.
     while (this.waiting.length > PAIRING_CODES_WAITING) this.waiting.shift();
     return { code: showPairingCode(code), expiresAt };
@@ -91,7 +93,7 @@ export class Pairing {
     if (match && options.accept && options.kinds.includes(match.kind) && (match.kind !== 'page' || (match.origin !== null && match.origin === options.origin))) {
       this.waiting = this.waiting.filter((code) => code !== match);
       if (this.waiting.length === 0) this.wrong = 0;
-      return { result: 'right', name: match.name, kind: match.kind, origin: match.origin };
+      return { result: 'right', name: match.name, kind: match.kind, origin: match.origin, person: match.person };
     }
     if (!match && this.waiting.length > 0) {
       this.wrong += 1;

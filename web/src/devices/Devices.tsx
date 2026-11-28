@@ -1,4 +1,4 @@
-import { DeviceName, deviceStatus, readPairingCode, showPairingCode, type Device, type PairingCodeAnswer } from '@aubergine/shared';
+import { DeviceName, PersonName, deviceStatus, readPairingCode, showPairingCode, type Device, type PairingCodeAnswer } from '@aubergine/shared';
 import { useEffect, useRef, useState } from 'react';
 import { ApiError, api } from '../api';
 import { runCommand } from '../commands';
@@ -61,7 +61,7 @@ export function DevicesPart() {
   return (
     <section className="settings-devices" data-testid="settings-devices">
       <h3>Devices</h3>
-      <p className="ui-meta">Browsers on your other devices, signed in from an outside address with a code. Each can do everything you can here.</p>
+      <p className="ui-meta">Browsers on other devices, yours or another person’s, signed in from an outside address with a code. Each can do everything you can here, whoever it is for.</p>
       {list.length === 0 ? (
         <EmptyState action={add} data-testid="devices-empty">
           No device has been added yet.
@@ -116,6 +116,7 @@ export function AddDeviceDialog() {
 
 function AddDevice({ close }: { close: () => void }) {
   const [name, setName] = useState('Phone');
+  const [person, setPerson] = useState('');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   /** The code and where it is used. Held here only: dropped when the dialog closes or the code runs out. */
@@ -124,7 +125,7 @@ function AddDevice({ close }: { close: () => void }) {
   const [now, setNow] = useState(() => Date.now());
   const field = useRef<HTMLInputElement>(null);
   const box = useRef<HTMLDivElement>(null);
-  const valid = DeviceName.safeParse(name.trim()).success;
+  const valid = DeviceName.safeParse(name.trim()).success && (person.trim() === '' || PersonName.safeParse(person.trim()).success);
 
   useEffect(() => field.current?.focus(), []);
   // Once a second while a code is shown; a timer, so it goes on in a tab that is not showing.
@@ -145,7 +146,7 @@ function AddDevice({ close }: { close: () => void }) {
     setError(null);
     setRanOut(false);
     try {
-      const answer = await api.makePairingCode(name.trim());
+      const answer = await api.makePairingCode(name.trim(), person.trim() === '' ? null : person.trim());
       setNow(Date.now());
       setMade(answer);
       // The form it was typed in is gone: the dialog keeps the keyboard, so that Escape still closes it.
@@ -213,6 +214,11 @@ function AddDevice({ close }: { close: () => void }) {
               <span>What the device is called</span>
               <input className="ui-field" ref={field} value={name} maxLength={80} onChange={(e) => setName(e.target.value)} data-testid="add-device-name" />
             </label>
+            <label className="wf-field">
+              <span>Who it is for, if not you</span>
+              <input className="ui-field" value={person} placeholder="Nobody is named" maxLength={80} onChange={(e) => setPerson(e.target.value)} data-testid="add-device-person" />
+            </label>
+            <p className="ui-meta">A name here says whose device did something, in this list and in Activity. It limits nothing: whoever signs in with the code is the owner here, with a shell on this computer.</p>
             <div className="dialog-actions">
               <Button kind="primary" type="submit" busy={busy} disabled={!valid} data-testid="add-device-go">
                 {ranOut ? 'Make another code' : 'Make a code'}

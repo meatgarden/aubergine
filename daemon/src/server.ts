@@ -453,6 +453,11 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     const sessionId = typeof said === 'string' && Id.safeParse(said).success && sessions.has(said) ? said : null;
     return { kind: 'owner-cli', sessionId };
   };
+  /** Who the device a request came from was made for, where it came from one and one was named. A word about the device: nothing is decided by it. */
+  const personOf = (request: FastifyRequest): string | null => {
+    const deviceId = deviceOf.get(request);
+    return deviceId === undefined ? null : (devices.find(deviceId)?.person ?? null);
+  };
   /** What the calling program says it is, when it says so in the form asked for. A trace: nothing is decided by it. */
   const clientOf = (request: FastifyRequest): string | null => {
     const said = request.headers[CLIENT_HEADER];
@@ -470,8 +475,9 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     if (!call) {
       const what = asked.get(request);
       if (principals.get(request)?.kind !== 'user' || !what || !(WATCHED_READS.includes(what.action) || (WATCHED.includes(what.action) && request.method !== 'GET')) || ownerLogged.has(request)) return;
-      // Through a linked page the owner is a device: said so, with which one. Otherwise only a call from outside the page is written.
-      const viaPage = fromLinkedPage.has(request) ? deviceOf.get(request) : undefined;
+      // On a paired device (a browser from outside, or a linked page) the owner is that device: said so, with which one
+      // and who it was made for. At this computer only a call from outside the page is written.
+      const viaPage = deviceOf.get(request);
       const caller = ownerCaller(request);
       if (viaPage === undefined && caller.kind !== 'owner-cli') return;
       ownerLogged.add(request);
@@ -479,6 +485,7 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
         at: new Date().toISOString(),
         caller: viaPage !== undefined ? 'device' : 'owner-cli',
         ...(viaPage !== undefined ? { byDeviceId: viaPage } : {}),
+        ...(viaPage !== undefined && personOf(request) !== null ? { byPerson: personOf(request) } : {}),
         tokenId: null,
         tokenName: '',
         fromSessionId: viaPage !== undefined ? null : caller.sessionId,
@@ -793,6 +800,7 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
       tokenId: null,
       tokenName: '',
       byDeviceId: line.caller === 'device' ? (deviceOf.get(request) ?? null) : null,
+      ...(line.caller === 'device' && personOf(request) !== null ? { byPerson: personOf(request) } : {}),
       deviceId: line.device?.id ?? null,
       deviceName: line.device?.name ?? null,
       client: clientOf(request),
@@ -832,13 +840,13 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
       return reply.code(401).send(PAIRING_REFUSED);
     }
     if (tried.kind === 'page') {
-      const { device, secret } = devices.create({ name: tried.name, kind: 'page', origin: tried.origin });
+      const { device, secret } = devices.create({ name: tried.name, kind: 'page', origin: tried.origin, person: tried.person });
       recordDevices(request, { caller: 'pairing', action: 'devices.pair', status: 200, outcome: 'ok', device: { id: device.id, name: device.name } });
       // The credential's one way out of the server: in this answer, never in a cookie, never again.
       const paired: PairedPage = { credential: secret, device: { id: device.id, name: device.name }, protocolVersion: PROTOCOL_VERSION };
       return reply.code(200).send(paired);
     }
-    const { device, secret } = devices.create({ name: tried.name, kind: tried.kind });
+    const { device, secret } = devices.create({ name: tried.name, kind: tried.kind, person: tried.person });
     recordDevices(request, { caller: 'pairing', action: 'devices.pair', status: 204, outcome: 'ok', device: { id: device.id, name: device.name } });
     setDeviceCookie(reply, secret, place);
     return reply.code(204).send();
@@ -864,10 +872,10 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
       // Only a page at an origin the owner wrote down can use it. Two servers on one computer link under their own names, so no outside address is needed.
       const checked = accessProblem('pages', body.origin);
       if (!checked.ok || !pageOrigins.has(checked.origin)) throw new HttpError(409, 'conflict', 'That origin is not written in access.pages in config.json, so a page there could not use a code. Write it there, start the server again, and ask for a code then.');
-      made = pairing.make(body.name, 'page', checked.origin);
+      made = pairing.make(body.name, 'page', checked.origin, body.person ?? null);
     } else {
       if (outsideAddresses.length === 0) throw new HttpError(409, 'conflict', 'No outside address is written in the settings, so a code could not be used anywhere. Write one in access.addresses in config.json, start the server again, and ask for a code then.');
-      made = pairing.make(body.name, 'browser');
+      made = pairing.make(body.name, 'browser', null, body.person ?? null);
     }
     recordDevices(request, { caller: ownerOnDevices(request), action: 'devices.manage', status: 201, outcome: 'ok' });
     // Shown once, and never kept anywhere on the way.

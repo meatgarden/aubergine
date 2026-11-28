@@ -17,6 +17,7 @@ export * from './entities';
 export * from './tokens';
 export * from './devices';
 export * from './access-addresses';
+export * from './directory';
 export * from './events';
 export * from './protocol';
 export * from './workflow-api';
