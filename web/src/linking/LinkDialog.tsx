@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { findServer, hostOf, loadServers, storageUsable } from '../servers';
 import { useApp } from '../store';
 import { Button, Row, ScreenHead, SectionTitle } from '../ui';
-import { checkDirectory, directoryHost, directoryRows, fetchDirectory, loadDirectories, removeDirectory, saveDirectories, type DirectoryKnown, type KeptDirectory } from './directories';
+import { SIGN_IN_WAITING, checkDirectory, directoryHost, directoryRows, fetchDirectory, forgetDirectoryToken, loadDirectories, removeDirectory, saveDirectories, signInEndedWords, signInToDirectory, type DirectoryKnown, type KeptDirectory } from './directories';
 import { linkServer, unlinkServer } from './linking';
 
 /** A question over the page or the canvas: closed by its button, by Escape, or by pressing beside it. */
@@ -153,11 +153,13 @@ function Directories({ pick }: { pick: (server: { address: string; label: string
     if (!checked.ok) return setSaid(checked.problem);
     setBusy(true);
     setSaid(null);
-    // Read first: an address that gives no directory is not kept.
+    // Read first: an address that gives no directory is not kept. One that asks who you are, and says where to sign in, is.
     const answer = await fetchDirectory(checked.address);
     if (!alive.current) return;
     setBusy(false);
-    if (answer.state !== 'read') return setSaid(answer.state === 'failed' ? answer.words : null);
+    if (answer.state === 'failed') return setSaid(answer.words);
+    if (answer.state === 'asks' && answer.signIn === null) return setSaid('That address asks for a sign-in, and does not say where in a way this page knows. It was not kept.');
+    if (answer.state === 'reading') return;
     const next = [...loadDirectories().filter((d) => d.address !== checked.address), { address: checked.address, addedAt: new Date().toISOString() }];
     if (!saveDirectories(next)) return setSaid('This browser could not keep the directory.');
     setKept(next);
@@ -166,7 +168,23 @@ function Directories({ pick }: { pick: (server: { address: string; label: string
     setAdding(false);
   };
 
+  /** Signing in to a directory that asks: what is said about each try, by the directory's address. */
+  const [signing, setSigning] = useState<Record<string, string>>({});
+  const signIn = (address: string, where: string): void => {
+    setSigning((now) => ({ ...now, [address]: SIGN_IN_WAITING }));
+    // Opened from the click itself: a browser opens a window only then.
+    void signInToDirectory(address, where).then((ended) => {
+      if (!alive.current) return;
+      setSigning((now) => {
+        const { [address]: _gone, ...rest } = now;
+        return ended === 'signed-in' ? rest : { ...rest, [address]: signInEndedWords(ended) };
+      });
+      if (ended === 'signed-in') read(address);
+    });
+  };
+
   const remove = (address: string): void => {
+    forgetDirectoryToken(address);
     const next = removeDirectory(loadDirectories(), address);
     saveDirectories(next);
     setKept(next);
@@ -182,6 +200,11 @@ function Directories({ pick }: { pick: (server: { address: string; label: string
             <div className="link-directory-head">
               <SectionTitle>{state.state === 'read' ? state.directory.name : host}</SectionTitle>
               <span className="ui-meta">{state.state === 'read' ? `a directory at ${host}` : state.state === 'reading' ? 'Reading…' : 'a directory'}</span>
+              {state.state === 'asks' && state.signIn !== null && (
+                <Button busy={signing[directory.address] === SIGN_IN_WAITING} onClick={() => signIn(directory.address, state.signIn as string)} data-testid="link-directory-sign-in">
+                  Sign in
+                </Button>
+              )}
               {state.state === 'failed' && (
                 <Button kind="quiet" onClick={() => read(directory.address)} data-testid="link-directory-again">
                   Read again
@@ -194,6 +217,20 @@ function Directories({ pick }: { pick: (server: { address: string; label: string
             {state.state === 'failed' && (
               <p className="dialog-error" role="alert" data-testid="link-directory-failed">
                 {state.words}
+              </p>
+            )}
+            {state.state === 'asks' && (
+              <p className="ui-meta" data-testid="link-directory-asks">
+                {state.signIn === null
+                  ? 'It asks who you are before it lists anything, and does not say where to sign in in a way this page knows.'
+                  : state.again
+                    ? `It no longer takes the sign-in this page had. Sign in again: a window opens at ${host}.`
+                    : `It asks who you are before it lists anything. Sign in opens a window at ${host}; what it gives this page is kept until the page is closed or loaded again, and sent to that directory alone.`}
+              </p>
+            )}
+            {state.state === 'asks' && signing[directory.address] !== undefined && (
+              <p className={signing[directory.address] === SIGN_IN_WAITING ? 'ui-meta' : 'dialog-error'} role="status" data-testid="link-directory-signing">
+                {signing[directory.address]}
               </p>
             )}
             {state.state === 'read' && state.directory.servers.length === 0 && <p className="ui-meta">It lists no servers.</p>}

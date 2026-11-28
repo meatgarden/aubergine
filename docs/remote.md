@@ -342,7 +342,39 @@ Where several Aubergines belong to one company, someone can keep a **directory**
 - This browser keeps only the directory's address (five at most). What the file says is read when the dialog opens and kept nowhere. The file is asked for with no cookie, no credential and no referrer, and neither this page's server nor a linked server is told of a directory.
 - A file of at most 256 KB and 500 servers is read. **Remove** beside a directory's name forgets its address.
 
-Not built: a directory that asks who you are (a company sign-in), and a server that puts itself into one.
+#### A directory that asks who you are
+
+A directory may want to know who is reading before it lists anything, so that each person sees only the servers of their own organizations. The page then shows **Sign in** beside it.
+
+- **Sign in** opens a window at the directory's own sign-in page. You sign in there, with whatever that directory uses, and the window closes.
+- The window hands this page a token. The page sends it to that directory, and nowhere else, when it reads the list.
+- The token is kept in the page's memory only: it is gone when the page is closed or loaded again, and you press **Sign in** once more. It is in no storage of the browser and in no address.
+- It says who reads the phone book. It is not a credential of any server: each server is still linked with a code made there.
+- If the directory no longer takes it, the page says so and offers **Sign in** again.
+
+For whoever writes such a directory, this is the whole contract:
+
+1. Asked without a sign-in, answer `401` with where the sign-in page is, at the directory's own origin, with no query:
+
+   ```json
+   { "aubergineDirectory": 1, "signIn": "https://directory.example.net/sign-in" }
+   ```
+
+2. The page opens that address in a window with two things added: `page`, the origin of the page that asks, and `request`, a name the page made for this one try.
+3. When the person is signed in, the window hands the token to the page that opened it, addressed to exactly that `page` origin, and only where that origin is one the directory knows:
+
+   ```js
+   window.opener.postMessage({ aubergineDirectory: 1, request: "<the request it was opened with>", token: "<the token>" }, "<the page origin>");
+   ```
+
+   A token is 16 to 4096 characters of printable ASCII without a space.
+4. The page then asks for the directory with `Authorization: Bearer <the token>`. The directory's answers, the `401` too, must carry `Access-Control-Allow-Origin` for the page's origin, and it must answer the browser's preflight for the `authorization` header.
+
+The page takes a token only from a message that came from the directory's own origin, from the very window it opened, with the `request` of that try. The sign-in window is the one place the page opens another site with a way back to the page: choose a directory as you would choose who gives you a list of servers to sign in to.
+
+Tried with a stand-in directory and sign-in window served by the browser test, in Chromium. Not tried: a real company sign-in in that window (a sign-in provider's own pages may cut the window off from the page that opened it), Safari and Firefox.
+
+Not built: a server that puts itself into a directory, and a server that lets a person in on a directory's word.
 
 ### Afterwards
 

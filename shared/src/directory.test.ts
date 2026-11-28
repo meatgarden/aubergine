@@ -216,3 +216,70 @@ describe('a directory by organization', () => {
     ]);
   });
 });
+
+describe('a directory that asks who you are', () => {
+  const AT = 'https://lists.example.test/aubergine-directory.json';
+  const PAGE = 'http://127.0.0.1:4600';
+  const REQUEST = 'abcdefgh12345678';
+  const offer = (signIn: unknown, over: Record<string, unknown> = {}): string => JSON.stringify({ aubergineDirectory: 1, signIn, ...over });
+
+  it('says where its sign-in page is, at its own origin', async () => {
+    const { readSignInOffer } = await import('./directory');
+    expect(readSignInOffer(offer('https://lists.example.test/sign-in'), AT)).toBe('https://lists.example.test/sign-in');
+    expect(readSignInOffer(offer('https://lists.example.test/sign-in', { error: 'sign_in_needed', later: 1 }), AT)).toBe('https://lists.example.test/sign-in');
+    for (const wrong of [
+      undefined,
+      '',
+      'not json',
+      '{"error":"sign_in_needed"}',
+      offer('https://elsewhere.example.test/sign-in'),
+      offer('https://lists.example.test:8443/sign-in'),
+      offer('http://lists.example.test/sign-in'),
+      offer('https://someone@lists.example.test/sign-in'),
+      offer('https://lists.example.test/sign-in?next=https://elsewhere.example.test'),
+      offer('https://lists.example.test/sign-in#x'),
+      offer('javascript:alert(1)'),
+      offer('/sign-in'),
+      offer(7),
+      offer('https://lists.example.test/sign-in', { aubergineDirectory: 2 }),
+      `{"aubergineDirectory":1,"signIn":"https://lists.example.test/${'a'.repeat(5000)}"}`,
+    ]) {
+      expect(readSignInOffer(wrong, AT), String(wrong).slice(0, 90)).toBeNull();
+    }
+  });
+
+  it('opens the window with the page’s origin and the name of the try, and nothing else', async () => {
+    const { signInWindowAddress } = await import('./directory');
+    expect(signInWindowAddress('https://lists.example.test/sign-in', PAGE, REQUEST)).toBe(`https://lists.example.test/sign-in?page=${encodeURIComponent(PAGE)}&request=${REQUEST}`);
+    expect(signInWindowAddress('https://lists.example.test/sign-in?x=1', PAGE, REQUEST)).toBeNull();
+    expect(signInWindowAddress('javascript:alert(1)', PAGE, REQUEST)).toBeNull();
+    expect(signInWindowAddress('https://lists.example.test/sign-in', `${PAGE}/c/1`, REQUEST)).toBeNull();
+    expect(signInWindowAddress('https://lists.example.test/sign-in', 'http://plain.example.test', REQUEST)).toBeNull();
+    expect(signInWindowAddress('https://lists.example.test/sign-in', PAGE, 'short')).toBeNull();
+    expect(signInWindowAddress('https://lists.example.test/sign-in', PAGE, `${REQUEST}&page=https://elsewhere.example.test`)).toBeNull();
+  });
+
+  it('takes a token only from a message for this very try', async () => {
+    const { MAX_DIRECTORY_TOKEN, readSignedIn } = await import('./directory');
+    const token = 'made-up-token-0123456789';
+    expect(readSignedIn({ aubergineDirectory: 1, request: REQUEST, token }, REQUEST)).toBe(token);
+    expect(readSignedIn({ aubergineDirectory: 1, request: REQUEST, token, later: true }, REQUEST)).toBe(token);
+    for (const wrong of [
+      null,
+      token,
+      { request: REQUEST, token },
+      { aubergineDirectory: 2, request: REQUEST, token },
+      { aubergineDirectory: 1, request: 'zzzzzzzz12345678', token },
+      { aubergineDirectory: 1, token },
+      { aubergineDirectory: 1, request: REQUEST },
+      { aubergineDirectory: 1, request: REQUEST, token: 'short' },
+      { aubergineDirectory: 1, request: REQUEST, token: 'with a space in it, long enough' },
+      { aubergineDirectory: 1, request: REQUEST, token: 'two\nlines-0123456789abcdef' },
+      { aubergineDirectory: 1, request: REQUEST, token: 'a'.repeat(MAX_DIRECTORY_TOKEN + 1) },
+      { aubergineDirectory: 1, request: REQUEST, token: 7 },
+    ]) {
+      expect(readSignedIn(wrong, REQUEST), JSON.stringify(wrong)?.slice(0, 90)).toBeNull();
+    }
+    expect(readSignedIn({ aubergineDirectory: 1, request: '', token }, '')).toBeNull();
+  });
+});

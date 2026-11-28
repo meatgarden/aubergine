@@ -562,6 +562,8 @@ describe('who a device is for', () => {
     // What the browser sends with the code plays no part: the name is the code's.
     expect((await tryCode(PairingCodeAnswer.parse(made.json).code, {}, )).status).toBe(204);
     expect(hub.state.devices.at(-1)).toMatchObject({ name: 'Phone', person: 'Ada Example' });
+    // The next one is made a moment later, so that the list's order is the order they were made in.
+    now += 1000;
     await pairDevice('Tablet');
     expect(hub.state.devices.at(-1)).toMatchObject({ name: 'Tablet', person: null });
     const listed = DeviceList.parse((await asOwnerHere('GET', paths.devices)).json);
