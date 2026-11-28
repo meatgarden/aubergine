@@ -36,6 +36,22 @@
       "path": "elements/hand-over.json"
     },
     {
+      "id": "check-for-drift",
+      "kind": "element",
+      "name": "Check for drift",
+      "description": "For a schedule: run the read-only plan against every stack the repository defines and list what differs from the code, or \"nothing drifted\". It never applies. It needs the repository's own tool and cloud access that can read: give the agent a read-only profile, since it runs with your cloud access.",
+      "version": "1",
+      "path": "elements/check-for-drift.json"
+    },
+    {
+      "id": "describe-this-stack",
+      "kind": "element",
+      "name": "Describe this stack",
+      "description": "Read the infrastructure code in a folder and write down what it creates, its environments, what costs money (no prices), where its state lives, and what to know before changing it. It needs the code only, no cloud access.",
+      "version": "1",
+      "path": "elements/describe-this-stack.json"
+    },
+    {
       "id": "reproduce-fix-verify",
       "kind": "workflow",
       "name": "Reproduce, fix, verify",
@@ -50,6 +66,14 @@
       "description": "For reviewing someone else's work: read it, check it, write down what you found.",
       "version": "1",
       "path": "workflows/read-and-report.json"
+    },
+    {
+      "id": "plan-review-apply",
+      "kind": "workflow",
+      "name": "Plan, review, apply",
+      "description": "For infrastructure as code: say the change, plan it with the repository's own tool, stop for your yes, apply that plan, check. The approval is a checkpoint for you, not a lock: the agent runs with your cloud access. Give it a read-only profile for planning.",
+      "version": "1",
+      "path": "workflows/plan-review-apply.json"
     }
   ]
 }

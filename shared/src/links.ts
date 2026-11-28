@@ -237,6 +237,156 @@ function officeDocument(parts: string[]): Told | null {
   return sort ? { kind: 'document', label: sort } : null;
 }
 
+// ---------- Cloud consoles and delivery ----------
+//
+// What an agent or a tool prints while it works on infrastructure. A console's page is a plain link with words that
+// say whose console it is, which service and, where the host carries it, which region: what stack, bucket or
+// project it is about is mostly after "?" or "#", which is not read. So such a page is never kept only because a
+// terminal showed it. A run of a plan or an update, whose whole name is in the path, is a run like any other.
+
+/** A region as a cloud host spells it: `eu-west-1`, `ap-southeast-2`. */
+const REGION = /^[a-z]{2}(-[a-z]+){1,2}-\d$/;
+/** A name of an organisation, a workspace, a project or a stack, as it stands in a path. */
+const PLAIN_PART = /^[A-Za-z0-9][A-Za-z0-9._-]{0,89}$/;
+const isPlainPart = (part: string | undefined): part is string => part !== undefined && PLAIN_PART.test(part);
+
+/** The services of the AWS console by the first part of the path. One not listed is not guessed at. */
+const AWS_SERVICES: Readonly<Record<string, string>> = {
+  acm: 'Certificate Manager',
+  apigateway: 'API Gateway',
+  athena: 'Athena',
+  backup: 'Backup',
+  billing: 'Billing',
+  cloudformation: 'CloudFormation',
+  cloudfront: 'CloudFront',
+  cloudtrail: 'CloudTrail',
+  cloudtrailv2: 'CloudTrail',
+  cloudwatch: 'CloudWatch',
+  'cost-management': 'Cost Management',
+  dynamodbv2: 'DynamoDB',
+  ec2: 'EC2',
+  ecr: 'ECR',
+  ecs: 'ECS',
+  eks: 'EKS',
+  elasticache: 'ElastiCache',
+  events: 'EventBridge',
+  iam: 'IAM',
+  kms: 'KMS',
+  lambda: 'Lambda',
+  rds: 'RDS',
+  route53: 'Route 53',
+  s3: 'S3',
+  secretsmanager: 'Secrets Manager',
+  singlesignon: 'IAM Identity Center',
+  sns: 'SNS',
+  sqs: 'SQS',
+  states: 'Step Functions',
+  'systems-manager': 'Systems Manager',
+  vpc: 'VPC',
+  vpcconsole: 'VPC',
+  wafv2: 'WAF',
+};
+const AWS_CODE_SERVICES: Readonly<Record<string, string>> = { codebuild: 'CodeBuild', codecommit: 'CodeCommit', codedeploy: 'CodeDeploy', codepipeline: 'CodePipeline' };
+/** Services that are of no region, whatever region the host of their page names. */
+const AWS_NO_REGION = new Set(['billing', 'cloudfront', 'cost-management', 'iam', 'route53']);
+
+/** The AWS console: the service from the first part of the path, the region from the host where the host names one. */
+function awsConsole(parts: string[], url: URL): Told | null {
+  const first = (parts[0] ?? '').toLowerCase();
+  const service = first === 'codesuite' ? AWS_CODE_SERVICES[(parts[1] ?? '').toLowerCase()] : Object.hasOwn(AWS_SERVICES, first) ? AWS_SERVICES[first] : undefined;
+  // The part of the host directly before the console's own name, where it is a region.
+  const before = url.hostname.toLowerCase().split('.').at(-5);
+  const region = before !== undefined && REGION.test(before) && !AWS_NO_REGION.has(first) ? before : null;
+  const what = service ? `AWS ${service}` : 'AWS console';
+  return { kind: 'link', label: region ? `${what} · ${region}` : what };
+}
+
+/** Where a command-line sign-in to AWS sends a person. The code such an address may carry is after "?" or "#" and is never read. */
+function awsSignIn(_parts: string[], url: URL): Told | null {
+  const host = url.hostname.toLowerCase().split('.');
+  // device.sso.<region>.amazonaws.com, and no other host of that suffix.
+  if (host.length === 5 && host[0] === 'device' && host[1] === 'sso' && REGION.test(host[2] ?? '')) return { kind: 'link', label: 'AWS sign-in' };
+  return null;
+}
+function awsAccessPortal(parts: string[]): Told | null {
+  return parts[0] === 'start' ? { kind: 'link', label: 'AWS access portal' } : null;
+}
+
+/** The products of the Google Cloud console by the first part of the path. The project is after "?" and is not read. */
+const GOOGLE_CLOUD_PRODUCTS: Readonly<Record<string, string>> = {
+  apis: 'APIs and services',
+  artifacts: 'Artifact Registry',
+  bigquery: 'BigQuery',
+  billing: 'Billing',
+  'cloud-build': 'Cloud Build',
+  cloudpubsub: 'Pub/Sub',
+  compute: 'Compute Engine',
+  dataflow: 'Dataflow',
+  deploy: 'Cloud Deploy',
+  errors: 'Error Reporting',
+  firestore: 'Firestore',
+  functions: 'Cloud Functions',
+  'iam-admin': 'IAM',
+  kubernetes: 'Kubernetes Engine',
+  logs: 'Logging',
+  memorystore: 'Memorystore',
+  monitoring: 'Monitoring',
+  networking: 'VPC network',
+  run: 'Cloud Run',
+  security: 'Security',
+  spanner: 'Spanner',
+  sql: 'Cloud SQL',
+  storage: 'Cloud Storage',
+  traces: 'Trace',
+};
+function googleCloud(parts: string[]): Told | null {
+  const first = (parts[0] ?? '').toLowerCase();
+  const product = Object.hasOwn(GOOGLE_CLOUD_PRODUCTS, first) ? GOOGLE_CLOUD_PRODUCTS[first] : undefined;
+  return { kind: 'link', label: product ? `Google Cloud · ${product}` : 'Google Cloud console' };
+}
+
+/** The Azure portal says everything after "#": only that it is the portal can be told. */
+const azurePortal = (): Told => ({ kind: 'link', label: 'Azure portal' });
+
+/**
+ * HCP Terraform: `/app/<organisation>/workspaces/<workspace>` as its pages spell it, and
+ * `/app/<organisation>/<workspace>/runs/<run>` as the command line prints it. A run is `run-` and letters and digits.
+ */
+function terraformCloud(parts: string[]): Told | null {
+  const [app, org, ...rest] = parts;
+  if (app !== 'app' || !isPlainPart(org)) return null;
+  const [workspace, runs, run] = rest[0] === 'workspaces' ? rest.slice(1) : rest;
+  if (!isPlainPart(workspace)) return null;
+  if (runs === 'runs' && run !== undefined && /^run-[A-Za-z0-9]{6,40}$/.test(run)) return { kind: 'run', label: short(`${workspace} · ${run}`, LINK_LABEL_MAX) };
+  // A workspace is told only where the address says "workspaces": anything else after an organisation may be another page.
+  if (rest[0] === 'workspaces') return { kind: 'link', label: short(`Terraform · ${org}/${workspace}`, LINK_LABEL_MAX) };
+  return null;
+}
+
+/** What stands first, or second, in a Pulumi Cloud address that is not an organisation or a project. */
+const PULUMI_NOT_ORG = new Set(['account', 'cli-login', 'logout', 'new', 'signin', 'signup', 'site', 'user', 'welcome']);
+const PULUMI_NOT_PROJECT = new Set(['access-tokens', 'audit-logs', 'billing', 'deployments', 'environments', 'esc', 'insights', 'members', 'policies', 'policypacks', 'projects', 'resources', 'services', 'settings', 'stacks', 'teams', 'templates', 'usage']);
+
+/** Pulumi Cloud: `/<organisation>/<project>/<stack>`, and under it `updates/<number>` or `previews/<id>`. */
+function pulumiCloud(parts: string[]): Told | null {
+  const [org, project, stack, what, id, more] = parts;
+  if (!isPlainPart(org) || !isPlainPart(project) || !isPlainPart(stack)) return null;
+  if (PULUMI_NOT_ORG.has(org.toLowerCase()) || PULUMI_NOT_PROJECT.has(project.toLowerCase())) return null;
+  if (what === undefined) return { kind: 'link', label: short(`Pulumi · ${org}/${project}/${stack}`, LINK_LABEL_MAX) };
+  if (more !== undefined) return null;
+  if (what === 'updates' && isNumber(id)) return { kind: 'run', label: short(`${project}/${stack} · update ${id}`, LINK_LABEL_MAX) };
+  if (what === 'previews' && id !== undefined && /^[0-9a-f-]{8,40}$/i.test(id)) return { kind: 'run', label: short(`${project}/${stack} · preview`, LINK_LABEL_MAX) };
+  return null;
+}
+
+/** Datadog, at the hosts it names for its own sites: a monitor by its number, a dashboard by its title, else only that it is Datadog. */
+function datadog(parts: string[]): Told | null {
+  const [what, id, title] = parts;
+  if (what === 'monitors' && isNumber(id)) return { kind: 'link', label: `Datadog monitor ${id}` };
+  if (what === 'dashboard' && id && title) return { kind: 'link', label: short(`Datadog · ${words(title)}`, LINK_LABEL_MAX) };
+  return { kind: 'link', label: 'Datadog' };
+}
+
 /**
  * The table. Easy to add to: a row is the hosts it is for and how to tell what an address there is. A host is
  * compared exactly, or by a registered suffix (`something.example.net`); never by whether it contains a word.
@@ -248,6 +398,15 @@ const TABLE: readonly TableRow[] = [
   { hosts: [{ host: 'figma.com' }], tell: design },
   { hosts: [{ host: 'notion.so' }, { suffix: 'notion.site' }], tell: titledPage },
   { hosts: [{ host: 'docs.google.com' }, { host: 'drive.google.com' }], tell: officeDocument },
+  // Cloud consoles and delivery. A console's regional hosts are told by the console's own suffix.
+  { hosts: [{ host: 'console.aws.amazon.com' }, { suffix: 'console.aws.amazon.com' }], tell: awsConsole },
+  { hosts: [{ suffix: 'amazonaws.com' }], tell: awsSignIn },
+  { hosts: [{ suffix: 'awsapps.com' }], tell: awsAccessPortal },
+  { hosts: [{ host: 'console.cloud.google.com' }], tell: googleCloud },
+  { hosts: [{ host: 'portal.azure.com' }], tell: azurePortal },
+  { hosts: [{ host: 'app.terraform.io' }, { host: 'app.eu.terraform.io' }], tell: terraformCloud },
+  { hosts: [{ host: 'app.pulumi.com' }], tell: pulumiCloud },
+  { hosts: [{ host: 'app.datadoghq.com' }, { host: 'app.datadoghq.eu' }, { host: 'us3.datadoghq.com' }, { host: 'us5.datadoghq.com' }, { host: 'ap1.datadoghq.com' }, { host: 'ap2.datadoghq.com' }, { host: 'app.ddog-gov.com' }], tell: datadog },
   // Hosts that are nobody's (reserved for examples): the demo's stand-ins use them, so that nothing it shows points at a real project.
   { hosts: [{ host: 'code.example.com' }], tell: codeHost },
   { hosts: [{ host: 'tickets.example.com' }], tell: tracker },

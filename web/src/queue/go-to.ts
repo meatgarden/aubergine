@@ -10,6 +10,10 @@ export function goTo(act: string): void {
     store.showSession(id);
   } else if (what === 'copy' && id) store.viewEnvironment(id);
   else if (what === 'review') store.togglePanel('review');
+  else if (what === 'rule') {
+    store.showPage('queue');
+    store.setRunsTab('rules');
+  }
   else if (what === 'task' && id && store.whole?.queue.tasks.find((task) => task.id === id)?.runId) store.viewRun(store.whole.queue.tasks.find((task) => task.id === id)?.runId ?? null);
   else store.showPage('queue');
 }

@@ -12,6 +12,7 @@ import {
   RULES_MAX,
   SCHEDULES_MAX,
   TemplateId,
+  diffProject,
   exportWorkflow,
   importWorkflow,
   isLocalHome,
@@ -29,6 +30,7 @@ import {
   type ImportProjectFileRequest,
   type ImportedProject,
   type Project,
+  type ProjectComparison,
   type ProjectFile,
   type ProjectFileReading,
   type ProjectTemplate,
@@ -186,6 +188,8 @@ export class ProjectFiles {
     const rules: FileRule[] = [];
     for (const rule of state.queue.rules.filter((r) => r.projectId === projectId)) {
       if (rule.action.kind === 'notify') rules.push({ event: rule.event, action: { kind: 'notify' } });
+      // A webhook is a setting of one computer: its name means nothing on another, so such a rule stays here.
+      else if (rule.action.kind === 'webhook') leftOut.push('A rule that sends a webhook is not in the file: a webhook is written in the settings file of one computer.');
       else {
         const action = rule.action as { elementId?: string; on?: { kind: 'session'; sessionId: string } | { kind: 'new'; canvasId: string } };
         const element = typeof action.elementId === 'string' ? needElement(action.elementId) : null;
@@ -227,6 +231,23 @@ export class ProjectFiles {
     const { file, leftOut } = this.file(projectId, options);
     const text = `${JSON.stringify(file, null, 2)}\n`;
     return { text, digest: digestOf(text), fileName: `${slug(file.name) || 'project'}.${options.template ? 'template' : 'project'}.json`, leftOut };
+  }
+
+  /* ---------- Comparing ---------- */
+
+  /**
+   * How a file differs from a project that is here. The file is read by the one reader; the project is written out by
+   * the code that writes files, read by the same reader, and the two are compared in the file's own shape. It reads
+   * and answers: no change, nothing made, nothing started, nothing written.
+   */
+  compare(projectId: string, text: string): ProjectComparison {
+    const read = readProjectFile(text);
+    if (!read.ok) throw new BadInputError(read.problem);
+    for (const { file } of read.file.workflows) this.contentOf(file);
+    // With its summaries: whether they are compared is decided where the two are compared, from what the file is.
+    const here = readProjectFile(this.export(projectId, { template: read.file.template, notes: true }).text);
+    if (!here.ok) throw new ConflictError(`This project cannot be written out as a file that can be read, so it cannot be compared with one: ${here.problem}`);
+    return diffProject(read.file, here.file);
   }
 
   /* ---------- Reading in ---------- */
@@ -409,7 +430,7 @@ export class ProjectFiles {
           const action = rule.action.kind === 'notify' ? { kind: 'notify' } : { kind: 'run-element', elementId: elementIds.get(rule.action.element) as string, on: on(rule.action.on) };
           if (!actionKind(action.kind)) throw new BadInputError(`A rule in this file does something this version does not know (${action.kind}). Nothing was made.`);
           // Switched off: it is the owner here who says when it begins to do anything.
-          this.hub.emit({ type: 'rule.changed', rule: { id: newId(), projectId, event: rule.event, action, on: false, createdAt: now } });
+          this.hub.emit({ type: 'rule.changed', rule: { id: newId(), projectId, event: rule.event, action, on: false, problem: null, createdAt: now } });
         }
         if (this.state.schedules.items.length + file.schedules.length > SCHEDULES_MAX) throw new ConflictError(`With this file there would be more than ${SCHEDULES_MAX} schedules. Nothing was made.`);
         for (const schedule of file.schedules) {

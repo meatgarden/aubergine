@@ -14,6 +14,7 @@ import {
   type ChangeEvent,
   type RuntimeStatus,
   type Settings,
+  type WebhookShown,
   firstProject,
   stateOf,
 } from '@aubergine/shared';
@@ -100,6 +101,8 @@ export interface AppStore {
    * on. Ask `atThisComputer`, not this.
    */
   here: boolean;
+  /** The webhooks a rule of the server shown may name: each by its name and its address's host. Where one goes, and its secret, never reach the page. */
+  webhooks: WebhookShown[];
   /** Whether the dialog that adds a device is open. What it shows (the code) is the dialog's own, and nobody else's. */
   addingDevice: boolean;
   /** The part of Settings to bring into view when it opens; used once. */
@@ -255,6 +258,7 @@ export const useApp = create<AppStore>((set, get) => ({
   selected: null,
   panel: null,
   here: true,
+  webhooks: [],
   addingDevice: false,
   settingsAt: null,
   addDevice: (addingDevice) => set({ addingDevice }),
@@ -319,7 +323,7 @@ export const useApp = create<AppStore>((set, get) => ({
       const exists = (id: string): boolean => everything.canvases.some((c) => c.id === id);
       const current = get().canvasId;
       const ownSettings = server === null ? response.settings : get().ownSettings;
-      set({ phase: 'ready', runtime: response.runtime, settings: withPageSettings(response.settings, ownSettings), ownSettings, here: response.here, following, whole: everything, app: viewOf(everything, current, get().app) });
+      set({ phase: 'ready', runtime: response.runtime, settings: withPageSettings(response.settings, ownSettings), ownSettings, here: response.here, webhooks: response.webhooks, following, whole: everything, app: viewOf(everything, current, get().app) });
       // A tab that shows one terminal by itself looks at no canvas, and keeps its own address.
       if (terminalPage !== null) return;
       // Keep looking at the same canvas. On opening the page, or if that canvas is gone: the one asked for on
@@ -656,6 +660,7 @@ whenRefused(() => {
 
 /** What names something of the server shown, set back as it is before anything is read: nothing of one server is left for the next. */
 const NOTHING_OF_A_SERVER = {
+  webhooks: [] as WebhookShown[],
   runtime: null,
   whole: null,
   app: null,

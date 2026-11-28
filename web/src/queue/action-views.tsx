@@ -56,3 +56,35 @@ registerActionView({
     );
   },
 });
+
+/** Where webhooks are explained: how one is written into the settings file, what is sent and how it is checked. */
+export const WEBHOOK_DOCS = 'https://github.com/thirstyeggplant/aubergine/blob/main/docs/webhooks.md';
+
+registerActionView({
+  kind: 'webhook',
+  blank: () => ({ kind: 'webhook', webhook: '' }),
+  Fields: ({ action, onChange }) => {
+    const webhooks = useApp((s) => s.webhooks);
+    // None is written: where the choice would be, the one sentence that says where they are written.
+    if (webhooks.length === 0)
+      return (
+        <span data-testid="rule-webhook-none">
+          No webhook is written yet. They are written by hand under “webhooks” in the settings file (config.json) and read when the server starts:{' '}
+          <a href={WEBHOOK_DOCS} target="_blank" rel="noopener noreferrer">
+            how to write one
+          </a>
+          .
+        </span>
+      );
+    return (
+      <select aria-label="Webhook" value={String(action.webhook ?? '')} onChange={(e) => onChange({ ...action, webhook: e.target.value })} data-testid="rule-webhook">
+        <option value="">Which webhook…</option>
+        {webhooks.map((hook) => (
+          <option key={hook.name} value={hook.name}>
+            {hook.name} ({hook.host})
+          </option>
+        ))}
+      </select>
+    );
+  },
+});

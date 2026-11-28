@@ -4,6 +4,18 @@ import type { Store } from './store/store';
 /** `revision`: the number of this change, counted from when this server started. */
 export type EventListener = (event: ChangeEvent, revision: number) => void;
 
+/** One change as it was told: the event and its number. */
+export interface ToldChange {
+  readonly event: ChangeEvent;
+  readonly revision: number;
+}
+
+/**
+ * How many of its most recent changes the hub remembers, for a follower that was away for a moment and asks what it
+ * missed. Memory only: not state, not a log, never written anywhere, and gone with the server.
+ */
+export const RECENT_CHANGES = 2000;
+
 /**
  * Holds the canvas state. `emit` is the only way to change it: the event is
  * applied, the new state is saved, and every listener is told.
@@ -25,12 +37,23 @@ export class StateHub {
   /** The changes of a step that is being made and is not whole yet; null outside one. */
   private step: { event: ChangeEvent; revision: number }[] | null = null;
 
+  /**
+   * The last `RECENT_CHANGES` changes that were told, as a ring: the change numbered `n` is at `n % size`. It never
+   * grows, whoever reads it and however slowly.
+   */
+  private readonly recent: (ToldChange | undefined)[];
+  /** The number of the last change the listeners were told of. */
+  private told = 0;
+
   constructor(
     initial: AppState,
     private readonly store: Store,
     private readonly onSaveError: (error: unknown) => void = () => {},
+    /** How many recent changes are remembered. Another number than the usual one is for tests. */
+    remembered: number = RECENT_CHANGES,
   ) {
     this.current = initial;
+    this.recent = new Array<ToldChange | undefined>(Math.max(1, remembered));
   }
 
   get state(): AppState {
@@ -92,12 +115,39 @@ export class StateHub {
     this.telling = true;
     try {
       for (let next = this.untold.shift(); next !== undefined; next = this.untold.shift()) {
+        // Remembered before anyone is told: whoever starts listening in the same turn as it asks `since` gets every
+        // change from one or the other, and none from both.
+        this.recent[next.revision % this.recent.length] = next;
+        this.told = next.revision;
         for (const listener of [...this.listeners]) listener(next.event, next.revision);
       }
     } finally {
       this.telling = false;
       this.untold.length = 0;
     }
+  }
+
+  /** The number of the last change the listeners were told of. Outside a listener it is `revision`. */
+  get toldRevision(): number {
+    return this.told;
+  }
+
+  /**
+   * The changes told after the one numbered `revision`, oldest first, as a list of the caller's own: what it does
+   * with it, and how long it takes, holds up no change. `null` when that is further back than is remembered, or is
+   * a number no change here has had. Whoever calls `subscribe` in the same turn misses nothing and gets nothing twice.
+   */
+  since(revision: number): ToldChange[] | null {
+    if (!Number.isSafeInteger(revision) || revision < 0 || revision > this.told) return null;
+    if (this.told - revision > this.recent.length) return null;
+    const out: ToldChange[] = [];
+    for (let n = revision + 1; n <= this.told; n += 1) {
+      const kept = this.recent[n % this.recent.length];
+      // Cannot happen while changes are told in order; said rather than sent with a hole in it.
+      if (kept === undefined || kept.revision !== n) return null;
+      out.push(kept);
+    }
+    return out;
   }
 
   subscribe(listener: EventListener): () => void {

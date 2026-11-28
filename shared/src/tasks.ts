@@ -1,6 +1,8 @@
 import { z } from 'zod';
+import type { Session } from './entities';
 import { EnvironmentKindName } from './environment';
 import { Id } from './ids';
+import { terminalSentence } from './webhooks';
 import { PlainName, type Run } from './workflows';
 
 /**
@@ -298,7 +300,7 @@ export type Ask = z.infer<typeof Ask>;
 
 /* ---------- Rules: when something happens, do something ---------- */
 
-export const RuleEvent = z.enum(['task.done', 'task.failed', 'task.needs-owner', 'ask.added', 'schedule.fired', 'schedule.failed']);
+export const RuleEvent = z.enum(['task.done', 'task.failed', 'task.needs-owner', 'ask.added', 'schedule.fired', 'schedule.failed', 'terminal.waiting', 'terminal.finished', 'command.failed']);
 export type RuleEvent = z.infer<typeof RuleEvent>;
 export const RULE_EVENT_WORDS: Record<RuleEvent, string> = {
   'task.done': 'a task is done',
@@ -307,6 +309,9 @@ export const RULE_EVENT_WORDS: Record<RuleEvent, string> = {
   'ask.added': 'something is asked of you',
   'schedule.fired': 'a schedule fired',
   'schedule.failed': 'a schedule could not run or was missed',
+  'terminal.waiting': 'a terminal starts waiting for you',
+  'terminal.finished': 'an agent in a terminal finished',
+  'command.failed': 'a command failed in a terminal',
 };
 export const RULES_MAX = 50;
 /** How often one rule may fire in a minute. What comes after that is dropped, and said in the activity log. */
@@ -324,6 +329,11 @@ export const Rule = z.object({
   action: RuleAction,
   /** False: it is kept and does nothing. A rule that came in a project file arrives so, until the owner switches it on. */
   on: z.boolean().default(true),
+  /**
+   * Why it cannot do what it says, while that lasts: the webhook it names is not in the settings, or could not be
+   * sent. Fixed words and that name; set by the server, never by a request. Null: nothing is known to be wrong.
+   */
+  problem: z.string().max(300).nullable().default(null),
   createdAt: Timestamp,
 });
 export type Rule = z.infer<typeof Rule>;
@@ -336,6 +346,10 @@ export interface Occasion {
   sentence: string;
   taskId: string | null;
   askId: string | null;
+  /** The terminal it happened in, for what happens to a terminal. */
+  sessionId?: string | null;
+  /** The schedule it is about, for what happens to a schedule. */
+  scheduleId?: string | null;
   /** The project it happened in. A rule hears only what happens in its own. */
   projectId: string;
 }
@@ -344,6 +358,20 @@ export interface Occasion {
 export function occasionOfTask(task: Task, event: 'task.done' | 'task.failed' | 'task.needs-owner'): Occasion {
   const what = event === 'task.done' ? 'is done' : event === 'task.failed' ? `failed${task.reason ? `: ${task.reason}` : ''}` : `needs you${task.reason ? `: ${task.reason}` : ''}`;
   return { id: `${event} ${task.id} ${task.updatedAt}`, event, sentence: `The task “${task.title}” ${what}`.slice(0, 500), taskId: task.id, askId: null, projectId: task.projectId };
+}
+
+/** What happens to a terminal that a rule can hear. */
+export type TerminalRuleEvent = 'terminal.waiting' | 'terminal.finished' | 'command.failed';
+
+/**
+ * The sentence for something that happened to a terminal: fixed words and the terminal's name, nothing else. Not what
+ * its agent said, not the command that failed, not what it printed: those are what the terminal showed. `nth` tells
+ * one happening from the next of the same kind in the same terminal.
+ */
+export function occasionOfTerminal(session: Pick<Session, 'id' | 'name' | 'projectId'>, event: TerminalRuleEvent, nth: number): Occasion {
+  // A name is one line of plain text by its schema; what an older file may still hold is taken out there.
+  const sentence = terminalSentence(session.name, event);
+  return { id: `${event} ${session.id} ${nth}`, event, sentence, taskId: null, askId: null, sessionId: session.id, projectId: session.projectId };
 }
 
 /* ---------- The queue, as the state keeps it ---------- */

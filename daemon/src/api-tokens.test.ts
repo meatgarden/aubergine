@@ -392,6 +392,7 @@ describe('every route has a rule', () => {
     'PATCH /v1/rules/:ruleId',
     'GET /v1/projects/:projectId/file',
     'POST /v1/project-files/read',
+    'POST /v1/projects/:projectId/file/compare',
     'POST /v1/project-files/import',
     'GET /v1/project-templates',
     'GET /v1/project-templates/:templateId',
@@ -713,7 +714,8 @@ describe('a script with a token', () => {
     expect(stream.statusCode).toBe(200);
     expect(stream.headers['content-type']).toContain('text/event-stream');
     stream.setEncoding('utf8');
-    stream.on('data', (chunk: string) => lines.push(...chunk.split('\n').filter((line) => line.startsWith('data: '))));
+    // Every connection begins with `hello`, which is not a change: this reads the changes.
+    stream.on('data', (chunk: string) => lines.push(...chunk.split('\n').filter((line) => line.startsWith('data: ') && !line.startsWith('data: {"type":"hello"'))));
     const until = async (check: () => boolean): Promise<void> => {
       for (let i = 0; i < 100 && !check(); i++) await new Promise((resolve) => setTimeout(resolve, 20));
       expect(check()).toBe(true);

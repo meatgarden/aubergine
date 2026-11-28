@@ -275,6 +275,8 @@ describe('the client against a real server', () => {
     const reading = (async () => {
       try {
         for await (const event of client.streamEvents({ signal: stop.signal })) {
+          // Every connection begins with `hello`, which is not a change.
+          if (event.type === 'hello') continue;
           seen.push(event.type);
           if (seen.length === 2) break;
         }

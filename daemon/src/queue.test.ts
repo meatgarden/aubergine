@@ -460,7 +460,7 @@ describe('rules', () => {
     const made = await asOwner('POST', '/v1/rules', { event: 'task.done', action: { kind: 'notify' } });
     expect(made.status, JSON.stringify(made.body)).toBe(201);
     expect(made.body.rules.map((r: { says: string }) => r.says)).toEqual(['When a task is done, notify me in the open page.']);
-    expect(made.body.actions.map((a: { kind: string }) => a.kind)).toEqual(['notify', 'run-element']);
+    expect(made.body.actions.map((a: { kind: string }) => a.kind)).toEqual(['notify', 'run-element', 'webhook']);
     const task = await add('Ship it');
     await startNext();
     expect(notified).toEqual([]);
@@ -526,6 +526,205 @@ describe('rules', () => {
     // When that run is over, the mark goes with it.
     await finish(helper);
     await until(() => queueNow().ruleRuns.length === 0);
+  });
+});
+
+describe('rules that hear a terminal', () => {
+  const rulesNow = () => activity.entries.filter((entry) => entry.caller === 'rule').map((entry) => [entry.action, entry.route, entry.status, entry.outcome, entry.resource.sessionId]);
+  const MARKER = 'MARKER-7f3a';
+  /** What its agent says of itself, through the session's own route. */
+  const says = async (session: Session, state: string, message?: string): Promise<void> => {
+    expect((await asSession(session, 'PUT', `/v1/sessions/${session.id}/attention`, { state, ...(message ? { message } : {}) })).status).toBe(200);
+  };
+  /** What the shell integration reports of a command that ended: the command line is what the terminal showed. */
+  let minute = 0;
+  const commandEnded = (session: Session, exit: number): void => {
+    minute += 1;
+    hub.emit({ type: 'session.status', sessionId: session.id, status: { ...NO_STATUS, state: 'idle', commandLine: `curl ${MARKER}`, lastExit: exit, lastFinishedAt: `2026-03-10T10:${String(minute).padStart(2, '0')}:00.000Z` } });
+  };
+  const sameReportAgain = (session: Session): void => hub.emit({ type: 'session.status', sessionId: session.id, status: { ...hub.state.sessions.find((s) => s.id === session.id)!.status, unread: true } });
+  const quiet = (): Promise<void> => new Promise((resolve) => setTimeout(resolve, 150));
+  const hearAll = async (more: object = {}): Promise<void> => {
+    for (const event of ['terminal.waiting', 'terminal.finished', 'command.failed']) expect((await asOwner('POST', '/v1/rules', { event, action: { kind: 'notify' }, ...more })).status).toBe(201);
+  };
+
+  it('fire once for one happening, not again while it lasts, and again once it ended and began again; nothing a terminal showed is in what they say or in the record', async () => {
+    const login = agent('Fix login');
+    const tests = fakeSession('Tests');
+    await hearAll();
+    expect((await asOwner('GET', '/v1/rules')).body.rules.map((r: { says: string }) => r.says)).toEqual(['When a terminal starts waiting for you, notify me in the open page.', 'When an agent in a terminal finished, notify me in the open page.', 'When a command failed in a terminal, notify me in the open page.']);
+
+    // It starts waiting: once. Still waiting, in other words: nothing more.
+    await says(login, 'waiting', `Which branch? ${MARKER}`);
+    await until(() => notified.length === 1);
+    await says(login, 'waiting', `Well? ${MARKER}`);
+    await quiet();
+    expect(notified).toEqual(['The terminal “Fix login” is waiting for you']);
+    // It stopped waiting and waits again: a second happening.
+    await says(login, 'working');
+    await says(login, 'waiting', MARKER);
+    await until(() => notified.length === 2);
+    expect(notified[1]).toBe('The terminal “Fix login” is waiting for you');
+
+    // Its agent finishes: once, however often it says so; and again after it worked again.
+    await says(login, 'done', `All green. ${MARKER}`);
+    await until(() => notified.length === 3);
+    await says(login, 'done', `Still green. ${MARKER}`);
+    await quiet();
+    expect(notified.slice(2)).toEqual(['The terminal “Fix login” finished']);
+    await says(login, 'working');
+    await says(login, 'done');
+    await until(() => notified.length === 4);
+    expect(notified[3]).toBe('The terminal “Fix login” finished');
+
+    // A command that ends well is nothing. One that fails is told once, whatever is reported of that prompt afterwards; the next failure is another.
+    commandEnded(tests, 0);
+    await quiet();
+    expect(notified).toHaveLength(4);
+    commandEnded(tests, 2);
+    await until(() => notified.length === 5);
+    sameReportAgain(tests);
+    sameReportAgain(tests);
+    await quiet();
+    expect(notified.slice(4)).toEqual(['A command failed in the terminal “Tests”']);
+    commandEnded(tests, 1);
+    await until(() => notified.length === 6);
+
+    // The record of each firing: the rule, the event, the terminal, how it ended.
+    await until(() => rulesNow().length === 6);
+    expect(rulesNow()).toEqual([
+      ['rule.notify', 'terminal.waiting', 200, 'ok', login.id],
+      ['rule.notify', 'terminal.waiting', 200, 'ok', login.id],
+      ['rule.notify', 'terminal.finished', 200, 'ok', login.id],
+      ['rule.notify', 'terminal.finished', 200, 'ok', login.id],
+      ['rule.notify', 'command.failed', 200, 'ok', tests.id],
+      ['rule.notify', 'command.failed', 200, 'ok', tests.id],
+    ]);
+    // Nothing the terminals showed: not the command that failed, not what the agent said, not an exit code.
+    expect(JSON.stringify([notified, activity.entries])).not.toContain(MARKER);
+    expect(JSON.stringify([notified, activity.entries])).not.toContain('curl');
+    expect(JSON.stringify(activity.entries)).not.toContain('Fix login');
+    expect(notified.join(' ')).not.toMatch(/exit|\d/);
+  });
+
+  it('make no difference of people only, and a step they run is told the same fixed words on the terminal the rule names', async () => {
+    const closed = agent('Closed', { peopleOnly: true });
+    const helper = agent('helper');
+    const element = await asOwner('POST', '/v1/elements', { name: 'Look into it', instructions: 'Look into this: {{task}}' });
+    expect((await asOwner('POST', '/v1/rules', { event: 'command.failed', action: { kind: 'run-element', elementId: element.body.id, on: { kind: 'session', sessionId: helper.id } } })).body.rules[0].says).toBe('When a command failed in a terminal, run “Look into it” on “helper”.');
+    commandEnded(closed, 3);
+    await until(() => hub.state.runs.length === 1);
+    // On the terminal the rule names, never on the one that was heard; and told that a command failed, not which.
+    expect(hub.state.runs[0]).toMatchObject({ sessionId: helper.id, inputs: { task: 'A command failed in the terminal “Closed”' } });
+    expect(typed).toEqual([[helper.id, KICKOFF_LINE]]);
+    expect(JSON.stringify([hub.state.runs, hub.state.queue, activity.entries])).not.toContain(MARKER);
+  });
+
+  it('cannot set themselves off: a terminal on a run a rule started is not heard, nor afterwards until it was given something new', async () => {
+    const helper = agent('helper');
+    const other = agent('other');
+    const element = await asOwner('POST', '/v1/elements', { name: 'Tell the calendar', instructions: 'Put this in the calendar: {{task}}' });
+    // Whenever any agent finishes, a step runs on the helper. The helper finishing must not start it again.
+    await asOwner('POST', '/v1/rules', { event: 'terminal.finished', action: { kind: 'run-element', elementId: element.body.id, on: { kind: 'session', sessionId: helper.id } } });
+    await hearAll();
+    await says(other, 'done');
+    await until(() => hub.state.runs.length === 1);
+    const run = hub.state.runs[0]!;
+    await until(() => queueNow().ruleRuns.includes(run.id) && notified.length === 1);
+    expect(notified).toEqual(['The terminal “other” finished']);
+    await until(() => rulesNow().length === 2);
+
+    // On that run the helper asks, has a command fail, and says it finished: none of it is heard.
+    await says(helper, 'working');
+    await says(helper, 'waiting', 'May I?');
+    await says(helper, 'working');
+    commandEnded(helper, 1);
+    await says(helper, 'done');
+    await quiet();
+    expect(notified).toHaveLength(1);
+    expect(hub.state.runs.map((r) => r.id)).toEqual([run.id]);
+
+    // The run is over and the mark gone. The agent then ends its turn: still because of that run, still not heard.
+    await says(helper, 'working');
+    await finish(helper);
+    await until(() => queueNow().ruleRuns.length === 0 && hub.state.runs.length === 0);
+    await says(helper, 'done');
+    await says(helper, 'waiting', 'Anything else?');
+    commandEnded(helper, 1);
+    await says(helper, 'done');
+    await quiet();
+    expect(notified).toHaveLength(1);
+    expect(hub.state.runs).toEqual([]);
+    expect(rulesNow()).toHaveLength(2);
+
+    // It is given something new (it no longer waits or says finished): from now on it is heard like any other.
+    await says(helper, 'working');
+    await says(helper, 'waiting', 'Which room?');
+    await until(() => notified.length === 2);
+    expect(notified[1]).toBe('The terminal “helper” is waiting for you');
+  });
+
+  it('are per project: a rule hears the terminals of its own project, and an archived project says nothing', async () => {
+    const mine = agent('mine');
+    const made = await asOwner('POST', '/v1/projects', { name: 'Second' });
+    expect(made.status, JSON.stringify(made.body)).toBe(201);
+    const second = made.body.id as string;
+    const canvasId = hub.state.canvases.find((c) => c.projectId === second)!.id;
+    const theirs: Session = { ...mine, id: newId(), name: 'theirs', projectId: second };
+    hub.emit({ type: 'session.created', session: theirs, canvasId, node: { id: newId(), sessionId: theirs.id, x: 0, y: 0, width: 640, height: 400, color: 'none' } });
+    // The first project's rules hear nothing of the second's terminal.
+    await hearAll();
+    await says(theirs, 'waiting', 'Hello?');
+    await says(theirs, 'done');
+    commandEnded(theirs, 1);
+    await quiet();
+    expect(notified).toEqual([]);
+    expect(rulesNow()).toEqual([]);
+    // The second project's own rule hears it, and not the first's terminal.
+    expect((await asOwner('POST', '/v1/rules', { projectId: second, event: 'terminal.waiting', action: { kind: 'notify' } })).status).toBe(201);
+    await says(theirs, 'waiting', 'Hello?');
+    await until(() => notified.length === 1);
+    await says(mine, 'waiting');
+    await until(() => notified.length === 2);
+    await until(() => rulesNow().length === 2);
+    expect(notified).toEqual(['The terminal “theirs” is waiting for you', 'The terminal “mine” is waiting for you']);
+    // Archived: its terminal may still change, and nothing is said or recorded.
+    expect((await asOwner('POST', `/v1/projects/${second}/archive`, { sessions: 'park' })).body.state).toBe('archived');
+    hub.emit({ type: 'session.attention', sessionId: theirs.id, attention: NO_ATTENTION });
+    hub.emit({ type: 'session.attention', sessionId: theirs.id, attention: { state: 'waiting', message: null, at: new Date().toISOString() } });
+    await quiet();
+    expect(notified).toHaveLength(2);
+    expect(rulesNow()).toHaveLength(2);
+  });
+
+  it('are bounded in rate like every rule, and a rule that is off hears nothing', async () => {
+    const made = await asOwner('POST', '/v1/rules', { event: 'terminal.waiting', action: { kind: 'notify' } });
+    const terminals = Array.from({ length: RULE_RATE_PER_MINUTE + 3 }, (_, n) => agent(`Agent ${String.fromCharCode(97 + n)}`));
+    for (const terminal of terminals) await says(terminal, 'waiting');
+    await until(() => rulesNow().length === RULE_RATE_PER_MINUTE + 3);
+    expect(notified).toHaveLength(RULE_RATE_PER_MINUTE);
+    expect(rulesNow().filter(([, , status, outcome]) => status === 429 && outcome === 'limited')).toHaveLength(3);
+    // Switched off, it is kept and hears nothing.
+    await asOwner('PATCH', `/v1/rules/${made.body.rules[0].id}`, { on: false });
+    await says(terminals[0]!, 'working');
+    await says(terminals[0]!, 'waiting');
+    await quiet();
+    expect(rulesNow()).toHaveLength(RULE_RATE_PER_MINUTE + 3);
+  });
+
+  it('do not take a terminal that already waits when the server starts for one that starts to wait', async () => {
+    const one = agent('one');
+    await hearAll();
+    await says(one, 'waiting');
+    commandEnded(one, 1);
+    await until(() => notified.length === 2);
+    await stop();
+    await start();
+    // The same state is reported again after the start: no happening.
+    hub.emit({ type: 'session.attention', sessionId: one.id, attention: hub.state.sessions.find((s) => s.id === one.id)!.attention });
+    sameReportAgain(one);
+    await quiet();
+    expect(notified).toHaveLength(2);
   });
 });
 
@@ -675,7 +874,7 @@ describe('the commands', () => {
     expect(() => parseRuleCommand(['add', '--when', 'task.done', '--run', 'x'])).toThrow(/needs where/);
     // A wrong option, a wrong event, a stray word: each answer gives the right form and one that works.
     for (const wrong of [['add', '--when', 'task.done', '--notfy'], ['add', '--when', 'task.finished', '--notify'], ['add', '--notify'], ['add', '--when', 'task.done', '--notify', 'please'], ['add', '--on', 'task.done', '--notify']]) {
-      expect(() => parseRuleCommand(wrong), wrong.join(' ')).toThrow(/The form is:\n {2}aubergine rule add --when <event> \(--notify \| --run <shelf element> \(--on <terminal> \| --new <canvas>\)\)\nwhere <event> is one of: task\.done, .*\nFor example:\n {2}aubergine rule add --when task\.done --notify$/s);
+      expect(() => parseRuleCommand(wrong), wrong.join(' ')).toThrow(/The form is:\n {2}aubergine rule add --when <event> \(--notify \| --webhook <name> \| --run <shelf element> \(--on <terminal> \| --new <canvas>\)\)\nwhere <event> is one of: task\.done, .*\nFor example:\n {2}aubergine rule add --when task\.done --notify$/s);
     }
     expect(() => parseRuleCommand(['add', '--when', 'task.done', '--notfy'])).toThrow(/^rule add does not know --notfy\./);
     expect(USAGE).toContain('For example: aubergine rule add --when task.done --notify');

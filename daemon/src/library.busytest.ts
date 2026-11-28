@@ -228,8 +228,11 @@ describe('what comes with the app', () => {
       ['check-before-done', 'A step', 'available', null],
       ['list-open-questions', 'A step', 'available', null],
       ['hand-over', 'A step', 'available', null],
+      ['check-for-drift', 'A step', 'available', null],
+      ['describe-this-stack', 'A step', 'available', null],
       ['reproduce-fix-verify', 'A workflow', 'available', null],
       ['read-and-report', 'A workflow', 'available', null],
+      ['plan-review-apply', 'A workflow', 'available', null],
     ]);
     for (const item of items) {
       const detail = await detailOf(source!.id, item.id);
@@ -245,6 +248,48 @@ describe('what comes with the app', () => {
     const workflow = await install(source!.id, 'reproduce-fix-verify');
     expect(hub.state.workflows.find((w) => w.id === workflow.target.workflowId)?.versions[0]?.elements.map((e) => e.name)).toEqual(['Reproduce', 'Find the cause', 'Agree on the cause', 'Fix', 'Verify']);
     expect((await asOwner('POST', '/v1/runs', { workflowId: workflow.target.workflowId, sessionId: agentSession('runner').id, inputs: { task: 'the login bug' }, kickoff: false })).status).toBe(201);
+  });
+
+  it('the three for infrastructure as code: a plan that stops for a person before anything is applied, a drift check that never applies, a description of a stack', async () => {
+    const [source] = sourcesNow();
+    // The workflow: its third step is the kind that waits for a person, between the plan and the apply.
+    const workflow = await install(source!.id, 'plan-review-apply');
+    const steps = hub.state.workflows.find((w) => w.id === workflow.target.workflowId)!.versions[0]!.elements;
+    expect(steps.map((step) => [step.name, step.kind, step.produces])).toEqual([
+      ['Say what will change', 'instructions', 'note'],
+      ['Make the plan', 'instructions', 'note'],
+      ['Review the plan', 'approval', 'note'],
+      ['Apply the reviewed plan', 'instructions', 'note'],
+      ['Check and report', 'instructions', 'note'],
+    ]);
+    expect(steps[2]!.ask).toContain('This is a checkpoint for you, not a lock: the agent runs with your cloud access.');
+    // Every step an agent reads says the three things it must never do.
+    const drift = await install(source!.id, 'check-for-drift');
+    const describing = await install(source!.id, 'describe-this-stack');
+    const saved = [drift, describing].map((made) => hub.state.shelf.find((e) => e.id === made.target.shelfId)!.element);
+    expect(saved.map((step) => [step.name, step.produces])).toEqual([
+      ['Check for drift', 'checklist'],
+      ['Describe this stack', 'note'],
+    ]);
+    for (const step of [...steps.filter((one) => one.kind === 'instructions'), ...saved]) {
+      expect(step.instructions, step.name).toMatch(/never print, copy or store a credential/);
+      expect(step.instructions, step.name).toMatch(/never widen a permission, a role or a policy to get past an error/);
+      expect(step.instructions, step.name).toMatch(/report blocked and ask|do not: say that it is not known/);
+      expect(step.instructions, step.name).not.toMatch(/\belement\b/);
+    }
+    expect(saved[0]!.instructions).toMatch(/must never apply/);
+    expect(saved[1]!.instructions).toMatch(/Do not give prices or totals/);
+    // What each needs is said before a run, and nothing is said to be installed.
+    expect(steps[1]!.needs.map((need) => need.kind)).toEqual(['command', 'access']);
+    expect(saved[0]!.needs.find((need) => need.kind === 'access')?.note).toMatch(/read-only profile/);
+    // In the list: the approval is called what it is, and a read-only profile is advised.
+    const listed = await itemsOf(source!.id);
+    expect(listed.find((item) => item.id === 'plan-review-apply')?.description).toMatch(/a checkpoint for you, not a lock: the agent runs with your cloud access\. Give it a read-only profile for planning\./);
+    expect(listed.find((item) => item.id === 'check-for-drift')?.description).toMatch(/It never applies\..*read-only profile/);
+    // It starts like any other workflow.
+    const session = agentSession('planner');
+    const started = await asOwner('POST', '/v1/runs', { workflowId: workflow.target.workflowId, sessionId: session.id, inputs: { task: 'a second subnet' }, kickoff: false });
+    expect(started.status).toBe(201);
   });
 });
 
@@ -865,7 +910,7 @@ describe('the commands', () => {
     const added = await library(['add', 'my-library', '--name', 'Mine']);
     expect(added.code).toBe(0);
     expect(added.out).toMatch(/^Mine {2}\(folder: .*my-library\)\n {2}2 items; last read /);
-    expect((await library(['sources'])).out).toMatch(/Comes with Aubergine {2}\(comes with Aubergine\)\n {2}6 items/);
+    expect((await library(['sources'])).out).toMatch(/Comes with Aubergine {2}\(comes with Aubergine\)\n {2}9 items/);
     const listed = (await library(['list'])).out;
     expect(listed).toMatch(/ship-a-change +a workflow, version 2, from "Mine": Ship a Change!\. Ships a change\.\n +not installed/);
     const shown = await library(['show', 'tidy-up']);

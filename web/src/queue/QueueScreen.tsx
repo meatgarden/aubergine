@@ -98,13 +98,14 @@ export function TaskRow({ task, waiting, onMove, onDropOn }: { task: Task; waiti
 }
 
 export function Rules() {
-  const count = useApp((s) => s.app?.queue.rules.length ?? 0);
+  // How many rules there are, and what each says is wrong with it: either changes what the list says.
+  const count = useApp((s) => (s.app?.queue.rules ?? []).map((rule) => `${rule.id} ${rule.problem ?? ''}`).join('\n'));
   const [list, setList] = useState<RuleList | null>(null);
   const [event, setEvent] = useState<RuleEvent>('task.done');
   const [action, setAction] = useState<RuleAction>({ kind: 'notify' });
   const [error, setError] = useState<string | null>(null);
   const [notify, setNotify] = useState(notificationsWanted);
-  // Read when the screen opens and when the number of rules changes: the sentences are the server's.
+  // Read when the screen opens and when the rules change: the sentences are the server's.
   useEffect(() => {
     let cancelled = false;
     void api.listRules().then(
@@ -122,7 +123,17 @@ export function Rules() {
       <ul>
         {(list?.rules ?? []).map((rule) => (
           <li key={rule.id} data-testid="rule-row" data-on={rule.on}>
-            <span>{rule.says}</span>
+            <span>
+              {rule.says}
+              {rule.problem && (
+                <>
+                  <br />
+                  <span className="dialog-error" data-testid="rule-problem">
+                    {rule.problem}
+                  </span>
+                </>
+              )}
+            </span>
             <label title="A rule that is off is kept and does nothing. A rule that came in a project file arrives off.">
               <input type="checkbox" checked={rule.on} aria-label={`The rule is switched on: ${rule.says}`} onChange={(e) => void api.switchRule(rule.id, e.target.checked).then((found) => setList(found as RuleList), (error: unknown) => setError((error as Error).message))} data-testid="rule-on" /> On
             </label>

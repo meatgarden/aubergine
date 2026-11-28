@@ -1,16 +1,28 @@
 import { z } from 'zod';
-import { Id, RULE_EVENT_WORDS, type AppState, type Occasion, type Rule, type RuleAction } from '@aubergine/shared';
+import { Id, RULE_EVENT_WORDS, WebhookName, type AppState, type Occasion, type Rule, type RuleAction } from '@aubergine/shared';
 
 /**
  * Kinds of action a rule can take. Registered, like kinds of element and
  * kinds of environment: nothing that stores, lists or fires a rule knows an
- * action by name. Two kinds today, and neither reaches outside this
- * computer by Aubergine's own hand: a notification in the open page, and a
- * run of one shelf element on a terminal, whose agent uses its own tools.
+ * action by name. Three kinds today: a notification in the open page, a
+ * run of one shelf element on a terminal, whose agent uses its own tools,
+ * and a webhook: a small signed message to an address the owner wrote into
+ * the settings file by hand, which the rule names by its name only. That
+ * last one is the only thing here that reaches outside this computer by
+ * Aubergine's own hand, and it does so through one module
+ * (`webhooks/send.ts`).
  *
- * Not here, on purpose: an action that calls an address, and one that runs
- * a command.
+ * Not here, on purpose: an action that takes an address of its own, and one
+ * that runs a command.
  */
+
+/** How an action ended, for the record: a few words, or those with the status and the webhook's name where it has them. */
+export type ActionDone = string | { says: string; status: number; outcome: 'ok' | 'error'; webhook?: string };
+
+/** What an action may name that is not in the state: the names of the webhooks in the settings file. */
+export interface ActionKnown {
+  webhooks: readonly string[];
+}
 
 /** What an action is given to work with. It cannot type, and cannot reach anything but these. */
 export interface ActionContext {
@@ -19,6 +31,11 @@ export interface ActionContext {
   notify(title: string, body: string): number;
   /** Starts a run of one shelf element, by the existing start. Returns the run's ID. */
   runElement(elementId: string, on: { kind: 'session'; sessionId: string } | { kind: 'new'; canvasId: string }, task: string): Promise<string>;
+  /**
+   * Sends the webhook of that name one message about what happened: once, with a body made of IDs, names and fixed
+   * words. The action gives a name and nothing else: not an address, not a word of the message.
+   */
+  sendWebhook(name: string, occasion: Occasion): Promise<ActionDone>;
 }
 
 export interface ActionKind {
@@ -30,8 +47,17 @@ export interface ActionKind {
   problem(action: RuleAction, state: AppState): string | null;
   /** The action in words, as part of "When …, …". */
   words(action: RuleAction, state: AppState): string;
+  /** The name of what the action names outside the state (a webhook's name), for the record of a firing; undefined when it names nothing. */
+  named?(action: RuleAction): string | undefined;
+  /** What the action names outside the state that is not there, in a sentence that stands by itself; null when nothing is missing. */
+  missing?(action: RuleAction, known: ActionKnown): string | null;
+  /**
+   * True for an action that waits on something outside this computer. It is not put in the line the other actions
+   * and the starting of tasks wait in: a receiver that is slow holds up nothing but its own message.
+   */
+  apart?: boolean;
   /** Does it. Returns what it did, in a few words, for the record. */
-  run(action: RuleAction, occasion: Occasion, context: ActionContext): Promise<string>;
+  run(action: RuleAction, occasion: Occasion, context: ActionContext): Promise<ActionDone>;
 }
 
 const kinds = new Map<string, ActionKind>();
@@ -94,4 +120,30 @@ registerActionKind({
     const runId = await context.runElement(parsed.elementId, parsed.on, occasion.sentence);
     return `started run ${runId}`;
   },
+});
+
+const Webhook = z.object({ kind: z.literal('webhook'), webhook: WebhookName });
+
+/** Why a rule's webhook cannot be sent because it is not among those the server took at its start. Fixed words and the name the owner wrote. */
+export const webhookMissingWords = (name: string): string => `There is no webhook named “${name}” that can be used, so the rule that names it sends nothing. Either none is written under "webhooks" in config.json, or its entry was refused when the server started: aubergine doctor says which.`;
+
+registerActionKind({
+  kind: 'webhook',
+  title: 'Send a webhook',
+  says: 'Sends one small signed message to an address you wrote into the settings file under a name. It says what happened, where and when: IDs, names and fixed words, never what a terminal showed or a task said. One attempt, no second.',
+  apart: true,
+  problem: (action) => (Webhook.safeParse(action).success ? null : 'Say which webhook to send, by the name it has in the settings file.'),
+  missing: (action, known) => {
+    const parsed = Webhook.safeParse(action);
+    return parsed.success && !known.webhooks.includes(parsed.data.webhook) ? webhookMissingWords(parsed.data.webhook) : null;
+  },
+  named: (action) => {
+    const parsed = Webhook.safeParse(action);
+    return parsed.success ? parsed.data.webhook : undefined;
+  },
+  words: (action) => {
+    const parsed = Webhook.safeParse(action);
+    return parsed.success ? `send the webhook “${parsed.data.webhook}”` : 'send a webhook';
+  },
+  run: (action, occasion, context) => context.sendWebhook(Webhook.parse(action).webhook, occasion),
 });

@@ -1,7 +1,7 @@
 import { FileTaskArchive } from './task-archive';
 import { mkdir, stat } from 'node:fs/promises';
 import path from 'node:path';
-import { SESSION_ENV, paths } from '@aubergine/shared';
+import { SESSION_ENV, paths, webhookEntries, webhooksShown } from '@aubergine/shared';
 import { ghFinder } from './found/pull-request';
 import { AgentTools } from './agents/agent-tools';
 import { claudeLaunchLine, claudeSettingsFile, writeClaudeSettings } from './agents/claude-code';
@@ -17,6 +17,7 @@ import { StateHub } from './state-hub';
 import { loadConfig } from './config';
 import { TmuxRuntime, shellEnvironment } from './runtime/tmux-runtime';
 import { buildServer } from './server';
+import { FetchWebhookSender } from './webhooks/send';
 import { openBrowser } from './cli/open-browser';
 import { readClaudeSession } from './migrate/claude-sessions';
 import { systemProcesses } from './migrate/move';
@@ -137,6 +138,8 @@ async function main(): Promise<void> {
     setAppearance: (change) => settings.setAppearance(change),
     setDescribeRemind: (value) => settings.setDescribeRemind(value),
     pullRequests: ghFinder(),
+    // The one thing that sends a rule's webhook: to the addresses of the settings file, as they were read above.
+    webhookSender: new FetchWebhookSender(),
     runArchive: new FileRunArchive(config.dataDir, (error) => console.warn(`Could not write the archive of runs: ${String(error)}`)),
     version: versionInfo(installRoot(), config).version,
   });
@@ -164,6 +167,9 @@ async function main(): Promise<void> {
   const base = config.devOrigin ?? `http://127.0.0.1:${port}`;
   console.log(`Aubergine is running at ${base}`);
   console.log(`Data folder: ${config.dataDir}`);
+  // Where a rule may send a webhook, by name and host. What is wrong with an entry was said when the settings were read.
+  const hooks = webhooksShown(webhookEntries(settings.value.webhooks).entries);
+  if (hooks.length > 0) console.log(`Webhooks a rule may send: ${hooks.map((hook) => `${hook.name} (${hook.host})`).join(', ')}`);
   console.log(`First visit in a browser? Open this link once:\n  ${base}${paths.auth}?token=${token}`);
   // Started with `--open` (as `pnpm start` does): the browser is opened on that link, signed in. Never otherwise:
   // the login service, `aubergine start` and the browser tests start this file without it.

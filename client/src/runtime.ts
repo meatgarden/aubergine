@@ -85,7 +85,19 @@ export interface CallOptions {
   idempotencyKey?: string;
 }
 
-type Args = Record<string, unknown> & { query?: Record<string, unknown>; body?: unknown } & CallOptions;
+/**
+ * What may be passed to a call that follows a stream, so that a program that was cut off can go on where it was.
+ * The server remembers its most recent changes only, and only while it runs: when it cannot go on from there, the
+ * first thing it sends is an event of type `reset`, and the lists are to be read again.
+ */
+export interface StreamOptions {
+  /** The `id` of the last event taken before, exactly as `onEventId` gave it. The changes made since are sent first. */
+  lastEventId?: string;
+  /** Called with the `id` of each event after it was handed over. Keep the last one; it is opaque. */
+  onEventId?: (id: string) => void;
+}
+
+type Args = Record<string, unknown> & { query?: Record<string, unknown>; body?: unknown } & CallOptions & StreamOptions;
 
 function addressOf(base: string, info: OperationInfo, args: Args): string {
   let path = info.path;
@@ -129,6 +141,7 @@ export function requester(options: ClientOptions): {
     if (options.token) headers.authorization = `Bearer ${options.token}`;
     if (info.hasBody && args.body !== undefined) headers['content-type'] = 'application/json';
     if (info.idempotent && args.idempotencyKey) headers['idempotency-key'] = args.idempotencyKey;
+    if (info.stream && args.lastEventId) headers['last-event-id'] = args.lastEventId;
     // Worked out before the request: a missing parameter is the caller's mistake, not the network's.
     const address = addressOf(base, info, args);
     let response: Response;
@@ -161,16 +174,26 @@ export function requester(options: ClientOptions): {
     },
 
     // Server-sent events: each `data:` line is one JSON object. Lines that start with `:` only keep the connection open.
+    // An `id:` line names the event it is in; it is told to `onEventId` at the event's end, after its data was handed over.
     stream: async function* (info, args) {
       const response = await send(info, args, 'text/event-stream');
       if (!response.body) return;
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
       let pending = '';
+      let id: string | null = null;
+      // Stopping ends the reading by this client's own hand: the signal given to `fetch` was seen not to end
+      // a body that is being read, in a process that had run for a while.
+      const stopped = (): void => void reader.cancel().catch(() => {});
+      args.signal?.addEventListener('abort', stopped, { once: true });
       try {
         for (;;) {
           const { done, value } = await reader.read();
-          if (done) return;
+          if (done) {
+            // Stopped by the caller: said as it always was, whichever of the two ended the reading.
+            if (args.signal?.aborted) throw args.signal.reason;
+            return;
+          }
           pending += decoder.decode(value, { stream: true });
           let end = pending.indexOf('\n');
           while (end >= 0) {
@@ -182,11 +205,18 @@ export function requester(options: ClientOptions): {
               } catch {
                 // A line this client cannot read: skip it rather than end the stream.
               }
+            } else if (line.startsWith('id:')) {
+              id = line.slice(3).replace(/^ /, '');
+            } else if (line === '' && id !== null) {
+              const ended = id;
+              id = null;
+              args.onEventId?.(ended);
             }
             end = pending.indexOf('\n');
           }
         }
       } finally {
+        args.signal?.removeEventListener('abort', stopped);
         await reader.cancel().catch(() => {});
       }
     },

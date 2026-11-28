@@ -26,8 +26,9 @@
     "generate": "pnpm --filter @aubergine/daemon exec tsx scripts/generate-api.ts",
     "site": "node scripts/site.mjs",
     "site:test": "node --test scripts/site.test.mjs",
+    "examples:test": "node --test examples/events/sse.test.mjs examples/webhooks/receive.test.mjs",
     "test:install": "pnpm --filter @aubergine/daemon test:install",
-    "check": "pnpm typecheck && pnpm lint && pnpm shellcheck && pnpm generate --check && pnpm site --check && pnpm site:test && pnpm test && pnpm test:install && pnpm e2e"
+    "check": "pnpm typecheck && pnpm lint && pnpm shellcheck && pnpm generate --check && pnpm site --check && pnpm site:test && pnpm examples:test && pnpm test && pnpm test:install && pnpm e2e"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

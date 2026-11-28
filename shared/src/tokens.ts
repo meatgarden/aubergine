@@ -185,6 +185,8 @@ export const ActivityEntry = z.object({
   fingerprint: z.string().max(32).nullable().default(null),
   /** What the calling program said it was (`mcp/0.1.0`), when it said so. Its own word, not checked. */
   client: z.string().max(64).nullable().default(null),
+  /** For a rule that sends a webhook: the webhook's name. Never its address, its secret or what was sent. */
+  webhook: z.string().max(40).nullable().optional(),
   /** What was asked for, as `authorize` names it; empty when the call never got that far. */
   action: z.string(),
   resource: z.object({ sessionId: z.string().optional(), canvasId: z.string().optional() }),

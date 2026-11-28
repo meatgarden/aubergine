@@ -3552,6 +3552,12 @@ test('one look: the canvas page and every screen use the two control heights (an
   await look('the Rules part of the queue', 'queue-rules', async () => {
     await openPage(page, 'queue');
     await page.getByTestId('queue-tab-rules').click();
+    // What a rule can hear is all in the one picker, what happens to a terminal included.
+    await expect(page.getByTestId('rule-event').locator('option')).toContainText(['a terminal starts waiting for you', 'an agent in a terminal finished', 'a command failed in a terminal']);
+    // Sending a webhook is one of the things a rule can do. This server has none written, so where the choice would be it says where they are written.
+    await page.getByTestId('rule-action').selectOption('webhook');
+    await expect(page.getByTestId('rule-webhook-none')).toContainText('No webhook is written yet.');
+    await expect(page.getByTestId('rule-webhook-none').getByRole('link')).toHaveAttribute('href', /docs\/webhooks\.md$/);
   });
   await look('Review', 'review-screen', () => command('Review drafts'));
   await look('the tags dialog', 'tag-dialog', () => command('Edit the tags'));

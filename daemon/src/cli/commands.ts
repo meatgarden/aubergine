@@ -202,6 +202,7 @@ export const USAGE = `Usage: aubergine <command>
   ask <text>                 Inside a session: ask your owner for something only a person can do
   rule list                  The rules: when something happens, do something. Only you write rules
   rule add --when <event> --notify
+  rule add --when <event> --webhook <name>   Send one signed message to an address written in the settings file
   rule add --when <event> --run <shelf element> (--on <terminal> | --new <canvas>)
                              For example: aubergine rule add --when task.done --notify
   rule remove <rule>
@@ -217,6 +218,12 @@ export const USAGE = `Usage: aubergine <command>
   project import <file> [--name "<name>"] [--place <name>=<folder>]… [--start]
                              Read one in: prints all it holds and asks first. Starts nothing without --start
                              For example: aubergine project import garden-site.project.json --place main=~/work/garden
+  project diff <file> [--project <project>] [--text] [--json]
+                             How a project file differs from a project here: what only the file has, what only the
+                             project has, what both have differently. Changes nothing. --text: the texts, line by line
+                             It ends with 0 when they agree, 1 when they differ, 2 when the file is wrong or cannot
+                             be read, the project is not found or the server does not answer
+                             For example: aubergine project diff garden-site.project.json --project "Garden site"
   project templates          The templates a project can be made from
   project new "<name>" --template "<template>" [--place <name>=<folder>]… [--start]
   --project <name>           On list, new, canvas, task, todo, rule, schedule and board: that project instead

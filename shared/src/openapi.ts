@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { accessOf, scopeFor, type Action } from './access';
-import { ErrorResponse, IDEMPOTENCY_HEADER, type ErrorCode } from './protocol';
+import { ErrorResponse, IDEMPOTENCY_HEADER, LAST_EVENT_ID_HEADER, type ErrorCode } from './protocol';
 import { ROUTES, ROUTE_IDS, ROUTE_TAGS, type RouteId, type RouteSpec } from './routes';
 import { GRANTABLE_SCOPES, SCOPE_MEANING, TOKEN_PREFIX, type Scope } from './tokens';
 
@@ -153,10 +153,20 @@ function operation(id: RouteId, spec: RouteSpec): OpenApiOperation {
     });
   }
 
+  if (spec.stream) {
+    parameters.push({
+      name: LAST_EVENT_ID_HEADER,
+      in: 'header',
+      required: false,
+      description: 'The `id` of the last event taken from this stream, exactly as it was given. The changes made since are sent first; an event `reset` says when they cannot be.',
+      schema: { type: 'string', minLength: 1, maxLength: 128 },
+    });
+  }
+
   const responses: OpenApiOperation['responses'] = {};
   if (spec.stream) {
     responses['200'] = {
-      description: 'A stream that stays open. Each `data:` line is one JSON object of the shape given here.',
+      description: 'A stream that stays open. Each `data:` line is one JSON object of the shape given here; an `id:` line before it is to be sent back as `Last-Event-ID` when connecting again.',
       content: { 'text/event-stream': { schema: jsonSchemaOf(spec.stream, 'output') } },
     };
   } else if (spec.response) {

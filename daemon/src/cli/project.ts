@@ -1,5 +1,5 @@
 import { AubergineError, type Client } from '@aubergine/client';
-import { NamedColor, SESSION_ENV, showControl } from '@aubergine/shared';
+import { NamedColor, SESSION_ENV, renderComparison, showControl } from '@aubergine/shared';
 import { UsageError, takeOption } from './commands';
 
 /**
@@ -13,6 +13,16 @@ import { UsageError, takeOption } from './commands';
 
 export const PROJECT_EXPORT_EXAMPLE = 'aubergine project export "Garden site" garden-site.project.json';
 export const PROJECT_IMPORT_EXAMPLE = 'aubergine project import garden-site.project.json --place main=~/work/garden';
+
+export const PROJECT_DIFF_EXAMPLE = 'aubergine project diff garden-site.project.json --project "Garden site"';
+/** What `project diff` ends with: so that a script or a check can tell the three apart. */
+export const DIFF_EXIT = { matches: 0, differs: 1, notCompared: 2 } as const;
+
+/**
+ * A text for a terminal as JSON: every character `showControl` would not print as it is, is written as its JSON
+ * escape. The value read back is the same; nothing in it is acted on by the terminal.
+ */
+export const jsonForTerminal = (value: unknown): string => [...JSON.stringify(value, null, 2)].map((char) => (showControl(char) === char ? char : `\\u${(char.codePointAt(0) as number).toString(16).padStart(4, '0')}`)).join('');
 
 /** Every `--place <name>=<folder>` taken out of what was typed. */
 function takePlaces(words: readonly string[]): { places: Record<string, string>; rest: string[] } {
@@ -51,6 +61,7 @@ export type ProjectCommand =
   | { action: 'new'; name: string; color: string | null; folder: string | null; template: string | null; places: Record<string, string>; start: boolean }
   | { action: 'export'; query: string; file: string | null; template: boolean }
   | { action: 'import'; file: string; name: string | null; places: Record<string, string>; start: boolean }
+  | { action: 'diff'; file: string; project: string | null; text: boolean; json: boolean }
   | { action: 'templates' }
   | { action: 'rename'; query: string; name: string }
   | { action: 'use'; query: string }
@@ -110,6 +121,15 @@ export function parseProjectCommand(args: readonly string[]): ProjectCommand {
       if (files.length !== 1) throw new UsageError(`project import needs one file: ${PROJECT_IMPORT_EXAMPLE}`);
       return { action: 'import', file: files[0] as string, name: name.value, places: placed.places, start: placed.rest.includes('--start') };
     }
+    case 'diff':
+    case 'compare': {
+      const project = takeOption(rest, '--project');
+      const unknown = project.rest.find((word) => word.startsWith('--') && word !== '--text' && word !== '--json');
+      if (unknown) throw new UsageError(`project diff does not know ${unknown}`);
+      const files = project.rest.filter((word) => !word.startsWith('--'));
+      if (files.length !== 1 || (rest.includes('--project') && (project.value === null || project.value.trim() === ''))) throw new UsageError(`project diff needs one file, and may name a project: ${PROJECT_DIFF_EXAMPLE}`);
+      return { action: 'diff', file: files[0] as string, project: project.value, text: project.rest.includes('--text'), json: project.rest.includes('--json') };
+    }
     case 'templates':
       if (rest.length > 0) throw new UsageError('project templates takes no arguments');
       return { action: 'templates' };
@@ -135,7 +155,7 @@ export function parseProjectCommand(args: readonly string[]): ProjectCommand {
       return { action: 'move-canvas', canvas, to: to.value };
     }
     default:
-      throw new UsageError(`project does not know "${action}". It knows: list, new, rename, use, archive, reopen, remove, move-canvas, export, import, templates. For example:\n  ${PROJECT_NEW_EXAMPLE}`);
+      throw new UsageError(`project does not know "${action}". It knows: list, new, rename, use, archive, reopen, remove, move-canvas, export, import, diff, templates. For example:\n  ${PROJECT_NEW_EXAMPLE}`);
   }
 }
 
@@ -186,6 +206,8 @@ export async function runProjectCommand(command: ProjectCommand, deps: ProjectCo
       print('\nA command that lists or makes things means the first project unless you say another: --project <name>, or once for all: aubergine project use <name>.');
       return 0;
     }
+    // Comparing answers with one of three codes, and a failure is never the code that means "they differ".
+    if (command.action === 'diff') return await compare(command, deps, inside);
     if (inside) {
       print(OWNERS);
       return 1;
@@ -278,6 +300,50 @@ export async function runProjectCommand(command: ProjectCommand, deps: ProjectCo
     if (!(error instanceof AubergineError)) throw error;
     print(showControl(error.code === 'network' ? 'The Aubergine server is not answering.' : error.message));
     return 1;
+  }
+}
+
+/**
+ * Compares a file with a project and prints how they differ. It changes nothing. It ends with 0 when they agree, 1
+ * when they differ, and 2 when no comparison was made: the file is wrong or cannot be read, the project is not
+ * found, or the server does not answer.
+ */
+async function compare(command: Extract<ProjectCommand, { action: 'diff' }>, deps: ProjectCommandDeps, inside: boolean): Promise<number> {
+  const { owner, print } = deps;
+  if (inside) {
+    print(OWNERS);
+    return DIFF_EXIT.notCompared;
+  }
+  let text: string;
+  try {
+    text = await deps.readFile(command.file);
+  } catch {
+    print(showControl(`Cannot read the file ${command.file}. Nothing was compared.`));
+    return DIFF_EXIT.notCompared;
+  }
+  try {
+    const { project, comparison } = await owner(async (client) => {
+      const all = await collect(client.each.listProjects());
+      // The one that was named; else the one chosen with `project use`; else the first, as for every command.
+      const remembered = command.project === null ? await deps.remembered() : null;
+      const project = command.project !== null ? pickProject(all, command.project) : (all.find((row) => row.id === remembered && row.state === 'open') ?? all[0]);
+      if (!project) throw new UsageError('There is no project to compare with.');
+      return { project, comparison: await client.compareProjectFile({ projectId: project.id, body: { text } }) };
+    });
+    if (command.json) print(jsonForTerminal(comparison));
+    else {
+      // What a file says is other people's text: control characters are shown, not sent to the terminal.
+      print(showControl(`The file compared with the project “${project.name}”. Nothing was changed.\n`));
+      print(showControl(renderComparison(comparison, { text: command.text })));
+    }
+    return comparison.matches ? DIFF_EXIT.matches : DIFF_EXIT.differs;
+  } catch (error) {
+    // Whatever kept the comparison from being made, and however whoever calls the server words a refusal, it is said
+    // and the command ends with the code for "nothing was compared": never with the one that means they differ.
+    if (!(error instanceof Error)) throw error;
+    const said = error instanceof AubergineError && error.code === 'network' ? 'The Aubergine server is not answering.' : error.message;
+    print(showControl(`${said}${/[.?!]$/.test(said) ? '' : '.'} Nothing was compared.`));
+    return DIFF_EXIT.notCompared;
   }
 }
 

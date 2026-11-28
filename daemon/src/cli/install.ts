@@ -8,7 +8,7 @@ import os from 'node:os';
 import path from 'node:path';
 import type { Config } from '../config';
 import { parseTmuxVersion } from '../runtime/tmux-runtime';
-import { accessReport } from '../settings';
+import { accessReport, webhookReport } from '../settings';
 
 /**
  * The commands that make a copy of Aubergine usable from anywhere: start,
@@ -366,6 +366,10 @@ export async function doctor(root: string, config: Config, env: NodeJS.ProcessEn
   checks.push({ ok: null, text: access.addresses.length === 0 ? 'outside addresses: none (another device cannot reach this server)' : `outside addresses: ${access.addresses.join(', ')}` });
   checks.push({ ok: null, text: access.pages.length === 0 ? 'linked pages: none (no other Aubergine\u2019s page may show this server)' : `linked pages: ${access.pages.join(', ')}` });
   for (const problem of access.problems) checks.push({ ok: false, text: problem });
+  // Webhooks, as the server takes them when it starts: by name and host, never the rest of an address or a secret.
+  const hooks = await webhookReport(config.dataDir);
+  checks.push({ ok: null, text: hooks.webhooks.length === 0 ? 'webhooks: none (no rule can send one)' : `webhooks: ${hooks.webhooks.map((hook) => `${hook.name} (${hook.host})`).join(', ')}` });
+  for (const problem of hooks.problems) checks.push({ ok: false, text: problem });
   return checks;
 }
 

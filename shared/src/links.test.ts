@@ -191,6 +191,216 @@ describe('what an address is, told from the address alone', () => {
   });
 });
 
+/**
+ * Cloud consoles and delivery: addresses shaped like the ones a tool prints, with made-up names, IDs and regions.
+ * A console's page is a plain link with words for whose it is; a run of a plan or an update is a run.
+ */
+const CLOUD: Record<string, [string, LinkKind, string | null][]> = {
+  'the AWS console': [
+    ['https://eu-west-1.console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/stackinfo?stackId=made-up', 'link', 'AWS CloudFormation · eu-west-1'],
+    ['https://console.aws.amazon.com/cloudformation/home', 'link', 'AWS CloudFormation'],
+    ['https://us-east-2.console.aws.amazon.com/ecs/v2/clusters/shop/services/checkout/health', 'link', 'AWS ECS · us-east-2'],
+    ['https://ap-southeast-2.console.aws.amazon.com/lambda/home?region=ap-southeast-2#/functions/resize-pictures', 'link', 'AWS Lambda · ap-southeast-2'],
+    ['https://s3.console.aws.amazon.com/s3/buckets/made-up-bucket?region=eu-north-1&tab=objects', 'link', 'AWS S3'],
+    ['https://eu-north-1.console.aws.amazon.com/s3/buckets/made-up-bucket', 'link', 'AWS S3 · eu-north-1'],
+    ['https://eu-central-1.console.aws.amazon.com/cloudwatch/home?region=eu-central-1#logsV2:log-groups', 'link', 'AWS CloudWatch · eu-central-1'],
+    ['https://us-west-2.console.aws.amazon.com/ec2/home?region=us-west-2#Instances:', 'link', 'AWS EC2 · us-west-2'],
+    // A service of no region says none, whatever its page's host names.
+    ['https://us-east-1.console.aws.amazon.com/iam/home#/roles', 'link', 'AWS IAM'],
+    ['https://eu-west-3.console.aws.amazon.com/rds/home?region=eu-west-3#databases:', 'link', 'AWS RDS · eu-west-3'],
+    ['https://eu-west-1.console.aws.amazon.com/codesuite/codepipeline/pipelines/release/view', 'link', 'AWS CodePipeline · eu-west-1'],
+    // A host with an account's own part before the region, as a console signed in to several accounts has.
+    ['https://000000000000-abcd1234.eu-west-1.console.aws.amazon.com/cloudformation/home', 'link', 'AWS CloudFormation · eu-west-1'],
+    // A service the table does not list is not guessed at; mixed case and a port change nothing.
+    ['https://eu-west-1.console.aws.amazon.com/some-new-service/home', 'link', 'AWS console · eu-west-1'],
+    ['https://EU-WEST-1.Console.AWS.Amazon.com/CloudFormation/home', 'link', 'AWS CloudFormation · eu-west-1'],
+    ['https://eu-west-1.console.aws.amazon.com:443/sqs/v3/home', 'link', 'AWS SQS · eu-west-1'],
+    ['https://www.console.aws.amazon.com/console/home', 'link', 'AWS console'],
+    // What does not match: a host that only looks like the console's, a trailing dot, the console's name in a path.
+    ['https://console.aws.amazon.com.example.org/cloudformation/home', 'link', null],
+    ['https://evilconsole.aws.amazon.com/cloudformation/home', 'link', null],
+    ['https://eu-west-1.console.aws.amazon.com.example.org/lambda/home', 'link', null],
+    ['https://console.aws.amazon.com./cloudformation/home', 'link', null],
+    ['https://example.org/console.aws.amazon.com/cloudformation/home', 'link', null],
+    ['https://console-aws.amazon.com/cloudformation/home', 'link', null],
+  ],
+  'signing in to AWS from a command line': [
+    ['https://device.sso.eu-west-1.amazonaws.com/', 'link', 'AWS sign-in'],
+    ['https://device.sso.eu-west-1.amazonaws.com/?user_code=ABCD-EFGH', 'link', 'AWS sign-in'],
+    ['https://device.sso.us-east-2.amazonaws.com/', 'link', 'AWS sign-in'],
+    ['https://DEVICE.SSO.ap-southeast-2.amazonaws.com/', 'link', 'AWS sign-in'],
+    ['https://d-abc123.awsapps.com/start', 'link', 'AWS access portal'],
+    ['https://d-abc123.awsapps.com/start/', 'link', 'AWS access portal'],
+    ['https://made-up-company.awsapps.com/start#/device?user_code=ABCD-EFGH', 'link', 'AWS access portal'],
+    ['https://made-up-company.awsapps.com/start/#/', 'link', 'AWS access portal'],
+    // Nothing else under those suffixes is told, and no look-alike.
+    ['https://made-up-bucket.s3.eu-west-1.amazonaws.com/device/sso', 'link', null],
+    ['https://device.sso.amazonaws.com/', 'link', null],
+    ['https://device.sso.not-a-region.amazonaws.com/', 'link', null],
+    ['https://x.device.sso.eu-west-1.amazonaws.com/', 'link', null],
+    ['https://device.sso.eu-west-1.amazonaws.com.example.org/', 'link', null],
+    ['https://awsapps.com/start', 'link', null],
+    ['https://d-abc123.awsapps.com/other', 'link', null],
+    ['https://d-abc123.awsapps.com.example.org/start', 'link', null],
+  ],
+  'the Google Cloud console': [
+    ['https://console.cloud.google.com/run/detail/europe-west1/checkout/metrics?project=made-up-project', 'link', 'Google Cloud · Cloud Run'],
+    ['https://console.cloud.google.com/compute/instances?project=made-up-project', 'link', 'Google Cloud · Compute Engine'],
+    ['https://console.cloud.google.com/kubernetes/list/overview', 'link', 'Google Cloud · Kubernetes Engine'],
+    ['https://console.cloud.google.com/storage/browser/made-up-bucket', 'link', 'Google Cloud · Cloud Storage'],
+    ['https://console.cloud.google.com/sql/instances', 'link', 'Google Cloud · Cloud SQL'],
+    ['https://console.cloud.google.com/iam-admin/iam?project=made-up-project', 'link', 'Google Cloud · IAM'],
+    ['https://console.cloud.google.com/logs/query;query=severity%3DERROR?project=made-up-project', 'link', 'Google Cloud · Logging'],
+    ['https://console.cloud.google.com/cloud-build/builds;region=europe-west1/0a1b2c3d?project=made-up-project', 'link', 'Google Cloud · Cloud Build'],
+    ['https://console.cloud.google.com/functions/list', 'link', 'Google Cloud · Cloud Functions'],
+    ['https://console.cloud.google.com/bigquery?project=made-up-project', 'link', 'Google Cloud · BigQuery'],
+    ['https://Console.Cloud.Google.com/Monitoring/dashboards', 'link', 'Google Cloud · Monitoring'],
+    ['https://console.cloud.google.com/', 'link', 'Google Cloud console'],
+    ['https://console.cloud.google.com/a-product-not-listed/x', 'link', 'Google Cloud console'],
+    ['https://console.cloud.google.com:443/artifacts', 'link', 'Google Cloud · Artifact Registry'],
+    // What does not match.
+    ['https://console.cloud.google.com.example.org/run', 'link', null],
+    ['https://evil.console.cloud.google.com/run', 'link', null],
+    ['https://cloud.google.com/run', 'link', null],
+    ['https://console.cloud.google.com./run', 'link', null],
+    ['https://example.org/?next=https://console.cloud.google.com/run', 'link', null],
+  ],
+  'the Azure portal': [
+    ['https://portal.azure.com/', 'link', 'Azure portal'],
+    ['https://portal.azure.com', 'link', 'Azure portal'],
+    ['https://portal.azure.com/#home', 'link', 'Azure portal'],
+    ['https://portal.azure.com/#@made-up.example/resource/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/shop/overview', 'link', 'Azure portal'],
+    ['https://portal.azure.com/#view/HubsExtension/BrowseResourceGroups', 'link', 'Azure portal'],
+    ['https://portal.azure.com/made-up.example', 'link', 'Azure portal'],
+    ['https://Portal.Azure.com/#home', 'link', 'Azure portal'],
+    ['https://portal.azure.com:443/#home', 'link', 'Azure portal'],
+    ['http://portal.azure.com/', 'link', 'Azure portal'],
+    ['https://www.portal.azure.com/', 'link', 'Azure portal'],
+    // What does not match.
+    ['https://portal.azure.com.example.org/', 'link', null],
+    ['https://evilportal.azure.com/', 'link', null],
+    ['https://x.portal.azure.com/', 'link', null],
+    ['https://portal.azure.com./', 'link', null],
+    ['https://example.org/portal.azure.com', 'link', null],
+  ],
+  'HCP Terraform': [
+    // As the command line prints a run, and as the pages spell it.
+    ['https://app.terraform.io/app/acme-co/network-prod/runs/run-CZcmD7eagjhyX0vN', 'run', 'network-prod · run-CZcmD7eagjhyX0vN'],
+    ['https://app.terraform.io/app/acme-co/workspaces/network-prod/runs/run-CZcmD7eagjhyX0vN', 'run', 'network-prod · run-CZcmD7eagjhyX0vN'],
+    ['https://app.eu.terraform.io/app/acme-co/network-prod/runs/run-AbCd1234EfGh5678', 'run', 'network-prod · run-AbCd1234EfGh5678'],
+    ['https://app.terraform.io/app/acme-co/workspaces/network_prod/runs/run-AbCd1234EfGh5678/', 'run', 'network_prod · run-AbCd1234EfGh5678'],
+    ['https://app.terraform.io/app/acme-co/workspaces/network-prod/runs/run-AbCd1234EfGh5678?tab=plan', 'run', 'network-prod · run-AbCd1234EfGh5678'],
+    ['https://APP.Terraform.io/app/acme-co/network-prod/runs/run-AbCd1234EfGh5678', 'run', 'network-prod · run-AbCd1234EfGh5678'],
+    ['https://app.terraform.io:443/app/acme-co/network-prod/runs/run-AbCd1234EfGh5678', 'run', 'network-prod · run-AbCd1234EfGh5678'],
+    ['https://app.terraform.io/app/acme-co/workspaces/network-prod', 'link', 'Terraform · acme-co/network-prod'],
+    ['https://app.terraform.io/app/acme-co/workspaces/network-prod/runs', 'link', 'Terraform · acme-co/network-prod'],
+    ['https://app.terraform.io/app/acme-co/workspaces/network-prod/states', 'link', 'Terraform · acme-co/network-prod'],
+    // Not told: a page that is not a workspace's, a run that is not shaped like one, a look-alike host.
+    ['https://app.terraform.io/app/acme-co/settings/general', 'link', null],
+    ['https://app.terraform.io/app/acme-co/network-prod/runs/latest', 'link', null],
+    ['https://app.terraform.io/app/acme-co/workspaces', 'link', null],
+    ['https://app.terraform.io/session', 'link', null],
+    ['https://app.terraform.io.example.org/app/acme-co/network-prod/runs/run-AbCd1234EfGh5678', 'link', null],
+    ['https://evilapp.terraform.io/app/acme-co/network-prod/runs/run-AbCd1234EfGh5678', 'link', null],
+    ['https://terraform.io/app/acme-co/network-prod/runs/run-AbCd1234EfGh5678', 'link', null],
+    ['https://app.terraform.io./app/acme-co/network-prod/runs/run-AbCd1234EfGh5678', 'link', null],
+    // A run named only after the question mark is not read.
+    ['https://app.terraform.io/app/acme-co?run=run-AbCd1234EfGh5678', 'link', null],
+  ],
+  'Pulumi Cloud': [
+    ['https://app.pulumi.com/acmecorp/webserver/dev', 'link', 'Pulumi · acmecorp/webserver/dev'],
+    ['https://app.pulumi.com/acmecorp/webserver/dev/', 'link', 'Pulumi · acmecorp/webserver/dev'],
+    ['https://app.pulumi.com/acmecorp/webserver/dev/updates/12', 'run', 'webserver/dev · update 12'],
+    ['https://app.pulumi.com/acmecorp/webserver/dev/updates/12?explain=true', 'run', 'webserver/dev · update 12'],
+    ['https://app.pulumi.com/acmecorp/webserver/dev/previews/0a1b2c3d-0000-4000-8000-0123456789ab', 'run', 'webserver/dev · preview'],
+    ['https://app.pulumi.com/a-person/site.infra/prod_eu/updates/3', 'run', 'site.infra/prod_eu · update 3'],
+    ['https://App.Pulumi.com/acmecorp/webserver/dev/updates/7', 'run', 'webserver/dev · update 7'],
+    ['https://app.pulumi.com:443/acmecorp/webserver/dev', 'link', 'Pulumi · acmecorp/webserver/dev'],
+    ['http://app.pulumi.com/acmecorp/webserver/staging', 'link', 'Pulumi · acmecorp/webserver/staging'],
+    // Not told: pages that are not a stack's, and look-alike hosts.
+    ['https://app.pulumi.com/signin', 'link', null],
+    ['https://app.pulumi.com/acmecorp/settings/members', 'link', null],
+    ['https://app.pulumi.com/acmecorp/environments/shop/prod', 'link', null],
+    ['https://app.pulumi.com/user/settings/tokens', 'link', null],
+    ['https://app.pulumi.com/acmecorp/webserver', 'link', null],
+    ['https://app.pulumi.com/acmecorp/webserver/dev/updates/latest', 'link', null],
+    ['https://app.pulumi.com/acmecorp/webserver/dev/updates/12/extra', 'link', null],
+    ['https://app.pulumi.com.example.org/acmecorp/webserver/dev', 'link', null],
+    ['https://evilapp.pulumi.com/acmecorp/webserver/dev', 'link', null],
+    ['https://pulumi.com/acmecorp/webserver/dev', 'link', null],
+    ['https://app.pulumi.com./acmecorp/webserver/dev', 'link', null],
+  ],
+  Datadog: [
+    ['https://app.datadoghq.com/monitors/1234567', 'link', 'Datadog monitor 1234567'],
+    ['https://app.datadoghq.eu/monitors/1234567', 'link', 'Datadog monitor 1234567'],
+    ['https://us5.datadoghq.com/monitors/42?view=spans', 'link', 'Datadog monitor 42'],
+    ['https://us3.datadoghq.com/dashboard/abc-123-xyz/checkout-latency', 'link', 'Datadog · checkout latency'],
+    ['https://ap1.datadoghq.com/dashboard/abc-123-xyz/checkout-latency?from_ts=1&to_ts=2', 'link', 'Datadog · checkout latency'],
+    ['https://ap2.datadoghq.com/logs', 'link', 'Datadog'],
+    ['https://app.ddog-gov.com/monitors/9', 'link', 'Datadog monitor 9'],
+    ['https://app.datadoghq.com/apm/traces', 'link', 'Datadog'],
+    ['https://App.DatadogHQ.com/monitors/5', 'link', 'Datadog monitor 5'],
+    ['https://app.datadoghq.com:443/monitors/6', 'link', 'Datadog monitor 6'],
+    ['https://app.datadoghq.com/monitors/manage', 'link', 'Datadog'],
+    // Not told: an organisation's own host (it would have to be guessed), and look-alikes.
+    ['https://acme.datadoghq.com/monitors/1', 'link', null],
+    ['https://datadoghq.com/monitors/1', 'link', null],
+    ['https://app.datadoghq.com.example.org/monitors/1', 'link', null],
+    ['https://evilapp.datadoghq.com/monitors/1', 'link', null],
+    ['https://app.datadoghq.com./monitors/1', 'link', null],
+    ['https://app.datadoghq.co/monitors/1', 'link', null],
+  ],
+};
+
+describe('cloud consoles and delivery, told from the address alone', () => {
+  for (const [row, addresses] of Object.entries(CLOUD)) {
+    it(`${row}: a dozen addresses and more, with the hosts that only look like it`, () => {
+      expect(addresses.length).toBeGreaterThanOrEqual(12);
+      for (const [address, kind, label] of addresses) {
+        if (label !== null) expect(tellLink(address), address).toEqual({ kind, label });
+        else expect(tellLink(address), address).toEqual({ kind: 'link', label: expect.stringMatching(new RegExp(`^${new URL(address).hostname.slice(0, 20).replace(/\./g, '\\.')}`)) });
+      }
+    });
+  }
+
+  it('a name before the host does not make it a console: such an address is not a link at all', () => {
+    for (const address of ['https://console.aws.amazon.com@example.org/', 'https://eu-west-1.console.aws.amazon.com:x@example.org/cloudformation/home', 'https://app.terraform.io@example.org/app/acme-co/network-prod/runs/run-AbCd1234EfGh5678', 'https://portal.azure.com@example.org/']) {
+      expect(addressProblem(address), address).toMatch(/name or a password/);
+      expect(tellLink(address).label.startsWith('AWS'), address).toBe(false);
+      expect(keptBySeeing(address), address).toBe(false);
+    }
+  });
+
+  it("a console's page and a sign-in page are never kept only because a terminal showed them; a run named in the path is", () => {
+    // Where a code or a name of something may be: never kept, with or without it.
+    for (const address of [
+      'https://device.sso.eu-west-1.amazonaws.com/?user_code=ABCD-EFGH',
+      'https://device.sso.eu-west-1.amazonaws.com/',
+      'https://d-abc123.awsapps.com/start/#/device?user_code=ABCD-EFGH',
+      'https://d-abc123.awsapps.com/start',
+      'https://eu-west-1.console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks',
+      'https://eu-west-1.console.aws.amazon.com/cloudformation/home',
+      'https://console.cloud.google.com/run?project=made-up-project',
+      'https://portal.azure.com/#home',
+      'https://app.pulumi.com/acmecorp/webserver/dev',
+      'https://app.datadoghq.com/monitors/1234567',
+    ])
+      expect(keptBySeeing(address), address).toBe(false);
+    expect(keptBySeeing('https://app.terraform.io/app/acme-co/network-prod/runs/run-CZcmD7eagjhyX0vN')).toBe(true);
+    expect(keptBySeeing('https://app.pulumi.com/acmecorp/webserver/dev/updates/12')).toBe(true);
+    expect(keptBySeeing('https://app.terraform.io/app/acme-co/network-prod/runs/run-CZcmD7eagjhyX0vN?token=abc')).toBe(false);
+  });
+
+  it('a label never carries a control character or more than a label may hold', () => {
+    for (const address of ['https://app.terraform.io/app/acme-co/workspaces/net%1Bwork/runs/run-AbCd1234EfGh5678', 'https://app.pulumi.com/acmecorp/web%E2%80%AEserver/dev', `https://app.pulumi.com/${'a'.repeat(90)}/${'b'.repeat(90)}/${'c'.repeat(90)}`, 'https://us3.datadoghq.com/dashboard/abc/Na%1B%5B31mme']) {
+      const { label } = tellLink(address);
+      expect(label.includes(String.fromCharCode(27)), address).toBe(false);
+      expect(label.includes(String.fromCharCode(0x202e)), address).toBe(false);
+      expect(label.length, address).toBeLessThanOrEqual(80);
+    }
+  });
+});
+
 describe('only http and https addresses are links', () => {
   it('refuses anything else with one sentence', () => {
     for (const text of ['', 'not an address', 'ftp://example.org/file', 'javascript:alert(1)', 'file:///etc/passwd', 'data:text/html,hi', 'mailto:someone@example.org', 'ssh://git@example.org/x', 'https://', 'https://exa mple.org', 'https://user:secret@example.org/x', `https://example.org/${'a'.repeat(2100)}`, 'https://example.org/\u0007']) {

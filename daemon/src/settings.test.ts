@@ -3,7 +3,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { DEFAULT_SETTINGS, Settings } from '@aubergine/shared';
-import { SETTINGS_FILE, SettingsFile, accessReport, appearanceOf, colorProblems, expandHome, loadSettings, shortcutProblems } from './settings';
+import { SETTINGS_FILE, SettingsFile, accessReport, webhookReport, appearanceOf, colorProblems, expandHome, loadSettings, shortcutProblems } from './settings';
 
 let dir: string;
 beforeEach(async () => {
@@ -194,6 +194,51 @@ describe('how the page looks', () => {
     expect(colorProblems({})).toEqual([]);
     expect(colorProblems({ appearance: 'x' })).toEqual([]);
     expect(colorProblems({ appearance: { colors: [1] } })).toEqual(['appearance.colors is not a list of colors by name: it is left out.']);
+  });
+});
+
+describe('webhooks in the settings', () => {
+  it('says that a file is not JSON without quoting it: beside the mistake may stand a secret', async () => {
+    const secret = 'MADEUPSECRET0123456789MADEUPSECRET';
+    const pad = 'x'.repeat(200);
+    // Three mistakes; for the second the parser itself would quote the text around it.
+    for (const text of [`{"webhooks":[{"name":"ops","secret":"${secret}",}]}`, `{"p":"${pad}","webhooks":[{"name":"ops","address":"https://hooks.example.test/in/PATHKEY","secret": ${secret}}],"q":"${pad}"}`, `{"secret":"${secret}`]) {
+      await writeFile(path.join(dir, SETTINGS_FILE), text);
+      const warnings: string[] = [];
+      expect(await loadSettings(dir, (message) => warnings.push(message))).toEqual(DEFAULT_SETTINGS);
+      expect(warnings).toHaveLength(1);
+      expect(warnings[0]).toMatch(/^Ignoring .*: it is not valid JSON.*\. Using default settings\.$/);
+      for (const never of ['MADEUP', 'SECRET', 'PATHKEY', 'hooks.example']) expect(warnings[0], never).not.toContain(never);
+      expect(await webhookReport(dir)).toEqual({ webhooks: [], problems: [] });
+    }
+  });
+
+  it('reports a wrong entry once, in words that repeat neither its address nor its secret, skips it, and never fails the file; the page\'s own writes leave them as they were', async () => {
+    const webhooks = [
+      { name: 'ops', address: 'https://hooks.example.test/in/PATHKEY-31?key=QUERYKEY-32', secret: 'made-up-secret-0123456789-abcdefghij' },
+      { name: 'plain', address: 'http://plain.example.test/in/PATHKEY-33', secret: 'made-up-secret-0123456789-abcdefghij' },
+      { name: 'short', address: 'https://hooks.example.test/in', secret: 'SHORTSECRET-34' },
+    ];
+    await writeFile(path.join(dir, SETTINGS_FILE), JSON.stringify({ theme: 'light', webhooks }));
+    const warnings: string[] = [];
+    const file = new SettingsFile(dir, (m) => warnings.push(m));
+    const settings = await file.reload();
+    await file.reload();
+    expect(settings.theme).toBe('light');
+    expect(warnings).toHaveLength(2);
+    expect(warnings[0]).toMatch(/webhooks: “plain”: its address is plain http on a host that is not this computer’s own; a webhook elsewhere is https\. It is skipped\.$/);
+    expect(warnings[1]).toMatch(/webhooks: “short”: its "secret" is shorter than 32 characters.* It is skipped\.$/);
+    for (const never of ['PATHKEY', 'QUERYKEY', 'SHORTSECRET', 'made-up-secret', 'plain.example.test']) expect(warnings.join('\n')).not.toContain(never);
+    expect(await webhookReport(dir)).toEqual({ webhooks: [{ name: 'ops', host: 'hooks.example.test' }], problems: [expect.stringMatching(/plain http/), expect.stringMatching(/shorter than 32/)] });
+    // A route that writes one key of the file leaves this list exactly as it was written.
+    await file.setDescribeRemind(false);
+    await file.setAppearance({ theme: 'dark' });
+    expect((JSON.parse(await readFile(path.join(dir, SETTINGS_FILE), 'utf8')) as { webhooks: unknown }).webhooks).toEqual(webhooks);
+    // Not a list: said, taken as empty, and the rest of the file still counts.
+    await writeFile(path.join(dir, SETTINGS_FILE), JSON.stringify({ theme: 'light', webhooks: { ops: 'https://hooks.example.test/in' } }));
+    expect((await file.reload()).theme).toBe('light');
+    expect(warnings.at(-1)).toMatch(/webhooks: is not a list of at most 20 entries\. It is skipped\.$/);
+    expect(await webhookReport(dir)).toEqual({ webhooks: [], problems: ['webhooks: is not a list of at most 20 entries.'] });
   });
 });
 

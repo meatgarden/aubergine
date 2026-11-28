@@ -520,7 +520,11 @@ describe('JsonStore', () => {
     // So did a terminal's own color theme: each terminal of the file has none, and is drawn in the default.
     expect(state.sessions.map((session) => session.theme)).toEqual(before.sessions.map(() => null));
     const sessionsBefore = (before.sessions as object[]).map((session) => ({ ...session, fields: [], theme: null }));
-    expect({ ...state, devices: undefined }).toEqual({ ...before, sessions: sessionsBefore, devices: undefined });
+    // And what a rule says it cannot do (a webhook that is not there, or was not sent): each rule of the file says nothing.
+    expect(state.queue.rules.length).toBeGreaterThan(0);
+    expect(state.queue.rules.map((rule) => rule.problem)).toEqual(state.queue.rules.map(() => null));
+    const queueBefore = { ...before.queue, rules: (before.queue.rules as object[]).map((rule) => ({ ...rule, problem: null })) };
+    expect({ ...state, devices: undefined }).toEqual({ ...before, sessions: sessionsBefore, queue: queueBefore, devices: undefined });
 
     await store.save(state);
     const raw = JSON.parse(await readFile(store.file, 'utf8'));
