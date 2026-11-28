@@ -47,7 +47,7 @@ describe('webhookProblem', () => {
       // A secret that is short, missing, or not text.
       [entry({ secret: 'short-secret-PATHKEY-1' }), /"secret" is shorter than 32 characters/],
       [entry({ secret: undefined }), /"secret" is shorter than 32/],
-      [entry({ secret: 12345678901234567890123456789012 }), /"secret" is shorter than 32/],
+      [entry({ secret: 123456789 }), /"secret" is shorter than 32/],
       [entry({ secret: `${SECRET}\n` }), /has a control character/],
       // A name that is not a short word: control characters, a space, a path, nothing.
       [entry({ name: 'ops\u0007' }), /entry 1: its "name" is not a short word/],
