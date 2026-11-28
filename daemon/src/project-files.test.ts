@@ -2,7 +2,7 @@ import { mkdir, mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promis
 import type { AddressInfo } from 'node:net';
 import os from 'node:os';
 import path from 'node:path';
-import { GRANTABLE_SCOPES, NO_ATTENTION, NO_STATUS, PROJECT_FILE_MAX_CHARS, RULES_MAX, newId, readProjectFile, type AppState, type ChangeEvent, type ForYou, type ProjectFile, type ProjectFileReading, type QueueState, type Scope, type Session, type Task } from '@aubergine/shared';
+import { GRANTABLE_SCOPES, NO_ATTENTION, NO_STATUS, PROJECT_FILE_MAX_CHARS, ProjectComparison, RULES_MAX, countLine, differenceLine, newId, readProjectFile, showControl, type AppState, type ChangeEvent, type ForYou, type ProjectFile, type ProjectFileReading, type QueueState, type Scope, type Session, type Task } from '@aubergine/shared';
 import type { FastifyInstance } from 'fastify';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { MemoryActivityLog } from './activity';
@@ -205,7 +205,7 @@ const forYouNow = async (): Promise<ForYou> => (await asOwner('GET', '/v1/for-yo
 
 import { createClient } from '@aubergine/client';
 import { SESSION_ENV } from '@aubergine/shared';
-import { parseProjectCommand, runProjectCommand } from './cli/project';
+import { DIFF_EXIT, jsonForTerminal, parseProjectCommand, runProjectCommand } from './cli/project';
 import { digestOf } from './project-files';
 
 void [taskNow, add, startNext, finish, until, forYouNow];
@@ -488,7 +488,7 @@ describe('nothing is made', () => {
         for (const secret of [everything, sessionToken(ownerToken, worker.id)]) {
           const answer = await call(secret, route.method, url, body);
           expect(answer.status, `${route.method} ${route.url}`).not.toBe(500);
-          if (route.url.includes('project-files') || route.url.includes('project-templates') || route.url.endsWith('/projects/:projectId/file') || route.url.endsWith('/template')) expect(answer.status, `${route.method} ${route.url}`).toBe(403);
+          if (route.url.includes('project-files') || route.url.includes('project-templates') || route.url.endsWith('/projects/:projectId/file') || route.url.endsWith('/projects/:projectId/file/compare') || route.url.endsWith('/template')) expect(answer.status, `${route.method} ${route.url}`).toBe(403);
           tried += 1;
         }
       }
@@ -731,5 +731,244 @@ describe('the commands', () => {
     expect(() => parseProjectCommand(['new', 'X', '--place', 'main=/tmp'])).toThrow(/--place and --start go with --template/);
     expect(parseProjectCommand(['import', 'a.json', '--place', 'main=/a b', '--place', 'docs=/c', '--start'])).toEqual({ action: 'import', file: 'a.json', name: null, places: { main: '/a b', docs: '/c' }, start: true });
     expect(parseProjectCommand(['export', 'Garden', '--template'])).toEqual({ action: 'export', query: 'Garden', file: null, template: true });
+  });
+});
+
+describe('a file compared with a project', () => {
+  const compare = (projectId: string, text: string): Promise<Answer> => asOwner('POST', `/v1/projects/${projectId}/file/compare`, { text });
+  const linesOf = (answer: Answer): string[] => (answer.body as ProjectComparison).differences.map((d) => `${d.group}${d.canvas === null ? '' : `@${d.canvas}`}| ${differenceLine(d)}`);
+  /** Every file in the data folder with what it holds, so that "nothing was written" is about the disk and not about one file. */
+  const onDisk = async (): Promise<Record<string, string>> => {
+    await hub.flush();
+    const found: Record<string, string> = {};
+    const walk = async (folder: string): Promise<void> => {
+      for (const entry of await readdir(folder, { withFileTypes: true })) {
+        const full = path.join(folder, entry.name);
+        if (entry.isDirectory()) await walk(full);
+        else if (entry.isFile()) found[path.relative(dir, full)] = (await readFile(full)).toString('base64');
+      }
+    };
+    await walk(dir);
+    return found;
+  };
+  const files = new Map<string, string>();
+  let remembered: string | null = null;
+  const typedHere = async (words: string[], inside?: Session): Promise<{ code: number; out: string }> => {
+    const printed: string[] = [];
+    const owner = createClient({ baseUrl: origin, headers: { origin, cookie: `${cookieName(port)}=${ownerToken}` } });
+    const env = inside ? { [SESSION_ENV.url]: origin, [SESSION_ENV.sessionId]: inside.id, [SESSION_ENV.token]: sessionToken(ownerToken, inside.id) } : {};
+    const code = await runProjectCommand(parseProjectCommand(words), {
+      owner: (work) => work(owner),
+      env,
+      print: (text) => printed.push(text),
+      remember: async () => {},
+      remembered: async () => remembered,
+      expandFolder: (folder) => folder,
+      ask: async () => 'n',
+      readFile: async (file) => {
+        const text = files.get(file);
+        if (text === undefined) throw new Error('No such file');
+        return text;
+      },
+      writeNew: async () => {
+        throw new Error('A comparison writes no file');
+      },
+    });
+    return { code, out: printed.join('\n') };
+  };
+  beforeEach(() => {
+    files.clear();
+    remembered = null;
+  });
+
+  it('written out and compared with itself there is no difference; one change at a time is exactly one more line', async () => {
+    const { projectId } = await fullProject();
+    const { text } = await exportOf(projectId);
+    const same = await compare(projectId, text);
+    expect(same.status, all(same.body)).toBe(200);
+    expect(same.body).toMatchObject({ matches: true, differences: [], summaries: true });
+    expect(same.body.notCompared).toMatch(/^A file does not hold what ran/);
+    // As a template, with and without its summaries.
+    expect((await compare(projectId, (await exportOf(projectId, '?template=true')).text)).body).toMatchObject({ matches: true, summaries: false });
+    expect((await compare(projectId, (await exportOf(projectId, '?template=true&notes=true')).text)).body).toMatchObject({ matches: true, summaries: true });
+
+    const s = state();
+    const build = s.canvases.find((c) => c.projectId === projectId && c.name === 'Build')!;
+    const builder = s.sessions.find((x) => x.projectId === projectId && x.name === 'builder')!;
+    const shell = s.sessions.find((x) => x.projectId === projectId && x.name === 'shell')!;
+    const seen: string[] = [];
+    const next = async (change: () => Promise<unknown> | void, ...more: string[]): Promise<void> => {
+      await change();
+      seen.push(...more);
+      expect(linesOf(await compare(projectId, text)).sort()).toEqual([...seen].sort());
+    };
+    await next(() => asOwner('PATCH', `/v1/canvases/${build.id}`, { color: 'teal' }), 'canvases| differs: “Build”: color (purple in the file, teal here)');
+    await next(() => asOwner('PATCH', `/v1/sessions/${builder.id}`, { tags: ['agent', 'slow'] }), 'terminals@Build| differs: “builder”: tags (agent in the file, agent, slow here)');
+    // A second thing about the same terminal is said on its one line.
+    seen[1] = 'terminals@Build| differs: “builder”: tags (agent in the file, agent, slow here); summary';
+    await next(() => hub.emit({ type: 'session.noted', sessionId: builder.id, note: 'Another summary.' } as ChangeEvent));
+    await next(() => asOwner('PATCH', `/v1/sessions/${shell.id}`, { name: 'scratch' }), 'terminals@Build| only in the file: “shell”', 'terminals@Build| only here: “scratch”');
+    await next(() => asOwner('POST', '/v1/rules', { projectId, event: 'task.needs-owner', action: { kind: 'notify' } }), 'rules| only here: when a task needs you: notify');
+    await next(() => asOwner('POST', `/v1/canvases/${build.id}/frames`, { label: 'Later', x: 2000, y: 10, width: 400, height: 300 }), 'frames@Build| only here: “Later”');
+    await next(() => asOwner('POST', '/v1/canvases', { projectId, name: 'Third' }), 'canvases| only here: “Third”');
+    // What a file does not hold makes no line: a field, a note in the log, a task, a rule switched off.
+    await next(() => asOwner('PATCH', `/v1/sessions/${builder.id}`, { fields: [{ label: 'Ticket', value: 'DEMO-12' }] }));
+    await next(() => asOwner('POST', `/v1/sessions/${builder.id}/notes`, { text: 'Another entry in the log' }));
+    await next(() => asOwner('POST', '/v1/tasks', { projectId, title: 'Another task' }));
+    const answer = (await compare(projectId, text)).body as ProjectComparison;
+    expect(answer.counts).toEqual({ onlyInFile: 1, onlyHere: 4, differ: 2, cannotTell: 0 });
+    expect(countLine(answer)).toBe('1 only in the file, 4 only here, 2 differ.');
+  });
+
+  it('changes nothing: the files of the data folder and the number of changes are what they were', async () => {
+    const { projectId } = await fullProject();
+    const { text } = await exportOf(projectId);
+    const other = fileWith({ name: 'Another project altogether' });
+    const before = await onDisk();
+    const [told, revision, held, shells, lines] = [events.length, hub.revision, all(state()), created.length, typed.length];
+    for (const one of [text, other, (await exportOf(projectId, '?template=true')).text]) expect((await compare(projectId, one)).status).toBe(200);
+    expect((await compare(projectId, other)).body.matches).toBe(false);
+    files.set('garden.json', text);
+    files.set('other.json', other);
+    for (const words of [['diff', 'garden.json', '--project', 'Garden site'], ['diff', 'other.json', '--project', 'Garden site', '--text'], ['diff', 'other.json', '--json']]) await typedHere(words);
+    expect([events.length, hub.revision, all(state()), created.length, typed.length]).toEqual([told, revision, held, shells, lines]);
+    expect(await onDisk()).toEqual(before);
+  });
+
+  it('refuses a wrong file whole with the sentence of the one reader, a project that is not here, every token and every session', async () => {
+    const { projectId, secret } = await fullProject();
+    const wrong: [string, string][] = [
+      ['{ not json', 'This is not a project file: it is not JSON.'],
+      [JSON.stringify({ aubergine: 'workflow' }), 'This is not an Aubergine project file.'],
+      [fileWith({ format: 2 }), 'This file is in format 2, and this version reads format 1. Update Aubergine to read it.'],
+      [fileWith({ rules: [{ event: 'task.done', action: { kind: 'webhook', webhook: 'chat' } }] }), 'A rule in this file sends a webhook. A project file cannot hold such a rule: a webhook is written in the settings file of one computer, and a rule that sends one is written there by its owner.'],
+      [fileWith({ canvases: [{ ref: 'c1', name: 'Main', nodes: [{ x: 0, y: 0, width: 640, height: 400, terminal: { ref: 't1', name: 'one', place: 'main', subfolder: '../../etc' } }] }], places: [{ name: 'main' }] }), 'This project file cannot be read: at canvases.0.nodes.0.terminal.subfolder, A subfolder is below its place: not from the root, and never upward.'],
+      [fileWith({ workflows: [{ ref: 'w1', file: { aubergine: 'workflow', workflow: 'none' } }] }), 'A workflow in this file cannot be read: This is not an Aubergine workflow file.'],
+    ];
+    for (const [text, sentence] of wrong) {
+      const answer = await compare(projectId, text);
+      expect([answer.status, answer.body.error.message], text.slice(0, 60)).toEqual([400, sentence]);
+      // The same sentence as when it is read in.
+      expect((await asOwner('POST', '/v1/project-files/read', { text })).body.error.message).toBe(sentence);
+    }
+    expect((await compare(projectId, 'x'.repeat(PROJECT_FILE_MAX_CHARS + 1))).status).toBe(400);
+    expect((await asOwner('POST', `/v1/projects/${projectId}/file/compare`, {})).status).toBe(400);
+    expect((await compare(newId(), fileWith())).status).toBe(404);
+    const worker = agent('worker');
+    const everything = await makeToken('everything', [...GRANTABLE_SCOPES], { reach: { kind: 'all' }, reviewWorkflowChanges: false });
+    for (const who of [everything, secret]) expect((await call(who, 'POST', `/v1/projects/${projectId}/file/compare`, { text: fileWith() })).status).toBe(403);
+    expect((await asSession(worker, 'POST', `/v1/projects/${worker.projectId}/file/compare`, { text: fileWith() })).status).toBe(403);
+    for (const who of [everything, secret, sessionToken(ownerToken, worker.id)]) {
+      for (const id of [projectId, state().projects[0]!.id, newId()]) {
+        const answer = await call(who, 'POST', `/v1/projects/${id}/file/compare`, { text: fileWith() });
+        // Refused, or for a project the caller does not reach, answered as not there: never compared.
+        expect([403, 404]).toContain(answer.status);
+        expect(all(answer.body)).not.toContain('differences');
+      }
+    }
+  });
+
+  it('shows what a file wrote and never acts on it, and says no path of this computer', async () => {
+    const { projectId, folder } = await fullProject();
+    const exported = JSON.parse((await exportOf(projectId)).text) as ProjectFile;
+    // A hostile file: a canvas whose name clears the screen and turns the text round, a terminal that starts somewhere else.
+    const hostile = 'Notes\u001b[2J\u202Eevil\u0007';
+    exported.canvases[1]!.name = hostile;
+    exported.canvases[0]!.nodes[1]!.terminal.subfolder = 'guide/other';
+    exported.canvases[0]!.nodes[0]!.terminal.place = 'docs';
+    const text = JSON.stringify(exported);
+    const answer = await compare(projectId, text);
+    expect(answer.status, all(answer.body)).toBe(200);
+    expect(linesOf(answer)).toEqual([
+      'canvases| only in the file: “Notes␛[2J<U+202E>evil␇”',
+      'canvases| only here: “Notes”',
+      'terminals@Build| differs: “builder”: starts in (docs in the file, main here)',
+      'terminals@Build| differs: “shell”: starts in (docs/guide/other in the file, docs/guide here)',
+    ]);
+    files.set('hostile.json', text);
+    const words = await typedHere(['diff', 'hostile.json', '--project', 'Garden site', '--text']);
+    const json = await typedHere(['diff', 'hostile.json', '--project', 'Garden site', '--json']);
+    expect(words.code).toBe(DIFF_EXIT.differs);
+    expect(words.out).toContain('only in the file: “Notes␛[2J<U+202E>evil␇”');
+    for (const out of [words.out, json.out]) {
+      expect(showControl(out)).toBe(out);
+      for (const raw of ['\u001b', '\u0007', '\u202e']) expect(out.includes(raw)).toBe(false);
+    }
+    // As data the name is whole: the characters are written as their escapes, and read back as they were.
+    expect((JSON.parse(json.out) as ProjectComparison).differences[0]?.name).toBe(hostile);
+    expect(JSON.parse(json.out)).toEqual(answer.body);
+    expect(jsonForTerminal({ name: 'a\u202Eb\u0085' })).toBe('{\n  "name": "a\\u202eb\\u0085"\n}');
+    // Nothing of this computer: not the data folder, not the project's folders, not even the last part of one.
+    for (const out of [all(answer.body), words.out, json.out]) for (const real of [dir, folder, os.tmpdir(), 'made-up work folder', '/somewhere/else']) expect(out.includes(real), `${real} is in the answer`).toBe(false);
+  });
+
+  it('a file read in on another server matches the project it made, where its places were said', async () => {
+    const { projectId } = await fullProject();
+    const { text } = await exportOf(projectId);
+    await anotherServer();
+    const here = path.join(dir, 'their own folder');
+    await mkdir(path.join(here, 'docs'), { recursive: true });
+    const taken = await takeIn(text, { places: { main: here, docs: path.join(here, 'docs') } });
+    expect(taken.status, all(taken.body)).toBe(201);
+    const made = taken.body.project.id as string;
+    const answer = await compare(made, text);
+    expect(linesOf(answer)).toEqual([]);
+    expect(answer.body.matches).toBe(true);
+    expect(all(answer.body)).not.toContain(here);
+    // With a place left unset, that place and the terminal that started there are what differs.
+    const second = await takeIn(text, { name: 'Without docs', places: { main: here, docs: null } });
+    expect(second.status, all(second.body)).toBe(201);
+    expect(linesOf(await compare(second.body.project.id as string, text))).toEqual(['project| differs: “Without docs”: name (Garden site in the file, Without docs here)', 'places| only in the file: “docs”', 'terminals@Build| differs: “shell”: starts in (docs/guide in the file, no place here)']);
+    // Against the project that was there before: everything is on one side.
+    const first = (await compare(state().projects[0]!.id, text)).body as ProjectComparison;
+    expect(first.counts.cannotTell).toBe(0);
+    expect(first.counts.onlyInFile).toBeGreaterThan(8);
+  });
+
+  it('the command ends with 0 when they agree, 1 when they differ and 2 when nothing was compared', async () => {
+    const { projectId } = await fullProject();
+    files.set('garden.json', (await exportOf(projectId)).text);
+    files.set('bad.json', '{ not json');
+    const agree = await typedHere(['diff', 'garden.json', '--project', 'Garden site']);
+    expect(agree.code).toBe(0);
+    expect(agree.out.split('\n').filter((line) => line !== '')).toEqual(['The file compared with the project “Garden site”. Nothing was changed.', 'The project matches the file.', expect.stringMatching(/^A file does not hold what ran .* none of that was compared\.$/)]);
+    // Without --project: the one chosen with `project use`, else the first.
+    remembered = projectId;
+    expect((await typedHere(['diff', 'garden.json'])).code).toBe(0);
+    remembered = null;
+    const first = await typedHere(['diff', 'garden.json']);
+    expect(first.code).toBe(1);
+    expect(first.out).toContain(`The file compared with the project “${state().projects[0]!.name}”. Nothing was changed.`);
+    expect(first.out).toContain('Canvases\n  only in the file: “Build”\n  only in the file: “Notes”\n  only here: “Main”');
+    // A change, in words, with the texts on request, and as data.
+    const builder = state().sessions.find((s) => s.projectId === projectId && s.name === 'builder')!;
+    hub.emit({ type: 'session.noted', sessionId: builder.id, note: '# Pinned\nKeep the tests red.' } as ChangeEvent);
+    const differ = await typedHere(['diff', 'garden.json', '--project', 'Garden site']);
+    expect(differ.code).toBe(1);
+    expect(differ.out).toContain('Terminals on “Build”\n  differs: “builder”: summary\n\n1 differs.\nTo see how the texts differ, line by line: --text\nA file does not hold');
+    const texts = await typedHere(['diff', 'garden.json', '--project', 'Garden site', '--text']);
+    expect(texts.out).toContain('    --- here\n    +++ in the file\n    @@ -1,2 +1,2 @@\n     # Pinned\n    -Keep the tests red.\n    +Keep the tests green.');
+    const data = await typedHere(['diff', 'garden.json', '--project', 'Garden site', '--json']);
+    expect(data.code).toBe(1);
+    expect(ProjectComparison.parse(JSON.parse(data.out))).toMatchObject({ matches: false, counts: { onlyInFile: 0, onlyHere: 0, differ: 1, cannotTell: 0 } });
+    // Nothing compared: a wrong file, a file that is not there, a project that is not there, inside a canvas terminal.
+    const bad = await typedHere(['diff', 'bad.json', '--project', 'Garden site']);
+    expect([bad.code, bad.out]).toEqual([2, 'This is not a project file: it is not JSON. Nothing was compared.']);
+    expect(await typedHere(['diff', 'missing.json'])).toEqual({ code: 2, out: 'Cannot read the file missing.json. Nothing was compared.' });
+    const nowhere = await typedHere(['diff', 'garden.json', '--project', 'No such project']);
+    expect([nowhere.code, nowhere.out]).toEqual([2, 'No project matches "No such project". See: aubergine project list. Nothing was compared.']);
+    const inside = await typedHere(['diff', 'garden.json'], agent('worker'));
+    expect(inside.code).toBe(2);
+    expect(inside.out).toContain('This command does nothing inside a canvas terminal.');
+    expect(DIFF_EXIT).toEqual({ matches: 0, differs: 1, notCompared: 2 });
+  });
+
+  it('says the right form', () => {
+    expect(parseProjectCommand(['diff', 'a.json'])).toEqual({ action: 'diff', file: 'a.json', project: null, text: false, json: false });
+    expect(parseProjectCommand(['diff', '--project', 'Garden site', 'a.json', '--text', '--json'])).toEqual({ action: 'diff', file: 'a.json', project: 'Garden site', text: true, json: true });
+    expect(() => parseProjectCommand(['diff'])).toThrow(/project diff needs one file, and may name a project/);
+    expect(() => parseProjectCommand(['diff', 'a.json', 'b.json'])).toThrow(/project diff needs one file/);
+    expect(() => parseProjectCommand(['diff', 'a.json', '--project'])).toThrow(/--project needs a name/);
+    expect(() => parseProjectCommand(['diff', 'a.json', '--apply'])).toThrow(/project diff does not know --apply/);
   });
 });
