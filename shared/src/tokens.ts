@@ -169,6 +169,8 @@ export const ActivityEntry = z.object({
   caller: z.enum(['token', 'owner-cli', 'rule', 'schedule', 'owner', 'device', 'pairing']).default('token'),
   /** For a call made from a paired device: that device. */
   byDeviceId: Id.nullable().optional(),
+  /** For a call made from a device that was made for a named person: that name, as it was then. A word about the device, not an identity that was checked. */
+  byPerson: z.string().max(120).nullable().optional(),
   /** For a line about one device (paired, revoked): which, by its ID and name. Never its secret, never a code. */
   deviceId: Id.nullable().optional(),
   deviceName: z.string().max(120).nullable().optional(),

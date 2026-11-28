@@ -1458,6 +1458,8 @@ aubergine device revoke "Phone"  # signed out at once; what it has open is close
 
 A device that is not used for 90 days stops working. More in [Pairing a browser](docs/remote.md#pairing-a-browser).
 
+Where several people use one server, `aubergine device add --name "Laptop" --person "Ada"` (or "Who it is for" in **Add a device**) says whose device it is: the list of devices and **Activity** then say so. **The name limits nothing: every device is the whole owner.** See [Several people on one server](docs/remote.md#several-people-on-one-server).
+
 ### Letting another Aubergine's page show this server
 
 The page of another Aubergine (one on your laptop, say) can be allowed to show this server's projects: write that page's origin under `access.pages` in `config.json` here, start the server again, and make a code for that page:

@@ -270,6 +270,24 @@ It asks first, unless you add `--yes`. In the page, the same list is under **Set
 - A device that is not used for 90 days stops working.
 - **A device is the whole owner**: whoever has it has a shell on that machine as you.
 
+### Several people on one server
+
+Where several people use one server, say who each device is for when you make its code:
+
+```sh
+aubergine device add --name "Laptop" --person "Ada"
+```
+
+In the page it is the second field of **Add a device**, "Who it is for, if not you".
+
+- The list of devices then says "for Ada" on that device (`aubergine device list` has a column **FOR**).
+- **Activity** says "Ada, on Laptop" for what was done through that device: what only the owner may do (making a token, changing a setting, approving a run, accepting a draft and the like), typing into or reading a terminal through the API, and everything about devices and codes. What is done at the computer itself, in the page, is not written there, as before.
+- The name is written by whoever makes the code, and cannot be changed afterwards: revoke the device and add it again.
+
+**A name limits nothing.** Every device is the whole owner, whoever it is for: it can type into every terminal, make tokens, and add or revoke devices, its own name included. The name is a word about the device, not a checked identity, and anyone with a shell on the machine can read and change the server's files. It makes the ordinary case visible; it does not keep one person from another.
+
+Not built: a person who may do less than the owner, signing in with a company's own sign-in, and seeing who is looking at a canvas.
+
 ## Two servers in one page
 
 The page of one Aubergine (on your laptop, say) can also show the projects of another (on a cloud instance, or a second server on the same computer). The other one is a **linked server**.
